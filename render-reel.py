@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R29
+UGI Reel Renderer R30
 =====================
 Renderer vertical 9:16 de custo inicial zero, executado com FFmpeg no GitHub Actions.
 
-Objetivos do R29:
+Objetivos do R30:
 - preservar a interface do workflow R27 (VIDEO_TITLE, VIDEO_DURATION, VIDEO_RENDER_ID);
 - gerar MP4 H.264 1080x1920 / 30 fps com trilha AAC silenciosa para compatibilidade;
 - usar somente conteúdo derivado do título + CTA UGI, evitando inventar mensagens editoriais;
@@ -393,22 +393,25 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
         ]
     )
 
-    # R29: trilha instrumental procedural, 100% local e sem APIs externas.
-    # A composição usa um pad harmônico suave + pulso discreto e fades de entrada/saída.
-    # Não há voz sintetizada nesta etapa: foco em manter custo zero e estabilidade do pipeline.
+    # R30: trilha instrumental procedural com loudness adequado para Reel.
+    # Mantém custo zero e execução 100% local no FFmpeg.
+    # O ganho bruto é elevado e, em seguida, normalizado para -16 LUFS,
+    # com true peak máximo de -1.5 dB para evitar distorção/clipping.
     audio_expr = (
-        "0.030*sin(2*PI*110*t)"
-        "+0.022*sin(2*PI*164.81*t)"
-        "+0.018*sin(2*PI*220*t)"
-        "+0.010*(0.55+0.45*sin(2*PI*2*t))*sin(2*PI*440*t)"
+        "0.040*sin(2*PI*110*t)"
+        "+0.032*sin(2*PI*164.81*t)"
+        "+0.026*sin(2*PI*220*t)"
+        "+0.016*(0.55+0.45*sin(2*PI*2*t))*sin(2*PI*440*t)"
+        "+0.010*(0.50+0.50*sin(2*PI*1*t))*sin(2*PI*329.63*t)"
     )
     audio_filter = (
         f"aevalsrc='{audio_expr}':s=48000:d={DURATION},"
         "aformat=sample_fmts=fltp:channel_layouts=stereo,"
-        "highpass=f=70,lowpass=f=4200,"
-        "afade=t=in:st=0:d=0.55,"
-        f"afade=t=out:st={max(0.1, DURATION-0.75)}:d=0.75,"
-        "volume=0.85"
+        "highpass=f=70,lowpass=f=5200,"
+        "afade=t=in:st=0:d=0.40,"
+        f"afade=t=out:st={max(0.1, DURATION-0.65)}:d=0.65,"
+        "volume=4.8,"
+        "loudnorm=I=-16:TP=-1.5:LRA=7"
     )
 
     run(
@@ -448,7 +451,7 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
 
 def validate_output() -> None:
     if not OUTPUT.exists() or OUTPUT.stat().st_size < 10_000:
-        raise RuntimeError("R29 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
+        raise RuntimeError("R30 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
 
     signature = OUTPUT.read_bytes()[:12]
     if len(signature) < 12 or signature[4:8] != b"ftyp":
@@ -459,10 +462,8 @@ def validate_output() -> None:
             "ffprobe",
             "-v",
             "error",
-            "-select_streams",
-            "v:0",
             "-show_entries",
-            "stream=codec_name,width,height,r_frame_rate",
+            "stream=index,codec_type,codec_name,width,height,r_frame_rate,sample_rate,channels",
             "-show_entries",
             "format=duration,size",
             "-of",
@@ -473,7 +474,7 @@ def validate_output() -> None:
         capture_output=True,
         text=True,
     )
-    print("===== R29 VALIDATION =====")
+    print("===== R30 VALIDATION =====")
     print(probe.stdout.strip())
     print(f"TITLE={TITLE}")
     print(f"CTA={CTA}")
@@ -494,7 +495,7 @@ def main() -> int:
     chunks = balanced_chunks(TITLE, 3)
     durations = scene_durations(DURATION)
 
-    print("===== UGI REEL RENDERER R29 =====")
+    print("===== UGI REEL RENDERER R30 =====")
     print(f"Title: {TITLE}")
     print(f"Duration: {DURATION}s")
     print(f"Render ID: {RENDER_ID}")
@@ -517,7 +518,7 @@ def main() -> int:
 
     concat_and_finalize(scene_files)
     validate_output()
-    print("RENDER_SUCCESS_R29")
+    print("RENDER_SUCCESS_R30")
     return 0
 
 
@@ -528,6 +529,6 @@ if __name__ == "__main__":
         print(f"FFMPEG_ERROR: returncode={exc.returncode}", file=sys.stderr)
         raise
     except Exception as exc:
-        print(f"R29_ERROR: {exc}", file=sys.stderr)
+        print(f"R30_ERROR: {exc}", file=sys.stderr)
         raise
 
