@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R34 Faber Voice
+name: UGI Reel Renderer R36 Kokoro PTBR
 
 on:
   workflow_dispatch:
@@ -34,8 +34,6 @@ jobs:
       VIDEO_RENDER_ID: ${{ inputs.render_id }}
       VIDEO_CTA: "Conheça a UGI"
       VIDEO_NARRATION: "Sua empresa cresceu. A gestão precisa acompanhar. Conheça a UGI."
-      PIPER_VOICE_MODEL: "voices/pt_BR-faber-medium.onnx"
-      PIPER_VOICE_CONFIG: "voices/pt_BR-faber-medium.onnx.json" 
       UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
       UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
 
@@ -59,58 +57,20 @@ jobs:
           ffmpeg -version | head -n 1
           ffprobe -version | head -n 1
 
-      - name: Install Piper TTS
+      - name: Install Kokoro PT-BR TTS
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          python -m pip install piper-tts
+          python -m pip install "kokoro>=0.9.4" soundfile numpy
+          sudo apt-get update
+          sudo apt-get install -y espeak-ng
 
-      - name: Cache PT-BR voice
-        id: cache-piper-voice
+      - name: Cache Kokoro models
         uses: actions/cache@v4
         with:
-          path: voices
-          key: piper-pt-br-faber-medium-v1
-
-      - name: Download PT-BR neural voice
-        if: steps.cache-piper-voice.outputs.cache-hit != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p voices
-          curl -fL --retry 4 --retry-delay 3 \
-            "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx?download=true" \
-            -o voices/pt_BR-faber-medium.onnx
-          curl -fL --retry 4 --retry-delay 3 \
-            "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx.json?download=true" \
-            -o voices/pt_BR-faber-medium.onnx.json
-          test -s voices/pt_BR-faber-medium.onnx
-          test -s voices/pt_BR-faber-medium.onnx.json
-
-
-      - name: Prepare render ID
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ -z "$VIDEO_RENDER_ID" ]; then
-            echo "VIDEO_RENDER_ID=legacy-${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
-          fi
-
-      - name: Validate required configuration
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -n "$VIDEO_RENDER_ID"
-          test -n "$UGI_VIDEO_UPLOAD_URL"
-          test -n "$UGI_VIDEO_UPLOAD_KEY"
-          case "$VIDEO_DURATION" in
-            ''|*[!0-9]*) echo "VIDEO_DURATION inválida"; exit 1 ;;
-          esac
-          if [ "$VIDEO_DURATION" -lt 4 ] || [ "$VIDEO_DURATION" -gt 40 ]; then
-            echo "VIDEO_DURATION deve estar entre 4 e 40 segundos"
-            exit 1
-          fi
+          path: ~/.cache/huggingface
+          key: kokoro-82m-ptbr-v1
 
       - name: Render UGI Reel
         shell: bash
