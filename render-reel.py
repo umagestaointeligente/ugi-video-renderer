@@ -276,7 +276,7 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
             drawtext_filter(
                 phrase_file,
                 fontfile=FONT_BOLD,
-                fontsize=84,
+                fontsize=78,
                 fontcolor=WHITE,
                 x="(w-text_w)/2",
                 y=text_y,
@@ -323,7 +323,7 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
             drawtext_filter(
                 cta_file,
                 fontfile=FONT_BOLD,
-                fontsize=54,
+                fontsize=58,
                 fontcolor=BG,
                 x="(w-text_w)/2",
                 y="1192",
@@ -338,7 +338,7 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
                 fontcolor=MUTED,
                 x="96",
                 y="1642",
-                alpha="0.55",
+                alpha="0.38",
             )
         )
 
@@ -565,7 +565,7 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
 
 def validate_output() -> None:
     if not OUTPUT.exists() or OUTPUT.stat().st_size < 10_000:
-        raise RuntimeError("R32 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
+        raise RuntimeError("R33 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
 
     signature = OUTPUT.read_bytes()[:12]
     if len(signature) < 12 or signature[4:8] != b"ftyp":
@@ -609,7 +609,7 @@ def main() -> int:
     chunks = balanced_chunks(TITLE, 3)
     durations = scene_durations(DURATION)
 
-    print("===== UGI REEL RENDERER R32 =====")
+    print("===== UGI REEL RENDERER R33 PRODUCTION =====")
     print(f"Title: {TITLE}")
     print(f"Duration: {DURATION}s")
     print(f"Render ID: {RENDER_ID}")
