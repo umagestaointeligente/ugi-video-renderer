@@ -1,0 +1,58 @@
+name: UGI Video Renderer
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Título do vídeo"
+        required: true
+        default: "Sua empresa cresceu. A gestão precisa acompanhar."
+      duration:
+        description: "Duração em segundos"
+        required: true
+        default: "8"
+
+jobs:
+  render-video:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Create directories
+        run: |
+          mkdir -p output
+
+      - name: Render UGI test video
+        env:
+          VIDEO_TITLE: ${{ inputs.title }}
+          VIDEO_DURATION: ${{ inputs.duration }}
+        run: |
+          ffmpeg -y \
+            -f lavfi \
+            -i "color=c=0x101820:s=1080x1920:r=30:d=${VIDEO_DURATION}" \
+            -vf "drawtext=text='UMA GESTÃO INTELIGENTE':fontcolor=white:fontsize=58:x=(w-text_w)/2:y=650,drawtext=text='${VIDEO_TITLE}':fontcolor=white:fontsize=44:x=(w-text_w)/2:y=850" \
+            -c:v libx264 \
+            -pix_fmt yuv420p \
+            -movflags +faststart \
+            output/ugi-video-test.mp4
+
+      - name: Validate MP4
+        run: |
+          ffprobe -v error \
+            -show_entries format=duration,size \
+            -of json \
+            output/ugi-video-test.mp4
+
+      - name: Upload rendered video
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-video-test
+          path: output/ugi-video-test.mp4
+          retention-days: 7
