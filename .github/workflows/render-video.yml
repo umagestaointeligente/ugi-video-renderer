@@ -34,6 +34,7 @@ jobs:
         env:
           VIDEO_TITLE: ${{ inputs.title }}
           VIDEO_DURATION: ${{ inputs.duration }}
+          VIDEO_CTA: "Conheça a UGI"
         run: |
           python render-reel.py
 
@@ -41,6 +42,7 @@ jobs:
         run: |
           echo "Validando arquivo..."
           ls -lh output/
+
           ffprobe -v error \
             -show_entries format=duration,size \
             -show_entries stream=codec_name,width,height,r_frame_rate \
