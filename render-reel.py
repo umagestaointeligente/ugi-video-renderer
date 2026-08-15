@@ -510,11 +510,15 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
 
     # Locução entra levemente após o início; sidechain reduz a música durante a fala.
     mix_filter = (
-        "[1:a]adelay=350|350,volume=1.08[voice];"
-        f"[2:a]volume=0.95[music];"
-        "[music][voice]sidechaincompress="
+        # A voz precisa alimentar dois ramos do grafo:
+        # 1) sidechain para abaixar a música;
+        # 2) mix final audível.
+        # O asplit evita o erro "Stream specifier 'voice' matches no streams".
+        "[1:a]adelay=350|350,volume=1.08,asplit=2[voice_sc][voice_mix];"
+        "[2:a]volume=0.95[music];"
+        "[music][voice_sc]sidechaincompress="
         "threshold=0.018:ratio=8:attack=18:release=280:makeup=1[ducked];"
-        "[ducked][voice]amix=inputs=2:duration=longest:dropout_transition=0,"
+        "[ducked][voice_mix]amix=inputs=2:duration=longest:dropout_transition=0,"
         "loudnorm=I=-14:TP=-1.2:LRA=6[aout]"
     )
 
