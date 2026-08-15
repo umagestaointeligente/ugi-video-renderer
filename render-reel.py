@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R30
+UGI Reel Renderer R31
 =====================
 Renderer vertical 9:16 de custo inicial zero, executado com FFmpeg no GitHub Actions.
 
-Objetivos do R30:
+Objetivos do R31:
 - preservar a interface do workflow R27 (VIDEO_TITLE, VIDEO_DURATION, VIDEO_RENDER_ID);
-- gerar MP4 H.264 1080x1920 / 30 fps com trilha AAC silenciosa para compatibilidade;
+- gerar MP4 H.264 1080x1920 / 30 fps com trilha editorial AAC audível e normalizada;
 - usar somente conteúdo derivado do título + CTA UGI, evitando inventar mensagens editoriais;
 - criar 4 cenas de kinetic typography com composição premium, transições, grão e progresso;
 - funcionar sem APIs pagas, sem downloads externos e sem dependências Python adicionais.
@@ -393,25 +393,40 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
         ]
     )
 
-    # R30: trilha instrumental procedural com loudness adequado para Reel.
-    # Mantém custo zero e execução 100% local no FFmpeg.
-    # O ganho bruto é elevado e, em seguida, normalizado para -16 LUFS,
-    # com true peak máximo de -1.5 dB para evitar distorção/clipping.
-    audio_expr = (
-        "0.040*sin(2*PI*110*t)"
-        "+0.032*sin(2*PI*164.81*t)"
-        "+0.026*sin(2*PI*220*t)"
-        "+0.016*(0.55+0.45*sin(2*PI*2*t))*sin(2*PI*440*t)"
-        "+0.010*(0.50+0.50*sin(2*PI*1*t))*sin(2*PI*329.63*t)"
+    # R31: trilha editorial procedural com maior sensação musical.
+    # 100% local, custo zero e sem bibliotecas/API externas.
+    # A base combina:
+    # - pad harmônico;
+    # - pulso rítmico;
+    # - acentos curtos em 2s, 4s e 6s;
+    # - final com leve elevação para reforçar o CTA.
+    pulse = "(0.5+0.5*sin(2*PI*2*t))"
+    accent = (
+        "exp(-18*abs(t-2.0))"
+        "+exp(-18*abs(t-4.0))"
+        "+exp(-18*abs(t-6.0))"
     )
+    lift = "(0.5+0.5*tanh(3*(t-6.2)))"
+
+    audio_expr = (
+        "0.030*sin(2*PI*110*t)"
+        "+0.024*sin(2*PI*164.81*t)"
+        "+0.020*sin(2*PI*220*t)"
+        "+0.016*" + pulse + "*sin(2*PI*329.63*t)"
+        "+0.012*" + pulse + "*sin(2*PI*440*t)"
+        "+0.030*(" + accent + ")*sin(2*PI*660*t)"
+        "+0.012*" + lift + "*sin(2*PI*523.25*t)"
+    )
+
     audio_filter = (
         f"aevalsrc='{audio_expr}':s=48000:d={DURATION},"
         "aformat=sample_fmts=fltp:channel_layouts=stereo,"
-        "highpass=f=70,lowpass=f=5200,"
-        "afade=t=in:st=0:d=0.40,"
-        f"afade=t=out:st={max(0.1, DURATION-0.65)}:d=0.65,"
-        "volume=4.8,"
-        "loudnorm=I=-16:TP=-1.5:LRA=7"
+        "highpass=f=75,lowpass=f=6500,"
+        "acompressor=threshold=-22dB:ratio=2.5:attack=15:release=180:makeup=3,"
+        "afade=t=in:st=0:d=0.30,"
+        f"afade=t=out:st={max(0.1, DURATION-0.55)}:d=0.55,"
+        "volume=4.2,"
+        "loudnorm=I=-15:TP=-1.2:LRA=6"
     )
 
     run(
@@ -451,7 +466,7 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
 
 def validate_output() -> None:
     if not OUTPUT.exists() or OUTPUT.stat().st_size < 10_000:
-        raise RuntimeError("R30 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
+        raise RuntimeError("R31 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
 
     signature = OUTPUT.read_bytes()[:12]
     if len(signature) < 12 or signature[4:8] != b"ftyp":
@@ -474,7 +489,7 @@ def validate_output() -> None:
         capture_output=True,
         text=True,
     )
-    print("===== R30 VALIDATION =====")
+    print("===== R31 VALIDATION =====")
     print(probe.stdout.strip())
     print(f"TITLE={TITLE}")
     print(f"CTA={CTA}")
@@ -495,7 +510,7 @@ def main() -> int:
     chunks = balanced_chunks(TITLE, 3)
     durations = scene_durations(DURATION)
 
-    print("===== UGI REEL RENDERER R30 =====")
+    print("===== UGI REEL RENDERER R31 =====")
     print(f"Title: {TITLE}")
     print(f"Duration: {DURATION}s")
     print(f"Render ID: {RENDER_ID}")
@@ -518,7 +533,7 @@ def main() -> int:
 
     concat_and_finalize(scene_files)
     validate_output()
-    print("RENDER_SUCCESS_R30")
+    print("RENDER_SUCCESS_R31")
     return 0
 
 
@@ -529,6 +544,6 @@ if __name__ == "__main__":
         print(f"FFMPEG_ERROR: returncode={exc.returncode}", file=sys.stderr)
         raise
     except Exception as exc:
-        print(f"R30_ERROR: {exc}", file=sys.stderr)
+        print(f"R31_ERROR: {exc}", file=sys.stderr)
         raise
 
