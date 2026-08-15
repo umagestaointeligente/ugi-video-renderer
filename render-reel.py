@@ -37,11 +37,11 @@ CTA = (os.getenv("VIDEO_CTA") or "Conheça a UGI").strip()
 RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r32").strip()
 VOICE_MODEL = Path(
     os.getenv("PIPER_VOICE_MODEL")
-    or "voices/pt_BR-cadu-medium.onnx"
+    or "voices/pt_BR-faber-medium.onnx"
 )
 VOICE_CONFIG = Path(
     os.getenv("PIPER_VOICE_CONFIG")
-    or "voices/pt_BR-cadu-medium.onnx.json"
+    or "voices/pt_BR-faber-medium.onnx.json"
 )
 NARRATION_RAW = (
     os.getenv("VIDEO_NARRATION")
@@ -399,16 +399,6 @@ def synthesize_narration() -> Path:
 
     narration = clean_text(NARRATION_RAW)
 
-    # Ajuste de dicção PT-BR para a voz Piper atual:
-    # o modelo apresenta pronúncia inconsistente em "cresceu".
-    # Mantemos "cresceu" corretamente na tela, mas na locução usamos
-    # uma formulação semanticamente equivalente e natural.
-    narration = re.sub(
-        r"\bcresceu\b",
-        "se expandiu",
-        narration,
-        flags=re.IGNORECASE,
-    )
 
     raw_wav = WORK / "narration_raw.wav"
 
