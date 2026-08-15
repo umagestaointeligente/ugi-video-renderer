@@ -35,14 +35,6 @@ WORK = Path("output/r32_work")
 TITLE = (os.getenv("VIDEO_TITLE") or "Sua empresa cresceu. A gestão precisa acompanhar.").strip()
 CTA = (os.getenv("VIDEO_CTA") or "Conheça a UGI").strip()
 RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r32").strip()
-VOICE_MODEL = Path(
-    os.getenv("PIPER_VOICE_MODEL")
-    or "voices/pt_BR-faber-medium.onnx"
-)
-VOICE_CONFIG = Path(
-    os.getenv("PIPER_VOICE_CONFIG")
-    or "voices/pt_BR-faber-medium.onnx.json"
-)
 NARRATION_RAW = (
     os.getenv("VIDEO_NARRATION")
     or f"{TITLE} {CTA}."
@@ -382,87 +374,56 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
 
 
 def synthesize_narration() -> Path:
-    """Gera locução neural PT-BR local com Piper."""
-    if not VOICE_MODEL.exists():
-        raise FileNotFoundError(
-            f"Modelo Piper ausente: {VOICE_MODEL}. "
-            "O workflow R32 deve baixar a voz antes de executar o renderer."
-        )
-
+    """Gera locução PT-BR local com Kokoro, voz feminina pf_dora."""
     try:
-        from piper import PiperVoice, SynthesisConfig
+        import numpy as np
+        import soundfile as sf
+        from kokoro import KPipeline
     except Exception as exc:
         raise RuntimeError(
-            "piper-tts não está instalado no runner. "
-            "Use o workflow R32 FINAL."
+            "Kokoro TTS não está instalado. Use o workflow R36 KOKORO."
         ) from exc
 
     narration = clean_text(NARRATION_RAW)
-
-    # R35 — dicionário fonético de locução PT-BR.
-    # O texto visual continua correto ("cresceu"), enquanto o TTS recebe
-    # uma grafia fonética controlada para melhorar a dicção.
-    pronunciation_lexicon = {
-        "cresceu": "cresseu",
-    }
-    for written, spoken in pronunciation_lexicon.items():
-        narration = re.sub(
-            rf"\b{re.escape(written)}\b",
-            spoken,
-            narration,
-            flags=re.IGNORECASE,
-        )
-
     raw_wav = WORK / "narration_raw.wav"
 
-    voice = PiperVoice.load(
-        str(VOICE_MODEL),
-        config_path=str(VOICE_CONFIG) if VOICE_CONFIG.exists() else None,
-    )
+    pipeline = KPipeline(lang_code="p")
+    chunks = []
+    for result in pipeline(
+        narration,
+        voice="pf_dora",
+        speed=1.02,
+        split_pattern=r"\n+",
+    ):
+        audio = getattr(result, "audio", None)
+        if audio is not None:
+            chunks.append(np.asarray(audio, dtype=np.float32))
 
-    # Ritmo ligeiramente mais ágil para caber com naturalidade em Reels de 8 s.
-    syn_config = SynthesisConfig(
-        volume=1.0,
-        length_scale=0.92,
-        noise_scale=0.62,
-        noise_w_scale=0.76,
-        normalize_audio=True,
-    )
+    if not chunks:
+        raise RuntimeError("Kokoro não retornou áudio para a locução.")
 
-    with wave.open(str(raw_wav), "wb") as wav_file:
-        voice.synthesize_wav(
-            narration,
-            wav_file,
-            syn_config=syn_config,
-        )
+    audio = np.concatenate(chunks)
+    sf.write(str(raw_wav), audio, 24000, subtype="PCM_16")
 
-    # Tratamento de voz: presença, limpeza e volume estável.
     narration_wav = WORK / "narration.wav"
     run(
         [
-            "ffmpeg",
-            "-hide_banner",
-            "-loglevel",
-            "error",
-            "-y",
-            "-i",
-            str(raw_wav),
+            "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+            "-i", str(raw_wav),
             "-af",
             (
-                "highpass=f=85,"
-                "lowpass=f=9000,"
-                "acompressor=threshold=-20dB:ratio=2.2:attack=8:release=120:makeup=2,"
+                "highpass=f=80,"
+                "lowpass=f=10000,"
+                "acompressor=threshold=-20dB:ratio=2:attack=8:release=120:makeup=2,"
                 "loudnorm=I=-16:TP=-2:LRA=5"
             ),
-            "-ar",
-            "48000",
-            "-ac",
-            "2",
+            "-ar", "48000",
+            "-ac", "2",
             str(narration_wav),
         ]
     )
-
     return narration_wav
+
 
 
 def concat_and_finalize(scene_files: list[Path]) -> None:
@@ -629,7 +590,6 @@ def main() -> int:
     print(f"Duration: {DURATION}s")
     print(f"Render ID: {RENDER_ID}")
     print(f"Narration: {clean_text(NARRATION_RAW)}")
-    print(f"Voice model: {VOICE_MODEL}")
     print(f"Chunks: {chunks}")
     print(f"Scene durations: {durations}")
     print("=================================")
