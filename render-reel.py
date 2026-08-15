@@ -30,11 +30,24 @@ WIDTH = 1080
 HEIGHT = 1920
 FPS = 30
 OUTPUT = Path("output/ugi-reel.mp4")
-WORK = Path("output/r28_work")
+WORK = Path("output/r32_work")
 
 TITLE = (os.getenv("VIDEO_TITLE") or "Sua empresa cresceu. A gestão precisa acompanhar.").strip()
 CTA = (os.getenv("VIDEO_CTA") or "Conheça a UGI").strip()
-RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r28").strip()
+RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r32").strip()
+VOICE_MODEL = Path(
+    os.getenv("PIPER_VOICE_MODEL")
+    or "voices/pt_BR-cadu-medium.onnx"
+)
+VOICE_CONFIG = Path(
+    os.getenv("PIPER_VOICE_CONFIG")
+    or "voices/pt_BR-cadu-medium.onnx.json"
+)
+NARRATION_RAW = (
+    os.getenv("VIDEO_NARRATION")
+    or f"{TITLE} {CTA}."
+).strip()
+
 
 try:
     DURATION = int(os.getenv("VIDEO_DURATION") or "8")
