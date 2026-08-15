@@ -1,10 +1,10 @@
-name: UGI Video Renderer
+name: UGI Reel Renderer
 
 on:
   workflow_dispatch:
     inputs:
       title:
-        description: "Título do vídeo"
+        description: "Título do Reel"
         required: true
         default: "Sua empresa cresceu. A gestão precisa acompanhar."
       duration:
@@ -13,46 +13,43 @@ on:
         default: "8"
 
 jobs:
-  render-video:
+  render-reel:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Install FFmpeg
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
-      - name: Create directories
-        run: |
-          mkdir -p output
-
-      - name: Render UGI test video
+      - name: Render UGI Reel
         env:
           VIDEO_TITLE: ${{ inputs.title }}
           VIDEO_DURATION: ${{ inputs.duration }}
         run: |
-          ffmpeg -y \
-            -f lavfi \
-            -i "color=c=0x101820:s=1080x1920:r=30:d=${VIDEO_DURATION}" \
-            -vf "drawtext=text='UMA GESTÃO INTELIGENTE':fontcolor=white:fontsize=58:x=(w-text_w)/2:y=650,drawtext=text='${VIDEO_TITLE}':fontcolor=white:fontsize=44:x=(w-text_w)/2:y=850" \
-            -c:v libx264 \
-            -pix_fmt yuv420p \
-            -movflags +faststart \
-            output/ugi-video-test.mp4
+          python render-reel.py
 
-      - name: Validate MP4
+      - name: Validate generated Reel
         run: |
+          echo "Validando arquivo..."
+          ls -lh output/
           ffprobe -v error \
             -show_entries format=duration,size \
+            -show_entries stream=codec_name,width,height,r_frame_rate \
             -of json \
-            output/ugi-video-test.mp4
+            output/ugi-reel.mp4
 
-      - name: Upload rendered video
+      - name: Upload Reel
         uses: actions/upload-artifact@v4
         with:
-          name: ugi-video-test
-          path: output/ugi-video-test.mp4
+          name: ugi-reel
+          path: output/ugi-reel.mp4
           retention-days: 7
