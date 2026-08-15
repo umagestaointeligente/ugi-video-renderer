@@ -1,4 +1,4 @@
-name: UGI Reel Renderer
+name: UGI Reel Renderer R32 Final
 
 on:
   workflow_dispatch:
@@ -32,6 +32,10 @@ jobs:
       VIDEO_TITLE: ${{ inputs.title }}
       VIDEO_DURATION: ${{ inputs.duration }}
       VIDEO_RENDER_ID: ${{ inputs.render_id }}
+      VIDEO_CTA: "Conheça a UGI"
+      VIDEO_NARRATION: "Sua empresa cresceu. A gestão precisa acompanhar. Conheça a UGI."
+      PIPER_VOICE_MODEL: "voices/pt_BR-cadu-medium.onnx"
+      PIPER_VOICE_CONFIG: "voices/pt_BR-cadu-medium.onnx.json" 
       UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
       UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
 
@@ -54,6 +58,36 @@ jobs:
           fi
           ffmpeg -version | head -n 1
           ffprobe -version | head -n 1
+
+      - name: Install Piper TTS
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install piper-tts
+
+      - name: Cache PT-BR voice
+        id: cache-piper-voice
+        uses: actions/cache@v4
+        with:
+          path: voices
+          key: piper-pt-br-cadu-medium-v1
+
+      - name: Download PT-BR neural voice
+        if: steps.cache-piper-voice.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p voices
+          curl -fL --retry 4 --retry-delay 3 \
+            "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/cadu/medium/pt_BR-cadu-medium.onnx?download=true" \
+            -o voices/pt_BR-cadu-medium.onnx
+          curl -fL --retry 4 --retry-delay 3 \
+            "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/cadu/medium/pt_BR-cadu-medium.onnx.json?download=true" \
+            -o voices/pt_BR-cadu-medium.onnx.json
+          test -s voices/pt_BR-cadu-medium.onnx
+          test -s voices/pt_BR-cadu-medium.onnx.json
+
 
       - name: Prepare render ID
         shell: bash
@@ -92,9 +126,16 @@ jobs:
           test -s output/ugi-reel.mp4
           ffprobe -v error \
             -show_entries format=duration,size,format_name \
-            -show_entries stream=codec_name,codec_type,width,height,r_frame_rate \
+            -show_entries stream=index,codec_name,codec_type,width,height,r_frame_rate,sample_rate,channels \
             -of json \
             output/ugi-reel.mp4 | tee output/ffprobe.json
+
+          ffprobe -v error -select_streams a:0 \
+            -show_entries stream=codec_name,sample_rate,channels \
+            -of default=noprint_wrappers=1 \
+            output/ugi-reel.mp4 | tee output/audio-check.txt
+
+          grep -q "codec_name=aac" output/audio-check.txt
 
           python - <<'PY'
           from pathlib import Path
