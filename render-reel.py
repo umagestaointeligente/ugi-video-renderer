@@ -398,6 +398,18 @@ def synthesize_narration() -> Path:
         ) from exc
 
     narration = clean_text(NARRATION_RAW)
+
+    # Ajuste de dicção PT-BR para a voz Piper atual:
+    # o modelo apresenta pronúncia inconsistente em "cresceu".
+    # Mantemos "cresceu" corretamente na tela, mas na locução usamos
+    # uma formulação semanticamente equivalente e natural.
+    narration = re.sub(
+        r"\bcresceu\b",
+        "se expandiu",
+        narration,
+        flags=re.IGNORECASE,
+    )
+
     raw_wav = WORK / "narration_raw.wav"
 
     voice = PiperVoice.load(
