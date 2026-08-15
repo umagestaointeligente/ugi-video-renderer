@@ -399,6 +399,19 @@ def synthesize_narration() -> Path:
 
     narration = clean_text(NARRATION_RAW)
 
+    # R35 — dicionário fonético de locução PT-BR.
+    # O texto visual continua correto ("cresceu"), enquanto o TTS recebe
+    # uma grafia fonética controlada para melhorar a dicção.
+    pronunciation_lexicon = {
+        "cresceu": "cresseu",
+    }
+    for written, spoken in pronunciation_lexicon.items():
+        narration = re.sub(
+            rf"\b{re.escape(written)}\b",
+            spoken,
+            narration,
+            flags=re.IGNORECASE,
+        )
 
     raw_wav = WORK / "narration_raw.wav"
 
