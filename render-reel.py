@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R31
+UGI Reel Renderer R32 FINAL VOICE
 =====================
 Renderer vertical 9:16 de custo inicial zero, executado com FFmpeg no GitHub Actions.
 
-Objetivos do R31:
+Objetivos do R32:
 - preservar a interface do workflow R27 (VIDEO_TITLE, VIDEO_DURATION, VIDEO_RENDER_ID);
-- gerar MP4 H.264 1080x1920 / 30 fps com trilha editorial AAC audível e normalizada;
+- gerar MP4 H.264 1080x1920 / 30 fps com locução neural PT-BR + trilha moderna AAC;
 - usar somente conteúdo derivado do título + CTA UGI, evitando inventar mensagens editoriais;
 - criar 4 cenas de kinetic typography com composição premium, transições, grão e progresso;
-- funcionar sem APIs pagas, sem downloads externos e sem dependências Python adicionais.
+- funcionar sem APIs pagas; o workflow baixa uma voz Piper aberta e executa TTS localmente.
 
 Saída:
     output/ugi-reel.mp4
@@ -22,6 +22,7 @@ import re
 import shutil
 import subprocess
 import sys
+import wave
 import textwrap
 from pathlib import Path
 
@@ -366,6 +367,76 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
     )
 
 
+
+def synthesize_narration() -> Path:
+    """Gera locução neural PT-BR local com Piper."""
+    if not VOICE_MODEL.exists():
+        raise FileNotFoundError(
+            f"Modelo Piper ausente: {VOICE_MODEL}. "
+            "O workflow R32 deve baixar a voz antes de executar o renderer."
+        )
+
+    try:
+        from piper import PiperVoice, SynthesisConfig
+    except Exception as exc:
+        raise RuntimeError(
+            "piper-tts não está instalado no runner. "
+            "Use o workflow R32 FINAL."
+        ) from exc
+
+    narration = clean_text(NARRATION_RAW)
+    raw_wav = WORK / "narration_raw.wav"
+
+    voice = PiperVoice.load(
+        str(VOICE_MODEL),
+        config_path=str(VOICE_CONFIG) if VOICE_CONFIG.exists() else None,
+    )
+
+    # Ritmo ligeiramente mais ágil para caber com naturalidade em Reels de 8 s.
+    syn_config = SynthesisConfig(
+        volume=1.0,
+        length_scale=0.92,
+        noise_scale=0.62,
+        noise_w_scale=0.76,
+        normalize_audio=True,
+    )
+
+    with wave.open(str(raw_wav), "wb") as wav_file:
+        voice.synthesize_wav(
+            narration,
+            wav_file,
+            syn_config=syn_config,
+        )
+
+    # Tratamento de voz: presença, limpeza e volume estável.
+    narration_wav = WORK / "narration.wav"
+    run(
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-i",
+            str(raw_wav),
+            "-af",
+            (
+                "highpass=f=85,"
+                "lowpass=f=9000,"
+                "acompressor=threshold=-20dB:ratio=2.2:attack=8:release=120:makeup=2,"
+                "loudnorm=I=-16:TP=-2:LRA=5"
+            ),
+            "-ar",
+            "48000",
+            "-ac",
+            "2",
+            str(narration_wav),
+        ]
+    )
+
+    return narration_wav
+
+
 def concat_and_finalize(scene_files: list[Path]) -> None:
     concat_file = WORK / "concat.txt"
     concat_file.write_text(
@@ -393,40 +464,45 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
         ]
     )
 
-    # R31: trilha editorial procedural com maior sensação musical.
-    # 100% local, custo zero e sem bibliotecas/API externas.
-    # A base combina:
-    # - pad harmônico;
-    # - pulso rítmico;
-    # - acentos curtos em 2s, 4s e 6s;
-    # - final com leve elevação para reforçar o CTA.
-    pulse = "(0.5+0.5*sin(2*PI*2*t))"
+    narration_wav = synthesize_narration()
+
+    # Trilha moderna procedural: pad + pulso + acentos de transição.
+    # A música é criada localmente e abaixada automaticamente sob a locução.
+    pulse = "(0.50+0.50*sin(2*PI*2*t))"
     accent = (
-        "exp(-18*abs(t-2.0))"
-        "+exp(-18*abs(t-4.0))"
-        "+exp(-18*abs(t-6.0))"
+        "exp(-16*abs(t-2.0))"
+        "+exp(-16*abs(t-4.0))"
+        "+exp(-16*abs(t-6.0))"
     )
-    lift = "(0.5+0.5*tanh(3*(t-6.2)))"
+    lift = "(0.5+0.5*tanh(3*(t-6.1)))"
 
-    audio_expr = (
+    music_expr = (
         "0.030*sin(2*PI*110*t)"
-        "+0.024*sin(2*PI*164.81*t)"
-        "+0.020*sin(2*PI*220*t)"
-        "+0.016*" + pulse + "*sin(2*PI*329.63*t)"
-        "+0.012*" + pulse + "*sin(2*PI*440*t)"
-        "+0.030*(" + accent + ")*sin(2*PI*660*t)"
-        "+0.012*" + lift + "*sin(2*PI*523.25*t)"
+        "+0.022*sin(2*PI*164.81*t)"
+        "+0.018*sin(2*PI*220*t)"
+        "+0.015*" + pulse + "*sin(2*PI*329.63*t)"
+        "+0.011*" + pulse + "*sin(2*PI*440*t)"
+        "+0.025*(" + accent + ")*sin(2*PI*659.25*t)"
+        "+0.010*" + lift + "*sin(2*PI*523.25*t)"
     )
 
-    audio_filter = (
-        f"aevalsrc='{audio_expr}':s=48000:d={DURATION},"
+    music_src = (
+        f"aevalsrc='{music_expr}':s=48000:d={DURATION},"
         "aformat=sample_fmts=fltp:channel_layouts=stereo,"
-        "highpass=f=75,lowpass=f=6500,"
-        "acompressor=threshold=-22dB:ratio=2.5:attack=15:release=180:makeup=3,"
-        "afade=t=in:st=0:d=0.30,"
-        f"afade=t=out:st={max(0.1, DURATION-0.55)}:d=0.55,"
-        "volume=4.2,"
-        "loudnorm=I=-15:TP=-1.2:LRA=6"
+        "highpass=f=70,lowpass=f=7200,"
+        "acompressor=threshold=-22dB:ratio=2:attack=12:release=160:makeup=2,"
+        "afade=t=in:st=0:d=0.25,"
+        f"afade=t=out:st={max(0.1, DURATION-0.55)}:d=0.55"
+    )
+
+    # Locução entra levemente após o início; sidechain reduz a música durante a fala.
+    mix_filter = (
+        "[1:a]adelay=350|350,volume=1.08[voice];"
+        f"[2:a]volume=0.95[music];"
+        "[music][voice]sidechaincompress="
+        "threshold=0.018:ratio=8:attack=18:release=280:makeup=1[ducked];"
+        "[ducked][voice]amix=inputs=2:duration=longest:dropout_transition=0,"
+        "loudnorm=I=-14:TP=-1.2:LRA=6[aout]"
     )
 
     run(
@@ -438,25 +514,30 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
             "-y",
             "-i",
             str(intermediate),
+            "-i",
+            str(narration_wav),
             "-f",
             "lavfi",
             "-i",
-            audio_filter,
-            "-t",
-            str(DURATION),
+            music_src,
+            "-filter_complex",
+            mix_filter,
             "-map",
             "0:v:0",
             "-map",
-            "1:a:0",
+            "[aout]",
+            "-t",
+            str(DURATION),
             "-c:v",
             "copy",
             "-c:a",
             "aac",
             "-b:a",
-            "128k",
+            "160k",
             "-ar",
             "48000",
-            "-shortest",
+            "-ac",
+            "2",
             "-movflags",
             "+faststart",
             str(OUTPUT),
@@ -464,9 +545,10 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
     )
 
 
+
 def validate_output() -> None:
     if not OUTPUT.exists() or OUTPUT.stat().st_size < 10_000:
-        raise RuntimeError("R31 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
+        raise RuntimeError("R32 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
 
     signature = OUTPUT.read_bytes()[:12]
     if len(signature) < 12 or signature[4:8] != b"ftyp":
@@ -489,7 +571,7 @@ def validate_output() -> None:
         capture_output=True,
         text=True,
     )
-    print("===== R31 VALIDATION =====")
+    print("===== R32 VALIDATION =====")
     print(probe.stdout.strip())
     print(f"TITLE={TITLE}")
     print(f"CTA={CTA}")
@@ -510,10 +592,12 @@ def main() -> int:
     chunks = balanced_chunks(TITLE, 3)
     durations = scene_durations(DURATION)
 
-    print("===== UGI REEL RENDERER R31 =====")
+    print("===== UGI REEL RENDERER R32 =====")
     print(f"Title: {TITLE}")
     print(f"Duration: {DURATION}s")
     print(f"Render ID: {RENDER_ID}")
+    print(f"Narration: {clean_text(NARRATION_RAW)}")
+    print(f"Voice model: {VOICE_MODEL}")
     print(f"Chunks: {chunks}")
     print(f"Scene durations: {durations}")
     print("=================================")
@@ -533,7 +617,7 @@ def main() -> int:
 
     concat_and_finalize(scene_files)
     validate_output()
-    print("RENDER_SUCCESS_R31")
+    print("RENDER_SUCCESS_R32")
     return 0
 
 
@@ -544,6 +628,6 @@ if __name__ == "__main__":
         print(f"FFMPEG_ERROR: returncode={exc.returncode}", file=sys.stderr)
         raise
     except Exception as exc:
-        print(f"R31_ERROR: {exc}", file=sys.stderr)
+        print(f"R32_ERROR: {exc}", file=sys.stderr)
         raise
 
