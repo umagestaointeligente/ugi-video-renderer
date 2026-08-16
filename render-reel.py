@@ -203,8 +203,8 @@ def finalize(scene_files):
     voice=synthesize(narration_text())
     music=(f"aevalsrc='0.018*sin(2*PI*110*t)+0.012*sin(2*PI*220*t)+"
            f"0.009*(0.5+0.5*sin(2*PI*2*t))*sin(2*PI*329.63*t)':s=48000:d={DURATION},"
-           f"aformat=sample_fmts=fltp:channel_layouts=stereo,afade=t=in:st=0:d=.4,"
-           f"afade=t=out:st={DURATION-.7}:d=.7")
+           f"aformat=sample_fmts=fltp:channel_layouts=stereo,afade=t=in:st=0:d=0.4,"
+           f"afade=t=out:st={DURATION-0.7}:d=0.7")
     graph=("[1:a]adelay=250|250,volume=1.08,asplit=2[vsc][vmix];"
            "[2:a]volume=.82[m];"
            "[m][vsc]sidechaincompress=threshold=.018:ratio=8:attack=18:release=280[duck];"
