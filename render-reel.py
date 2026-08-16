@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.5 — MULTI-PLATFORM SEMANTIC VIDEO ENGINE — CLEAN OUTPUT + BACKGROUND MUSIC
+UGI Reel Renderer R43.6 — CLEAN OUTPUT + PROFESSIONAL MUSIC MIX
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -62,7 +62,7 @@ COMMERCIAL_INTENT = (
 
 MUSIC_FILE = (os.getenv("VIDEO_MUSIC_FILE") or "assets/ugi-background-music.mp3").strip()
 MUSIC_ENABLED = (os.getenv("VIDEO_MUSIC_ENABLED") or "true").strip().lower() not in {"0", "false", "no", "off"}
-MUSIC_STYLE = (os.getenv("VIDEO_MUSIC_STYLE") or "modern_corporate_instrumental").strip()
+MUSIC_STYLE = (os.getenv("VIDEO_MUSIC_STYLE") or "business_tech_contemporary_instrumental").strip()
 MUSIC_FALLBACK_MODE = (os.getenv("VIDEO_MUSIC_FALLBACK_MODE") or "synthetic").strip().lower()
 
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
@@ -88,7 +88,7 @@ PLATFORM_PROFILES = {
         "overlay_y": 1275,
         "support_y": 1495,
         "progress_y": 1745,
-        "music_level": 0.72,
+        "music_level": 72,
         "voice_speed": 1.03,
     },
     "tiktok": {
@@ -104,7 +104,7 @@ PLATFORM_PROFILES = {
         "overlay_y": 1300,
         "support_y": 1490,
         "progress_y": 1745,
-        "music_level": 0.78,
+        "music_level": 78,
         "voice_speed": 1.08,
     },
     "youtube": {
@@ -120,7 +120,7 @@ PLATFORM_PROFILES = {
         "overlay_y": 1270,
         "support_y": 1500,
         "progress_y": 1745,
-        "music_level": 0.68,
+        "music_level": 68,
         "voice_speed": 1.00,
     },
 }
@@ -711,11 +711,14 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
         "[1:a]volume=1.10,asplit=2[vsc][vmix];"
         f"{music_stream}"
         f"volume={music_level},"
+        "highpass=f=55,lowpass=f=12500,"
+        "equalizer=f=250:t=q:w=1.2:g=-1.5,"
+        "equalizer=f=2500:t=q:w=1.0:g=-2.0,"
         "aformat=sample_fmts=fltp:channel_layouts=stereo,"
         "afade=t=in:st=0:d=0.45,"
         f"afade=t=out:st={max(0.1,duration-0.8)}:d=0.8[music];"
         "[music][vsc]sidechaincompress="
-        "threshold=0.018:ratio=9:attack=15:release=260:makeup=1[ducked];"
+        "threshold=0.025:ratio=6:attack=12:release=320:makeup=1.15[ducked];"
         "[ducked][vmix]amix=inputs=2:duration=longest:dropout_transition=0,"
         "loudnorm=I=-14:TP=-1.2:LRA=6[aout]"
     )
@@ -939,7 +942,7 @@ def main() -> int:
     )
 
     manifest = {
-        "version": "R43_5_MULTI_PLATFORM_SEMANTIC_WITH_MUSIC",
+        "version": "R43_6_PROFESSIONAL_MUSIC_MIX",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -957,7 +960,8 @@ def main() -> int:
             "preferred_file": MUSIC_FILE,
             "fallback_mode": MUSIC_FALLBACK_MODE,
             "ducking": True,
-            "commercial_safety": "use proprietary or royalty-free instrumental music only"
+            "commercial_safety": "use proprietary or royalty-free instrumental music only",
+            "production_rule": "synthetic fallback is diagnostic only; production should use assets/ugi-background-music.mp3"
         },
         "architecture_note":
             "R43.5 preserva os três masters e adiciona trilha instrumental moderna subordinada à locução. "
