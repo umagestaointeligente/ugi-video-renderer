@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.6 — CLEAN OUTPUT + PROFESSIONAL MUSIC MIX
+UGI Reel Renderer R43.7 — MUSIC INTELLIGENCE ENGINE + PROFESSIONAL MIX
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -27,6 +27,7 @@ Mídia esperada do workflow:
 from __future__ import annotations
 
 import json
+import hashlib
 import math
 import os
 import re
@@ -60,10 +61,16 @@ COMMERCIAL_INTENT = (
     or "atracao_com_potencial_de_conversao"
 ).strip()
 
-MUSIC_FILE = (os.getenv("VIDEO_MUSIC_FILE") or "assets/ugi-background-music.mp3").strip()
+MUSIC_FILE = (os.getenv("VIDEO_MUSIC_FILE") or "").strip()
+MUSIC_LIBRARY_ROOT = Path(
+    (os.getenv("VIDEO_MUSIC_LIBRARY_ROOT") or "assets/music").strip()
+)
 MUSIC_ENABLED = (os.getenv("VIDEO_MUSIC_ENABLED") or "true").strip().lower() not in {"0", "false", "no", "off"}
 MUSIC_STYLE = (os.getenv("VIDEO_MUSIC_STYLE") or "business_tech_contemporary_instrumental").strip()
+MUSIC_FAMILY_OVERRIDE = (os.getenv("VIDEO_MUSIC_FAMILY") or "").strip().lower()
+MUSIC_RECENT_TRACKS_RAW = (os.getenv("VIDEO_MUSIC_RECENT_TRACKS") or "").strip()
 MUSIC_FALLBACK_MODE = (os.getenv("VIDEO_MUSIC_FALLBACK_MODE") or "synthetic").strip().lower()
+MUSIC_ALLOWED_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}
 
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
@@ -88,7 +95,7 @@ PLATFORM_PROFILES = {
         "overlay_y": 1275,
         "support_y": 1495,
         "progress_y": 1745,
-        "music_level": 72,
+        "music_level": 0.18,
         "voice_speed": 1.03,
     },
     "tiktok": {
@@ -104,7 +111,7 @@ PLATFORM_PROFILES = {
         "overlay_y": 1300,
         "support_y": 1490,
         "progress_y": 1745,
-        "music_level": 78,
+        "music_level": 0.20,
         "voice_speed": 1.08,
     },
     "youtube": {
@@ -120,7 +127,7 @@ PLATFORM_PROFILES = {
         "overlay_y": 1270,
         "support_y": 1500,
         "progress_y": 1745,
-        "music_level": 68,
+        "music_level": 0.17,
         "voice_speed": 1.00,
     },
 }
@@ -632,25 +639,278 @@ def create_voice_timeline(platform: str, fitted_voices: list[Path]) -> Path:
     return out
 
 
-def resolve_music_input(duration: float, platform: str) -> tuple[list[str], str, str]:
-    """
-    Retorna args de input, label de origem e filter source.
-    Preferência:
-      1) arquivo de trilha royalty-free/proprietária em VIDEO_MUSIC_FILE;
-      2) fallback sintético instrumental moderno, sem vocal.
-    """
-    requested = Path(MUSIC_FILE)
+MUSIC_FAMILY_RULES = {
+    "tension": [
+        "gargalo", "dependência", "dependencia", "problema", "risco",
+        "sobrecarga", "caos", "travado", "centralização", "centralizacao",
+        "pressão", "pressao", "erro", "crise",
+    ],
+    "growth": [
+        "crescimento", "crescer", "escala", "escalar", "resultado",
+        "performance", "evolução", "evolucao", "expansão", "expansao",
+        "vendas", "oportunidade",
+    ],
+    "leadership": [
+        "liderança", "lideranca", "líder", "lider", "gestor", "gestão",
+        "gestao", "equipe", "delegação", "delegacao", "autonomia",
+        "decisão", "decisao",
+    ],
+    "innovation": [
+        "inovação", "inovacao", "tecnologia", "digital", "ia",
+        "inteligência artificial", "inteligencia artificial", "automação",
+        "automacao", "futuro", "transformação", "transformacao",
+    ],
+    "insight": [
+        "insight", "aprendizado", "estratégia", "estrategia", "clareza",
+        "prioridade", "priorização", "priorizacao", "análise", "analise",
+        "diagnóstico", "diagnostico",
+    ],
+    "productivity": [
+        "produtividade", "processo", "eficiência", "eficiencia", "tempo",
+        "rotina", "organização", "organizacao", "execução", "execucao",
+        "reunião", "reuniao",
+    ],
+}
 
-    if MUSIC_ENABLED and requested.exists() and requested.stat().st_size > 0:
-        return (
-            ["-stream_loop", "-1", "-i", requested],
-            "file",
-            "[2:a]"
+_MUSIC_SELECTION_CACHE = None
+
+
+def _normalize_for_music(value: str) -> str:
+    return re.sub(r"\s+", " ", (value or "").strip().lower())
+
+
+def _parse_recent_tracks() -> set[str]:
+    if not MUSIC_RECENT_TRACKS_RAW:
+        return set()
+
+    raw = MUSIC_RECENT_TRACKS_RAW.strip()
+
+    try:
+        parsed = json.loads(raw)
+        if isinstance(parsed, list):
+            return {
+                Path(str(item)).name.lower()
+                for item in parsed
+                if str(item).strip()
+            }
+    except Exception:
+        pass
+
+    return {
+        Path(item.strip()).name.lower()
+        for item in raw.split(",")
+        if item.strip()
+    }
+
+
+def scan_music_library() -> dict[str, list[Path]]:
+    library: dict[str, list[Path]] = {}
+
+    if not MUSIC_LIBRARY_ROOT.exists():
+        return library
+
+    for family_dir in sorted(MUSIC_LIBRARY_ROOT.iterdir()):
+        if not family_dir.is_dir():
+            continue
+
+        tracks = sorted(
+            path
+            for path in family_dir.rglob("*")
+            if (
+                path.is_file()
+                and path.suffix.lower() in MUSIC_ALLOWED_EXTENSIONS
+                and not path.name.startswith(".")
+                and path.stat().st_size > 0
+            )
         )
 
-    if MUSIC_ENABLED and MUSIC_FALLBACK_MODE == "synthetic":
-        profile = PLATFORM_PROFILES[platform]
-        music_level = float(profile["music_level"])
+        if tracks:
+            library[family_dir.name.lower()] = tracks
+
+    return library
+
+
+def infer_music_family() -> tuple[str, str]:
+    if MUSIC_FAMILY_OVERRIDE:
+        return (
+            MUSIC_FAMILY_OVERRIDE,
+            "explicit VIDEO_MUSIC_FAMILY override",
+        )
+
+    context = _normalize_for_music(
+        " ".join(
+            [
+                TITLE,
+                COMMERCIAL_INTENT,
+                CONTENT_ID,
+                EXPERIMENT_ID,
+                VARIANT,
+            ]
+        )
+    )
+
+    scores: dict[str, int] = {}
+
+    for family, keywords in MUSIC_FAMILY_RULES.items():
+        score = sum(
+            1
+            for keyword in keywords
+            if _normalize_for_music(keyword) in context
+        )
+        scores[family] = score
+
+    max_score = max(scores.values(), default=0)
+
+    if max_score > 0:
+        candidates = sorted(
+            family
+            for family, score in scores.items()
+            if score == max_score
+        )
+        selected = candidates[0]
+        return (
+            selected,
+            f"contextual keyword match score={max_score}",
+        )
+
+    return (
+        "innovation",
+        "default UGI business-tech family",
+    )
+
+
+def select_music_track() -> dict:
+    global _MUSIC_SELECTION_CACHE
+
+    if _MUSIC_SELECTION_CACHE is not None:
+        return _MUSIC_SELECTION_CACHE
+
+    if not MUSIC_ENABLED:
+        _MUSIC_SELECTION_CACHE = {
+            "enabled": False,
+            "source": "disabled",
+            "family": None,
+            "track": None,
+            "path": None,
+            "reason": "VIDEO_MUSIC_ENABLED=false",
+            "recent_tracks_filtered": [],
+        }
+        return _MUSIC_SELECTION_CACHE
+
+    # Compatibilidade/override: arquivo explícito ganha prioridade.
+    if MUSIC_FILE:
+        explicit = Path(MUSIC_FILE)
+        if explicit.exists() and explicit.is_file() and explicit.stat().st_size > 0:
+            _MUSIC_SELECTION_CACHE = {
+                "enabled": True,
+                "source": "explicit_file",
+                "family": explicit.parent.name.lower() or "explicit",
+                "track": explicit.name,
+                "path": explicit,
+                "reason": "explicit VIDEO_MUSIC_FILE",
+                "recent_tracks_filtered": [],
+            }
+            return _MUSIC_SELECTION_CACHE
+
+    library = scan_music_library()
+    desired_family, family_reason = infer_music_family()
+    recent = _parse_recent_tracks()
+
+    candidates = list(library.get(desired_family, []))
+    selected_family = desired_family
+    fallback_note = ""
+
+    # Se a família contextual ainda não tiver arquivos, usa outra família
+    # disponível. Isso permite a biblioteca crescer progressivamente.
+    if not candidates and library:
+        selected_family = sorted(library.keys())[0]
+        candidates = list(library[selected_family])
+        fallback_note = (
+            f"; requested family '{desired_family}' unavailable, "
+            f"using '{selected_family}'"
+        )
+
+    if candidates:
+        non_recent = [
+            path
+            for path in candidates
+            if path.name.lower() not in recent
+        ]
+
+        pool = non_recent or candidates
+        filtered_names = [
+            path.name
+            for path in candidates
+            if path.name.lower() in recent
+        ]
+
+        seed_material = "|".join(
+            [
+                RENDER_ID,
+                CONTENT_ID,
+                EXPERIMENT_ID,
+                VARIANT,
+                TITLE,
+                selected_family,
+            ]
+        )
+        digest = hashlib.sha256(
+            seed_material.encode("utf-8")
+        ).hexdigest()
+        index = int(digest[:12], 16) % len(pool)
+        chosen = pool[index]
+
+        repeat_reason = (
+            "anti-repeat filter applied"
+            if non_recent
+            else "all family tracks were recent; deterministic reuse required"
+        )
+
+        _MUSIC_SELECTION_CACHE = {
+            "enabled": True,
+            "source": "music_library",
+            "family": selected_family,
+            "track": chosen.name,
+            "path": chosen,
+            "reason": (
+                f"{family_reason}{fallback_note}; "
+                f"{repeat_reason}; deterministic content-based rotation"
+            ),
+            "recent_tracks_filtered": filtered_names,
+            "library_candidates": [path.name for path in candidates],
+        }
+        return _MUSIC_SELECTION_CACHE
+
+    _MUSIC_SELECTION_CACHE = {
+        "enabled": True,
+        "source": "synthetic" if MUSIC_FALLBACK_MODE == "synthetic" else "disabled",
+        "family": desired_family,
+        "track": None,
+        "path": None,
+        "reason": (
+            f"music library empty for '{desired_family}'; "
+            f"fallback={MUSIC_FALLBACK_MODE}"
+        ),
+        "recent_tracks_filtered": [],
+        "library_candidates": [],
+    }
+    return _MUSIC_SELECTION_CACHE
+
+
+def resolve_music_input(duration: float, platform: str) -> tuple[list[str], str, str, dict]:
+    selection = select_music_track()
+    source = selection["source"]
+
+    if source in {"explicit_file", "music_library"}:
+        requested = Path(selection["path"])
+        return (
+            ["-stream_loop", "-1", "-i", requested],
+            source,
+            "[2:a]",
+            selection,
+        )
+
+    if source == "synthetic":
         lavfi = (
             "aevalsrc="
             "'0.016*sin(2*PI*98*t)"
@@ -662,17 +922,26 @@ def resolve_music_input(duration: float, platform: str) -> tuple[list[str], str,
         return (
             ["-f", "lavfi", "-i", lavfi],
             "synthetic",
-            "[2:a]"
+            "[2:a]",
+            selection,
         )
 
-    return ([], "disabled", "")
+    return (
+        [],
+        "disabled",
+        "",
+        selection,
+    )
 
 
 def finalize_platform(platform: str, video: Path, voice: Path, duration: float, output: Path) -> dict:
     profile = PLATFORM_PROFILES[platform]
     music_level = float(profile["music_level"])
 
-    music_args, music_source, music_stream = resolve_music_input(duration, platform)
+    music_args, music_source, music_stream, selection = resolve_music_input(
+        duration,
+        platform,
+    )
 
     if music_source == "disabled":
         graph = (
@@ -680,33 +949,36 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
             "loudnorm=I=-14:TP=-1.2:LRA=6[aout]"
         )
 
-        cmd = [
-            "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
-            "-i", video,
-            "-i", voice,
-            "-filter_complex", graph,
-            "-map", "0:v:0",
-            "-map", "[aout]",
-            "-t", f"{duration:.3f}",
-            "-c:v", "copy",
-            "-c:a", "aac",
-            "-b:a", "160k",
-            "-ar", "48000",
-            "-ac", "2",
-            "-movflags", "+faststart",
-            output,
-        ]
-
-        run(cmd)
+        run(
+            [
+                "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+                "-i", video,
+                "-i", voice,
+                "-filter_complex", graph,
+                "-map", "0:v:0",
+                "-map", "[aout]",
+                "-t", f"{duration:.3f}",
+                "-c:v", "copy",
+                "-c:a", "aac",
+                "-b:a", "160k",
+                "-ar", "48000",
+                "-ac", "2",
+                "-movflags", "+faststart",
+                output,
+            ]
+        )
 
         return {
             "music_enabled": False,
             "music_source": "disabled",
             "music_style": MUSIC_STYLE,
+            "music_family": selection.get("family"),
+            "music_track": None,
+            "music_selection_reason": selection.get("reason"),
         }
 
-    # Música fica subordinada à voz por sidechain compression.
-    # Fade curto no início/final para evitar entrada abrupta.
+    # R43.7:
+    # trilha mais presente nos intervalos, mas recua suavemente durante a voz.
     graph = (
         "[1:a]volume=1.10,asplit=2[vsc][vmix];"
         f"{music_stream}"
@@ -716,7 +988,7 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
         "equalizer=f=2500:t=q:w=1.0:g=-2.0,"
         "aformat=sample_fmts=fltp:channel_layouts=stereo,"
         "afade=t=in:st=0:d=0.45,"
-        f"afade=t=out:st={max(0.1,duration-0.8)}:d=0.8[music];"
+        f"afade=t=out:st={max(0.1, duration - 0.8)}:d=0.8[music];"
         "[music][vsc]sidechaincompress="
         "threshold=0.025:ratio=6:attack=12:release=320:makeup=1.15[ducked];"
         "[ducked][vmix]amix=inputs=2:duration=longest:dropout_transition=0,"
@@ -743,12 +1015,22 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
         ]
     )
 
+    selected_path = selection.get("path")
+
     return {
         "music_enabled": True,
         "music_source": music_source,
         "music_style": MUSIC_STYLE,
-        "music_file": str(Path(MUSIC_FILE)) if music_source == "file" else None,
+        "music_family": selection.get("family"),
+        "music_track": selection.get("track"),
+        "music_file": str(selected_path) if selected_path else None,
+        "music_selection_reason": selection.get("reason"),
+        "music_recent_tracks_filtered": selection.get("recent_tracks_filtered", []),
+        "music_library_candidates": selection.get("library_candidates", []),
+        "music_level": music_level,
         "ducking": True,
+        "ducking_threshold": 0.025,
+        "ducking_ratio": 6,
         "fade_in_seconds": 0.45,
         "fade_out_seconds": 0.8,
     }
@@ -942,7 +1224,7 @@ def main() -> int:
     )
 
     manifest = {
-        "version": "R43_6_PROFESSIONAL_MUSIC_MIX",
+        "version": "R43_7_MUSIC_INTELLIGENCE_ENGINE",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -957,15 +1239,27 @@ def main() -> int:
         "music_policy": {
             "enabled": MUSIC_ENABLED,
             "style": MUSIC_STYLE,
-            "preferred_file": MUSIC_FILE,
+            "library_root": str(MUSIC_LIBRARY_ROOT),
+            "family_override": MUSIC_FAMILY_OVERRIDE or None,
+            "recent_tracks_input": sorted(_parse_recent_tracks()),
             "fallback_mode": MUSIC_FALLBACK_MODE,
             "ducking": True,
             "commercial_safety": "use proprietary or royalty-free instrumental music only",
-            "production_rule": "synthetic fallback is diagnostic only; production should use assets/ugi-background-music.mp3"
+            "production_rule": "production selects from assets/music/<family>; synthetic fallback is diagnostic only",
+            "anti_repeat": "VIDEO_MUSIC_RECENT_TRACKS excludes recent filenames when alternatives exist",
+            "rotation": "deterministic SHA-256 rotation by render/content/experiment/variant"
+        },
+        "music_selection": {
+            key: (
+                str(value)
+                if isinstance(value, Path)
+                else value
+            )
+            for key, value in select_music_track().items()
         },
         "architecture_note":
-            "R43.5 preserva os três masters e adiciona trilha instrumental moderna subordinada à locução. "
-            "Quando VIDEO_MUSIC_FILE existir, usa esse arquivo; caso contrário, usa fallback sintético sem vocal.",
+            "R43.7 preserves the R43.6 audiovisual pipeline and adds contextual music-family selection, "
+            "library rotation, optional anti-repeat history and professional voice-priority ducking.",
     }
 
     (OUTPUT_DIR / "r42-platform-manifest.json").write_text(
@@ -974,7 +1268,7 @@ def main() -> int:
     )
 
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
-    print("RENDER_SUCCESS_R42")
+    print("RENDER_SUCCESS_R43_7")
     return 0
 
 
