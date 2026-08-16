@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R42 — MULTI-PLATFORM SEMANTIC VIDEO ENGINE
+UGI Reel Renderer R42.1 — MULTI-PLATFORM SEMANTIC VIDEO ENGINE — FINAL POLISH
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -77,7 +77,7 @@ PLATFORM_PROFILES = {
         "cut_pace": "medium_dynamic",
         "text_density": "short",
         "cta_style": "brand_interest",
-        "primary_cta": "Conheça a UGI.",
+        "primary_cta": "Conheça a UGI",
         "panel_y": 1210,
         "panel_h": 435,
         "overlay_y": 1275,
@@ -93,7 +93,7 @@ PLATFORM_PROFILES = {
         "cut_pace": "fast",
         "text_density": "very_short",
         "cta_style": "interaction_plus_brand",
-        "primary_cta": "Se isso acontece na sua empresa, conheça a UGI.",
+        "primary_cta": "Conheça a UGI",
         "panel_y": 1235,
         "panel_h": 395,
         "overlay_y": 1300,
@@ -109,7 +109,7 @@ PLATFORM_PROFILES = {
         "cut_pace": "medium",
         "text_density": "short_explanatory",
         "cta_style": "learn_more",
-        "primary_cta": "Conheça a UGI e veja como estruturar uma gestão menos dependente.",
+        "primary_cta": "Conheça a UGI",
         "panel_y": 1205,
         "panel_h": 445,
         "overlay_y": 1270,
@@ -144,7 +144,7 @@ SCENES = [
         {
             "instagram": "Isso parece controle. Mas pode ser gargalo.",
             "tiktok": "Isso é gargalo.",
-            "youtube": "Quando toda decisão chega ao líder, o crescimento começa a cobrar um preço.",
+            "youtube": "Toda decisão no líder limita o crescimento.",
         },
         {
             "instagram": "Se tudo precisa passar por você, sua empresa pode estar crescendo dependente.",
@@ -164,7 +164,7 @@ SCENES = [
         {
             "instagram": "Decisões acumulam. A operação desacelera.",
             "tiktok": "Decisão parada = trabalho parado.",
-            "youtube": "Decisões acumulam, prioridades travam e o ritmo cai.",
+            "youtube": "Decisões acumulam. O ritmo cai.",
         },
         {
             "instagram": "A equipe espera, as decisões acumulam e a operação perde velocidade.",
@@ -184,7 +184,7 @@ SCENES = [
         {
             "instagram": "Crescer assim aumenta a dependência.",
             "tiktok": "Quanto mais cresce, pior fica.",
-            "youtube": "Mais crescimento sem autonomia significa mais decisões concentradas.",
+            "youtube": "Sem autonomia, o crescimento concentra decisões.",
         },
         {
             "instagram": "Quando a empresa cresce sem autonomia, o que parecia controle vira gargalo.",
@@ -202,9 +202,9 @@ SCENES = [
             "youtube": "Autonomia com critérios.",
         },
         {
-            "instagram": "Critérios claros transformam espera em execução.",
+            "instagram": "Critérios claros. Mais execução.",
             "tiktok": "Critério claro. Decisão rápida.",
-            "youtube": "Responsabilidade distribuída, critérios claros e decisões no nível certo.",
+            "youtube": "Critérios claros. Decisões no nível certo.",
         },
         {
             "instagram": "Gestão inteligente cria autonomia com critérios, clareza e direção.",
@@ -224,7 +224,7 @@ SCENES = [
         {
             "instagram": "O líder acompanha. A equipe executa.",
             "tiktok": "Você lidera. O time executa.",
-            "youtube": "O líder sai do centro de tudo e volta a liderar o crescimento.",
+            "youtube": "O líder sai do gargalo e volta a liderar.",
         },
         {
             "instagram": "A operação ganha velocidade, e você volta a liderar o crescimento.",
@@ -242,9 +242,9 @@ SCENES = [
             "youtube": "Cresça sem depender de você para tudo.",
         },
         {
-            "instagram": "Transforme gestão em execução.",
-            "tiktok": "Conheça a UGI.",
-            "youtube": "Estruture autonomia, clareza e execução.",
+            "instagram": "Autonomia para crescer.",
+            "tiktok": "Autonomia para avançar.",
+            "youtube": "Autonomia para crescer.",
         },
         {
             "instagram": "Sua empresa pode crescer sem depender de você para tudo. Conheça a UGI.",
@@ -476,7 +476,7 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
     )
     support = write_text(
         pdir / f"{item['index']}-support.txt",
-        "\n".join(textwrap.wrap(item["support"], width=40, break_long_words=False)),
+        "\n".join(textwrap.wrap(item["support"], width=46, break_long_words=False)[:2]),
     )
     brand = write_text(
         pdir / f"{item['index']}-brand.txt",
@@ -522,7 +522,7 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         visual = []
         media_kind = "fallback"
 
-    # R42: painel mais baixo e menor.
+    # R42.1: mantém o painel R42 homologado; refina apenas hierarquia, legibilidade e CTA.
     panel_y = int(profile["panel_y"])
     panel_h = int(profile["panel_h"])
     overlay_y = int(profile["overlay_y"])
@@ -540,13 +540,13 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         f"drawbox=x=68:y={panel_y}:w=944:h={panel_h}:color={PANEL}@0.62:t=fill",
         f"drawbox=x=68:y={panel_y}:w=8:h={panel_h}:color={ACCENT}@0.96:t=fill",
         drawtext(number, FONT_BOLD, 24, MUTED, "92", "112", "0.84"),
-        drawtext(brand, FONT_BOLD, 22, WHITE, "w-text_w-92", "112", "0.84"),
+        drawtext(brand, FONT_BOLD, 26, WHITE, "w-text_w-92", "112", "0.90"),
         drawtext(
             overlay, FONT_BOLD, overlay_size, WHITE, "106", str(overlay_y),
             "if(lt(t,0.08),0,min((t-0.08)/0.22,1))", 12
         ),
         drawtext(
-            support, FONT_REGULAR, 27, MUTED, "106", str(support_y),
+            support, FONT_REGULAR, 31, MUTED, "106", str(support_y),
             "if(lt(t,0.35),0,min((t-0.35)/0.25,1))", 10
         ),
     ]
@@ -554,9 +554,9 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
     if item["role"] == "cta":
         cta_y = min(panel_y + panel_h - 105, 1635)
         visual += [
-            f"drawbox=x=106:y={cta_y}:w=600:h=82:color={ACCENT}@0.94:t=fill",
+            f"drawbox=x=106:y={cta_y}:w=430:h=82:color={ACCENT}@0.94:t=fill",
             drawtext(
-                cta_file, FONT_BOLD, 30 if platform != "tiktok" else 27,
+                cta_file, FONT_BOLD, 30,
                 BG, "132", str(cta_y + 23),
                 "if(lt(t,0.42),0,min((t-0.42)/0.28,1))"
             ),
