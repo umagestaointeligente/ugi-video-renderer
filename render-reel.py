@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R32 FINAL VOICE
+UGI Reel Renderer R37.3 CREATIVE PRODUCTION
 =====================
 Renderer vertical 9:16 de custo inicial zero, executado com FFmpeg no GitHub Actions.
 
-Objetivos do R32:
+Objetivos do R37.3:
 - preservar a interface do workflow R27 (VIDEO_TITLE, VIDEO_DURATION, VIDEO_RENDER_ID);
 - gerar MP4 H.264 1080x1920 / 30 fps com locução neural PT-BR + trilha moderna AAC;
 - usar somente conteúdo derivado do título + CTA UGI, evitando inventar mensagens editoriais;
-- criar 4 cenas de kinetic typography com composição premium, transições, grão e progresso;
-- funcionar sem APIs pagas; o workflow baixa uma voz Piper aberta e executa TTS localmente.
+- criar 4 cenas com direção visual, movimento, hierarquia tipográfica, metáforas gráficas e CTA;
+- funcionar sem APIs pagas; usar Kokoro PT-BR local + FFmpeg no GitHub Actions.
 
 Saída:
     output/ugi-reel.mp4
@@ -30,11 +30,11 @@ WIDTH = 1080
 HEIGHT = 1920
 FPS = 30
 OUTPUT = Path("output/ugi-reel.mp4")
-WORK = Path("output/r32_work")
+WORK = Path("output/r373_work")
 
 TITLE = (os.getenv("VIDEO_TITLE") or "Sua empresa cresceu. A gestão precisa acompanhar.").strip()
 CTA = (os.getenv("VIDEO_CTA") or "Conheça a UGI").strip()
-RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r32").strip()
+RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r373").strip()
 NARRATION_RAW = (
     os.getenv("VIDEO_NARRATION")
     or f"{TITLE} {CTA}."
@@ -63,6 +63,9 @@ WHITE = "0xF4F7F9"
 MUTED = "0xAAB6C2"
 ACCENT = "0x35D0BA"
 ACCENT_2 = "0x66A6FF"
+DEEP = "0x07101A"
+PANEL_2 = "0x162330"
+WARM = "0xD7B56D"
 
 
 def first_existing(paths: list[str]) -> str:
@@ -171,32 +174,72 @@ def esc_path(p: Path) -> str:
 
 
 def add_common_layers(filters: list[str], scene_index: int, dur: float) -> None:
-    # Fundo com painel central muito sutil.
+    """Base visual R37.3 usando apenas filtros FFmpeg amplamente compatíveis."""
     filters.extend(
         [
-            f"drawbox=x=70:y=250:w={WIDTH-140}:h={HEIGHT-500}:color={PANEL}@0.36:t=fill",
-            # linhas cinéticas que atravessam a composição
-            f"drawbox=x='-420+t*240':y={280 + scene_index*28}:w=420:h=8:color={ACCENT}@0.72:t=fill",
-            f"drawbox=x='{WIDTH+120}-t*190':y={1510 - scene_index*35}:w=330:h=6:color={ACCENT_2}@0.48:t=fill",
-            # régua vertical / grid editorial
-            f"drawbox=x=92:y=320:w=3:h=1180:color={WHITE}@0.10:t=fill",
-            f"drawbox=x={WIDTH-95}:y=320:w=3:h=1180:color={WHITE}@0.07:t=fill",
-            # grão discreto e vinheta
-            "noise=alls=3:allf=t+u",
-            "vignette=PI/5",
+            f"drawbox=x=54:y=210:w={WIDTH-108}:h={HEIGHT-420}:color={PANEL}@0.42:t=fill",
+            f"drawbox=x=78:y=238:w={WIDTH-156}:h={HEIGHT-476}:color={PANEL_2}@0.18:t=fill",
+            f"drawbox=x='-560+t*320':y={275 + scene_index*24}:w=520:h=10:color={ACCENT}@0.78:t=fill",
+            f"drawbox=x='{WIDTH+180}-t*235':y={1495 - scene_index*34}:w=430:h=8:color={ACCENT_2}@0.52:t=fill",
+            f"drawbox=x='-300+t*150':y={1660 - scene_index*12}:w=260:h=4:color={WHITE}@0.18:t=fill",
+            f"drawbox=x=82:y=300:w=2:h=1230:color={WHITE}@0.10:t=fill",
+            f"drawbox=x={WIDTH-84}:y=300:w=2:h=1230:color={WHITE}@0.07:t=fill",
+            f"drawbox=x=82:y=300:w={WIDTH-164}:h=2:color={WHITE}@0.06:t=fill",
+            f"drawbox=x=82:y=1530:w={WIDTH-164}:h=2:color={WHITE}@0.05:t=fill",
+            "noise=alls=2:allf=t+u",
+            "vignette=PI/5.5",
         ]
     )
 
-    # barra de progresso no rodapé
     progress_x = 82
     progress_y = 1765
     progress_w = WIDTH - 164
     filters.append(
-        f"drawbox=x={progress_x}:y={progress_y}:w={progress_w}:h=4:color={WHITE}@0.12:t=fill"
+        f"drawbox=x={progress_x}:y={progress_y}:w={progress_w}:h=4:color={WHITE}@0.10:t=fill"
     )
     filters.append(
-        f"drawbox=x={progress_x}:y={progress_y}:w='({progress_w})*min(t/{dur},1)':h=4:color={ACCENT}@0.90:t=fill"
+        f"drawbox=x={progress_x}:y={progress_y}:w='({progress_w})*min(t/{dur},1)':h=4:color={ACCENT}@0.96:t=fill"
     )
+
+
+def add_scene_motif(filters: list[str], scene_index: int, dur: float) -> None:
+    """Metáforas gráficas abstratas sem criar texto editorial adicional."""
+    if scene_index == 1:
+        filters.extend(
+            [
+                f"drawbox=x='110+180*min(t/{dur},1)':y=430:w=230:h=78:color={ACCENT_2}@0.16:t=fill",
+                f"drawbox=x='{WIDTH-340}-180*min(t/{dur},1)':y=540:w=230:h=78:color={ACCENT}@0.16:t=fill",
+                f"drawbox=x='130+160*min(t/{dur},1)':y=650:w=210:h=70:color={WHITE}@0.08:t=fill",
+                f"drawbox=x={WIDTH//2-18}:y=390:w=36:h=390:color={ACCENT}@0.26:t=fill",
+            ]
+        )
+    elif scene_index == 2:
+        for i, y in enumerate((430, 535, 640, 745)):
+            delay = 0.08 * i
+            filters.append(
+                f"drawbox=x='115+{i*24}+120*max(0,min((t-{delay})/{max(0.6, dur)},1))':"
+                f"y={y}:w={560-i*42}:h=72:color={WHITE}@{0.07 + i*0.015}:t=fill"
+            )
+        filters.append(
+            f"drawbox=x={WIDTH-265}:y=400:w=120:h=470:color={ACCENT_2}@0.18:t=fill"
+        )
+    elif scene_index == 3:
+        filters.extend(
+            [
+                f"drawbox=x='420-250*min(t/{dur},1)':y=430:w=210:h=72:color={ACCENT}@0.16:t=fill",
+                f"drawbox=x='450+250*min(t/{dur},1)':y=540:w=210:h=72:color={ACCENT_2}@0.16:t=fill",
+                f"drawbox=x='410-205*min(t/{dur},1)':y=650:w=190:h=68:color={WHITE}@0.09:t=fill",
+                f"drawbox=x='470+185*min(t/{dur},1)':y=760:w=190:h=68:color={WHITE}@0.07:t=fill",
+            ]
+        )
+    else:
+        filters.extend(
+            [
+                f"drawbox=x='120+30*sin(t*2.2)':y=470:w={WIDTH-240}:h=5:color={ACCENT}@0.42:t=fill",
+                f"drawbox=x='180-24*sin(t*1.8)':y=1380:w={WIDTH-360}:h=5:color={ACCENT_2}@0.26:t=fill",
+            ]
+        )
+
 
 
 def drawtext_filter(
@@ -228,116 +271,121 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
     brand = write_text(f"scene_{index}_brand", "UMA GESTÃO INTELIGENTE")
     phrase_file = write_text(
         f"scene_{index}_phrase",
-        wrap_for_reel(phrase if phrase else TITLE, 21 if not closing else 27),
+        wrap_for_reel(phrase if phrase else TITLE, 23 if not closing else 28),
     )
     cta_file = write_text(f"scene_{index}_cta", CTA)
     render_file = write_text(f"scene_{index}_render", RENDER_ID)
 
     filters: list[str] = []
     add_common_layers(filters, index, dur)
+    add_scene_motif(filters, index, dur)
 
-    # Cabeçalho editorial.
     filters.append(
         drawtext_filter(
             scene_no,
             fontfile=FONT_BOLD,
-            fontsize=31,
+            fontsize=28,
             fontcolor=MUTED,
             x="96",
-            y="118",
-            alpha=f"min(t/0.30,1)",
+            y="112",
+            alpha="min(t/0.24,1)",
         )
     )
     filters.append(
         drawtext_filter(
             brand,
             fontfile=FONT_BOLD,
-            fontsize=28,
+            fontsize=27,
             fontcolor=WHITE,
             x="w-text_w-96",
-            y="118",
-            alpha=f"min(t/0.30,1)",
+            y="112",
+            alpha="min(t/0.24,1)",
         )
     )
 
     if not closing:
-        # Entrada vertical com leve overshoot visual.
-        text_y = "760-50*exp(-4*t)"
-        text_alpha = f"if(lt(t,0.18),0,min((t-0.18)/0.38,1))"
+        text_x = "104+34*exp(-4*t)"
+        text_y = 895 if index == 1 else (865 if index == 2 else 835)
+        text_alpha = "if(lt(t,0.08),0,min((t-0.08)/0.30,1))"
+
         filters.append(
             drawtext_filter(
                 phrase_file,
                 fontfile=FONT_BOLD,
-                fontsize=78,
+                fontsize=70,
                 fontcolor=WHITE,
-                x="(w-text_w)/2",
-                y=text_y,
-                line_spacing=18,
+                x=text_x,
+                y=str(text_y),
+                line_spacing=15,
                 alpha=text_alpha,
                 borderw=1,
-                bordercolor="black@0.16",
+                bordercolor="black@0.20",
             )
         )
-        # assinatura visual mínima, sem criar nova mensagem editorial
+
+        filters.append(
+            f"drawbox=x=104:y={text_y-42}:w='190+380*min(t/{dur},1)':h=7:color={ACCENT}@0.88:t=fill"
+        )
+
         accent_word = write_text(f"scene_{index}_accent", "UGI")
         filters.append(
             drawtext_filter(
                 accent_word,
                 fontfile=FONT_BOLD,
-                fontsize=34,
+                fontsize=30,
                 fontcolor=ACCENT,
-                x="96",
+                x="104",
                 y="1585",
-                alpha=f"if(lt(t,0.55),0,min((t-0.55)/0.28,1))",
+                alpha="if(lt(t,0.42),0,min((t-0.42)/0.26,1))",
             )
         )
     else:
-        # Fechamento: título completo menor + CTA forte.
-        title_full = write_text("scene_4_title_full", wrap_for_reel(TITLE, 28))
+        title_full = write_text("scene_4_title_full", wrap_for_reel(TITLE, 30))
         filters.append(
             drawtext_filter(
                 title_full,
                 fontfile=FONT_BOLD,
-                fontsize=62,
+                fontsize=56,
                 fontcolor=WHITE,
-                x="(w-text_w)/2",
-                y="610",
-                line_spacing=15,
-                alpha=f"min(t/0.42,1)",
+                x="104",
+                y="570",
+                line_spacing=14,
+                alpha="min(t/0.34,1)",
             )
         )
 
-        # CTA em bloco premium
         filters.append(
-            f"drawbox=x=150:y=1150:w={WIDTH-300}:h=154:color={ACCENT}@0.92:t=fill"
+            f"drawbox=x=104:y=1125:w={WIDTH-208}:h=168:color={PANEL_2}@0.92:t=fill"
+        )
+        filters.append(
+            f"drawbox=x=104:y=1125:w=12:h=168:color={ACCENT}@0.98:t=fill"
         )
         filters.append(
             drawtext_filter(
                 cta_file,
                 fontfile=FONT_BOLD,
-                fontsize=58,
-                fontcolor=BG,
-                x="(w-text_w)/2",
-                y="1192",
-                alpha=f"if(lt(t,0.28),0,min((t-0.28)/0.32,1))",
+                fontsize=54,
+                fontcolor=WHITE,
+                x="148",
+                y="1172",
+                alpha="if(lt(t,0.18),0,min((t-0.18)/0.30,1))",
             )
         )
         filters.append(
             drawtext_filter(
                 render_file,
                 fontfile=FONT_REGULAR,
-                fontsize=18,
+                fontsize=16,
                 fontcolor=MUTED,
-                x="96",
-                y="1642",
-                alpha="0.38",
+                x="104",
+                y="1644",
+                alpha="0.26",
             )
         )
 
-    # Fade integral de cena.
-    out_start = max(0.05, dur - 0.22)
-    filters.append(f"fade=t=in:st=0:d=0.18")
-    filters.append(f"fade=t=out:st={out_start}:d=0.22")
+    out_start = max(0.05, dur - 0.14)
+    filters.append("fade=t=in:st=0:d=0.10")
+    filters.append(f"fade=t=out:st={out_start}:d=0.14")
 
     vf = ",".join(filters)
 
@@ -351,7 +399,7 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
             "-f",
             "lavfi",
             "-i",
-            f"color=c={BG}:s={WIDTH}x{HEIGHT}:r={FPS}:d={dur}",
+            f"color=c={DEEP}:s={WIDTH}x{HEIGHT}:r={FPS}:d={dur}",
             "-vf",
             vf,
             "-an",
@@ -360,7 +408,7 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
             "-preset",
             "medium",
             "-crf",
-            "20",
+            "19",
             "-pix_fmt",
             "yuv420p",
             "-r",
@@ -370,6 +418,7 @@ def render_scene(index: int, phrase: str, dur: float, output: Path, closing: boo
             str(output),
         ]
     )
+
 
 
 
@@ -490,10 +539,10 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
         # 1) sidechain para abaixar a música;
         # 2) mix final audível.
         # O asplit evita o erro "Stream specifier 'voice' matches no streams".
-        "[1:a]adelay=350|350,volume=1.08,asplit=2[voice_sc][voice_mix];"
-        "[2:a]volume=0.95[music];"
+        "[1:a]adelay=280|280,volume=1.12,asplit=2[voice_sc][voice_mix];"
+        "[2:a]volume=0.82[music];"
         "[music][voice_sc]sidechaincompress="
-        "threshold=0.018:ratio=8:attack=18:release=280:makeup=1[ducked];"
+        "threshold=0.016:ratio=9:attack=14:release=240:makeup=1[ducked];"
         "[ducked][voice_mix]amix=inputs=2:duration=longest:dropout_transition=0,"
         "loudnorm=I=-14:TP=-1.2:LRA=6[aout]"
     )
@@ -541,7 +590,7 @@ def concat_and_finalize(scene_files: list[Path]) -> None:
 
 def validate_output() -> None:
     if not OUTPUT.exists() or OUTPUT.stat().st_size < 10_000:
-        raise RuntimeError("R33 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
+        raise RuntimeError("R37.3 não produziu um MP4 válido ou o arquivo ficou pequeno demais.")
 
     signature = OUTPUT.read_bytes()[:12]
     if len(signature) < 12 or signature[4:8] != b"ftyp":
@@ -564,7 +613,7 @@ def validate_output() -> None:
         capture_output=True,
         text=True,
     )
-    print("===== R32 VALIDATION =====")
+    print("===== R37.3 VALIDATION =====")
     print(probe.stdout.strip())
     print(f"TITLE={TITLE}")
     print(f"CTA={CTA}")
@@ -585,7 +634,7 @@ def main() -> int:
     chunks = balanced_chunks(TITLE, 3)
     durations = scene_durations(DURATION)
 
-    print("===== UGI REEL RENDERER R33 PRODUCTION =====")
+    print("===== UGI REEL RENDERER R37.3 CREATIVE PRODUCTION =====")
     print(f"Title: {TITLE}")
     print(f"Duration: {DURATION}s")
     print(f"Render ID: {RENDER_ID}")
@@ -609,7 +658,7 @@ def main() -> int:
 
     concat_and_finalize(scene_files)
     validate_output()
-    print("RENDER_SUCCESS_R32")
+    print("RENDER_SUCCESS_R37_3")
     return 0
 
 
@@ -620,6 +669,6 @@ if __name__ == "__main__":
         print(f"FFMPEG_ERROR: returncode={exc.returncode}", file=sys.stderr)
         raise
     except Exception as exc:
-        print(f"R32_ERROR: {exc}", file=sys.stderr)
+        print(f"R37_3_ERROR: {exc}", file=sys.stderr)
         raise
 
