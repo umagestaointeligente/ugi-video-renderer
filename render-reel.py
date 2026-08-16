@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.7 — MUSIC INTELLIGENCE ENGINE + PROFESSIONAL MIX
+UGI Reel Renderer R43.7.1 — MUSIC INTELLIGENCE ENGINE + BALANCED VOICE/MUSIC DUCKING
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -978,7 +978,7 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
         }
 
     # R43.7:
-    # trilha mais presente nos intervalos, mas recua suavemente durante a voz.
+    # trilha permanece perceptível durante a locução, recuando apenas o necessário para preservar a voz.
     graph = (
         "[1:a]volume=1.10,asplit=2[vsc][vmix];"
         f"{music_stream}"
@@ -990,7 +990,7 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
         "afade=t=in:st=0:d=0.45,"
         f"afade=t=out:st={max(0.1, duration - 0.8)}:d=0.8[music];"
         "[music][vsc]sidechaincompress="
-        "threshold=0.025:ratio=6:attack=12:release=320:makeup=1.15[ducked];"
+        "threshold=0.040:ratio=2.8:attack=18:release=420:makeup=1.10[ducked];"
         "[ducked][vmix]amix=inputs=2:duration=longest:dropout_transition=0,"
         "loudnorm=I=-14:TP=-1.2:LRA=6[aout]"
     )
@@ -1029,8 +1029,8 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
         "music_library_candidates": selection.get("library_candidates", []),
         "music_level": music_level,
         "ducking": True,
-        "ducking_threshold": 0.025,
-        "ducking_ratio": 6,
+        "ducking_threshold": 0.040,
+        "ducking_ratio": 2.8,
         "fade_in_seconds": 0.45,
         "fade_out_seconds": 0.8,
     }
@@ -1224,7 +1224,7 @@ def main() -> int:
     )
 
     manifest = {
-        "version": "R43_7_MUSIC_INTELLIGENCE_ENGINE",
+        "version": "R43_7_1_BALANCED_VOICE_MUSIC_DUCKING",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -1258,8 +1258,8 @@ def main() -> int:
             for key, value in select_music_track().items()
         },
         "architecture_note":
-            "R43.7 preserves the R43.6 audiovisual pipeline and adds contextual music-family selection, "
-            "library rotation, optional anti-repeat history and professional voice-priority ducking.",
+            "R43.7.1 preserves the complete R43.7 Music Intelligence Engine and changes only the ducking curve, "
+            "keeping background music perceptible during narration while preserving voice priority.",
     }
 
     (OUTPUT_DIR / "r42-platform-manifest.json").write_text(
@@ -1268,7 +1268,7 @@ def main() -> int:
     )
 
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
-    print("RENDER_SUCCESS_R43_7")
+    print("RENDER_SUCCESS_R43_7_1")
     return 0
 
 
