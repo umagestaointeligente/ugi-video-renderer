@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R42.1 — MULTI-PLATFORM SEMANTIC VIDEO ENGINE — FINAL POLISH
+UGI Reel Renderer R43.4 — MULTI-PLATFORM SEMANTIC VIDEO ENGINE — CLEAN OUTPUT
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -482,10 +482,6 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         pdir / f"{item['index']}-brand.txt",
         "UMA GESTÃO INTELIGENTE",
     )
-    number = write_text(
-        pdir / f"{item['index']}-number.txt",
-        f"0{item['index']} / 06",
-    )
     cta_file = write_text(
         pdir / f"{item['index']}-cta.txt",
         profile["primary_cta"],
@@ -522,7 +518,9 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         visual = []
         media_kind = "fallback"
 
-    # R42.1: mantém o painel R42 homologado; refina apenas hierarquia, legibilidade e CTA.
+    # R43.4: clean output.
+    # O scene index continua existindo internamente para timeline, logs e storyboard,
+    # mas nunca é renderizado no vídeo público.
     panel_y = int(profile["panel_y"])
     panel_h = int(profile["panel_h"])
     overlay_y = int(profile["overlay_y"])
@@ -539,7 +537,6 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         "drawbox=x=0:y=0:w=iw:h=ih:color=black@0.10:t=fill",
         f"drawbox=x=68:y={panel_y}:w=944:h={panel_h}:color={PANEL}@0.62:t=fill",
         f"drawbox=x=68:y={panel_y}:w=8:h={panel_h}:color={ACCENT}@0.96:t=fill",
-        drawtext(number, FONT_BOLD, 24, MUTED, "92", "112", "0.84"),
         drawtext(brand, FONT_BOLD, 26, WHITE, "w-text_w-92", "112", "0.90"),
         drawtext(
             overlay, FONT_BOLD, overlay_size, WHITE, "106", str(overlay_y),
@@ -871,6 +868,8 @@ def main() -> int:
         "primary_delivery": "instagram",
         "compatibility_output": "output/ugi-reel.mp4",
         "platform_results": results,
+        "public_overlay_policy": "scene_index_hidden",
+        "scene_index_internal_only": True,
         "architecture_note":
             "R42 já gera três masters específicos. O Worker atual ainda recebe apenas o MP4 primário; "
             "R43/bridge deverá registrar os três assets separadamente na Central.",
