@@ -1,48 +1,53 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R38 — CREATIVE VIDEO ENGINE / PHASE 1
-========================================================
-Baseado no R37.3 validado.
+UGI Reel Renderer R39 — CREATIVE COMMERCIAL ENGINE
+===================================================
+Evolução direta do R38.
 
-Objetivos do R38:
-- preservar a interface atual do workflow: VIDEO_TITLE, VIDEO_DURATION, VIDEO_RENDER_ID;
-- abandonar timeline fixa por chunks;
-- usar storyboard por cenas com narração, texto, prompt visual e timing;
-- sintetizar a voz CENA A CENA com Kokoro PT-BR;
-- calcular a duração visual a partir da duração REAL da fala;
-- manter texto e fala na mesma cena;
-- aceitar mídia humana por cena em assets/scene-N.mp4|jpg|png;
-- animar imagens estáticas com movimento de câmera;
-- usar fallback procedural quando a mídia humana ainda não estiver disponível;
-- preservar FFmpeg, Kokoro, H.264/AAC, GitHub Actions, R2 e Central de Aprovação.
+Objetivos do R39:
+- preservar VIDEO_TITLE, VIDEO_DURATION, VIDEO_RENDER_ID, VIDEO_CTA;
+- produzir narrativa comercial: dor -> tensão -> transformação -> desejo -> CTA;
+- manter voz PT-BR Kokoro;
+- sincronizar fala, cena e texto por timeline real;
+- usar mídia humana real por cena quando disponível;
+- aceitar mídia por arquivo local OU URL remota;
+- evitar transcrição literal: texto visual curto, grande e orientado a impacto;
+- aplicar QA comercial: duração, contraste, presença de mídia humana e CTA;
+- preservar GitHub Actions -> FFmpeg -> Worker -> R2 -> Central de Aprovação.
 
-Saída:
-    output/ugi-reel.mp4
-    output/storyboard.json
+Entradas opcionais:
+- VIDEO_STORYBOARD_JSON
+- VIDEO_SCENE_MEDIA_JSON
+- VIDEO_MEDIA_MODE = pilot | production
+- VIDEO_ASSET_DIR
 
-Observação:
-O R38 já está preparado para pessoas/situações reais. Quando arquivos de mídia
-forem fornecidos em assets/, eles entram automaticamente sem alterar o renderer.
+Saídas:
+- output/ugi-reel.mp4
+- output/storyboard.json
+- output/qa.json
 """
 
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import shutil
 import subprocess
 import sys
 import textwrap
-import wave
 from pathlib import Path
+from urllib.parse import urlparse
 
 WIDTH = 1080
 HEIGHT = 1920
 FPS = 30
+
 OUTPUT = Path("output/ugi-reel.mp4")
-WORK = Path("output/r38_work")
+WORK = Path("output/r39_work")
 STORYBOARD_OUT = Path("output/storyboard.json")
+QA_OUT = Path("output/qa.json")
 ASSET_DIR = Path(os.getenv("VIDEO_ASSET_DIR") or "assets")
 
 TITLE = (
@@ -50,15 +55,15 @@ TITLE = (
     or "Se tudo precisa passar por você, sua empresa não está crescendo. Está ficando dependente."
 ).strip()
 CTA = (os.getenv("VIDEO_CTA") or "Conheça a UGI").strip()
-RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r38").strip()
+RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r39").strip()
+MEDIA_MODE = (os.getenv("VIDEO_MEDIA_MODE") or "pilot").strip().lower()
 
 try:
-    REQUESTED_DURATION = int(os.getenv("VIDEO_DURATION") or "28")
+    REQUESTED_DURATION = int(os.getenv("VIDEO_DURATION") or "30")
 except ValueError:
-    REQUESTED_DURATION = 28
+    REQUESTED_DURATION = 30
 
-# R38: faixa editorial inicial para Reels/TikTok/Shorts.
-REQUESTED_DURATION = max(15, min(60, REQUESTED_DURATION))
+REQUESTED_DURATION = max(20, min(60, REQUESTED_DURATION))
 
 FONT_REGULAR_CANDIDATES = [
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
@@ -73,9 +78,11 @@ BG = "0x07101A"
 PANEL = "0x101820"
 PANEL_2 = "0x162330"
 WHITE = "0xF4F7F9"
-MUTED = "0xAAB6C2"
+MUTED = "0xB8C4CF"
 ACCENT = "0x35D0BA"
 ACCENT_2 = "0x66A6FF"
+WARM = "0xD7B56D"
+RED = "0xE76F73"
 
 
 def first_existing(paths: list[str]) -> str:
@@ -95,21 +102,20 @@ def run(cmd: list[str]) -> None:
 
 
 def clean_text(value: str) -> str:
-    value = re.sub(r"\s+", " ", str(value or "")).strip()
-    return value
+    return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
-def esc_path(p: Path) -> str:
-    return p.as_posix().replace("'", r"\'")
+def esc_path(path: Path) -> str:
+    return path.as_posix().replace("'", r"\'")
 
 
 def write_text(name: str, content: str) -> Path:
-    p = WORK / f"{name}.txt"
-    p.write_text(content, encoding="utf-8")
-    return p
+    path = WORK / f"{name}.txt"
+    path.write_text(content, encoding="utf-8")
+    return path
 
 
-def wrap_for_reel(text: str, width: int = 22) -> str:
+def wrap_text(text: str, width: int = 20) -> str:
     return "\n".join(
         textwrap.wrap(
             clean_text(text),
@@ -122,50 +128,81 @@ def wrap_for_reel(text: str, width: int = 22) -> str:
 
 def default_storyboard() -> list[dict]:
     """
-    Piloto R38 sobre centralização.
-    Depois, VIDEO_STORYBOARD_JSON poderá ser enviado pelo Worker sem alterar
-    este renderer.
+    Storyboard comercial padrão.
+    Os overlays são curtos por design: não repetem toda a locução.
     """
     return [
         {
             "id": "hook",
             "role": "hook",
-            "narration": "Se tudo precisa passar por você, sua empresa pode estar crescendo em tamanho, mas ficando dependente.",
-            "on_screen_text": "Tudo precisa passar por você?",
-            "visual_prompt": "Gestor em escritório moderno sendo interrompido por várias pessoas ao mesmo tempo, solicitações chegando, expressão de sobrecarga, ambiente corporativo realista, movimento natural de equipe.",
-            "min_duration": 4.8,
+            "emotion": "pressure",
+            "narration":
+                "Se tudo precisa passar por você, talvez sua empresa não esteja crescendo de verdade. Talvez esteja ficando dependente.",
+            "overlay": "TUDO DEPENDE DE VOCÊ?",
+            "support": "Isso parece controle. Mas pode ser gargalo.",
+            "visual_prompt":
+                "Gestor em escritório moderno sendo interrompido por várias pessoas, notificações e solicitações simultâneas, expressão de sobrecarga, equipe aguardando decisões, movimento corporativo realista.",
+            "min_duration": 5.0,
         },
         {
-            "id": "pain",
+            "id": "tension",
             "role": "pain",
-            "narration": "Quando cada decisão para no gestor, a equipe espera, o trabalho desacelera e o retrabalho aumenta.",
-            "on_screen_text": "A equipe espera. O trabalho para.",
-            "visual_prompt": "Equipe em reunião aguardando aprovação do líder, pessoas olhando para o gestor, notebook e documentos sobre a mesa, situação real de dependência decisória.",
-            "min_duration": 5.2,
+            "emotion": "friction",
+            "narration":
+                "Quando cada decisão para no gestor, a equipe espera, o trabalho desacelera e o retrabalho aumenta.",
+            "overlay": "ESPERA • RETRABALHO • LENTIDÃO",
+            "support": "O problema não é trabalhar mais. É decidir melhor.",
+            "visual_prompt":
+                "Equipe em reunião olhando para o líder aguardando aprovação, documentos e notebooks abertos, colaboradores interrompendo o gestor, sensação de fila e dependência.",
+            "min_duration": 5.0,
         },
         {
             "id": "consequence",
             "role": "consequence",
-            "narration": "E quanto mais a operação depende de uma única pessoa, menos autonomia existe para crescer com velocidade.",
-            "on_screen_text": "Centralização limita o crescimento.",
-            "visual_prompt": "Gestor cercado por mensagens e tarefas enquanto colaboradores aguardam, ambiente empresarial movimentado, sensação de gargalo operacional.",
-            "min_duration": 5.2,
+            "emotion": "realization",
+            "narration":
+                "Centralizar pode funcionar no começo. Mas quando a empresa cresce, o que parecia controle vira limite.",
+            "overlay": "O CONTROLE VIROU GARGALO.",
+            "support": "Crescimento sem autonomia aumenta a dependência.",
+            "visual_prompt":
+                "Gestor sobrecarregado diante de quadro de tarefas e mensagens enquanto a equipe aguarda, ambiente empresarial movimentado, sensação de gargalo operacional.",
+            "min_duration": 5.0,
         },
         {
-            "id": "solution",
+            "id": "transformation",
             "role": "solution",
-            "narration": "Gestão inteligente distribui responsabilidades, cria critérios claros e permite que decisões aconteçam no nível certo.",
-            "on_screen_text": "Autonomia com critérios.",
-            "visual_prompt": "Líder alinhando responsabilidades com equipe em quadro de planejamento, colaboradores participando, ambiente profissional, sensação de autonomia e clareza.",
-            "min_duration": 5.5,
+            "emotion": "relief",
+            "narration":
+                "Gestão inteligente distribui responsabilidades, cria critérios claros e permite que decisões aconteçam no nível certo.",
+            "overlay": "AUTONOMIA COM CRITÉRIOS.",
+            "support": "Menos dependência. Mais velocidade e clareza.",
+            "visual_prompt":
+                "Líder alinhando prioridades com equipe em quadro de planejamento, colaboradores tomando decisões, ambiente profissional, autonomia, confiança e clareza.",
+            "min_duration": 5.4,
+        },
+        {
+            "id": "desire",
+            "role": "desire",
+            "emotion": "aspiration",
+            "narration":
+                "Sua empresa pode crescer sem depender de você para tudo. Você deixa de ser o gargalo e volta a liderar o crescimento.",
+            "overlay": "LIDERE O CRESCIMENTO.",
+            "support": "A operação funciona. Você ganha visão e controle.",
+            "visual_prompt":
+                "Equipe trabalhando com autonomia enquanto o gestor acompanha indicadores e conversa estrategicamente com o time, clima de confiança e crescimento.",
+            "min_duration": 5.2,
         },
         {
             "id": "cta",
             "role": "cta",
-            "narration": "Sua empresa precisa crescer sem depender de você para tudo. Conheça a UGI.",
-            "on_screen_text": "Cresça sem centralizar tudo.",
-            "visual_prompt": "Equipe confiante trabalhando com autonomia, líder acompanhando de forma estratégica, escritório contemporâneo, clima profissional positivo.",
-            "min_duration": 4.8,
+            "emotion": "confidence",
+            "narration":
+                "Conheça a UGI e transforme gestão em execução.",
+            "overlay": "CONHEÇA A UGI",
+            "support": "Uma Gestão Inteligente.",
+            "visual_prompt":
+                "Equipe confiante em ambiente corporativo contemporâneo, líder em posição estratégica, composição limpa para encerramento de marca.",
+            "min_duration": 3.4,
             "cta": CTA,
         },
     ]
@@ -173,38 +210,75 @@ def default_storyboard() -> list[dict]:
 
 def load_storyboard() -> list[dict]:
     raw = os.getenv("VIDEO_STORYBOARD_JSON", "").strip()
-    if not raw:
-        scenes = default_storyboard()
-    else:
+    if raw:
         try:
-            data = json.loads(raw)
+            parsed = json.loads(raw)
         except json.JSONDecodeError as exc:
             raise RuntimeError(f"VIDEO_STORYBOARD_JSON inválido: {exc}") from exc
-        scenes = data.get("scenes") if isinstance(data, dict) else data
+        scenes = parsed.get("scenes") if isinstance(parsed, dict) else parsed
+    else:
+        scenes = default_storyboard()
 
-    if not isinstance(scenes, list) or not scenes:
-        raise RuntimeError("Storyboard precisa conter ao menos uma cena.")
+    if not isinstance(scenes, list) or len(scenes) < 3:
+        raise RuntimeError("Storyboard inválido: mínimo de 3 cenas.")
 
-    normalized = []
+    out = []
     for idx, scene in enumerate(scenes, start=1):
         if not isinstance(scene, dict):
             raise RuntimeError(f"Cena {idx} inválida.")
+
         narration = clean_text(scene.get("narration"))
+        overlay = clean_text(scene.get("overlay") or scene.get("on_screen_text"))
         if not narration:
             raise RuntimeError(f"Cena {idx} sem narration.")
-        normalized.append(
+        if not overlay:
+            raise RuntimeError(f"Cena {idx} sem overlay.")
+
+        out.append(
             {
                 "index": idx,
                 "id": clean_text(scene.get("id")) or f"scene-{idx}",
                 "role": clean_text(scene.get("role")) or "content",
+                "emotion": clean_text(scene.get("emotion")) or "neutral",
                 "narration": narration,
-                "on_screen_text": clean_text(scene.get("on_screen_text")),
+                "overlay": overlay,
+                "support": clean_text(scene.get("support")),
                 "visual_prompt": clean_text(scene.get("visual_prompt")),
-                "min_duration": max(2.2, float(scene.get("min_duration") or 3.5)),
+                "min_duration": max(2.6, float(scene.get("min_duration") or 4.0)),
                 "cta": clean_text(scene.get("cta")),
             }
         )
-    return normalized
+    return out
+
+
+def load_scene_media_config() -> dict[int, dict]:
+    """
+    Exemplo:
+    {
+      "1":{"url":"https://.../clip.mp4","type":"video"},
+      "2":{"path":"assets/scene-2.jpg","type":"image"}
+    }
+    """
+    raw = os.getenv("VIDEO_SCENE_MEDIA_JSON", "").strip()
+    if not raw:
+        return {}
+
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"VIDEO_SCENE_MEDIA_JSON inválido: {exc}") from exc
+
+    result = {}
+    for key, value in (parsed or {}).items():
+        try:
+            idx = int(key)
+        except (TypeError, ValueError):
+            continue
+        if isinstance(value, str):
+            value = {"url": value}
+        if isinstance(value, dict):
+            result[idx] = value
+    return result
 
 
 def ffprobe_duration(path: Path) -> float:
@@ -228,20 +302,17 @@ def synthesize_scene_voice(scene: dict) -> Path:
         import soundfile as sf
         from kokoro import KPipeline
     except Exception as exc:
-        raise RuntimeError(
-            "Kokoro TTS não está instalado. Use o workflow Kokoro atual."
-        ) from exc
+        raise RuntimeError("Kokoro TTS não instalado no workflow.") from exc
 
-    raw_wav = WORK / f"voice-{scene['index']}-raw.wav"
-    out_wav = WORK / f"voice-{scene['index']}.wav"
+    raw_path = WORK / f"voice-{scene['index']}-raw.wav"
+    out_path = WORK / f"voice-{scene['index']}.wav"
 
     pipeline = KPipeline(lang_code="p")
     chunks = []
-
     for result in pipeline(
         scene["narration"],
         voice="pf_dora",
-        speed=1.03,
+        speed=1.04,
         split_pattern=r"\n+",
     ):
         audio = getattr(result, "audio", None)
@@ -249,15 +320,19 @@ def synthesize_scene_voice(scene: dict) -> Path:
             chunks.append(np.asarray(audio, dtype=np.float32))
 
     if not chunks:
-        raise RuntimeError(f"Kokoro não retornou áudio para a cena {scene['index']}.")
+        raise RuntimeError(f"Kokoro sem áudio na cena {scene['index']}.")
 
-    audio = np.concatenate(chunks)
-    sf.write(str(raw_wav), audio, 24000, subtype="PCM_16")
+    sf.write(
+        str(raw_path),
+        np.concatenate(chunks),
+        24000,
+        subtype="PCM_16",
+    )
 
     run(
         [
             "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
-            "-i", str(raw_wav),
+            "-i", str(raw_path),
             "-af",
             (
                 "highpass=f=80,"
@@ -267,26 +342,121 @@ def synthesize_scene_voice(scene: dict) -> Path:
             ),
             "-ar", "48000",
             "-ac", "2",
-            str(out_wav),
+            str(out_path),
         ]
     )
+    return out_path
 
-    return out_wav
+
+def download_media(url: str, index: int) -> Path:
+    parsed = urlparse(url)
+    suffix = Path(parsed.path).suffix.lower()
+    if suffix not in {".mp4", ".mov", ".jpg", ".jpeg", ".png", ".webp"}:
+        suffix = ".mp4"
+
+    out = WORK / f"remote-scene-{index}{suffix}"
+    run(
+        [
+            "curl",
+            "-L",
+            "--fail",
+            "--silent",
+            "--show-error",
+            "--max-time",
+            "45",
+            "-o",
+            str(out),
+            url,
+        ]
+    )
+    if not out.exists() or out.stat().st_size < 1000:
+        raise RuntimeError(f"Mídia remota inválida na cena {index}.")
+    return out
 
 
-def media_for_scene(index: int) -> tuple[str, Path | None]:
-    candidates = [
-        ("video", ASSET_DIR / f"scene-{index}.mp4"),
-        ("video", ASSET_DIR / f"scene-{index}.mov"),
-        ("image", ASSET_DIR / f"scene-{index}.jpg"),
-        ("image", ASSET_DIR / f"scene-{index}.jpeg"),
-        ("image", ASSET_DIR / f"scene-{index}.png"),
-        ("image", ASSET_DIR / f"scene-{index}.webp"),
+def resolve_scene_media(index: int, config: dict[int, dict]) -> tuple[str, Path | None, str]:
+    entry = config.get(index) or {}
+
+    # 1) configuração explícita
+    path_value = clean_text(entry.get("path"))
+    url_value = clean_text(entry.get("url"))
+    declared = clean_text(entry.get("type")).lower()
+
+    path = None
+    source = "none"
+
+    if path_value:
+        candidate = Path(path_value)
+        if candidate.exists():
+            path = candidate
+            source = "configured_path"
+    elif url_value:
+        try:
+            path = download_media(url_value, index)
+            source = "remote_url"
+        except Exception as exc:
+            print(f"MEDIA_DOWNLOAD_WARNING scene={index}: {exc}")
+
+    # 2) convenção local
+    if path is None:
+        candidates = [
+            ASSET_DIR / f"scene-{index}.mp4",
+            ASSET_DIR / f"scene-{index}.mov",
+            ASSET_DIR / f"scene-{index}.jpg",
+            ASSET_DIR / f"scene-{index}.jpeg",
+            ASSET_DIR / f"scene-{index}.png",
+            ASSET_DIR / f"scene-{index}.webp",
+        ]
+        for candidate in candidates:
+            if candidate.exists() and candidate.stat().st_size > 0:
+                path = candidate
+                source = "asset_dir"
+                break
+
+    if path is None:
+        return "fallback", None, "fallback"
+
+    ext = path.suffix.lower()
+    if declared in {"video", "image"}:
+        kind = declared
+    elif ext in {".mp4", ".mov"}:
+        kind = "video"
+    else:
+        kind = "image"
+
+    return kind, path, source
+
+
+def fit_scene_durations(scenes: list[dict], voice_durations: list[float]) -> list[float]:
+    """
+    Não corta locução. A fala governa a duração.
+    O alvo solicitado serve como referência editorial, não como guilhotina.
+    """
+    durations = [
+        max(scene["min_duration"], voice + 0.42)
+        for scene, voice in zip(scenes, voice_durations)
     ]
-    for kind, path in candidates:
-        if path.exists() and path.stat().st_size > 0:
-            return kind, path
-    return "fallback", None
+
+    total = sum(durations)
+
+    # Se houver folga até o alvo, distribui principalmente no hook/CTA/desejo.
+    if total < REQUESTED_DURATION:
+        extra = REQUESTED_DURATION - total
+        weights = []
+        for scene in scenes:
+            role = scene["role"]
+            if role in {"hook", "desire", "cta"}:
+                weights.append(1.25)
+            else:
+                weights.append(0.9)
+
+        weight_sum = sum(weights)
+        durations = [
+            d + extra * weights[i] / weight_sum
+            for i, d in enumerate(durations)
+        ]
+
+    return [round(d, 3) for d in durations]
 
 
 def drawtext_filter(
@@ -298,7 +468,7 @@ def drawtext_filter(
     x: str,
     y: str,
     alpha: str = "1",
-    line_spacing: int = 14,
+    line_spacing: int = 12,
     borderw: int = 0,
     bordercolor: str = "black@0.0",
 ) -> str:
@@ -313,86 +483,111 @@ def drawtext_filter(
     )
 
 
-def base_overlay_filters(scene: dict, dur: float, media_kind: str) -> list[str]:
-    text_file = write_text(
-        f"scene-{scene['index']}-text",
-        wrap_for_reel(scene["on_screen_text"], 23)
+def role_accent(scene: dict) -> str:
+    if scene["role"] in {"hook", "pain"}:
+        return RED
+    if scene["role"] in {"solution", "desire", "cta"}:
+        return ACCENT
+    return ACCENT_2
+
+
+def add_text_layers(filters: list[str], scene: dict, dur: float) -> None:
+    accent = role_accent(scene)
+
+    overlay_file = write_text(
+        f"scene-{scene['index']}-overlay",
+        wrap_text(scene["overlay"], 18),
+    )
+    support_file = write_text(
+        f"scene-{scene['index']}-support",
+        wrap_text(scene["support"], 38),
     )
     brand_file = write_text(
         f"scene-{scene['index']}-brand",
-        "UMA GESTÃO INTELIGENTE"
-    )
-    scene_file = write_text(
-        f"scene-{scene['index']}-number",
-        f"{scene['index']:02d}"
+        "UMA GESTÃO INTELIGENTE",
     )
 
-    filters = [
-        # Legibilidade: gradiente simulado com placas translúcidas.
-        f"drawbox=x=0:y=0:w={WIDTH}:h=270:color=black@0.32:t=fill",
-        f"drawbox=x=0:y=1210:w={WIDTH}:h=710:color=black@0.48:t=fill",
-        f"drawbox=x=70:y=1350:w={WIDTH-140}:h=330:color={PANEL}@0.70:t=fill",
-        f"drawbox=x=70:y=1350:w=9:h=330:color={ACCENT}@0.96:t=fill",
-        "vignette=PI/5.8",
-    ]
-
-    filters.append(
-        drawtext_filter(
-            scene_file,
-            fontfile=FONT_BOLD,
-            fontsize=28,
-            fontcolor=MUTED,
-            x="86",
-            y="104",
-            alpha="0.88",
-        )
+    # Top/Bottom readability shields
+    filters.extend(
+        [
+            f"drawbox=x=0:y=0:w={WIDTH}:h=260:color=black@0.30:t=fill",
+            f"drawbox=x=0:y=1190:w={WIDTH}:h=730:color=black@0.50:t=fill",
+            f"drawbox=x=72:y=1310:w={WIDTH-144}:h=405:color={PANEL}@0.66:t=fill",
+            f"drawbox=x=72:y=1310:w=10:h=405:color={accent}@0.98:t=fill",
+        ]
     )
+
     filters.append(
         drawtext_filter(
             brand_file,
             fontfile=FONT_BOLD,
-            fontsize=25,
+            fontsize=24,
             fontcolor=WHITE,
-            x="w-text_w-86",
-            y="104",
-            alpha="0.92",
+            x="w-text_w-82",
+            y="92",
+            alpha="0.94",
         )
     )
 
-    if scene["on_screen_text"]:
+    # Overlay principal: grande, curto, sempre legível.
+    overlay_size = 66
+    if len(scene["overlay"]) > 34:
+        overlay_size = 58
+    if len(scene["overlay"]) > 52:
+        overlay_size = 50
+
+    filters.append(
+        drawtext_filter(
+            overlay_file,
+            fontfile=FONT_BOLD,
+            fontsize=overlay_size,
+            fontcolor=WHITE,
+            x="108",
+            y="1370",
+            line_spacing=10,
+            alpha="if(lt(t,0.10),0,min((t-0.10)/0.24,1))",
+            borderw=1,
+            bordercolor="black@0.28",
+        )
+    )
+
+    if scene["support"]:
         filters.append(
             drawtext_filter(
-                text_file,
-                fontfile=FONT_BOLD,
-                fontsize=64 if len(scene["on_screen_text"]) < 38 else 55,
-                fontcolor=WHITE,
+                support_file,
+                fontfile=FONT_REGULAR,
+                fontsize=31,
+                fontcolor=MUTED,
                 x="108",
-                y="1405",
-                line_spacing=14,
-                alpha="if(lt(t,0.12),0,min((t-0.12)/0.28,1))",
-                borderw=1,
-                bordercolor="black@0.24",
+                y="1585",
+                line_spacing=9,
+                alpha="if(lt(t,0.35),0,min((t-0.35)/0.28,1))",
             )
         )
 
-    # Barra de progresso da cena.
+    # Scene progress
     filters.append(
-        f"drawbox=x=86:y=1772:w={WIDTH-172}:h=4:color={WHITE}@0.18:t=fill"
+        f"drawbox=x=84:y=1778:w={WIDTH-168}:h=4:color={WHITE}@0.18:t=fill"
     )
     filters.append(
-        f"drawbox=x=86:y=1772:w='({WIDTH-172})*min(t/{dur},1)':h=4:color={ACCENT}@0.96:t=fill"
+        f"drawbox=x=84:y=1778:w='({WIDTH-168})*min(t/{dur},1)':h=4:color={accent}@0.96:t=fill"
     )
 
-    return filters
 
+def render_scene_visual(
+    scene: dict,
+    dur: float,
+    media_config: dict[int, dict],
+    output: Path,
+) -> dict:
+    kind, media_path, media_source = resolve_scene_media(scene["index"], media_config)
+    filters = []
 
-def render_scene_visual(scene: dict, dur: float, output: Path) -> dict:
-    media_kind, media_path = media_for_scene(scene["index"])
-    filters: list[str] = []
-
-    if media_kind == "video":
-        # Movimento humano real quando há clipe disponível.
-        input_args = ["-stream_loop", "-1", "-i", str(media_path)]
+    if kind == "video":
+        input_args = [
+            "-stream_loop", "-1",
+            "-i", str(media_path),
+        ]
         filters.extend(
             [
                 f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase",
@@ -400,36 +595,48 @@ def render_scene_visual(scene: dict, dur: float, output: Path) -> dict:
                 "setsar=1",
             ]
         )
-    elif media_kind == "image":
-        # Imagem humana com movimento de câmera; não finge movimento corporal.
-        input_args = ["-loop", "1", "-framerate", str(FPS), "-i", str(media_path)]
+
+    elif kind == "image":
         frames = max(1, round(dur * FPS))
-        filters.extend(
-            [
-                f"scale=1400:-2",
-                f"zoompan=z='min(zoom+0.00075,1.085)':"
-                f"x='iw/2-(iw/zoom/2)+18*sin(on/24)':"
-                f"y='ih/2-(ih/zoom/2)+12*cos(on/28)':"
-                f"d={frames}:s={WIDTH}x{HEIGHT}:fps={FPS}",
-                "setsar=1",
-            ]
-        )
-    else:
-        # Fallback técnico. Mantém pipeline vivo, mas deve falhar QA comercial.
         input_args = [
-            "-f", "lavfi",
-            "-i", f"color=c={BG}:s={WIDTH}x{HEIGHT}:r={FPS}:d={dur}"
+            "-loop", "1",
+            "-framerate", str(FPS),
+            "-i", str(media_path),
         ]
         filters.extend(
             [
-                f"drawbox=x=70:y=300:w={WIDTH-140}:h=780:color={PANEL}@0.78:t=fill",
-                f"drawbox=x='-500+t*170':y=470:w=430:h=12:color={ACCENT}@0.55:t=fill",
-                f"drawbox=x='{WIDTH+100}-t*150':y=860:w=350:h=8:color={ACCENT_2}@0.38:t=fill",
+                "scale=1500:-2",
+                (
+                    "zoompan="
+                    "z='min(zoom+0.00075,1.09)':"
+                    "x='iw/2-(iw/zoom/2)+14*sin(on/23)':"
+                    "y='ih/2-(ih/zoom/2)+10*cos(on/27)':"
+                    f"d={frames}:s={WIDTH}x{HEIGHT}:fps={FPS}"
+                ),
+                "setsar=1",
+            ]
+        )
+
+    else:
+        # Fallback visual mais vivo que o R38, mas ainda marcado como fallback.
+        input_args = [
+            "-f", "lavfi",
+            "-i", f"color=c={BG}:s={WIDTH}x{HEIGHT}:r={FPS}:d={dur}",
+        ]
+        accent = role_accent(scene)
+        filters.extend(
+            [
+                f"drawbox=x=72:y=290:w={WIDTH-144}:h=790:color={PANEL_2}@0.88:t=fill",
+                f"drawbox=x='-600+t*210':y=430:w=560:h=14:color={accent}@0.68:t=fill",
+                f"drawbox=x='{WIDTH+180}-t*180':y=760:w=420:h=10:color={ACCENT_2}@0.42:t=fill",
+                f"drawbox=x='110+80*sin(t*1.7)':y=900:w=310:h=80:color={WHITE}@0.07:t=fill",
+                f"drawbox=x='650-70*sin(t*1.4)':y=560:w=280:h=72:color={accent}@0.10:t=fill",
                 "noise=alls=2:allf=t+u",
             ]
         )
 
-    filters.extend(base_overlay_filters(scene, dur, media_kind))
+    add_text_layers(filters, scene, dur)
+    filters.append("vignette=PI/6")
     filters.append("fade=t=in:st=0:d=0.10")
     filters.append(f"fade=t=out:st={max(0.05, dur-0.12)}:d=0.12")
 
@@ -451,79 +658,50 @@ def render_scene_visual(scene: dict, dur: float, output: Path) -> dict:
     )
 
     return {
-        "media_kind": media_kind,
+        "media_kind": kind,
         "media_path": str(media_path) if media_path else None,
+        "media_source": media_source,
     }
-
-
-def fit_scene_durations(scenes: list[dict], voice_durations: list[float]) -> list[float]:
-    """
-    Fala governa a timeline.
-    Cada cena dura no mínimo a fala + respiro e respeita min_duration.
-    Se o conjunto ficar menor que o solicitado, o tempo extra é distribuído.
-    Se ficar maior, NÃO cortamos a fala; o vídeo final pode superar o alvo.
-    """
-    durations = [
-        max(scene["min_duration"], voice_dur + 0.55)
-        for scene, voice_dur in zip(scenes, voice_durations)
-    ]
-
-    total = sum(durations)
-    if total < REQUESTED_DURATION:
-        extra = REQUESTED_DURATION - total
-        weights = [1.15, 1.0, 1.0, 1.0, 1.1][: len(durations)]
-        weight_sum = sum(weights)
-        durations = [
-            d + extra * (weights[i] / weight_sum)
-            for i, d in enumerate(durations)
-        ]
-
-    return [round(d, 3) for d in durations]
 
 
 def create_voice_timeline(
     voice_files: list[Path],
     scene_durations: list[float],
 ) -> Path:
-    """
-    Cada voz é acolchoada exatamente até a duração da cena.
-    Ao concatenar, o início de cada locução coincide com o início de sua cena.
-    """
-    padded_files = []
+    padded = []
 
-    for idx, (voice, dur) in enumerate(zip(voice_files, scene_durations), start=1):
-        padded = WORK / f"voice-{idx}-timeline.wav"
+    for idx, (voice, duration) in enumerate(zip(voice_files, scene_durations), start=1):
+        out = WORK / f"voice-{idx}-timeline.wav"
         run(
             [
                 "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
                 "-i", str(voice),
-                "-af", f"apad=whole_dur={dur}",
-                "-t", f"{dur:.3f}",
+                "-af", f"apad=whole_dur={duration}",
+                "-t", f"{duration:.3f}",
                 "-ar", "48000",
                 "-ac", "2",
-                str(padded),
+                str(out),
             ]
         )
-        padded_files.append(padded)
+        padded.append(out)
 
     concat_file = WORK / "voice-concat.txt"
     concat_file.write_text(
-        "\n".join(f"file '{p.resolve().as_posix()}'" for p in padded_files),
+        "\n".join(f"file '{p.resolve().as_posix()}'" for p in padded),
         encoding="utf-8",
     )
 
-    out = WORK / "voice-timeline.wav"
+    output = WORK / "voice-timeline.wav"
     run(
         [
             "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
-            "-f", "concat",
-            "-safe", "0",
+            "-f", "concat", "-safe", "0",
             "-i", str(concat_file),
             "-c", "copy",
-            str(out),
+            str(output),
         ]
     )
-    return out
+    return output
 
 
 def concat_visuals(scene_files: list[Path]) -> Path:
@@ -532,32 +710,28 @@ def concat_visuals(scene_files: list[Path]) -> Path:
         "\n".join(f"file '{p.resolve().as_posix()}'" for p in scene_files),
         encoding="utf-8",
     )
-    out = WORK / "joined.mp4"
+
+    output = WORK / "joined.mp4"
     run(
         [
             "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
             "-f", "concat", "-safe", "0",
             "-i", str(concat_file),
             "-c", "copy",
-            str(out),
+            str(output),
         ]
     )
-    return out
+    return output
 
 
-def finalize(
-    joined_video: Path,
-    voice_timeline: Path,
-    final_duration: float,
-) -> None:
-    # Trilha procedural discreta; depois pode ser trocada por catálogo licenciado.
-    pulse = "(0.50+0.50*sin(2*PI*1.6*t))"
+def finalize(video: Path, voice: Path, final_duration: float) -> None:
+    pulse = "(0.50+0.50*sin(2*PI*1.7*t))"
     music_expr = (
-        "0.024*sin(2*PI*110*t)"
-        "+0.018*sin(2*PI*164.81*t)"
-        "+0.014*sin(2*PI*220*t)"
-        "+0.010*" + pulse + "*sin(2*PI*329.63*t)"
-        "+0.007*" + pulse + "*sin(2*PI*440*t)"
+        "0.022*sin(2*PI*110*t)"
+        "+0.016*sin(2*PI*164.81*t)"
+        "+0.012*sin(2*PI*220*t)"
+        "+0.009*" + pulse + "*sin(2*PI*329.63*t)"
+        "+0.006*" + pulse + "*sin(2*PI*440*t)"
     )
 
     music_src = (
@@ -565,15 +739,15 @@ def finalize(
         "aformat=sample_fmts=fltp:channel_layouts=stereo,"
         "highpass=f=70,lowpass=f=7200,"
         "acompressor=threshold=-22dB:ratio=2:attack=12:release=160:makeup=2,"
-        "afade=t=in:st=0:d=0.25,"
-        f"afade=t=out:st={max(0.1, final_duration-0.7)}:d=0.7"
+        "afade=t=in:st=0:d=0.20,"
+        f"afade=t=out:st={max(0.1, final_duration-0.75)}:d=0.75"
     )
 
-    mix_filter = (
-        "[1:a]volume=1.12,asplit=2[voice_sc][voice_mix];"
-        "[2:a]volume=0.72[music];"
+    mix = (
+        "[1:a]volume=1.14,asplit=2[voice_sc][voice_mix];"
+        "[2:a]volume=0.66[music];"
         "[music][voice_sc]sidechaincompress="
-        "threshold=0.016:ratio=9:attack=14:release=240:makeup=1[ducked];"
+        "threshold=0.015:ratio=10:attack=12:release=230:makeup=1[ducked];"
         "[ducked][voice_mix]amix=inputs=2:duration=longest:dropout_transition=0,"
         "loudnorm=I=-14:TP=-1.2:LRA=6[aout]"
     )
@@ -581,11 +755,11 @@ def finalize(
     run(
         [
             "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
-            "-i", str(joined_video),
-            "-i", str(voice_timeline),
+            "-i", str(video),
+            "-i", str(voice),
             "-f", "lavfi",
             "-i", music_src,
-            "-filter_complex", mix_filter,
+            "-filter_complex", mix,
             "-map", "0:v:0",
             "-map", "[aout]",
             "-t", f"{final_duration:.3f}",
@@ -600,15 +774,56 @@ def finalize(
     )
 
 
-def validate_output(final_duration: float) -> None:
+def qa_report(scenes: list[dict], final_duration: float) -> dict:
+    human_scenes = sum(
+        1 for scene in scenes
+        if scene.get("media_kind") in {"video", "image"}
+    )
+    fallback_scenes = len(scenes) - human_scenes
+
+    issues = []
+
+    if final_duration < 20:
+        issues.append("duration_too_short_for_commercial_story")
+    if final_duration > 60:
+        issues.append("duration_above_initial_shortform_guardrail")
+
+    if not any(scene["role"] == "hook" for scene in scenes):
+        issues.append("hook_missing")
+    if not any(scene["role"] == "cta" for scene in scenes):
+        issues.append("cta_missing")
+
+    if MEDIA_MODE == "production" and human_scenes < max(3, math.ceil(len(scenes) * 0.6)):
+        issues.append("insufficient_human_media_for_production")
+
+    commercial_ready = not issues and (
+        MEDIA_MODE != "production"
+        or human_scenes >= max(3, math.ceil(len(scenes) * 0.6))
+    )
+
+    return {
+        "version": "R39",
+        "render_id": RENDER_ID,
+        "media_mode": MEDIA_MODE,
+        "scene_count": len(scenes),
+        "human_media_scenes": human_scenes,
+        "fallback_scenes": fallback_scenes,
+        "requested_duration": REQUESTED_DURATION,
+        "final_duration": round(final_duration, 3),
+        "commercial_ready": commercial_ready,
+        "issues": issues,
+    }
+
+
+def validate_output() -> None:
     if not OUTPUT.exists() or OUTPUT.stat().st_size < 10_000:
-        raise RuntimeError("R38 não produziu um MP4 válido.")
+        raise RuntimeError("R39 não produziu MP4 válido.")
 
     signature = OUTPUT.read_bytes()[:12]
     if len(signature) < 12 or signature[4:8] != b"ftyp":
         raise RuntimeError("Assinatura MP4 ftyp ausente.")
 
-    probe = subprocess.run(
+    cp = subprocess.run(
         [
             "ffprobe", "-v", "error",
             "-show_entries",
@@ -621,19 +836,16 @@ def validate_output(final_duration: float) -> None:
         capture_output=True,
         text=True,
     )
-
-    print("===== R38 VALIDATION =====")
-    print(probe.stdout.strip())
-    print(f"REQUESTED_DURATION={REQUESTED_DURATION}")
-    print(f"FINAL_DURATION={final_duration:.3f}")
-    print(f"RENDER_ID={RENDER_ID}")
-    print(f"OUTPUT={OUTPUT}")
+    print("===== R39 VALIDATION =====")
+    print(cp.stdout.strip())
     print("==========================")
 
 
 def main() -> int:
     if shutil.which("ffmpeg") is None or shutil.which("ffprobe") is None:
         raise RuntimeError("FFmpeg/ffprobe não encontrados.")
+    if shutil.which("curl") is None:
+        raise RuntimeError("curl não encontrado no runner.")
 
     if WORK.exists():
         shutil.rmtree(WORK)
@@ -641,65 +853,80 @@ def main() -> int:
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 
     scenes = load_storyboard()
+    media_config = load_scene_media_config()
 
-    print("===== UGI R38 CREATIVE VIDEO ENGINE =====")
+    print("===== UGI R39 CREATIVE COMMERCIAL ENGINE =====")
     print(f"Title: {TITLE}")
     print(f"Requested duration: {REQUESTED_DURATION}s")
     print(f"Scenes: {len(scenes)}")
-    print(f"Asset dir: {ASSET_DIR}")
-    print("=========================================")
+    print(f"Media mode: {MEDIA_MODE}")
+    print("==============================================")
 
     voice_files = []
     voice_durations = []
 
     for scene in scenes:
         voice = synthesize_scene_voice(scene)
+        duration = ffprobe_duration(voice)
+        scene["voice_duration"] = round(duration, 3)
         voice_files.append(voice)
-        voice_duration = ffprobe_duration(voice)
-        voice_durations.append(voice_duration)
-        scene["voice_duration"] = round(voice_duration, 3)
+        voice_durations.append(duration)
 
     durations = fit_scene_durations(scenes, voice_durations)
     final_duration = round(sum(durations), 3)
 
     scene_files = []
-    current = 0.0
+    cursor = 0.0
 
-    for scene, dur in zip(scenes, durations):
-        scene["start"] = round(current, 3)
-        scene["duration"] = dur
+    for scene, duration in zip(scenes, durations):
+        scene["start"] = round(cursor, 3)
+        scene["duration"] = duration
 
-        scene_path = WORK / f"scene-{scene['index']}.mp4"
-        media_info = render_scene_visual(scene, dur, scene_path)
+        output = WORK / f"scene-{scene['index']}.mp4"
+        media_info = render_scene_visual(
+            scene,
+            duration,
+            media_config,
+            output,
+        )
         scene.update(media_info)
+        scene_files.append(output)
+        cursor += duration
 
-        scene_files.append(scene_path)
-        current += dur
-
+    storyboard_payload = {
+        "version": "R39",
+        "render_id": RENDER_ID,
+        "title": TITLE,
+        "requested_duration": REQUESTED_DURATION,
+        "final_duration": final_duration,
+        "scenes": scenes,
+    }
     STORYBOARD_OUT.write_text(
-        json.dumps(
-            {
-                "version": "R38-phase1",
-                "render_id": RENDER_ID,
-                "title": TITLE,
-                "requested_duration": REQUESTED_DURATION,
-                "final_duration": final_duration,
-                "scenes": scenes,
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
+        json.dumps(storyboard_payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
 
     voice_timeline = create_voice_timeline(voice_files, durations)
-    joined_video = concat_visuals(scene_files)
-    finalize(joined_video, voice_timeline, final_duration)
-    validate_output(final_duration)
+    joined = concat_visuals(scene_files)
+    finalize(joined, voice_timeline, final_duration)
+    validate_output()
 
-    fallback_count = sum(1 for s in scenes if s["media_kind"] == "fallback")
-    print(f"MEDIA_FALLBACK_SCENES={fallback_count}/{len(scenes)}")
-    print("RENDER_SUCCESS_R38")
+    qa = qa_report(scenes, final_duration)
+    QA_OUT.write_text(
+        json.dumps(qa, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    print("===== R39 QA =====")
+    print(json.dumps(qa, ensure_ascii=False, indent=2))
+    print("==================")
+
+    if MEDIA_MODE == "production" and not qa["commercial_ready"]:
+        raise RuntimeError(
+            "R39 commercial QA reprovado: " + ", ".join(qa["issues"])
+        )
+
+    print("RENDER_SUCCESS_R39")
     return 0
 
 
@@ -710,6 +937,6 @@ if __name__ == "__main__":
         print(f"FFMPEG_ERROR: returncode={exc.returncode}", file=sys.stderr)
         raise
     except Exception as exc:
-        print(f"R38_ERROR: {exc}", file=sys.stderr)
+        print(f"R39_ERROR: {exc}", file=sys.stderr)
         raise
 
