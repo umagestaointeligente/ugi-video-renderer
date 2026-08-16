@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R40 — HUMAN VISUAL COMMERCIAL ENGINE
+UGI Reel Renderer R40.2 — HUMAN VISUAL COMMERCIAL ENGINE
 ===================================================
 Evolução direta do R39.
 
@@ -8,6 +8,8 @@ Objetivos do R39:
 - preservar VIDEO_TITLE, VIDEO_DURATION, VIDEO_RENDER_ID, VIDEO_CTA;
 - respeitar a duração solicitada como duração final real;
 - priorizar pessoas, situações empresariais e movimento na área principal;
+- aplicar safe zones maiores para textos e separar título, overlay e apoio;
+- preservar leitura confortável em Instagram, TikTok e YouTube Shorts;
 - produzir narrativa comercial: dor -> tensão -> transformação -> desejo -> CTA;
 - manter voz PT-BR Kokoro;
 - sincronizar fala, cena e texto por timeline real;
@@ -47,7 +49,7 @@ HEIGHT = 1920
 FPS = 30
 
 OUTPUT = Path("output/ugi-reel.mp4")
-WORK = Path("output/r40_work")
+WORK = Path("output/r402_work")
 STORYBOARD_OUT = Path("output/storyboard.json")
 QA_OUT = Path("output/qa.json")
 ASSET_DIR = Path(os.getenv("VIDEO_ASSET_DIR") or "assets")
@@ -57,7 +59,7 @@ TITLE = (
     or "Se tudo precisa passar por você, sua empresa não está crescendo. Está ficando dependente."
 ).strip()
 CTA = (os.getenv("VIDEO_CTA") or "Conheça a UGI").strip()
-RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r40").strip()
+RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r402").strip()
 MEDIA_MODE = (os.getenv("VIDEO_MEDIA_MODE") or "pilot").strip().lower()
 
 try:
@@ -488,6 +490,14 @@ def role_accent(scene: dict) -> str:
 
 
 def add_text_layers(filters: list[str], scene: dict, dur: float) -> None:
+    """
+    R40.2 — tipografia com safe zones:
+    - marca no topo;
+    - área visual principal livre;
+    - overlay principal no terço inferior;
+    - texto de apoio com respiro real;
+    - proteção contra aproximação excessiva entre blocos.
+    """
     accent = role_accent(scene)
 
     overlay_file = write_text(
@@ -496,77 +506,89 @@ def add_text_layers(filters: list[str], scene: dict, dur: float) -> None:
     )
     support_file = write_text(
         f"scene-{scene['index']}-support",
-        wrap_text(scene["support"], 38),
+        wrap_text(scene["support"], 34),
     )
     brand_file = write_text(
         f"scene-{scene['index']}-brand",
         "UMA GESTÃO INTELIGENTE",
     )
 
-    # Top/Bottom readability shields
+    # Safe zones universais: topo e rodapé de interfaces sociais.
+    top_safe = 150
+    bottom_safe = 1780
+
+    # O painel textual foi empurrado para baixo e ganhou mais altura.
+    panel_y = 1265
+    panel_h = 455
+
     filters.extend(
         [
-            f"drawbox=x=0:y=0:w={WIDTH}:h=260:color=black@0.30:t=fill",
-            f"drawbox=x=0:y=1190:w={WIDTH}:h=730:color=black@0.50:t=fill",
-            f"drawbox=x=72:y=1310:w={WIDTH-144}:h=405:color={PANEL}@0.66:t=fill",
-            f"drawbox=x=72:y=1310:w=10:h=405:color={accent}@0.98:t=fill",
+            f"drawbox=x=0:y=0:w={WIDTH}:h=245:color=black@0.26:t=fill",
+            f"drawbox=x=0:y=1180:w={WIDTH}:h=740:color=black@0.46:t=fill",
+            f"drawbox=x=66:y={panel_y}:w={WIDTH-132}:h={panel_h}:color={PANEL}@0.64:t=fill",
+            f"drawbox=x=66:y={panel_y}:w=10:h={panel_h}:color={accent}@0.98:t=fill",
         ]
     )
 
+    # Marca discretamente no topo; não compete com o conteúdo.
     filters.append(
         drawtext_filter(
             brand_file,
             fontfile=FONT_BOLD,
-            fontsize=24,
+            fontsize=22,
             fontcolor=WHITE,
-            x="w-text_w-82",
-            y="92",
-            alpha="0.94",
+            x="w-text_w-78",
+            y=str(top_safe),
+            alpha="0.90",
         )
     )
 
-    # Overlay principal: grande, curto, sempre legível.
-    overlay_size = 66
+    # Overlay principal — mais alto, mas ainda separado do apoio.
+    overlay_size = 64
     if len(scene["overlay"]) > 34:
-        overlay_size = 58
+        overlay_size = 56
     if len(scene["overlay"]) > 52:
-        overlay_size = 50
+        overlay_size = 48
 
+    overlay_y = 1335
     filters.append(
         drawtext_filter(
             overlay_file,
             fontfile=FONT_BOLD,
             fontsize=overlay_size,
             fontcolor=WHITE,
-            x="108",
-            y="1370",
-            line_spacing=10,
+            x="102",
+            y=str(overlay_y),
+            line_spacing=12,
             alpha="if(lt(t,0.10),0,min((t-0.10)/0.24,1))",
             borderw=1,
-            bordercolor="black@0.28",
+            bordercolor="black@0.30",
         )
     )
 
+    # Apoio — mais abaixo e menor, criando respiro perceptível.
     if scene["support"]:
+        support_y = 1585
         filters.append(
             drawtext_filter(
                 support_file,
                 fontfile=FONT_REGULAR,
-                fontsize=31,
+                fontsize=28,
                 fontcolor=MUTED,
-                x="108",
-                y="1585",
-                line_spacing=9,
-                alpha="if(lt(t,0.35),0,min((t-0.35)/0.28,1))",
+                x="102",
+                y=str(support_y),
+                line_spacing=10,
+                alpha="if(lt(t,0.42),0,min((t-0.42)/0.28,1))",
             )
         )
 
-    # Scene progress
+    # Progresso fora da área textual e acima da interface inferior.
+    progress_y = 1748
     filters.append(
-        f"drawbox=x=84:y=1778:w={WIDTH-168}:h=4:color={WHITE}@0.18:t=fill"
+        f"drawbox=x=82:y={progress_y}:w={WIDTH-164}:h=4:color={WHITE}@0.16:t=fill"
     )
     filters.append(
-        f"drawbox=x=84:y=1778:w='({WIDTH-168})*min(t/{dur},1)':h=4:color={accent}@0.96:t=fill"
+        f"drawbox=x=82:y={progress_y}:w='({WIDTH-164})*min(t/{dur},1)':h=4:color={accent}@0.96:t=fill"
     )
 
 
@@ -822,7 +844,7 @@ def qa_report(scenes: list[dict], final_duration: float) -> dict:
     )
 
     return {
-        "version": "R40",
+        "version": "R40.2",
         "render_id": RENDER_ID,
         "media_mode": MEDIA_MODE,
         "scene_count": len(scenes),
@@ -837,7 +859,7 @@ def qa_report(scenes: list[dict], final_duration: float) -> dict:
 
 def validate_output() -> None:
     if not OUTPUT.exists() or OUTPUT.stat().st_size < 10_000:
-        raise RuntimeError("R40 não produziu MP4 válido.")
+        raise RuntimeError("R40.2 não produziu MP4 válido.")
 
     signature = OUTPUT.read_bytes()[:12]
     if len(signature) < 12 or signature[4:8] != b"ftyp":
@@ -856,7 +878,7 @@ def validate_output() -> None:
         capture_output=True,
         text=True,
     )
-    print("===== R40 VALIDATION =====")
+    print("===== R40.2 VALIDATION =====")
     print(cp.stdout.strip())
     print("==========================")
 
@@ -875,7 +897,7 @@ def main() -> int:
     scenes = load_storyboard()
     media_config = load_scene_media_config()
 
-    print("===== UGI R40 HUMAN VISUAL COMMERCIAL ENGINE =====")
+    print("===== UGI R40.2 HUMAN VISUAL COMMERCIAL ENGINE =====")
     print(f"Title: {TITLE}")
     print(f"Requested duration: {REQUESTED_DURATION}s")
     print(f"Scenes: {len(scenes)}")
@@ -914,7 +936,7 @@ def main() -> int:
         cursor += duration
 
     storyboard_payload = {
-        "version": "R40",
+        "version": "R40.2",
         "render_id": RENDER_ID,
         "title": TITLE,
         "requested_duration": REQUESTED_DURATION,
@@ -937,16 +959,16 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    print("===== R40 QA =====")
+    print("===== R40.2 QA =====")
     print(json.dumps(qa, ensure_ascii=False, indent=2))
     print("==================")
 
     if MEDIA_MODE == "production" and not qa["commercial_ready"]:
         raise RuntimeError(
-            "R40 commercial QA reprovado: " + ", ".join(qa["issues"])
+            "R40.2 commercial QA reprovado: " + ", ".join(qa["issues"])
         )
 
-    print("RENDER_SUCCESS_R40")
+    print("RENDER_SUCCESS_R40_2")
     return 0
 
 
@@ -957,6 +979,6 @@ if __name__ == "__main__":
         print(f"FFMPEG_ERROR: returncode={exc.returncode}", file=sys.stderr)
         raise
     except Exception as exc:
-        print(f"R40_ERROR: {exc}", file=sys.stderr)
+        print(f"R40_2_ERROR: {exc}", file=sys.stderr)
         raise
 
