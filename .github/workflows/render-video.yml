@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R40.1 Human Media
+name: UGI Reel Renderer R40.2 Human Media Diversity
 
 on:
   workflow_dispatch:
@@ -110,12 +110,14 @@ jobs:
 
           # Consultas objetivas para o piloto de centralização.
           queries = {
-              1: "overwhelmed business manager office coworkers approval",
-              2: "business team meeting waiting manager decision",
-              3: "stressed manager office workload team",
-              4: "business leader planning team collaboration office",
-              5: "autonomous team working manager office strategy",
-              6: "successful business team modern office leadership",
+              # R40.2: casting visual deliberadamente variado.
+              # Não buscamos "três mulheres sorrindo" no final; cada cena tem um papel.
+              1: "overwhelmed male business manager office coworkers approval",
+              2: "female professional team meeting waiting manager decision office",
+              3: "young professional office workload team decision",
+              4: "male female business leader planning team collaboration office",
+              5: "young diverse professional team working autonomy manager strategy office",
+              6: "diverse business team man woman young professional modern office leadership",
           }
 
           endpoint = "https://api.pexels.com/v1/videos/search"
@@ -235,6 +237,25 @@ jobs:
               encoding="utf-8",
           )
 
+          (output / "casting-policy.json").write_text(
+              json.dumps(
+                  {
+                      "version": "R40.2",
+                      "policy": "visual_diversity_by_role_not_fixed_cast",
+                      "principles": [
+                          "alternar perfis e faixas de senioridade",
+                          "misturar homens, mulheres e profissionais jovens",
+                          "priorizar pessoas executando ações, não apenas posando",
+                          "evitar repetição de perfis semelhantes no fechamento",
+                          "usar diversidade como regra de composição, não fórmula rígida"
+                      ]
+                  },
+                  ensure_ascii=False,
+                  indent=2,
+              ),
+              encoding="utf-8",
+          )
+
           print(f"PEXELS_SELECTED_SCENES={selected_count}/6")
 
           if selected_count < 4:
@@ -336,6 +357,7 @@ jobs:
             output/qa.json
             output/storyboard.json
             output/pexels-attribution.json
+            output/casting-policy.json
           if-no-files-found: error
           retention-days: 7
 
