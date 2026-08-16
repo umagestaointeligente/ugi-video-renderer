@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.4 — MULTI-PLATFORM SEMANTIC VIDEO ENGINE — CLEAN OUTPUT
+UGI Reel Renderer R43.5 — MULTI-PLATFORM SEMANTIC VIDEO ENGINE — CLEAN OUTPUT + BACKGROUND MUSIC
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -59,6 +59,11 @@ COMMERCIAL_INTENT = (
     os.getenv("VIDEO_COMMERCIAL_INTENT")
     or "atracao_com_potencial_de_conversao"
 ).strip()
+
+MUSIC_FILE = (os.getenv("VIDEO_MUSIC_FILE") or "assets/ugi-background-music.mp3").strip()
+MUSIC_ENABLED = (os.getenv("VIDEO_MUSIC_ENABLED") or "true").strip().lower() not in {"0", "false", "no", "off"}
+MUSIC_STYLE = (os.getenv("VIDEO_MUSIC_STYLE") or "modern_corporate_instrumental").strip()
+MUSIC_FALLBACK_MODE = (os.getenv("VIDEO_MUSIC_FALLBACK_MODE") or "synthetic").strip().lower()
 
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
@@ -627,23 +632,88 @@ def create_voice_timeline(platform: str, fitted_voices: list[Path]) -> Path:
     return out
 
 
-def finalize_platform(platform: str, video: Path, voice: Path, duration: float, output: Path) -> None:
+def resolve_music_input(duration: float, platform: str) -> tuple[list[str], str, str]:
+    """
+    Retorna args de input, label de origem e filter source.
+    Preferência:
+      1) arquivo de trilha royalty-free/proprietária em VIDEO_MUSIC_FILE;
+      2) fallback sintético instrumental moderno, sem vocal.
+    """
+    requested = Path(MUSIC_FILE)
+
+    if MUSIC_ENABLED and requested.exists() and requested.stat().st_size > 0:
+        return (
+            ["-stream_loop", "-1", "-i", requested],
+            "file",
+            "[2:a]"
+        )
+
+    if MUSIC_ENABLED and MUSIC_FALLBACK_MODE == "synthetic":
+        profile = PLATFORM_PROFILES[platform]
+        music_level = float(profile["music_level"])
+        lavfi = (
+            "aevalsrc="
+            "'0.016*sin(2*PI*98*t)"
+            "+0.010*sin(2*PI*196*t)"
+            "+0.007*(0.5+0.5*sin(2*PI*1.7*t))*sin(2*PI*293.66*t)"
+            "+0.004*(0.5+0.5*sin(2*PI*0.35*t))*sin(2*PI*392*t)':"
+            f"s=48000:d={duration}"
+        )
+        return (
+            ["-f", "lavfi", "-i", lavfi],
+            "synthetic",
+            "[2:a]"
+        )
+
+    return ([], "disabled", "")
+
+
+def finalize_platform(platform: str, video: Path, voice: Path, duration: float, output: Path) -> dict:
     profile = PLATFORM_PROFILES[platform]
     music_level = float(profile["music_level"])
 
-    # Valores de duração sempre com zero à esquerda para compatibilidade FFmpeg.
-    music = (
-        f"aevalsrc='0.018*sin(2*PI*110*t)+0.012*sin(2*PI*220*t)+"
-        f"0.009*(0.5+0.5*sin(2*PI*2*t))*sin(2*PI*329.63*t)':"
-        f"s=48000:d={duration},"
-        "aformat=sample_fmts=fltp:channel_layouts=stereo,"
-        "afade=t=in:st=0:d=0.4,"
-        f"afade=t=out:st={max(0.1,duration-0.7)}:d=0.7"
-    )
+    music_args, music_source, music_stream = resolve_music_input(duration, platform)
 
+    if music_source == "disabled":
+        graph = (
+            "[1:a]volume=1.10,"
+            "loudnorm=I=-14:TP=-1.2:LRA=6[aout]"
+        )
+
+        cmd = [
+            "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+            "-i", video,
+            "-i", voice,
+            "-filter_complex", graph,
+            "-map", "0:v:0",
+            "-map", "[aout]",
+            "-t", f"{duration:.3f}",
+            "-c:v", "copy",
+            "-c:a", "aac",
+            "-b:a", "160k",
+            "-ar", "48000",
+            "-ac", "2",
+            "-movflags", "+faststart",
+            output,
+        ]
+
+        run(cmd)
+
+        return {
+            "music_enabled": False,
+            "music_source": "disabled",
+            "music_style": MUSIC_STYLE,
+        }
+
+    # Música fica subordinada à voz por sidechain compression.
+    # Fade curto no início/final para evitar entrada abrupta.
     graph = (
         "[1:a]volume=1.10,asplit=2[vsc][vmix];"
-        f"[2:a]volume={music_level}[music];"
+        f"{music_stream}"
+        f"volume={music_level},"
+        "aformat=sample_fmts=fltp:channel_layouts=stereo,"
+        "afade=t=in:st=0:d=0.45,"
+        f"afade=t=out:st={max(0.1,duration-0.8)}:d=0.8[music];"
         "[music][vsc]sidechaincompress="
         "threshold=0.018:ratio=9:attack=15:release=260:makeup=1[ducked];"
         "[ducked][vmix]amix=inputs=2:duration=longest:dropout_transition=0,"
@@ -655,8 +725,7 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
             "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
             "-i", video,
             "-i", voice,
-            "-f", "lavfi",
-            "-i", music,
+            *music_args,
             "-filter_complex", graph,
             "-map", "0:v:0",
             "-map", "[aout]",
@@ -670,6 +739,16 @@ def finalize_platform(platform: str, video: Path, voice: Path, duration: float, 
             output,
         ]
     )
+
+    return {
+        "music_enabled": True,
+        "music_source": music_source,
+        "music_style": MUSIC_STYLE,
+        "music_file": str(Path(MUSIC_FILE)) if music_source == "file" else None,
+        "ducking": True,
+        "fade_in_seconds": 0.45,
+        "fade_out_seconds": 0.8,
+    }
 
 
 def validate_video(path: Path, expected: float) -> dict:
@@ -786,7 +865,7 @@ def render_platform(platform: str) -> dict:
     }[platform]
 
     final = OUTPUT_DIR / output_name
-    finalize_platform(platform, joined, voice_timeline, target, final)
+    music_info = finalize_platform(platform, joined, voice_timeline, target, final)
     probe = validate_video(final, target)
 
     qa = qa_platform(platform, script, scene_durations, media_info)
@@ -805,6 +884,7 @@ def render_platform(platform: str) -> dict:
         "story_structure": "hook>pain>consequence>turn>result>cta",
         "scenes": script,
         "qa": qa,
+        "music": music_info,
         "ffprobe": probe,
     }
 
@@ -823,6 +903,7 @@ def render_platform(platform: str) -> dict:
         "target_duration": target,
         "actual_duration": float(probe["format"]["duration"]),
         "qa": qa,
+        "music": music_info,
     }
 
 
@@ -858,7 +939,7 @@ def main() -> int:
     )
 
     manifest = {
-        "version": "R42_MULTI_PLATFORM_SEMANTIC",
+        "version": "R43_5_MULTI_PLATFORM_SEMANTIC_WITH_MUSIC",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -870,9 +951,17 @@ def main() -> int:
         "platform_results": results,
         "public_overlay_policy": "scene_index_hidden",
         "scene_index_internal_only": True,
+        "music_policy": {
+            "enabled": MUSIC_ENABLED,
+            "style": MUSIC_STYLE,
+            "preferred_file": MUSIC_FILE,
+            "fallback_mode": MUSIC_FALLBACK_MODE,
+            "ducking": True,
+            "commercial_safety": "use proprietary or royalty-free instrumental music only"
+        },
         "architecture_note":
-            "R42 já gera três masters específicos. O Worker atual ainda recebe apenas o MP4 primário; "
-            "R43/bridge deverá registrar os três assets separadamente na Central.",
+            "R43.5 preserva os três masters e adiciona trilha instrumental moderna subordinada à locução. "
+            "Quando VIDEO_MUSIC_FILE existir, usa esse arquivo; caso contrário, usa fallback sintético sem vocal.",
     }
 
     (OUTPUT_DIR / "r42-platform-manifest.json").write_text(
