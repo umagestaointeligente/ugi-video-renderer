@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R39 — CREATIVE COMMERCIAL ENGINE
+UGI Reel Renderer R40 — HUMAN VISUAL COMMERCIAL ENGINE
 ===================================================
-Evolução direta do R38.
+Evolução direta do R39.
 
 Objetivos do R39:
 - preservar VIDEO_TITLE, VIDEO_DURATION, VIDEO_RENDER_ID, VIDEO_CTA;
+- respeitar a duração solicitada como duração final real;
+- priorizar pessoas, situações empresariais e movimento na área principal;
 - produzir narrativa comercial: dor -> tensão -> transformação -> desejo -> CTA;
 - manter voz PT-BR Kokoro;
 - sincronizar fala, cena e texto por timeline real;
@@ -45,7 +47,7 @@ HEIGHT = 1920
 FPS = 30
 
 OUTPUT = Path("output/ugi-reel.mp4")
-WORK = Path("output/r39_work")
+WORK = Path("output/r40_work")
 STORYBOARD_OUT = Path("output/storyboard.json")
 QA_OUT = Path("output/qa.json")
 ASSET_DIR = Path(os.getenv("VIDEO_ASSET_DIR") or "assets")
@@ -55,7 +57,7 @@ TITLE = (
     or "Se tudo precisa passar por você, sua empresa não está crescendo. Está ficando dependente."
 ).strip()
 CTA = (os.getenv("VIDEO_CTA") or "Conheça a UGI").strip()
-RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r39").strip()
+RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r40").strip()
 MEDIA_MODE = (os.getenv("VIDEO_MEDIA_MODE") or "pilot").strip().lower()
 
 try:
@@ -128,8 +130,8 @@ def wrap_text(text: str, width: int = 20) -> str:
 
 def default_storyboard() -> list[dict]:
     """
-    Storyboard comercial padrão.
-    Os overlays são curtos por design: não repetem toda a locução.
+    R40: roteiro curto para caber em 30 s sem acelerar artificialmente a voz.
+    A imagem humana conta a história; o overlay apenas reforça a ideia.
     """
     return [
         {
@@ -137,76 +139,75 @@ def default_storyboard() -> list[dict]:
             "role": "hook",
             "emotion": "pressure",
             "narration":
-                "Se tudo precisa passar por você, talvez sua empresa não esteja crescendo de verdade. Talvez esteja ficando dependente.",
+                "Se tudo precisa passar por você, sua empresa pode estar crescendo dependente.",
             "overlay": "TUDO DEPENDE DE VOCÊ?",
-            "support": "Isso parece controle. Mas pode ser gargalo.",
+            "support": "Quando o líder vira passagem obrigatória, o crescimento trava.",
             "visual_prompt":
-                "Gestor em escritório moderno sendo interrompido por várias pessoas, notificações e solicitações simultâneas, expressão de sobrecarga, equipe aguardando decisões, movimento corporativo realista.",
-            "min_duration": 5.0,
+                "Vertical cinematic realistic video, Brazilian business manager in a modern office, multiple coworkers approaching for approvals, phone notifications, manager visibly overloaded, natural movement, authentic corporate environment, no text, no logos.",
+            "min_duration": 4.8,
         },
         {
-            "id": "tension",
+            "id": "pain",
             "role": "pain",
             "emotion": "friction",
             "narration":
-                "Quando cada decisão para no gestor, a equipe espera, o trabalho desacelera e o retrabalho aumenta.",
+                "A equipe espera. Decisões acumulam. O líder vira gargalo.",
             "overlay": "ESPERA • RETRABALHO • LENTIDÃO",
-            "support": "O problema não é trabalhar mais. É decidir melhor.",
+            "support": "Mais demanda. Menos velocidade.",
             "visual_prompt":
-                "Equipe em reunião olhando para o líder aguardando aprovação, documentos e notebooks abertos, colaboradores interrompendo o gestor, sensação de fila e dependência.",
-            "min_duration": 5.0,
+                "Vertical realistic business video, team waiting in a meeting for manager approval, stalled work, laptops and documents, subtle frustration, natural office movement, no text, no logos.",
+            "min_duration": 4.3,
         },
         {
-            "id": "consequence",
+            "id": "turn",
             "role": "consequence",
             "emotion": "realization",
             "narration":
-                "Centralizar pode funcionar no começo. Mas quando a empresa cresce, o que parecia controle vira limite.",
-            "overlay": "O CONTROLE VIROU GARGALO.",
-            "support": "Crescimento sem autonomia aumenta a dependência.",
+                "Controle demais não cria segurança. Cria dependência.",
+            "overlay": "CONTROLE ≠ AUTONOMIA",
+            "support": "Centralizar tudo custa velocidade.",
             "visual_prompt":
-                "Gestor sobrecarregado diante de quadro de tarefas e mensagens enquanto a equipe aguarda, ambiente empresarial movimentado, sensação de gargalo operacional.",
-            "min_duration": 5.0,
+                "Vertical cinematic corporate video, overloaded manager surrounded by pending tasks while capable team members wait, visual metaphor of bottleneck, realistic people, no text, no logos.",
+            "min_duration": 4.2,
         },
         {
-            "id": "transformation",
+            "id": "solution",
             "role": "solution",
             "emotion": "relief",
             "narration":
-                "Gestão inteligente distribui responsabilidades, cria critérios claros e permite que decisões aconteçam no nível certo.",
+                "Gestão inteligente define critérios, distribui responsabilidades e mantém clareza.",
             "overlay": "AUTONOMIA COM CRITÉRIOS.",
-            "support": "Menos dependência. Mais velocidade e clareza.",
+            "support": "Decisões no nível certo. Controle sem centralização.",
             "visual_prompt":
-                "Líder alinhando prioridades com equipe em quadro de planejamento, colaboradores tomando decisões, ambiente profissional, autonomia, confiança e clareza.",
-            "min_duration": 5.4,
+                "Vertical realistic corporate video, confident leader aligning priorities with diverse team at planning board, team members taking ownership, collaboration, positive movement, no text, no logos.",
+            "min_duration": 5.0,
         },
         {
             "id": "desire",
             "role": "desire",
             "emotion": "aspiration",
             "narration":
-                "Sua empresa pode crescer sem depender de você para tudo. Você deixa de ser o gargalo e volta a liderar o crescimento.",
-            "overlay": "LIDERE O CRESCIMENTO.",
-            "support": "A operação funciona. Você ganha visão e controle.",
+                "A operação ganha velocidade. E você volta a liderar o crescimento.",
+            "overlay": "LIDERE. NÃO CENTRALIZE.",
+            "support": "Sua equipe avança sem depender de você para tudo.",
             "visual_prompt":
-                "Equipe trabalhando com autonomia enquanto o gestor acompanha indicadores e conversa estrategicamente com o time, clima de confiança e crescimento.",
-            "min_duration": 5.2,
+                "Vertical cinematic business video, autonomous team working confidently while manager reviews strategic indicators and coaches team, modern office, energetic but professional, no text, no logos.",
+            "min_duration": 4.8,
         },
         {
             "id": "cta",
             "role": "cta",
             "emotion": "confidence",
             "narration":
-                "Conheça a UGI e transforme gestão em execução.",
+                "Conheça a UGI. Uma Gestão Inteligente.",
             "overlay": "CONHEÇA A UGI",
-            "support": "Uma Gestão Inteligente.",
+            "support": "Transforme gestão em execução.",
             "visual_prompt":
-                "Equipe confiante em ambiente corporativo contemporâneo, líder em posição estratégica, composição limpa para encerramento de marca.",
-            "min_duration": 3.4,
+                "Vertical premium corporate closing shot, confident manager and team moving forward together in modern workplace, aspirational realistic lighting, clean composition for brand overlay, no text, no logos.",
+            "min_duration": 3.8,
             "cta": CTA,
         },
     ]
-
 
 def load_storyboard() -> list[dict]:
     raw = os.getenv("VIDEO_STORYBOARD_JSON", "").strip()
@@ -429,35 +430,30 @@ def resolve_scene_media(index: int, config: dict[int, dict]) -> tuple[str, Path 
 
 def fit_scene_durations(scenes: list[dict], voice_durations: list[float]) -> list[float]:
     """
-    Não corta locução. A fala governa a duração.
-    O alvo solicitado serve como referência editorial, não como guilhotina.
+    R40: a soma das cenas fecha exatamente em VIDEO_DURATION.
+    O roteiro padrão foi reduzido para caber naturalmente em ~30 s.
+    Se uma voz isolada exceder sua janela, ela será ajustada na timeline de áudio.
     """
-    durations = [
-        max(scene["min_duration"], voice + 0.42)
-        for scene, voice in zip(scenes, voice_durations)
-    ]
+    mins = [max(2.8, float(scene["min_duration"])) for scene in scenes]
+    total_min = sum(mins)
 
-    total = sum(durations)
-
-    # Se houver folga até o alvo, distribui principalmente no hook/CTA/desejo.
-    if total < REQUESTED_DURATION:
-        extra = REQUESTED_DURATION - total
-        weights = []
-        for scene in scenes:
-            role = scene["role"]
-            if role in {"hook", "desire", "cta"}:
-                weights.append(1.25)
-            else:
-                weights.append(0.9)
-
-        weight_sum = sum(weights)
-        durations = [
-            d + extra * weights[i] / weight_sum
-            for i, d in enumerate(durations)
+    if total_min > REQUESTED_DURATION:
+        scale = REQUESTED_DURATION / total_min
+        durations = [max(2.5, m * scale) for m in mins]
+    else:
+        durations = mins[:]
+        extra = REQUESTED_DURATION - sum(durations)
+        weights = [
+            1.15 if scene["role"] in {"hook", "solution", "desire", "cta"} else 0.9
+            for scene in scenes
         ]
+        sw = sum(weights)
+        durations = [d + extra * weights[i] / sw for i, d in enumerate(durations)]
 
-    return [round(d, 3) for d in durations]
-
+    # Fecha matematicamente no alvo.
+    durations = [round(d, 3) for d in durations]
+    durations[-1] = round(REQUESTED_DURATION - sum(durations[:-1]), 3)
+    return durations
 
 def drawtext_filter(
     textfile: Path,
@@ -668,15 +664,37 @@ def create_voice_timeline(
     voice_files: list[Path],
     scene_durations: list[float],
 ) -> Path:
+    """
+    Ajusta cada locução à janela da própria cena.
+    Só acelera quando necessário e limita cada estágio do atempo a 2x.
+    """
     padded = []
 
     for idx, (voice, duration) in enumerate(zip(voice_files, scene_durations), start=1):
+        source_duration = ffprobe_duration(voice)
         out = WORK / f"voice-{idx}-timeline.wav"
+
+        filters = []
+        usable = max(0.8, duration - 0.20)
+
+        if source_duration > usable:
+            factor = source_duration / usable
+            stages = []
+            while factor > 2.0:
+                stages.append("atempo=2.0")
+                factor /= 2.0
+            if factor > 1.001:
+                stages.append(f"atempo={factor:.5f}")
+            filters.extend(stages)
+
+        filters.append(f"apad=whole_dur={duration}")
+        af = ",".join(filters)
+
         run(
             [
                 "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
                 "-i", str(voice),
-                "-af", f"apad=whole_dur={duration}",
+                "-af", af,
                 "-t", f"{duration:.3f}",
                 "-ar", "48000",
                 "-ac", "2",
@@ -702,7 +720,6 @@ def create_voice_timeline(
         ]
     )
     return output
-
 
 def concat_visuals(scene_files: list[Path]) -> Path:
     concat_file = WORK / "visual-concat.txt"
@@ -783,6 +800,9 @@ def qa_report(scenes: list[dict], final_duration: float) -> dict:
 
     issues = []
 
+    if abs(final_duration - REQUESTED_DURATION) > 0.12:
+        issues.append("final_duration_mismatch")
+
     if final_duration < 20:
         issues.append("duration_too_short_for_commercial_story")
     if final_duration > 60:
@@ -802,7 +822,7 @@ def qa_report(scenes: list[dict], final_duration: float) -> dict:
     )
 
     return {
-        "version": "R39",
+        "version": "R40",
         "render_id": RENDER_ID,
         "media_mode": MEDIA_MODE,
         "scene_count": len(scenes),
@@ -817,7 +837,7 @@ def qa_report(scenes: list[dict], final_duration: float) -> dict:
 
 def validate_output() -> None:
     if not OUTPUT.exists() or OUTPUT.stat().st_size < 10_000:
-        raise RuntimeError("R39 não produziu MP4 válido.")
+        raise RuntimeError("R40 não produziu MP4 válido.")
 
     signature = OUTPUT.read_bytes()[:12]
     if len(signature) < 12 or signature[4:8] != b"ftyp":
@@ -836,7 +856,7 @@ def validate_output() -> None:
         capture_output=True,
         text=True,
     )
-    print("===== R39 VALIDATION =====")
+    print("===== R40 VALIDATION =====")
     print(cp.stdout.strip())
     print("==========================")
 
@@ -855,7 +875,7 @@ def main() -> int:
     scenes = load_storyboard()
     media_config = load_scene_media_config()
 
-    print("===== UGI R39 CREATIVE COMMERCIAL ENGINE =====")
+    print("===== UGI R40 HUMAN VISUAL COMMERCIAL ENGINE =====")
     print(f"Title: {TITLE}")
     print(f"Requested duration: {REQUESTED_DURATION}s")
     print(f"Scenes: {len(scenes)}")
@@ -894,7 +914,7 @@ def main() -> int:
         cursor += duration
 
     storyboard_payload = {
-        "version": "R39",
+        "version": "R40",
         "render_id": RENDER_ID,
         "title": TITLE,
         "requested_duration": REQUESTED_DURATION,
@@ -917,16 +937,16 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    print("===== R39 QA =====")
+    print("===== R40 QA =====")
     print(json.dumps(qa, ensure_ascii=False, indent=2))
     print("==================")
 
     if MEDIA_MODE == "production" and not qa["commercial_ready"]:
         raise RuntimeError(
-            "R39 commercial QA reprovado: " + ", ".join(qa["issues"])
+            "R40 commercial QA reprovado: " + ", ".join(qa["issues"])
         )
 
-    print("RENDER_SUCCESS_R39")
+    print("RENDER_SUCCESS_R40")
     return 0
 
 
@@ -937,6 +957,6 @@ if __name__ == "__main__":
         print(f"FFMPEG_ERROR: returncode={exc.returncode}", file=sys.stderr)
         raise
     except Exception as exc:
-        print(f"R39_ERROR: {exc}", file=sys.stderr)
+        print(f"R40_ERROR: {exc}", file=sys.stderr)
         raise
 
