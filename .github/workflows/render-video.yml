@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R42 Multi-Platform Semantic
+name: UGI Reel Renderer R43.2 Multi-Asset Delivery
 
 on:
   workflow_dispatch:
@@ -404,35 +404,139 @@ jobs:
             output/r42-storyboard-youtube.json
             output/pexels-attribution.json
             output/casting-policy.json
+            output/r2-upload-instagram.json
+            output/r2-upload-tiktok.json
+            output/r2-upload-youtube.json
           if-no-files-found: error
           retention-days: 7
 
-      - name: Deliver primary Instagram MP4 to Lola R2
+      - name: Deliver 3 platform masters to Lola R2
         shell: bash
         run: |
           set -euo pipefail
 
           BASE_URL="${UGI_VIDEO_UPLOAD_URL%/}"
-          UPLOAD_URL="${BASE_URL}/api/video-upload?renderId=${VIDEO_RENDER_ID}&githubRunId=${GITHUB_RUN_ID}&duration=32"
 
-          RESPONSE="$(curl \
-            --fail-with-body \
-            --silent \
-            --show-error \
-            --retry 3 \
-            --retry-delay 2 \
-            --retry-all-errors \
-            --connect-timeout 15 \
-            --max-time 120 \
-            -X POST "$UPLOAD_URL" \
-            -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
-            -H "Content-Type: video/mp4" \
-            --data-binary @output/ugi-reel.mp4)"
+          [ -n "$BASE_URL" ] || { echo "UGI_VIDEO_UPLOAD_URL ausente"; exit 1; }
+          [ -n "$UGI_VIDEO_UPLOAD_KEY" ] || { echo "UGI_VIDEO_UPLOAD_KEY ausente"; exit 1; }
+          [ -n "$VIDEO_RENDER_ID" ] || { echo "VIDEO_RENDER_ID ausente"; exit 1; }
 
-          printf '%s\n' "$RESPONSE" | tee output/r2-upload-response.json
-          echo "$RESPONSE" | grep -q '"status": "ready"'
+          upload_asset() {
+            local platform="$1"
+            local duration="$2"
+            local file="$3"
+            local response_file="$4"
 
-          echo "R2_DELIVERY_SUCCESS renderId=${VIDEO_RENDER_ID} primary=instagram"
+            test -s "$file"
+
+            local upload_url="${BASE_URL}/api/video-upload?renderId=${VIDEO_RENDER_ID}&githubRunId=${GITHUB_RUN_ID}&platform=${platform}&duration=${duration}"
+
+            echo "Uploading platform=${platform} file=${file} duration=${duration}"
+
+            local response
+            response="$(curl \
+              --fail-with-body \
+              --silent \
+              --show-error \
+              --retry 3 \
+              --retry-delay 2 \
+              --retry-all-errors \
+              --connect-timeout 15 \
+              --max-time 180 \
+              -X POST "$upload_url" \
+              -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
+              -H "Content-Type: video/mp4" \
+              -H "X-UGI-Platform: ${platform}" \
+              -H "X-UGI-Video-Duration: ${duration}" \
+              --data-binary @"$file")"
+
+            printf '%s\n' "$response" | tee "$response_file"
+
+            python - "$platform" "$response_file" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          platform = sys.argv[1]
+          path = Path(sys.argv[2])
+
+          data = json.loads(path.read_text(encoding="utf-8"))
+
+          if data.get("ok") is not True:
+              raise SystemExit(f"Upload {platform} retornou ok!=true: {data}")
+
+          if data.get("platform") != platform:
+              raise SystemExit(
+                  f"Worker retornou plataforma incorreta: esperado={platform} recebido={data.get('platform')}"
+              )
+
+          assets = data.get("assets") or {}
+          asset = assets.get(platform) or {}
+
+          if asset.get("ready") is not True:
+              raise SystemExit(f"Asset {platform} não ficou ready: {asset}")
+
+          if not asset.get("videoUrl") or not asset.get("videoKey"):
+              raise SystemExit(f"Asset {platform} sem videoUrl/videoKey: {asset}")
+
+          print(
+              f"UPLOAD_OK platform={platform} "
+              f"status={data.get('status')} "
+              f"readyPlatforms={data.get('readyPlatforms')}"
+          )
+          PY
+          }
+
+          upload_asset             "instagram"             "32"             "output/instagram-reel.mp4"             "output/r2-upload-instagram.json"
+
+          upload_asset             "tiktok"             "24"             "output/tiktok-reel.mp4"             "output/r2-upload-tiktok.json"
+
+          upload_asset             "youtube"             "36"             "output/youtube-short.mp4"             "output/r2-upload-youtube.json"
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          final = json.loads(
+              Path("output/r2-upload-youtube.json").read_text(encoding="utf-8")
+          )
+
+          expected = {"instagram", "tiktok", "youtube"}
+          ready = set(final.get("readyPlatforms") or [])
+          assets = final.get("assets") or {}
+
+          if final.get("status") != "ready":
+              raise SystemExit(f"Render multi-asset não ficou ready: {final}")
+
+          if final.get("ready") is not True:
+              raise SystemExit("Render multi-asset terminou sem ready=true.")
+
+          if final.get("allPlatformsReady") is not True:
+              raise SystemExit("Worker não confirmou allPlatformsReady=true.")
+
+          if ready != expected:
+              raise SystemExit(
+                  f"readyPlatforms incorreto: recebido={sorted(ready)} esperado={sorted(expected)}"
+              )
+
+          for platform in sorted(expected):
+              asset = assets.get(platform) or {}
+              if asset.get("ready") is not True:
+                  raise SystemExit(f"{platform} não está ready no resultado final.")
+              if not asset.get("videoUrl") or not asset.get("videoKey"):
+                  raise SystemExit(f"{platform} sem videoUrl/videoKey.")
+
+          # Compatibilidade legada deve continuar apontando para Instagram.
+          if final.get("videoUrl") != assets["instagram"].get("videoUrl"):
+              raise SystemExit("videoUrl legado deixou de apontar para Instagram.")
+
+          if final.get("videoKey") != assets["instagram"].get("videoKey"):
+              raise SystemExit("videoKey legado deixou de apontar para Instagram.")
+
+          print("R43_2_MULTI_ASSET_DELIVERY_OK")
+          PY
+
+          echo "R2_MULTI_ASSET_DELIVERY_SUCCESS renderId=${VIDEO_RENDER_ID}"
 
       - name: Report failure to Lola
         if: ${{ failure() }}
@@ -455,5 +559,5 @@ jobs:
             -X POST "${BASE_URL}/api/video-status" \
             -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
             -H "Content-Type: application/json" \
-            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R42 falhou antes de concluir a geração multi-plataforma. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
+            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.2 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
 
