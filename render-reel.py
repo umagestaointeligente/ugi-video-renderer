@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.7.7 — RIGHT-ALIGNED ADAPTIVE CONTRAST BRAND LOCKUP + BALANCED VOICE/MUSIC DUCKING
+UGI Reel Renderer R43.7.9 — SMOKE COPY FIX + RIGHT-ALIGNED ADAPTIVE CONTRAST BRAND LOCKUP
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -75,7 +75,7 @@ MUSIC_ALLOWED_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
-# R43.7.7 — Right-Aligned Adaptive Contrast Brand Lockup.
+# R43.7.9 — Smoke Copy Fix + Right-Aligned Adaptive Contrast Brand Lockup.
 # PNG deve possuir canal alpha real (fundo transparente).
 BRAND_LOGO = Path(
     (os.getenv("VIDEO_BRAND_LOGO") or "assets/branding/ugi-symbol-transparent.png").strip()
@@ -1338,10 +1338,25 @@ def main() -> int:
         # Compatibilidade com o workflow atual: produz os três nomes esperados,
         # mas sem renderizar três vídeos completos. São cópias do único smoke render.
         source = Path(smoke_result["output"])
-        shutil.copyfile(source, OUTPUT_DIR / "instagram-reel.mp4")
-        shutil.copyfile(source, OUTPUT_DIR / "tiktok-reel.mp4")
-        shutil.copyfile(source, OUTPUT_DIR / "youtube-short.mp4")
-        shutil.copyfile(source, OUTPUT_DIR / "ugi-reel.mp4")
+
+        instagram_output = OUTPUT_DIR / "instagram-reel.mp4"
+        tiktok_output = OUTPUT_DIR / "tiktok-reel.mp4"
+        youtube_output = OUTPUT_DIR / "youtube-short.mp4"
+        compatibility_output = OUTPUT_DIR / "ugi-reel.mp4"
+
+        # R43.7.9 — evita shutil.SameFileError quando o smoke render
+        # já foi gerado diretamente em output/instagram-reel.mp4.
+        if source.resolve() != instagram_output.resolve():
+            shutil.copyfile(source, instagram_output)
+
+        if source.resolve() != tiktok_output.resolve():
+            shutil.copyfile(source, tiktok_output)
+
+        if source.resolve() != youtube_output.resolve():
+            shutil.copyfile(source, youtube_output)
+
+        if source.resolve() != compatibility_output.resolve():
+            shutil.copyfile(source, compatibility_output)
     else:
         for platform in ("instagram", "tiktok", "youtube"):
             print(f"\n===== R42 PLATFORM: {platform.upper()} =====")
@@ -1354,7 +1369,7 @@ def main() -> int:
         )
 
     manifest = {
-        "version": "R43_7_7_RIGHT_ALIGNED_ADAPTIVE_CONTRAST",
+        "version": "R43_7_9_SMOKE_COPY_FIX_RIGHT_ALIGNED_ADAPTIVE_CONTRAST",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -1412,9 +1427,9 @@ def main() -> int:
             for key, value in select_music_track().items()
         },
         "architecture_note":
-            "R43.7.7 preserves the approved audiovisual engine and changes only the brand lockup finish: "
-            "the unified UGI symbol + text is shifted further right and gains a very subtle black shadow for readability "
-            "over bright backgrounds, without adding a box, panel, or changing any other visual/audio layer.",
+            "R43.7.9 preserves the approved R43.7.7 audiovisual and branding behavior and fixes only smoke-test compatibility copies: "
+            "copy operations now skip source==destination to prevent shutil.SameFileError while preserving Instagram, TikTok, "
+            "YouTube compatibility filenames and output/ugi-reel.mp4.",
     }
 
     (OUTPUT_DIR / "r42-platform-manifest.json").write_text(
@@ -1423,7 +1438,7 @@ def main() -> int:
     )
 
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
-    print("RENDER_SUCCESS_R43_7_7")
+    print("RENDER_SUCCESS_R43_7_9")
     return 0
 
 
