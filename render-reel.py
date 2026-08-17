@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.7.6 — UNIFIED BRAND LOCKUP + TRUE SMOKE TEST + BALANCED VOICE/MUSIC DUCKING
+UGI Reel Renderer R43.7.7 — RIGHT-ALIGNED ADAPTIVE CONTRAST BRAND LOCKUP + BALANCED VOICE/MUSIC DUCKING
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -75,7 +75,7 @@ MUSIC_ALLOWED_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
-# R43.7.6 — Unified Brand Lockup + True Smoke Test.
+# R43.7.7 — Right-Aligned Adaptive Contrast Brand Lockup.
 # PNG deve possuir canal alpha real (fundo transparente).
 BRAND_LOGO = Path(
     (os.getenv("VIDEO_BRAND_LOGO") or "assets/branding/ugi-symbol-transparent.png").strip()
@@ -84,8 +84,11 @@ BRAND_TEXT = (os.getenv("VIDEO_BRAND_TEXT") or "UGI - UMA GESTÃO INTELIGENTE").
 BRAND_OPACITY = float(os.getenv("VIDEO_BRAND_OPACITY") or "0.66")
 BRAND_LOGO_WIDTH = int(os.getenv("VIDEO_BRAND_LOGO_WIDTH") or "54")
 BRAND_GAP = int(os.getenv("VIDEO_BRAND_GAP") or "18")
-BRAND_RIGHT_MARGIN = int(os.getenv("VIDEO_BRAND_RIGHT_MARGIN") or "92")
+BRAND_RIGHT_MARGIN = int(os.getenv("VIDEO_BRAND_RIGHT_MARGIN") or "58")
 BRAND_TOP = int(os.getenv("VIDEO_BRAND_TOP") or "78")
+BRAND_SHADOW_ALPHA = float(os.getenv("VIDEO_BRAND_SHADOW_ALPHA") or "0.24")
+BRAND_SHADOW_X = int(os.getenv("VIDEO_BRAND_SHADOW_X") or "2")
+BRAND_SHADOW_Y = int(os.getenv("VIDEO_BRAND_SHADOW_Y") or "2")
 
 # R43.7.6 — smoke test rápido.
 # Renderiza apenas a primeira cena em duração curta e depois cria cópias de
@@ -598,7 +601,7 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         "format=yuv420p",
     ]
 
-    # R43.7.6 — assinatura UGI como uma única camada RGBA.
+    # R43.7.7 — assinatura UGI única, mais à direita, com contraste adaptativo por sombra suave.
     # Símbolo e texto deixam de ser posicionados independentemente.
     logo_available = (
         BRAND_LOGO.exists()
@@ -613,22 +616,42 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         text_y = 31
 
         # Camada transparente única:
-        # [símbolo branco translúcido] + [UGI - UMA GESTÃO INTELIGENTE]
-        # A camada inteira recebe fade-in em alpha e só depois é aplicada ao vídeo.
+        # símbolo + texto em branco translúcido com uma sombra preta muito suave.
+        # A sombra preserva a leitura sobre fundos claros sem criar caixa ou tarja.
         filter_complex = (
             f"[0:v]{','.join(visual)}[base];"
             f"color=c=black@0.0:s={lockup_w}x{lockup_h}:d={duration},format=rgba[brandbg];"
+
+            # sombra do símbolo
+            f"[1:v]scale={BRAND_LOGO_WIDTH}:-1:flags=lanczos,"
+            "format=rgba,"
+            "lutrgb=r='0':g='0':b='0',"
+            f"colorchannelmixer=aa={BRAND_SHADOW_ALPHA:.3f}[symbolshadow];"
+            f"[brandbg][symbolshadow]overlay="
+            f"x={BRAND_SHADOW_X}:y=(H-h)/2+{BRAND_SHADOW_Y}:format=auto[brandshadow1];"
+
+            # símbolo branco
             f"[1:v]scale={BRAND_LOGO_WIDTH}:-1:flags=lanczos,"
             "format=rgba,"
             "lutrgb=r='255':g='255':b='255',"
             f"colorchannelmixer=aa={BRAND_OPACITY:.3f}[symbol];"
-            f"[brandbg][symbol]overlay=x=0:y=(H-h)/2:format=auto[brand1];"
+            f"[brandshadow1][symbol]overlay=x=0:y=(H-h)/2:format=auto[brand1];"
+
+            # sombra do texto
             f"[brand1]drawtext="
             f"fontfile='{FONT_BOLD}':"
             f"textfile='{esc(brand)}':reload=0:"
+            f"fontsize=24:fontcolor=black@{BRAND_SHADOW_ALPHA:.3f}:"
+            f"x={text_x + BRAND_SHADOW_X}:y={text_y + BRAND_SHADOW_Y}[brand2];"
+
+            # texto branco
+            f"[brand2]drawtext="
+            f"fontfile='{FONT_BOLD}':"
+            f"textfile='{esc(brand)}':reload=0:"
             f"fontsize=24:fontcolor=white@{BRAND_OPACITY:.3f}:"
-            f"x={text_x}:y={text_y}[brand2];"
-            "[brand2]fade=t=in:st=0.15:d=0.25:alpha=1[brand];"
+            f"x={text_x}:y={text_y}[brand3];"
+
+            "[brand3]fade=t=in:st=0.15:d=0.25:alpha=1[brand];"
             f"[base][brand]overlay="
             f"x=W-w-{BRAND_RIGHT_MARGIN}:"
             f"y={BRAND_TOP}:"
@@ -1331,7 +1354,7 @@ def main() -> int:
         )
 
     manifest = {
-        "version": "R43_7_6_UNIFIED_BRAND_LOCKUP_SMOKE_TEST",
+        "version": "R43_7_7_RIGHT_ALIGNED_ADAPTIVE_CONTRAST",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -1356,9 +1379,12 @@ def main() -> int:
             "opacity": BRAND_OPACITY,
             "symbol_width": BRAND_LOGO_WIDTH,
             "symbol_render": "white_monochrome_alpha_preserved",
-            "composition": "single_rgba_lockup_layer",
+            "composition": "single_rgba_lockup_layer_with_subtle_shadow",
             "brand_fade_in_start": 0.15,
             "brand_fade_in_duration": 0.25,
+            "right_margin": BRAND_RIGHT_MARGIN,
+            "shadow_alpha": BRAND_SHADOW_ALPHA,
+            "shadow_offset": [BRAND_SHADOW_X, BRAND_SHADOW_Y],
             "symbol_gap": BRAND_GAP,
             "position": "upper_right",
             "transparent_background_required": True,
@@ -1386,9 +1412,9 @@ def main() -> int:
             for key, value in select_music_track().items()
         },
         "architecture_note":
-            "R43.7.6 preserves the approved audiovisual engine and composes the UGI symbol plus text as one transparent RGBA lockup, "
-            "eliminating independent positioning and overlap. It also adds a fast smoke-test mode that renders one short scene "
-            "and creates compatibility copies for the current three-asset upload workflow.",
+            "R43.7.7 preserves the approved audiovisual engine and changes only the brand lockup finish: "
+            "the unified UGI symbol + text is shifted further right and gains a very subtle black shadow for readability "
+            "over bright backgrounds, without adding a box, panel, or changing any other visual/audio layer.",
     }
 
     (OUTPUT_DIR / "r42-platform-manifest.json").write_text(
@@ -1397,7 +1423,7 @@ def main() -> int:
     )
 
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
-    print("RENDER_SUCCESS_R43_7_6")
+    print("RENDER_SUCCESS_R43_7_7")
     return 0
 
 
