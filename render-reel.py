@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.7.3 — BRAND LOCKUP FIX + BALANCED VOICE/MUSIC DUCKING
+UGI Reel Renderer R43.7.4 — SYMBOL + TEXT LOCKUP + BALANCED VOICE/MUSIC DUCKING
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -75,15 +75,15 @@ MUSIC_ALLOWED_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
-# R43.7.3 — Brand Lockup Fix.
+# R43.7.4 — Symbol + Text Lockup.
 # PNG deve possuir canal alpha real (fundo transparente).
 BRAND_LOGO = Path(
-    (os.getenv("VIDEO_BRAND_LOGO") or "assets/branding/ugi-logo-transparent.png").strip()
+    (os.getenv("VIDEO_BRAND_LOGO") or "assets/branding/ugi-symbol-transparent.png").strip()
 )
 BRAND_TEXT = (os.getenv("VIDEO_BRAND_TEXT") or "UGI - UMA GESTÃO INTELIGENTE").strip()
 BRAND_OPACITY = float(os.getenv("VIDEO_BRAND_OPACITY") or "0.72")
-BRAND_LOGO_WIDTH = int(os.getenv("VIDEO_BRAND_LOGO_WIDTH") or "58")
-BRAND_GAP = int(os.getenv("VIDEO_BRAND_GAP") or "14")
+BRAND_LOGO_WIDTH = int(os.getenv("VIDEO_BRAND_LOGO_WIDTH") or "64")
+BRAND_GAP = int(os.getenv("VIDEO_BRAND_GAP") or "12")
 BRAND_RIGHT_MARGIN = int(os.getenv("VIDEO_BRAND_RIGHT_MARGIN") or "92")
 BRAND_TOP = int(os.getenv("VIDEO_BRAND_TOP") or "78")
 
@@ -561,7 +561,7 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         "drawbox=x=0:y=0:w=iw:h=ih:color=black@0.10:t=fill",
         f"drawbox=x=68:y={panel_y}:w=944:h={panel_h}:color={PANEL}@0.62:t=fill",
         f"drawbox=x=68:y={panel_y}:w=8:h={panel_h}:color={ACCENT}@0.96:t=fill",
-        # R43.7.2: texto da assinatura; símbolo transparente é composto abaixo quando disponível.
+        # R43.7.4: mantém o texto aprovado e compõe somente o símbolo oficial antes dele.
         drawtext(
             brand, FONT_BOLD, 24, WHITE,
             f"w-text_w-{BRAND_RIGHT_MARGIN}",
@@ -598,7 +598,7 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         "format=yuv420p",
     ]
 
-    # R43.7.2 — aplica o símbolo UGI com transparência real sem alterar a identidade
+    # R43.7.4 — aplica somente o símbolo oficial UGI com transparência real
     # das cenas. Se o PNG ainda não estiver no repositório, mantém somente a assinatura
     # textual para não quebrar o renderer.
     logo_available = (
@@ -642,7 +642,7 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         )
     else:
         print(
-            f"R43.7.2 BRAND WARNING: logo transparente não encontrado em {BRAND_LOGO}; "
+            f"R43.7.4 BRAND WARNING: símbolo transparente não encontrado em {BRAND_LOGO}; "
             "renderizando assinatura textual sem símbolo.",
             file=sys.stderr,
         )
@@ -1290,7 +1290,7 @@ def main() -> int:
     )
 
     manifest = {
-        "version": "R43_7_3_BRAND_LOCKUP_FIX",
+        "version": "R43_7_4_SYMBOL_TEXT_LOCKUP",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -1304,10 +1304,10 @@ def main() -> int:
         "scene_index_internal_only": True,
         "brand_signature": {
             "enabled": True,
-            "logo_path": str(BRAND_LOGO),
+            "symbol_path": str(BRAND_LOGO),
             "text": BRAND_TEXT,
             "opacity": BRAND_OPACITY,
-            "logo_width": BRAND_LOGO_WIDTH,
+            "symbol_width": BRAND_LOGO_WIDTH,
             "position": "upper_right",
             "transparent_background_required": True,
             "fallback": "text_only_if_logo_asset_missing"
@@ -1334,9 +1334,9 @@ def main() -> int:
             for key, value in select_music_track().items()
         },
         "architecture_note":
-            "R43.7.2 preserves the complete approved R43.7.1 audiovisual engine and adds only the UGI Brand Signature: "
-            "transparent UGI symbol plus 'UGI - UMA GESTÃO INTELIGENTE' in the upper-right area, "
-            "while preserving balanced ducking, Music Intelligence Engine, platform durations and clean output.",
+            "R43.7.4 preserves the approved audiovisual engine and changes only the upper-right brand composition: "
+            "the official transparent UGI symbol is rendered before the existing 'UGI - UMA GESTÃO INTELIGENTE' text, "
+            "without altering music, narration, scene timing, CTA, Pexels media or platform outputs.",
     }
 
     (OUTPUT_DIR / "r42-platform-manifest.json").write_text(
@@ -1345,7 +1345,7 @@ def main() -> int:
     )
 
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
-    print("RENDER_SUCCESS_R43_7_3")
+    print("RENDER_SUCCESS_R43_7_4")
     return 0
 
 
