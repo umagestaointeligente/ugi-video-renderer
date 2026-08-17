@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.7.5 — MONOCHROME SYMBOL + LOCKUP SPACING + BALANCED VOICE/MUSIC DUCKING
+UGI Reel Renderer R43.7.6 — UNIFIED BRAND LOCKUP + TRUE SMOKE TEST + BALANCED VOICE/MUSIC DUCKING
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -75,7 +75,7 @@ MUSIC_ALLOWED_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
-# R43.7.5 — Monochrome Symbol + Lockup Spacing.
+# R43.7.6 — Unified Brand Lockup + True Smoke Test.
 # PNG deve possuir canal alpha real (fundo transparente).
 BRAND_LOGO = Path(
     (os.getenv("VIDEO_BRAND_LOGO") or "assets/branding/ugi-symbol-transparent.png").strip()
@@ -86,6 +86,13 @@ BRAND_LOGO_WIDTH = int(os.getenv("VIDEO_BRAND_LOGO_WIDTH") or "54")
 BRAND_GAP = int(os.getenv("VIDEO_BRAND_GAP") or "18")
 BRAND_RIGHT_MARGIN = int(os.getenv("VIDEO_BRAND_RIGHT_MARGIN") or "92")
 BRAND_TOP = int(os.getenv("VIDEO_BRAND_TOP") or "78")
+
+# R43.7.6 — smoke test rápido.
+# Renderiza apenas a primeira cena em duração curta e depois cria cópias de
+# compatibilidade para TikTok/YouTube, evitando três renders completos.
+SMOKE_TEST = (os.getenv("VIDEO_SMOKE_TEST") or "false").strip().lower() in {"1", "true", "yes", "on"}
+SMOKE_TEST_DURATION = float(os.getenv("VIDEO_SMOKE_TEST_DURATION") or "4.0")
+SMOKE_TEST_PLATFORM = (os.getenv("VIDEO_SMOKE_TEST_PLATFORM") or "instagram").strip().lower()
 
 BG = "0x091018"
 WHITE = "0xF4F7F9"
@@ -394,7 +401,7 @@ def allocate_semantic_timeline(platform: str, script: list[dict], voice_duration
     2) se o total ultrapassa a meta, o sistema reduz respiros e acelera apenas o áudio da cena;
     3) se sobra tempo, distribui respiro por função narrativa.
     """
-    target = float(PLATFORM_PROFILES[platform]["target_duration"])
+    target = SMOKE_TEST_DURATION if SMOKE_TEST else float(PLATFORM_PROFILES[platform]["target_duration"])
 
     role_buffer = {
         "hook": 0.28,
@@ -561,13 +568,6 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         "drawbox=x=0:y=0:w=iw:h=ih:color=black@0.10:t=fill",
         f"drawbox=x=68:y={panel_y}:w=944:h={panel_h}:color={PANEL}@0.62:t=fill",
         f"drawbox=x=68:y={panel_y}:w=8:h={panel_h}:color={ACCENT}@0.96:t=fill",
-        # R43.7.5: mantém o texto aprovado e compõe o símbolo oficial em branco translúcido antes dele.
-        drawtext(
-            brand, FONT_BOLD, 24, WHITE,
-            f"w-text_w-{BRAND_RIGHT_MARGIN}",
-            str(BRAND_TOP + 16),
-            f"{BRAND_OPACITY:.2f}"
-        ),
         drawtext(
             overlay, FONT_BOLD, overlay_size, WHITE, "106", str(overlay_y),
             "if(lt(t,0.08),0,min((t-0.08)/0.22,1))", 12
@@ -598,9 +598,8 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         "format=yuv420p",
     ]
 
-    # R43.7.5 — aplica o símbolo oficial UGI em branco translúcido com espaçamento corrigido
-    # das cenas. Se o PNG ainda não estiver no repositório, mantém somente a assinatura
-    # textual para não quebrar o renderer.
+    # R43.7.6 — assinatura UGI como uma única camada RGBA.
+    # Símbolo e texto deixam de ser posicionados independentemente.
     logo_available = (
         BRAND_LOGO.exists()
         and BRAND_LOGO.is_file()
@@ -608,21 +607,32 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
     )
 
     if logo_available:
-        # Estimativa conservadora para manter o símbolo sempre antes do texto, sem sobreposição.
-        brand_text_width_estimate = max(320, int(len(BRAND_TEXT) * 13.2))
-        logo_x = max(
-            24,
-            WIDTH - BRAND_RIGHT_MARGIN - brand_text_width_estimate - BRAND_GAP - BRAND_LOGO_WIDTH
-        )
-        logo_y = BRAND_TOP + 2
+        lockup_w = 610
+        lockup_h = 92
+        text_x = BRAND_LOGO_WIDTH + BRAND_GAP
+        text_y = 31
 
+        # Camada transparente única:
+        # [símbolo branco translúcido] + [UGI - UMA GESTÃO INTELIGENTE]
+        # A camada inteira recebe fade-in em alpha e só depois é aplicada ao vídeo.
         filter_complex = (
             f"[0:v]{','.join(visual)}[base];"
+            f"color=c=black@0.0:s={lockup_w}x{lockup_h}:d={duration},format=rgba[brandbg];"
             f"[1:v]scale={BRAND_LOGO_WIDTH}:-1:flags=lanczos,"
             "format=rgba,"
             "lutrgb=r='255':g='255':b='255',"
-            f"colorchannelmixer=aa={BRAND_OPACITY:.3f}[brandlogo];"
-            f"[base][brandlogo]overlay=x={logo_x}:y={logo_y}:format=auto[vout]"
+            f"colorchannelmixer=aa={BRAND_OPACITY:.3f}[symbol];"
+            f"[brandbg][symbol]overlay=x=0:y=(H-h)/2:format=auto[brand1];"
+            f"[brand1]drawtext="
+            f"fontfile='{FONT_BOLD}':"
+            f"textfile='{esc(brand)}':reload=0:"
+            f"fontsize=24:fontcolor=white@{BRAND_OPACITY:.3f}:"
+            f"x={text_x}:y={text_y}[brand2];"
+            "[brand2]fade=t=in:st=0.15:d=0.25:alpha=1[brand];"
+            f"[base][brand]overlay="
+            f"x=W-w-{BRAND_RIGHT_MARGIN}:"
+            f"y={BRAND_TOP}:"
+            "format=auto[vout]"
         )
 
         run(
@@ -644,8 +654,8 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
         )
     else:
         print(
-            f"R43.7.5 BRAND WARNING: símbolo transparente não encontrado em {BRAND_LOGO}; "
-            "renderizando assinatura textual sem símbolo.",
+            f"R43.7.6 BRAND WARNING: símbolo transparente não encontrado em {BRAND_LOGO}; "
+            "renderizando sem assinatura visual para evitar composição incompleta.",
             file=sys.stderr,
         )
         run(
@@ -655,14 +665,14 @@ def render_scene(platform: str, item: dict, duration: float, output: Path) -> di
                 "-t", f"{duration:.3f}",
                 "-vf", ",".join(visual),
                 "-an",
-            "-c:v", "libx264",
-            "-preset", "medium",
-            "-crf", "19",
-            "-r", str(FPS),
-            "-pix_fmt", "yuv420p",
-            output,
-        ]
-    )
+                "-c:v", "libx264",
+                "-preset", "medium",
+                "-crf", "19",
+                "-r", str(FPS),
+                "-pix_fmt", "yuv420p",
+                output,
+            ]
+        )
 
     return {
         "media_kind": media_kind,
@@ -1139,17 +1149,29 @@ def qa_platform(platform: str, script: list[dict], durations: list[float], media
 
     human_scenes = sum(1 for x in media_info if x["media_kind"] in {"video", "image"})
 
-    checks = {
-        "semantic_order": roles == required,
-        "human_media_minimum": human_scenes >= 4,
-        "cta_present": bool(script[-1]["overlay"]) and bool(PLATFORM_PROFILES[platform]["primary_cta"]),
-        "short_overlays": all(len(x["overlay"].split()) <= 9 for x in script),
-        "dynamic_layout": True,
-        "safe_zone_applied": True,
-        "voice_driven_timeline": True,
-        "platform_profile_applied": True,
-        "duration_sum_matches": abs(sum(durations) - PLATFORM_PROFILES[platform]["target_duration"]) <= 0.01,
-    }
+    if SMOKE_TEST:
+        checks = {
+            "smoke_test": True,
+            "single_scene": len(script) == 1,
+            "human_media_present": human_scenes >= 1,
+            "short_overlay": all(len(x["overlay"].split()) <= 9 for x in script),
+            "dynamic_layout": True,
+            "safe_zone_applied": True,
+            "voice_driven_timeline": True,
+            "duration_sum_matches": abs(sum(durations) - SMOKE_TEST_DURATION) <= 0.01,
+        }
+    else:
+        checks = {
+            "semantic_order": roles == required,
+            "human_media_minimum": human_scenes >= 4,
+            "cta_present": bool(script[-1]["overlay"]) and bool(PLATFORM_PROFILES[platform]["primary_cta"]),
+            "short_overlays": all(len(x["overlay"].split()) <= 9 for x in script),
+            "dynamic_layout": True,
+            "safe_zone_applied": True,
+            "voice_driven_timeline": True,
+            "platform_profile_applied": True,
+            "duration_sum_matches": abs(sum(durations) - PLATFORM_PROFILES[platform]["target_duration"]) <= 0.01,
+        }
 
     return {
         "platform": platform,
@@ -1162,11 +1184,13 @@ def qa_platform(platform: str, script: list[dict], durations: list[float], media
 
 def render_platform(platform: str) -> dict:
     profile = PLATFORM_PROFILES[platform]
-    target = float(profile["target_duration"])
+    target = SMOKE_TEST_DURATION if SMOKE_TEST else float(profile["target_duration"])
     pdir = WORK / platform
     pdir.mkdir(parents=True, exist_ok=True)
 
     script = platform_script(platform)
+    if SMOKE_TEST:
+        script = script[:1]
 
     voices = []
     voice_durations = []
@@ -1281,18 +1305,33 @@ def main() -> int:
     print("=========================================================")
 
     results = []
-    for platform in ("instagram", "tiktok", "youtube"):
-        print(f"\n===== R42 PLATFORM: {platform.upper()} =====")
-        results.append(render_platform(platform))
 
-    # Compatibilidade com o pipeline atual: entrega primária continua sendo Instagram.
-    shutil.copyfile(
-        OUTPUT_DIR / "instagram-reel.mp4",
-        OUTPUT_DIR / "ugi-reel.mp4",
-    )
+    if SMOKE_TEST:
+        platform = SMOKE_TEST_PLATFORM if SMOKE_TEST_PLATFORM in PLATFORM_PROFILES else "instagram"
+        print(f"\n===== R43.7.6 SMOKE TEST: {platform.upper()} / {SMOKE_TEST_DURATION:.1f}s =====")
+        smoke_result = render_platform(platform)
+        results.append(smoke_result)
+
+        # Compatibilidade com o workflow atual: produz os três nomes esperados,
+        # mas sem renderizar três vídeos completos. São cópias do único smoke render.
+        source = Path(smoke_result["output"])
+        shutil.copyfile(source, OUTPUT_DIR / "instagram-reel.mp4")
+        shutil.copyfile(source, OUTPUT_DIR / "tiktok-reel.mp4")
+        shutil.copyfile(source, OUTPUT_DIR / "youtube-short.mp4")
+        shutil.copyfile(source, OUTPUT_DIR / "ugi-reel.mp4")
+    else:
+        for platform in ("instagram", "tiktok", "youtube"):
+            print(f"\n===== R42 PLATFORM: {platform.upper()} =====")
+            results.append(render_platform(platform))
+
+        # Compatibilidade com o pipeline atual: entrega primária continua sendo Instagram.
+        shutil.copyfile(
+            OUTPUT_DIR / "instagram-reel.mp4",
+            OUTPUT_DIR / "ugi-reel.mp4",
+        )
 
     manifest = {
-        "version": "R43_7_5_MONOCHROME_SYMBOL_LOCKUP_SPACING",
+        "version": "R43_7_6_UNIFIED_BRAND_LOCKUP_SMOKE_TEST",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -1304,6 +1343,12 @@ def main() -> int:
         "platform_results": results,
         "public_overlay_policy": "scene_index_hidden",
         "scene_index_internal_only": True,
+        "smoke_test": {
+            "enabled": SMOKE_TEST,
+            "duration": SMOKE_TEST_DURATION if SMOKE_TEST else None,
+            "platform": SMOKE_TEST_PLATFORM if SMOKE_TEST else None,
+            "render_strategy": "single_short_render_plus_compatibility_copies" if SMOKE_TEST else "full_multi_platform"
+        },
         "brand_signature": {
             "enabled": True,
             "symbol_path": str(BRAND_LOGO),
@@ -1311,6 +1356,9 @@ def main() -> int:
             "opacity": BRAND_OPACITY,
             "symbol_width": BRAND_LOGO_WIDTH,
             "symbol_render": "white_monochrome_alpha_preserved",
+            "composition": "single_rgba_lockup_layer",
+            "brand_fade_in_start": 0.15,
+            "brand_fade_in_duration": 0.25,
             "symbol_gap": BRAND_GAP,
             "position": "upper_right",
             "transparent_background_required": True,
@@ -1338,10 +1386,9 @@ def main() -> int:
             for key, value in select_music_track().items()
         },
         "architecture_note":
-            "R43.7.5 preserves the approved audiovisual engine and changes only the upper-right brand composition: "
-            "the official UGI symbol is rendered as white translucent monochrome before the existing "
-            "'UGI - UMA GESTÃO INTELIGENTE' text with corrected spacing, without altering music, narration, "
-            "scene timing, CTA, Pexels media or platform outputs.",
+            "R43.7.6 preserves the approved audiovisual engine and composes the UGI symbol plus text as one transparent RGBA lockup, "
+            "eliminating independent positioning and overlap. It also adds a fast smoke-test mode that renders one short scene "
+            "and creates compatibility copies for the current three-asset upload workflow.",
     }
 
     (OUTPUT_DIR / "r42-platform-manifest.json").write_text(
@@ -1350,7 +1397,7 @@ def main() -> int:
     )
 
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
-    print("RENDER_SUCCESS_R43_7_5")
+    print("RENDER_SUCCESS_R43_7_6")
     return 0
 
 
