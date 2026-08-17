@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.7.2 — BRAND SIGNATURE + BALANCED VOICE/MUSIC DUCKING
+UGI Reel Renderer R43.7.3 — BRAND LOCKUP FIX + BALANCED VOICE/MUSIC DUCKING
 =============================================================
 Objetivo:
 - preservar Pexels + Kokoro + FFmpeg + GitHub + R2;
@@ -75,7 +75,7 @@ MUSIC_ALLOWED_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
-# R43.7.2 — Brand Signature.
+# R43.7.3 — Brand Lockup Fix.
 # PNG deve possuir canal alpha real (fundo transparente).
 BRAND_LOGO = Path(
     (os.getenv("VIDEO_BRAND_LOGO") or "assets/branding/ugi-logo-transparent.png").strip()
@@ -85,7 +85,7 @@ BRAND_OPACITY = float(os.getenv("VIDEO_BRAND_OPACITY") or "0.72")
 BRAND_LOGO_WIDTH = int(os.getenv("VIDEO_BRAND_LOGO_WIDTH") or "58")
 BRAND_GAP = int(os.getenv("VIDEO_BRAND_GAP") or "14")
 BRAND_RIGHT_MARGIN = int(os.getenv("VIDEO_BRAND_RIGHT_MARGIN") or "92")
-BRAND_TOP = int(os.getenv("VIDEO_BRAND_TOP") or "92")
+BRAND_TOP = int(os.getenv("VIDEO_BRAND_TOP") or "78")
 
 BG = "0x091018"
 WHITE = "0xF4F7F9"
@@ -1290,7 +1290,7 @@ def main() -> int:
     )
 
     manifest = {
-        "version": "R43_7_2_BRAND_SIGNATURE",
+        "version": "R43_7_3_BRAND_LOCKUP_FIX",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -1345,7 +1345,7 @@ def main() -> int:
     )
 
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
-    print("RENDER_SUCCESS_R43_7_2")
+    print("RENDER_SUCCESS_R43_7_3")
     return 0
 
 
