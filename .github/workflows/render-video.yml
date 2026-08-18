@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R43.7.10 Multi-Asset + Metadata Pass
+name: UGI Reel Renderer R43.7.11 Bootstrap Timeout Fix + Metadata Pass
 
 on:
   workflow_dispatch:
@@ -60,7 +60,7 @@ concurrency:
 jobs:
   render-reel:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
 
     env:
       VIDEO_TITLE: ${{ inputs.title }}
@@ -74,7 +74,7 @@ jobs:
       VIDEO_VARIANT: ${{ inputs.variant }}
       VIDEO_COMMERCIAL_INTENT: ${{ inputs.commercial_intent }}
 
-      # R43.7.10 — parâmetros reais do smoke test.
+      # R43.7.11 — parâmetros reais do smoke test.
       VIDEO_SMOKE_TEST: ${{ inputs.smoke_test }}
       VIDEO_SMOKE_TEST_DURATION: ${{ inputs.smoke_test_duration }}
       VIDEO_SMOKE_TEST_PLATFORM: ${{ inputs.smoke_test_platform }}
@@ -92,33 +92,113 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Ensure FFmpeg and curl
+      - name: Verify runner media tools
         shell: bash
         run: |
           set -euo pipefail
 
-          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install -y ffmpeg
+          missing=0
+
+          for bin in ffmpeg ffprobe curl; do
+            if ! command -v "$bin" >/dev/null 2>&1; then
+              echo "MISSING_BINARY=$bin"
+              missing=1
+            fi
+          done
+
+          if [ "$missing" -eq 0 ]; then
+            echo "R43.7.11 runner already contains FFmpeg, FFprobe and curl."
+          else
+            echo "R43.7.11 one or more runner binaries are missing; controlled apt recovery required."
+            echo "UGI_APT_RECOVERY_REQUIRED=true" >> "$GITHUB_ENV"
           fi
 
-          if ! command -v curl >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install -y curl
+          if command -v ffmpeg >/dev/null 2>&1; then
+            ffmpeg -version | head -n 1
           fi
 
-          ffmpeg -version | head -n 1
-          ffprobe -version | head -n 1
-          curl --version | head -n 1
+          if command -v ffprobe >/dev/null 2>&1; then
+            ffprobe -version | head -n 1
+          fi
 
-      - name: Install Kokoro PT-BR TTS and media dependencies
+          if command -v curl >/dev/null 2>&1; then
+            curl --version | head -n 1
+          fi
+
+      - name: Controlled apt recovery for missing system tools
+        if: ${{ env.UGI_APT_RECOVERY_REQUIRED == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
+          export DEBIAN_FRONTEND=noninteractive
+
+          apt_update() {
+            timeout 150s sudo apt-get               -o Acquire::Retries=2               -o Acquire::http::Timeout=20               -o Acquire::https::Timeout=20               update
+          }
+
+          if ! apt_update; then
+            echo "Primary apt update failed or timed out. Replacing Azure mirror with archive.ubuntu.com and retrying once."
+
+            sudo sed -i               's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g'               /etc/apt/sources.list 2>/dev/null || true
+
+            sudo sed -i               's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g'               /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null || true
+
+            apt_update
+          fi
+
+          packages=()
+
+          command -v ffmpeg >/dev/null 2>&1 || packages+=(ffmpeg)
+          command -v ffprobe >/dev/null 2>&1 || packages+=(ffmpeg)
+          command -v curl >/dev/null 2>&1 || packages+=(curl)
+
+          if [ "${#packages[@]}" -gt 0 ]; then
+            timeout 180s sudo apt-get               -o Acquire::Retries=2               -o Acquire::http::Timeout=20               -o Acquire::https::Timeout=20               install -y --no-install-recommends "${packages[@]}"
+          fi
+
+          command -v ffmpeg
+          command -v ffprobe
+          command -v curl
+
+      - name: Install Kokoro PT-BR TTS and Python dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+
           python -m pip install --upgrade pip
           python -m pip install "kokoro>=0.9.4" soundfile numpy requests
-          sudo apt-get update
-          sudo apt-get install -y espeak-ng
+
+      - name: Ensure espeak-ng without unbounded apt update
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if command -v espeak-ng >/dev/null 2>&1; then
+            echo "R43.7.11 espeak-ng already available."
+            espeak-ng --version | head -n 1
+            exit 0
+          fi
+
+          export DEBIAN_FRONTEND=noninteractive
+
+          apt_update() {
+            timeout 150s sudo apt-get               -o Acquire::Retries=2               -o Acquire::http::Timeout=20               -o Acquire::https::Timeout=20               update
+          }
+
+          if ! apt_update; then
+            echo "Primary apt update failed or timed out. Replacing Azure mirror with archive.ubuntu.com and retrying once."
+
+            sudo sed -i               's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g'               /etc/apt/sources.list 2>/dev/null || true
+
+            sudo sed -i               's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g'               /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null || true
+
+            apt_update
+          fi
+
+          timeout 180s sudo apt-get             -o Acquire::Retries=2             -o Acquire::http::Timeout=20             -o Acquire::https::Timeout=20             install -y --no-install-recommends espeak-ng
+
+          command -v espeak-ng
+          espeak-ng --version | head -n 1
 
       - name: Cache Kokoro models
         uses: actions/cache@v4
@@ -162,9 +242,9 @@ jobs:
           echo "VIDEO_SMOKE_TEST_PLATFORM=${VIDEO_SMOKE_TEST_PLATFORM}"
 
           if [ "${RESOLVED_SMOKE}" = "true" ]; then
-            echo "R43.7.10_MODE=TRUE_SMOKE_TEST"
+            echo "R43.7.11_MODE=TRUE_SMOKE_TEST"
           else
-            echo "R43.7.10_MODE=FULL_MULTI_PLATFORM"
+            echo "R43.7.11_MODE=FULL_MULTI_PLATFORM"
           fi
 
       - name: Acquire semantic human media from Pexels
@@ -332,7 +412,7 @@ jobs:
           (output_dir / "pexels-attribution.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.7.10",
+                      "version": "R43.7.11",
                       "provider": "Pexels",
                       "smoke_test": smoke_test,
                       "selected_scene_count": selected_count,
@@ -347,7 +427,7 @@ jobs:
           (output_dir / "casting-policy.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.7.10",
+                      "version": "R43.7.11",
                       "policy": "semantic_storytelling_plus_visual_diversity",
                       "smoke_test": smoke_test,
                       "principles": [
@@ -375,7 +455,7 @@ jobs:
 
           if selected_count < required_minimum:
               raise SystemExit(
-                  f"R43.7.10 exige pelo menos {required_minimum} cena(s) humana(s)."
+                  f"R43.7.11 exige pelo menos {required_minimum} cena(s) humana(s)."
               )
           PY
 
@@ -396,14 +476,14 @@ jobs:
               "$f"
           done
 
-      - name: Render UGI R43.7.10
+      - name: Render UGI R43.7.11
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p output
           python render-reel.py
 
-      - name: Validate R43.7.10 outputs
+      - name: Validate R43.7.11 outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -500,7 +580,7 @@ jobs:
                   )
 
           print(
-              "R43_7_10_VALIDATION_OK "
+              "R43_7_11_VALIDATION_OK "
               f"smoke_test={smoke_test} "
               f"smoke_duration={smoke_duration if smoke_test else 'n/a'}"
           )
@@ -509,7 +589,7 @@ jobs:
       - name: Preserve GitHub artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ugi-reel-r43-7-10-${{ inputs.render_id }}
+          name: ugi-reel-r43-7-11-${{ inputs.render_id }}
           path: |
             output/ugi-reel.mp4
             output/instagram-reel.mp4
@@ -542,12 +622,12 @@ jobs:
             INSTAGRAM_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             TIKTOK_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             YOUTUBE_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
-            echo "R43.7.10 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
+            echo "R43.7.11 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
           else
             INSTAGRAM_DURATION="32"
             TIKTOK_DURATION="24"
             YOUTUBE_DURATION="36"
-            echo "R43.7.10 delivery mode=FULL"
+            echo "R43.7.11 delivery mode=FULL"
           fi
 
           upload_asset() {
@@ -689,7 +769,7 @@ jobs:
               raise SystemExit("videoKey legado deixou de apontar para Instagram.")
 
           print(
-              "R43_7_10_MULTI_ASSET_DELIVERY_OK "
+              "R43_7_11_MULTI_ASSET_DELIVERY_OK "
               f"smoke_test={smoke_test}"
           )
           PY
@@ -717,5 +797,5 @@ jobs:
             -X POST "${BASE_URL}/api/video-status" \
             -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
             -H "Content-Type: application/json" \
-            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.7.10 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
+            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.7.11 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
 
