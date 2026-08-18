@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R43.7.8 Multi-Asset Delivery + True Smoke Test
+name: UGI Reel Renderer R43.7.10 Multi-Asset + Metadata Pass
 
 on:
   workflow_dispatch:
@@ -15,6 +15,22 @@ on:
         description: "ID único enviado pela Lola Operacional"
         required: false
         default: ""
+      content_id:
+        description: "Content ID rastreável enviado pela Lola Operacional"
+        required: false
+        default: "UGI-R43-CONTENT"
+      experiment_id:
+        description: "Experiment ID rastreável"
+        required: false
+        default: "UGI-R43-EXPERIMENT"
+      variant:
+        description: "Variante experimental"
+        required: false
+        default: "A"
+      commercial_intent:
+        description: "Intenção comercial do conteúdo"
+        required: false
+        default: "atracao_com_potencial_de_conversao"
       smoke_test:
         description: "Ativar smoke test curto"
         required: false
@@ -53,12 +69,12 @@ jobs:
       VIDEO_CTA: "Conheça a UGI."
       VIDEO_NARRATION: ""
 
-      VIDEO_CONTENT_ID: "UGI-CENTRALIZACAO-R42-001"
-      VIDEO_EXPERIMENT_ID: "UGI-CENTRALIZACAO-R42-001"
-      VIDEO_VARIANT: "A-R42"
-      VIDEO_COMMERCIAL_INTENT: "atracao_com_potencial_de_conversao"
+      VIDEO_CONTENT_ID: ${{ inputs.content_id }}
+      VIDEO_EXPERIMENT_ID: ${{ inputs.experiment_id }}
+      VIDEO_VARIANT: ${{ inputs.variant }}
+      VIDEO_COMMERCIAL_INTENT: ${{ inputs.commercial_intent }}
 
-      # R43.7.8 — parâmetros reais do smoke test.
+      # R43.7.10 — parâmetros reais do smoke test.
       VIDEO_SMOKE_TEST: ${{ inputs.smoke_test }}
       VIDEO_SMOKE_TEST_DURATION: ${{ inputs.smoke_test_duration }}
       VIDEO_SMOKE_TEST_PLATFORM: ${{ inputs.smoke_test_platform }}
@@ -146,9 +162,9 @@ jobs:
           echo "VIDEO_SMOKE_TEST_PLATFORM=${VIDEO_SMOKE_TEST_PLATFORM}"
 
           if [ "${RESOLVED_SMOKE}" = "true" ]; then
-            echo "R43.7.8_MODE=TRUE_SMOKE_TEST"
+            echo "R43.7.10_MODE=TRUE_SMOKE_TEST"
           else
-            echo "R43.7.8_MODE=FULL_MULTI_PLATFORM"
+            echo "R43.7.10_MODE=FULL_MULTI_PLATFORM"
           fi
 
       - name: Acquire semantic human media from Pexels
@@ -316,7 +332,7 @@ jobs:
           (output_dir / "pexels-attribution.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.7.8",
+                      "version": "R43.7.10",
                       "provider": "Pexels",
                       "smoke_test": smoke_test,
                       "selected_scene_count": selected_count,
@@ -331,7 +347,7 @@ jobs:
           (output_dir / "casting-policy.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.7.8",
+                      "version": "R43.7.10",
                       "policy": "semantic_storytelling_plus_visual_diversity",
                       "smoke_test": smoke_test,
                       "principles": [
@@ -359,7 +375,7 @@ jobs:
 
           if selected_count < required_minimum:
               raise SystemExit(
-                  f"R43.7.8 exige pelo menos {required_minimum} cena(s) humana(s)."
+                  f"R43.7.10 exige pelo menos {required_minimum} cena(s) humana(s)."
               )
           PY
 
@@ -380,14 +396,14 @@ jobs:
               "$f"
           done
 
-      - name: Render UGI R43.7.8
+      - name: Render UGI R43.7.10
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p output
           python render-reel.py
 
-      - name: Validate R43.7.8 outputs
+      - name: Validate R43.7.10 outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -484,7 +500,7 @@ jobs:
                   )
 
           print(
-              "R43_7_8_VALIDATION_OK "
+              "R43_7_10_VALIDATION_OK "
               f"smoke_test={smoke_test} "
               f"smoke_duration={smoke_duration if smoke_test else 'n/a'}"
           )
@@ -493,7 +509,7 @@ jobs:
       - name: Preserve GitHub artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ugi-reel-r43-7-8-${{ inputs.render_id }}
+          name: ugi-reel-r43-7-10-${{ inputs.render_id }}
           path: |
             output/ugi-reel.mp4
             output/instagram-reel.mp4
@@ -526,12 +542,12 @@ jobs:
             INSTAGRAM_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             TIKTOK_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             YOUTUBE_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
-            echo "R43.7.8 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
+            echo "R43.7.10 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
           else
             INSTAGRAM_DURATION="32"
             TIKTOK_DURATION="24"
             YOUTUBE_DURATION="36"
-            echo "R43.7.8 delivery mode=FULL"
+            echo "R43.7.10 delivery mode=FULL"
           fi
 
           upload_asset() {
@@ -673,7 +689,7 @@ jobs:
               raise SystemExit("videoKey legado deixou de apontar para Instagram.")
 
           print(
-              "R43_7_8_MULTI_ASSET_DELIVERY_OK "
+              "R43_7_10_MULTI_ASSET_DELIVERY_OK "
               f"smoke_test={smoke_test}"
           )
           PY
@@ -701,5 +717,5 @@ jobs:
             -X POST "${BASE_URL}/api/video-status" \
             -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
             -H "Content-Type: application/json" \
-            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.7.8 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
+            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.7.10 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
 
