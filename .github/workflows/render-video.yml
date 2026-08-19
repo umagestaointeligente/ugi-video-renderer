@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R43.8.0 Dynamic Scenes + Fail Closed + Metadata Pass
+name: UGI Reel Renderer R43.8.1 Dynamic Scenes + Pexels Retry + Fail Closed
 
 on:
   workflow_dispatch:
@@ -80,7 +80,7 @@ jobs:
       VIDEO_SCENES_JSON: ${{ inputs.scenes_json }}
       VIDEO_ALLOW_LEGACY_SCENES: "false"
 
-      # R43.8.0 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
+      # R43.8.1 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
       VIDEO_SMOKE_TEST: ${{ inputs.smoke_test }}
       VIDEO_SMOKE_TEST_DURATION: ${{ inputs.smoke_test_duration }}
       VIDEO_SMOKE_TEST_PLATFORM: ${{ inputs.smoke_test_platform }}
@@ -113,9 +113,9 @@ jobs:
           done
 
           if [ "$missing" -eq 0 ]; then
-            echo "R43.8.0 runner already contains FFmpeg, FFprobe and curl."
+            echo "R43.8.1 runner already contains FFmpeg, FFprobe and curl."
           else
-            echo "R43.8.0 one or more runner binaries are missing; controlled apt recovery required."
+            echo "R43.8.1 one or more runner binaries are missing; controlled apt recovery required."
             echo "UGI_APT_RECOVERY_REQUIRED=true" >> "$GITHUB_ENV"
           fi
 
@@ -180,7 +180,7 @@ jobs:
           set -euo pipefail
 
           if command -v espeak-ng >/dev/null 2>&1; then
-            echo "R43.8.0 espeak-ng already available."
+            echo "R43.8.1 espeak-ng already available."
             espeak-ng --version | head -n 1
             exit 0
           fi
@@ -248,9 +248,9 @@ jobs:
           echo "VIDEO_SMOKE_TEST_PLATFORM=${VIDEO_SMOKE_TEST_PLATFORM}"
 
           if [ "${RESOLVED_SMOKE}" = "true" ]; then
-            echo "R43.8.0_MODE=TRUE_SMOKE_TEST"
+            echo "R43.8.1_MODE=TRUE_SMOKE_TEST"
           else
-            echo "R43.8.0_MODE=FULL_MULTI_PLATFORM"
+            echo "R43.8.1_MODE=FULL_MULTI_PLATFORM"
           fi
 
       - name: Validate dynamic scenes payload
@@ -264,37 +264,37 @@ jobs:
 
           raw = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
           if not raw:
-              raise SystemExit("R43.8.0 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
+              raise SystemExit("R43.8.1 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
 
           payload = json.loads(raw)
           scenes = payload.get("scenes") if isinstance(payload, dict) else payload
 
           if not isinstance(scenes, list):
-              raise SystemExit("R43.8.0 FAIL-CLOSED: scenes_json não contém array scenes.")
+              raise SystemExit("R43.8.1 FAIL-CLOSED: scenes_json não contém array scenes.")
 
           if not 4 <= len(scenes) <= 10:
-              raise SystemExit(f"R43.8.0 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
+              raise SystemExit(f"R43.8.1 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
 
           allowed_roles = {"hook", "pain", "consequence", "turn", "result", "cta"}
           required_platforms = {"instagram", "tiktok", "youtube"}
 
           for idx, scene in enumerate(scenes, start=1):
               if not isinstance(scene, dict):
-                  raise SystemExit(f"R43.8.0 cena {idx} inválida.")
+                  raise SystemExit(f"R43.8.1 cena {idx} inválida.")
               if str(scene.get("role") or "").strip() not in allowed_roles:
-                  raise SystemExit(f"R43.8.0 role inválido na cena {idx}.")
+                  raise SystemExit(f"R43.8.1 role inválido na cena {idx}.")
               if not str(scene.get("visual_intent") or "").strip():
-                  raise SystemExit(f"R43.8.0 visual_intent ausente na cena {idx}.")
+                  raise SystemExit(f"R43.8.1 visual_intent ausente na cena {idx}.")
               if not str(scene.get("pexels_query") or "").strip():
-                  raise SystemExit(f"R43.8.0 pexels_query ausente na cena {idx}.")
+                  raise SystemExit(f"R43.8.1 pexels_query ausente na cena {idx}.")
               for field in ("overlay", "support", "narration"):
                   value = scene.get(field)
                   if not isinstance(value, dict) or set(value.keys()) < required_platforms:
-                      raise SystemExit(f"R43.8.0 {field} incompleto na cena {idx}.")
+                      raise SystemExit(f"R43.8.1 {field} incompleto na cena {idx}.")
                   for platform in required_platforms:
                       if not str(value.get(platform) or "").strip():
                           raise SystemExit(
-                              f"R43.8.0 {field}.{platform} vazio na cena {idx}."
+                              f"R43.8.1 {field}.{platform} vazio na cena {idx}."
                           )
 
           forbidden = [
@@ -317,7 +317,7 @@ jobs:
                       "LEGACY_RENDERER_CONTENT_LEAK_DETECTED: " + ", ".join(hits)
                   )
 
-          print(f"R43_8_0_DYNAMIC_SCENES_VALID scenes={len(scenes)} content_id={content_id}")
+          print(f"R43_8_1_DYNAMIC_SCENES_VALID scenes={len(scenes)} content_id={content_id}")
           PY
 
       - name: Acquire semantic human media from Pexels
@@ -363,7 +363,7 @@ jobs:
                       alternatives.append(candidate)
 
               if not alternatives:
-                  raise SystemExit(f"R43.8.0 cena {idx}: nenhuma query disponível.")
+                  raise SystemExit(f"R43.8.1 cena {idx}: nenhuma query disponível.")
 
               dynamic_queries[idx] = alternatives
 
@@ -376,6 +376,74 @@ jobs:
           used_video_ids = set()
           attribution = []
           selected_count = 0
+
+          # R43.8.1 — Pexels é dependência externa e não pode derrubar
+          # o job inteiro por um único ReadTimeout transitório.
+          # Faz retries controlados, backoff curto e tenta a query alternativa.
+          def request_json(url, *, headers=None, params=None, attempts=3):
+              last_error = None
+
+              for attempt in range(1, attempts + 1):
+                  try:
+                      response = requests.get(
+                          url,
+                          headers=headers,
+                          params=params,
+                          timeout=(10, 60),
+                      )
+                      response.raise_for_status()
+                      return response.json()
+                  except requests.RequestException as exc:
+                      last_error = exc
+                      print(
+                          f"PEXELS_SEARCH_ATTEMPT_FAILED "
+                          f"attempt={attempt}/{attempts} "
+                          f"error={type(exc).__name__}: {exc}"
+                      )
+                      if attempt < attempts:
+                          import time
+                          time.sleep(2 * attempt)
+
+              raise last_error
+
+          def download_media(url, target, attempts=3):
+              last_error = None
+
+              for attempt in range(1, attempts + 1):
+                  try:
+                      with requests.get(
+                          url,
+                          stream=True,
+                          timeout=(10, 120),
+                      ) as media:
+                          media.raise_for_status()
+                          with target.open("wb") as fh:
+                              for chunk in media.iter_content(
+                                  chunk_size=1024 * 1024
+                              ):
+                                  if chunk:
+                                      fh.write(chunk)
+
+                      if target.exists() and target.stat().st_size >= 50_000:
+                          return
+
+                      target.unlink(missing_ok=True)
+                      raise RuntimeError(
+                          "arquivo Pexels pequeno demais após download"
+                      )
+                  except Exception as exc:
+                      last_error = exc
+                      target.unlink(missing_ok=True)
+                      print(
+                          f"PEXELS_DOWNLOAD_ATTEMPT_FAILED "
+                          f"attempt={attempt}/{attempts} "
+                          f"error={type(exc).__name__}: {exc}"
+                      )
+                      if attempt < attempts:
+                          import time
+                          time.sleep(2 * attempt)
+
+              raise last_error
 
           def score(file):
               width = int(file.get("width") or 0)
@@ -396,21 +464,30 @@ jobs:
           for scene, alternatives in queries.items():
               chosen = None
               chosen_query = None
+              scene_errors = []
 
               for query in alternatives:
-                  response = requests.get(
-                      endpoint,
-                      headers=headers,
-                      params={
-                          "query": query,
-                          "orientation": "portrait",
-                          "per_page": 15,
-                          "page": 1,
-                      },
-                      timeout=30,
-                  )
-                  response.raise_for_status()
-                  payload = response.json()
+                  try:
+                      payload = request_json(
+                          endpoint,
+                          headers=headers,
+                          params={
+                              "query": query,
+                              "orientation": "portrait",
+                              "per_page": 15,
+                              "page": 1,
+                          },
+                          attempts=3,
+                      )
+                  except Exception as exc:
+                      scene_errors.append(
+                          f"{query}: {type(exc).__name__}: {exc}"
+                      )
+                      print(
+                          f"SCENE_{scene}: query indisponível após retries: "
+                          f"{query}"
+                      )
+                      continue
 
                   ranked = []
                   for video in payload.get("videos", []):
@@ -431,7 +508,10 @@ jobs:
                       break
 
               if not chosen:
-                  print(f"SCENE_{scene}: nenhuma mídia encontrada.")
+                  print(
+                      f"SCENE_{scene}: nenhuma mídia encontrada. "
+                      f"errors={scene_errors}"
+                  )
                   continue
 
               _, video, file = chosen
@@ -445,16 +525,13 @@ jobs:
                   f"query={chosen_query}"
               )
 
-              with requests.get(file["link"], stream=True, timeout=90) as media:
-                  media.raise_for_status()
-                  with target.open("wb") as fh:
-                      for chunk in media.iter_content(chunk_size=1024 * 1024):
-                          if chunk:
-                              fh.write(chunk)
-
-              if target.stat().st_size < 50_000:
-                  target.unlink(missing_ok=True)
-                  print(f"SCENE_{scene}: arquivo pequeno demais; descartado.")
+              try:
+                  download_media(file["link"], target, attempts=3)
+              except Exception as exc:
+                  print(
+                      f"SCENE_{scene}: download falhou após retries: "
+                      f"{type(exc).__name__}: {exc}"
+                  )
                   continue
 
               selected_count += 1
@@ -478,7 +555,7 @@ jobs:
           (output_dir / "pexels-attribution.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.8.0",
+                      "version": "R43.8.1",
                       "provider": "Pexels",
                       "smoke_test": smoke_test,
                       "selected_scene_count": selected_count,
@@ -493,7 +570,7 @@ jobs:
           (output_dir / "casting-policy.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.8.0",
+                      "version": "R43.8.1",
                       "policy": "semantic_storytelling_plus_visual_diversity",
                       "smoke_test": smoke_test,
                       "principles": [
@@ -521,7 +598,7 @@ jobs:
 
           if selected_count < required_minimum:
               raise SystemExit(
-                  f"R43.8.0 exige pelo menos {required_minimum} cena(s) humana(s)."
+                  f"R43.8.1 exige pelo menos {required_minimum} cena(s) humana(s)."
               )
           PY
 
@@ -542,14 +619,14 @@ jobs:
               "$f"
           done
 
-      - name: Render UGI R43.8.0
+      - name: Render UGI R43.8.1
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p output
           python render-reel.py
 
-      - name: Validate R43.8.0 outputs
+      - name: Validate R43.8.1 outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -646,7 +723,7 @@ jobs:
                   )
 
           print(
-              "R43_8_0_VALIDATION_OK "
+              "R43_8_1_VALIDATION_OK "
               f"smoke_test={smoke_test} "
               f"smoke_duration={smoke_duration if smoke_test else 'n/a'}"
           )
@@ -688,12 +765,12 @@ jobs:
             INSTAGRAM_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             TIKTOK_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             YOUTUBE_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
-            echo "R43.8.0 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
+            echo "R43.8.1 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
           else
             INSTAGRAM_DURATION="32"
             TIKTOK_DURATION="24"
             YOUTUBE_DURATION="36"
-            echo "R43.8.0 delivery mode=FULL"
+            echo "R43.8.1 delivery mode=FULL"
           fi
 
           upload_asset() {
@@ -835,7 +912,7 @@ jobs:
               raise SystemExit("videoKey legado deixou de apontar para Instagram.")
 
           print(
-              "R43_8_0_MULTI_ASSET_DELIVERY_OK "
+              "R43_8_1_MULTI_ASSET_DELIVERY_OK "
               f"smoke_test={smoke_test}"
           )
           PY
@@ -863,5 +940,5 @@ jobs:
             -X POST "${BASE_URL}/api/video-status" \
             -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
             -H "Content-Type: application/json" \
-            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.0 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
+            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.1 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
 
