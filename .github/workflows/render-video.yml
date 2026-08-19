@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R43.7.12 Valid Workflow + Apt Install Fix + Metadata Pass
+name: UGI Reel Renderer R43.8.0 Dynamic Scenes + Fail Closed + Metadata Pass
 
 on:
   workflow_dispatch:
@@ -31,6 +31,10 @@ on:
         description: "Intenção comercial do conteúdo"
         required: false
         default: "atracao_com_potencial_de_conversao"
+      scenes_json:
+        description: "JSON das cenas dinâmicas enviado pela Lola Operacional"
+        required: true
+        default: ""
       smoke_test:
         description: "Ativar smoke test curto"
         required: false
@@ -73,8 +77,10 @@ jobs:
       VIDEO_EXPERIMENT_ID: ${{ inputs.experiment_id }}
       VIDEO_VARIANT: ${{ inputs.variant }}
       VIDEO_COMMERCIAL_INTENT: ${{ inputs.commercial_intent }}
+      VIDEO_SCENES_JSON: ${{ inputs.scenes_json }}
+      VIDEO_ALLOW_LEGACY_SCENES: "false"
 
-      # R43.7.12 — parâmetros reais do smoke test.
+      # R43.8.0 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
       VIDEO_SMOKE_TEST: ${{ inputs.smoke_test }}
       VIDEO_SMOKE_TEST_DURATION: ${{ inputs.smoke_test_duration }}
       VIDEO_SMOKE_TEST_PLATFORM: ${{ inputs.smoke_test_platform }}
@@ -107,9 +113,9 @@ jobs:
           done
 
           if [ "$missing" -eq 0 ]; then
-            echo "R43.7.12 runner already contains FFmpeg, FFprobe and curl."
+            echo "R43.8.0 runner already contains FFmpeg, FFprobe and curl."
           else
-            echo "R43.7.12 one or more runner binaries are missing; controlled apt recovery required."
+            echo "R43.8.0 one or more runner binaries are missing; controlled apt recovery required."
             echo "UGI_APT_RECOVERY_REQUIRED=true" >> "$GITHUB_ENV"
           fi
 
@@ -174,7 +180,7 @@ jobs:
           set -euo pipefail
 
           if command -v espeak-ng >/dev/null 2>&1; then
-            echo "R43.7.12 espeak-ng already available."
+            echo "R43.8.0 espeak-ng already available."
             espeak-ng --version | head -n 1
             exit 0
           fi
@@ -242,10 +248,77 @@ jobs:
           echo "VIDEO_SMOKE_TEST_PLATFORM=${VIDEO_SMOKE_TEST_PLATFORM}"
 
           if [ "${RESOLVED_SMOKE}" = "true" ]; then
-            echo "R43.7.12_MODE=TRUE_SMOKE_TEST"
+            echo "R43.8.0_MODE=TRUE_SMOKE_TEST"
           else
-            echo "R43.7.12_MODE=FULL_MULTI_PLATFORM"
+            echo "R43.8.0_MODE=FULL_MULTI_PLATFORM"
           fi
+
+      - name: Validate dynamic scenes payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          import json
+          import os
+
+          raw = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
+          if not raw:
+              raise SystemExit("R43.8.0 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
+
+          payload = json.loads(raw)
+          scenes = payload.get("scenes") if isinstance(payload, dict) else payload
+
+          if not isinstance(scenes, list):
+              raise SystemExit("R43.8.0 FAIL-CLOSED: scenes_json não contém array scenes.")
+
+          if not 4 <= len(scenes) <= 10:
+              raise SystemExit(f"R43.8.0 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
+
+          allowed_roles = {"hook", "pain", "consequence", "turn", "result", "cta"}
+          required_platforms = {"instagram", "tiktok", "youtube"}
+
+          for idx, scene in enumerate(scenes, start=1):
+              if not isinstance(scene, dict):
+                  raise SystemExit(f"R43.8.0 cena {idx} inválida.")
+              if str(scene.get("role") or "").strip() not in allowed_roles:
+                  raise SystemExit(f"R43.8.0 role inválido na cena {idx}.")
+              if not str(scene.get("visual_intent") or "").strip():
+                  raise SystemExit(f"R43.8.0 visual_intent ausente na cena {idx}.")
+              if not str(scene.get("pexels_query") or "").strip():
+                  raise SystemExit(f"R43.8.0 pexels_query ausente na cena {idx}.")
+              for field in ("overlay", "support", "narration"):
+                  value = scene.get(field)
+                  if not isinstance(value, dict) or set(value.keys()) < required_platforms:
+                      raise SystemExit(f"R43.8.0 {field} incompleto na cena {idx}.")
+                  for platform in required_platforms:
+                      if not str(value.get(platform) or "").strip():
+                          raise SystemExit(
+                              f"R43.8.0 {field}.{platform} vazio na cena {idx}."
+                          )
+
+          forbidden = [
+              "tudo passa por você",
+              "tudo depende de você",
+              "o líder vira gargalo",
+              "você virou o gargalo",
+              "autonomia com direção",
+              "mais autonomia. mais execução",
+          ]
+
+          content_id = (os.getenv("VIDEO_CONTENT_ID") or "").strip().lower()
+          canonical = json.dumps(scenes, ensure_ascii=False, sort_keys=True).lower()
+
+          # Proteção específica do incidente confirmado.
+          if "trial03" in content_id or "1945" in content_id:
+              hits = [phrase for phrase in forbidden if phrase in canonical]
+              if hits:
+                  raise SystemExit(
+                      "LEGACY_RENDERER_CONTENT_LEAK_DETECTED: " + ", ".join(hits)
+                  )
+
+          print(f"R43_8_0_DYNAMIC_SCENES_VALID scenes={len(scenes)} content_id={content_id}")
+          PY
 
       - name: Acquire semantic human media from Pexels
         shell: bash
@@ -274,35 +347,28 @@ jobs:
               "1", "true", "yes", "on"
           }
 
-          all_queries = {
-              1: [
-                  "overwhelmed male manager busy office coworkers approval",
-                  "stressed business manager office coworkers"
-              ],
-              2: [
-                  "business team waiting meeting female manager office",
-                  "team waiting decision office meeting"
-              ],
-              3: [
-                  "busy diverse office team working pressure manager",
-                  "corporate team workload busy office"
-              ],
-              4: [
-                  "young professional presenting diverse team collaboration office",
-                  "young employee presenting idea business team"
-              ],
-              5: [
-                  "male leader dashboard diverse autonomous team office",
-                  "business leader reviewing dashboard team working"
-              ],
-              6: [
-                  "diverse business team man woman young professional success office",
-                  "diverse office team leadership young professional"
-              ],
-          }
+          raw = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
+          payload = json.loads(raw)
+          scenes = payload.get("scenes") if isinstance(payload, dict) else payload
 
-          # Smoke test precisa apenas da primeira cena humana.
-          queries = {1: all_queries[1]} if smoke_test else all_queries
+          dynamic_queries = {}
+          for idx, scene in enumerate(scenes, start=1):
+              primary = str(scene.get("pexels_query") or "").strip()
+              visual = str(scene.get("visual_intent") or "").strip()
+
+              alternatives = []
+              for candidate in (primary, visual):
+                  candidate = candidate.strip()
+                  if candidate and candidate not in alternatives:
+                      alternatives.append(candidate)
+
+              if not alternatives:
+                  raise SystemExit(f"R43.8.0 cena {idx}: nenhuma query disponível.")
+
+              dynamic_queries[idx] = alternatives
+
+          # Smoke test usa apenas a primeira cena real do payload.
+          queries = {1: dynamic_queries[1]} if smoke_test else dynamic_queries
 
           endpoint = "https://api.pexels.com/v1/videos/search"
           headers = {"Authorization": api_key}
@@ -412,7 +478,7 @@ jobs:
           (output_dir / "pexels-attribution.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.7.12",
+                      "version": "R43.8.0",
                       "provider": "Pexels",
                       "smoke_test": smoke_test,
                       "selected_scene_count": selected_count,
@@ -427,7 +493,7 @@ jobs:
           (output_dir / "casting-policy.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.7.12",
+                      "version": "R43.8.0",
                       "policy": "semantic_storytelling_plus_visual_diversity",
                       "smoke_test": smoke_test,
                       "principles": [
@@ -455,7 +521,7 @@ jobs:
 
           if selected_count < required_minimum:
               raise SystemExit(
-                  f"R43.7.12 exige pelo menos {required_minimum} cena(s) humana(s)."
+                  f"R43.8.0 exige pelo menos {required_minimum} cena(s) humana(s)."
               )
           PY
 
@@ -476,14 +542,14 @@ jobs:
               "$f"
           done
 
-      - name: Render UGI R43.7.12
+      - name: Render UGI R43.8.0
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p output
           python render-reel.py
 
-      - name: Validate R43.7.12 outputs
+      - name: Validate R43.8.0 outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -580,7 +646,7 @@ jobs:
                   )
 
           print(
-              "R43_7_12_VALIDATION_OK "
+              "R43_8_0_VALIDATION_OK "
               f"smoke_test={smoke_test} "
               f"smoke_duration={smoke_duration if smoke_test else 'n/a'}"
           )
@@ -622,12 +688,12 @@ jobs:
             INSTAGRAM_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             TIKTOK_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             YOUTUBE_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
-            echo "R43.7.12 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
+            echo "R43.8.0 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
           else
             INSTAGRAM_DURATION="32"
             TIKTOK_DURATION="24"
             YOUTUBE_DURATION="36"
-            echo "R43.7.12 delivery mode=FULL"
+            echo "R43.8.0 delivery mode=FULL"
           fi
 
           upload_asset() {
@@ -769,7 +835,7 @@ jobs:
               raise SystemExit("videoKey legado deixou de apontar para Instagram.")
 
           print(
-              "R43_7_12_MULTI_ASSET_DELIVERY_OK "
+              "R43_8_0_MULTI_ASSET_DELIVERY_OK "
               f"smoke_test={smoke_test}"
           )
           PY
@@ -797,5 +863,5 @@ jobs:
             -X POST "${BASE_URL}/api/video-status" \
             -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
             -H "Content-Type: application/json" \
-            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.7.12 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
+            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.0 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
 
