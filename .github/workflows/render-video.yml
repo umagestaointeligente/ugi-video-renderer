@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R43.8.1 Dynamic Scenes + Pexels Retry + Fail Closed
+name: UGI Reel Renderer R43.8.2 Dynamic Scenes + Multi-Provider Media Cascade
 
 on:
   workflow_dispatch:
@@ -80,7 +80,7 @@ jobs:
       VIDEO_SCENES_JSON: ${{ inputs.scenes_json }}
       VIDEO_ALLOW_LEGACY_SCENES: "false"
 
-      # R43.8.1 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
+      # R43.8.2 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
       VIDEO_SMOKE_TEST: ${{ inputs.smoke_test }}
       VIDEO_SMOKE_TEST_DURATION: ${{ inputs.smoke_test_duration }}
       VIDEO_SMOKE_TEST_PLATFORM: ${{ inputs.smoke_test_platform }}
@@ -88,6 +88,7 @@ jobs:
       UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
       UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
       PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
 
     steps:
       - name: Checkout repository
@@ -113,9 +114,9 @@ jobs:
           done
 
           if [ "$missing" -eq 0 ]; then
-            echo "R43.8.1 runner already contains FFmpeg, FFprobe and curl."
+            echo "R43.8.2 runner already contains FFmpeg, FFprobe and curl."
           else
-            echo "R43.8.1 one or more runner binaries are missing; controlled apt recovery required."
+            echo "R43.8.2 one or more runner binaries are missing; controlled apt recovery required."
             echo "UGI_APT_RECOVERY_REQUIRED=true" >> "$GITHUB_ENV"
           fi
 
@@ -180,7 +181,7 @@ jobs:
           set -euo pipefail
 
           if command -v espeak-ng >/dev/null 2>&1; then
-            echo "R43.8.1 espeak-ng already available."
+            echo "R43.8.2 espeak-ng already available."
             espeak-ng --version | head -n 1
             exit 0
           fi
@@ -248,9 +249,9 @@ jobs:
           echo "VIDEO_SMOKE_TEST_PLATFORM=${VIDEO_SMOKE_TEST_PLATFORM}"
 
           if [ "${RESOLVED_SMOKE}" = "true" ]; then
-            echo "R43.8.1_MODE=TRUE_SMOKE_TEST"
+            echo "R43.8.2_MODE=TRUE_SMOKE_TEST"
           else
-            echo "R43.8.1_MODE=FULL_MULTI_PLATFORM"
+            echo "R43.8.2_MODE=FULL_MULTI_PLATFORM"
           fi
 
       - name: Validate dynamic scenes payload
@@ -264,37 +265,37 @@ jobs:
 
           raw = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
           if not raw:
-              raise SystemExit("R43.8.1 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
+              raise SystemExit("R43.8.2 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
 
           payload = json.loads(raw)
           scenes = payload.get("scenes") if isinstance(payload, dict) else payload
 
           if not isinstance(scenes, list):
-              raise SystemExit("R43.8.1 FAIL-CLOSED: scenes_json não contém array scenes.")
+              raise SystemExit("R43.8.2 FAIL-CLOSED: scenes_json não contém array scenes.")
 
           if not 4 <= len(scenes) <= 10:
-              raise SystemExit(f"R43.8.1 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
+              raise SystemExit(f"R43.8.2 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
 
           allowed_roles = {"hook", "pain", "consequence", "turn", "result", "cta"}
           required_platforms = {"instagram", "tiktok", "youtube"}
 
           for idx, scene in enumerate(scenes, start=1):
               if not isinstance(scene, dict):
-                  raise SystemExit(f"R43.8.1 cena {idx} inválida.")
+                  raise SystemExit(f"R43.8.2 cena {idx} inválida.")
               if str(scene.get("role") or "").strip() not in allowed_roles:
-                  raise SystemExit(f"R43.8.1 role inválido na cena {idx}.")
+                  raise SystemExit(f"R43.8.2 role inválido na cena {idx}.")
               if not str(scene.get("visual_intent") or "").strip():
-                  raise SystemExit(f"R43.8.1 visual_intent ausente na cena {idx}.")
+                  raise SystemExit(f"R43.8.2 visual_intent ausente na cena {idx}.")
               if not str(scene.get("pexels_query") or "").strip():
-                  raise SystemExit(f"R43.8.1 pexels_query ausente na cena {idx}.")
+                  raise SystemExit(f"R43.8.2 pexels_query ausente na cena {idx}.")
               for field in ("overlay", "support", "narration"):
                   value = scene.get(field)
                   if not isinstance(value, dict) or set(value.keys()) < required_platforms:
-                      raise SystemExit(f"R43.8.1 {field} incompleto na cena {idx}.")
+                      raise SystemExit(f"R43.8.2 {field} incompleto na cena {idx}.")
                   for platform in required_platforms:
                       if not str(value.get(platform) or "").strip():
                           raise SystemExit(
-                              f"R43.8.1 {field}.{platform} vazio na cena {idx}."
+                              f"R43.8.2 {field}.{platform} vazio na cena {idx}."
                           )
 
           forbidden = [
@@ -317,10 +318,10 @@ jobs:
                       "LEGACY_RENDERER_CONTENT_LEAK_DETECTED: " + ", ".join(hits)
                   )
 
-          print(f"R43_8_1_DYNAMIC_SCENES_VALID scenes={len(scenes)} content_id={content_id}")
+          print(f"R43_8_2_DYNAMIC_SCENES_VALID scenes={len(scenes)} content_id={content_id}")
           PY
 
-      - name: Acquire semantic human media from Pexels
+      - name: Acquire semantic human media from provider cascade
         shell: bash
         run: |
           set -euo pipefail
@@ -329,19 +330,18 @@ jobs:
           python - <<'PY'
           import json
           import os
+          import time
           from pathlib import Path
 
           import requests
 
-          api_key = (os.getenv("PEXELS_API_KEY") or "").strip()
+          pexels_key = (os.getenv("PEXELS_API_KEY") or "").strip()
+          pixabay_key = (os.getenv("PIXABAY_API_KEY") or "").strip()
           media_dir = Path("output/media")
           output_dir = Path("output")
 
           media_dir.mkdir(parents=True, exist_ok=True)
           output_dir.mkdir(parents=True, exist_ok=True)
-
-          if not api_key:
-              raise SystemExit("PEXELS_API_KEY ausente.")
 
           smoke_test = (os.getenv("VIDEO_SMOKE_TEST") or "false").strip().lower() in {
               "1", "true", "yes", "on"
@@ -355,199 +355,253 @@ jobs:
           for idx, scene in enumerate(scenes, start=1):
               primary = str(scene.get("pexels_query") or "").strip()
               visual = str(scene.get("visual_intent") or "").strip()
-
               alternatives = []
               for candidate in (primary, visual):
                   candidate = candidate.strip()
                   if candidate and candidate not in alternatives:
                       alternatives.append(candidate)
-
               if not alternatives:
-                  raise SystemExit(f"R43.8.1 cena {idx}: nenhuma query disponível.")
-
+                  raise SystemExit(f"R43.8.2 cena {idx}: nenhuma query disponível.")
               dynamic_queries[idx] = alternatives
 
-          # Smoke test usa apenas a primeira cena real do payload.
           queries = {1: dynamic_queries[1]} if smoke_test else dynamic_queries
 
-          endpoint = "https://api.pexels.com/v1/videos/search"
-          headers = {"Authorization": api_key}
-
-          used_video_ids = set()
+          used_ids = set()
           attribution = []
           selected_count = 0
+          provider_failures = []
 
-          # R43.8.1 — Pexels é dependência externa e não pode derrubar
-          # o job inteiro por um único ReadTimeout transitório.
-          # Faz retries controlados, backoff curto e tenta a query alternativa.
-          def request_json(url, *, headers=None, params=None, attempts=3):
-              last_error = None
-
+          def retry_get(url, *, headers=None, params=None, attempts=3, stream=False):
+              last = None
               for attempt in range(1, attempts + 1):
                   try:
                       response = requests.get(
                           url,
                           headers=headers,
                           params=params,
-                          timeout=(10, 60),
+                          stream=stream,
+                          timeout=(10, 60 if not stream else 120),
                       )
                       response.raise_for_status()
-                      return response.json()
+                      return response
                   except requests.RequestException as exc:
-                      last_error = exc
+                      last = exc
                       print(
-                          f"PEXELS_SEARCH_ATTEMPT_FAILED "
+                          f"MEDIA_HTTP_ATTEMPT_FAILED url={url} "
                           f"attempt={attempt}/{attempts} "
                           f"error={type(exc).__name__}: {exc}"
                       )
                       if attempt < attempts:
-                          import time
                           time.sleep(2 * attempt)
+              raise last
 
-              raise last_error
-
-          def download_media(url, target, attempts=3):
-              last_error = None
-
-              for attempt in range(1, attempts + 1):
+          def download(url, target):
+              last = None
+              for attempt in range(1, 4):
                   try:
-                      with requests.get(
-                          url,
-                          stream=True,
-                          timeout=(10, 120),
-                      ) as media:
-                          media.raise_for_status()
+                      with retry_get(url, attempts=1, stream=True) as response:
                           with target.open("wb") as fh:
-                              for chunk in media.iter_content(
-                                  chunk_size=1024 * 1024
-                              ):
+                              for chunk in response.iter_content(1024 * 1024):
                                   if chunk:
                                       fh.write(chunk)
-
-                      if target.exists() and target.stat().st_size >= 50_000:
-                          return
-
-                      target.unlink(missing_ok=True)
-                      raise RuntimeError(
-                          "arquivo Pexels pequeno demais após download"
-                      )
+                      if target.stat().st_size >= 50_000:
+                          return True
+                      raise RuntimeError("download menor que 50 KB")
                   except Exception as exc:
-                      last_error = exc
+                      last = exc
                       target.unlink(missing_ok=True)
                       print(
-                          f"PEXELS_DOWNLOAD_ATTEMPT_FAILED "
-                          f"attempt={attempt}/{attempts} "
+                          f"MEDIA_DOWNLOAD_FAILED attempt={attempt}/3 "
                           f"error={type(exc).__name__}: {exc}"
                       )
-                      if attempt < attempts:
-                          import time
+                      if attempt < 3:
                           time.sleep(2 * attempt)
+              print(f"MEDIA_DOWNLOAD_EXHAUSTED error={last}")
+              return False
 
-              raise last_error
+          def pexels_candidates(query):
+              if not pexels_key:
+                  return []
 
-          def score(file):
-              width = int(file.get("width") or 0)
-              height = int(file.get("height") or 0)
-              quality = str(file.get("quality") or "")
-              file_type = str(file.get("file_type") or "")
+              try:
+                  response = retry_get(
+                      "https://api.pexels.com/v1/videos/search",
+                      headers={"Authorization": pexels_key},
+                      params={
+                          "query": query,
+                          "orientation": "portrait",
+                          "per_page": 15,
+                          "page": 1,
+                      },
+                      attempts=3,
+                  )
+                  data = response.json()
+              except Exception as exc:
+                  provider_failures.append(
+                      f"pexels:{query}:{type(exc).__name__}:{exc}"
+                  )
+                  return []
 
-              if file_type != "video/mp4":
-                  return -100000
+              candidates = []
+              for video in data.get("videos", []):
+                  video_id = f"pexels:{video.get('id')}"
+                  if video_id in used_ids:
+                      continue
 
-              portrait_bonus = 7000 if height > width else 0
-              hd_bonus = 1000 if quality == "hd" else 0
-              resolution = min(width, 1080) + min(height, 1920)
-              fit_penalty = abs(width - 1080) * 0.15 + abs(height - 1920) * 0.06
+                  user = video.get("user") or {}
+                  for file in video.get("video_files", []):
+                      if file.get("file_type") != "video/mp4" or not file.get("link"):
+                          continue
+                      width = int(file.get("width") or 0)
+                      height = int(file.get("height") or 0)
+                      portrait_bonus = 7000 if height > width else 0
+                      hd_bonus = 1000 if str(file.get("quality") or "") == "hd" else 0
+                      score = (
+                          portrait_bonus
+                          + hd_bonus
+                          + min(width, 1080)
+                          + min(height, 1920)
+                          - abs(width - 1080) * 0.15
+                          - abs(height - 1920) * 0.06
+                      )
+                      candidates.append({
+                          "score": score,
+                          "provider": "Pexels",
+                          "id": video_id,
+                          "source_id": video.get("id"),
+                          "url": file["link"],
+                          "page_url": video.get("url"),
+                          "creator_name": user.get("name"),
+                          "creator_url": user.get("url"),
+                          "width": width,
+                          "height": height,
+                      })
+              return sorted(candidates, key=lambda item: item["score"], reverse=True)
 
-              return portrait_bonus + hd_bonus + resolution - fit_penalty
+          def pixabay_candidates(query):
+              if not pixabay_key:
+                  return []
+
+              try:
+                  response = retry_get(
+                      "https://pixabay.com/api/videos/",
+                      params={
+                          "key": pixabay_key,
+                          "q": query,
+                          "video_type": "film",
+                          "category": "business",
+                          "per_page": 20,
+                          "safesearch": "true",
+                      },
+                      attempts=3,
+                  )
+                  data = response.json()
+              except Exception as exc:
+                  provider_failures.append(
+                      f"pixabay:{query}:{type(exc).__name__}:{exc}"
+                  )
+                  return []
+
+              candidates = []
+              for video in data.get("hits", []):
+                  video_id = f"pixabay:{video.get('id')}"
+                  if video_id in used_ids:
+                      continue
+
+                  videos = video.get("videos") or {}
+                  for variant_name in ("large", "medium", "small", "tiny"):
+                      variant = videos.get(variant_name) or {}
+                      url = variant.get("url")
+                      if not url:
+                          continue
+                      width = int(variant.get("width") or 0)
+                      height = int(variant.get("height") or 0)
+                      portrait_bonus = 7000 if height > width else 0
+                      score = (
+                          portrait_bonus
+                          + min(width, 1080)
+                          + min(height, 1920)
+                          - abs(width - 1080) * 0.15
+                          - abs(height - 1920) * 0.06
+                      )
+                      candidates.append({
+                          "score": score,
+                          "provider": "Pixabay",
+                          "id": video_id,
+                          "source_id": video.get("id"),
+                          "url": url,
+                          "page_url": video.get("pageURL"),
+                          "creator_name": video.get("user"),
+                          "creator_url": None,
+                          "width": width,
+                          "height": height,
+                      })
+                      break
+              return sorted(candidates, key=lambda item: item["score"], reverse=True)
+
+          provider_functions = [
+              ("Pexels", pexels_candidates),
+              ("Pixabay", pixabay_candidates),
+          ]
+
+          if not pexels_key and not pixabay_key:
+              raise SystemExit(
+                  "R43.8.2 exige ao menos PEXELS_API_KEY ou PIXABAY_API_KEY."
+              )
 
           for scene, alternatives in queries.items():
               chosen = None
               chosen_query = None
-              scene_errors = []
 
-              for query in alternatives:
-                  try:
-                      payload = request_json(
-                          endpoint,
-                          headers=headers,
-                          params={
-                              "query": query,
-                              "orientation": "portrait",
-                              "per_page": 15,
-                              "page": 1,
-                          },
-                          attempts=3,
-                      )
-                  except Exception as exc:
-                      scene_errors.append(
-                          f"{query}: {type(exc).__name__}: {exc}"
-                      )
+              for provider_name, provider_fn in provider_functions:
+                  for query in alternatives:
                       print(
-                          f"SCENE_{scene}: query indisponível após retries: "
-                          f"{query}"
+                          f"SCENE_{scene}: provider={provider_name} query={query}"
                       )
-                      continue
-
-                  ranked = []
-                  for video in payload.get("videos", []):
-                      video_id = video.get("id")
-                      if video_id in used_video_ids:
-                          continue
-
-                      for file in video.get("video_files", []):
-                          if not file.get("link"):
-                              continue
-                          ranked.append((score(file), video, file))
-
-                  ranked.sort(key=lambda item: item[0], reverse=True)
-
-                  if ranked:
-                      chosen = ranked[0]
-                      chosen_query = query
+                      candidates = provider_fn(query)
+                      if candidates:
+                          chosen = candidates[0]
+                          chosen_query = query
+                          break
+                  if chosen:
                       break
 
               if not chosen:
                   print(
-                      f"SCENE_{scene}: nenhuma mídia encontrada. "
-                      f"errors={scene_errors}"
+                      f"SCENE_{scene}: nenhum provider retornou mídia. "
+                      f"failures={provider_failures[-8:]}"
                   )
                   continue
 
-              _, video, file = chosen
-              used_video_ids.add(video.get("id"))
-
+              used_ids.add(chosen["id"])
               target = media_dir / f"scene-{scene}.mp4"
 
               print(
-                  f"SCENE_{scene}: video={video.get('id')} "
-                  f"{file.get('width')}x{file.get('height')} "
+                  f"SCENE_{scene}: selected provider={chosen['provider']} "
+                  f"id={chosen['source_id']} "
+                  f"{chosen['width']}x{chosen['height']} "
                   f"query={chosen_query}"
               )
 
-              try:
-                  download_media(file["link"], target, attempts=3)
-              except Exception as exc:
+              if not download(chosen["url"], target):
                   print(
-                      f"SCENE_{scene}: download falhou após retries: "
-                      f"{type(exc).__name__}: {exc}"
+                      f"SCENE_{scene}: download final falhou "
+                      f"provider={chosen['provider']}"
                   )
                   continue
 
               selected_count += 1
-              user = video.get("user") or {}
-
               attribution.append(
                   {
                       "scene": scene,
+                      "provider": chosen["provider"],
                       "query": chosen_query,
-                      "pexels_video_id": video.get("id"),
-                      "pexels_url": video.get("url"),
-                      "creator_name": user.get("name"),
-                      "creator_url": user.get("url"),
-                      "width": file.get("width"),
-                      "height": file.get("height"),
-                      "quality": file.get("quality"),
+                      "provider_video_id": chosen["source_id"],
+                      "provider_page_url": chosen["page_url"],
+                      "creator_name": chosen["creator_name"],
+                      "creator_url": chosen["creator_url"],
+                      "width": chosen["width"],
+                      "height": chosen["height"],
                       "local_file": str(target),
                   }
               )
@@ -555,11 +609,12 @@ jobs:
           (output_dir / "pexels-attribution.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.8.1",
-                      "provider": "Pexels",
+                      "version": "R43.8.2",
+                      "provider_strategy": "Pexels_primary_Pixabay_fallback",
                       "smoke_test": smoke_test,
                       "selected_scene_count": selected_count,
                       "items": attribution,
+                      "provider_failures": provider_failures,
                   },
                   ensure_ascii=False,
                   indent=2,
@@ -570,16 +625,15 @@ jobs:
           (output_dir / "casting-policy.json").write_text(
               json.dumps(
                   {
-                      "version": "R43.8.1",
-                      "policy": "semantic_storytelling_plus_visual_diversity",
+                      "version": "R43.8.2",
+                      "policy": "dynamic_semantic_storytelling_multi_provider",
                       "smoke_test": smoke_test,
                       "principles": [
                           "cada cena deve representar semanticamente a etapa da história",
-                          "alternar perfis profissionais e faixas de senioridade",
-                          "misturar homens, mulheres e profissionais jovens",
-                          "priorizar pessoas em ação e ambientes corporativos reais",
+                          "Pexels é provider primário",
+                          "Pixabay é fallback automático quando Pexels falha",
                           "evitar repetir o mesmo vídeo entre cenas",
-                          "buscar fechamento com composição profissional diversa"
+                          "priorizar pessoas em ação e ambientes profissionais reais"
                       ]
                   },
                   ensure_ascii=False,
@@ -589,16 +643,16 @@ jobs:
           )
 
           required_minimum = 1 if smoke_test else 4
-          expected_maximum = 1 if smoke_test else 6
+          expected_maximum = 1 if smoke_test else len(queries)
 
           print(
-              f"PEXELS_SELECTED_SCENES={selected_count}/{expected_maximum} "
+              f"MEDIA_SELECTED_SCENES={selected_count}/{expected_maximum} "
               f"smoke_test={smoke_test}"
           )
 
           if selected_count < required_minimum:
               raise SystemExit(
-                  f"R43.8.1 exige pelo menos {required_minimum} cena(s) humana(s)."
+                  f"R43.8.2 exige pelo menos {required_minimum} cena(s) humana(s)."
               )
           PY
 
@@ -619,14 +673,14 @@ jobs:
               "$f"
           done
 
-      - name: Render UGI R43.8.1
+      - name: Render UGI R43.8.2
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p output
           python render-reel.py
 
-      - name: Validate R43.8.1 outputs
+      - name: Validate R43.8.2 outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -723,7 +777,7 @@ jobs:
                   )
 
           print(
-              "R43_8_1_VALIDATION_OK "
+              "R43_8_2_VALIDATION_OK "
               f"smoke_test={smoke_test} "
               f"smoke_duration={smoke_duration if smoke_test else 'n/a'}"
           )
@@ -765,12 +819,12 @@ jobs:
             INSTAGRAM_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             TIKTOK_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
             YOUTUBE_DURATION="${VIDEO_SMOKE_TEST_DURATION}"
-            echo "R43.8.1 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
+            echo "R43.8.2 delivery mode=SMOKE duration=${VIDEO_SMOKE_TEST_DURATION}"
           else
             INSTAGRAM_DURATION="32"
             TIKTOK_DURATION="24"
             YOUTUBE_DURATION="36"
-            echo "R43.8.1 delivery mode=FULL"
+            echo "R43.8.2 delivery mode=FULL"
           fi
 
           upload_asset() {
@@ -912,7 +966,7 @@ jobs:
               raise SystemExit("videoKey legado deixou de apontar para Instagram.")
 
           print(
-              "R43_8_1_MULTI_ASSET_DELIVERY_OK "
+              "R43_8_2_MULTI_ASSET_DELIVERY_OK "
               f"smoke_test={smoke_test}"
           )
           PY
@@ -940,5 +994,5 @@ jobs:
             -X POST "${BASE_URL}/api/video-status" \
             -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
             -H "Content-Type: application/json" \
-            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.1 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
+            --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.2 falhou antes de concluir a geração ou entrega multi-asset. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
 
