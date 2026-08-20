@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UGI Reel Renderer R43.8.3 — DYNAMIC SCENES + MULTI-PROVIDER COMPAT
+UGI Reel Renderer R43.8.4 — DYNAMIC SCENES + MULTI-PROVIDER COMPAT
 ==================================================================
 Objetivo:
 - preservar Pexels/Pixabay acquisition no workflow + Kokoro + FFmpeg + GitHub + R2;
@@ -54,11 +54,11 @@ TITLE = (
     or "Se tudo precisa passar por você, sua empresa não está crescendo. Está ficando dependente."
 ).strip()
 CTA = (os.getenv("VIDEO_CTA") or "Conheça a UGI.").strip()
-RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r43-8-2").strip()
+RENDER_ID = (os.getenv("VIDEO_RENDER_ID") or "local-r43-8-4").strip()
 
 CONTENT_ID = (os.getenv("VIDEO_CONTENT_ID") or "UGI-R43-CONTENT").strip()
 EXPERIMENT_ID = (os.getenv("VIDEO_EXPERIMENT_ID") or "UGI-R43-EXPERIMENT").strip()
-VARIANT = (os.getenv("VIDEO_VARIANT") or "A-R43-8-2").strip()
+VARIANT = (os.getenv("VIDEO_VARIANT") or "A-R43-8-4").strip()
 COMMERCIAL_INTENT = (
     os.getenv("VIDEO_COMMERCIAL_INTENT")
     or "atracao_com_potencial_de_conversao"
@@ -128,7 +128,7 @@ PLATFORM_PROFILES = {
         "cut_pace": "medium_dynamic",
         "text_density": "short",
         "cta_style": "brand_interest",
-        "primary_cta": "Conheça a UGI",
+        "primary_cta": CTA,
         "panel_y": 1210,
         "panel_h": 435,
         "overlay_y": 1275,
@@ -144,7 +144,7 @@ PLATFORM_PROFILES = {
         "cut_pace": "fast",
         "text_density": "very_short",
         "cta_style": "interaction_plus_brand",
-        "primary_cta": "Conheça a UGI",
+        "primary_cta": CTA,
         "panel_y": 1235,
         "panel_h": 395,
         "overlay_y": 1300,
@@ -160,7 +160,7 @@ PLATFORM_PROFILES = {
         "cut_pace": "medium",
         "text_density": "short_explanatory",
         "cta_style": "learn_more",
-        "primary_cta": "Conheça a UGI",
+        "primary_cta": CTA,
         "panel_y": 1205,
         "panel_h": 445,
         "overlay_y": 1270,
@@ -183,7 +183,7 @@ class SceneTemplate:
 
 
 # ============================================================
-# R43.8.3 — DYNAMIC SCENES / FAIL-CLOSED
+# R43.8.4 — DYNAMIC SCENES / FAIL-CLOSED
 # ============================================================
 
 VIDEO_SCENES_JSON = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
@@ -196,7 +196,7 @@ def _require_scene_text(value, field: str) -> str:
     value = str(value or "").strip()
     if not value:
         raise RuntimeError(
-            f"R43.8.3 campo obrigatório ausente: {field}"
+            f"R43.8.4 campo obrigatório ausente: {field}"
         )
     return value
 
@@ -204,7 +204,7 @@ def _require_scene_text(value, field: str) -> str:
 def _platform_text_map(value, field: str, index: int) -> dict:
     if not isinstance(value, dict):
         raise RuntimeError(
-            f"R43.8.3 {field} da cena {index} precisa ser objeto."
+            f"R43.8.4 {field} da cena {index} precisa ser objeto."
         )
 
     out = {}
@@ -219,7 +219,7 @@ def _platform_text_map(value, field: str, index: int) -> dict:
 def load_dynamic_scenes() -> list[SceneTemplate]:
     if not VIDEO_SCENES_JSON:
         raise RuntimeError(
-            "R43.8.3 FAIL-CLOSED: VIDEO_SCENES_JSON é obrigatório. "
+            "R43.8.4 FAIL-CLOSED: VIDEO_SCENES_JSON é obrigatório. "
             "O renderer legado hardcoded foi desativado."
         )
 
@@ -227,19 +227,19 @@ def load_dynamic_scenes() -> list[SceneTemplate]:
         payload = json.loads(VIDEO_SCENES_JSON)
     except Exception as exc:
         raise RuntimeError(
-            f"R43.8.3 FAIL-CLOSED: VIDEO_SCENES_JSON inválido: {exc}"
+            f"R43.8.4 FAIL-CLOSED: VIDEO_SCENES_JSON inválido: {exc}"
         ) from exc
 
     scenes_raw = payload.get("scenes") if isinstance(payload, dict) else payload
 
     if not isinstance(scenes_raw, list):
         raise RuntimeError(
-            "R43.8.3 FAIL-CLOSED: payload não contém array scenes."
+            "R43.8.4 FAIL-CLOSED: payload não contém array scenes."
         )
 
     if not 4 <= len(scenes_raw) <= 10:
         raise RuntimeError(
-            f"R43.8.3 quantidade de cenas inválida: {len(scenes_raw)}."
+            f"R43.8.4 quantidade de cenas inválida: {len(scenes_raw)}."
         )
 
     allowed_roles = {
@@ -256,7 +256,7 @@ def load_dynamic_scenes() -> list[SceneTemplate]:
     for index, item in enumerate(scenes_raw, start=1):
         if not isinstance(item, dict):
             raise RuntimeError(
-                f"R43.8.3 cena {index} precisa ser objeto."
+                f"R43.8.4 cena {index} precisa ser objeto."
             )
 
         role = _require_scene_text(
@@ -266,7 +266,7 @@ def load_dynamic_scenes() -> list[SceneTemplate]:
 
         if role not in allowed_roles:
             raise RuntimeError(
-                f"R43.8.3 role inválido na cena {index}: {role}"
+                f"R43.8.4 role inválido na cena {index}: {role}"
             )
 
         scenes.append(
@@ -311,7 +311,7 @@ def load_dynamic_scenes() -> list[SceneTemplate]:
 
         if actual != expected:
             raise RuntimeError(
-                "R43.8.3 ordem narrativa inválida: "
+                "R43.8.4 ordem narrativa inválida: "
                 + ">".join(actual)
             )
 
@@ -859,7 +859,7 @@ def render_scene(
 
     else:
         print(
-            "R43.8.3 BRAND WARNING: símbolo transparente não encontrado em "
+            "R43.8.4 BRAND WARNING: símbolo transparente não encontrado em "
             f"{BRAND_LOGO}; renderizando sem assinatura visual para evitar "
             "composição incompleta.",
             file=sys.stderr,
@@ -1641,7 +1641,7 @@ def render_platform(platform: str) -> dict:
     )
 
     storyboard = {
-        "version": "R43.8.3",
+        "version": "R43.8.4",
         "render_id": RENDER_ID,
         "platform": platform,
         "platform_label": profile["label"],
@@ -1682,7 +1682,7 @@ def render_platform(platform: str) -> dict:
 
     if qa["quality_status"] != "pass":
         raise RuntimeError(
-            f"R43.8.3 QA reprovado para {platform}: "
+            f"R43.8.4 QA reprovado para {platform}: "
             f"{qa['checks']}"
         )
 
@@ -1726,7 +1726,7 @@ def main() -> int:
     )
 
     print(
-        "===== UGI R43.8.3 MULTI-PLATFORM "
+        "===== UGI R43.8.4 MULTI-PLATFORM "
         "DYNAMIC SEMANTIC VIDEO ENGINE ====="
     )
     print(f"TITLE={TITLE}")
@@ -1759,7 +1759,7 @@ def main() -> int:
         )
 
         print(
-            f"\n===== R43.8.3 SMOKE TEST: "
+            f"\n===== R43.8.4 SMOKE TEST: "
             f"{platform.upper()} / "
             f"{SMOKE_TEST_DURATION:.1f}s ====="
         )
@@ -1817,7 +1817,7 @@ def main() -> int:
             "youtube",
         ):
             print(
-                f"\n===== R43.8.3 PLATFORM: "
+                f"\n===== R43.8.4 PLATFORM: "
                 f"{platform.upper()} ====="
             )
             results.append(
@@ -1830,7 +1830,7 @@ def main() -> int:
         )
 
     manifest = {
-        "version": "R43_8_3_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
         "render_id": RENDER_ID,
         "title": TITLE,
         "content_id": CONTENT_ID,
@@ -1935,10 +1935,10 @@ def main() -> int:
             in select_music_track().items()
         },
         "architecture_note": (
-            "R43.8.3 consumes only VIDEO_SCENES_JSON dynamic scenes, "
+            "R43.8.4 consumes only VIDEO_SCENES_JSON dynamic scenes, "
             "fails closed when scenes are missing/invalid, preserves "
             "the approved audiovisual/branding behavior, and is compatible "
-            "with the R43.8.2 workflow provider cascade Pexels -> Pixabay. R43.8.3 also applies platform-aware overlay QA: 9 words for Instagram/TikTok and 10 words for YouTube Shorts."
+            "with the R43.8.2 workflow provider cascade Pexels -> Pixabay. R43.8.4 also applies platform-aware overlay QA: 9 words for Instagram/TikTok and 10 words for YouTube Shorts."
         ),
     }
 
@@ -1962,7 +1962,7 @@ def main() -> int:
         )
     )
 
-    print("RENDER_SUCCESS_R43_8_3")
+    print("RENDER_SUCCESS_R43_8_4")
     return 0
 
 
@@ -1972,7 +1972,7 @@ if __name__ == "__main__":
 
     except subprocess.CalledProcessError as exc:
         print(
-            f"R43_8_3_FFMPEG_ERROR "
+            f"R43_8_4_FFMPEG_ERROR "
             f"returncode={exc.returncode}",
             file=sys.stderr,
         )
@@ -1980,7 +1980,7 @@ if __name__ == "__main__":
 
     except Exception as exc:
         print(
-            f"R43_8_3_ERROR: {exc}",
+            f"R43_8_4_ERROR: {exc}",
             file=sys.stderr,
         )
         raise
