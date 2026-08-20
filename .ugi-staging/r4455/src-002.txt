@@ -1,0 +1,567 @@
+      }
+
+        const videoKey = `${VIDEO_PREFIX}${renderId}/${platform}.mp4`;
+        const uploadedAt = new Date().toISOString();
+        const githubRunId = String(
+          url.searchParams.get("githubRunId") ||
+          request.headers.get("x-github-run-id") ||
+          ""
+        ).trim() || null;
+        const durationRaw = Number(
+          url.searchParams.get("duration") ||
+          request.headers.get("x-ugi-video-duration") ||
+          0
+        );
+        const duration = Number.isFinite(durationRaw) && durationRaw > 0
+          ? durationRaw
+          : null;
+
+        const previous = await loadVideoResult(env, renderId);
+
+        const putResult = await env.MEDIA.put(
+          videoKey,
+          bytes,
+          {
+            httpMetadata: {
+              contentType: "video/mp4",
+              cacheControl: "public,max-age=31536000,immutable"
+            },
+            customMetadata: {
+              renderId,
+              source: "github-actions-ffmpeg",
+              ...(githubRunId ? { githubRunId } : {})
+            }
+          }
+        );
+
+        const videoUrl = `${url.origin}/media/${encodeURIComponent(videoKey)}`;
+        const previousAssets = previous?.assets && typeof previous.assets === "object"
+          ? previous.assets
+          : {};
+
+        const asset = {
+          platform,
+          status: "ready",
+          ready: true,
+          videoKey,
+          videoUrl,
+          videoBytes: bytes.length,
+          contentType: "video/mp4",
+          mp4Signature: true,
+          duration: duration || VIDEO_PLATFORM_DEFAULT_DURATIONS[platform] || null,
+          githubRunId,
+          r2Etag: putResult?.etag || null,
+          uploadedAt,
+          approvalStatus: previousAssets?.[platform]?.approvalStatus || "pending_approval"
+        };
+
+        const assets = { ...previousAssets, [platform]: asset };
+        const readyPlatforms = VIDEO_PLATFORMS.filter((name) => assets?.[name]?.ready);
+        const allPlatformsReady = VIDEO_PLATFORMS.every((name) => assets?.[name]?.ready);
+
+        const primary = assets.instagram || asset;
+        const result = {
+          ...(previous || {}),
+          ok: true,
+          version: VERSION,
+          route: "/api/video-upload",
+          routing: "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+          renderer: "github-actions-ffmpeg",
+          costMode: "zero_cost_initial",
+          renderId,
+          status: allPlatformsReady ? "ready" : "processing",
+          ready: allPlatformsReady,
+          assets,
+          readyPlatforms,
+          expectedPlatforms: VIDEO_PLATFORMS,
+          allPlatformsReady,
+
+          // Compatibilidade R37/R42: videoUrl/videoKey continuam apontando para Instagram.
+          videoKey: primary?.videoKey || null,
+          videoUrl: primary?.videoUrl || null,
+          videoBytes: primary?.videoBytes || null,
+          contentType: "video/mp4",
+          mp4Signature: true,
+          duration: primary?.duration || null,
+          githubRunId,
+          uploadedAt
+        };
+
+        await saveVideoResult(env, result);
+
+        // R37: se este render nasceu como conteúdo editorial,
+        // atualiza automaticamente o rascunho da Central de Aprovação.
+        let approvalDraft = null;
+        let approvalBridgeError = null;
+
+        try {
+          const mappedDraftId = String(
+            previous?.approvalDraftId ||
+            renderId
+          ).trim();
+
+          approvalDraft = await getLocalDraft(env, mappedDraftId);
+          if (approvalDraft) {
+            approvalDraft.type = approvalDraft.type || "reel";
+            approvalDraft.assets = assets;
+            approvalDraft.readyPlatforms = readyPlatforms;
+            approvalDraft.expectedPlatforms = VIDEO_PLATFORMS;
+            approvalDraft.allPlatformsReady = allPlatformsReady;
+
+            // Compatibilidade: campos legados continuam representando Instagram.
+            approvalDraft.videoUrl = primary?.videoUrl || null;
+            approvalDraft.videoKey = primary?.videoKey || null;
+            approvalDraft.videoBytes = primary?.videoBytes || null;
+            approvalDraft.videoDuration = primary?.duration || null;
+            approvalDraft.renderId = renderId;
+            approvalDraft.renderStatus = allPlatformsReady ? "ready" : "processing";
+            approvalDraft.normalizationStatus = allPlatformsReady ? "ready" : "processing";
+            approvalDraft.qualityStatus =
+              approvalDraft.qualityStatus === "needs_review"
+                ? "needs_review"
+                : allPlatformsReady
+                  ? "ready_for_review"
+                  : "awaiting_render";
+            approvalDraft.workflowStatus =
+              allPlatformsReady ? "pending_approval" : "generating";
+            approvalDraft.updatedAt = uploadedAt;
+            await saveLocalDraft(env, approvalDraft);
+            await saveContentEvent(
+              env,
+              approvalDraft,
+              "render_ready",
+              { platform, videoKey, videoBytes: bytes.length, githubRunId, readyPlatforms, allPlatformsReady }
+            );
+          }
+        } catch (bridgeError) {
+          approvalBridgeError =
+            bridgeError?.message || String(bridgeError);
+          console.log(
+            "R37 approval bridge upload warning:",
+            approvalBridgeError
+          );
+        }
+
+        return json({
+          ...result,
+          platform,
+          approvalDraftId: approvalDraft?.id || null,
+          approvalReady: Boolean(approvalDraft) && allPlatformsReady,
+          approvalBridgeError
+        }, 201);
+      }
+
+      // Callback de falha/estado chamado pelo GitHub Actions.
+      if (request.method === "POST" && path === "/api/video-status") {
+        if (!isGithubVideoUploadAuthorized(request, env)) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-status",
+            errorClass: "video_status_authorization",
+            error: "Não autorizado"
+          }, 401);
+        }
+
+        if (!env.MEDIA) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-status",
+            errorClass: "r2_binding_missing",
+            error: "Binding R2 MEDIA não conectado"
+          }, 500);
+        }
+
+        const body = await request.json().catch(() => ({}));
+        const renderId = sanitizeRenderId(body.renderId || body.render_id || "");
+        if (!renderId) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-status",
+            errorClass: "render_id_missing",
+            error: "renderId ausente ou inválido"
+          }, 400);
+        }
+
+        const previous = await loadVideoResult(env, renderId);
+        const status = ["queued", "processing", "failed"].includes(String(body.status || ""))
+          ? String(body.status)
+          : "failed";
+        const updatedAt = new Date().toISOString();
+        const result = {
+          ...(previous || {}),
+          ok: status !== "failed",
+          version: VERSION,
+          route: "/api/video-status",
+          routing: "GITHUB_ACTIONS_TO_WORKER_STATUS",
+          renderer: "github-actions-ffmpeg",
+          costMode: "zero_cost_initial",
+          renderId,
+          status,
+          ready: false,
+          videoUrl: previous?.videoUrl || null,
+          videoKey: previous?.videoKey || null,
+          githubRunId: String(body.githubRunId || body.github_run_id || previous?.githubRunId || "").trim() || null,
+          errorClass: status === "failed"
+            ? String(body.errorClass || body.error_class || "github_workflow_failed").slice(0, 120)
+            : null,
+          githubError: status === "failed"
+            ? String(body.githubError || body.github_error || "O workflow falhou antes de entregar um MP4 válido.").slice(0, 1000)
+            : null,
+          updatedAt
+        };
+
+        await saveVideoResult(env, result);
+
+        const mappedDraftId = String(
+          previous?.approvalDraftId ||
+          renderId
+        ).trim();
+
+        const approvalDraft = await getLocalDraft(env, mappedDraftId);
+        if (approvalDraft) {
+          approvalDraft.renderStatus =
+            status === "failed" ? "failed" : status;
+          approvalDraft.workflowStatus =
+            status === "failed" ? "generation_failed" : "generating";
+          approvalDraft.qualityStatus =
+            status === "failed" ? "needs_review" : approvalDraft.qualityStatus;
+          approvalDraft.generationError =
+            status === "failed" ? result.githubError : null;
+          approvalDraft.updatedAt = updatedAt;
+          await saveLocalDraft(env, approvalDraft);
+          await saveContentEvent(
+            env,
+            approvalDraft,
+            status === "failed" ? "render_failed" : "render_status",
+            { status, githubRunId: result.githubRunId || null }
+          );
+        }
+
+        return json(result);
+      }
+
+      // R44.5.2 — callback semântico de sucesso chamado pelo GitHub Actions.
+      if (request.method === "POST" && path === "/api/video-semantic-result") {
+        if (!isGithubVideoUploadAuthorized(request, env)) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-semantic-result",
+            errorClass: "video_semantic_authorization",
+            error: "Não autorizado"
+          }, 401);
+        }
+
+        if (!env.MEDIA) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-semantic-result",
+            errorClass: "r2_binding_missing",
+            error: "Binding R2 MEDIA não conectado"
+          }, 500);
+        }
+
+        const body = await request.json().catch(() => ({}));
+        const renderId = sanitizeRenderId(body.renderId || body.render_id || "");
+        if (!renderId) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-semantic-result",
+            errorClass: "render_id_missing",
+            error: "renderId ausente ou inválido"
+          }, 400);
+        }
+
+        const previous = await loadVideoResult(env, renderId);
+        if (!previous) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-semantic-result",
+            renderId,
+            errorClass: "render_not_found",
+            error: "Render não encontrado"
+          }, 404);
+        }
+
+        const semanticValidation =
+          body.semanticValidation && typeof body.semanticValidation === "object"
+            ? body.semanticValidation
+            : {};
+
+        const copyLockValidation =
+          body.copyLockValidation && typeof body.copyLockValidation === "object"
+            ? body.copyLockValidation
+            : { required: previous?.copyLock?.enabled === true, pass: previous?.copyLock?.enabled !== true };
+
+        const legacyContentLeakDetected = body.legacyContentLeakDetected === true;
+        const semanticPass =
+          semanticValidation.pass === true &&
+          legacyContentLeakDetected !== true &&
+          (previous?.copyLock?.enabled !== true || copyLockValidation.pass === true);
+
+        const updatedAt = new Date().toISOString();
+        const nextResult = {
+          ...previous,
+          version: VERSION,
+          semanticValidationAvailable: true,
+          semanticValidation: {
+            ...semanticValidation,
+            pass: semanticPass,
+            receivedAt: updatedAt
+          },
+          copyLockValidation,
+          legacyContentLeakDetected,
+          semanticEvidence: body.semanticEvidence || null,
+          mediaProviders: body.mediaProviders || null,
+          finalCta: body.finalCta || null,
+          updatedAt
+        };
+
+        await saveVideoResult(env, nextResult);
+
+        const mappedDraftId = String(previous.approvalDraftId || renderId).trim();
+        const draft = await getLocalDraft(env, mappedDraftId);
+        if (draft) {
+          draft.semanticValidationRequired = draft.semanticValidationRequired === true || draft.copyLock?.enabled === true;
+          draft.semanticValidationAvailable = true;
+          draft.semanticValidation = nextResult.semanticValidation;
+          draft.copyLockValidation = copyLockValidation;
+          draft.legacyContentLeakDetected = legacyContentLeakDetected;
+          draft.semanticEvidence = nextResult.semanticEvidence;
+          draft.mediaProviders = nextResult.mediaProviders;
+          draft.finalCta = nextResult.finalCta;
+          draft.qualityStatus = semanticPass
+            ? (draft.renderStatus === "ready" ? "ready_for_review" : draft.qualityStatus)
+            : "needs_review";
+          draft.updatedAt = updatedAt;
+          await saveLocalDraft(env, draft);
+          await saveContentEvent(env, draft, "video_semantic_validation", {
+            pass: semanticPass,
+            legacyContentLeakDetected,
+            copyLockPass: copyLockValidation?.pass === true
+          });
+        }
+
+        return json({
+          ok: true,
+          version: VERSION,
+          route: "/api/video-semantic-result",
+          renderId,
+          semanticValidationAvailable: true,
+          semanticPass,
+          legacyContentLeakDetected,
+          copyLockValidation,
+          publicationTriggered: false,
+          bufferMutationPerformed: false
+        });
+      }
+
+      // Resultado individual. Usado pela Lola UGI depois que o job foi enfileirado.
+      if (request.method === "GET" && path.startsWith("/api/video-result/")) {
+        if (
+          !isLolaUGIAuthorized(request, env) &&
+          !isAdminAuthorized(request, env)
+        ) {
+          return json({ ok: false, error: "Não autorizado" }, 401);
+        }
+
+        if (!env.MEDIA) {
+          return json({
+            ok: false,
+            version: VERSION,
+            errorClass: "r2_binding_missing",
+            error: "Binding R2 MEDIA não conectado"
+          }, 500);
+        }
+
+        const renderId = sanitizeRenderId(
+          decodeURIComponent(path.slice("/api/video-result/".length))
+        );
+
+        if (!renderId) {
+          return json({
+            ok: false,
+            version: VERSION,
+            errorClass: "render_id_invalid",
+            error: "renderId inválido"
+          }, 400);
+        }
+
+        const result = await loadVideoResult(env, renderId);
+
+        if (!result) {
+          return json({
+            ok: true,
+            version: VERSION,
+            route: `/api/video-result/${renderId}`,
+            renderId,
+            status: "processing",
+            ready: false,
+            videoUrl: null,
+            videoKey: null,
+            note: "O renderer ainda não entregou o MP4 ao R2 ou o resultado ainda não foi registrado."
+          }, 200);
+        }
+
+        return json({ ...result, ready: result.status === "ready" });
+      }
+
+      // Último resultado concluído, útil para diagnóstico operacional.
+      if (request.method === "GET" && path === "/api/video-results/latest") {
+        if (
+          !isLolaUGIAuthorized(request, env) &&
+          !isAdminAuthorized(request, env)
+        ) {
+          return json({ ok: false, error: "Não autorizado" }, 401);
+        }
+
+        if (!env.MEDIA) {
+          return json({
+            ok: false,
+            version: VERSION,
+            errorClass: "r2_binding_missing",
+            error: "Binding R2 MEDIA não conectado"
+          }, 500);
+        }
+
+        const result = await loadLatestVideoResult(env);
+        return json({
+          ok: true,
+          version: VERSION,
+          route: "/api/video-results/latest",
+          found: Boolean(result),
+          result: result || null
+        });
+      }
+
+      // ========================================================
+      // R44.4.11 — DYNAMIC VIDEO SCENES / FAIL-CLOSED
+      const normalizeDynamicVideoScenes = (rawScenes) => {
+        const platforms = ["instagram", "tiktok", "youtube"];
+        const allowedRoles = new Set(["hook", "pain", "consequence", "turn", "result", "cta"]);
+
+        if (!Array.isArray(rawScenes) || rawScenes.length < 4 || rawScenes.length > 10) {
+          throw new Error("dynamic_video_scenes_required");
+        }
+
+        const normalizeMap = (value, field, index) => {
+          if (!value || typeof value !== "object") {
+            throw new Error(`invalid_${field}_scene_${index}`);
+          }
+
+          const out = {};
+          for (const platform of platforms) {
+            const text = String(value[platform] || "").trim();
+            if (!text) {
+              throw new Error(`missing_${field}_${platform}_scene_${index}`);
+            }
+            out[platform] = text;
+          }
+          return out;
+        };
+
+        const normalized = rawScenes.map((scene, offset) => {
+          const index = offset + 1;
+          const role = String(scene?.role || "").trim();
+          const visualIntent = String(
+            scene?.visual_intent ||
+            scene?.visualIntent ||
+            ""
+          ).trim();
+          const pexelsQuery = String(
+            scene?.pexels_query ||
+            scene?.pexelsQuery ||
+            visualIntent
+          ).trim();
+
+          if (!allowedRoles.has(role)) {
+            throw new Error(`invalid_role_scene_${index}`);
+          }
+
+          if (!visualIntent || !pexelsQuery) {
+            throw new Error(`invalid_dynamic_scene_${index}`);
+          }
+
+          return {
+            role,
+            visual_intent: visualIntent,
+            pexels_query: pexelsQuery,
+            overlay: normalizeMap(scene?.overlay, "overlay", index),
+            support: normalizeMap(scene?.support, "support", index),
+            narration: normalizeMap(scene?.narration, "narration", index)
+          };
+        });
+
+        if (
+          normalized.length === 6 &&
+          normalized.map((scene) => scene.role).join(">") !==
+            "hook>pain>consequence>turn>result>cta"
+        ) {
+          throw new Error("invalid_six_scene_story_order");
+        }
+
+        return normalized;
+      };
+
+      // R25 — GITHUB ZERO-COST VIDEO RENDERER
+      // ========================================================
+
+      if (request.method === "POST" && path === "/api/video-render") {
+        if (
+          !isLolaUGIAuthorized(request, env) &&
+          !isAdminAuthorized(request, env)
+        ) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-render",
+            routing: "LOLA_TO_GITHUB_ACTIONS_FFMPEG",
+            renderer: "github-actions-ffmpeg",
+            githubAccepted: false,
+            githubStatus: null,
+            errorClass: "worker_authorization",
+            error: "Não autorizado",
+            authDiagnostic: buildSafeAuthDiagnostic(request, env)
+          });
+        }
+
+        const body = await request.json().catch(() => ({}));
+        const renderId = createRenderId();
+
+        const requestedContentId = String(
+          body.content_id ||
+          body.contentId ||
+          ""
+        ).trim();
+
+        const requestedDraftId = String(
+          body.draftId ||
+          body.draft_id ||
+          body.id ||
+          ""
+        ).trim();
+
+        let existingDraft = null;
+
+        if (requestedDraftId) {
+          existingDraft = await getLocalDraft(env, requestedDraftId);
+        }
+
+        if (!existingDraft && requestedContentId) {
+          existingDraft = await findLocalDraftByContentId(env, requestedContentId);
+        }
+
+        // Legacy migration: drafts antigos criados pelo /api/command podiam ter
+        // contentId=id. Quando draftId explícito + content_id determinístico são
+        // fornecidos, preservamos o id editorial e corrigimos somente a metadata.
+        if (existingDraft && requestedContentId) {
+          existingDraft = normalizeContentMetadata({
+            ...existingDraft,
+            contentId: requestedContentId,
+            ex
