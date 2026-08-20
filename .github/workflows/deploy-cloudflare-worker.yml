@@ -1,4 +1,4 @@
-name: UGI Cloudflare Worker Deploy R44.5.4
+name: UGI Cloudflare Worker Deploy R44.5.5
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
         run: |
           set -euo pipefail
           test -s cloudflare/lola-operacional-worker.mjs
-          grep -q 'lola-v8-r44-5-4-material-store-commerce-adapter-fulfillment-2026-08-20' cloudflare/lola-operacional-worker.mjs
+          grep -q 'lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20' cloudflare/lola-operacional-worker.mjs
           node --check cloudflare/lola-operacional-worker.mjs
 
       - name: Deploy Worker
@@ -40,13 +40,12 @@ jobs:
           HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
           for i in 1 2 3 4 5; do
             BODY="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 30 "$HEALTH" || true)"
-            if printf '%s' "$BODY" | grep -q 'lola-v8-r44-5-4-material-store-commerce-adapter-fulfillment-2026-08-20' && printf '%s' "$BODY" | grep -q '"ok":true'; then
+            if printf '%s' "$BODY" | grep -q 'lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20' && printf '%s' "$BODY" | grep -q '"ok":true'; then
               printf '%s\n' "$BODY"
-              echo 'R44.5.4_DEPLOY_HEALTH_OK'
+              echo 'R44.5.5_DEPLOY_HEALTH_OK'
               exit 0
             fi
             sleep 6
           done
-          echo 'R44.5.4_DEPLOY_HEALTH_FAILED' >&2
+          echo 'R44.5.5_DEPLOY_HEALTH_FAILED' >&2
           exit 1
-
