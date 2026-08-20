@@ -1,0 +1,391 @@
+// ============================================================
+// LOLA OPERACIONAL UGI v8 R12 VISUAL SELF-REPAIR CAROUSEL
+// Command Hub + Central + R2 + Workers AI + Images + Media + Buffer
+//
+// R7:
+// - preserva autenticação LOLA_AUTH_KEY / LOLA_COMMAND_KEY
+// - usa AI para texto, imagem e vídeo
+// - usa IMAGES para compor carrossel com texto EXATO sobre fundo raster
+// - elimina dependência de IA para escrever texto dentro das artes
+// - usa VIDEO (Media Transformations binding) para normalizar vídeos em MP4 9:16
+// - música permanece como metadata operacional
+// - não finge que Media/Buffer anexam música da biblioteca do Instagram
+// - retries e fallback resilientes
+// - Central de Aprovação multimídia
+//
+// R9:
+// - preserva integralmente o fluxo estável do R8
+// - mantém LOLA_AUTH_KEY para administração e LOLA_COMMAND_KEY para Lola UGI
+// - adiciona auditoria semântica pós-geração para aderência a área + ângulo + orientação
+// - bloqueia valores financeiros/percentuais e regras universais inventadas
+// - endurece filtro contra linguagem genérica típica de IA
+// - reescreve automaticamente antes de marcar conteúdo para revisão
+// - moderniza o carrossel determinístico sem voltar a depender de IA para desenhar texto
+// - adiciona letras minúsculas à fonte bitmap, mais espaço negativo e layouts editoriais variados
+// R13:
+// - mantém autenticação, Command Hub, R2, Central e Buffer da arquitetura estável
+// - comando simples passa a ser suficiente: a Lola cria capa, estrutura e fechamento
+// - gate editorial agora tenta autocorreção antes de bloquear a geração
+// - cada slide recebe uma fotografia/visual exclusivo gerado por IA
+// - a IA visual é proibida de escrever; o texto exato entra depois via Images binding
+// - tipografia principal usa SVG/Arial/Helvetica, removendo o aspecto de terminal
+// - rodapé deixa de usar bitmap com acentos, eliminando "gestão ?" na arte
+// - legenda obrigatória entre 130 e 180 palavras
+// R14:
+// - corrige o gate da capa: literalidade só é exigida quando o briefing traz capa/gancho explícito
+// - auditoria semântica vira gate de reparo, não bloqueio cego após os controles determinísticos
+// - aumenta o self-repair editorial antes da renderização
+// - mantém Browser Run obrigatório para carrossel, sem fallback para fonte de terminal
+// - adiciona política musical UGI para Beatly: moderna, atual, profissional e coerente com o tema
+// - padroniza a variável de catálogo musical como MUSIC_CATALOG_JSON
+// - suporta catálogo Beatly no R2/variável, rotação sem repetição até esgotar o catálogo e reinício de ciclo
+// R14.2:
+// - MUSIC_CATALOG_JSON passa a ser fonte direta do catálogo; não exige sincronização manual para funcionar
+// - adiciona GET /api/music/catalog/status para teste seguro sem expor faixas nem exigir chave
+// - POST /api/music/catalog aceita administração ou Lola UGI autenticada para futuras atualizações
+// - remove duplicidade do endpoint musicCatalog no /api/health
+// R16:
+ // - política musical única para Instagram, TikTok e YouTube
+ // - relevância contextual e segurança editorial acima de tendência
+ // - bloqueio de conteúdo explícito e inadequado ao posicionamento UGI
+ // - elegibilidade/licença tratada separadamente por plataforma
+ // - até 500 candidatos e fallback automático sem fabricar IDs de áudio
+ // - bibliotecas nativas permanecem dependentes de identificação/autorização real da plataforma
+// R44.4.4 BUFFER ERROR DIAGNOSTICS:
+ // - preserva integralmente R44.4.3 Publication Eligibility e todos os gates já validados
+ // - captura Post.error oficial do Buffer (message, rawError, supportUrl)
+ // - preserva __typename e payload diagnóstico das respostas GraphQL
+ // - /api/platform-publication-status passa a persistir e retornar o erro real de publicação
+ // - nenhuma republicação automática é executada por este diagnóstico
+// R44.4.10 COMMAND METADATA + LEGACY DRAFT BRIDGE:
+ // - preserva contentId/experimentId/variant/commercialIntent em createCommand
+ // - propaga metadata para drafts gerados pelo command hub
+ // - /api/video-render aceita draftId editorial explícito para recuperar drafts legados
+ // - ao receber draftId + content_id, migra o draft legado para o content_id determinístico
+ // - evita duplicidade e preserva o id editorial original
+// R44.4.9 EXISTING DRAFT -> GITHUB BRIDGE:
+ // - /api/video-render reutiliza automaticamente draft existente pelo content_id
+ // - não cria segundo draft quando o conteúdo já existe
+ // - associa novo renderId ao mesmo draft e preserva seu id original
+ // - /api/video-upload e /api/video-status resolvem o draft pelo approvalDraftId salvo no video result
+ // - preserva R44.4.8 helper fix, R44.4.7 lookup/metadata pass, Buffer, GitHub e renderer
+// R44.4.8 VEO DURATION HELPER FIX:
+ // - restaura helper resolveVeoDurationSeconds ausente no baseline
+ // - corrige ReferenceError no normalizeContentMetadata para reel/video
+ // - preserva R44.4.7 compact draft lookup + metadata pass
+ // - nenhuma alteração de endpoint, schema, Buffer, GitHub ou renderer
+// R44.4.6 CAROUSEL SLIDE RECOVERY:
+// - preserva integralmente publicação, eligibility e diagnostics já validados
+// - adiciona recuperação cirúrgica de um único slide em draft de carrossel existente
+// - reutiliza o mesmo draftId e nunca cria novo draft durante recovery
+// - preserva slides já renderizados no R2 e reconstrói imageUrls/imageKeys em ordem
+// - endpoint: POST /api/carousel-slide-recovery
+// - nenhuma aprovação, publicação ou agendamento é executado pelo recovery
+//
+// R44.4 MULTI-PLATFORM PUBLISHING:
+ // - preserva renderer R43.4, storage multi-asset, delivery R43.2 e aprovação R43.3
+ // - APROVAR continua diferente de PUBLICAR
+ // - adiciona publicação/agendamento individual por Instagram, TikTok e YouTube via Buffer GraphQL
+ // - modos: shareNow, customScheduled e addToQueue
+ // - resolve canais por env explícito ou descoberta segura no Buffer
+ // - registra bufferPostId, status, dueAt, sentAt e externalLink por plataforma
+ // - adiciona consulta de status pós-publicação para confirmação de entrega
+ // - uma falha de plataforma não altera as demais
+ //
+// R43.3 CENTRAL MULTI-ASSET APPROVAL:
+ // - preserva R42.1 renderer, R43.1 storage e R43.2 delivery
+ // - Central exibe Instagram, TikTok e YouTube como previews independentes
+ // - aprovação/rejeição passa a ser independente por plataforma
+ // - decisão de aprovação NÃO publica automaticamente; publicação multi-canal fica para etapa posterior
+ // - /api/approve legado continua disponível para posts/carrosséis/reels legados de ativo único
+ // - conteúdo multi-asset usa /api/platform-approval
+ // - status consolidado: pending_approval | partially_approved | approved | rejected
+ //
+ // R43.1 WORKER MULTI-ASSET:
+ // - /api/video-upload aceita platform=instagram|tiktok|youtube
+ // - armazena masters independentes em geradas/videos/{renderId}/{platform}.mp4
+ // - resultado agrega assets por plataforma e só fica ready quando os três masters chegam
+ // - preserva videoUrl/videoKey legados apontando para Instagram
+ // - Central recebe metadata multi-asset; UI/aprovação independente fica para R43.3
+ // R37 APPROVAL + COMMERCIAL MVP:
+ // - preserva integralmente o R27 e o pipeline audiovisual validado
+ // - conecta automaticamente Reel renderizado à Central de Aprovação
+ // - adiciona contentId, experimentId, variant, objective, CTA e commercialIntent
+ // - preserva histórico aprovado/rejeitado em R2 sem implementar Growth Engine
+ // - registra eventos mínimos para futura observabilidade/MET sem classificar performance
+ // - Central continua com aprovação humana e Buffer somente após aprovação
+// R27 GITHUB -> R2 DELIVERY FINAL:
+// - preserva integralmente o R26 e o renderer gratuito GitHub Actions + FFmpeg
+// - adiciona renderId único e rastreável por solicitação
+// - adiciona POST /api/video-upload para receber MP4 real do GitHub Actions
+// - valida segredo dedicado, Content-Length, MIME e assinatura ISO-BMFF/MP4 (ftyp)
+// - grava o MP4 no R2 MEDIA em geradas/videos/{renderId}.mp4
+// - grava manifesto de resultado em lola/video-results/{renderId}.json e latest.json
+// - adiciona GET /api/video-result/{renderId} e GET /api/video-results/latest
+// - GitHub nunca recebe credenciais do R2; upload passa pelo Worker
+// - mantém Veo/Runway/Pruna apenas como pipeline legado isolado /api/video-test
+// R21 VIDEO ROUTING DIAGNOSTIC:
+// - preserva integralmente o carrossel 7/7 validado
+// - adiciona /api/video-test: rota direta e exclusiva para generateVideoDraft
+// - bypass total do renderer de imagem no teste audiovisual
+// - mantém cascata de provedores e validação MP4 real do R20
+// R20 VIDEO RECOVERY:
+// - preserva integralmente o carrossel 7/7 do R19 FINAL CLOSURE
+// - isola a correção exclusivamente no pipeline audiovisual
+// - tenta Veo 3.1 Fast -> Runway Gen-4.5 -> Pruna P-Video
+// - cada provedor usa parâmetros oficiais próprios
+// - registra state, URL, MIME, bytes, assinatura MP4 e erro de cada tentativa
+// - JPG/PNG/thumbnail nunca são aceitos nem armazenados como vídeo
+// - fallback só ocorre entre modelos de vídeo reais, nunca para modelo de imagem
+// - mantém música independente e sem inventar faixa/licença
+// R19 FINAL CLOSURE:
+// - corrige o hard gate "capa explícita não foi preservada"
+// - restaura deterministicamente capa/gancho literal antes de bloquear o carrossel
+// - restaura CTA literal quando necessário e reaudita o pacote
+// - mantém renderização em duas passagens + cooldown/backoff 429
+// - mantém validação binária: JPG nunca pode ser contabilizado como vídeo
+// - mantém música pendente quando não houver faixa/licença real elegível
+// R19:
+// - fila de renderização do carrossel em duas passagens, com cooldown global entre cards
+// - backoff 429 mais conservador no Browser Run e respeito ao Retry-After
+// - reprocessa somente cards que falharam, sem invalidar os cards já renderizados
+// - vídeo passa a seguir o formato oficial de resposta do Veo 3.1 Fast
+// - valida state/URL/content-type/assinatura MP4 antes de aceitar mídia audiovisual
+// - valida também o MP4 após Media Transformations e após gravação no R2
+// - remove qualquer possibilidade de JPG/imagem estática ser contabilizada como vídeo
+// - separa duração solicitada da duração real suportada pelo Veo (4s/6s/8s)
+// - auditoria editorial do vídeo passa a gerar qualityIssues explícitos
+// R44.5.5 MATERIAL JSON/BASE64 UPLOAD BRIDGE:
+// - preserva integralmente R44.5.4 Material Store, Commerce Adapter, Asaas e fulfillment
+// - adiciona POST /api/materials/{materialId}/asset-json para GPT Actions sem bridge binário
+// - payload JSON aceita contentBase64 + mimeType; decodifica no Worker e grava bytes reais no R2
+// - mantém POST /api/materials/{materialId}/asset binário existente para clientes compatíveis
+//
+// R44.5.4 MATERIAL STORE + COMMERCE ADAPTER + FULFILLMENT:
+// - preserva R44.5.3 Commerce/Copy Lock/Exact Copy/Semantic Bridge e todo pipeline audiovisual
+// - adiciona Material Store e Product Catalog persistidos no R2 MEDIA
+// - adiciona Commerce Adapter fail-closed com Asaas como primeiro provider implementado
+// - checkout real exige credencial e payload do provider; nenhum ID/link é fabricado
+// - webhook Asaas exige asaas-access-token e só libera fulfillment após status pago confirmado
+// - fulfillment gera token opaco temporário e entrega o asset pelo próprio Worker
+// - nenhum checkout, webhook ou fulfillment publica conteúdo ou toca no Buffer
+// ============================================================
+
+const IG = "6a7896cdb2d9d57743457e33";
+
+// ------------------------------------------------------------
+// MODELOS
+// ------------------------------------------------------------
+
+const TXT = "@cf/meta/llama-3.1-8b-instruct-fast";
+const IMG = "@cf/black-forest-labs/flux-1-schnell";
+const VIDEO_MODEL = "google/veo-3.1-fast";
+const VIDEO_FALLBACK_MODEL = "runwayml/gen-4.5";
+const VIDEO_FALLBACK_MODEL_2 = "pruna/p-video";
+const VIDEO_PROVIDER_ORDER = [
+  VIDEO_MODEL,
+  VIDEO_FALLBACK_MODEL,
+  VIDEO_FALLBACK_MODEL_2
+];
+
+const VERSION = "lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20";
+
+// ------------------------------------------------------------
+// STORAGE
+// ------------------------------------------------------------
+
+const HISTORY_KEY = "lola/editorial-history-v8.json";
+const DRAFT_PREFIX = "lola/drafts/";
+const COMMAND_PREFIX = "lola/commands/";
+const IMAGE_PREFIX = "geradas/posts/";
+const CAROUSEL_PREFIX = "geradas/carrosseis/";
+const VIDEO_PREFIX = "geradas/videos/";
+const VIDEO_RESULT_PREFIX = "lola/video-results/";
+const VIDEO_RESULT_LATEST_KEY = `${VIDEO_RESULT_PREFIX}latest.json`;
+const APPROVAL_ARCHIVE_PREFIX = "lola/approval-archive/";
+const CONTENT_EVENT_PREFIX = "lola/content-events/";
+const MATERIAL_PREFIX = "lola/materials/";
+const MATERIAL_ASSET_PREFIX = "lola/material-assets/";
+const PRODUCT_PREFIX = "lola/products/";
+const CHECKOUT_PREFIX = "lola/commerce/checkouts/";
+const ORDER_PREFIX = "lola/commerce/orders/";
+const DELIVERY_PREFIX = "lola/commerce/deliveries/";
+const MATERIAL_ASSET_MAX_BYTES = 25 * 1024 * 1024;
+const DELIVERY_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const VIDEO_UPLOAD_MAX_BYTES = 50 * 1024 * 1024; // 50 MB de proteção operacional
+const VIDEO_PLATFORMS = ["instagram", "tiktok", "youtube"];
+const VIDEO_PLATFORM_DEFAULT_DURATIONS = {
+  instagram: 32,
+  tiktok: 24,
+  youtube: 36
+};
+
+const HISTORY_LIMIT = 96;
+const DRAFT_LIMIT = 100;
+const COMMAND_LIMIT = 100;
+
+// ------------------------------------------------------------
+// TEXTO
+// ------------------------------------------------------------
+
+const MIN_WORDS = 110;
+const MAX_WORDS = 200;
+const TARGET_MIN = 135;
+const TARGET_MAX = 175;
+
+const BRAND_HASHTAG = "#UmaGestaoInteligente";
+
+const MAX_SEMANTIC_REWRITES = 2;
+
+const CAROUSEL_MIN_WORDS = 130;
+const CAROUSEL_MAX_WORDS = 180;
+const CAROUSEL_PACKAGE_REPAIRS = 2;
+
+const CAROUSEL_VISUAL_STEPS = 4;
+const CAROUSEL_VISUAL_RETRIES = 2;
+const CAROUSEL_COVER_MAX_WORDS = 10;
+const CAROUSEL_BODY_MAX_WORDS = 34;
+
+const MONEY_OR_PERCENT_PATTERN =
+  /(?:R\$\s*\d|US\$\s*\d|€\s*\d|\b\d+(?:[.,]\d+)?\s*(?:reais|real|dólares|dolares|euros|%|por cento)\b)/i;
+
+
+// ------------------------------------------------------------
+// RETRIES
+// ------------------------------------------------------------
+
+const FULL_GENERATION_ATTEMPTS = 2;
+const CAPTION_REWRITE_ATTEMPTS = 2;
+const IMAGE_ATTEMPTS = 2;
+const CAROUSEL_ATTEMPTS = 2;
+const CAROUSEL_BG_ATTEMPTS = 2;
+const VIDEO_ATTEMPTS = 3;
+
+// R19 — estabilidade de renderização Browser Run
+const BROWSER_RENDER_ATTEMPTS = 6;
+const BROWSER_BASE_BACKOFF_MS = 6000;
+const BROWSER_MAX_BACKOFF_MS = 30000;
+const CAROUSEL_SLIDE_SPACING_MS = 6500;
+const CAROUSEL_FAILED_PASS_COOLDOWN_MS = 18000;
+const CAROUSEL_RENDER_PASSES = 2;
+
+// ------------------------------------------------------------
+// MÚSICA / BEATLY
+// ------------------------------------------------------------
+
+const BEATLY_CATALOG_KEY = "lola/music/beatly-catalog.json";
+const BEATLY_HISTORY_KEY = "lola/music/beatly-history.json";
+const BEATLY_HISTORY_LIMIT = 600;
+const BEATLY_RANDOM_TOP_N = 18;
+const BEATLY_MIN_TREND_SCORE = 0.45;
+
+// R15: motor de fontes reais. O Worker não inventa IDs de Instagram.
+// MUSIC_CATALOG_JSON pode continuar contendo somente a política UGI.
+// Fontes externas reais podem ser conectadas por MUSIC_PROVIDER_URL + MUSIC_PROVIDER_TOKEN.
+// O cache operacional fica limitado a 500 faixas e falhas entram em quarentena temporária.
+const MUSIC_CACHE_LIMIT = 500;
+const MUSIC_FALLBACK_ATTEMPTS = 5;
+const MUSIC_UNAVAILABLE_KEY = "lola/music/unavailable.json";
+const MUSIC_UNAVAILABLE_TTL_MS = 24 * 60 * 60 * 1000;
+
+// R16: política musical multiplataforma.
+// Não presume que uma licença/áudio válido em uma plataforma seja válido nas demais.
+// Tendência é critério secundário; aderência editorial e segurança vêm primeiro.
+const MUSIC_PLATFORMS = ["instagram", "tiktok", "youtube"];
+const MUSIC_EXPLICIT_TERMS = [
+  "explicit", "palavrao", "palavrão", "profanity", "sexual",
+  "violence", "violent", "aggressive lyrics"
+];
+const MUSIC_PLATFORM_POLICY = {
+  instagram: {
+    discovery: "native_professional_trending_and_sound_collection",
+    automaticLibraryAttachment: false,
+    commercialSafetyRequired: true,
+    fallbackRequired: true
+  },
+  tiktok: {
+    discovery: "commercial_music_library",
+    automaticLibraryAttachment: false,
+    commercialSafetyRequired: true,
+    fallbackRequired: true
+  },
+  youtube: {
+    discovery: "shorts_audio_library_or_royalty_free",
+    automaticLibraryAttachment: false,
+    commercialSafetyRequired: true,
+    fallbackRequired: true
+  }
+};
+
+// ============================================================
+// ESTILOS
+// ============================================================
+
+const STYLES = [
+  "cinematic editorial business photography, realistic people, natural body language",
+  "documentary-style small business photography, candid professional action",
+  "premium realistic workplace photography, authentic entrepreneur activity",
+  "human-centered leadership photography, subtle emotion, natural interaction",
+  "executive workspace photography, practical objects, sophisticated composition",
+  "realistic small-business operational photography, visible action, natural environment"
+];
+
+// ============================================================
+// BRIEFS EDITORIAIS
+// ============================================================
+
+const BRIEFS = [
+  {
+    id: "prioridade-criterios",
+    area: "priorização e foco",
+    angle: "como definir prioridades quando tudo parece urgente",
+    hashtags: ["#GestaoDePrioridades", "#FocoNaGestao", BRAND_HASHTAG],
+    instruction:
+      "Ensine o gestor a comparar demandas por impacto, urgência real, risco e dependências. Mostre como desempatar duas tarefas aparentemente urgentes com um critério aplicável hoje.",
+    cta:
+      "Qual demanda da sua lista mudaria de posição se você aplicasse esses critérios hoje?"
+  },
+  {
+    id: "delegacao-controle",
+    area: "delegação e autonomia",
+    angle: "como delegar sem perder o controle",
+    hashtags: ["#Delegacao", "#AutonomiaNaGestao", BRAND_HASHTAG],
+    instruction:
+      "Ensine delegação usando resultado esperado, limite de autonomia e ponto de acompanhamento. Explique que acompanhar não é refazer a tarefa nem pedir atualização o tempo todo.",
+    cta:
+      "Na próxima delegação, qual desses três pontos você precisa deixar mais claro?"
+  },
+  {
+    id: "processo-retrabalho",
+    area: "processos e padronização",
+    angle: "como reduzir retrabalho com processos claros",
+    hashtags: ["#GestaoDeProcessos", "#Padronizacao", BRAND_HASHTAG],
+    instruction:
+      "Estruture um processo mínimo com entrada da tarefa, responsável, padrão de conclusão e ponto de conferência. Use um exemplo operacional simples e reconhecível.",
+    cta:
+      "Qual etapa do seu processo hoje mais precisa de um critério claro de conclusão?"
+  },
+  {
+    id: "reuniao-assincrona",
+    area: "reuniões e comunicação",
+    angle: "como reduzir reuniões sem perder alinhamento",
+    hashtags: ["#ReunioesProdutivas", "#ComunicacaoNaGestao", BRAND_HASHTAG],
+    instruction:
+      "Explique o que pode virar atualização assíncrona, o que ainda exige conversa ao vivo e qual critério separa os dois casos.",
+    cta:
+      "Qual reunião da sua semana poderia virar uma atualização objetiva sem perder alinhamento?"
+  },
+  {
+    id: "lideranca-habito",
+    area: "liderança de equipe",
+    angle: "um pequeno hábito com grande impacto gerencial",
+    hashtags: ["#Lideranca", "#GestaoDeEquipe", BRAND_HASHTAG],
+    instruction:
+      "Escolha um único hábito gerencial de até cinco minutos, diga quando praticá-lo e qual comportamento da equipe ele melhora. O hábito precisa ser observável e repetível.",
+    cta:
+      "Que pequeno hábito você consegue testar com sua equipe ainda nesta semana?"
+  },
+  {
+    id: "decisao-regra",
+    area: "tomada de decisão",
+    angle: "uma decisão que líderes ocupados precisam simplificar",
