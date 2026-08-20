@@ -1,4 +1,4 @@
-name: UGI Reel Renderer R43.8.2 Dynamic Scenes + Multi-Provider Media Cascade
+name: UGI Reel Renderer R43.8.4 Dynamic Scenes + Semantic Success Callback
 
 on:
   workflow_dispatch:
@@ -80,7 +80,7 @@ jobs:
       VIDEO_SCENES_JSON: ${{ inputs.scenes_json }}
       VIDEO_ALLOW_LEGACY_SCENES: "false"
 
-      # R43.8.2 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
+      # R43.8.4 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
       VIDEO_SMOKE_TEST: ${{ inputs.smoke_test }}
       VIDEO_SMOKE_TEST_DURATION: ${{ inputs.smoke_test_duration }}
       VIDEO_SMOKE_TEST_PLATFORM: ${{ inputs.smoke_test_platform }}
@@ -111,9 +111,9 @@ jobs:
             fi
           done
           if [ "$missing" -eq 0 ]; then
-            echo "R43.8.2 runner already contains FFmpeg, FFprobe and curl."
+            echo "R43.8.4 runner already contains FFmpeg, FFprobe and curl."
           else
-            echo "R43.8.2 one or more runner binaries are missing; controlled apt recovery required."
+            echo "R43.8.4 one or more runner binaries are missing; controlled apt recovery required."
             echo "UGI_APT_RECOVERY_REQUIRED=true" >> "$GITHUB_ENV"
           fi
           command -v ffmpeg >/dev/null 2>&1 && ffmpeg -version | head -n 1
@@ -157,7 +157,7 @@ jobs:
         run: |
           set -euo pipefail
           if command -v espeak-ng >/dev/null 2>&1; then
-            echo "R43.8.2 espeak-ng already available."
+            echo "R43.8.4 espeak-ng already available."
             espeak-ng --version | head -n 1
             exit 0
           fi
@@ -216,32 +216,32 @@ jobs:
           import json, os
           raw = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
           if not raw:
-              raise SystemExit("R43.8.2 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
+              raise SystemExit("R43.8.4 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
           payload = json.loads(raw)
           scenes = payload.get("scenes") if isinstance(payload, dict) else payload
           if not isinstance(scenes, list):
-              raise SystemExit("R43.8.2 FAIL-CLOSED: scenes_json não contém array scenes.")
+              raise SystemExit("R43.8.4 FAIL-CLOSED: scenes_json não contém array scenes.")
           if not 4 <= len(scenes) <= 10:
-              raise SystemExit(f"R43.8.2 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
+              raise SystemExit(f"R43.8.4 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
           allowed_roles = {"hook", "pain", "consequence", "turn", "result", "cta"}
           required_platforms = {"instagram", "tiktok", "youtube"}
           for idx, scene in enumerate(scenes, start=1):
               if not isinstance(scene, dict):
-                  raise SystemExit(f"R43.8.2 cena {idx} inválida.")
+                  raise SystemExit(f"R43.8.4 cena {idx} inválida.")
               if str(scene.get("role") or "").strip() not in allowed_roles:
-                  raise SystemExit(f"R43.8.2 role inválido na cena {idx}.")
+                  raise SystemExit(f"R43.8.4 role inválido na cena {idx}.")
               if not str(scene.get("visual_intent") or "").strip():
-                  raise SystemExit(f"R43.8.2 visual_intent ausente na cena {idx}.")
+                  raise SystemExit(f"R43.8.4 visual_intent ausente na cena {idx}.")
               if not str(scene.get("pexels_query") or "").strip():
-                  raise SystemExit(f"R43.8.2 pexels_query ausente na cena {idx}.")
+                  raise SystemExit(f"R43.8.4 pexels_query ausente na cena {idx}.")
               for field in ("overlay", "support", "narration"):
                   value = scene.get(field)
                   if not isinstance(value, dict) or set(value.keys()) < required_platforms:
-                      raise SystemExit(f"R43.8.2 {field} incompleto na cena {idx}.")
+                      raise SystemExit(f"R43.8.4 {field} incompleto na cena {idx}.")
                   for platform in required_platforms:
                       if not str(value.get(platform) or "").strip():
-                          raise SystemExit(f"R43.8.2 {field}.{platform} vazio na cena {idx}.")
-          print(f"R43_8_2_DYNAMIC_SCENES_VALID scenes={len(scenes)}")
+                          raise SystemExit(f"R43.8.4 {field}.{platform} vazio na cena {idx}.")
+          print(f"R43_8_4_DYNAMIC_SCENES_VALID scenes={len(scenes)}")
           PY
 
       - name: Acquire semantic human media from provider cascade
@@ -314,20 +314,57 @@ jobs:
                   if download(url,target):
                       used.add(vid); selected+=1
                       attribution.append({"scene":idx,"provider":provider,"query":q,"provider_video_id":source,"provider_page_url":page,"local_file":target})
-          Path("output/pexels-attribution.json").write_text(json.dumps({"version":"R43.8.2","items":attribution},ensure_ascii=False,indent=2),encoding="utf-8")
-          Path("output/casting-policy.json").write_text(json.dumps({"version":"R43.8.2","policy":"dynamic_semantic_storytelling_multi_provider"},ensure_ascii=False,indent=2),encoding="utf-8")
+          Path("output/pexels-attribution.json").write_text(json.dumps({"version":"R43.8.4","items":attribution},ensure_ascii=False,indent=2),encoding="utf-8")
+          Path("output/casting-policy.json").write_text(json.dumps({"version":"R43.8.4","policy":"dynamic_semantic_storytelling_multi_provider"},ensure_ascii=False,indent=2),encoding="utf-8")
           required=1 if smoke else 4
-          if selected<required: raise SystemExit(f"R43.8.2 exige pelo menos {required} cena(s) humana(s).")
+          if selected<required: raise SystemExit(f"R43.8.4 exige pelo menos {required} cena(s) humana(s).")
           PY
 
-      - name: Render UGI R43.8.2
+      - name: Resolve CTA and semantic metadata from scenes payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          raw = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
+          payload = json.loads(raw)
+          if not isinstance(payload, dict):
+              payload = {"scenes": payload}
+
+          cta = str(payload.get("cta") or os.getenv("VIDEO_CTA") or "Conheça a UGI.").strip()
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as fh:
+              fh.write(f"VIDEO_CTA={cta}\n")
+
+          request_meta = {
+              "version": "R43.8.4",
+              "renderId": os.getenv("VIDEO_RENDER_ID"),
+              "contentId": os.getenv("VIDEO_CONTENT_ID"),
+              "experimentId": os.getenv("VIDEO_EXPERIMENT_ID"),
+              "variant": os.getenv("VIDEO_VARIANT"),
+              "commercialIntent": os.getenv("VIDEO_COMMERCIAL_INTENT"),
+              "cta": cta,
+              "commercialOffer": payload.get("commercial_offer") is True,
+              "commerce": payload.get("commerce") or {},
+              "copyLock": payload.get("copy_lock") or {},
+              "sceneCount": len(payload.get("scenes") or []),
+          }
+          Path("output/semantic-request-meta.json").write_text(
+              json.dumps(request_meta, ensure_ascii=False, indent=2), encoding="utf-8"
+          )
+          print(f"R43.8.4 VIDEO_CTA={cta}")
+          PY
+
+      - name: Render UGI R43.8.4
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p output
           python render-reel.py
 
-      - name: Validate R43.8.2 outputs
+      - name: Validate R43.8.4 outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -365,10 +402,201 @@ jobs:
           upload_asset "tiktok" "${TIKTOK_DURATION}" "output/tiktok-reel.mp4" "output/r2-upload-tiktok.json"
           upload_asset "youtube" "${YOUTUBE_DURATION}" "output/youtube-short.mp4" "output/r2-upload-youtube.json"
 
+      - name: Build and deliver semantic success callback
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BASE_URL="${UGI_VIDEO_UPLOAD_URL%/}"
+          [ -n "$BASE_URL" ] || { echo "UGI_VIDEO_UPLOAD_URL ausente"; exit 1; }
+          [ -n "$UGI_VIDEO_UPLOAD_KEY" ] || { echo "UGI_VIDEO_UPLOAD_KEY ausente"; exit 1; }
+          [ -n "$VIDEO_RENDER_ID" ] || { echo "VIDEO_RENDER_ID ausente"; exit 1; }
+
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          raw = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
+          payload = json.loads(raw)
+          if not isinstance(payload, dict):
+              payload = {"scenes": payload}
+
+          expected_scenes = payload.get("scenes") or []
+          copy_lock = payload.get("copy_lock") or {}
+          commerce = payload.get("commerce") or {}
+          expected_cta = str(payload.get("cta") or os.getenv("VIDEO_CTA") or "").strip()
+          smoke = (os.getenv("VIDEO_SMOKE_TEST") or "false").strip().lower() in {"1","true","yes","on"}
+
+          storyboard_files = sorted(Path("output").glob("r42-storyboard-*.json"))
+          storyboards = []
+          for path in storyboard_files:
+              try:
+                  storyboards.append(json.loads(path.read_text(encoding="utf-8")))
+              except Exception as exc:
+                  raise SystemExit(f"STORYBOARD_READ_FAILED {path}: {exc}")
+
+          if not storyboards:
+              raise SystemExit("SEMANTIC_CALLBACK_FAIL: nenhum storyboard disponível")
+
+          manifest = json.loads(Path("output/r42-platform-manifest.json").read_text(encoding="utf-8"))
+          attribution_path = Path("output/pexels-attribution.json")
+          attribution = json.loads(attribution_path.read_text(encoding="utf-8")) if attribution_path.exists() else {}
+
+          mismatches = []
+          qa_pass = True
+          validated_platforms = []
+          rendered_scene_counts = {}
+          final_ctas = {}
+
+          for sb in storyboards:
+              platform = str(sb.get("platform") or "").strip()
+              if not platform:
+                  continue
+              validated_platforms.append(platform)
+              qa = sb.get("qa") or {}
+              if qa.get("quality_status") != "pass":
+                  qa_pass = False
+                  mismatches.append({"platform": platform, "field": "qa.quality_status", "expected": "pass", "received": qa.get("quality_status")})
+
+              rendered = sb.get("scenes") or []
+              rendered_scene_counts[platform] = len(rendered)
+              for rendered_scene in rendered:
+                  idx = int(rendered_scene.get("index") or 0)
+                  if idx < 1 or idx > len(expected_scenes):
+                      mismatches.append({"platform": platform, "scene": idx, "field": "index", "reason": "out_of_expected_range"})
+                      continue
+                  exp = expected_scenes[idx - 1]
+                  for field in ("role", "visual_intent", "pexels_query"):
+                      if str(rendered_scene.get(field) or "") != str(exp.get(field) or ""):
+                          mismatches.append({"platform": platform, "scene": idx, "field": field, "expected": exp.get(field), "received": rendered_scene.get(field)})
+                  for field in ("overlay", "support", "narration"):
+                      exp_map = exp.get(field) or {}
+                      expected_value = str(exp_map.get(platform) or "")
+                      received_value = str(rendered_scene.get(field) or "")
+                      if received_value != expected_value:
+                          mismatches.append({"platform": platform, "scene": idx, "field": field, "expected": expected_value, "received": received_value})
+
+              profile = (qa.get("profile") or {})
+              actual_cta = str(profile.get("primary_cta") or "").strip()
+              final_ctas[platform] = actual_cta
+              if expected_cta and actual_cta != expected_cta:
+                  mismatches.append({"platform": platform, "field": "final_cta", "expected": expected_cta, "received": actual_cta})
+
+          canonical_storyboards = json.dumps(storyboards, ensure_ascii=False, sort_keys=True).lower()
+          forbidden = [
+              "tudo passa por você",
+              "tudo depende de você",
+              "o líder vira gargalo",
+              "você virou o gargalo",
+              "autonomia com direção",
+              "mais autonomia. mais execução",
+          ]
+          legacy_hits = [phrase for phrase in forbidden if phrase in canonical_storyboards]
+          legacy_detected = bool(legacy_hits)
+
+          copy_required = copy_lock.get("enabled") is True
+          copy_pass = (not copy_required) or len(mismatches) == 0
+          semantic_pass = qa_pass and copy_pass and not legacy_detected
+
+          evidence = {
+              "version": "R43.8.4",
+              "renderId": os.getenv("VIDEO_RENDER_ID"),
+              "githubRunId": os.getenv("GITHUB_RUN_ID"),
+              "contentId": os.getenv("VIDEO_CONTENT_ID"),
+              "experimentId": os.getenv("VIDEO_EXPERIMENT_ID"),
+              "variant": os.getenv("VIDEO_VARIANT"),
+              "sceneCount": len(expected_scenes),
+              "sceneRoles": [str(x.get("role") or "") for x in expected_scenes],
+              "validatedPlatforms": validated_platforms,
+              "renderedSceneCounts": rendered_scene_counts,
+              "smokeTest": smoke,
+              "exactCopyScope": "rendered_scenes_only" if smoke else "all_rendered_platform_scenes",
+              "finalCtaByPlatform": final_ctas,
+              "commercialOffer": payload.get("commercial_offer") is True,
+              "commerce": commerce,
+              "copyLock": copy_lock,
+              "manifest": {
+                  "version": manifest.get("version"),
+                  "sceneSource": manifest.get("sceneSource"),
+                  "sceneCount": manifest.get("sceneCount"),
+                  "sceneRoles": manifest.get("sceneRoles"),
+                  "legacyHardcodedScenesDisabled": manifest.get("legacyHardcodedScenesDisabled"),
+              },
+          }
+
+          result = {
+              "renderId": os.getenv("VIDEO_RENDER_ID"),
+              "githubRunId": os.getenv("GITHUB_RUN_ID"),
+              "semanticValidation": {
+                  "pass": semantic_pass,
+                  "qaPass": qa_pass,
+                  "copyLockPass": copy_pass,
+                  "validatedPlatforms": validated_platforms,
+                  "declaredSceneCount": len(expected_scenes),
+                  "renderedSceneCounts": rendered_scene_counts,
+                  "smokeTest": smoke,
+                  "mismatches": mismatches,
+              },
+              "copyLockValidation": {
+                  "required": copy_required,
+                  "pass": copy_pass,
+                  "mode": copy_lock.get("mode") or "exact",
+                  "strict": copy_lock.get("strict") is not False,
+                  "mismatches": mismatches,
+              },
+              "legacyContentLeakDetected": legacy_detected,
+              "semanticEvidence": evidence,
+              "mediaProviders": attribution.get("items") or [],
+              "finalCta": expected_cta or None,
+          }
+
+          Path("output/semantic-result-request.json").write_text(
+              json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
+          )
+
+          if not semantic_pass:
+              print(json.dumps(result, ensure_ascii=False, indent=2))
+              raise SystemExit("SEMANTIC_VALIDATION_FAILED")
+
+          print("R43_8_4_SEMANTIC_VALIDATION_LOCAL_PASS")
+          PY
+
+          curl \
+            --fail-with-body \
+            --silent \
+            --show-error \
+            --retry 3 \
+            --retry-delay 2 \
+            --retry-all-errors \
+            --connect-timeout 15 \
+            --max-time 120 \
+            -X POST "${BASE_URL}/api/video-semantic-result" \
+            -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
+            -H "Content-Type: application/json" \
+            --data-binary @output/semantic-result-request.json \
+            | tee output/semantic-result-response.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("output/semantic-result-response.json").read_text(encoding="utf-8"))
+          if data.get("ok") is not True:
+              raise SystemExit(f"SEMANTIC_CALLBACK ok!=true: {data}")
+          if data.get("semanticValidationAvailable") is not True:
+              raise SystemExit(f"SEMANTIC_CALLBACK semanticValidationAvailable!=true: {data}")
+          if data.get("semanticPass") is not True:
+              raise SystemExit(f"SEMANTIC_CALLBACK semanticPass!=true: {data}")
+          if data.get("legacyContentLeakDetected") is True:
+              raise SystemExit(f"SEMANTIC_CALLBACK legacy leak: {data}")
+          if (data.get("copyLockValidation") or {}).get("pass") is not True:
+              raise SystemExit(f"SEMANTIC_CALLBACK copy lock failed: {data}")
+          print("R43_8_4_SEMANTIC_CALLBACK_OK")
+          PY
+
       - name: Preserve GitHub artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ugi-reel-r43-8-2-${{ inputs.render_id }}
+          name: ugi-reel-r43-8-4-${{ inputs.render_id }}
           path: |
             output/ugi-reel.mp4
             output/instagram-reel.mp4
@@ -383,6 +611,9 @@ jobs:
             output/r2-upload-instagram.json
             output/r2-upload-tiktok.json
             output/r2-upload-youtube.json
+            output/semantic-request-meta.json
+            output/semantic-result-request.json
+            output/semantic-result-response.json
           if-no-files-found: error
           retention-days: 7
 
@@ -396,5 +627,5 @@ jobs:
           [ -n "$BASE_URL" ] || exit 0
           [ -n "$UGI_VIDEO_UPLOAD_KEY" ] || exit 0
           [ -n "$VIDEO_RENDER_ID" ] || exit 0
-          curl --silent --show-error --connect-timeout 10 --max-time 30 -X POST "${BASE_URL}/api/video-status" -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" -H "Content-Type: application/json" --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.2 falhou. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
+          curl --silent --show-error --connect-timeout 10 --max-time 30 -X POST "${BASE_URL}/api/video-status" -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" -H "Content-Type: application/json" --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.4 falhou. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
 
