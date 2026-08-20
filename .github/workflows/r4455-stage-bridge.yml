@@ -5,7 +5,7 @@ on:
     branches:
       - ugi-r44-5-5-deploy
     paths:
-      - '.ugi-staging/r4455/src-019.txt'
+      - '.ugi-staging/r4455/src-007.txt'
 
 permissions:
   contents: write
@@ -29,7 +29,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(find .ugi-staging/r4455 -maxdepth 1 -type f -name 'src-*.txt' | wc -l | tr -d ' ')" = "20"
+          test "$(find .ugi-staging/r4455 -maxdepth 1 -type f -name 'src-*.txt' | wc -l | tr -d ' ')" = "8"
           cat .ugi-staging/r4455/src-*.txt > /tmp/lola-operacional-worker.mjs
           test "$(wc -c < /tmp/lola-operacional-worker.mjs | tr -d ' ')" = "392658"
           printf '%s  %s\n' 'fc74f5d53bc0a5d476c19ac6acfb3acc9900a84afff59d0ccf5211827546927c' '/tmp/lola-operacional-worker.mjs' | sha256sum -c -
