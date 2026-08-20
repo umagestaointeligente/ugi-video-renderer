@@ -1,0 +1,52 @@
+name: UGI Cloudflare Worker Deploy R44.5.4
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ugi-cloudflare-worker-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Pre-deploy source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s cloudflare/lola-operacional-worker.mjs
+          grep -q 'lola-v8-r44-5-4-material-store-commerce-adapter-fulfillment-2026-08-20' cloudflare/lola-operacional-worker.mjs
+          node --check cloudflare/lola-operacional-worker.mjs
+
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy cloudflare/lola-operacional-worker.mjs --name lola-operacional-ugi --compatibility-date 2026-08-20
+
+      - name: Post-deploy health gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
+          for i in 1 2 3 4 5; do
+            BODY="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 30 "$HEALTH" || true)"
+            if printf '%s' "$BODY" | grep -q 'lola-v8-r44-5-4-material-store-commerce-adapter-fulfillment-2026-08-20' && printf '%s' "$BODY" | grep -q '"ok":true'; then
+              printf '%s\n' "$BODY"
+              echo 'R44.5.4_DEPLOY_HEALTH_OK'
+              exit 0
+            fi
+            sleep 6
+          done
+          echo 'R44.5.4_DEPLOY_HEALTH_FAILED' >&2
+          exit 1
+
