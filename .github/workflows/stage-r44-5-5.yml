@@ -27,7 +27,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/ugi-r4455
-          cat .ugi-stage/r4455/chunk-*.xz.b64 > /tmp/ugi-r4455/worker.xz.b64
+          cat .ugi-stage/r4455/chunk-*.xz.b64 | tr -d '[:space:]' > /tmp/ugi-r4455/worker.xz.b64
           test "$(wc -c < /tmp/ugi-r4455/worker.xz.b64 | tr -d ' ')" = "99144"
           printf '%s  %s\n' '4ff3b7d1f7f95dd6390a581e91e8ec64c5752e911ee6b1b73b756a31f2a7414c' '/tmp/ugi-r4455/worker.xz.b64' | sha256sum -c -
           base64 -d /tmp/ugi-r4455/worker.xz.b64 > /tmp/ugi-r4455/worker.mjs.xz
