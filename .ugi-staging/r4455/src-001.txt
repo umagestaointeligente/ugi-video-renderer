@@ -1,0 +1,577 @@
+    hashtags: ["#TomadaDeDecisao", "#DecisaoGerencial", BRAND_HASHTAG],
+    instruction:
+      "Escolha uma decisão recorrente, crie uma regra simples para reduzi-la e inclua uma exceção em que o gestor deve parar e analisar com mais cuidado.",
+    cta:
+      "Qual decisão recorrente poderia deixar de consumir sua atenção todos os dias?"
+  },
+  {
+    id: "ia-julgamento",
+    area: "IA aplicada à gestão",
+    angle: "como usar IA sem terceirizar julgamento",
+    hashtags: ["#InteligenciaArtificial", "#IANaGestao", BRAND_HASHTAG],
+    instruction:
+      "Mostre uma tarefa concreta que a IA pode apoiar e deixe explícito o que continua dependendo de validação, contexto e julgamento humano.",
+    cta:
+      "Em qual tarefa a IA pode acelerar seu trabalho sem assumir a decisão final?"
+  },
+  {
+    id: "rotina-informal",
+    area: "organização operacional",
+    angle: "como transformar processos informais em rotinas claras",
+    hashtags: ["#GestaoOperacional", "#OrganizacaoEmpresarial", BRAND_HASHTAG],
+    instruction:
+      "Mostre como transformar conhecimento que está apenas na cabeça das pessoas em sequência de passos, responsável e critério de conclusão. Use um exemplo operacional simples.",
+    cta:
+      "Qual rotina importante ainda depende mais da memória das pessoas do que de um processo claro?"
+  },
+  {
+    id: "gargalo-gestor",
+    area: "delegação e autonomia",
+    angle: "um sinal de que o gestor virou gargalo da própria empresa",
+    hashtags: ["#Delegacao", "#AutonomiaNaGestao", BRAND_HASHTAG],
+    instruction:
+      "Mostre um sinal observável de gargalo, explique a causa e indique uma mudança de autonomia ou critério que reduza a dependência do gestor.",
+    cta:
+      "Que decisão pequena ainda está esperando por você sem realmente precisar estar?"
+  },
+  {
+    id: "autonomia-qualidade",
+    area: "liderança de equipe",
+    angle: "como criar autonomia sem perder padrão de qualidade",
+    hashtags: ["#Lideranca", "#GestaoDeEquipe", BRAND_HASHTAG],
+    instruction:
+      "Explique três níveis de decisão: equipe decide sozinha; decide e comunica; precisa de aprovação. Relacione aprovação a risco, dinheiro, cliente, exceção ou impacto relevante.",
+    cta:
+      "Sua equipe sabe quais decisões pode tomar sozinha e quais ainda precisam de você?"
+  },
+  {
+    id: "tempo-estrategico",
+    area: "produtividade gerencial",
+    angle: "como proteger tempo de trabalho estratégico",
+    hashtags: ["#ProdutividadeGerencial", "#GestaoDoTempo", BRAND_HASHTAG],
+    instruction:
+      "Ensine a reservar blocos protegidos, criar uma regra de disponibilidade e separar interrupções que podem ser agrupadas, delegadas ou adiadas.",
+    cta:
+      "Qual bloco da sua semana você deveria proteger antes que as urgências ocupem tudo?"
+  },
+  {
+    id: "parar-de-fazer",
+    area: "melhoria contínua",
+    angle: "como decidir o que parar de fazer",
+    hashtags: ["#MelhoriaContinua", "#GestaoEficiente", BRAND_HASHTAG],
+    instruction:
+      "Dê critérios para eliminar, reduzir ou delegar atividades de baixo impacto e diferencie necessidade real de hábito organizacional.",
+    cta:
+      "Qual atividade continua na rotina mais por costume do que por resultado?"
+  },
+  {
+    id: "erro-gestao",
+    area: "melhoria contínua",
+    angle: "um erro comum de gestão e como corrigir",
+    hashtags: ["#MelhoriaContinua", "#GestaoEficiente", BRAND_HASHTAG],
+    instruction:
+      "Escolha um erro gerencial específico, mostre uma consequência concreta e ensine uma correção operacional aplicável. Evite erros genéricos sem comportamento observável.",
+    cta:
+      "Qual comportamento de gestão você precisa corrigir antes que ele vire um problema maior?"
+  },
+  {
+    id: "framework-hoje",
+    area: "tomada de decisão",
+    angle: "um framework simples que pode ser aplicado hoje",
+    hashtags: ["#TomadaDeDecisao", "#DecisaoGerencial", BRAND_HASHTAG],
+    instruction:
+      "Entregue um framework real de três etapas ou três perguntas. Cada etapa deve produzir uma decisão ou informação diferente.",
+    cta:
+      "Em qual decisão você pode testar esse framework ainda hoje?"
+  },
+  {
+    id: "principio-lideranca",
+    area: "liderança de equipe",
+    angle: "um princípio contraintuitivo de liderança",
+    hashtags: ["#Lideranca", "#GestaoDeEquipe", BRAND_HASHTAG],
+    instruction:
+      "Apresente uma crença comum, um contraponto contraintuitivo e explique por que o contraponto funciona em uma situação real de liderança.",
+    cta:
+      "Que prática de liderança você mantém por hábito, mesmo sem ter certeza de que funciona?"
+  },
+  {
+    id: "diagnostico-tres-perguntas",
+    area: "redução de retrabalho",
+    angle: "um diagnóstico em três perguntas",
+    hashtags: ["#ReducaoDeRetrabalho", "#EficienciaOperacional", BRAND_HASHTAG],
+    instruction:
+      "Inclua exatamente três perguntas diagnósticas que investiguem causa, responsabilidade e critério de conclusão antes de alterar o processo.",
+    cta:
+      "Qual dessas três perguntas revelaria mais rapidamente a origem do seu retrabalho hoje?"
+  }
+];
+
+// ============================================================
+// EXPRESSÕES PROIBIDAS
+// ============================================================
+
+const BANNED_PATTERNS = [
+  /imagine\s+que/i,
+  /imagine\s+um/i,
+  /imagine\s+uma/i,
+  /\ba arte de\b/i,
+  /\bo segredo para\b/i,
+  /\ba chave para\b/i,
+  /\bo caminho para\b/i,
+  /a proposta inédita/i,
+  /é chamada de/i,
+  /visa ajudar/i,
+  /a imagem mostra/i,
+  /na imagem/i,
+  /nesta imagem/i,
+  /nesta cena/i,
+  /direção visual/i,
+  /ângulo obrigatório/i,
+  /área editorial/i,
+  /imageprompt/i,
+  /liberar seu potencial/i,
+  /potencial máximo/i,
+  /liderança eficaz/i,
+  /garante eficiência/i,
+  /garantir eficiência/i,
+  /alcançar resultados positivos/i,
+  /resultados significativos/i,
+  /ambiente mais eficiente e produtivo/i,
+  /todos trabalham em harmonia/i,
+  /funcionários e equipe/i,
+  /áreas de expertise/i,
+  /antes de implementar a mudança/i,
+  /essa revisão evita transformar uma boa intenção/i
+];
+
+
+// ============================================================
+// CRITÉRIOS SEMÂNTICOS R9
+// ============================================================
+
+function semanticCriterionForBrief(brief) {
+  const byId = {
+    "prioridade-criterios":
+      "O texto deve ensinar comparação entre prioridades usando pelo menos três critérios concretos. Não basta falar genericamente sobre foco.",
+
+    "delegacao-controle":
+      "O texto precisa abordar resultado esperado, autonomia e acompanhamento. Delegação não pode virar simples cobrança ou repasse de tarefa.",
+
+    "processo-retrabalho":
+      "O método deve conter entrada, responsável, padrão de conclusão e conferência. O texto precisa ligar esses elementos à redução de retrabalho.",
+
+    "reuniao-assincrona":
+      "O texto deve diferenciar comunicação assíncrona de reunião ao vivo e fornecer um critério de escolha entre os dois formatos.",
+
+    "lideranca-habito":
+      "O conteúdo deve girar em torno de um único hábito pequeno, com momento ou frequência de aplicação e efeito observável. Não transforme o tema em reunião, crise, motivação ou liderança genérica.",
+
+    "decisao-regra":
+      "A regra precisa ser baseada em critérios, não em valores monetários, percentuais ou números arbitrários inventados. Deve haver uma exceção clara.",
+
+    "ia-julgamento":
+      "A IA deve aparecer como apoio a uma tarefa concreta, enquanto contexto, validação e decisão final continuam explicitamente humanos.",
+
+    "rotina-informal":
+      "O texto deve transformar conhecimento informal em sequência de passos, responsável e critério de conclusão, com exemplo operacional.",
+
+    "gargalo-gestor":
+      "O texto precisa apresentar um sinal observável de dependência do gestor, explicar a causa e propor uma mudança concreta de autonomia ou critério.",
+
+    "autonomia-qualidade":
+      "O texto deve separar decisões que a equipe toma sozinha, decisões que toma e comunica e decisões que exigem aprovação, relacionando aprovação a risco ou impacto relevante.",
+
+    "tempo-estrategico":
+      "O conteúdo deve ensinar proteção de blocos estratégicos, regra de disponibilidade e tratamento das interrupções por agrupamento, delegação ou adiamento.",
+
+    "parar-de-fazer":
+      "O texto deve fornecer critérios concretos para eliminar, reduzir ou delegar atividades de baixo impacto e diferenciar necessidade real de hábito organizacional.",
+
+    "erro-gestao":
+      "O texto precisa nomear um erro gerencial específico, mostrar consequência observável e ensinar uma correção operacional aplicável.",
+
+    "framework-hoje":
+      "O conteúdo deve entregar um framework real de três etapas ou três perguntas, e cada etapa precisa produzir informação ou decisão distinta.",
+
+    "principio-lideranca":
+      "O texto deve apresentar uma crença comum, um contraponto contraintuitivo e explicar por que esse contraponto funciona em uma situação real de liderança.",
+
+    "diagnostico-tres-perguntas":
+      "O texto deve conter exatamente três perguntas diagnósticas que investiguem causa, responsabilidade e critério de conclusão antes de alterar o processo."
+  };
+
+  return (
+    brief?.semanticMust ||
+    byId[brief?.id] ||
+    "A legenda deve cumprir diretamente a área, o ângulo e a orientação do briefing, com aplicação prática concreta e sem trocar o assunto por um tema apenas relacionado."
+  );
+}
+
+async function semanticAudit(
+  env,
+  brief,
+  caption,
+  seed
+) {
+  try {
+    const r = await aiAuditJSON(
+      env,
+      [
+        {
+          role: "system",
+          content: [
+            "Você é uma revisora editorial rigorosa da Uma Gestão Inteligente.",
+            "Avalie somente a legenda fornecida.",
+            "Não reescreva o texto.",
+            "Marque aligned=true apenas se a legenda realmente cumprir o ângulo e a orientação do brief.",
+            "Marque specific=true apenas se houver aplicação prática concreta, não apenas conselhos genéricos.",
+            "Marque inventedRules=true se houver valores financeiros, percentuais, limites, políticas, números ou regras universais inventadas sem base no próprio brief.",
+            "Marque genericLanguage=true se houver linguagem promocional, motivacional, vaga, clichê ou típica de texto de IA.",
+            "Se houver dúvida relevante, seja conservadora."
+          ].join(" ")
+        },
+        {
+          role: "user",
+          content: [
+            `Área: ${brief.area}.`,
+            `Ângulo: ${brief.angle}.`,
+            `Orientação: ${brief.instruction}`,
+            `Critério obrigatório: ${semanticCriterionForBrief(brief)}`,
+            "Legenda:",
+            caption
+          ].join("\n")
+        }
+      ],
+      seed
+    );
+
+    const aligned = !!r?.aligned;
+    const specific = !!r?.specific;
+    const inventedRules =
+      !!r?.inventedRules ||
+      MONEY_OR_PERCENT_PATTERN.test(caption);
+    const genericLanguage = !!r?.genericLanguage;
+
+    return {
+      pass:
+        aligned &&
+        specific &&
+        !inventedRules &&
+        !genericLanguage,
+      aligned,
+      specific,
+      inventedRules,
+      genericLanguage,
+      reason: String(r?.reason || "").trim()
+    };
+  } catch (error) {
+    return {
+      pass: false,
+      aligned: false,
+      specific: false,
+      inventedRules:
+        MONEY_OR_PERCENT_PATTERN.test(caption),
+      genericLanguage: false,
+      reason:
+        `Auditoria semântica indisponível: ${error?.message || error}`
+    };
+  }
+}
+
+async function semanticRewrite(
+  env,
+  brief,
+  caption,
+  audit,
+  seed
+) {
+  const result = await env.AI.run(
+    TXT,
+    {
+      messages: [
+        {
+          role: "system",
+          content: [
+            "Você é editora sênior da Uma Gestão Inteligente.",
+            "A legenda passou pela revisão estrutural, mas falhou na aderência semântica ou na voz editorial.",
+            "Reescreva a legenda inteira corrigindo exatamente os problemas apontados.",
+            `Mantenha preferencialmente entre ${TARGET_MIN} e ${TARGET_MAX} palavras.`,
+            "Use 4 ou 5 parágrafos curtos.",
+            "Não use título interno, Markdown, listas, hashtags ou linguagem meta.",
+            "Não invente valores financeiros, percentuais, limites numéricos, políticas ou regras universais.",
+            "Evite frases vagas, motivacionais, promocionais e clichês de IA.",
+            "Cada parágrafo deve avançar o raciocínio.",
+            `Área: ${brief.area}.`,
+            `Ângulo: ${brief.angle}.`,
+            `Orientação obrigatória: ${brief.instruction}`,
+            `Critério semântico obrigatório: ${semanticCriterionForBrief(brief)}`,
+            `Fechamento de referência: ${brief.cta}`
+          ].join(" ")
+        },
+        {
+          role: "user",
+          content: [
+            `aligned: ${audit?.aligned}`,
+            `specific: ${audit?.specific}`,
+            `inventedRules: ${audit?.inventedRules}`,
+            `genericLanguage: ${audit?.genericLanguage}`,
+            `Motivo da reprovação: ${audit?.reason || "não informado"}`,
+            "Legenda atual:",
+            caption,
+            "Retorne somente a legenda final corrigida."
+          ].join("\n")
+        }
+      ],
+      max_tokens: 1000,
+      temperature: 0.18,
+      repetition_penalty: 1.15,
+      frequency_penalty: 0.5,
+    }
+  );
+
+  return result?.response || caption;
+}
+
+async function aiAuditJSON(
+  env,
+  messages,
+  seed
+) {
+  let result;
+
+  try {
+    result = await env.AI.run(
+      TXT,
+      {
+        messages,
+        max_tokens: 350,
+        temperature: 0.05,
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            type: "object",
+            properties: {
+              aligned: { type: "boolean" },
+              specific: { type: "boolean" },
+              inventedRules: { type: "boolean" },
+              genericLanguage: { type: "boolean" },
+              reason: { type: "string" }
+            },
+            required: [
+              "aligned",
+              "specific",
+              "inventedRules",
+              "genericLanguage",
+              "reason"
+            ],
+            additionalProperties: false
+          }
+        }
+      }
+    );
+  } catch {
+    result = await env.AI.run(
+      TXT,
+      {
+        messages: [
+          ...messages,
+          {
+            role: "user",
+            content:
+              'Retorne somente JSON válido: {"aligned":true,"specific":true,"inventedRules":false,"genericLanguage":false,"reason":"..."}'
+          }
+        ],
+        max_tokens: 350,
+        temperature: 0.05,
+      }
+    );
+  }
+
+  if (
+    result?.response &&
+    typeof result.response === "object"
+  ) {
+    return result.response;
+  }
+
+  const raw = String(result?.response || "").trim();
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const start = raw.indexOf("{");
+    const end = raw.lastIndexOf("}");
+
+    if (start >= 0 && end > start) {
+      try {
+        return JSON.parse(
+          raw.slice(start, end + 1)
+        );
+      } catch {}
+    }
+  }
+
+  return {
+    aligned: false,
+    specific: false,
+    inventedRules: false,
+    genericLanguage: false,
+    reason:
+      "A auditoria semântica não retornou JSON válido."
+  };
+}
+
+// ============================================================
+// WORKER
+// ============================================================
+
+export default {
+  async fetch(request, env) {
+    try {
+      const url = new URL(request.url);
+      const path = url.pathname;
+
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: corsHeaders()
+        });
+      }
+
+      if (path.startsWith("/media/")) {
+        return serveMedia(request, env, path);
+      }
+
+      if (path === "/approve") {
+        return html(APP);
+      }
+
+
+
+      // ========================================================
+      // R27 — GITHUB -> WORKER -> R2 VIDEO DELIVERY
+      // ========================================================
+
+      // Upload técnico chamado exclusivamente pelo GitHub Actions.
+      // O GitHub NÃO recebe credenciais do R2; o Worker grava pelo binding MEDIA.
+      if (request.method === "POST" && path === "/api/video-upload") {
+        if (!isGithubVideoUploadAuthorized(request, env)) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            errorClass: "video_upload_authorization",
+            error: "Não autorizado"
+          }, 401);
+        }
+
+        if (!env.MEDIA) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            errorClass: "r2_binding_missing",
+            error: "Binding R2 MEDIA não conectado"
+          }, 500);
+        }
+
+        const renderId = sanitizeRenderId(
+          url.searchParams.get("renderId") ||
+          request.headers.get("x-ugi-render-id") ||
+          ""
+        );
+
+        if (!renderId) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            errorClass: "render_id_missing",
+            error: "renderId ausente ou inválido"
+          }, 400);
+        }
+
+        const declaredLength = Number(request.headers.get("content-length") || 0);
+        if (declaredLength > VIDEO_UPLOAD_MAX_BYTES) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            renderId,
+            errorClass: "video_too_large",
+            maxBytes: VIDEO_UPLOAD_MAX_BYTES,
+            declaredBytes: declaredLength
+          }, 413);
+        }
+
+        const contentType = String(request.headers.get("content-type") || "").toLowerCase();
+        if (contentType && !contentType.includes("video/mp4") && !contentType.includes("application/octet-stream")) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            renderId,
+            errorClass: "invalid_video_content_type",
+            contentType
+          }, 415);
+        }
+
+        const bytes = new Uint8Array(await request.arrayBuffer());
+
+        if (!bytes.length) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            renderId,
+            errorClass: "empty_video",
+            error: "Arquivo vazio"
+          }, 400);
+        }
+
+        if (bytes.length > VIDEO_UPLOAD_MAX_BYTES) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            renderId,
+            errorClass: "video_too_large",
+            maxBytes: VIDEO_UPLOAD_MAX_BYTES,
+            receivedBytes: bytes.length
+          }, 413);
+        }
+
+        if (!hasMp4FtypSignature(bytes)) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            renderId,
+            errorClass: "invalid_mp4_signature",
+            error: "O arquivo recebido não possui assinatura MP4/ISO-BMFF válida (ftyp)."
+          }, 415);
+        }
+
+        // R43.1 — cada render pode possuir três masters independentes.
+        // Compatibilidade: ausência de platform continua sendo tratada como Instagram/legacy.
+        const platformRaw = String(
+          url.searchParams.get("platform") ||
+          request.headers.get("x-ugi-platform") ||
+          "instagram"
+        ).trim().toLowerCase();
+
+        const platform = platformRaw === "youtube_shorts" || platformRaw === "youtube-shorts"
+          ? "youtube"
+          : platformRaw;
+
+        if (!VIDEO_PLATFORMS.includes(platform)) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/video-upload",
+            renderId,
+            errorClass: "invalid_video_platform",
+            platform: platformRaw,
+            allowedPlatforms: VIDEO_PLATFORMS
+          }, 400);
+   
