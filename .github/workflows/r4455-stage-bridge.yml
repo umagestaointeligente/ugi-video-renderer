@@ -1,11 +1,11 @@
-name: UGI R44.5.5 Exact Compressed Stage Bridge
+name: UGI R44.5.5 Exact Source Stage Bridge
 
 on:
   push:
     branches:
       - ugi-r44-5-5-deploy
     paths:
-      - '.ugi-staging/r4455/gz-007.b64'
+      - '.ugi-staging/r4455/src-019.txt'
 
 permissions:
   contents: write
@@ -29,14 +29,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(find .ugi-staging/r4455 -maxdepth 1 -type f -name 'gz-*.b64' | wc -l | tr -d ' ')" = "8"
-          cat .ugi-staging/r4455/gz-*.b64 > /tmp/r4455.gz.b64
-          test "$(wc -c < /tmp/r4455.gz.b64 | tr -d ' ')" = "122892"
-          printf '%s  %s\n' 'baadb0c92b3042540d7f7cd512047d18e5242eca7aecbb587d5b64b798403164' '/tmp/r4455.gz.b64' | sha256sum -c -
-          base64 --decode /tmp/r4455.gz.b64 > /tmp/r4455.gz
-          test "$(wc -c < /tmp/r4455.gz | tr -d ' ')" = "92167"
-          printf '%s  %s\n' '1c86d88a4f9f32359eef8eefb59200bccd84d636a8f258185eb07e0154f3341a' '/tmp/r4455.gz' | sha256sum -c -
-          gzip -dc /tmp/r4455.gz > /tmp/lola-operacional-worker.mjs
+          test "$(find .ugi-staging/r4455 -maxdepth 1 -type f -name 'src-*.txt' | wc -l | tr -d ' ')" = "20"
+          cat .ugi-staging/r4455/src-*.txt > /tmp/lola-operacional-worker.mjs
           test "$(wc -c < /tmp/lola-operacional-worker.mjs | tr -d ' ')" = "392658"
           printf '%s  %s\n' 'fc74f5d53bc0a5d476c19ac6acfb3acc9900a84afff59d0ccf5211827546927c' '/tmp/lola-operacional-worker.mjs' | sha256sum -c -
           grep -q 'lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20' /tmp/lola-operacional-worker.mjs
