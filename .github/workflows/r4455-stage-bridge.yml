@@ -1,0 +1,55 @@
+name: UGI R44.5.5 Exact Base64 Stage Bridge
+
+on:
+  push:
+    branches:
+      - ugi-r44-5-5-deploy
+    paths:
+      - '.ugi-staging/r4455/part-010.b64'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-r44-5-5-stage-bridge
+  cancel-in-progress: false
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout staging branch
+        uses: actions/checkout@v4
+        with:
+          ref: ugi-r44-5-5-deploy
+          fetch-depth: 0
+
+      - name: Assemble exact R44.5.5 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find .ugi-staging/r4455 -maxdepth 1 -type f -name 'part-*.b64' | wc -l | tr -d ' ')" = "11"
+          cat .ugi-staging/r4455/part-*.b64 > /tmp/r4455.b64
+          test "$(wc -c < /tmp/r4455.b64 | tr -d ' ')" = "523544"
+          printf '%s  %s\n' '5ca8bbded9e132b25959cf56e7b23e8bfc07565f5c77912dc17cdb1d4dd3edb6' '/tmp/r4455.b64' | sha256sum -c -
+          base64 --decode /tmp/r4455.b64 > /tmp/lola-operacional-worker.mjs
+          test "$(wc -c < /tmp/lola-operacional-worker.mjs | tr -d ' ')" = "392658"
+          printf '%s  %s\n' 'fc74f5d53bc0a5d476c19ac6acfb3acc9900a84afff59d0ccf5211827546927c' '/tmp/lola-operacional-worker.mjs' | sha256sum -c -
+          grep -q 'lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20' /tmp/lola-operacional-worker.mjs
+          node --check /tmp/lola-operacional-worker.mjs
+          cp /tmp/lola-operacional-worker.mjs cloudflare/lola-operacional-worker.mjs
+
+      - name: Commit exact worker and remove staging bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .ugi-staging/r4455
+          rm -f .github/workflows/r4455-stage-bridge.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- cloudflare/lola-operacional-worker.mjs .github/workflows/r4455-stage-bridge.yml
+          git add -u -- .ugi-staging/r4455
+          git diff --cached --check
+          git commit -m 'UGI R44.5.5 — exact validated Worker stage'
+          git push origin HEAD:ugi-r44-5-5-deploy
