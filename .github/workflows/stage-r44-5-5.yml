@@ -1,0 +1,67 @@
+name: UGI R44.5.5 Staging Assembler
+
+on:
+  push:
+    branches:
+      - r44-5-5-stage
+    paths:
+      - '.ugi-stage/r4455/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout staging branch
+        uses: actions/checkout@v4
+        with:
+          ref: r44-5-5-stage
+          fetch-depth: 0
+
+      - name: Assemble exact R44.5.5 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ugi-r4455
+          cat .ugi-stage/r4455/chunk-*.b64 > /tmp/ugi-r4455/worker.b64
+          test "$(wc -c < /tmp/ugi-r4455/worker.b64 | tr -d ' ')" = "523544"
+          printf '%s  %s\n' '5ca8bbded9e132b25959cf56e7b23e8bfc07565f5c77912dc17cdb1d4dd3edb6' '/tmp/ugi-r4455/worker.b64' | sha256sum -c -
+          base64 -d /tmp/ugi-r4455/worker.b64 > cloudflare/lola-operacional-worker.mjs
+          test "$(wc -c < cloudflare/lola-operacional-worker.mjs | tr -d ' ')" = "392658"
+          printf '%s  %s\n' 'fc74f5d53bc0a5d476c19ac6acfb3acc9900a84afff59d0ccf5211827546927c' 'cloudflare/lola-operacional-worker.mjs' | sha256sum -c -
+          node --check cloudflare/lola-operacional-worker.mjs
+          grep -q 'lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20' cloudflare/lola-operacional-worker.mjs
+          grep -q 'materialJsonUploadBridge' cloudflare/lola-operacional-worker.mjs
+          grep -q '/api/materials/' cloudflare/lola-operacional-worker.mjs
+          grep -q 'asset-json' cloudflare/lola-operacional-worker.mjs
+
+      - name: Align deploy workflow gates to R44.5.5 on staging only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('.github/workflows/deploy-cloudflare-worker.yml')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('UGI Cloudflare Worker Deploy R44.5.4','UGI Cloudflare Worker Deploy R44.5.5')
+          s=s.replace('lola-v8-r44-5-4-material-store-commerce-adapter-fulfillment-2026-08-20','lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20')
+          s=s.replace('R44.5.4_DEPLOY_HEALTH_OK','R44.5.5_DEPLOY_HEALTH_OK')
+          s=s.replace('R44.5.4_DEPLOY_HEALTH_FAILED','R44.5.5_DEPLOY_HEALTH_FAILED')
+          p.write_text(s,encoding='utf-8')
+          PY
+          grep -q 'lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20' .github/workflows/deploy-cloudflare-worker.yml
+
+      - name: Commit staged R44.5.5
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add cloudflare/lola-operacional-worker.mjs .github/workflows/deploy-cloudflare-worker.yml
+          git diff --cached --quiet && exit 0
+          git commit -m 'UGI R44.5.5 material JSON upload bridge'
+          git push origin HEAD:r44-5-5-stage
