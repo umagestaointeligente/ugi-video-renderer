@@ -27,12 +27,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/ugi-r4455
-          cat .ugi-stage/r4455/chunk-*.gz.b64 > /tmp/ugi-r4455/worker.gz.b64
-          test "$(wc -c < /tmp/ugi-r4455/worker.gz.b64 | tr -d ' ')" = "122596"
-          printf '%s  %s\n' '2d2b6db37e6718a50631a3d8890561cddf062d4321f2b359857f9d606dd77539' '/tmp/ugi-r4455/worker.gz.b64' | sha256sum -c -
-          base64 -d /tmp/ugi-r4455/worker.gz.b64 > /tmp/ugi-r4455/worker.mjs.gz
-          printf '%s  %s\n' '553b7d907ec50a7edffe73d2ac4865666fe86dd0dd714d17c148eeeb39bc2986' '/tmp/ugi-r4455/worker.mjs.gz' | sha256sum -c -
-          gzip -dc /tmp/ugi-r4455/worker.mjs.gz > cloudflare/lola-operacional-worker.mjs
+          cat .ugi-stage/r4455/chunk-*.xz.b64 > /tmp/ugi-r4455/worker.xz.b64
+          test "$(wc -c < /tmp/ugi-r4455/worker.xz.b64 | tr -d ' ')" = "99144"
+          printf '%s  %s\n' '4ff3b7d1f7f95dd6390a581e91e8ec64c5752e911ee6b1b73b756a31f2a7414c' '/tmp/ugi-r4455/worker.xz.b64' | sha256sum -c -
+          base64 -d /tmp/ugi-r4455/worker.xz.b64 > /tmp/ugi-r4455/worker.mjs.xz
+          printf '%s  %s\n' 'ef98eba0d84f64e34db1fa97a1324f68894c73ec495e81af70170306277101d6' '/tmp/ugi-r4455/worker.mjs.xz' | sha256sum -c -
+          xz -dc /tmp/ugi-r4455/worker.mjs.xz > cloudflare/lola-operacional-worker.mjs
           test "$(wc -c < cloudflare/lola-operacional-worker.mjs | tr -d ' ')" = "392658"
           printf '%s  %s\n' 'fc74f5d53bc0a5d476c19ac6acfb3acc9900a84afff59d0ccf5211827546927c' 'cloudflare/lola-operacional-worker.mjs' | sha256sum -c -
           node --check cloudflare/lola-operacional-worker.mjs
