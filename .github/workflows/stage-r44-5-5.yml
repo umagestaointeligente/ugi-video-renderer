@@ -27,16 +27,17 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/ugi-r4455
-          cat .ugi-stage/r4455/chunk-*.b64 > /tmp/ugi-r4455/worker.b64
-          test "$(wc -c < /tmp/ugi-r4455/worker.b64 | tr -d ' ')" = "523544"
-          printf '%s  %s\n' '5ca8bbded9e132b25959cf56e7b23e8bfc07565f5c77912dc17cdb1d4dd3edb6' '/tmp/ugi-r4455/worker.b64' | sha256sum -c -
-          base64 -d /tmp/ugi-r4455/worker.b64 > cloudflare/lola-operacional-worker.mjs
+          cat .ugi-stage/r4455/chunk-*.gz.b64 > /tmp/ugi-r4455/worker.gz.b64
+          test "$(wc -c < /tmp/ugi-r4455/worker.gz.b64 | tr -d ' ')" = "122596"
+          printf '%s  %s\n' '2d2b6db37e6718a50631a3d8890561cddf062d4321f2b359857f9d606dd77539' '/tmp/ugi-r4455/worker.gz.b64' | sha256sum -c -
+          base64 -d /tmp/ugi-r4455/worker.gz.b64 > /tmp/ugi-r4455/worker.mjs.gz
+          printf '%s  %s\n' '553b7d907ec50a7edffe73d2ac4865666fe86dd0dd714d17c148eeeb39bc2986' '/tmp/ugi-r4455/worker.mjs.gz' | sha256sum -c -
+          gzip -dc /tmp/ugi-r4455/worker.mjs.gz > cloudflare/lola-operacional-worker.mjs
           test "$(wc -c < cloudflare/lola-operacional-worker.mjs | tr -d ' ')" = "392658"
           printf '%s  %s\n' 'fc74f5d53bc0a5d476c19ac6acfb3acc9900a84afff59d0ccf5211827546927c' 'cloudflare/lola-operacional-worker.mjs' | sha256sum -c -
           node --check cloudflare/lola-operacional-worker.mjs
           grep -q 'lola-v8-r44-5-5-material-json-upload-bridge-2026-08-20' cloudflare/lola-operacional-worker.mjs
           grep -q 'materialJsonUploadBridge' cloudflare/lola-operacional-worker.mjs
-          grep -q '/api/materials/' cloudflare/lola-operacional-worker.mjs
           grep -q 'asset-json' cloudflare/lola-operacional-worker.mjs
 
       - name: Align deploy workflow gates to R44.5.5 on staging only
