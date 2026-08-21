@@ -45,10 +45,9 @@ def wait(ver):
         try:
             r=requests.get(ORIGIN+'/api/health',timeout=12)
             if r.status_code==200:
-                last=r.json(); bd=last.get('bindings') or {}; cp=last.get('capabilities') or {}
+                last=r.json(); bd=last.get('bindings') or {}
                 if (last.get('ok') is True and last.get('version')==ver
-                    and bd.get('MEDIA_R2') is True and bd.get('BUFFER_API_KEY') is True and bd.get('ASAAS_API_KEY') is True
-                    and cp.get('reliableCheckoutAnchor') is True and cp.get('checkoutGetEntrypoint') is True):
+                    and bd.get('MEDIA_R2') is True and bd.get('BUFFER_API_KEY') is True and bd.get('ASAAS_API_KEY') is True):
                     return last
         except Exception:
             pass
@@ -88,13 +87,6 @@ def patch(src):
 
     if '.buy{width:100%;' in t:
         t=t.replace('.buy{width:100%;','.buy{display:block;text-align:center;text-decoration:none;width:100%;',1)
-
-    hanchor='            commerceHubEntrypoint: true,\n'
-    if t.count(hanchor)!=1:
-        raise RuntimeError('health anchor mismatch')
-    flags='''            reliableCheckoutAnchor: true,\n            checkoutGetEntrypoint: true,\n            brandedCommerceHostname: "materiais.umagestaointeligente.com",\n            checkoutEndToEndGateRequired: true,\n'''
-    if 'reliableCheckoutAnchor: true' not in t:
-        t=t.replace(hanchor,hanchor+flags,1)
     return t
 
 
