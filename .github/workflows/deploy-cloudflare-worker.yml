@@ -1,4 +1,4 @@
-name: UGI R44.5.18 Permanent Link Policy + Slot02 Repair
+name: UGI R44.5.18 Stage 1 Diagnostic
 
 on:
   workflow_dispatch:
@@ -16,325 +16,87 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  repair-and-deploy:
+  diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
-      - name: Resolve permanent public commerce URL
+      - name: Inspect current production and Cloudflare binding baseline
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          set -euo pipefail
-          FALLBACK='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
-          PUBLIC_URL="$FALLBACK"
+          set -u
+          mkdir -p cloudflare/status
+          OUT=cloudflare/status/r44-5-18-debug.txt
+          : > "$OUT"
+          echo 'STAGE=1_DIAGNOSTIC' >> "$OUT"
+          echo "CF_ACCOUNT_ID_PRESENT=$([ -n "${CF_ACCOUNT_ID:-}" ] && echo true || echo false)" >> "$OUT"
+          echo "CF_API_TOKEN_PRESENT=$([ -n "${CF_API_TOKEN:-}" ] && echo true || echo false)" >> "$OUT"
 
-          ZONE_JSON="$(curl --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" 'https://api.cloudflare.com/client/v4/zones?name=umagestaointeligente.com&status=active' || true)"
-          ZONE_ID="$(printf '%s' "$ZONE_JSON" | python -c 'import json,sys; d=json.load(sys.stdin); r=d.get("result") or []; print(r[0].get("id","") if r else "")' 2>/dev/null || true)"
-          if [ -n "$ZONE_ID" ]; then
-            for PATTERN in 'umagestaointeligente.com/priorizacao*' 'www.umagestaointeligente.com/priorizacao*'; do
-              curl --silent --show-error -X POST \
-                -H "Authorization: Bearer $CF_API_TOKEN" \
-                -H 'Content-Type: application/json' \
-                --data "{\"pattern\":\"$PATTERN\",\"script\":\"lola-operacional-ugi\"}" \
-                "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/workers/routes" >/tmp/route.json || true
-            done
-            for CANDIDATE in 'https://umagestaointeligente.com/priorizacao' 'https://www.umagestaointeligente.com/priorizacao'; do
-              CODE="$(curl --silent --show-error --location --output /tmp/candidate.html --write-out '%{http_code}' --connect-timeout 8 --max-time 20 "$CANDIDATE" || true)"
-              if [ "$CODE" = '200' ] && grep -q 'Kit UGI' /tmp/candidate.html && grep -q 'Comprar agora' /tmp/candidate.html; then
-                PUBLIC_URL="$CANDIDATE"
-                break
-              fi
-            done
+          HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
+          HCODE="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' "$HEALTH" || true)"
+          echo "HEALTH_HTTP=$HCODE" >> "$OUT"
+          if [ -s /tmp/health.json ]; then
+            python - <<'PY' >> "$OUT"
+          import json
+          from pathlib import Path
+          try:
+              h=json.loads(Path('/tmp/health.json').read_text())
+          except Exception as e:
+              print('HEALTH_PARSE=false')
+              print('HEALTH_ERROR='+str(e))
+          else:
+              print('HEALTH_PARSE=true')
+              print('HEALTH_OK='+str(h.get('ok')).lower())
+              print('HEALTH_VERSION='+str(h.get('version')))
+              print('HEALTH_STATUS='+str(h.get('status')))
+              b=h.get('bindings') or {}
+              print('BINDING_COUNT_VISIBLE='+str(sum(1 for v in b.values() if v is True)))
+              for k in ['MEDIA_R2','BUFFER_API_KEY','ASAAS_API_KEY','LOLA_AUTH_KEY','LOLA_COMMAND_KEY']:
+                  print('BINDING_'+k+'='+str(b.get(k)).lower())
+          PY
           fi
 
-          printf 'PUBLIC_COMMERCE_URL=%s\n' "$PUBLIC_URL" >> "$GITHUB_ENV"
-
-      - name: Fetch live R44.5.17 source and stable bindings
-        shell: bash
-        env:
-          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          set -euo pipefail
-          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
-          STABLE='35dc7be4-2d9e-479d-8f27-39e726e0b58f'
-          curl --fail --silent --show-error -D /tmp/cf.headers -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/content/v2" -o /tmp/cf.body
-          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/versions/$STABLE" -o /tmp/stable.json
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          headers=Path('/tmp/cf.headers').read_text(errors='ignore')
-          body=Path('/tmp/cf.body').read_bytes()
-          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers)
-          ctype=m.group(1).strip() if m else ''
-          bm=re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))',ctype,re.I)
-          if not bm:
-              source=body
-          else:
-              boundary=(bm.group(1) or bm.group(2)).encode()
-              candidates=[]
-              for part in body.split(b'--'+boundary):
-                  sep=b'\r\n\r\n' if b'\r\n\r\n' in part else (b'\n\n' if b'\n\n' in part else None)
-                  if not sep:
-                      continue
-                  head,payload=part.split(sep,1)
-                  payload=payload.rstrip(b'\r\n-')
-                  if b'javascript' in head.lower() or b'module' in head.lower():
-                      candidates.append(payload)
-              if not candidates:
-                  raise SystemExit('no JS module found')
-              source=max(candidates,key=len)
-          if b'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' not in source:
-              raise SystemExit('live source is not R44.5.17')
-          Path('/tmp/worker-r44-5-17.js').write_bytes(source)
-          PY
-          node --check /tmp/worker-r44-5-17.js
-
-      - name: Build temporary and final R44.5.18 source
-        shell: bash
-        run: |
-          set -euo pipefail
-          REPAIR_TOKEN="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
-          REPAIR_PATH="/__ugi_repair_slot02_$(python -c 'import secrets; print(secrets.token_hex(12))')"
-          printf 'REPAIR_TOKEN=%s\n' "$REPAIR_TOKEN" >> "$GITHUB_ENV"
-          printf 'REPAIR_PATH=%s\n' "$REPAIR_PATH" >> "$GITHUB_ENV"
-
-          python - "$PUBLIC_COMMERCE_URL" "$REPAIR_PATH" "$REPAIR_TOKEN" <<'PY'
-          from pathlib import Path
-          import json,sys
-          public_url,repair_path,repair_token=sys.argv[1:4]
-          text=Path('/tmp/worker-r44-5-17.js').read_text()
-
-          old='const VERSION = "lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21";'
-          new='const VERSION = "lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21";'
-          if text.count(old)!=1:
-              raise SystemExit('version anchor mismatch')
-          text=text.replace(old,new,1)
-
-          anchor='// R44.5.17 PERMANENT COMMERCE ENTRYPOINT:\n'
-          banner='''// R44.5.18 PERMANENT PUBLICATION LINK POLICY:\n// - preserva integralmente R44.5.17\n// - proíbe checkoutSession Asaas em textos públicos novos\n// - substitui checkout temporário pelo permalink permanente na borda Buffer\n// - preserva vídeo, copy renderizada, Material, Product, checkout JIT e fulfillment\n// - reparo transitório do Slot 02 é removido antes do deploy final\n//\n'''
-          if anchor not in text:
-              raise SystemExit('banner anchor missing')
-          text=text.replace(anchor,banner+anchor,1)
-
-          const_anchor='const VIDEO_UPLOAD_MAX_BYTES = 50 * 1024 * 1024; // 50 MB de proteção operacional\n'
-          if const_anchor not in text:
-              raise SystemExit('constant anchor missing')
-          text=text.replace(const_anchor,const_anchor+'const PERMANENT_COMMERCE_PUBLIC_URL = '+json.dumps(public_url,ensure_ascii=False)+';\n',1)
-
-          helper_anchor='async function createBufferPlatformVideoPost(\n'
-          if helper_anchor not in text:
-              raise SystemExit('buffer helper anchor missing')
-          helpers=r'''function permanentCommercePublicationText(draft = {}) {
-            const original = String(draft?.text || "");
-            const commerce = draft?.commerce || {};
-            const productId = String(draft?.productId || commerce?.productId || "");
-            const materialId = String(draft?.materialId || commerce?.materialId || "");
-            const commercial = draft?.commercialOffer === true || commerce?.required === true;
-            if (!commercial) return original;
-            if (productId !== "UGI-MATERIAL-PRIORIDADES-001" && materialId !== "UGI-KIT-PRIORIZACAO-001") return original;
-            let next = original.replace(/https:\/\/(?:www\.)?asaas\.com\/checkoutSession\/show\/[A-Za-z0-9_-]+/gi, PERMANENT_COMMERCE_PUBLIC_URL);
-            if (!next.includes(PERMANENT_COMMERCE_PUBLIC_URL)) {
-              next = next.trim() + "\n\nKit UGI — Priorização Inteligente: R$ 14,99. Acesse: " + PERMANENT_COMMERCE_PUBLIC_URL;
-            }
-            return next;
-          }
-
-          '''
-          text=text.replace(helper_anchor,helpers+helper_anchor,1)
-
-          old_line='          text: ${JSON.stringify(String(draft.text || ""))}\n'
-          new_line='          text: ${JSON.stringify(permanentCommercePublicationText(draft))}\n'
-          if old_line not in text:
-              raise SystemExit('createPost text anchor missing')
-          text=text.replace(old_line,new_line,1)
-
-          health_anchor='            permanentCommerceEntrypoint: true,\n'
-          if health_anchor not in text:
-              raise SystemExit('health anchor missing')
-          flags='''            permanentCommercePublicationLinkPolicy: true,\n            directAsaasCheckoutInPublicTextBlocked: true,\n            permanentCommercePublicUrl: PERMANENT_COMMERCE_PUBLIC_URL,\n'''
-          text=text.replace(health_anchor,health_anchor+flags,1)
-
-          route_anchor='      if (path === "/approve") {\n'
-          if route_anchor not in text:
-              raise SystemExit('route anchor missing')
-
-          route=r'''      // BEGIN_R44_5_18_ONE_SHOT_REPAIR
-      if (request.method === "POST" && path === __REPAIR_PATH__ && url.searchParams.get("token") === __REPAIR_TOKEN__) {
-        const ids = [
-          "6a87d61b1b38003a90c37507",
-          "6a87d61f1b38003a90c3752d",
-          "6a87d6231b38003a90c3755b"
-        ];
-        const results = [];
-        for (const id of ids) {
-          const before = await getBufferPostStatus(id, env);
-          const beforePost = before.post || {};
-          const beforeDueAt = beforePost.dueAt || null;
-          if (beforePost.sentAt || String(beforePost.status || "").toLowerCase() === "sent") {
-            results.push({ id, ok:false, error:"already_sent", status:beforePost.status || null });
-            continue;
-          }
-          const original = String(beforePost.text || "");
-          let repaired = original.replace(/https:\/\/(?:www\.)?asaas\.com\/checkoutSession\/show\/[A-Za-z0-9_-]+/gi, PERMANENT_COMMERCE_PUBLIC_URL);
-          if (!repaired.includes(PERMANENT_COMMERCE_PUBLIC_URL)) {
-            repaired = repaired.trim() + "\n\nKit UGI — Priorização Inteligente: R$ 14,99. Acesse: " + PERMANENT_COMMERCE_PUBLIC_URL;
-          }
-          const q = "mutation { editPost(input: { id: " + JSON.stringify(id) + ", text: " + JSON.stringify(repaired) + ", aiAssisted: true }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink } } ... on MutationError { message } } }";
-          const edited = await bufferGraphQL(q, env);
-          const payload = edited?.data?.editPost;
-          if (!payload?.post?.id) {
-            results.push({ id, ok:false, error:payload?.message || "edit_failed", diagnostics:edited?.__bufferDiagnostics || null });
-            continue;
-          }
-          const after = await getBufferPostStatus(id, env);
-          const afterPost = after?.post || {};
-          const afterText = String(afterPost.text || "");
-          results.push({
-            id,
-            ok: afterText.includes(PERMANENT_COMMERCE_PUBLIC_URL) && !/asaas\.com\/checkoutSession\/show/i.test(afterText) && (afterPost.dueAt || null) === beforeDueAt,
-            status: afterPost.status || null,
-            dueAt: afterPost.dueAt || null,
-            sentAt: afterPost.sentAt || null,
-            schedulePreserved: (afterPost.dueAt || null) === beforeDueAt,
-            permanentUrlPresent: afterText.includes(PERMANENT_COMMERCE_PUBLIC_URL),
-            temporaryCheckoutAbsent: !/asaas\.com\/checkoutSession\/show/i.test(afterText)
-          });
-        }
-        return json({ ok: results.every(x => x.ok), version: VERSION, publicUrl: PERMANENT_COMMERCE_PUBLIC_URL, results, mutationPerformed:true, bufferMutation:true });
-      }
-      // END_R44_5_18_ONE_SHOT_REPAIR
-
-'''
-          route=route.replace('__REPAIR_PATH__',json.dumps(repair_path)).replace('__REPAIR_TOKEN__',json.dumps(repair_token))
-          text=text.replace(route_anchor,route+route_anchor,1)
-
-          Path('/tmp/worker-temp.js').write_text(text)
-          start=text.index('      // BEGIN_R44_5_18_ONE_SHOT_REPAIR')
-          end=text.index('      // END_R44_5_18_ONE_SHOT_REPAIR')+len('      // END_R44_5_18_ONE_SHOT_REPAIR\n')
-          final=text[:start]+text[end:]
-          Path('/tmp/worker-final.js').write_text(final)
-          PY
-
-          node --check /tmp/worker-temp.js
-          node --check /tmp/worker-final.js
-          grep -q 'lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21' /tmp/worker-final.js
-          grep -q 'permanentCommercePublicationLinkPolicy: true' /tmp/worker-final.js
-          ! grep -q 'BEGIN_R44_5_18_ONE_SHOT_REPAIR' /tmp/worker-final.js
-
-      - name: Prepare inherited 19-binding metadata
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY' >/tmp/metadata.json
+          BASE="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID:-missing}/workers/scripts/lola-operacional-ugi"
+          SCODE="$(curl --silent --show-error -H "Authorization: Bearer ${CF_API_TOKEN:-missing}" --output /tmp/stable.json --write-out '%{http_code}' "$BASE/versions/35dc7be4-2d9e-479d-8f27-39e726e0b58f" || true)"
+          echo "STABLE_VERSION_HTTP=$SCODE" >> "$OUT"
+          if [ "$SCODE" = '200' ]; then
+            python - <<'PY' >> "$OUT"
           import json
           from pathlib import Path
-          stable=(json.loads(Path('/tmp/stable.json').read_text()).get('result') or {})
-          bindings=((stable.get('resources') or {}).get('bindings') or [])
-          if len(bindings) != 19:
-              raise SystemExit(f'expected 19 bindings, got {len(bindings)}')
-          restored=[]
-          for b in bindings:
-              if b.get('type') == 'secret_text':
-                  restored.append({'name':b['name'],'type':'inherit','version_id':'latest'})
-              else:
-                  restored.append(b)
-          print(json.dumps({'main_module':'worker.js','compatibility_date':'2026-08-20','bindings':restored},separators=(',',':'),ensure_ascii=False))
+          d=json.loads(Path('/tmp/stable.json').read_text())
+          r=d.get('result') or {}
+          bindings=((r.get('resources') or {}).get('bindings') or [])
+          print('STABLE_VERSION_ID='+str(r.get('id')))
+          print('STABLE_BINDING_COUNT='+str(len(bindings)))
+          print('STABLE_BINDING_NAMES='+','.join(sorted(str(x.get('name')) for x in bindings if isinstance(x,dict))))
           PY
+          fi
 
-      - name: Deploy temporary repair version
-        shell: bash
-        env:
-          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          set -euo pipefail
-          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
-          META="$(cat /tmp/metadata.json)"
-          curl --fail --silent --show-error -X POST -H "Authorization: Bearer $CF_API_TOKEN" -o /tmp/temp-create.json "$BASE/versions?bindings_inherit=strict" -F "metadata=$META;type=application/json" -F 'worker.js=@/tmp/worker-temp.js;type=application/javascript+module'
-          TEMP_VID="$(python -c 'import json; print((json.load(open("/tmp/temp-create.json")).get("result") or {}).get("id", ""))')"
-          test -n "$TEMP_VID"
-          printf '{"strategy":"percentage","versions":[{"version_id":"%s","percentage":100}],"annotations":{"workers/message":"UGI R44.5.18 temporary Slot02 repair"}}' "$TEMP_VID" >/tmp/temp-deploy.json
-          curl --fail --silent --show-error -X POST -H "Authorization: Bearer $CF_API_TOKEN" -H 'Content-Type: application/json' --data-binary @/tmp/temp-deploy.json "$BASE/deployments" -o /tmp/temp-deploy-response.json
-          sleep 5
+          CCODE="$(curl --silent --show-error -D /tmp/content.headers -H "Authorization: Bearer ${CF_API_TOKEN:-missing}" --output /tmp/content.body --write-out '%{http_code}' "$BASE/content/v2" || true)"
+          echo "LIVE_CONTENT_HTTP=$CCODE" >> "$OUT"
+          if [ -s /tmp/content.body ]; then
+            grep -a -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/content.body && echo 'LIVE_SOURCE_R44_5_17=true' >> "$OUT" || echo 'LIVE_SOURCE_R44_5_17=false' >> "$OUT"
+          fi
 
-      - name: Repair Slot 02 Buffer captions and verify schedule preservation
+          PCODE="$(curl --silent --show-error --output /tmp/permalink.html --write-out '%{http_code}' 'https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao' || true)"
+          echo "PERMALINK_HTTP=$PCODE" >> "$OUT"
+          if [ -s /tmp/permalink.html ]; then
+            grep -q 'Comprar agora' /tmp/permalink.html && echo 'PERMALINK_BUY_BUTTON=true' >> "$OUT" || echo 'PERMALINK_BUY_BUTTON=false' >> "$OUT"
+          fi
+
+      - name: Persist diagnostic evidence
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
-          BASE='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
-          HTTP="$(curl --silent --show-error -X POST --output /tmp/repair.json --write-out '%{http_code}' "$BASE$REPAIR_PATH?token=$REPAIR_TOKEN")"
-          test "$HTTP" = '200'
-          python - <<'PY'
-          import json
-          r=json.load(open('/tmp/repair.json'))
-          rows=r.get('results') or []
-          if not r.get('ok'):
-              raise SystemExit(json.dumps(r,ensure_ascii=False))
-          if len(rows)!=3 or not all(x.get('ok') for x in rows):
-              raise SystemExit('repair readback failed')
-          if not all(x.get('schedulePreserved') and x.get('permanentUrlPresent') and x.get('temporaryCheckoutAbsent') for x in rows):
-              raise SystemExit('Slot02 invariant failed')
-          PY
-
-      - name: Deploy final R44.5.18 without one-shot endpoint
-        shell: bash
-        env:
-          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          set -euo pipefail
-          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
-          META="$(cat /tmp/metadata.json)"
-          curl --fail --silent --show-error -X POST -H "Authorization: Bearer $CF_API_TOKEN" -o /tmp/final-create.json "$BASE/versions?bindings_inherit=strict" -F "metadata=$META;type=application/json" -F 'worker.js=@/tmp/worker-final.js;type=application/javascript+module'
-          FINAL_VID="$(python -c 'import json; print((json.load(open("/tmp/final-create.json")).get("result") or {}).get("id", ""))')"
-          test -n "$FINAL_VID"
-          printf '{"strategy":"percentage","versions":[{"version_id":"%s","percentage":100}],"annotations":{"workers/message":"UGI R44.5.18 permanent publication link policy"}}' "$FINAL_VID" >/tmp/final-deploy.json
-          curl --fail --silent --show-error -X POST -H "Authorization: Bearer $CF_API_TOKEN" -H 'Content-Type: application/json' --data-binary @/tmp/final-deploy.json "$BASE/deployments" -o /tmp/final-deploy-response.json
-
-      - name: Final validation and persist evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
-          PASS=false
-          for i in 1 2 3 4 5 6 7 8; do
-            curl --silent --show-error "$HEALTH" -o /tmp/health.json || true
-            if grep -q 'lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21' /tmp/health.json && grep -q '"ok":true' /tmp/health.json && grep -q '"permanentCommercePublicationLinkPolicy":true' /tmp/health.json && grep -q '"directAsaasCheckoutInPublicTextBlocked":true' /tmp/health.json && grep -q '"MEDIA_R2":true' /tmp/health.json && grep -q '"BUFFER_API_KEY":true' /tmp/health.json; then
-              PASS=true
-              break
-            fi
-            sleep 4
-          done
-          test "$PASS" = true
-
-          PCODE="$(curl --silent --show-error --location --output /tmp/permalink.html --write-out '%{http_code}' --connect-timeout 10 --max-time 30 "$PUBLIC_COMMERCE_URL" || true)"
-          test "$PCODE" = '200'
-          grep -q 'Comprar agora' /tmp/permalink.html
-
           mkdir -p cloudflare/status
-          python - <<'PY' > cloudflare/status/r44-5-18.txt
-          import json,os
-          r=json.load(open('/tmp/repair.json'))
-          h=json.load(open('/tmp/health.json'))
-          print('R44.5.18_STAGE=FINAL')
-          print('OK='+str(h.get('ok')).lower())
-          print('VERSION='+str(h.get('version')))
-          print('PUBLIC_COMMERCE_URL='+os.environ.get('PUBLIC_COMMERCE_URL',''))
-          print('PERMALINK_HTTP=200')
-          print('SLOT02_REPAIR_OK='+str(r.get('ok')).lower())
-          for x in r.get('results') or []:
-              print('BUFFER_POST='+str(x.get('id'))+' STATUS='+str(x.get('status'))+' DUE_AT='+str(x.get('dueAt'))+' SCHEDULE_PRESERVED='+str(x.get('schedulePreserved')).lower()+' PERMANENT_URL='+str(x.get('permanentUrlPresent')).lower()+' TEMP_CHECKOUT_ABSENT='+str(x.get('temporaryCheckoutAbsent')).lower())
-          print('TEMP_REPAIR_ENDPOINT_REMOVED=true')
-          print('FUTURE_DIRECT_ASAAS_LINK_BLOCKED=true')
-          PY
-
+          test -f cloudflare/status/r44-5-18-debug.txt || echo 'STAGE=WORKFLOW_STARTED_BUT_DIAGNOSTIC_FILE_MISSING' > cloudflare/status/r44-5-18-debug.txt
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
-          git add cloudflare/status/r44-5-18.txt
-          git commit -m 'UGI R44.5.18 — permanent link and Slot02 repair result'
+          git add cloudflare/status/r44-5-18-debug.txt
+          git commit -m 'UGI R44.5.18 — stage 1 diagnostic result' || true
           git push origin HEAD:main
