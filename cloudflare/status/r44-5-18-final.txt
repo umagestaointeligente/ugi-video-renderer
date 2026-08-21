@@ -1,3 +1,8 @@
 R44.5.18_STAGE=ASSET_PRESERVING_SLOT02_REPAIR_V2
 OK=false
 STATE=STARTED
+WRAPPER_FAILURE=true
+ERROR_TYPE=RuntimeError
+ERROR=diagnostic platform set incomplete
+TRACE=Traceback (most recent call last): |   File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_18_repair_v2_runner.py", line 7, in <module> |     job.main() |   File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_18_repair_v2.py", line 362, in main |     details = parse_diag(diag) |               ^^^^^^^^^^^^^^^^ |   File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_18_repair_v2.py", line 240, in parse_diag |     raise RuntimeError('diagnostic platform set incomplete') | RuntimeError: diagnostic platform set incomplete | 
+OK=false
