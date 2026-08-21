@@ -1,4 +1,4 @@
-name: UGI R44.5.17 Binding Inheritance Upload Diagnostic
+name: UGI R44.5.17 Binding-Safe Version Create
 
 on:
   workflow_dispatch:
@@ -16,13 +16,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  diagnose:
+  create-version:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create non-deployed version with strict inherited bindings
+      - name: Build and upload non-deployed R44.5.17 version with restored bindings
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -30,7 +30,9 @@ jobs:
         run: |
           set -euo pipefail
           BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
+          STABLE='a05b7d5b-b604-40c1-8370-bd025402d0a0'
 
+          # Fetch currently-live R44.5.17 source.
           curl --fail --silent --show-error -D /tmp/cf.headers -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/content/v2" -o /tmp/cf.body
           python - <<'PY'
           from pathlib import Path
@@ -46,18 +48,43 @@ jobs:
                   if not sep: continue
                   head,payload=part.split(sep,1); payload=payload.rstrip(b'\r\n-')
                   if b'javascript' in head.lower() or b'module' in head.lower(): candidates.append(payload)
-              if not candidates: raise SystemExit('no JS part')
+              if not candidates: raise SystemExit('no JS module found')
               source=max(candidates,key=len)
-          if b'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' not in source: raise SystemExit('not R44.5.17')
+          if b'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' not in source: raise SystemExit('live source is not R44.5.17')
           Path('/tmp/worker.js').write_bytes(source)
           PY
           node --check /tmp/worker.js
 
+          # Fetch the last known-good version metadata containing all 19 bindings.
+          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/versions/$STABLE" -o /tmp/stable.json
+
+          # Copy all non-secret binding objects exactly from the stable version.
+          # Preserve secret values by inheriting only the 7 secret_text bindings from latest,
+          # because the current version still contains those secrets.
           python - <<'PY' >/tmp/metadata.json
           import json
-          stable='a05b7d5b-b604-40c1-8370-bd025402d0a0'
-          names=['AI','ASAAS_API_KEY','ASAAS_WEBHOOK_TOKEN','BROWSER','BUFFER_API_KEY','BUFFER_CHANNEL_INSTAGRAM','BUFFER_CHANNEL_TIKTOK','BUFFER_CHANNEL_YOUTUBE','GITHUB_VIDEO_OWNER','GITHUB_VIDEO_REPO','GITHUB_VIDEO_TOKEN','GITHUB_VIDEO_UPLOAD_KEY','GITHUB_VIDEO_WORKFLOW','IMAGES','LOLA_AUTH_KEY','LOLA_COMMAND_KEY','MEDIA','MUSIC_CATALOG_JSON','VIDEO']
-          print(json.dumps({'main_module':'worker.js','compatibility_date':'2026-08-20','annotations':{'workers/message':'UGI R44.5.17 strict binding inheritance diagnostic'},'bindings':[{'name':n,'type':'inherit','version_id':stable} for n in names]},separators=(',',':')))
+          from pathlib import Path
+          root=json.loads(Path('/tmp/stable.json').read_text())
+          stable=root.get('result') or {}
+          resources=stable.get('resources') or {}
+          bindings=resources.get('bindings') or []
+          if len(bindings) != 19: raise SystemExit(f'expected 19 stable bindings, got {len(bindings)}')
+          restored=[]
+          for b in bindings:
+              if b.get('type') == 'secret_text':
+                  restored.append({'name':b['name'],'type':'inherit','version_id':'latest'})
+              else:
+                  restored.append(b)
+          metadata={
+            'main_module':'worker.js',
+            'compatibility_date':'2026-08-20',
+            'annotations':{
+              'workers/message':'UGI R44.5.17 permanent commerce entrypoint — binding-safe restore',
+              'workers/tag':'r44-5-17-binding-safe'
+            },
+            'bindings':restored
+          }
+          print(json.dumps(metadata,separators=(',',':'),ensure_ascii=False))
           PY
 
           META="$(cat /tmp/metadata.json)"
@@ -68,18 +95,17 @@ jobs:
           import json,sys
           from pathlib import Path
           http=sys.argv[1]
-          try:r=json.loads(Path('/tmp/create.json').read_text())
-          except Exception as e:r={'parse_error':str(e),'raw':Path('/tmp/create.json').read_text(errors='ignore')[:1000]}
-          result=r.get('result') or {} if isinstance(r,dict) else {}
-          resources=result.get('resources') or {} if isinstance(result,dict) else {}
-          bindings=resources.get('bindings') or [] if isinstance(resources,dict) else []
-          print('R44.5.17_DEPLOY_STAGE=BINDING_INHERIT_UPLOAD_DIAGNOSTIC')
+          r=json.loads(Path('/tmp/create.json').read_text())
+          result=r.get('result') or {}
+          resources=result.get('resources') or {}
+          bindings=resources.get('bindings') or []
+          print('R44.5.17_DEPLOY_STAGE=BINDING_SAFE_VERSION_CREATE')
           print('HTTP='+http)
-          print('SUCCESS='+str(r.get('success') if isinstance(r,dict) else None).lower())
-          print('NEW_VERSION_ID='+str(result.get('id') if isinstance(result,dict) else None))
+          print('SUCCESS='+str(r.get('success')).lower())
+          print('NEW_VERSION_ID='+str(result.get('id')))
           print('NEW_BINDING_COUNT='+str(len(bindings)))
-          print('ERRORS='+json.dumps(r.get('errors') if isinstance(r,dict) else None,ensure_ascii=False))
-          print('MESSAGES='+json.dumps(r.get('messages') if isinstance(r,dict) else None,ensure_ascii=False))
+          print('ERRORS='+json.dumps(r.get('errors'),ensure_ascii=False))
+          print('MESSAGES='+json.dumps(r.get('messages'),ensure_ascii=False))
           for i,b in enumerate(bindings):
               if isinstance(b,dict): print(f'BINDING_{i}={b.get("name")}:{b.get("type")}')
           PY
@@ -87,5 +113,5 @@ jobs:
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI R44.5.17 — binding inheritance upload diagnostic result'
+          git commit -m 'UGI R44.5.17 — binding-safe version create result'
           git push origin HEAD:main
