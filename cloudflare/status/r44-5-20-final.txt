@@ -1,0 +1,19 @@
+R44.5.20_STAGE=RELIABLE_CHECKOUT_BRANDED_DOMAIN
+OK=false
+STATE=STARTED
+ERROR_TYPE=RuntimeError
+ERROR=materials route anchor mismatch
+COMMERCE_HUB_READY=false
+CHECKOUT_END_TO_END_READY=false
+OK=false
+WORKFLOW_EXECUTION_FAILED=true
+STDERR=Traceback (most recent call last):
+STDERR=  File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_20_checkout_domain_fix.py", line 199, in <module>
+STDERR=    try: main()
+STDERR=         ^^^^^^
+STDERR=  File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_20_checkout_domain_fix.py", line 165, in main
+STDERR=    live=fetch_live(api,h); final=patch(live); b=bindings(api,h)
+STDERR=                                  ^^^^^^^^^^^
+STDERR=  File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_20_checkout_domain_fix.py", line 101, in patch
+STDERR=    raise RuntimeError('materials route anchor mismatch')
+STDERR=RuntimeError: materials route anchor mismatch
