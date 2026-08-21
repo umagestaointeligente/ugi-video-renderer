@@ -1,1 +1,6 @@
 R44.5.19_STAGE=WORKFLOW_STATUS_MISSING
+WORKFLOW_EXECUTION_FAILED=true
+STDERR=Traceback (most recent call last):
+STDERR=  File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_19_compact.py", line 5, in <module>
+STDERR=    import scripts.r44_5_18_repair_v2 as base
+STDERR=ModuleNotFoundError: No module named 'scripts'
