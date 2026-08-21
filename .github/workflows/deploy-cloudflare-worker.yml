@@ -1,4 +1,4 @@
-name: UGI R44.5.17 Live Source Marker Diagnostic
+name: UGI R44.5.17 Live Validation
 
 on:
   workflow_dispatch:
@@ -16,77 +16,55 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  diagnose:
+  validate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
-      - name: Inspect live Cloudflare source markers
+      - name: Validate health and permanent commerce URL
         shell: bash
-        env:
-          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error \
-            -D /tmp/cf.headers \
-            -H "Authorization: Bearer $CF_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi/content/v2" \
-            -o /tmp/cf.body
-
+          HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
+          PERMALINK='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
           mkdir -p cloudflare/status
-          python - <<'PY' > cloudflare/status/r44-5-17.txt
-          from pathlib import Path
-          import re, hashlib
-          headers=Path('/tmp/cf.headers').read_text(errors='ignore')
-          body=Path('/tmp/cf.body').read_bytes()
-          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers)
-          ctype=m.group(1).strip() if m else ''
-          bm=re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))',ctype,re.I)
-          source=body
-          selected_header='RAW_BODY'
-          if bm:
-              boundary=(bm.group(1) or bm.group(2)).encode()
-              parts=[]
-              for part in body.split(b'--'+boundary):
-                  sep=b'\r\n\r\n' if b'\r\n\r\n' in part else (b'\n\n' if b'\n\n' in part else None)
-                  if not sep: continue
-                  head,payload=part.split(sep,1)
-                  payload=payload.rstrip(b'\r\n-')
-                  if b'javascript' in head.lower() or b'module' in head.lower():
-                      parts.append((head,payload))
-              if not parts: raise SystemExit('No JS multipart part found')
-              head,source=max(parts,key=lambda p:len(p[1]))
-              selected_header=head.decode('utf-8',errors='ignore').replace('\r',' ').replace('\n',' ')[:300]
-          probes={
-            'HAS_R44_5_16': b'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' in source,
-            'HAS_R44_5_17': b'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' in source,
-            'HAS_PERMANENT_ENTRYPOINT': b'permanentCommerceEntrypoint' in source,
-            'HAS_PRIORIZACAO_ROUTE': b'/priorizacao' in source,
-            'HAS_BUY_ROUTE': b'/comprar/priorizacao' in source,
-            'HAS_JIT_ASAAS': b'justInTimeAsaasCheckout' in source,
-            'HAS_COMMERCE_GATE_V2': b'commercePublicationGateV2' in source,
-            'HAS_CONST_VERSION_LITERAL': b'const VERSION' in source,
-            'HAS_VAR_VERSION_LITERAL': b'var VERSION' in source,
-          }
-          print('R44.5.17_DEPLOY_STAGE=LIVE_MARKER_DIAGNOSTIC')
-          print('CONTENT_TYPE='+ctype)
-          print('SELECTED_HEADER='+selected_header)
-          print('SOURCE_SIZE='+str(len(source)))
-          print('SOURCE_SHA256='+hashlib.sha256(source).hexdigest())
-          for k,v in probes.items(): print(f'{k}={str(v).lower()}')
-          # safe nearby snippets around R44.5.17/permanentCommerceEntrypoint only
-          s=source.decode('utf-8',errors='ignore')
-          for label,needle in [('R44_5_17','r44-5-17'),('PERMANENT','permanentCommerceEntrypoint'),('PRIORIZACAO','/priorizacao')]:
-              i=s.lower().find(needle.lower())
-              if i>=0:
-                  snippet=s[max(0,i-120):i+300].replace('\n',' ').replace('\r',' ')
-                  print(f'{label}_SNIPPET='+snippet[:420])
-          PY
+
+          HCODE="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' --connect-timeout 10 --max-time 30 "$HEALTH")"
+          PCODE="$(curl --silent --show-error --output /tmp/priorizacao.html --write-out '%{http_code}' --connect-timeout 10 --max-time 30 "$PERMALINK")"
+
+          VERSION_PASS=false
+          CAPABILITY_PASS=false
+          PERMALINK_PASS=false
+          PRICE_PASS=false
+          BUTTON_PASS=false
+
+          if [ "$HCODE" = '200' ] && grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/health.json; then VERSION_PASS=true; fi
+          if grep -q '"permanentCommerceEntrypoint":true' /tmp/health.json && grep -q '"justInTimeAsaasCheckout":true' /tmp/health.json && grep -q '"expiredCheckoutReturnsToPermalink":true' /tmp/health.json; then CAPABILITY_PASS=true; fi
+          if [ "$PCODE" = '200' ]; then PERMALINK_PASS=true; fi
+          if grep -q 'R$ 14,99' /tmp/priorizacao.html; then PRICE_PASS=true; fi
+          if grep -q 'Comprar agora' /tmp/priorizacao.html && grep -q '/comprar/priorizacao' /tmp/priorizacao.html; then BUTTON_PASS=true; fi
+
+          cat > cloudflare/status/r44-5-17.txt <<EOF
+          R44.5.17_DEPLOY_STAGE=LIVE_VALIDATION
+          HEALTH_HTTP=$HCODE
+          PERMALINK_HTTP=$PCODE
+          VERSION_PASS=$VERSION_PASS
+          CAPABILITY_PASS=$CAPABILITY_PASS
+          PERMALINK_PASS=$PERMALINK_PASS
+          PRICE_PASS=$PRICE_PASS
+          BUY_BUTTON_PASS=$BUTTON_PASS
+          LIVE_URL=$PERMALINK
+          EOF
 
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI R44.5.17 — live source marker diagnostic'
+          git commit -m 'UGI R44.5.17 — live validation result'
           git push origin HEAD:main
+
+          test "$VERSION_PASS" = true
+          test "$CAPABILITY_PASS" = true
+          test "$PERMALINK_PASS" = true
+          test "$PRICE_PASS" = true
+          test "$BUTTON_PASS" = true
