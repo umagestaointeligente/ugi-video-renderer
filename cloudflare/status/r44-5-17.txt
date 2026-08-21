@@ -1,9 +1,17 @@
-R44.5.17_DEPLOY_STAGE=MULTIPART_DIAGNOSTIC
-CONTENT_TYPE=multipart/form-data; boundary=563f45abf76198412a73df2aa0e34bc61f1296db996b206d16a4f20b3830
-BODY_SIZE=424817
-BOUNDARY_FOUND=true
-PART_1_SIZE=424547
-PART_1_HEADER=  Content-Disposition: form-data; name="r44-5-17-worker.js"; filename="r44-5-17-worker.js"  Content-Type: application/javascript+module
-PART_1_HAS_R44_5_16=false
-PART_1_HAS_CONST_VERSION=false
-PART_1_SHA256=966bd38b821b4cbeb2039c0940fed37412513b6f326dc9a3703e3f7086dadad6
+R44.5.17_DEPLOY_STAGE=LIVE_MARKER_DIAGNOSTIC
+CONTENT_TYPE=multipart/form-data; boundary=b1ddf60c752474e8b0a7b85ceb12728721156d4605c36facbbbbca742cf1
+SELECTED_HEADER=  Content-Disposition: form-data; name="r44-5-17-worker.js"; filename="r44-5-17-worker.js"  Content-Type: application/javascript+module
+SOURCE_SIZE=424547
+SOURCE_SHA256=966bd38b821b4cbeb2039c0940fed37412513b6f326dc9a3703e3f7086dadad6
+HAS_R44_5_16=false
+HAS_R44_5_17=true
+HAS_PERMANENT_ENTRYPOINT=true
+HAS_PRIORIZACAO_ROUTE=true
+HAS_BUY_ROUTE=true
+HAS_JIT_ASAAS=true
+HAS_COMMERCE_GATE_V2=true
+HAS_CONST_VERSION_LITERAL=false
+HAS_VAR_VERSION_LITERAL=true
+R44_5_17_SNIPPET=perty; var __name = (target, value) => __defProp(target, "name", { value, configurable: true });  // ../../../../../tmp/r44-5-17-worker.mjs var IG = "6a7896cdb2d9d57743457e33"; var TXT = "@cf/meta/llama-3.1-8b-instruct-fast"; var IMG = "@cf/black-forest-labs/flux-1-schnell"; var VIDEO_MODEL = "google/veo-3.1-fast"; var VIDEO_FALLBACK_MODEL = "runwayml/gen-4.5"; var VIDEO_FALLBACK_MODEL_2 = "pruna/p-video"; var VIDEO_
+PERMANENT_SNIPPET=,             githubLegacyTemporalCorrelationFailClosed: true,             commercePublicationGateV2: true,             permanentCommerceEntrypoint: true,             permanentCommerceUrlPrioritization: "/priorizacao",             justInTimeAsaasCheckout: true,             expiredCheckoutReturnsToPermalink: true,             directAsaasCheckoutPublishingDeprecated: true,             commercePublicationRequiresFulfill
+PRIORIZACAO_SNIPPET=   }       if (path === "/approve") {         return html(APP);       }       if (request.method === "GET" && path === "/priorizacao") {         const config = resolveCommercePermalink("priorizacao");         const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);         const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);         if (!product || !material 
