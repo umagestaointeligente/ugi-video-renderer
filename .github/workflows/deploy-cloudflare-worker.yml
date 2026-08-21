@@ -1,4 +1,4 @@
-name: UGI Cloudflare Version Binding Diagnostic
+name: UGI R44.5.17 Binding-Safe Recovery Deploy
 
 on:
   workflow_dispatch:
@@ -16,57 +16,186 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  diagnose:
+  recover:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Inspect version resources and bindings
+      - name: Fetch current R44.5.17 source and extract JS module
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi/versions"
-          STABLE='a05b7d5b-b604-40c1-8370-bd025402d0a0'
-          CURRENT='d0d8fc1f-4592-44c6-bd16-8d8edf7a0755'
-          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/$STABLE" -o /tmp/stable.json
-          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/$CURRENT" -o /tmp/current.json
+          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/cf.headers \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            "$BASE/content/v2" -o /tmp/cf.body
 
-          mkdir -p cloudflare/status
-          python - <<'PY' > cloudflare/status/r44-5-17.txt
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          headers=Path('/tmp/cf.headers').read_text(errors='ignore')
+          body=Path('/tmp/cf.body').read_bytes()
+          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers)
+          ctype=m.group(1).strip() if m else ''
+          bm=re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))',ctype,re.I)
+          if not bm:
+              source=body
+          else:
+              boundary=(bm.group(1) or bm.group(2)).encode()
+              candidates=[]
+              for part in body.split(b'--'+boundary):
+                  sep=b'\r\n\r\n' if b'\r\n\r\n' in part else (b'\n\n' if b'\n\n' in part else None)
+                  if not sep: continue
+                  head,payload=part.split(sep,1)
+                  payload=payload.rstrip(b'\r\n-')
+                  if b'javascript' in head.lower() or b'module' in head.lower():
+                      candidates.append(payload)
+              if not candidates: raise SystemExit('No JavaScript module in Cloudflare multipart')
+              source=max(candidates,key=len)
+          if b'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' not in source:
+              raise SystemExit('Current live source is not R44.5.17')
+          if b'permanentCommerceEntrypoint' not in source or b'/comprar/priorizacao' not in source:
+              raise SystemExit('Permanent commerce code missing from current source')
+          Path('/tmp/r44-5-17-worker.js').write_bytes(source)
+          print('SOURCE_BYTES='+str(len(source)))
+          PY
+          node --check /tmp/r44-5-17-worker.js
+
+      - name: Upload new R44.5.17 version inheriting all 19 stable bindings
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
+          STABLE='a05b7d5b-b604-40c1-8370-bd025402d0a0'
+
+          python - <<'PY' >/tmp/metadata.json
+          import json
+          stable='a05b7d5b-b604-40c1-8370-bd025402d0a0'
+          names=[
+            'AI','ASAAS_API_KEY','ASAAS_WEBHOOK_TOKEN','BROWSER','BUFFER_API_KEY',
+            'BUFFER_CHANNEL_INSTAGRAM','BUFFER_CHANNEL_TIKTOK','BUFFER_CHANNEL_YOUTUBE',
+            'GITHUB_VIDEO_OWNER','GITHUB_VIDEO_REPO','GITHUB_VIDEO_TOKEN','GITHUB_VIDEO_UPLOAD_KEY',
+            'GITHUB_VIDEO_WORKFLOW','IMAGES','LOLA_AUTH_KEY','LOLA_COMMAND_KEY','MEDIA',
+            'MUSIC_CATALOG_JSON','VIDEO'
+          ]
+          metadata={
+            'main_module':'worker.js',
+            'compatibility_date':'2026-08-20',
+            'annotations':{
+              'workers/message':'UGI R44.5.17 permanent commerce entrypoint — bindings restored by strict inheritance',
+              'workers/tag':'r44-5-17-binding-safe'
+            },
+            'bindings':[{'name':name,'type':'inherit','version_id':stable} for name in names]
+          }
+          print(json.dumps(metadata,separators=(',',':'),ensure_ascii=False))
+          PY
+
+          curl --fail --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            "$BASE/versions?bindings_inherit=strict" \
+            -F 'metadata=@/tmp/metadata.json;type=application/json' \
+            -F 'worker.js=@/tmp/r44-5-17-worker.js;type=application/javascript+module' \
+            -o /tmp/version-create.json
+
+          python - <<'PY'
           import json
           from pathlib import Path
-
-          def dump(label,path):
-              root=json.loads(Path(path).read_text())
-              result=root.get('result') or {}
-              meta=result.get('metadata') or {}
-              resources=result.get('resources') or {}
-              bindings=resources.get('bindings') or meta.get('bindings') or []
-              print(f'{label}_SUCCESS={str(root.get("success")).lower()}')
-              print(f'{label}_ID={result.get("id")}')
-              print(f'{label}_NUMBER={result.get("number")}')
-              print(f'{label}_CREATED={meta.get("created_on")}')
-              print(f'{label}_COMPATIBILITY_DATE={meta.get("compatibility_date")}')
-              print(f'{label}_MAIN_MODULE={meta.get("main_module")}')
-              print(f'{label}_BINDING_COUNT={len(bindings)}')
-              for i,b in enumerate(bindings):
-                  if not isinstance(b,dict): continue
-                  print(f'{label}_BINDING_{i}_NAME={b.get("name")}')
-                  print(f'{label}_BINDING_{i}_TYPE={b.get("type")}')
-                  for k in ['bucket_name','namespace_id','script_name']:
-                      if b.get(k) is not None:
-                          print(f'{label}_BINDING_{i}_{k.upper()}={b.get(k)}')
-          print('R44.5.17_DEPLOY_STAGE=VERSION_BINDING_DIAGNOSTIC')
-          dump('STABLE','/tmp/stable.json')
-          dump('CURRENT','/tmp/current.json')
+          r=json.loads(Path('/tmp/version-create.json').read_text())
+          if not r.get('success'):
+              raise SystemExit('Version upload failed: '+json.dumps(r.get('errors')))
+          result=r.get('result') or {}
+          vid=result.get('id')
+          resources=result.get('resources') or {}
+          bindings=resources.get('bindings') or []
+          if not vid: raise SystemExit('New version ID missing')
+          if len(bindings) < 19: raise SystemExit(f'Inherited binding count too low: {len(bindings)}')
+          Path('/tmp/new-version-id').write_text(vid)
+          print('NEW_VERSION_ID='+vid)
+          print('NEW_BINDING_COUNT='+str(len(bindings)))
           PY
+
+      - name: Deploy new binding-safe version at 100 percent
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
+          VID="$(cat /tmp/new-version-id)"
+          printf '{"strategy":"percentage","versions":[{"version_id":"%s","percentage":100}],"annotations":{"workers/message":"UGI R44.5.17 binding-safe recovery"}}' "$VID" >/tmp/deploy.json
+          curl --fail --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H 'Content-Type: application/json' \
+            --data-binary @/tmp/deploy.json \
+            "$BASE/deployments" \
+            -o /tmp/deploy-response.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/deploy-response.json').read_text())
+          if not r.get('success'):
+              raise SystemExit('Deployment failed: '+json.dumps(r.get('errors')))
+          print('DEPLOYMENT_CREATE=PASS')
+          PY
+
+      - name: Validate restored bindings and permanent commerce page
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
+          PERMALINK='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
+          PASS=false
+          for i in 1 2 3 4 5 6; do
+            curl --silent --show-error "$HEALTH" -o /tmp/health.json || true
+            if grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/health.json \
+              && grep -q '"ok":true' /tmp/health.json \
+              && grep -q '"MEDIA_R2":true' /tmp/health.json \
+              && grep -q '"AI":true' /tmp/health.json \
+              && grep -q '"BROWSER":true' /tmp/health.json \
+              && grep -q '"IMAGES":true' /tmp/health.json \
+              && grep -q '"VIDEO":true' /tmp/health.json; then
+              PASS=true
+              break
+            fi
+            sleep 5
+          done
+          test "$PASS" = true
+
+          PCODE="$(curl --silent --show-error --output /tmp/priorizacao.html --write-out '%{http_code}' --connect-timeout 10 --max-time 30 "$PERMALINK")"
+          test "$PCODE" = '200'
+          grep -q 'Comprar agora' /tmp/priorizacao.html
+          grep -q 'R$ 14,99' /tmp/priorizacao.html
+
+          mkdir -p cloudflare/status
+          cat > cloudflare/status/r44-5-17.txt <<EOF
+          R44.5.17_DEPLOY_STAGE=COMPLETE
+          VERSION=lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21
+          BINDINGS_RESTORED=true
+          MEDIA_R2=true
+          AI=true
+          BROWSER=true
+          IMAGES=true
+          VIDEO=true
+          PERMANENT_COMMERCE_URL_PASS=true
+          BUY_BUTTON_PASS=true
+          PRICE_PASS=true
+          LIVE_URL=$PERMALINK
+          NEW_VERSION_ID=$(cat /tmp/new-version-id)
+          EOF
 
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI — Cloudflare version binding diagnostic result'
+          git commit -m 'UGI R44.5.17 — binding-safe recovery COMPLETE'
           git push origin HEAD:main
