@@ -1,4 +1,4 @@
-name: UGI Cloudflare Version Recovery Diagnostic
+name: UGI Cloudflare Version Recovery Diagnostic REST
 
 on:
   workflow_dispatch:
@@ -22,47 +22,51 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: List Worker versions and deployments
+      - name: List Worker versions and deployments via REST
         shell: bash
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          test -n "$CLOUDFLARE_API_TOKEN"
-          test -n "$CLOUDFLARE_ACCOUNT_ID"
-          npx --yes wrangler@latest versions list --name lola-operacional-ugi --json > /tmp/versions.json
-          npx --yes wrangler@latest deployments list --name lola-operacional-ugi --json > /tmp/deployments.json
+          test -n "$CF_API_TOKEN"
+          test -n "$CF_ACCOUNT_ID"
+          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/versions?per_page=20" -o /tmp/versions.json
+          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/deployments" -o /tmp/deployments.json
 
           mkdir -p cloudflare/status
           python - <<'PY' > cloudflare/status/r44-5-17.txt
           import json
           from pathlib import Path
-
-          versions=json.loads(Path('/tmp/versions.json').read_text())
-          deployments=json.loads(Path('/tmp/deployments.json').read_text())
-          print('R44.5.17_DEPLOY_STAGE=VERSION_RECOVERY_DIAGNOSTIC')
+          vr=json.loads(Path('/tmp/versions.json').read_text())
+          dr=json.loads(Path('/tmp/deployments.json').read_text())
+          versions=vr.get('result') or []
+          deployments=(dr.get('result') or {}).get('deployments') if isinstance(dr.get('result'),dict) else (dr.get('result') or [])
+          deployments=deployments or []
+          print('R44.5.17_DEPLOY_STAGE=VERSION_RECOVERY_DIAGNOSTIC_REST')
+          print('VERSIONS_SUCCESS='+str(vr.get('success')).lower())
           print('VERSIONS_COUNT='+str(len(versions)))
-          for i,v in enumerate(versions[:10]):
-              vid=v.get('id') or v.get('version_id')
-              created=v.get('created_on') or v.get('created_at')
-              annotations=v.get('annotations') or {}
-              message=annotations.get('workers/message') or v.get('message') or ''
-              print(f'VERSION_{i}_ID={vid}')
-              print(f'VERSION_{i}_CREATED={created}')
-              print(f'VERSION_{i}_MESSAGE={message}')
+          for i,v in enumerate(versions[:12]):
+              meta=v.get('metadata') or {}
+              ann=meta.get('annotations') or {}
+              print(f'VERSION_{i}_ID={v.get("id")}')
+              print(f'VERSION_{i}_NUMBER={v.get("number")}')
+              print(f'VERSION_{i}_CREATED={meta.get("created_on")}')
+              print(f'VERSION_{i}_SOURCE={meta.get("source")}')
+              print(f'VERSION_{i}_MESSAGE={ann.get("workers/message") or ""}')
+          print('DEPLOYMENTS_SUCCESS='+str(dr.get('success')).lower())
           print('DEPLOYMENTS_COUNT='+str(len(deployments)))
-          for i,d in enumerate(deployments[:10]):
-              did=d.get('id') or d.get('deployment_id')
-              created=d.get('created_on') or d.get('created_at')
-              print(f'DEPLOYMENT_{i}_ID={did}')
-              print(f'DEPLOYMENT_{i}_CREATED={created}')
-              versions_field=d.get('versions') or []
-              print(f'DEPLOYMENT_{i}_VERSIONS='+','.join(str(x.get('version_id') or x.get('id')) for x in versions_field if isinstance(x,dict)))
+          for i,d in enumerate(deployments[:12]):
+              print(f'DEPLOYMENT_{i}_ID={d.get("id")}')
+              print(f'DEPLOYMENT_{i}_CREATED={d.get("created_on")}')
+              print(f'DEPLOYMENT_{i}_SOURCE={d.get("source")}')
+              vers=d.get('versions') or []
+              print(f'DEPLOYMENT_{i}_VERSIONS='+','.join(str(x.get('version_id') or x.get('id')) for x in vers if isinstance(x,dict)))
           PY
 
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI — Cloudflare version recovery diagnostic result'
+          git commit -m 'UGI — Cloudflare REST version diagnostic result'
           git push origin HEAD:main
