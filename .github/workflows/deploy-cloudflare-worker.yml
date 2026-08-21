@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - scripts/r44_5_18_repair_v2.py
+      - scripts/r44_5_18_repair_v2_runner.py
       - .github/workflows/deploy-cloudflare-worker.yml
 
 permissions:
@@ -30,7 +31,7 @@ jobs:
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-        run: python scripts/r44_5_18_repair_v2.py
+        run: python -m scripts.r44_5_18_repair_v2_runner
 
       - name: Persist execution evidence
         if: always()
