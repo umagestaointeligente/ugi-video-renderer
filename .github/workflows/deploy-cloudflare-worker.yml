@@ -1,4 +1,4 @@
-name: UGI Cloudflare Worker R44.5.17 Autonomous Patch + Deploy
+name: UGI R44.5.17 Permanent Commerce Deploy
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  patch-deploy-sync:
+  deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -24,7 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Fetch current production Worker preserving Cloudflare multipart metadata
+      - name: Validate Cloudflare credentials
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -33,269 +33,124 @@ jobs:
           set -euo pipefail
           test -n "$CF_API_TOKEN"
           test -n "$CF_ACCOUNT_ID"
-          curl --fail --silent --show-error \
-            -D /tmp/cf-worker.headers \
-            -H "Authorization: Bearer $CF_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi" \
-            -o /tmp/cf-worker.body
-          grep -qi '^content-type:' /tmp/cf-worker.headers
-          grep -a -q 'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' /tmp/cf-worker.body
+          echo "CLOUDFLARE_CREDENTIALS_PRESENT=true"
 
-      - name: Patch production source to R44.5.17
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > /tmp/patch_worker.py <<'PY'
-          from pathlib import Path
-          import re
-
-          body_path = Path('/tmp/cf-worker.body')
-          raw = body_path.read_bytes()
-          text = raw.decode('utf-8')
-
-          old_version = 'const VERSION = "lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21";'
-          new_version = 'const VERSION = "lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21";'
-          if text.count(old_version) != 1:
-              raise SystemExit(f'Expected exactly one old VERSION, found {text.count(old_version)}')
-          text = text.replace(old_version, new_version, 1)
-
-          anchor = '// R44.5.16 COMMERCE PUBLICATION GATE FIX:\n'
-          if anchor not in text:
-              raise SystemExit('R44.5.16 banner anchor missing')
-          banner = '''// R44.5.17 PERMANENT COMMERCE ENTRYPOINT:\n// - preserva integralmente R44.5.16\n// - adiciona URL comercial permanente por material (/priorizacao)\n// - checkout Asaas criado just-in-time somente após clique do comprador\n// - sessão temporária Asaas deixa de ser URL pública canônica\n// - checkout expirado/cancelado retorna ao permalink permanente\n// - mantém Product/Material gates, preço travado, webhook, fulfillment e entrega tokenizada\n//\n'''
-          text = text.replace(anchor, banner + anchor, 1)
-
-          const_anchor = 'const DELIVERY_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;\n'
-          if const_anchor not in text:
-              raise SystemExit('storage anchor missing')
-          permalink_config = '''const COMMERCE_PERMALINKS = {\n  priorizacao: {\n    productId: "UGI-MATERIAL-PRIORIDADES-001",\n    materialId: "UGI-KIT-PRIORIZACAO-001",\n    title: "Kit UGI — Priorização Inteligente",\n    shortTitle: "Priorização Inteligente"\n  }\n};\n'''
-          text = text.replace(const_anchor, const_anchor + permalink_config, 1)
-
-          helper_anchor = 'async function createProviderCheckout(env, provider, product, material, body, origin) {'
-          if helper_anchor not in text:
-              raise SystemExit('checkout helper anchor missing')
-          helpers = r'''function commercePermalinkHtml(origin, slug, product, material, notice = "") {
-            const esc = (value) => String(value || "").replace(/[<>&]/g, "");
-            const safeTitle = esc(product?.title || material?.title || "Material UGI");
-            const price = Number(product?.price || 0);
-            const priceText = Number.isFinite(price) && price > 0
-              ? `R$ ${price.toFixed(2).replace(".", ",")}`
-              : "";
-            const noticeHtml = notice
-              ? `<div style="margin:0 0 18px;padding:12px 14px;border-radius:12px;background:#fff4d6;color:#6b4d00;font-size:14px">${esc(notice)}</div>`
-              : "";
-            return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${safeTitle}</title><meta name="robots" content="index,follow"><style>body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#061A2B;color:#fff}.wrap{max-width:720px;margin:0 auto;padding:28px 20px 48px}.brand{color:#E7A72C;font-weight:800;letter-spacing:.04em}.card{margin-top:20px;background:#fff;color:#182433;border-radius:22px;padding:26px;box-shadow:0 16px 45px rgba(0,0,0,.25)}h1{font-size:30px;line-height:1.12;margin:0 0 12px}.price{font-size:28px;font-weight:800;color:#061A2B;margin:18px 0}.desc{line-height:1.55;color:#44505f}.buy{width:100%;border:0;border-radius:14px;background:#E7A72C;color:#061A2B;font-size:18px;font-weight:800;padding:16px 18px;cursor:pointer}.note{font-size:13px;color:#697586;margin-top:14px;line-height:1.45}</style></head><body><main class="wrap"><div class="brand">UGI · UMA GESTÃO INTELIGENTE</div><section class="card">${noticeHtml}<h1>${safeTitle}</h1><p class="desc">${esc(product?.description || material?.description || "Material prático UGI para apoiar decisões melhores.")}</p><div class="price">${priceText}</div><form method="post" action="${origin}/comprar/${encodeURIComponent(slug)}"><button class="buy" type="submit">Comprar agora</button></form><p class="note">Pagamento seguro via Asaas. O checkout é criado no momento da compra e a entrega ocorre após a confirmação do pagamento.</p></section></main></body></html>`;
-          }
-
-          function resolveCommercePermalink(slug) {
-            const key = String(slug || "").trim().toLowerCase();
-            return COMMERCE_PERMALINKS[key] || null;
-          }
-
-          '''
-          text = text.replace(helper_anchor, helpers + helper_anchor, 1)
-
-          old_cb = '''    const callbackBase = `${origin}/api/commerce/checkout-return`;
-              payload = {
-          '''
-          if old_cb not in text:
-              # indentation inside multipart source is the normal two-space function indentation
-              old_cb = '''    const callbackBase = `${origin}/api/commerce/checkout-return`;
-    payload = {
-'''
-          if old_cb not in text:
-              raise SystemExit('callback base anchor missing')
-          new_cb = '''    const callbackBase = `${origin}/api/commerce/checkout-return`;
-    const permanentPath = String(body?.permanentPath || "").trim();
-    const permanentUrl = permanentPath.startsWith("/") ? `${origin}${permanentPath}` : null;
-    payload = {
-'''
-          text = text.replace(old_cb, new_cb, 1)
-
-          old_urls = '''      callback: {
-        successUrl: `${callbackBase}/success?referenceId=${encodeURIComponent(referenceId)}`,
-        cancelUrl: `${callbackBase}/cancel?referenceId=${encodeURIComponent(referenceId)}`,
-        expiredUrl: `${callbackBase}/expired?referenceId=${encodeURIComponent(referenceId)}`
-      },
-'''
-          new_urls = '''      callback: {
-        successUrl: `${callbackBase}/success?referenceId=${encodeURIComponent(referenceId)}`,
-        cancelUrl: permanentUrl ? `${permanentUrl}?checkout=cancelled` : `${callbackBase}/cancel?referenceId=${encodeURIComponent(referenceId)}`,
-        expiredUrl: permanentUrl ? `${permanentUrl}?checkout=expired` : `${callbackBase}/expired?referenceId=${encodeURIComponent(referenceId)}`
-      },
-'''
-          if old_urls not in text:
-              raise SystemExit('callback URLs anchor missing')
-          text = text.replace(old_urls, new_urls, 1)
-
-          route_anchor = '''      if (path === "/approve") {
-        return html(APP);
-      }
-
-'''
-          if route_anchor not in text:
-              raise SystemExit('public route anchor missing')
-          routes = r'''      // R44.5.17 — URL comercial permanente. Não cria checkout no simples GET.
-      if (request.method === "GET" && path === "/priorizacao") {
-        const config = resolveCommercePermalink("priorizacao");
-        const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);
-        const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);
-        if (!product || !material || product.status !== "active" || material.assetReady !== true || material.qualityStatus !== "PASS" || material.deliveryEnabled !== true) {
-          return new Response("Material temporariamente indisponível.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
-        }
-        const state = String(url.searchParams.get("checkout") || "").toLowerCase();
-        const notice = state === "expired"
-          ? "A sessão anterior expirou. Clique em Comprar agora para gerar uma nova sessão segura."
-          : state === "cancelled"
-          ? "A compra anterior foi cancelada. Você pode iniciar uma nova compra quando quiser."
-          : "";
-        return new Response(commercePermalinkHtml(url.origin, "priorizacao", product, material, notice), {
-          status: 200,
-          headers: {
-            "Content-Type": "text/html; charset=utf-8",
-            "Cache-Control": "no-store",
-            "X-Robots-Tag": "index, follow",
-            "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
-          }
-        });
-      }
-
-      // Checkout temporário é criado somente quando o comprador clica em Comprar agora.
-      if (request.method === "POST" && path === "/comprar/priorizacao") {
-        const config = resolveCommercePermalink("priorizacao");
-        const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);
-        const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);
-        if (!product || !material || product.status !== "active" || material.assetReady !== true || material.qualityStatus !== "PASS" || material.deliveryEnabled !== true) {
-          return new Response("Produto indisponível.", { status: 503, headers: { "Cache-Control": "no-store" } });
-        }
-        const provider = resolveCommerceProvider(env, "asaas");
-        if (provider !== "asaas") return new Response("Pagamento temporariamente indisponível.", { status: 503, headers: { "Cache-Control": "no-store" } });
-        const referenceId = `UGI-BUY-PRIORIDADES-${crypto.randomUUID()}`;
-        let checkout;
-        try {
-          checkout = await createProviderCheckout(env, "asaas", product, material, { referenceId, permanentPath: "/priorizacao" }, url.origin);
-        } catch (error) {
-          console.log("R44.5.17 permalink checkout error", error);
-          return new Response("Não foi possível iniciar o pagamento agora. Tente novamente em instantes.", { status: 502, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
-        }
-        await putJsonR2(env, `${CHECKOUT_PREFIX}${checkout.checkoutId}.json`, checkout);
-        await putJsonR2(env, `${ORDER_PREFIX}${checkout.referenceId}.json`, { ...checkout, orderStatus: "awaiting_payment", paymentStatus: "pending", fulfilledAt: null, permanentCommerceUrl: `${url.origin}/priorizacao` });
-        return Response.redirect(checkout.checkoutUrl, 303);
-      }
-
-'''
-          text = text.replace(route_anchor, route_anchor + routes, 1)
-
-          health_anchor = '            commercePublicationGateV2: true,\n'
-          if health_anchor not in text:
-              raise SystemExit('health capability anchor missing')
-          health_flags = '''            permanentCommerceEntrypoint: true,
-            permanentCommerceUrlPrioritization: "/priorizacao",
-            justInTimeAsaasCheckout: true,
-            expiredCheckoutReturnsToPermalink: true,
-            directAsaasCheckoutPublishingDeprecated: true,
-'''
-          text = text.replace(health_anchor, health_anchor + health_flags, 1)
-
-          if text.count(new_version) != 1:
-              raise SystemExit('new VERSION validation failed')
-          if 'request.method === "GET" && path === "/priorizacao"' not in text:
-              raise SystemExit('permalink route not installed')
-          if 'request.method === "POST" && path === "/comprar/priorizacao"' not in text:
-              raise SystemExit('JIT checkout route not installed')
-
-          patched = text.encode('utf-8')
-          Path('/tmp/cf-worker.patched.body').write_bytes(patched)
-
-          # Extract the JS source part for node --check and repository synchronization.
-          header_text = Path('/tmp/cf-worker.headers').read_text(errors='ignore')
-          m = re.search(r'(?im)^content-type:\s*([^\r\n]+)', header_text)
-          if not m:
-              raise SystemExit('Cloudflare Content-Type missing')
-          content_type = m.group(1).strip()
-          bm = re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))', content_type, re.I)
-          if bm:
-              boundary = (bm.group(1) or bm.group(2)).encode()
-              chunks = patched.split(b'--' + boundary)
-              candidates = []
-              for chunk in chunks:
-                  if new_version.encode() in chunk:
-                      sep = b'\r\n\r\n' if b'\r\n\r\n' in chunk else b'\n\n'
-                      if sep not in chunk:
-                          continue
-                      payload = chunk.split(sep, 1)[1]
-                      payload = payload.rstrip(b'\r\n-')
-                      candidates.append(payload)
-              if len(candidates) != 1:
-                  raise SystemExit(f'Expected one JS multipart candidate, found {len(candidates)}')
-              source = candidates[0]
-          else:
-              source = patched
-          Path('/tmp/lola-operacional-worker.mjs').write_bytes(source)
-          PY
-          python /tmp/patch_worker.py
-          node --check /tmp/lola-operacional-worker.mjs
-          grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/lola-operacional-worker.mjs
-          grep -q 'path === "/priorizacao"' /tmp/lola-operacional-worker.mjs
-          grep -q 'path === "/comprar/priorizacao"' /tmp/lola-operacional-worker.mjs
-
-      - name: Deploy patched multipart back to Cloudflare preserving bindings and metadata
+      - name: Fetch live R44.5.16 Worker
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          CONTENT_TYPE="$(grep -i '^content-type:' /tmp/cf-worker.headers | tail -1 | cut -d: -f2- | sed 's/^[[:space:]]*//' | tr -d '\r')"
-          test -n "$CONTENT_TYPE"
           curl --fail --silent --show-error \
-            -X PUT \
+            -D /tmp/cf.headers \
             -H "Authorization: Bearer $CF_API_TOKEN" \
-            -H "Content-Type: $CONTENT_TYPE" \
-            --data-binary @/tmp/cf-worker.patched.body \
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi" \
-            -o /tmp/cf-put.json
+            -o /tmp/cf.body
+
           python - <<'PY'
-          import json
           from pathlib import Path
-          data=json.loads(Path('/tmp/cf-put.json').read_text())
-          if data.get('success') is not True:
-              raise SystemExit(data)
-          print('CLOUDFLARE_PUT_SUCCESS=true')
+          import re
+
+          headers = Path('/tmp/cf.headers').read_text(errors='ignore')
+          body = Path('/tmp/cf.body').read_bytes()
+          expected = b'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21'
+
+          m = re.search(r'(?im)^content-type:\s*([^\r\n]+)', headers)
+          if not m:
+              raise SystemExit('Cloudflare content-type header missing')
+
+          content_type = m.group(1).strip()
+          bm = re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))', content_type, re.I)
+
+          if bm:
+              boundary = (bm.group(1) or bm.group(2)).encode()
+              candidates = []
+              for part in body.split(b'--' + boundary):
+                  if expected not in part:
+                      continue
+                  sep = b'\r\n\r\n' if b'\r\n\r\n' in part else b'\n\n'
+                  if sep not in part:
+                      continue
+                  payload = part.split(sep, 1)[1].rstrip(b'\r\n')
+                  candidates.append(payload)
+              if len(candidates) != 1:
+                  raise SystemExit(f'Expected exactly one Worker JS part, found {len(candidates)}')
+              source = candidates[0]
+          else:
+              source = body
+
+          if expected not in source:
+              raise SystemExit('Live Worker is not the expected R44.5.16 baseline')
+
+          Path('/tmp/current-worker.mjs').write_bytes(source)
+          print(f'LIVE_SOURCE_BYTES={len(source)}')
           PY
 
-      - name: Post-deploy health and permanent permalink gate
+          grep -q 'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' /tmp/current-worker.mjs
+          node --check /tmp/current-worker.mjs
+
+      - name: Apply deterministic R44.5.17 patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python cloudflare/patch-r44-5-17.py /tmp/current-worker.mjs /tmp/r44-5-17-worker.mjs
+          node --check /tmp/r44-5-17-worker.mjs
+          grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/r44-5-17-worker.mjs
+          grep -q 'path === "/priorizacao"' /tmp/r44-5-17-worker.mjs
+          grep -q 'path === "/comprar/priorizacao"' /tmp/r44-5-17-worker.mjs
+          echo "R44_5_17_SOURCE_GATE=PASS"
+
+      - name: Deploy R44.5.17 to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy /tmp/r44-5-17-worker.mjs --name lola-operacional-ugi --compatibility-date 2026-08-20
+
+      - name: Post-deploy health gate
         shell: bash
         run: |
           set -euo pipefail
           HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
-          PERMALINK='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
-          for i in 1 2 3 4 5 6 7 8; do
+          for i in 1 2 3 4 5 6; do
             BODY="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 30 "$HEALTH" || true)"
             if printf '%s' "$BODY" | grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' \
               && printf '%s' "$BODY" | grep -q '"ok":true' \
               && printf '%s' "$BODY" | grep -q '"permanentCommerceEntrypoint":true' \
-              && curl --fail --silent --show-error --connect-timeout 10 --max-time 30 "$PERMALINK" | grep -q 'Comprar agora'; then
-              echo 'R44.5.17_DEPLOY_HEALTH_OK'
-              echo "PERMANENT_COMMERCE_URL=$PERMALINK"
+              && printf '%s' "$BODY" | grep -q '"justInTimeAsaasCheckout":true'; then
+              printf '%s\n' "$BODY"
+              echo 'R44_5_17_HEALTH_PASS=true'
               exit 0
             fi
-            sleep 6
+            sleep 5
           done
-          echo 'R44.5.17_DEPLOY_HEALTH_FAILED' >&2
+          echo 'R44_5_17_HEALTH_PASS=false' >&2
           exit 1
 
-      - name: Synchronize deployed Worker source back to repository
+      - name: Permanent commerce URL smoke test
         shell: bash
         run: |
           set -euo pipefail
-          cp /tmp/lola-operacional-worker.mjs cloudflare/lola-operacional-worker.mjs
-          git config user.name 'UGI Autonomous Deploy'
-          git config user.email 'actions@users.noreply.github.com'
+          URL='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
+          CODE="$(curl --silent --show-error --output /tmp/permalink.html --write-out '%{http_code}' --connect-timeout 10 --max-time 30 "$URL")"
+          test "$CODE" = '200'
+          grep -q 'Comprar agora' /tmp/permalink.html
+          grep -q 'R$ 14,99' /tmp/permalink.html
+          echo 'PERMANENT_COMMERCE_URL_PASS=true'
+
+      - name: Sync deployed Worker source back to repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp /tmp/r44-5-17-worker.mjs cloudflare/lola-operacional-worker.mjs
+          git config user.name 'ugi-automation'
+          git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/lola-operacional-worker.mjs
           if git diff --cached --quiet; then
-            echo 'Repository source already synchronized.'
+            echo 'WORKER_SYNC=NO_CHANGE'
             exit 0
           fi
-          git commit -m 'UGI R44.5.17 — sync permanent commerce entrypoint Worker'
+          git commit -m 'UGI R44.5.17 — sync permanent commerce Worker after successful deploy'
           git push origin HEAD:main
+          echo 'WORKER_SYNC=PASS'
