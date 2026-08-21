@@ -23,11 +23,36 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install requests
         run: python -m pip install --disable-pip-version-check requests
-      - name: Execute R44.5.19
+      - name: Execute R44.5.19 with diagnostics
+        shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-        run: python scripts/r44_5_19_compact.py
+        run: |
+          set +e
+          mkdir -p cloudflare/status
+          python -m py_compile scripts/r44_5_19_compact.py 2> /tmp/compile.err
+          C=$?
+          if [ "$C" -ne 0 ]; then
+            {
+              echo 'R44.5.19_STAGE=PY_COMPILE_FAILED'
+              echo 'OK=false'
+              sed 's/^/PY_COMPILE_ERROR=/' /tmp/compile.err
+            } > cloudflare/status/r44-5-19-final.txt
+            exit "$C"
+          fi
+          python scripts/r44_5_19_compact.py > /tmp/run.out 2> /tmp/run.err
+          R=$?
+          if [ "$R" -ne 0 ]; then
+            {
+              test -f cloudflare/status/r44-5-19-final.txt && cat cloudflare/status/r44-5-19-final.txt
+              echo 'WORKFLOW_EXECUTION_FAILED=true'
+              sed 's/^/STDOUT=/' /tmp/run.out | tail -80
+              sed 's/^/STDERR=/' /tmp/run.err | tail -120
+            } > /tmp/status
+            mv /tmp/status cloudflare/status/r44-5-19-final.txt
+            exit "$R"
+          fi
       - name: Persist evidence
         if: always()
         shell: bash
