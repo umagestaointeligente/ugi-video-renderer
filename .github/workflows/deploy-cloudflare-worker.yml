@@ -18,7 +18,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -33,9 +33,9 @@ jobs:
           set -euo pipefail
           test -n "$CF_API_TOKEN"
           test -n "$CF_ACCOUNT_ID"
-          echo "CLOUDFLARE_CREDENTIALS_PRESENT=true"
+          echo 'CLOUDFLARE_CREDENTIALS_PRESENT=true'
 
-      - name: Fetch live R44.5.16 Worker
+      - name: Download live Worker source only
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -43,52 +43,14 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --silent --show-error \
-            -D /tmp/cf.headers \
             -H "Authorization: Bearer $CF_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi" \
-            -o /tmp/cf.body
-
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          headers = Path('/tmp/cf.headers').read_text(errors='ignore')
-          body = Path('/tmp/cf.body').read_bytes()
-          expected = b'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21'
-
-          m = re.search(r'(?im)^content-type:\s*([^\r\n]+)', headers)
-          if not m:
-              raise SystemExit('Cloudflare content-type header missing')
-
-          content_type = m.group(1).strip()
-          bm = re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))', content_type, re.I)
-
-          if bm:
-              boundary = (bm.group(1) or bm.group(2)).encode()
-              candidates = []
-              for part in body.split(b'--' + boundary):
-                  if expected not in part:
-                      continue
-                  sep = b'\r\n\r\n' if b'\r\n\r\n' in part else b'\n\n'
-                  if sep not in part:
-                      continue
-                  payload = part.split(sep, 1)[1].rstrip(b'\r\n')
-                  candidates.append(payload)
-              if len(candidates) != 1:
-                  raise SystemExit(f'Expected exactly one Worker JS part, found {len(candidates)}')
-              source = candidates[0]
-          else:
-              source = body
-
-          if expected not in source:
-              raise SystemExit('Live Worker is not the expected R44.5.16 baseline')
-
-          Path('/tmp/current-worker.mjs').write_bytes(source)
-          print(f'LIVE_SOURCE_BYTES={len(source)}')
-          PY
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi/content/v2" \
+            -o /tmp/current-worker.mjs
 
           grep -q 'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' /tmp/current-worker.mjs
           node --check /tmp/current-worker.mjs
+          echo "LIVE_SOURCE_BYTES=$(wc -c < /tmp/current-worker.mjs)"
+          echo 'LIVE_R44_5_16_SOURCE_GATE=PASS'
 
       - name: Apply deterministic R44.5.17 patch
         shell: bash
@@ -99,14 +61,25 @@ jobs:
           grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/r44-5-17-worker.mjs
           grep -q 'path === "/priorizacao"' /tmp/r44-5-17-worker.mjs
           grep -q 'path === "/comprar/priorizacao"' /tmp/r44-5-17-worker.mjs
-          echo "R44_5_17_SOURCE_GATE=PASS"
+          grep -q 'permanentCommerceEntrypoint: true' /tmp/r44-5-17-worker.mjs
+          echo 'R44_5_17_PATCH_GATE=PASS'
 
-      - name: Deploy R44.5.17 to Cloudflare
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy /tmp/r44-5-17-worker.mjs --name lola-operacional-ugi --compatibility-date 2026-08-20
+      - name: Upload Worker source without touching config or bindings
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          RESPONSE="$(curl --fail --silent --show-error \
+            -X PUT \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi/content" \
+            -F 'metadata={"main_module":"worker.mjs"};type=application/json' \
+            -F 'worker.mjs=@/tmp/r44-5-17-worker.mjs;type=application/javascript+module')"
+          printf '%s\n' "$RESPONSE"
+          printf '%s' "$RESPONSE" | grep -q '"success":true'
+          echo 'CLOUDFLARE_CONTENT_UPLOAD=PASS'
 
       - name: Post-deploy health gate
         shell: bash
@@ -118,7 +91,8 @@ jobs:
             if printf '%s' "$BODY" | grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' \
               && printf '%s' "$BODY" | grep -q '"ok":true' \
               && printf '%s' "$BODY" | grep -q '"permanentCommerceEntrypoint":true' \
-              && printf '%s' "$BODY" | grep -q '"justInTimeAsaasCheckout":true'; then
+              && printf '%s' "$BODY" | grep -q '"justInTimeAsaasCheckout":true' \
+              && printf '%s' "$BODY" | grep -q '"expiredCheckoutReturnsToPermalink":true'; then
               printf '%s\n' "$BODY"
               echo 'R44_5_17_HEALTH_PASS=true'
               exit 0
