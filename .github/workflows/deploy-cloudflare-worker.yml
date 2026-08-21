@@ -1,4 +1,4 @@
-name: UGI R44.5.17 Health Diagnostic
+name: UGI Cloudflare Version Recovery Diagnostic
 
 on:
   workflow_dispatch:
@@ -22,53 +22,47 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Diagnose public health and permalink
+      - name: List Worker versions and deployments
         shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
-          PERMALINK='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
-          curl --fail --silent --show-error "$HEALTH" -o /tmp/health.json
-          curl --silent --show-error -D /tmp/permalink.headers "$PERMALINK" -o /tmp/permalink.body
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npx --yes wrangler@latest versions list --name lola-operacional-ugi --json > /tmp/versions.json
+          npx --yes wrangler@latest deployments list --name lola-operacional-ugi --json > /tmp/deployments.json
 
           mkdir -p cloudflare/status
           python - <<'PY' > cloudflare/status/r44-5-17.txt
           import json
           from pathlib import Path
 
-          h=json.loads(Path('/tmp/health.json').read_text())
-          body=Path('/tmp/permalink.body').read_text(errors='ignore')
-          headers=Path('/tmp/permalink.headers').read_text(errors='ignore')
-
-          print('R44.5.17_DEPLOY_STAGE=HEALTH_DIAGNOSTIC')
-          print('OK='+str(h.get('ok')).lower())
-          print('VERSION='+str(h.get('version')))
-          print('STATUS='+str(h.get('status')))
-
-          caps=h.get('capabilities') or {}
-          for key in [
-            'permanentCommerceEntrypoint','permanentCommerceUrlPrioritization','justInTimeAsaasCheckout',
-            'expiredCheckoutReturnsToPermalink','directAsaasCheckoutPublishingDeprecated',
-            'materialStore','productCatalog','commerceAdapter','commerceFulfillment','materialDeliveryTokenized',
-            'commercePublicationGateV2'
-          ]:
-            print(f'CAP_{key}={caps.get(key)!r}')
-
-          bindings=h.get('bindings') or {}
-          for key in sorted(bindings):
-            val=bindings.get(key)
-            if isinstance(val,(bool,int,float)) or val is None:
-              print(f'BINDING_{key}={val!r}')
-            else:
-              print(f'BINDING_{key}=PRESENT')
-
-          status_line=headers.splitlines()[0] if headers.splitlines() else ''
-          print('PERMALINK_STATUS_LINE='+status_line)
-          print('PERMALINK_BODY='+body[:300].replace('\n',' '))
+          versions=json.loads(Path('/tmp/versions.json').read_text())
+          deployments=json.loads(Path('/tmp/deployments.json').read_text())
+          print('R44.5.17_DEPLOY_STAGE=VERSION_RECOVERY_DIAGNOSTIC')
+          print('VERSIONS_COUNT='+str(len(versions)))
+          for i,v in enumerate(versions[:10]):
+              vid=v.get('id') or v.get('version_id')
+              created=v.get('created_on') or v.get('created_at')
+              annotations=v.get('annotations') or {}
+              message=annotations.get('workers/message') or v.get('message') or ''
+              print(f'VERSION_{i}_ID={vid}')
+              print(f'VERSION_{i}_CREATED={created}')
+              print(f'VERSION_{i}_MESSAGE={message}')
+          print('DEPLOYMENTS_COUNT='+str(len(deployments)))
+          for i,d in enumerate(deployments[:10]):
+              did=d.get('id') or d.get('deployment_id')
+              created=d.get('created_on') or d.get('created_at')
+              print(f'DEPLOYMENT_{i}_ID={did}')
+              print(f'DEPLOYMENT_{i}_CREATED={created}')
+              versions_field=d.get('versions') or []
+              print(f'DEPLOYMENT_{i}_VERSIONS='+','.join(str(x.get('version_id') or x.get('id')) for x in versions_field if isinstance(x,dict)))
           PY
 
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI R44.5.17 — health diagnostic result'
+          git commit -m 'UGI — Cloudflare version recovery diagnostic result'
           git push origin HEAD:main
