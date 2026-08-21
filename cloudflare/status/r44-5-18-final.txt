@@ -1,8 +1,20 @@
 R44.5.18_STAGE=ASSET_PRESERVING_SLOT02_REPAIR_V2
-OK=false
-STATE=STARTED
-WRAPPER5_FAILURE=true
-ERROR_TYPE=RuntimeError
-ERROR=diagnostic HTTP 500: {   "ok": false,   "version": "lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21",   "error": "Cannot query field \"type\" on type \"PostMetadata\". Did you mean to use an inline fragment on \"CommonPostMetadata\", \"BlueskyPostMetadata\", \"FacebookPostMetadata\", \"GoogleBusinessPostMetadata\", or \"InstagramPostMetadata\"?" }
-TRACE=Traceback (most recent call last): |   File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_18_repair_v2_runner5.py", line 46, in <module> |     job.main() |   File "/home/runner/work/ugi-video-renderer/ugi-video-renderer/scripts/r44_5_18_repair_v2.py", line 360, in main |     raise RuntimeError(f'diagnostic HTTP {dr.status_code}: {dr.text[:1200]}') | RuntimeError: diagnostic HTTP 500: { |   "ok": false, |   "version": "lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21", |   "error": "Cannot query field \"type\" on type \"PostMetadata\". Did you mean to use an inline fragment on \"CommonPostMetadata\", \"BlueskyPostMetadata\", \"FacebookPostMetadata\", \"GoogleBusinessPostMetadata\", or \"InstagramPostMetadata\"?" | } | 
-OK=false
+BASE_SOURCE_BYTES=425826
+BINDINGS_PRESERVED=19
+FINAL_SOURCE_TEMP_ROUTES_STRIPPED=true
+BUFFER_DIAGNOSTIC_PASS=true
+DIAG_INSTAGRAM_STATUS=scheduled DUE_AT=2026-08-21T21:30:00.000Z VIDEO_SOURCE_PRESENT=true
+DIAG_TIKTOK_STATUS=scheduled DUE_AT=2026-08-21T21:30:00.000Z VIDEO_SOURCE_PRESENT=true
+DIAG_YOUTUBE_STATUS=scheduled DUE_AT=2026-08-21T21:30:00.000Z VIDEO_SOURCE_PRESENT=true
+SLOT02_REPAIR_PASS=true
+BUFFER_POST=6a87d61b1b38003a90c37507 PLATFORM=instagram STATUS=scheduled DUE_AT=2026-08-21T21:30:00.000Z SCHEDULE_PRESERVED=true PERMANENT_URL_PRESENT=true TEMPORARY_CHECKOUT_ABSENT=true
+BUFFER_POST=6a87d61f1b38003a90c3752d PLATFORM=tiktok STATUS=scheduled DUE_AT=2026-08-21T21:30:00.000Z SCHEDULE_PRESERVED=true PERMANENT_URL_PRESENT=true TEMPORARY_CHECKOUT_ABSENT=true
+BUFFER_POST=6a87d6231b38003a90c3755b PLATFORM=youtube STATUS=scheduled DUE_AT=2026-08-21T21:30:00.000Z SCHEDULE_PRESERVED=true PERMANENT_URL_PRESENT=true TEMPORARY_CHECKOUT_ABSENT=true
+FINAL_VERSION_ID=6fdfe5eb-db45-4304-9834-4afd78bef734
+FINAL_DEPLOYMENT_ID=5999034e-3083-4f6f-8cfc-6876632fa8db
+TEMP_ENDPOINTS_REMOVED=true
+PERMALINK_HTTP=200
+PERMANENT_PUBLICATION_LINK_POLICY=true
+DIRECT_ASAAS_CHECKOUT_IN_PUBLIC_TEXT_BLOCKED=true
+PUBLIC_COMMERCE_URL=https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao
+OK=true
