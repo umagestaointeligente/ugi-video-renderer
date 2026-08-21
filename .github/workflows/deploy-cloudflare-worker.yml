@@ -1,4 +1,4 @@
-name: UGI R44.5.17 Binding-Safe Version Create
+name: UGI R44.5.17 Binding-Safe Final Deploy
 
 on:
   workflow_dispatch:
@@ -16,13 +16,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  create-version:
+  deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build and upload non-deployed R44.5.17 version with restored bindings
+      - name: Deploy verified 19-binding R44.5.17 version
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -30,88 +30,89 @@ jobs:
         run: |
           set -euo pipefail
           BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
-          STABLE='a05b7d5b-b604-40c1-8370-bd025402d0a0'
-
-          # Fetch currently-live R44.5.17 source.
-          curl --fail --silent --show-error -D /tmp/cf.headers -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/content/v2" -o /tmp/cf.body
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          headers=Path('/tmp/cf.headers').read_text(errors='ignore'); body=Path('/tmp/cf.body').read_bytes()
-          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers); ctype=m.group(1).strip() if m else ''
-          bm=re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))',ctype,re.I)
-          if not bm: source=body
-          else:
-              boundary=(bm.group(1) or bm.group(2)).encode(); candidates=[]
-              for part in body.split(b'--'+boundary):
-                  sep=b'\r\n\r\n' if b'\r\n\r\n' in part else (b'\n\n' if b'\n\n' in part else None)
-                  if not sep: continue
-                  head,payload=part.split(sep,1); payload=payload.rstrip(b'\r\n-')
-                  if b'javascript' in head.lower() or b'module' in head.lower(): candidates.append(payload)
-              if not candidates: raise SystemExit('no JS module found')
-              source=max(candidates,key=len)
-          if b'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' not in source: raise SystemExit('live source is not R44.5.17')
-          Path('/tmp/worker.js').write_bytes(source)
-          PY
-          node --check /tmp/worker.js
-
-          # Fetch the last known-good version metadata containing all 19 bindings.
-          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/versions/$STABLE" -o /tmp/stable.json
-
-          # Copy all non-secret binding objects exactly from the stable version.
-          # Preserve secret values by inheriting only the 7 secret_text bindings from latest,
-          # because the current version still contains those secrets.
-          python - <<'PY' >/tmp/metadata.json
-          import json
-          from pathlib import Path
-          root=json.loads(Path('/tmp/stable.json').read_text())
-          stable=root.get('result') or {}
-          resources=stable.get('resources') or {}
-          bindings=resources.get('bindings') or []
-          if len(bindings) != 19: raise SystemExit(f'expected 19 stable bindings, got {len(bindings)}')
-          restored=[]
-          for b in bindings:
-              if b.get('type') == 'secret_text':
-                  restored.append({'name':b['name'],'type':'inherit','version_id':'latest'})
-              else:
-                  restored.append(b)
-          metadata={
-            'main_module':'worker.js',
-            'compatibility_date':'2026-08-20',
-            'annotations':{
-              'workers/message':'UGI R44.5.17 permanent commerce entrypoint — binding-safe restore',
-              'workers/tag':'r44-5-17-binding-safe'
-            },
-            'bindings':restored
-          }
-          print(json.dumps(metadata,separators=(',',':'),ensure_ascii=False))
-          PY
-
-          META="$(cat /tmp/metadata.json)"
-          HTTP="$(curl --silent --show-error -X POST -H "Authorization: Bearer $CF_API_TOKEN" -o /tmp/create.json -w '%{http_code}' "$BASE/versions?bindings_inherit=strict" -F "metadata=$META;type=application/json" -F 'worker.js=@/tmp/worker.js;type=application/javascript+module')"
+          VID='35dc7be4-2d9e-479d-8f27-39e726e0b58f'
+          cat > /tmp/deploy.json <<EOF
+          {"strategy":"percentage","versions":[{"version_id":"$VID","percentage":100}],"annotations":{"workers/message":"UGI R44.5.17 binding-safe final deploy"}}
+          EOF
+          HTTP="$(curl --silent --show-error -X POST -H "Authorization: Bearer $CF_API_TOKEN" -H 'Content-Type: application/json' --data-binary @/tmp/deploy.json -o /tmp/deploy-response.json -w '%{http_code}' "$BASE/deployments")"
 
           mkdir -p cloudflare/status
           python - "$HTTP" <<'PY' > cloudflare/status/r44-5-17.txt
           import json,sys
           from pathlib import Path
           http=sys.argv[1]
-          r=json.loads(Path('/tmp/create.json').read_text())
+          r=json.loads(Path('/tmp/deploy-response.json').read_text())
           result=r.get('result') or {}
-          resources=result.get('resources') or {}
-          bindings=resources.get('bindings') or []
-          print('R44.5.17_DEPLOY_STAGE=BINDING_SAFE_VERSION_CREATE')
+          print('R44.5.17_DEPLOY_STAGE=DEPLOYMENT_CREATE_RESULT')
           print('HTTP='+http)
           print('SUCCESS='+str(r.get('success')).lower())
-          print('NEW_VERSION_ID='+str(result.get('id')))
-          print('NEW_BINDING_COUNT='+str(len(bindings)))
+          print('DEPLOYMENT_ID='+str(result.get('id')))
           print('ERRORS='+json.dumps(r.get('errors'),ensure_ascii=False))
           print('MESSAGES='+json.dumps(r.get('messages'),ensure_ascii=False))
-          for i,b in enumerate(bindings):
-              if isinstance(b,dict): print(f'BINDING_{i}={b.get("name")}:{b.get("type")}')
           PY
 
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI R44.5.17 — binding-safe version create result'
+          git commit -m 'UGI R44.5.17 — deployment create result'
           git push origin HEAD:main
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/deploy-response.json').read_text())
+          if not r.get('success'):
+              raise SystemExit('deployment create failed')
+          PY
+
+      - name: Validate live health bindings and permalink
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
+          PERMALINK='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
+          PASS=false
+          for i in 1 2 3 4 5 6 7 8; do
+            curl --silent --show-error "$HEALTH" -o /tmp/health.json || true
+            if grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/health.json \
+              && grep -q '"ok":true' /tmp/health.json \
+              && grep -q '"MEDIA_R2":true' /tmp/health.json \
+              && grep -q '"AI":true' /tmp/health.json \
+              && grep -q '"BROWSER":true' /tmp/health.json \
+              && grep -q '"IMAGES":true' /tmp/health.json \
+              && grep -q '"VIDEO":true' /tmp/health.json \
+              && grep -q '"ASAAS_API_KEY":true' /tmp/health.json \
+              && grep -q '"ASAAS_WEBHOOK_TOKEN":true' /tmp/health.json; then
+              PASS=true
+              break
+            fi
+            sleep 4
+          done
+
+          PCODE="$(curl --silent --show-error --output /tmp/priorizacao.html --write-out '%{http_code}' --connect-timeout 10 --max-time 30 "$PERMALINK")"
+          BUTTON=false
+          PRICE=false
+          [ "$PCODE" = '200' ] && grep -q 'Comprar agora' /tmp/priorizacao.html && BUTTON=true || true
+          [ "$PCODE" = '200' ] && grep -q 'R$ 14,99' /tmp/priorizacao.html && PRICE=true || true
+
+          mkdir -p cloudflare/status
+          cat > cloudflare/status/r44-5-17.txt <<EOF
+          R44.5.17_DEPLOY_STAGE=FINAL_VALIDATION
+          HEALTH_BINDINGS_PASS=$PASS
+          PERMALINK_HTTP=$PCODE
+          BUY_BUTTON_PASS=$BUTTON
+          PRICE_PASS=$PRICE
+          LIVE_URL=$PERMALINK
+          VERSION_ID=35dc7be4-2d9e-479d-8f27-39e726e0b58f
+          EOF
+
+          git config user.name 'ugi-automation'
+          git config user.email 'ugi-automation@users.noreply.github.com'
+          git add cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — final validation result'
+          git push origin HEAD:main
+
+          test "$PASS" = true
+          test "$PCODE" = '200'
+          test "$BUTTON" = true
+          test "$PRICE" = true
