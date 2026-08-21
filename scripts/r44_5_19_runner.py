@@ -1,3 +1,4 @@
+# Trigger-safe wrapper for R44.5.19 after workflow registration.
 import re
 import scripts.r44_5_19_compact as job
 
