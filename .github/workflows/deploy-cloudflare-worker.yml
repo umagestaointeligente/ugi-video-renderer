@@ -63,14 +63,12 @@ jobs:
             -o /tmp/cf-source.body \
             -w '%{http_code}' \
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi/content/v2")"
-
           CONTENT_TYPE="$(grep -i '^content-type:' /tmp/cf-source.headers | tail -1 | cut -d: -f2- | sed 's/^[[:space:]]*//' | tr -d '\r')"
           BODY_SIZE="$(wc -c < /tmp/cf-source.body)"
           printf 'R44.5.17_DEPLOY_STAGE=SOURCE_FETCHED\nHTTP_CODE=%s\nCONTENT_TYPE=%s\nBODY_SIZE=%s\n' "$HTTP_CODE" "$CONTENT_TYPE" "$BODY_SIZE" > cloudflare/status/r44-5-17.txt
           git add cloudflare/status/r44-5-17.txt
           git commit -m 'UGI R44.5.17 — deploy checkpoint SOURCE_FETCHED'
           git push origin HEAD:main
-
           test "$HTTP_CODE" = '200'
 
           python - <<'PY'
@@ -79,38 +77,44 @@ jobs:
 
           headers = Path('/tmp/cf-source.headers').read_text(errors='ignore')
           body = Path('/tmp/cf-source.body').read_bytes()
-          expected = b'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21'
-
           m = re.search(r'(?im)^content-type:\s*([^\r\n]+)', headers)
           content_type = m.group(1).strip() if m else ''
           bm = re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))', content_type, re.I)
 
-          if bm:
+          if not bm:
+              source = body
+          else:
               boundary = (bm.group(1) or bm.group(2)).encode()
               candidates = []
+              all_parts = []
               for part in body.split(b'--' + boundary):
-                  if expected not in part:
+                  if not part.strip() or part.strip() == b'--':
                       continue
                   sep = b'\r\n\r\n' if b'\r\n\r\n' in part else b'\n\n'
                   if sep not in part:
                       continue
-                  payload = part.split(sep, 1)[1].rstrip(b'\r\n')
-                  candidates.append(payload)
-              if len(candidates) != 1:
-                  raise SystemExit(f'Expected exactly one Worker source part, found {len(candidates)}')
-              source = candidates[0]
-          else:
-              source = body
+                  head, payload = part.split(sep, 1)
+                  payload = payload.rstrip(b'\r\n')
+                  all_parts.append((head, payload))
+                  lower_head = head.lower()
+                  if b'javascript' in lower_head or b'module' in lower_head:
+                      candidates.append((head, payload))
 
-          if expected not in source:
-              raise SystemExit('Expected R44.5.16 version marker not found in extracted source')
+              if not candidates:
+                  candidates = all_parts
+              if not candidates:
+                  raise SystemExit('No multipart payload candidates found')
+
+              head, source = max(candidates, key=lambda item: len(item[1]))
+              print('SELECTED_PART_HEADER=' + head.decode('utf-8', errors='ignore').replace('\r',' ').replace('\n',' ')[:500])
+              print(f'SELECTED_SOURCE_BYTES={len(source)}')
 
           Path('/tmp/current-worker.mjs').write_bytes(source)
-          print(f'EXTRACTED_SOURCE_BYTES={len(source)}')
           PY
 
           node --check /tmp/current-worker.mjs
-          printf 'R44.5.17_DEPLOY_STAGE=SOURCE_PASS\n' > cloudflare/status/r44-5-17.txt
+          grep -q 'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' /tmp/current-worker.mjs
+          printf 'R44.5.17_DEPLOY_STAGE=SOURCE_PASS\nSOURCE_SIZE=%s\n' "$(wc -c < /tmp/current-worker.mjs)" > cloudflare/status/r44-5-17.txt
           git add cloudflare/status/r44-5-17.txt
           git commit -m 'UGI R44.5.17 — deploy checkpoint SOURCE_PASS'
           git push origin HEAD:main
