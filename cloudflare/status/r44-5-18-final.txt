@@ -1,10 +1,3 @@
-R44.5.18_STAGE=AUTONOMOUS_DEPLOY_AND_SLOT02_REPAIR
-PREEXISTING_R44_5_18=false
-BASE_SOURCE_BYTES=424547
-BINDING_BASELINE=19
-POLICY_SOURCE_ALREADY_PRESENT=false
-TEMP_VERSION_ID=0565f1a4-a72e-4dd9-a9c7-536d63a45839
-TEMP_DEPLOYMENT_ID=3faec871-beab-4656-a812-86f8a1915d50
-FAILED_STAGE=BUFFER_SLOT02_REPAIR
-ERROR=repair failed: {"ok": false, "version": "lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21", "publicUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao", "results": [{"id": "6a87d61b1b38003a90c37507", "ok": false, "error": "Invalid post: Instagram posts require at least one image or video., Instagram posts require a type (post, story, or reel).", "diagnostics": {"httpStatus": 200, "httpOk": true, "requestId": "a2eaac9c0e3933ac-DTW", "rateLimitRemaining": "2679", "graphqlErrors": []}}, {"id": "6a87d61f1b38003a90c3752d", "ok": false, "error": "Invalid post: TikTok posts require at least one image or video.", "diagnostics": {"httpStatus": 200, "httpOk": true, "requestId": "a2eaac9db81833ac-DTW", "rateLimitRemaining": "2677", "graphqlErrors": []}}, {"id": "6a87d6231b38003a90c3755b", "ok": false, "error": "Invalid post: YouTube posts require a video., YouTube posts require a title., YouTube posts require a category.", "diagnostics": {"httpStatus": 200, "httpOk": true, "requestId": "a2eaac9ef9dd33ac-DTW", "rateLimitRemaining": "2675", "graphqlErrors": []}}], "mutationPerformed": true, "bufferMutation": true}
+R44.5.18_STAGE=ASSET_PRESERVING_SLOT02_REPAIR_V2
 OK=false
+STATE=STARTED
