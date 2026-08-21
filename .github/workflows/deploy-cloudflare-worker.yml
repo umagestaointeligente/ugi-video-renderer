@@ -1,4 +1,4 @@
-name: UGI Stable Version Preview Diagnostic
+name: UGI Cloudflare Version Binding Diagnostic
 
 on:
   workflow_dispatch:
@@ -22,33 +22,51 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Preview known pre-R44.5.17 version
+      - name: Inspect version resources and bindings
         shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          VERSION_ID='a05b7d5b-b604-40c1-8370-bd025402d0a0'
-          URL='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
-          curl --fail --silent --show-error \
-            -H "Cloudflare-Workers-Version-Overrides: lola-operacional-ugi=\"$VERSION_ID\"" \
-            "$URL" -o /tmp/stable-health.json
+          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi/versions"
+          STABLE='a05b7d5b-b604-40c1-8370-bd025402d0a0'
+          CURRENT='d0d8fc1f-4592-44c6-bd16-8d8edf7a0755'
+          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/$STABLE" -o /tmp/stable.json
+          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/$CURRENT" -o /tmp/current.json
 
           mkdir -p cloudflare/status
           python - <<'PY' > cloudflare/status/r44-5-17.txt
           import json
           from pathlib import Path
-          h=json.loads(Path('/tmp/stable-health.json').read_text())
-          b=h.get('bindings') or {}
-          print('R44.5.17_DEPLOY_STAGE=STABLE_VERSION_PREVIEW')
-          print('STABLE_VERSION_ID=a05b7d5b-b604-40c1-8370-bd025402d0a0')
-          print('OK='+str(h.get('ok')).lower())
-          print('VERSION='+str(h.get('version')))
-          print('STATUS='+str(h.get('status')))
-          for key in ['AI','BROWSER','IMAGES','MEDIA_R2','VIDEO','ASAAS_API_KEY','ASAAS_WEBHOOK_TOKEN','BUFFER_API_KEY','GITHUB_VIDEO_TOKEN','GITHUB_VIDEO_UPLOAD_KEY','LOLA_AUTH_KEY','LOLA_COMMAND_KEY']:
-              print(f'BINDING_{key}={b.get(key)!r}')
+
+          def dump(label,path):
+              root=json.loads(Path(path).read_text())
+              result=root.get('result') or {}
+              meta=result.get('metadata') or {}
+              resources=result.get('resources') or {}
+              bindings=resources.get('bindings') or meta.get('bindings') or []
+              print(f'{label}_SUCCESS={str(root.get("success")).lower()}')
+              print(f'{label}_ID={result.get("id")}')
+              print(f'{label}_NUMBER={result.get("number")}')
+              print(f'{label}_CREATED={meta.get("created_on")}')
+              print(f'{label}_COMPATIBILITY_DATE={meta.get("compatibility_date")}')
+              print(f'{label}_MAIN_MODULE={meta.get("main_module")}')
+              print(f'{label}_BINDING_COUNT={len(bindings)}')
+              for i,b in enumerate(bindings):
+                  if not isinstance(b,dict): continue
+                  print(f'{label}_BINDING_{i}_NAME={b.get("name")}')
+                  print(f'{label}_BINDING_{i}_TYPE={b.get("type")}')
+                  for k in ['bucket_name','namespace_id','script_name']:
+                      if b.get(k) is not None:
+                          print(f'{label}_BINDING_{i}_{k.upper()}={b.get(k)}')
+          print('R44.5.17_DEPLOY_STAGE=VERSION_BINDING_DIAGNOSTIC')
+          dump('STABLE','/tmp/stable.json')
+          dump('CURRENT','/tmp/current.json')
           PY
 
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI — stable version preview result'
+          git commit -m 'UGI — Cloudflare version binding diagnostic result'
           git push origin HEAD:main
