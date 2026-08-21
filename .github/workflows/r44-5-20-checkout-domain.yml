@@ -1,0 +1,70 @@
+name: UGI R44.5.20 Reliable Checkout + Branded Domain
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/r44_5_20_checkout_domain_fix.py
+      - .github/workflows/r44-5-20-checkout-domain.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-cloudflare-worker-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install requests
+        run: python -m pip install --disable-pip-version-check requests
+
+      - name: Execute R44.5.20
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set +e
+          mkdir -p cloudflare/status
+          PYTHONPATH=. python -m py_compile scripts/r44_5_20_checkout_domain_fix.py 2>/tmp/compile.err
+          C=$?
+          if [ "$C" -ne 0 ]; then
+            {
+              echo 'R44.5.20_STAGE=PY_COMPILE_FAILED'
+              sed 's/^/PY_COMPILE_ERROR=/' /tmp/compile.err
+              echo 'OK=false'
+            } > cloudflare/status/r44-5-20-final.txt
+            exit "$C"
+          fi
+          PYTHONPATH=. python scripts/r44_5_20_checkout_domain_fix.py >/tmp/run.out 2>/tmp/run.err
+          R=$?
+          if [ "$R" -ne 0 ]; then
+            {
+              test -f cloudflare/status/r44-5-20-final.txt && cat cloudflare/status/r44-5-20-final.txt
+              echo 'WORKFLOW_EXECUTION_FAILED=true'
+              sed 's/^/STDOUT=/' /tmp/run.out | tail -80
+              sed 's/^/STDERR=/' /tmp/run.err | tail -120
+            } > /tmp/status
+            mv /tmp/status cloudflare/status/r44-5-20-final.txt
+            exit "$R"
+          fi
+
+      - name: Persist evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p cloudflare/status
+          test -f cloudflare/status/r44-5-20-final.txt || echo 'R44.5.20_STAGE=WORKFLOW_STATUS_MISSING' > cloudflare/status/r44-5-20-final.txt
+          git config user.name 'ugi-automation'
+          git config user.email 'ugi-automation@users.noreply.github.com'
+          git add cloudflare/status/r44-5-20-final.txt
+          git commit -m 'UGI R44.5.20 — deployment result' || true
+          git push origin HEAD:main
