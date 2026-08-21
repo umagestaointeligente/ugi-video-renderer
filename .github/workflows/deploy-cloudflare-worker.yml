@@ -1,4 +1,4 @@
-name: UGI R44.5.18 Stage 2C Patch Diagnostic
+name: UGI R44.5.18 Stage 2D Source Marker Diagnostic
 
 on:
   workflow_dispatch:
@@ -11,78 +11,55 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: ugi-cloudflare-worker-production
-  cancel-in-progress: true
-
 jobs:
-  patch-diagnostic:
+  diagnose-markers:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch live source and test patch anchors
+      - name: Extract live source markers
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          set -u
+          set -euo pipefail
+          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/content/v2" -o /tmp/b
           mkdir -p cloudflare/status
-          OUT=cloudflare/status/r44-5-18-patch-debug.txt
-          : > "$OUT"
-          echo 'STAGE=2C_PATCH_DIAGNOSTIC' >> "$OUT"
-          BASE="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID:-missing}/workers/scripts/lola-operacional-ugi"
-          CODE="$(curl --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN:-missing}" --output /tmp/b --write-out '%{http_code}' "$BASE/content/v2" || true)"
-          echo "CONTENT_HTTP=$CODE" >> "$OUT"
-          python - "$OUT" <<'PY'
+          python - <<'PY' > cloudflare/status/r44-5-18-markers.txt
           from pathlib import Path
-          import re,sys
-          out=Path(sys.argv[1])
-          def log(k,v):
-              with out.open('a') as f: f.write(f'{k}={v}\n')
-          headers=Path('/tmp/h').read_text(errors='ignore')
-          body=Path('/tmp/b').read_bytes()
-          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers)
-          ctype=m.group(1).strip() if m else ''
+          import re
+          headers=Path('/tmp/h').read_text(errors='ignore'); body=Path('/tmp/b').read_bytes()
+          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers); ctype=m.group(1).strip() if m else ''
           bm=re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))',ctype,re.I)
-          log('CONTENT_TYPE',ctype)
-          log('MULTIPART',bool(bm))
-          if not bm:
-              source=body
-          else:
+          if bm:
               boundary=(bm.group(1) or bm.group(2)).encode(); candidates=[]
               for part in body.split(b'--'+boundary):
                   sep=b'\r\n\r\n' if b'\r\n\r\n' in part else (b'\n\n' if b'\n\n' in part else None)
                   if not sep: continue
                   head,payload=part.split(sep,1); payload=payload.rstrip(b'\r\n-')
                   if b'javascript' in head.lower() or b'module' in head.lower(): candidates.append(payload)
-              log('JS_CANDIDATES',len(candidates))
-              source=max(candidates,key=len) if candidates else b''
+              source=max(candidates,key=len)
+          else: source=body
           text=source.decode('utf-8',errors='replace')
-          log('SOURCE_BYTES',len(source))
-          checks={
-            'VERSION_ANCHOR': 'const VERSION = "lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21";',
-            'BANNER_ANCHOR': '// R44.5.17 PERMANENT COMMERCE ENTRYPOINT:\n',
-            'CONST_ANCHOR': 'const VIDEO_UPLOAD_MAX_BYTES = 50 * 1024 * 1024; // 50 MB de proteção operacional\n',
-            'BUFFER_HELPER_ANCHOR': 'async function createBufferPlatformVideoPost(\n',
-            'CREATEPOST_TEXT_ANCHOR': '          text: ${JSON.stringify(String(draft.text || ""))}\n',
-            'HEALTH_ANCHOR': '            permanentCommerceEntrypoint: true,\n'
-          }
-          for k,s in checks.items(): log(k+'_COUNT',text.count(s))
-          Path('/tmp/source.js').write_text(text)
+          print('SOURCE_BYTES='+str(len(source)))
+          patterns=['VERSION','R44.5.17','R44_5_17','permanent-commerce-entrypoint','VIDEO_UPLOAD_MAX_BYTES','createBufferPlatformVideoPost','permanentCommerceEntrypoint','checkoutSession','PERMANENT_COMMERCE']
+          for p in patterns:
+              print('\nPATTERN='+p+' COUNT='+str(text.count(p)))
+              starts=[m.start() for m in re.finditer(re.escape(p),text)][:5]
+              for i,s in enumerate(starts):
+                  a=max(0,s-180); b=min(len(text),s+300)
+                  snippet=text[a:b].replace('\n','\\n').replace('\r','')
+                  print(f'SNIPPET_{i}='+snippet)
           PY
-          if node --check /tmp/source.js >/tmp/node.out 2>/tmp/node.err; then echo 'SOURCE_NODE_CHECK=true' >> "$OUT"; else echo 'SOURCE_NODE_CHECK=false' >> "$OUT"; fi
-          sed 's/^/NODE_ERR=/' /tmp/node.err >> "$OUT" || true
-      - name: Persist patch diagnostic
+      - name: Persist markers
         if: always()
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p cloudflare/status
-          test -f cloudflare/status/r44-5-18-patch-debug.txt || echo 'STAGE=2C_STARTED_FILE_MISSING' > cloudflare/status/r44-5-18-patch-debug.txt
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
-          git add cloudflare/status/r44-5-18-patch-debug.txt
-          git commit -m 'UGI R44.5.18 — stage 2C patch diagnostic result' || true
+          git add cloudflare/status/r44-5-18-markers.txt
+          git commit -m 'UGI R44.5.18 — stage 2D marker diagnostic result' || true
           git push origin HEAD:main
