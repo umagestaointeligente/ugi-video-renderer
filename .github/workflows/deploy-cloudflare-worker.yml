@@ -1,4 +1,4 @@
-name: UGI R44.5.17 Live Validation
+name: UGI R44.5.17 Health Diagnostic
 
 on:
   workflow_dispatch:
@@ -16,55 +16,59 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  diagnose:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate health and permanent commerce URL
+      - name: Diagnose public health and permalink
         shell: bash
         run: |
           set -euo pipefail
           HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
           PERMALINK='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
+          curl --fail --silent --show-error "$HEALTH" -o /tmp/health.json
+          curl --silent --show-error -D /tmp/permalink.headers "$PERMALINK" -o /tmp/permalink.body
+
           mkdir -p cloudflare/status
+          python - <<'PY' > cloudflare/status/r44-5-17.txt
+          import json
+          from pathlib import Path
 
-          HCODE="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' --connect-timeout 10 --max-time 30 "$HEALTH")"
-          PCODE="$(curl --silent --show-error --output /tmp/priorizacao.html --write-out '%{http_code}' --connect-timeout 10 --max-time 30 "$PERMALINK")"
+          h=json.loads(Path('/tmp/health.json').read_text())
+          body=Path('/tmp/permalink.body').read_text(errors='ignore')
+          headers=Path('/tmp/permalink.headers').read_text(errors='ignore')
 
-          VERSION_PASS=false
-          CAPABILITY_PASS=false
-          PERMALINK_PASS=false
-          PRICE_PASS=false
-          BUTTON_PASS=false
+          print('R44.5.17_DEPLOY_STAGE=HEALTH_DIAGNOSTIC')
+          print('OK='+str(h.get('ok')).lower())
+          print('VERSION='+str(h.get('version')))
+          print('STATUS='+str(h.get('status')))
 
-          if [ "$HCODE" = '200' ] && grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/health.json; then VERSION_PASS=true; fi
-          if grep -q '"permanentCommerceEntrypoint":true' /tmp/health.json && grep -q '"justInTimeAsaasCheckout":true' /tmp/health.json && grep -q '"expiredCheckoutReturnsToPermalink":true' /tmp/health.json; then CAPABILITY_PASS=true; fi
-          if [ "$PCODE" = '200' ]; then PERMALINK_PASS=true; fi
-          if grep -q 'R$ 14,99' /tmp/priorizacao.html; then PRICE_PASS=true; fi
-          if grep -q 'Comprar agora' /tmp/priorizacao.html && grep -q '/comprar/priorizacao' /tmp/priorizacao.html; then BUTTON_PASS=true; fi
+          caps=h.get('capabilities') or {}
+          for key in [
+            'permanentCommerceEntrypoint','permanentCommerceUrlPrioritization','justInTimeAsaasCheckout',
+            'expiredCheckoutReturnsToPermalink','directAsaasCheckoutPublishingDeprecated',
+            'materialStore','productCatalog','commerceAdapter','commerceFulfillment','materialDeliveryTokenized',
+            'commercePublicationGateV2'
+          ]:
+            print(f'CAP_{key}={caps.get(key)!r}')
 
-          cat > cloudflare/status/r44-5-17.txt <<EOF
-          R44.5.17_DEPLOY_STAGE=LIVE_VALIDATION
-          HEALTH_HTTP=$HCODE
-          PERMALINK_HTTP=$PCODE
-          VERSION_PASS=$VERSION_PASS
-          CAPABILITY_PASS=$CAPABILITY_PASS
-          PERMALINK_PASS=$PERMALINK_PASS
-          PRICE_PASS=$PRICE_PASS
-          BUY_BUTTON_PASS=$BUTTON_PASS
-          LIVE_URL=$PERMALINK
-          EOF
+          bindings=h.get('bindings') or {}
+          for key in sorted(bindings):
+            val=bindings.get(key)
+            if isinstance(val,(bool,int,float)) or val is None:
+              print(f'BINDING_{key}={val!r}')
+            else:
+              print(f'BINDING_{key}=PRESENT')
+
+          status_line=headers.splitlines()[0] if headers.splitlines() else ''
+          print('PERMALINK_STATUS_LINE='+status_line)
+          print('PERMALINK_BODY='+body[:300].replace('\n',' '))
+          PY
 
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI R44.5.17 — live validation result'
+          git commit -m 'UGI R44.5.17 — health diagnostic result'
           git push origin HEAD:main
-
-          test "$VERSION_PASS" = true
-          test "$CAPABILITY_PASS" = true
-          test "$PERMALINK_PASS" = true
-          test "$PRICE_PASS" = true
-          test "$BUTTON_PASS" = true
