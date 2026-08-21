@@ -9,6 +9,7 @@ WORKER='lola-operacional-ugi'
 ORIGIN='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
 OLD='lola-v8-r44-5-19-commerce-hub-visual-caption-2026-08-21'
 NEW='lola-v8-r44-5-20-reliable-checkout-branded-domain-2026-08-21'
+ZONE_NAME='umagestaointeligente.com'
 CUSTOM_HOST='materiais.umagestaointeligente.com'
 CUSTOM_ORIGIN='https://'+CUSTOM_HOST
 
@@ -92,17 +93,28 @@ def patch(src):
 
 def attach_custom_domain(account_id,token):
     h={'Authorization':f'Bearer {token}','Content-Type':'application/json'}
-    url=f'https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/domains'
-    lr=requests.get(url,headers={'Authorization':f'Bearer {token}'},timeout=30)
+    domains_url=f'https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/domains'
+    lr=requests.get(domains_url,headers={'Authorization':f'Bearer {token}'},timeout=30)
     if lr.status_code==200:
         existing=(lr.json().get('result') or [])
         for d in existing:
             if str(d.get('hostname') or '').lower()==CUSTOM_HOST:
                 return True,'existing',d
-    payload={'hostname':CUSTOM_HOST,'service':WORKER,'environment':'production'}
-    r=requests.put(url,headers=h,json=payload,timeout=45)
+
+    # Cloudflare requires the zone to be explicit when it cannot infer it.
+    zr=requests.get('https://api.cloudflare.com/client/v4/zones',headers={'Authorization':f'Bearer {token}'},params={'name':ZONE_NAME,'account.id':account_id,'status':'active','per_page':50},timeout=30)
+    zone_id=None
+    if zr.status_code==200:
+        zdata=zr.json().get('result') or []
+        if zdata:
+            zone_id=zdata[0].get('id')
+    payload={'hostname':CUSTOM_HOST,'service':WORKER,'environment':'production','zone_name':ZONE_NAME}
+    if zone_id:
+        payload['zone_id']=zone_id
+    r=requests.put(domains_url,headers=h,json=payload,timeout=45)
     try:data=r.json()
     except Exception:data={'raw':r.text[:1000]}
+    if zone_id and isinstance(data,dict): data['_resolved_zone_id']=zone_id
     return bool(r.status_code==200 and data.get('success') is not False),'created' if r.status_code==200 else f'http_{r.status_code}',data
 
 
