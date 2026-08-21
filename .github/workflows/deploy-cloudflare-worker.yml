@@ -1,4 +1,4 @@
-name: UGI R44.5.18 Stage 2D Source Marker Diagnostic
+name: UGI R44.5.18 Stage 2E Deploy Live Bundled Source
 
 on:
   workflow_dispatch:
@@ -11,13 +11,18 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ugi-cloudflare-worker-production
+  cancel-in-progress: true
+
 jobs:
-  diagnose-markers:
+  deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-      - name: Extract live source markers
+
+      - name: Fetch live bundled source and 19-binding baseline
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -26,8 +31,8 @@ jobs:
           set -euo pipefail
           BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
           curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/content/v2" -o /tmp/b
-          mkdir -p cloudflare/status
-          python - <<'PY' > cloudflare/status/r44-5-18-markers.txt
+          curl --fail --silent --show-error -H "Authorization: Bearer $CF_API_TOKEN" "$BASE/versions/35dc7be4-2d9e-479d-8f27-39e726e0b58f" -o /tmp/stable.json
+          python - <<'PY'
           from pathlib import Path
           import re
           headers=Path('/tmp/h').read_text(errors='ignore'); body=Path('/tmp/b').read_bytes()
@@ -40,26 +45,137 @@ jobs:
                   if not sep: continue
                   head,payload=part.split(sep,1); payload=payload.rstrip(b'\r\n-')
                   if b'javascript' in head.lower() or b'module' in head.lower(): candidates.append(payload)
+              if not candidates: raise SystemExit('no JS module found')
               source=max(candidates,key=len)
           else: source=body
-          text=source.decode('utf-8',errors='replace')
-          print('SOURCE_BYTES='+str(len(source)))
-          patterns=['VERSION','R44.5.17','R44_5_17','permanent-commerce-entrypoint','VIDEO_UPLOAD_MAX_BYTES','createBufferPlatformVideoPost','permanentCommerceEntrypoint','checkoutSession','PERMANENT_COMMERCE']
-          for p in patterns:
-              print('\nPATTERN='+p+' COUNT='+str(text.count(p)))
-              starts=[m.start() for m in re.finditer(re.escape(p),text)][:5]
-              for i,s in enumerate(starts):
-                  a=max(0,s-180); b=min(len(text),s+300)
-                  snippet=text[a:b].replace('\n','\\n').replace('\r','')
-                  print(f'SNIPPET_{i}='+snippet)
+          text=source.decode('utf-8')
+          if text.count('var VERSION = "lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21";')!=1:
+              raise SystemExit('live version anchor mismatch')
+          Path('/tmp/live.js').write_text(text)
           PY
-      - name: Persist markers
+          node --check /tmp/live.js
+
+      - name: Patch live bundled source to R44.5.18
+        shell: bash
+        run: |
+          set -euo pipefail
+          PUBLIC_URL='https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'
+          printf 'PUBLIC_COMMERCE_URL=%s\n' "$PUBLIC_URL" >> "$GITHUB_ENV"
+          python - "$PUBLIC_URL" <<'PY'
+          from pathlib import Path
+          import json,sys
+          public_url=sys.argv[1]
+          text=Path('/tmp/live.js').read_text()
+          old='var VERSION = "lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21";'
+          new='var VERSION = "lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21";'
+          text=text.replace(old,new,1)
+
+          const_anchor='var VIDEO_UPLOAD_MAX_BYTES = 50 * 1024 * 1024;\n'
+          if text.count(const_anchor)!=1: raise SystemExit('video max anchor mismatch')
+          text=text.replace(const_anchor,const_anchor+'var PERMANENT_COMMERCE_PUBLIC_URL = '+json.dumps(public_url)+';\n',1)
+
+          helper_anchor='async function createBufferPlatformVideoPost(draft, platform, mode, dueAt, env) {\n'
+          if text.count(helper_anchor)!=1: raise SystemExit('buffer helper anchor mismatch')
+          helper=r'''function permanentCommercePublicationText(draft = {}) {
+  const original = String(draft?.text || "");
+  const commerce = draft?.commerce || {};
+  const productId = String(draft?.productId || commerce?.productId || "");
+  const materialId = String(draft?.materialId || commerce?.materialId || "");
+  const commercial = draft?.commercialOffer === true || commerce?.required === true;
+  if (!commercial) return original;
+  if (productId !== "UGI-MATERIAL-PRIORIDADES-001" && materialId !== "UGI-KIT-PRIORIZACAO-001") return original;
+  let next = original.replace(/https:\/\/(?:www\.)?asaas\.com\/checkoutSession\/show(?:\/[A-Za-z0-9_-]+|\?id=[^\s]+)/gi, PERMANENT_COMMERCE_PUBLIC_URL);
+  if (!next.includes(PERMANENT_COMMERCE_PUBLIC_URL)) {
+    next = next.trim() + "\n\nKit UGI — Priorização Inteligente: R$ 14,99. Acesse: " + PERMANENT_COMMERCE_PUBLIC_URL;
+  }
+  return next;
+}
+__name(permanentCommercePublicationText, "permanentCommercePublicationText");
+'''
+          text=text.replace(helper_anchor,helper+helper_anchor,1)
+
+          old_line='          text: ${JSON.stringify(String(draft.text || ""))}\n'
+          new_line='          text: ${JSON.stringify(permanentCommercePublicationText(draft))}\n'
+          if text.count(old_line)!=1: raise SystemExit('createPost text anchor mismatch')
+          text=text.replace(old_line,new_line,1)
+
+          health_anchor='            permanentCommerceEntrypoint: true,\n'
+          if text.count(health_anchor)!=1: raise SystemExit('health anchor mismatch')
+          flags='''            permanentCommercePublicationLinkPolicy: true,\n            directAsaasCheckoutInPublicTextBlocked: true,\n            permanentCommercePublicUrl: PERMANENT_COMMERCE_PUBLIC_URL,\n'''
+          text=text.replace(health_anchor,health_anchor+flags,1)
+
+          Path('/tmp/r44-5-18.js').write_text(text)
+          PY
+          node --check /tmp/r44-5-18.js
+          grep -q 'lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21' /tmp/r44-5-18.js
+          grep -q 'permanentCommercePublicationLinkPolicy: true' /tmp/r44-5-18.js
+          grep -q 'permanentCommercePublicationText' /tmp/r44-5-18.js
+
+      - name: Create and deploy strict 19-binding R44.5.18 version
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          BASE="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi"
+          python - <<'PY' >/tmp/meta.json
+          import json
+          from pathlib import Path
+          stable=(json.loads(Path('/tmp/stable.json').read_text()).get('result') or {})
+          bindings=((stable.get('resources') or {}).get('bindings') or [])
+          if len(bindings)!=19: raise SystemExit(f'expected 19 bindings got {len(bindings)}')
+          restored=[]
+          for b in bindings:
+              restored.append({'name':b['name'],'type':'inherit','version_id':'latest'} if b.get('type')=='secret_text' else b)
+          print(json.dumps({'main_module':'worker.js','compatibility_date':'2026-08-20','annotations':{'workers/message':'UGI R44.5.18 permanent publication link policy','workers/tag':'r44-5-18-permanent-link'},'bindings':restored},separators=(',',':'),ensure_ascii=False))
+          PY
+          META="$(cat /tmp/meta.json)"
+          HTTP="$(curl --silent --show-error -X POST -H "Authorization: Bearer $CF_API_TOKEN" -o /tmp/create.json -w '%{http_code}' "$BASE/versions?bindings_inherit=strict" -F "metadata=$META;type=application/json" -F 'worker.js=@/tmp/r44-5-18.js;type=application/javascript+module')"
+          test "$HTTP" = '200'
+          VID="$(python -c 'import json; d=json.load(open("/tmp/create.json")); print((d.get("result") or {}).get("id", ""))')"
+          test -n "$VID"
+          printf 'R44_5_18_VERSION_ID=%s\n' "$VID" >> "$GITHUB_ENV"
+          printf '{"strategy":"percentage","versions":[{"version_id":"%s","percentage":100}],"annotations":{"workers/message":"UGI R44.5.18 permanent publication link policy"}}' "$VID" >/tmp/deploy.json
+          DHTTP="$(curl --silent --show-error -X POST -H "Authorization: Bearer $CF_API_TOKEN" -H 'Content-Type: application/json' --data-binary @/tmp/deploy.json -o /tmp/deploy-response.json -w '%{http_code}' "$BASE/deployments")"
+          test "$DHTTP" = '200'
+
+      - name: Validate live deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
+          PASS=false
+          for i in 1 2 3 4 5 6 7 8; do
+            curl --silent --show-error "$HEALTH" -o /tmp/health.json || true
+            if grep -q 'lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21' /tmp/health.json && grep -q '"ok":true' /tmp/health.json && grep -q '"permanentCommercePublicationLinkPolicy":true' /tmp/health.json && grep -q '"directAsaasCheckoutInPublicTextBlocked":true' /tmp/health.json && grep -q '"BUFFER_API_KEY":true' /tmp/health.json; then PASS=true; break; fi
+            sleep 4
+          done
+          test "$PASS" = true
+          PCODE="$(curl --silent --show-error --output /tmp/page --write-out '%{http_code}' "$PUBLIC_COMMERCE_URL")"
+          test "$PCODE" = '200'
+          grep -q 'Comprar agora' /tmp/page
+          mkdir -p cloudflare/status
+          cat > cloudflare/status/r44-5-18-stage2.txt <<EOF
+          STAGE=2E_POLICY_DEPLOY
+          OK=true
+          VERSION=lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21
+          VERSION_ID=$R44_5_18_VERSION_ID
+          PUBLIC_COMMERCE_URL=$PUBLIC_COMMERCE_URL
+          PERMANENT_PUBLICATION_LINK_POLICY=true
+          DIRECT_ASAAS_CHECKOUT_IN_PUBLIC_TEXT_BLOCKED=true
+          PERMALINK_HTTP=200
+          BINDINGS_PRESERVED=19
+          EOF
+      - name: Persist deployment evidence
         if: always()
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p cloudflare/status
+          test -f cloudflare/status/r44-5-18-stage2.txt || echo 'STAGE=2E_STARTED_BUT_NOT_COMPLETED' > cloudflare/status/r44-5-18-stage2.txt
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
-          git add cloudflare/status/r44-5-18-markers.txt
-          git commit -m 'UGI R44.5.18 — stage 2D marker diagnostic result' || true
+          git add cloudflare/status/r44-5-18-stage2.txt
+          git commit -m 'UGI R44.5.18 — stage 2E deployment result' || true
           git push origin HEAD:main
