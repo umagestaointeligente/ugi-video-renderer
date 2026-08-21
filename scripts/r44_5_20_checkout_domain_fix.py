@@ -65,8 +65,6 @@ def patch(src):
     elif f'var VERSION = "{NEW}";' not in t:
         raise RuntimeError('version anchor mismatch')
 
-    # Make the explicit user click reliable inside Instagram/TikTok in-app browsers.
-    # The GET endpoint still creates a checkout only after the buyer taps the button.
     post_route='if (request.method === "POST" && path === "/comprar/priorizacao") {'
     getpost_route='if ((request.method === "POST" || request.method === "GET") && path === "/comprar/priorizacao") {'
     if post_route in t:
@@ -74,7 +72,6 @@ def patch(src):
     elif getpost_route not in t:
         raise RuntimeError('buy route anchor mismatch')
 
-    # Replace form submit by plain HTTPS anchor for maximum compatibility with in-app browsers.
     patterns=[
         (r'<form method="post" action="\$\{origin\}/comprar/\$\{encodeURIComponent\(slug\)\}">\s*<button class="buy" type="submit">Comprar agora</button>\s*</form>',
          '<a class="buy" href="${origin}/comprar/${encodeURIComponent(slug)}?source=product_page" rel="nofollow">Comprar agora</a>'),
@@ -89,19 +86,8 @@ def patch(src):
     if not changed and 'source=product_page' not in t:
         raise RuntimeError('commerce button html anchor mismatch')
 
-    # CSS: anchors should render exactly like buttons.
     if '.buy{width:100%;' in t:
         t=t.replace('.buy{width:100%;','.buy{display:block;text-align:center;text-decoration:none;width:100%;',1)
-    elif '.buy{display:block;text-align:center;text-decoration:none;' not in t:
-        pass
-
-    # Branded custom-domain root opens the commerce hub directly.
-    route_anchor='      if (request.method === "GET" && path === "/materiais") {'
-    if t.count(route_anchor)!=1:
-        raise RuntimeError('materials route anchor mismatch')
-    branded='''      if (request.method === "GET" && path === "/" && String(url.hostname || "").toLowerCase() === "materiais.umagestaointeligente.com") {\n        return Response.redirect(`${url.origin}/materiais`, 302);\n      }\n\n'''
-    if 'materiais.umagestaointeligente.com' not in t:
-        t=t.replace(route_anchor,branded+route_anchor,1)
 
     hanchor='            commerceHubEntrypoint: true,\n'
     if t.count(hanchor)!=1:
@@ -115,9 +101,7 @@ def patch(src):
 def attach_custom_domain(account_id,token):
     h={'Authorization':f'Bearer {token}','Content-Type':'application/json'}
     url=f'https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/domains'
-    # Avoid duplicates.
     lr=requests.get(url,headers={'Authorization':f'Bearer {token}'},timeout=30)
-    existing=[]
     if lr.status_code==200:
         existing=(lr.json().get('result') or [])
         for d in existing:
@@ -125,7 +109,6 @@ def attach_custom_domain(account_id,token):
                 return True,'existing',d
     payload={'hostname':CUSTOM_HOST,'service':WORKER,'environment':'production'}
     r=requests.put(url,headers=h,json=payload,timeout=45)
-    data={}
     try:data=r.json()
     except Exception:data={'raw':r.text[:1000]}
     return bool(r.status_code==200 and data.get('success') is not False),'created' if r.status_code==200 else f'http_{r.status_code}',data
@@ -146,7 +129,6 @@ def validate_store(base_url):
 
 
 def validate_checkout(base_url):
-    # One real provider checkout is created for proof, but no payment is made.
     r=requests.get(base_url+'/comprar/priorizacao?source=smoke_test',timeout=30,allow_redirects=False,
                    headers={'User-Agent':'UGI-Commerce-Smoke/1.0'})
     loc=r.headers.get('location','')
@@ -174,18 +156,18 @@ def main():
     ok,mode,data=attach_custom_domain(acct,tok)
     lines += ['CUSTOM_DOMAIN_ATTACH_ATTEMPTED=true','CUSTOM_DOMAIN_ATTACH_MODE='+mode,'CUSTOM_DOMAIN_ATTACH_PASS='+str(ok).lower()]
     if ok:
-        # certificate/DNS propagation can take a short period
         custom_ok=False
+        custom_url=CUSTOM_ORIGIN+'/materiais'
         for _ in range(30):
             try:
-                rr=requests.get(CUSTOM_ORIGIN,timeout=12,allow_redirects=True)
+                rr=requests.get(custom_url,timeout=12,allow_redirects=True)
                 if rr.status_code==200 and 'Materiais práticos' in rr.text:
                     custom_ok=True; break
             except Exception: pass
             time.sleep(4)
         lines += ['CUSTOM_DOMAIN_HTTP_PASS='+str(custom_ok).lower()]
         if custom_ok:
-            lines += ['BRANDED_COMMERCE_URL='+CUSTOM_ORIGIN,'BIO_URL_READY=true']
+            lines += ['BRANDED_COMMERCE_URL='+custom_url,'BIO_URL_READY=true']
         else:
             lines += ['BRANDED_COMMERCE_URL=PENDING_TLS_DNS','BIO_URL_READY=false']
     else:
