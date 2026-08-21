@@ -1,4 +1,5 @@
-name: UGI Reel Renderer R43.8.5 Dynamic Scenes + Canonical Semantic Success Callback
+name: UGI Reel Renderer R43.8.6 Correlated Dynamic Scenes + Semantic Callback
+run-name: UGI ${{ inputs.render_id }}
 
 on:
   workflow_dispatch:
@@ -80,7 +81,7 @@ jobs:
       VIDEO_SCENES_JSON: ${{ inputs.scenes_json }}
       VIDEO_ALLOW_LEGACY_SCENES: "false"
 
-      # R43.8.5 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
+      # R43.8.6 — cenas dinâmicas obrigatórias; sem fallback produtivo legado.
       VIDEO_SMOKE_TEST: ${{ inputs.smoke_test }}
       VIDEO_SMOKE_TEST_DURATION: ${{ inputs.smoke_test_duration }}
       VIDEO_SMOKE_TEST_PLATFORM: ${{ inputs.smoke_test_platform }}
@@ -111,9 +112,9 @@ jobs:
             fi
           done
           if [ "$missing" -eq 0 ]; then
-            echo "R43.8.5 runner already contains FFmpeg, FFprobe and curl."
+            echo "R43.8.6 runner already contains FFmpeg, FFprobe and curl."
           else
-            echo "R43.8.5 one or more runner binaries are missing; controlled apt recovery required."
+            echo "R43.8.6 one or more runner binaries are missing; controlled apt recovery required."
             echo "UGI_APT_RECOVERY_REQUIRED=true" >> "$GITHUB_ENV"
           fi
           command -v ffmpeg >/dev/null 2>&1 && ffmpeg -version | head -n 1
@@ -157,7 +158,7 @@ jobs:
         run: |
           set -euo pipefail
           if command -v espeak-ng >/dev/null 2>&1; then
-            echo "R43.8.5 espeak-ng already available."
+            echo "R43.8.6 espeak-ng already available."
             espeak-ng --version | head -n 1
             exit 0
           fi
@@ -216,31 +217,31 @@ jobs:
           import json, os
           raw = (os.getenv("VIDEO_SCENES_JSON") or "").strip()
           if not raw:
-              raise SystemExit("R43.8.5 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
+              raise SystemExit("R43.8.6 FAIL-CLOSED: VIDEO_SCENES_JSON ausente.")
           payload = json.loads(raw)
           scenes = payload.get("scenes") if isinstance(payload, dict) else payload
           if not isinstance(scenes, list):
-              raise SystemExit("R43.8.5 FAIL-CLOSED: scenes_json não contém array scenes.")
+              raise SystemExit("R43.8.6 FAIL-CLOSED: scenes_json não contém array scenes.")
           if not 4 <= len(scenes) <= 10:
-              raise SystemExit(f"R43.8.5 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
+              raise SystemExit(f"R43.8.6 FAIL-CLOSED: quantidade de cenas inválida: {len(scenes)}")
           allowed_roles = {"hook", "pain", "consequence", "turn", "result", "cta"}
           required_platforms = {"instagram", "tiktok", "youtube"}
           for idx, scene in enumerate(scenes, start=1):
               if not isinstance(scene, dict):
-                  raise SystemExit(f"R43.8.5 cena {idx} inválida.")
+                  raise SystemExit(f"R43.8.6 cena {idx} inválida.")
               if str(scene.get("role") or "").strip() not in allowed_roles:
-                  raise SystemExit(f"R43.8.5 role inválido na cena {idx}.")
+                  raise SystemExit(f"R43.8.6 role inválido na cena {idx}.")
               if not str(scene.get("visual_intent") or "").strip():
-                  raise SystemExit(f"R43.8.5 visual_intent ausente na cena {idx}.")
+                  raise SystemExit(f"R43.8.6 visual_intent ausente na cena {idx}.")
               if not str(scene.get("pexels_query") or "").strip():
-                  raise SystemExit(f"R43.8.5 pexels_query ausente na cena {idx}.")
+                  raise SystemExit(f"R43.8.6 pexels_query ausente na cena {idx}.")
               for field in ("overlay", "support", "narration"):
                   value = scene.get(field)
                   if not isinstance(value, dict) or set(value.keys()) < required_platforms:
-                      raise SystemExit(f"R43.8.5 {field} incompleto na cena {idx}.")
+                      raise SystemExit(f"R43.8.6 {field} incompleto na cena {idx}.")
                   for platform in required_platforms:
                       if not str(value.get(platform) or "").strip():
-                          raise SystemExit(f"R43.8.5 {field}.{platform} vazio na cena {idx}.")
+                          raise SystemExit(f"R43.8.6 {field}.{platform} vazio na cena {idx}.")
           print(f"R43_8_5_DYNAMIC_SCENES_VALID scenes={len(scenes)}")
           PY
 
@@ -314,10 +315,10 @@ jobs:
                   if download(url,target):
                       used.add(vid); selected+=1
                       attribution.append({"scene":idx,"provider":provider,"query":q,"provider_video_id":source,"provider_page_url":page,"local_file":target})
-          Path("output/pexels-attribution.json").write_text(json.dumps({"version":"R43.8.5","items":attribution},ensure_ascii=False,indent=2),encoding="utf-8")
-          Path("output/casting-policy.json").write_text(json.dumps({"version":"R43.8.5","policy":"dynamic_semantic_storytelling_multi_provider"},ensure_ascii=False,indent=2),encoding="utf-8")
+          Path("output/pexels-attribution.json").write_text(json.dumps({"version":"R43.8.6","items":attribution},ensure_ascii=False,indent=2),encoding="utf-8")
+          Path("output/casting-policy.json").write_text(json.dumps({"version":"R43.8.6","policy":"dynamic_semantic_storytelling_multi_provider"},ensure_ascii=False,indent=2),encoding="utf-8")
           required=1 if smoke else 4
-          if selected<required: raise SystemExit(f"R43.8.5 exige pelo menos {required} cena(s) humana(s).")
+          if selected<required: raise SystemExit(f"R43.8.6 exige pelo menos {required} cena(s) humana(s).")
           PY
 
       - name: Resolve CTA and semantic metadata from scenes payload
@@ -339,7 +340,7 @@ jobs:
               fh.write(f"VIDEO_CTA={cta}\n")
 
           request_meta = {
-              "version": "R43.8.5",
+              "version": "R43.8.6",
               "renderId": os.getenv("VIDEO_RENDER_ID"),
               "contentId": os.getenv("VIDEO_CONTENT_ID"),
               "experimentId": os.getenv("VIDEO_EXPERIMENT_ID"),
@@ -354,17 +355,17 @@ jobs:
           Path("output/semantic-request-meta.json").write_text(
               json.dumps(request_meta, ensure_ascii=False, indent=2), encoding="utf-8"
           )
-          print(f"R43.8.5 VIDEO_CTA={cta}")
+          print(f"R43.8.6 VIDEO_CTA={cta}")
           PY
 
-      - name: Render UGI R43.8.5
+      - name: Render UGI R43.8.6
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p output
           python render-reel.py
 
-      - name: Validate R43.8.5 outputs
+      - name: Validate R43.8.6 outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -655,7 +656,7 @@ jobs:
           )
 
           evidence = {
-              "version": "R43.8.5",
+              "version": "R43.8.6",
               "renderId": os.getenv("VIDEO_RENDER_ID"),
               "githubRunId": os.getenv("GITHUB_RUN_ID"),
               "contentId": os.getenv("VIDEO_CONTENT_ID"),
@@ -838,5 +839,5 @@ jobs:
           [ -n "$BASE_URL" ] || exit 0
           [ -n "$UGI_VIDEO_UPLOAD_KEY" ] || exit 0
           [ -n "$VIDEO_RENDER_ID" ] || exit 0
-          curl --silent --show-error --connect-timeout 10 --max-time 30 -X POST "${BASE_URL}/api/video-status" -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" -H "Content-Type: application/json" --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.5 falhou. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
+          curl --silent --show-error --connect-timeout 10 --max-time 30 -X POST "${BASE_URL}/api/video-status" -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" -H "Content-Type: application/json" --data "{\"renderId\":\"${VIDEO_RENDER_ID}\",\"status\":\"failed\",\"githubRunId\":\"${GITHUB_RUN_ID}\",\"errorClass\":\"github_workflow_or_delivery_failed\",\"githubError\":\"O workflow R43.8.6 falhou. Consulte o GitHub Actions run ${GITHUB_RUN_ID}.\"}"
 
