@@ -1,4 +1,4 @@
-name: UGI R44.5.18 Asset-Preserving Slot02 Repair V3
+name: UGI R44.5.18 Asset-Preserving Slot02 Repair V4
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ on:
     paths:
       - scripts/r44_5_18_repair_v2.py
       - scripts/r44_5_18_repair_v2_runner3.py
+      - scripts/r44_5_18_repair_v2_runner4.py
       - .github/workflows/deploy-cloudflare-worker.yml
 
 permissions:
@@ -18,20 +19,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy-repair-v3:
+  deploy-repair-v4:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Python dependency
         run: python -m pip install --disable-pip-version-check requests
 
-      - name: Execute active-branch R44.5.18 Slot02 repair
+      - name: Execute propagated R44.5.18 Slot02 repair
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-        run: python -m scripts.r44_5_18_repair_v2_runner3
+        run: python -m scripts.r44_5_18_repair_v2_runner4
 
       - name: Persist execution evidence
         if: always()
@@ -39,9 +40,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p cloudflare/status
-          test -f cloudflare/status/r44-5-18-final.txt || echo 'R44.5.18_STAGE=V3_STARTED_BUT_STATUS_MISSING' > cloudflare/status/r44-5-18-final.txt
+          test -f cloudflare/status/r44-5-18-final.txt || echo 'R44.5.18_STAGE=V4_STARTED_BUT_STATUS_MISSING' > cloudflare/status/r44-5-18-final.txt
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-18-final.txt
-          git commit -m 'UGI R44.5.18 — active-branch Slot02 repair result' || true
+          git commit -m 'UGI R44.5.18 — propagated asset-preserving Slot02 repair result' || true
           git push origin HEAD:main
