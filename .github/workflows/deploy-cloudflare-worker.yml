@@ -1,4 +1,4 @@
-name: UGI R44.5.17 Source Diagnostic
+name: UGI R44.5.17 Live Source Marker Diagnostic
 
 on:
   workflow_dispatch:
@@ -19,20 +19,16 @@ jobs:
   diagnose:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Fetch and inspect Cloudflare multipart
+      - name: Inspect live Cloudflare source markers
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          test -n "$CF_API_TOKEN"
-          test -n "$CF_ACCOUNT_ID"
           curl --fail --silent --show-error \
             -D /tmp/cf.headers \
             -H "Authorization: Bearer $CF_API_TOKEN" \
@@ -43,44 +39,54 @@ jobs:
           python - <<'PY' > cloudflare/status/r44-5-17.txt
           from pathlib import Path
           import re, hashlib
-
-          headers = Path('/tmp/cf.headers').read_text(errors='ignore')
-          body = Path('/tmp/cf.body').read_bytes()
-          m = re.search(r'(?im)^content-type:\s*([^\r\n]+)', headers)
-          ctype = m.group(1).strip() if m else ''
-          bm = re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))', ctype, re.I)
-          print('R44.5.17_DEPLOY_STAGE=MULTIPART_DIAGNOSTIC')
-          print('CONTENT_TYPE=' + ctype)
-          print('BODY_SIZE=' + str(len(body)))
-          if not bm:
-              print('BOUNDARY_FOUND=false')
-              print('BODY_HAS_R44_5_16=' + str(b'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' in body).lower())
-              raise SystemExit(0)
-
-          boundary = (bm.group(1) or bm.group(2)).encode()
-          print('BOUNDARY_FOUND=true')
-          parts=[]
-          for idx, part in enumerate(body.split(b'--' + boundary)):
-              if not part.strip() or part.strip() == b'--':
-                  continue
-              sep = b'\r\n\r\n' if b'\r\n\r\n' in part else (b'\n\n' if b'\n\n' in part else None)
-              if not sep:
-                  print(f'PART_{idx}_NO_SEPARATOR=true')
-                  continue
-              head,payload=part.split(sep,1)
-              payload=payload.rstrip(b'\r\n-')
-              h=head.decode('utf-8',errors='ignore').replace('\r',' ').replace('\n',' ')[:300]
-              has16=b'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' in payload
-              hasconst=b'const VERSION' in payload
-              print(f'PART_{idx}_SIZE={len(payload)}')
-              print(f'PART_{idx}_HEADER={h}')
-              print(f'PART_{idx}_HAS_R44_5_16={str(has16).lower()}')
-              print(f'PART_{idx}_HAS_CONST_VERSION={str(hasconst).lower()}')
-              print(f'PART_{idx}_SHA256={hashlib.sha256(payload).hexdigest()}')
+          headers=Path('/tmp/cf.headers').read_text(errors='ignore')
+          body=Path('/tmp/cf.body').read_bytes()
+          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers)
+          ctype=m.group(1).strip() if m else ''
+          bm=re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))',ctype,re.I)
+          source=body
+          selected_header='RAW_BODY'
+          if bm:
+              boundary=(bm.group(1) or bm.group(2)).encode()
+              parts=[]
+              for part in body.split(b'--'+boundary):
+                  sep=b'\r\n\r\n' if b'\r\n\r\n' in part else (b'\n\n' if b'\n\n' in part else None)
+                  if not sep: continue
+                  head,payload=part.split(sep,1)
+                  payload=payload.rstrip(b'\r\n-')
+                  if b'javascript' in head.lower() or b'module' in head.lower():
+                      parts.append((head,payload))
+              if not parts: raise SystemExit('No JS multipart part found')
+              head,source=max(parts,key=lambda p:len(p[1]))
+              selected_header=head.decode('utf-8',errors='ignore').replace('\r',' ').replace('\n',' ')[:300]
+          probes={
+            'HAS_R44_5_16': b'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' in source,
+            'HAS_R44_5_17': b'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' in source,
+            'HAS_PERMANENT_ENTRYPOINT': b'permanentCommerceEntrypoint' in source,
+            'HAS_PRIORIZACAO_ROUTE': b'/priorizacao' in source,
+            'HAS_BUY_ROUTE': b'/comprar/priorizacao' in source,
+            'HAS_JIT_ASAAS': b'justInTimeAsaasCheckout' in source,
+            'HAS_COMMERCE_GATE_V2': b'commercePublicationGateV2' in source,
+            'HAS_CONST_VERSION_LITERAL': b'const VERSION' in source,
+            'HAS_VAR_VERSION_LITERAL': b'var VERSION' in source,
+          }
+          print('R44.5.17_DEPLOY_STAGE=LIVE_MARKER_DIAGNOSTIC')
+          print('CONTENT_TYPE='+ctype)
+          print('SELECTED_HEADER='+selected_header)
+          print('SOURCE_SIZE='+str(len(source)))
+          print('SOURCE_SHA256='+hashlib.sha256(source).hexdigest())
+          for k,v in probes.items(): print(f'{k}={str(v).lower()}')
+          # safe nearby snippets around R44.5.17/permanentCommerceEntrypoint only
+          s=source.decode('utf-8',errors='ignore')
+          for label,needle in [('R44_5_17','r44-5-17'),('PERMANENT','permanentCommerceEntrypoint'),('PRIORIZACAO','/priorizacao')]:
+              i=s.lower().find(needle.lower())
+              if i>=0:
+                  snippet=s[max(0,i-120):i+300].replace('\n',' ').replace('\r',' ')
+                  print(f'{label}_SNIPPET='+snippet[:420])
           PY
 
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git add cloudflare/status/r44-5-17.txt
-          git commit -m 'UGI R44.5.17 — multipart diagnostic result'
+          git commit -m 'UGI R44.5.17 — live source marker diagnostic'
           git push origin HEAD:main
