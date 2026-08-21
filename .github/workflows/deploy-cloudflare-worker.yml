@@ -1,4 +1,4 @@
-name: UGI R44.5.18 Stage 2B State Diagnostic
+name: UGI R44.5.18 Stage 2C Patch Diagnostic
 
 on:
   workflow_dispatch:
@@ -16,12 +16,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  diagnose:
+  patch-diagnostic:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Capture live state
+      - name: Fetch live source and test patch anchors
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -29,46 +29,60 @@ jobs:
         run: |
           set -u
           mkdir -p cloudflare/status
-          OUT=cloudflare/status/r44-5-18-stage2-debug.txt
+          OUT=cloudflare/status/r44-5-18-patch-debug.txt
           : > "$OUT"
-          echo 'STAGE=2B_STATE_DIAGNOSTIC' >> "$OUT"
-          HCODE="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' 'https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health' || true)"
-          echo "HEALTH_HTTP=$HCODE" >> "$OUT"
-          if [ -s /tmp/health.json ]; then
-            python - <<'PY' >> "$OUT"
-          import json
-          h=json.load(open('/tmp/health.json'))
-          print('OK='+str(h.get('ok')).lower())
-          print('VERSION='+str(h.get('version')))
-          print('STATUS='+str(h.get('status')))
-          c=h.get('capabilities') or {}
-          b=h.get('bindings') or {}
-          for k in ['permanentCommerceEntrypoint','permanentCommercePublicationLinkPolicy','directAsaasCheckoutInPublicTextBlocked','permanentCommercePublicUrl','justInTimeAsaasCheckout']:
-              print('CAP_'+k+'='+repr(c.get(k)))
-          for k in ['MEDIA_R2','BUFFER_API_KEY','ASAAS_API_KEY','LOLA_AUTH_KEY','LOLA_COMMAND_KEY']:
-              print('BINDING_'+k+'='+repr(b.get(k)))
-          PY
-          fi
+          echo 'STAGE=2C_PATCH_DIAGNOSTIC' >> "$OUT"
           BASE="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID:-missing}/workers/scripts/lola-operacional-ugi"
-          CCODE="$(curl --silent --show-error -D /tmp/ch -H "Authorization: Bearer ${CF_API_TOKEN:-missing}" --output /tmp/cb --write-out '%{http_code}' "$BASE/content/v2" || true)"
-          echo "CONTENT_HTTP=$CCODE" >> "$OUT"
-          grep -a -q 'lola-v8-r44-5-18-permanent-publication-link-policy-2026-08-21' /tmp/cb 2>/dev/null && echo 'SOURCE_R44_5_18=true' >> "$OUT" || echo 'SOURCE_R44_5_18=false' >> "$OUT"
-          grep -a -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/cb 2>/dev/null && echo 'SOURCE_R44_5_17=true' >> "$OUT" || echo 'SOURCE_R44_5_17=false' >> "$OUT"
-          for URL in 'https://umagestaointeligente.com/priorizacao' 'https://www.umagestaointeligente.com/priorizacao' 'https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao'; do
-            CODE="$(curl --silent --show-error --location --output /tmp/page --write-out '%{http_code}' --connect-timeout 6 --max-time 12 "$URL" || true)"
-            KEY="$(echo "$URL" | sed 's#https://##; s#[^A-Za-z0-9]#_#g')"
-            echo "URL_${KEY}_HTTP=$CODE" >> "$OUT"
-            if [ "$CODE" = '200' ] && grep -q 'Comprar agora' /tmp/page; then echo "URL_${KEY}_BUY_BUTTON=true" >> "$OUT"; else echo "URL_${KEY}_BUY_BUTTON=false" >> "$OUT"; fi
-          done
-      - name: Persist diagnostic
+          CODE="$(curl --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN:-missing}" --output /tmp/b --write-out '%{http_code}' "$BASE/content/v2" || true)"
+          echo "CONTENT_HTTP=$CODE" >> "$OUT"
+          python - "$OUT" <<'PY'
+          from pathlib import Path
+          import re,sys
+          out=Path(sys.argv[1])
+          def log(k,v):
+              with out.open('a') as f: f.write(f'{k}={v}\n')
+          headers=Path('/tmp/h').read_text(errors='ignore')
+          body=Path('/tmp/b').read_bytes()
+          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers)
+          ctype=m.group(1).strip() if m else ''
+          bm=re.search(r'boundary=(?:"([^"]+)"|([^;\s]+))',ctype,re.I)
+          log('CONTENT_TYPE',ctype)
+          log('MULTIPART',bool(bm))
+          if not bm:
+              source=body
+          else:
+              boundary=(bm.group(1) or bm.group(2)).encode(); candidates=[]
+              for part in body.split(b'--'+boundary):
+                  sep=b'\r\n\r\n' if b'\r\n\r\n' in part else (b'\n\n' if b'\n\n' in part else None)
+                  if not sep: continue
+                  head,payload=part.split(sep,1); payload=payload.rstrip(b'\r\n-')
+                  if b'javascript' in head.lower() or b'module' in head.lower(): candidates.append(payload)
+              log('JS_CANDIDATES',len(candidates))
+              source=max(candidates,key=len) if candidates else b''
+          text=source.decode('utf-8',errors='replace')
+          log('SOURCE_BYTES',len(source))
+          checks={
+            'VERSION_ANCHOR': 'const VERSION = "lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21";',
+            'BANNER_ANCHOR': '// R44.5.17 PERMANENT COMMERCE ENTRYPOINT:\n',
+            'CONST_ANCHOR': 'const VIDEO_UPLOAD_MAX_BYTES = 50 * 1024 * 1024; // 50 MB de proteção operacional\n',
+            'BUFFER_HELPER_ANCHOR': 'async function createBufferPlatformVideoPost(\n',
+            'CREATEPOST_TEXT_ANCHOR': '          text: ${JSON.stringify(String(draft.text || ""))}\n',
+            'HEALTH_ANCHOR': '            permanentCommerceEntrypoint: true,\n'
+          }
+          for k,s in checks.items(): log(k+'_COUNT',text.count(s))
+          Path('/tmp/source.js').write_text(text)
+          PY
+          if node --check /tmp/source.js >/tmp/node.out 2>/tmp/node.err; then echo 'SOURCE_NODE_CHECK=true' >> "$OUT"; else echo 'SOURCE_NODE_CHECK=false' >> "$OUT"; fi
+          sed 's/^/NODE_ERR=/' /tmp/node.err >> "$OUT" || true
+      - name: Persist patch diagnostic
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p cloudflare/status
-          test -f cloudflare/status/r44-5-18-stage2-debug.txt || echo 'STAGE=2B_WORKFLOW_STARTED' > cloudflare/status/r44-5-18-stage2-debug.txt
+          test -f cloudflare/status/r44-5-18-patch-debug.txt || echo 'STAGE=2C_STARTED_FILE_MISSING' > cloudflare/status/r44-5-18-patch-debug.txt
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
-          git add cloudflare/status/r44-5-18-stage2-debug.txt
-          git commit -m 'UGI R44.5.18 — stage 2B diagnostic result' || true
+          git add cloudflare/status/r44-5-18-patch-debug.txt
+          git commit -m 'UGI R44.5.18 — stage 2C patch diagnostic result' || true
           git push origin HEAD:main
