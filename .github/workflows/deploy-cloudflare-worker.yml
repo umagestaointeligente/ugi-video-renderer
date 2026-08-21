@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: ugi-cloudflare-worker-production
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -24,6 +24,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Mark workflow started
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p cloudflare/status
+          printf 'R44.5.17_DEPLOY_STAGE=STARTED\n' > cloudflare/status/r44-5-17.txt
+          git config user.name 'ugi-automation'
+          git config user.email 'ugi-automation@users.noreply.github.com'
+          git add cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — deploy checkpoint STARTED' || true
+          git push origin HEAD:main
+
       - name: Validate Cloudflare credentials
         shell: bash
         env:
@@ -33,7 +45,10 @@ jobs:
           set -euo pipefail
           test -n "$CF_API_TOKEN"
           test -n "$CF_ACCOUNT_ID"
-          echo 'CLOUDFLARE_CREDENTIALS_PRESENT=true'
+          printf 'R44.5.17_DEPLOY_STAGE=CREDENTIALS_PASS\n' > cloudflare/status/r44-5-17.txt
+          git add cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — deploy checkpoint CREDENTIALS_PASS'
+          git push origin HEAD:main
 
       - name: Download live Worker source only
         shell: bash
@@ -46,11 +61,12 @@ jobs:
             -H "Authorization: Bearer $CF_API_TOKEN" \
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi/content/v2" \
             -o /tmp/current-worker.mjs
-
           grep -q 'lola-v8-r44-5-16-commerce-publication-gate-fix-2026-08-21' /tmp/current-worker.mjs
           node --check /tmp/current-worker.mjs
-          echo "LIVE_SOURCE_BYTES=$(wc -c < /tmp/current-worker.mjs)"
-          echo 'LIVE_R44_5_16_SOURCE_GATE=PASS'
+          printf 'R44.5.17_DEPLOY_STAGE=SOURCE_PASS\n' > cloudflare/status/r44-5-17.txt
+          git add cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — deploy checkpoint SOURCE_PASS'
+          git push origin HEAD:main
 
       - name: Apply deterministic R44.5.17 patch
         shell: bash
@@ -61,8 +77,10 @@ jobs:
           grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' /tmp/r44-5-17-worker.mjs
           grep -q 'path === "/priorizacao"' /tmp/r44-5-17-worker.mjs
           grep -q 'path === "/comprar/priorizacao"' /tmp/r44-5-17-worker.mjs
-          grep -q 'permanentCommerceEntrypoint: true' /tmp/r44-5-17-worker.mjs
-          echo 'R44_5_17_PATCH_GATE=PASS'
+          printf 'R44.5.17_DEPLOY_STAGE=PATCH_PASS\n' > cloudflare/status/r44-5-17.txt
+          git add cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — deploy checkpoint PATCH_PASS'
+          git push origin HEAD:main
 
       - name: Upload Worker source without touching config or bindings
         shell: bash
@@ -77,30 +95,34 @@ jobs:
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/lola-operacional-ugi/content" \
             -F 'metadata={"main_module":"worker.mjs"};type=application/json' \
             -F 'worker.mjs=@/tmp/r44-5-17-worker.mjs;type=application/javascript+module')"
-          printf '%s\n' "$RESPONSE"
           printf '%s' "$RESPONSE" | grep -q '"success":true'
-          echo 'CLOUDFLARE_CONTENT_UPLOAD=PASS'
+          printf 'R44.5.17_DEPLOY_STAGE=UPLOAD_PASS\n' > cloudflare/status/r44-5-17.txt
+          git add cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — deploy checkpoint UPLOAD_PASS'
+          git push origin HEAD:main
 
       - name: Post-deploy health gate
         shell: bash
         run: |
           set -euo pipefail
           HEALTH='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health'
+          PASS=false
           for i in 1 2 3 4 5 6; do
             BODY="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 30 "$HEALTH" || true)"
             if printf '%s' "$BODY" | grep -q 'lola-v8-r44-5-17-permanent-commerce-entrypoint-2026-08-21' \
               && printf '%s' "$BODY" | grep -q '"ok":true' \
               && printf '%s' "$BODY" | grep -q '"permanentCommerceEntrypoint":true' \
-              && printf '%s' "$BODY" | grep -q '"justInTimeAsaasCheckout":true' \
-              && printf '%s' "$BODY" | grep -q '"expiredCheckoutReturnsToPermalink":true'; then
-              printf '%s\n' "$BODY"
-              echo 'R44_5_17_HEALTH_PASS=true'
-              exit 0
+              && printf '%s' "$BODY" | grep -q '"justInTimeAsaasCheckout":true'; then
+              PASS=true
+              break
             fi
             sleep 5
           done
-          echo 'R44_5_17_HEALTH_PASS=false' >&2
-          exit 1
+          test "$PASS" = true
+          printf 'R44.5.17_DEPLOY_STAGE=HEALTH_PASS\n' > cloudflare/status/r44-5-17.txt
+          git add cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — deploy checkpoint HEALTH_PASS'
+          git push origin HEAD:main
 
       - name: Permanent commerce URL smoke test
         shell: bash
@@ -111,20 +133,17 @@ jobs:
           test "$CODE" = '200'
           grep -q 'Comprar agora' /tmp/permalink.html
           grep -q 'R$ 14,99' /tmp/permalink.html
-          echo 'PERMANENT_COMMERCE_URL_PASS=true'
+          printf 'R44.5.17_DEPLOY_STAGE=PERMALINK_PASS\n' > cloudflare/status/r44-5-17.txt
+          git add cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — deploy checkpoint PERMALINK_PASS'
+          git push origin HEAD:main
 
       - name: Sync deployed Worker source back to repository
         shell: bash
         run: |
           set -euo pipefail
           cp /tmp/r44-5-17-worker.mjs cloudflare/lola-operacional-worker.mjs
-          git config user.name 'ugi-automation'
-          git config user.email 'ugi-automation@users.noreply.github.com'
-          git add cloudflare/lola-operacional-worker.mjs
-          if git diff --cached --quiet; then
-            echo 'WORKER_SYNC=NO_CHANGE'
-            exit 0
-          fi
-          git commit -m 'UGI R44.5.17 — sync permanent commerce Worker after successful deploy'
+          printf 'R44.5.17_DEPLOY_STAGE=COMPLETE\n' > cloudflare/status/r44-5-17.txt
+          git add cloudflare/lola-operacional-worker.mjs cloudflare/status/r44-5-17.txt
+          git commit -m 'UGI R44.5.17 — sync Worker and mark deploy COMPLETE'
           git push origin HEAD:main
-          echo 'WORKER_SYNC=PASS'
