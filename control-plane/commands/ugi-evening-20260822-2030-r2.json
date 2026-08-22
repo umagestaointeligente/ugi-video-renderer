@@ -1,0 +1,32 @@
+{
+  "title": "UGI Evening 2026-08-22 — prioridades sem ruído",
+  "duration": "18",
+  "render_id": "ugi-evening-20260822-2030-r2",
+  "content_id": "UGI-EVENING-20260822-MULTI-PLATFORM-002",
+  "experiment_id": "UGI-MOTOR-ARRANQUE-20260822-NIGHT",
+  "variant": "B",
+  "commercial_intent": "direct_low_ticket_conversion",
+  "smoke_test": false,
+  "smoke_test_duration": 4,
+  "smoke_test_platform": "instagram",
+  "scenes_json": {
+    "cta": "Materiais UGI no link do perfil.",
+    "commercial_offer": true,
+    "commerce": {
+      "materialId": "UGI-KIT-PRIORIZACAO-001",
+      "productId": "UGI-MATERIAL-PRIORIDADES-001",
+      "price": 14.99,
+      "currency": "BRL"
+    },
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "scenes": [
+      {"role":"hook","visual_intent":"gestor em reunião olhando uma lista cheia de demandas e escolhendo uma prioridade","pexels_query":"manager meeting priorities office","overlay":{"instagram":"3 perguntas antes de aceitar uma nova prioridade","tiktok":"Antes do SIM: 10s.","youtube":"Sua lista de prioridades sobreviveria a um ataque da IA?"},"support":{"instagram":"Nem toda urgência merece espaço na sua agenda.","tiktok":"Urgente não é importante.","youtube":"Use a IA como contraditório, não como oráculo."},"narration":{"instagram":"Antes de aceitar mais uma prioridade, faça três perguntas simples.","tiktok":"Antes de dizer sim para mais uma urgência, use este filtro rápido.","youtube":"Quer testar sua lista de prioridades? Peça para a IA tentar derrubá-la."}},
+      {"role":"pain","visual_intent":"profissional alternando entre muitas tarefas e notificações no notebook","pexels_query":"busy manager multitasking notifications office","overlay":{"instagram":"1. Isso muda resultado ou só aumenta movimento?","tiktok":"Isso muda resultado?","youtube":"Pergunta 1: qual prioridade tem menos impacto real?"},"support":{"instagram":"Movimento não é progresso.","tiktok":"Movimento não é progresso.","youtube":"Force a IA a apontar a tarefa com menor retorno."},"narration":{"instagram":"Primeiro: isso muda resultado ou apenas aumenta movimento?","tiktok":"Primeiro: isso muda resultado ou só cria movimento?","youtube":"Primeiro, peça para a IA identificar qual prioridade parece importante, mas tem pouco impacto."}},
+      {"role":"consequence","visual_intent":"gestor cancelando itens de uma agenda lotada e respirando aliviado","pexels_query":"manager calendar planning office focus","overlay":{"instagram":"2. O que sai da agenda para isso entrar?","tiktok":"Se entra, o que sai?","youtube":"Pergunta 2: o que deve sair para isso entrar?"},"support":{"instagram":"Priorizar também é retirar.","tiktok":"Priorizar é retirar.","youtube":"Uma prioridade nova precisa de um custo explícito."},"narration":{"instagram":"Segundo: o que vai sair da agenda para essa nova prioridade entrar?","tiktok":"Segundo: se isso entra, o que sai agora?","youtube":"Depois, peça uma troca clara: se isso entra, o que deve sair da lista?"}},
+      {"role":"turn","visual_intent":"líder conversando com equipe e delegando uma tarefa em quadro de planejamento","pexels_query":"team leader delegation planning board","overlay":{"instagram":"3. Precisa mesmo ser você?","tiktok":"Precisa ser você?","youtube":"Pergunta 3: o que pode ser delegado, adiado ou eliminado?"},"support":{"instagram":"Prioridade também é decidir quem executa.","tiktok":"Delegar é priorizar.","youtube":"IA ajuda a desafiar centralização e excesso."},"narration":{"instagram":"Terceiro: isso precisa mesmo ser feito por você?","tiktok":"Terceiro: isso precisa mesmo ser você fazendo?","youtube":"Por fim, peça para classificar o que pode ser delegado, adiado ou simplesmente eliminado."}},
+      {"role":"result","visual_intent":"gestor com quadro simples de prioridades e equipe trabalhando com foco","pexels_query":"focused team project planning office","overlay":{"instagram":"Clareza reduz urgência artificial.","tiktok":"Menos ruído. Mais foco.","youtube":"Decisão melhor nasce de confronto, não de confirmação."},"support":{"instagram":"Uma boa prioridade cria espaço.","tiktok":"Seu sim precisa de critério.","youtube":"Use IA para testar decisões, não apenas validá-las."},"narration":{"instagram":"Quando o critério fica claro, a urgência artificial perde força.","tiktok":"Um bom sim nasce de critério, não de pressão.","youtube":"A melhor IA para decisão é a que contradiz você com argumentos melhores."}},
+      {"role":"cta","visual_intent":"profissional consultando material de gestão em tablet e anotando prioridades","pexels_query":"business planning workbook tablet office","overlay":{"instagram":"Quer aplicar? Materiais UGI no perfil.","tiktok":"Materiais UGI no perfil.","youtube":"Aplique com método: Materiais UGI no perfil."},"support":{"instagram":"Kit Priorização Inteligente — aplicação prática.","tiktok":"Kit Priorização Inteligente.","youtube":"Material prático para transformar decisão em rotina."},"narration":{"instagram":"Quer aplicar essas perguntas na prática? Encontre os Materiais UGI no link do perfil.","tiktok":"Quer usar esse filtro no dia a dia? Materiais UGI no link do perfil.","youtube":"Quer transformar esse teste em método? Materiais UGI no link do perfil."}}
+    ]
+  }
+}
