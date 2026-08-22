@@ -9,7 +9,7 @@ on:
       - 'control-plane/commands/*.json'
 
 permissions:
-  contents: read
+  contents: write
   actions: write
 
 jobs:
@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Resolve latest command
         id: cmd
@@ -50,6 +52,7 @@ jobs:
           PY
 
       - name: Dispatch renderer
+        id: dispatch
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -90,4 +93,31 @@ jobs:
             -f smoke_test="$SMOKE_TEST" \
             -f smoke_test_duration="$SMOKE_TEST_DURATION" \
             -f smoke_test_platform="$SMOKE_TEST_PLATFORM"
+          echo "render_id=$RENDER_ID" >> "$GITHUB_OUTPUT"
           echo "DISPATCH_OK render_id=$RENDER_ID"
+
+      - name: Persist dispatch receipt
+        shell: bash
+        env:
+          RENDER_ID: ${{ steps.dispatch.outputs.render_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/dispatch
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          rid=os.environ['RENDER_ID']
+          Path(f'control-plane/dispatch/{rid}.json').write_text(json.dumps({
+            'renderId': rid,
+            'dispatchAccepted': True,
+            'source': 'ugi-chat-control-plane',
+            'commandCommit': os.environ['GITHUB_SHA'],
+            'controlRunId': os.environ['GITHUB_RUN_ID']
+          }, indent=2), encoding='utf-8')
+          PY
+          git config user.name 'ugi-control-plane-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "control-plane/dispatch/${RENDER_ID}.json"
+          git commit -m "chore: persist UGI dispatch receipt ${RENDER_ID}"
+          git pull --rebase origin main
+          git push origin HEAD:main
