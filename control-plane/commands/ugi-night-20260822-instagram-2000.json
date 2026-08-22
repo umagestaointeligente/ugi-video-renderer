@@ -1,0 +1,25 @@
+{
+  "title": "Sua ideia perde força quando demora para chegar ao ponto",
+  "duration": 12,
+  "render_id": "ugi-night-20260822-instagram-2000",
+  "content_id": "UGI-NIGHT-20260822-INSTAGRAM-COMUNICACAO-001",
+  "experiment_id": "UGI-NIGHT-20260822-MULTINET-001",
+  "variant": "A",
+  "commercial_intent": "material_interest_building",
+  "scenes_json": {
+    "cta": "Materiais UGI no link do perfil.",
+    "commercial_offer": true,
+    "commerce": {"material_match_required": true, "catalog_target": "Materiais UGI", "topic": "comunicacao executiva"},
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "scenes": [
+      {"role":"hook","visual_intent":"gestor em reunião executiva olhando para diretoria","pexels_query":"executive meeting manager presentation","overlay":{"instagram":"Se sua ideia demora 30s para chegar ao ponto, ela perde força.","tiktok":"Se sua ideia demora 30s para chegar ao ponto, ela perde força.","youtube":"Se sua ideia demora 30s para chegar ao ponto, ela perde força."},"support":{"instagram":"Clareza antes de detalhe.","tiktok":"Clareza antes de detalhe.","youtube":"Clareza antes de detalhe."},"narration":{"instagram":"Se sua ideia demora trinta segundos para chegar ao ponto, ela já perdeu força.","tiktok":"Se sua ideia demora trinta segundos para chegar ao ponto, ela já perdeu força.","youtube":"Se sua ideia demora trinta segundos para chegar ao ponto, ela já perdeu força."}},
+      {"role":"pain","visual_intent":"profissional explicando demais em reunião","pexels_query":"business presentation too much information","overlay":{"instagram":"O excesso de contexto dilui sua mensagem.","tiktok":"O excesso de contexto dilui sua mensagem.","youtube":"O excesso de contexto dilui sua mensagem."},"support":{"instagram":"Diretoria compra clareza.","tiktok":"Diretoria compra clareza.","youtube":"Diretoria compra clareza."},"narration":{"instagram":"Quando você começa pelo contexto, a decisão fica escondida.","tiktok":"Quando você começa pelo contexto, a decisão fica escondida.","youtube":"Quando você começa pelo contexto, a decisão fica escondida."}},
+      {"role":"consequence","visual_intent":"executivos dispersos durante apresentação","pexels_query":"executives distracted meeting","overlay":{"instagram":"Resultado: menos atenção e menos influência.","tiktok":"Resultado: menos atenção e menos influência.","youtube":"Resultado: menos atenção e menos influência."},"support":{"instagram":"A mensagem se perde.","tiktok":"A mensagem se perde.","youtube":"A mensagem se perde."},"narration":{"instagram":"O resultado é simples: menos atenção, menos influência e mais retrabalho.","tiktok":"O resultado é simples: menos atenção, menos influência e mais retrabalho.","youtube":"O resultado é simples: menos atenção, menos influência e mais retrabalho."}},
+      {"role":"turn","visual_intent":"gestor estruturando fala em três passos","pexels_query":"manager planning presentation notes","overlay":{"instagram":"Use 3 passos: conclusão → evidência → decisão.","tiktok":"Use 3 passos: conclusão → evidência → decisão.","youtube":"Use 3 passos: conclusão → evidência → decisão."},"support":{"instagram":"Comece pelo que importa.","tiktok":"Comece pelo que importa.","youtube":"Comece pelo que importa."},"narration":{"instagram":"Use três passos: conclusão, evidência e a decisão que precisa ser tomada.","tiktok":"Use três passos: conclusão, evidência e a decisão que precisa ser tomada.","youtube":"Use três passos: conclusão, evidência e a decisão que precisa ser tomada."}},
+      {"role":"result","visual_intent":"reunião executiva com reação positiva","pexels_query":"successful executive meeting agreement","overlay":{"instagram":"Sua fala fica mais curta, forte e memorável.","tiktok":"Sua fala fica mais curta, forte e memorável.","youtube":"Sua fala fica mais curta, forte e memorável."},"support":{"instagram":"Mais clareza. Mais influência.","tiktok":"Mais clareza. Mais influência.","youtube":"Mais clareza. Mais influência."},"narration":{"instagram":"Sua fala fica mais curta, forte e memorável.","tiktok":"Sua fala fica mais curta, forte e memorável.","youtube":"Sua fala fica mais curta, forte e memorável."}},
+      {"role":"cta","visual_intent":"profissional revisando material prático no celular","pexels_query":"professional using smartphone business guide","overlay":{"instagram":"Quer aplicar isso? Materiais UGI no perfil.","tiktok":"Quer aplicar isso? Materiais UGI no perfil.","youtube":"Quer aplicar isso? Materiais UGI no perfil."},"support":{"instagram":"Ferramentas práticas para gestores.","tiktok":"Ferramentas práticas para gestores.","youtube":"Ferramentas práticas para gestores."},"narration":{"instagram":"Quer aplicar isso na prática? Acesse Materiais UGI no link do perfil.","tiktok":"Quer aplicar isso na prática? Acesse Materiais UGI no link do perfil.","youtube":"Quer aplicar isso na prática? Acesse Materiais UGI no link do perfil."}}
+    ]
+  },
+  "smoke_test": false
+}
