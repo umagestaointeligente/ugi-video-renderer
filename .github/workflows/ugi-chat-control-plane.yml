@@ -1,0 +1,93 @@
+name: UGI Chat Control Plane
+run-name: UGI Chat Control Plane ${{ github.sha }}
+
+on:
+  push:
+    branches:
+      - ugi-control-plane-smoke
+    paths:
+      - 'control-plane/commands/*.json'
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve latest command
+        id: cmd
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE="$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep '^control-plane/commands/.*\.json$' | tail -n1)"
+          [ -n "$FILE" ] || { echo 'No command file found'; exit 1; }
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Validate command
+        shell: bash
+        env:
+          CMD_FILE: ${{ steps.cmd.outputs.file }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ['CMD_FILE'])
+          d=json.loads(p.read_text(encoding='utf-8'))
+          required=['title','duration','render_id','content_id','experiment_id','variant','commercial_intent','scenes_json']
+          missing=[k for k in required if k not in d]
+          if missing: raise SystemExit(f'missing fields: {missing}')
+          if not isinstance(d['scenes_json'], dict): raise SystemExit('scenes_json must be object')
+          scenes=d['scenes_json'].get('scenes')
+          if not isinstance(scenes, list) or len(scenes)!=6: raise SystemExit('exactly 6 scenes required')
+          print('COMMAND_VALID')
+          PY
+
+      - name: Dispatch renderer
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CMD_FILE: ${{ steps.cmd.outputs.file }}
+        run: |
+          set -euo pipefail
+          python - <<'PY' > /tmp/args.env
+          import json, os, shlex
+          from pathlib import Path
+          d=json.loads(Path(os.environ['CMD_FILE']).read_text(encoding='utf-8'))
+          vals={
+            'TITLE':d['title'],
+            'DURATION':str(d['duration']),
+            'RENDER_ID':d['render_id'],
+            'CONTENT_ID':d['content_id'],
+            'EXPERIMENT_ID':d['experiment_id'],
+            'VARIANT':d['variant'],
+            'COMMERCIAL_INTENT':d['commercial_intent'],
+            'SCENES_JSON':json.dumps(d['scenes_json'],ensure_ascii=False,separators=(',',':')),
+            'SMOKE_TEST':'true' if d.get('smoke_test',True) else 'false',
+            'SMOKE_TEST_DURATION':str(d.get('smoke_test_duration',4)),
+            'SMOKE_TEST_PLATFORM':d.get('smoke_test_platform','instagram'),
+          }
+          for k,v in vals.items(): print(f'{k}={shlex.quote(v)}')
+          PY
+          source /tmp/args.env
+          gh workflow run render-video.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f title="$TITLE" \
+            -f duration="$DURATION" \
+            -f render_id="$RENDER_ID" \
+            -f content_id="$CONTENT_ID" \
+            -f experiment_id="$EXPERIMENT_ID" \
+            -f variant="$VARIANT" \
+            -f commercial_intent="$COMMERCIAL_INTENT" \
+            -f scenes_json="$SCENES_JSON" \
+            -f smoke_test="$SMOKE_TEST" \
+            -f smoke_test_duration="$SMOKE_TEST_DURATION" \
+            -f smoke_test_platform="$SMOKE_TEST_PLATFORM"
+          echo "DISPATCH_OK render_id=$RENDER_ID"
