@@ -97,7 +97,7 @@ jobs:
           EXPECTED="UGI ${RENDER_ID}"
           RUN_JSON=''
           for i in $(seq 1 20); do
-            RUN_JSON="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow render-video.yml --event workflow_dispatch --limit 30 --json databaseId,displayTitle,status,conclusion,createdAt,url | python -c 'import json,sys,os; data=json.load(sys.stdin); exp=os.environ["EXPECTED"]; m=[x for x in data if x.get("displayTitle")==exp]; print(json.dumps(m[0] if m else {}))' EXPECTED="$EXPECTED" 2>/dev/null || true)"
+            RUN_JSON="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow render-video.yml --event workflow_dispatch --limit 30 --json databaseId,displayTitle,status,conclusion,createdAt,url | EXPECTED="$EXPECTED" python -c 'import json,sys,os; data=json.load(sys.stdin); exp=os.environ["EXPECTED"]; m=[x for x in data if x.get("displayTitle")==exp]; print(json.dumps(m[0] if m else {}))' 2>/dev/null || true)"
             if [ -n "$RUN_JSON" ] && [ "$RUN_JSON" != '{}' ]; then break; fi
             sleep 2
           done
