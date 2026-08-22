@@ -1,0 +1,25 @@
+{
+  "title": "Delegar não é repassar tarefa",
+  "duration": 12,
+  "render_id": "ugi-night-20260822-tiktok-1800",
+  "content_id": "UGI-NIGHT-20260822-TT-DELEGACAO-001",
+  "experiment_id": "UGI-NIGHT-20260822-MULTINET-002",
+  "variant": "TT",
+  "commercial_intent": "direct_low_ticket_conversion",
+  "scenes_json": {
+    "cta": "Materiais UGI no link do perfil.",
+    "commercial_offer": true,
+    "commerce": {"materialId":"UGI-MAT-DELEGACAO-001","productId":"UGI-PROD-DELEGACAO-001","catalogTarget":"Materiais UGI"},
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "scenes": [
+      {"role":"hook","visual_intent":"gestor entregando tarefa para colaborador","pexels_query":"manager delegating task employee","overlay":{"instagram":"Delegar não é dizer: faz isso pra mim.","tiktok":"Delegar não é dizer: faz isso pra mim.","youtube":"Delegar não é dizer: faz isso pra mim."},"support":{"instagram":"Isso é repasse.","tiktok":"Isso é repasse.","youtube":"Isso é repasse."},"narration":{"instagram":"Delegar não é dizer faz isso pra mim. Isso é só repasse.","tiktok":"Delegar não é dizer faz isso pra mim. Isso é só repasse.","youtube":"Delegar não é dizer faz isso pra mim. Isso é só repasse."}},
+      {"role":"pain","visual_intent":"colaborador confuso olhando instruções","pexels_query":"confused employee task instructions","overlay":{"instagram":"Sem contexto, a tarefa volta torta.","tiktok":"Sem contexto, a tarefa volta torta.","youtube":"Sem contexto, a tarefa volta torta."},"support":{"instagram":"E o gestor refaz.","tiktok":"E o gestor refaz.","youtube":"E o gestor refaz."},"narration":{"instagram":"Sem contexto, a tarefa volta torta e o gestor acaba refazendo.","tiktok":"Sem contexto, a tarefa volta torta e o gestor acaba refazendo.","youtube":"Sem contexto, a tarefa volta torta e o gestor acaba refazendo."}},
+      {"role":"consequence","visual_intent":"gestor sobrecarregado revisando trabalho","pexels_query":"overworked manager reviewing work","overlay":{"instagram":"Microgestão nasce aí.","tiktok":"Microgestão nasce aí.","youtube":"Microgestão nasce aí."},"support":{"instagram":"Falta de clareza vira controle.","tiktok":"Falta de clareza vira controle.","youtube":"Falta de clareza vira controle."},"narration":{"instagram":"Quando falta clareza, o gestor compensa com controle.","tiktok":"Quando falta clareza, o gestor compensa com controle.","youtube":"Quando falta clareza, o gestor compensa com controle."}},
+      {"role":"turn","visual_intent":"gestor alinhando expectativa em quadro","pexels_query":"manager setting expectations whiteboard","overlay":{"instagram":"Delegue: resultado + limite + prazo.","tiktok":"Delegue: resultado + limite + prazo.","youtube":"Delegue: resultado + limite + prazo."},"support":{"instagram":"E combine um checkpoint.","tiktok":"E combine um checkpoint.","youtube":"E combine um checkpoint."},"narration":{"instagram":"Delegue resultado, limite e prazo. Depois combine um checkpoint.","tiktok":"Delegue resultado, limite e prazo. Depois combine um checkpoint.","youtube":"Delegue resultado, limite e prazo. Depois combine um checkpoint."}},
+      {"role":"result","visual_intent":"colaborador trabalhando com autonomia","pexels_query":"employee autonomous work confident","overlay":{"instagram":"Menos cobrança. Mais autonomia.","tiktok":"Menos cobrança. Mais autonomia.","youtube":"Menos cobrança. Mais autonomia."},"support":{"instagram":"Clareza reduz retrabalho.","tiktok":"Clareza reduz retrabalho.","youtube":"Clareza reduz retrabalho."},"narration":{"instagram":"Clareza reduz retrabalho e aumenta autonomia.","tiktok":"Clareza reduz retrabalho e aumenta autonomia.","youtube":"Clareza reduz retrabalho e aumenta autonomia."}},
+      {"role":"cta","visual_intent":"profissional abrindo guia de delegação no celular","pexels_query":"business guide smartphone manager","overlay":{"instagram":"Quer o framework? Materiais UGI.","tiktok":"Quer o framework? Materiais UGI.","youtube":"Quer o framework? Materiais UGI."},"support":{"instagram":"Delegação sem Retrabalho.","tiktok":"Delegação sem Retrabalho.","youtube":"Delegação sem Retrabalho."},"narration":{"instagram":"Encontre Delegação sem Retrabalho em Materiais UGI, no link do perfil.","tiktok":"Encontre Delegação sem Retrabalho em Materiais UGI, no link do perfil.","youtube":"Encontre Delegação sem Retrabalho em Materiais UGI, no link do perfil."}}
+    ]
+  },
+  "smoke_test": false
+}
