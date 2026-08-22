@@ -1,0 +1,38 @@
+name: UGI Commerce Secret Diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/commerce-diag/*.json'
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    env:
+      UGI_BASE_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      LOLA_COMMAND_KEY: ${{ secrets.LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Persist safe diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/commerce-status
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          data={
+            'ugiBaseUrlPresent': bool(os.environ.get('UGI_BASE_URL')),
+            'lolaCommandKeyPresent': bool(os.environ.get('LOLA_COMMAND_KEY')),
+            'safeToAttemptCommerceApi': bool(os.environ.get('UGI_BASE_URL')) and bool(os.environ.get('LOLA_COMMAND_KEY'))
+          }
+          Path('control-plane/commerce-status/last.json').write_text(json.dumps(data,indent=2),encoding='utf-8')
+          PY
+          git config user.name 'ugi-control-plane-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add control-plane/commerce-status/last.json
+          git commit -m 'chore: persist commerce secret diagnostic'
+          git pull --rebase origin main
+          git push origin HEAD:main
