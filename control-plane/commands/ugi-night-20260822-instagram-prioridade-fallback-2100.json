@@ -1,0 +1,25 @@
+{
+  "title": "Antes de dizer sim, escolha o que vai sair da sua agenda",
+  "duration": 18,
+  "render_id": "ugi-night-20260822-instagram-prioridade-fallback-2100",
+  "content_id": "UGI-NIGHT-20260822-IG-PRIORIDADE-FALLBACK-001",
+  "experiment_id": "UGI-NIGHT-20260822-MULTIFORMAT-001",
+  "variant": "IG-FALLBACK",
+  "commercial_intent": "direct_low_ticket_conversion",
+  "scenes_json": {
+    "cta": "Kit UGI - Priorização Inteligente no link do perfil.",
+    "commercial_offer": true,
+    "commerce": {"materialId":"UGI-KIT-PRIORIZACAO-001","productId":"UGI-MATERIAL-PRIORIDADES-001","catalogTarget":"https://materiais.umagestaointeligente.com/materiais"},
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "scenes": [
+      {"role":"hook","visual_intent":"gestor recebendo nova demanda em reunião","pexels_query":"manager receiving new task meeting","overlay":{"instagram":"Antes de dizer SIM, escolha o que vai sair.","tiktok":"Antes de dizer SIM, escolha o que vai sair.","youtube":"Antes de dizer SIM, escolha o que vai sair."},"support":{"instagram":"Toda prioridade tem custo.","tiktok":"Toda prioridade tem custo.","youtube":"Toda prioridade tem custo."},"narration":{"instagram":"Antes de dizer sim para uma nova prioridade, escolha o que vai sair da sua agenda.","tiktok":"Antes de dizer sim para uma nova prioridade, escolha o que vai sair da sua agenda.","youtube":"Antes de dizer sim para uma nova prioridade, escolha o que vai sair da sua agenda."}},
+      {"role":"pain","visual_intent":"agenda lotada no notebook","pexels_query":"overloaded calendar laptop","overlay":{"instagram":"O problema não é a nova tarefa.","tiktok":"O problema não é a nova tarefa.","youtube":"O problema não é a nova tarefa."},"support":{"instagram":"É fingir que cabe tudo.","tiktok":"É fingir que cabe tudo.","youtube":"É fingir que cabe tudo."},"narration":{"instagram":"O problema não é a nova tarefa. É fingir que cabe tudo ao mesmo tempo.","tiktok":"O problema não é a nova tarefa. É fingir que cabe tudo ao mesmo tempo.","youtube":"O problema não é a nova tarefa. É fingir que cabe tudo ao mesmo tempo."}},
+      {"role":"consequence","visual_intent":"profissional alternando entre tarefas","pexels_query":"office multitasking stressed professional","overlay":{"instagram":"Quando tudo entra, o importante perde espaço.","tiktok":"Quando tudo entra, o importante perde espaço.","youtube":"Quando tudo entra, o importante perde espaço."},"support":{"instagram":"E o retrabalho cresce.","tiktok":"E o retrabalho cresce.","youtube":"E o retrabalho cresce."},"narration":{"instagram":"Quando tudo entra, o importante perde espaço e o retrabalho cresce.","tiktok":"Quando tudo entra, o importante perde espaço e o retrabalho cresce.","youtube":"Quando tudo entra, o importante perde espaço e o retrabalho cresce."}},
+      {"role":"turn","visual_intent":"gestor comparando prioridades em matriz","pexels_query":"manager priority matrix board","overlay":{"instagram":"Pergunte: impacto alto? urgência real?","tiktok":"Pergunte: impacto alto? urgência real?","youtube":"Pergunte: impacto alto? urgência real?"},"support":{"instagram":"Depois escolha o que sai.","tiktok":"Depois escolha o que sai.","youtube":"Depois escolha o que sai."},"narration":{"instagram":"Pergunte se o impacto é alto e se a urgência é real. Depois escolha o que sai.","tiktok":"Pergunte se o impacto é alto e se a urgência é real. Depois escolha o que sai.","youtube":"Pergunte se o impacto é alto e se a urgência é real. Depois escolha o que sai."}},
+      {"role":"result","visual_intent":"agenda organizada com poucas prioridades","pexels_query":"organized calendar focused priorities","overlay":{"instagram":"Priorizar é proteger capacidade.","tiktok":"Priorizar é proteger capacidade.","youtube":"Priorizar é proteger capacidade."},"support":{"instagram":"Menos volume. Mais resultado.","tiktok":"Menos volume. Mais resultado.","youtube":"Menos volume. Mais resultado."},"narration":{"instagram":"Priorizar é proteger capacidade para aquilo que realmente move resultado.","tiktok":"Priorizar é proteger capacidade para aquilo que realmente move resultado.","youtube":"Priorizar é proteger capacidade para aquilo que realmente move resultado."}},
+      {"role":"cta","visual_intent":"gestor acessando material de priorização no celular","pexels_query":"manager smartphone productivity guide","overlay":{"instagram":"Quer aplicar? Kit UGI no perfil.","tiktok":"Quer aplicar? Kit UGI no perfil.","youtube":"Quer aplicar? Kit UGI no perfil."},"support":{"instagram":"Priorização Inteligente.","tiktok":"Priorização Inteligente.","youtube":"Priorização Inteligente."},"narration":{"instagram":"Acesse o Kit UGI - Priorização Inteligente em Materiais UGI, no link do perfil.","tiktok":"Acesse o Kit UGI - Priorização Inteligente em Materiais UGI, no link do perfil.","youtube":"Acesse o Kit UGI - Priorização Inteligente em Materiais UGI, no link do perfil."}}
+    ]
+  },
+  "smoke_test": false
+}
