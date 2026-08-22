@@ -1,0 +1,40 @@
+name: UGI Public Commerce Inspect
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/public-inspect/*.json'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Inspect public commerce hub
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/public-inspect-receipts
+          python - <<'PY'
+          import json,re,requests
+          from pathlib import Path
+          base='https://materiais.umagestaointeligente.com'
+          r=requests.get(base+'/materiais',timeout=20)
+          out={'status':r.status_code,'url':r.url,'ok':r.status_code==200}
+          html=r.text
+          out['containsPriorizacao']='Priorização' in html or 'priorizacao' in html.lower()
+          out['links']=sorted(set(re.findall(r'href=["\']([^"\']+)["\']',html)))[:100]
+          out['titles']=sorted(set(re.findall(r'<h[1-4][^>]*>(.*?)</h[1-4]>',html,re.S|re.I)))[:50]
+          Path('control-plane/public-inspect-receipts/commerce-hub.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          if r.status_code!=200: raise SystemExit(f'HTTP {r.status_code}')
+          PY
+          git config user.name 'ugi-control-plane-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add control-plane/public-inspect-receipts/commerce-hub.json
+          git commit -m 'chore: persist public commerce hub inspection'
+          git pull --rebase origin main
+          git push origin HEAD:main
