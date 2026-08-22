@@ -51,7 +51,7 @@ jobs:
           print('COMMAND_VALID')
           PY
 
-      - name: Dispatch renderer
+      - name: Dispatch and correlate renderer
         id: dispatch
         shell: bash
         env:
@@ -93,13 +93,32 @@ jobs:
             -f smoke_test="$SMOKE_TEST" \
             -f smoke_test_duration="$SMOKE_TEST_DURATION" \
             -f smoke_test_platform="$SMOKE_TEST_PLATFORM"
+
+          EXPECTED="UGI ${RENDER_ID}"
+          RUN_JSON=''
+          for i in $(seq 1 20); do
+            RUN_JSON="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow render-video.yml --event workflow_dispatch --limit 30 --json databaseId,displayTitle,status,conclusion,createdAt,url | python -c 'import json,sys,os; data=json.load(sys.stdin); exp=os.environ["EXPECTED"]; m=[x for x in data if x.get("displayTitle")==exp]; print(json.dumps(m[0] if m else {}))' EXPECTED="$EXPECTED" 2>/dev/null || true)"
+            if [ -n "$RUN_JSON" ] && [ "$RUN_JSON" != '{}' ]; then break; fi
+            sleep 2
+          done
+          [ -n "$RUN_JSON" ] && [ "$RUN_JSON" != '{}' ] || { echo "RUN_CORRELATION_FAILED $EXPECTED"; exit 1; }
+          printf '%s' "$RUN_JSON" > /tmp/render-run.json
+          RENDER_RUN_ID="$(python -c 'import json; print(json.load(open("/tmp/render-run.json"))["databaseId"])')"
+          RENDER_STATUS="$(python -c 'import json; print(json.load(open("/tmp/render-run.json"))["status"])')"
+          RENDER_URL="$(python -c 'import json; print(json.load(open("/tmp/render-run.json"))["url"])')"
           echo "render_id=$RENDER_ID" >> "$GITHUB_OUTPUT"
-          echo "DISPATCH_OK render_id=$RENDER_ID"
+          echo "render_run_id=$RENDER_RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "render_status=$RENDER_STATUS" >> "$GITHUB_OUTPUT"
+          echo "render_url=$RENDER_URL" >> "$GITHUB_OUTPUT"
+          echo "DISPATCH_OK render_id=$RENDER_ID run_id=$RENDER_RUN_ID status=$RENDER_STATUS"
 
       - name: Persist dispatch receipt
         shell: bash
         env:
           RENDER_ID: ${{ steps.dispatch.outputs.render_id }}
+          RENDER_RUN_ID: ${{ steps.dispatch.outputs.render_run_id }}
+          RENDER_STATUS: ${{ steps.dispatch.outputs.render_status }}
+          RENDER_URL: ${{ steps.dispatch.outputs.render_url }}
         run: |
           set -euo pipefail
           mkdir -p control-plane/dispatch
@@ -110,6 +129,10 @@ jobs:
           Path(f'control-plane/dispatch/{rid}.json').write_text(json.dumps({
             'renderId': rid,
             'dispatchAccepted': True,
+            'runCorrelated': True,
+            'githubRunId': int(os.environ['RENDER_RUN_ID']),
+            'githubWorkflowStatus': os.environ['RENDER_STATUS'],
+            'githubRunUrl': os.environ['RENDER_URL'],
             'source': 'ugi-chat-control-plane',
             'commandCommit': os.environ['GITHUB_SHA'],
             'controlRunId': os.environ['GITHUB_RUN_ID']
