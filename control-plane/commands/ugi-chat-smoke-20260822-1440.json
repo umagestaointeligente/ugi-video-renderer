@@ -1,0 +1,26 @@
+{
+  "title": "UGI Chat Control Plane Smoke Test",
+  "duration": "4",
+  "render_id": "ugi-chat-smoke-20260822-1440",
+  "content_id": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+  "experiment_id": "UGI-CHAT-CONTROL-PLANE-E2E-001",
+  "variant": "SMOKE",
+  "commercial_intent": "none",
+  "smoke_test": true,
+  "smoke_test_duration": 4,
+  "smoke_test_platform": "instagram",
+  "scenes_json": {
+    "cta": "Teste técnico UGI concluído.",
+    "commercial_offer": false,
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "scenes": [
+      {"role":"hook","visual_intent":"gestor olhando painel digital em escritório moderno","pexels_query":"manager dashboard office","overlay":{"instagram":"Teste técnico UGI","tiktok":"Teste técnico UGI","youtube":"Teste técnico UGI"},"support":{"instagram":"Controle único em validação","tiktok":"Controle único em validação","youtube":"Controle único em validação"},"narration":{"instagram":"Estamos validando o controle único da UGI.","tiktok":"Estamos validando o controle único da UGI.","youtube":"Estamos validando o controle único da UGI."}},
+      {"role":"pain","visual_intent":"profissional alternando entre várias telas e sistemas","pexels_query":"professional multiple screens office","overlay":{"instagram":"Menos retrabalho","tiktok":"Menos retrabalho","youtube":"Menos retrabalho"},"support":{"instagram":"Sem copiar prompts entre chats","tiktok":"Sem copiar prompts entre chats","youtube":"Sem copiar prompts entre chats"},"narration":{"instagram":"O objetivo é eliminar a dependência de múltiplas conversas.","tiktok":"O objetivo é eliminar a dependência de múltiplas conversas.","youtube":"O objetivo é eliminar a dependência de múltiplas conversas."}},
+      {"role":"consequence","visual_intent":"fluxo de trabalho digital com alertas e tarefas pendentes","pexels_query":"workflow alerts computer office","overlay":{"instagram":"Sem falhas silenciosas","tiktok":"Sem falhas silenciosas","youtube":"Sem falhas silenciosas"},"support":{"instagram":"Cada etapa precisa de evidência","tiktok":"Cada etapa precisa de evidência","youtube":"Cada etapa precisa de evidência"},"narration":{"instagram":"Cada etapa precisa deixar uma evidência verificável.","tiktok":"Cada etapa precisa deixar uma evidência verificável.","youtube":"Cada etapa precisa deixar uma evidência verificável."}},
+      {"role":"turn","visual_intent":"automação conectando sistemas em um fluxo simples","pexels_query":"automation workflow technology","overlay":{"instagram":"Um único fluxo","tiktok":"Um único fluxo","youtube":"Um único fluxo"},"support":{"instagram":"Comando para render e mídia","tiktok":"Comando para render e mídia","youtube":"Comando para render e mídia"},"narration":{"instagram":"O comando deve seguir direto para renderização e mídia.","tiktok":"O comando deve seguir direto para renderização e mídia.","youtube":"O comando deve seguir direto para renderização e mídia."}},
+      {"role":"result","visual_intent":"painel verde mostrando processo concluído com sucesso","pexels_query":"successful dashboard office technology","overlay":{"instagram":"Evidência de ponta a ponta","tiktok":"Evidência de ponta a ponta","youtube":"Evidência de ponta a ponta"},"support":{"instagram":"Só vale quando o readback confirma","tiktok":"Só vale quando o readback confirma","youtube":"Só vale quando o readback confirma"},"narration":{"instagram":"Só consideramos sucesso quando o readback confirma o resultado.","tiktok":"Só consideramos sucesso quando o readback confirma o resultado.","youtube":"Só consideramos sucesso quando o readback confirma o resultado."}},
+      {"role":"cta","visual_intent":"gestor confiante encerrando tarefa em notebook","pexels_query":"confident manager laptop office","overlay":{"instagram":"Teste técnico concluído","tiktok":"Teste técnico concluído","youtube":"Teste técnico concluído"},"support":{"instagram":"UGI control plane","tiktok":"UGI control plane","youtube":"UGI control plane"},"narration":{"instagram":"Teste técnico UGI concluído.","tiktok":"Teste técnico UGI concluído.","youtube":"Teste técnico UGI concluído."}}
+    ]
+  }
+}
