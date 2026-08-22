@@ -1,0 +1,106 @@
+name: Bom de Clique - Zernio Bridge
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  zernio-command:
+    if: startsWith(github.event.issue.title, '[BDC-ZERNIO]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
+      ISSUE_BODY: ${{ github.event.issue.body }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+    steps:
+      - name: Validate secret
+        shell: bash
+        run: |
+          if [ -z "$ZERNIO_API_KEY" ]; then
+            echo "ZERNIO_API_KEY is not configured" >&2
+            gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "❌ BDC_ZERNIO_BRIDGE_ERROR: secret ZERNIO_API_KEY is not configured."
+            exit 1
+          fi
+
+      - name: Execute allowlisted Zernio API command
+        shell: python
+        run: |
+          import json, os, sys, urllib.request, urllib.error, uuid
+
+          raw = os.environ.get("ISSUE_BODY", "").strip()
+          try:
+              cmd = json.loads(raw)
+          except Exception as e:
+              print(f"Invalid JSON: {e}", file=sys.stderr)
+              sys.exit(2)
+
+          method = str(cmd.get("method", "GET")).upper()
+          path = str(cmd.get("path", ""))
+          body = cmd.get("body")
+
+          allowed_prefixes = (
+              "/v1/accounts",
+              "/v1/analytics",
+              "/v1/posts",
+              "/v1/media",
+              "/v1/profiles",
+              "/v1/usage",
+          )
+          if method not in {"GET", "POST", "PATCH", "DELETE"}:
+              raise SystemExit("Method not allowed")
+          if not path.startswith(allowed_prefixes):
+              raise SystemExit("Path not allowlisted")
+
+          url = "https://zernio.com/api" + path
+          data = None if body is None else json.dumps(body).encode("utf-8")
+          headers = {
+              "Authorization": "Bearer " + os.environ["ZERNIO_API_KEY"],
+              "Accept": "application/json",
+              "User-Agent": "BomDeClique-GitHub-Bridge/1.0",
+              "x-request-id": str(uuid.uuid4()),
+          }
+          if data is not None:
+              headers["Content-Type"] = "application/json"
+
+          req = urllib.request.Request(url, data=data, headers=headers, method=method)
+          try:
+              with urllib.request.urlopen(req, timeout=45) as r:
+                  status = r.status
+                  text = r.read().decode("utf-8", "replace")
+          except urllib.error.HTTPError as e:
+              status = e.code
+              text = e.read().decode("utf-8", "replace")
+          except Exception as e:
+              status = 0
+              text = json.dumps({"error": str(e)})
+
+          try:
+              payload = json.loads(text)
+              pretty = json.dumps(payload, indent=2, ensure_ascii=False)
+          except Exception:
+              pretty = text
+
+          # Avoid oversized GitHub comments.
+          if len(pretty) > 50000:
+              pretty = pretty[:50000] + "\n...TRUNCATED..."
+
+          result = f"BDC_ZERNIO_BRIDGE_RESULT\nHTTP_STATUS={status}\n```json\n{pretty}\n```"
+          open("/tmp/result.md", "w", encoding="utf-8").write(result)
+
+          if not (200 <= status < 300):
+              sys.exit(3)
+
+      - name: Return result to issue
+        if: always()
+        shell: bash
+        run: |
+          if [ -f /tmp/result.md ]; then
+            gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body-file /tmp/result.md
+          fi
