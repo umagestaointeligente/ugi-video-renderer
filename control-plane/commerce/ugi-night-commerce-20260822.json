@@ -1,0 +1,53 @@
+{
+  "batchId": "ugi-night-commerce-20260822",
+  "materials": [
+    {
+      "materialId": "UGI-MAT-REUNIAO-DECISAO-001",
+      "productId": "UGI-PROD-REUNIAO-DECISAO-001",
+      "title": "Reunião que Termina com Decisão",
+      "theme": "reuniões e decisão",
+      "problem": "reuniões longas que terminam sem decisão, dono ou próximo passo",
+      "solution": "roteiro prático para transformar reuniões em decisões claras, com dono, prazo e registro",
+      "price": 14.90,
+      "sections": [
+        {"heading":"1. Antes da reunião","body":["Defina em uma frase qual decisão precisa existir ao final.","Liste apenas as informações indispensáveis para essa decisão.","Convide apenas quem decide, executa ou fornece evidência crítica."]},
+        {"heading":"2. Abertura em 60 segundos","body":["Comece pela pergunta de decisão, não pelo histórico.","Declare o limite de tempo e o resultado esperado."]},
+        {"heading":"3. Estrutura da conversa","body":["Fato: o que sabemos.","Opções: quais caminhos existem.","Critério: como vamos escolher.","Decisão: o que ficou definido."]},
+        {"heading":"4. Fechamento obrigatório","body":["Decisão registrada.","Dono definido.","Prazo definido.","Próxima checagem agendada."]},
+        {"heading":"5. Checklist de 5 minutos","body":["Se a reunião terminou sem decisão, pergunte: faltou dado, autoridade, critério ou coragem para decidir?"]}
+      ]
+    },
+    {
+      "materialId": "UGI-MAT-DELEGACAO-001",
+      "productId": "UGI-PROD-DELEGACAO-001",
+      "title": "Delegação sem Retrabalho",
+      "theme": "delegação",
+      "problem": "tarefas delegadas voltam incompletas, gerando cobrança, microgestão e retrabalho",
+      "solution": "framework de delegação com contexto, resultado esperado, limites, checkpoints e definição de pronto",
+      "price": 14.90,
+      "sections": [
+        {"heading":"1. Delegue o resultado","body":["Explique o resultado esperado antes de listar tarefas.","Diga por que aquilo importa e para quem."]},
+        {"heading":"2. Defina limites","body":["O que a pessoa pode decidir sozinha?","Quando precisa escalar?","Quais riscos não podem ser assumidos?"]},
+        {"heading":"3. Definição de pronto","body":["Descreva como saberemos que a entrega está concluída e aceitável."]},
+        {"heading":"4. Checkpoints inteligentes","body":["Combine marcos curtos em vez de acompanhar cada passo.","Checkpoint serve para remover bloqueio, não para tomar a tarefa de volta."]},
+        {"heading":"5. Perguntas finais","body":["O que você entendeu que precisa entregar?","Qual é seu primeiro passo?","O que pode bloquear você?"]}
+      ]
+    },
+    {
+      "materialId": "UGI-MAT-PREMORTEM-IA-001",
+      "productId": "UGI-PROD-PREMORTEM-IA-001",
+      "title": "Pré-mortem com IA para Decisões de Projeto",
+      "theme": "IA aplicada à gestão",
+      "problem": "projetos avançam sem testar premissas, riscos e pontos de falha antes da execução",
+      "solution": "roteiro de pré-mortem com IA para atacar a própria decisão antes de comprometer tempo e recursos",
+      "price": 14.90,
+      "sections": [
+        {"heading":"1. Cenário de falha","body":["Imagine que o projeto fracassou em seis meses. Peça à IA cinco causas plausíveis e específicas."]},
+        {"heading":"2. Ataque às premissas","body":["Liste suas três principais premissas e peça evidências que poderiam invalidá-las."]},
+        {"heading":"3. Red team","body":["Peça à IA para agir como um executivo cético e fazer perguntas difíceis sobre custo, prazo, dependências e adoção."]},
+        {"heading":"4. Sinais antecipados","body":["Para cada risco, defina um sinal observável que apareceria cedo se o problema estivesse começando."]},
+        {"heading":"5. Decisão final","body":["Classifique: seguir, testar menor, adiar ou cancelar. Registre o que mudaria sua decisão."]}
+      ]
+    }
+  ]
+}
