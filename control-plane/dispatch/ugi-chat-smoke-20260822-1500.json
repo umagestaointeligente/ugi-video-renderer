@@ -1,0 +1,11 @@
+{
+  "renderId": "ugi-chat-smoke-20260822-1500",
+  "dispatchAccepted": true,
+  "runCorrelated": true,
+  "githubRunId": 32589402506,
+  "githubWorkflowStatus": "queued",
+  "githubRunUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/32589402506",
+  "source": "ugi-chat-control-plane",
+  "commandCommit": "b011d8b978ed700dfb116159809e57e751d1b317",
+  "controlRunId": "32589396180"
+}
