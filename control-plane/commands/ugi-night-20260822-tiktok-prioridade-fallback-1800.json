@@ -1,0 +1,25 @@
+{
+  "title": "A urgência dos outros não pode virar sua prioridade automática",
+  "duration": 12,
+  "render_id": "ugi-night-20260822-tiktok-prioridade-fallback-1800",
+  "content_id": "UGI-NIGHT-20260822-TT-PRIORIDADE-FALLBACK-001",
+  "experiment_id": "UGI-NIGHT-20260822-MULTIFORMAT-001",
+  "variant": "TT-FALLBACK",
+  "commercial_intent": "direct_low_ticket_conversion",
+  "scenes_json": {
+    "cta": "Kit UGI - Priorização Inteligente no link do perfil.",
+    "commercial_offer": true,
+    "commerce": {"materialId":"UGI-KIT-PRIORIZACAO-001","productId":"UGI-MATERIAL-PRIORIDADES-001","catalogTarget":"https://materiais.umagestaointeligente.com/materiais"},
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "scenes": [
+      {"role":"hook","visual_intent":"profissional recebendo mensagem urgente no celular","pexels_query":"urgent work message smartphone office","overlay":{"instagram":"A urgência dos outros não é sua prioridade automática.","tiktok":"A urgência dos outros não é sua prioridade automática.","youtube":"A urgência dos outros não é sua prioridade automática."},"support":{"instagram":"Pare antes de aceitar.","tiktok":"Pare antes de aceitar.","youtube":"Pare antes de aceitar."},"narration":{"instagram":"A urgência dos outros não pode virar sua prioridade automática.","tiktok":"A urgência dos outros não pode virar sua prioridade automática.","youtube":"A urgência dos outros não pode virar sua prioridade automática."}},
+      {"role":"pain","visual_intent":"gestor interrompendo trabalho por notificações","pexels_query":"manager interrupted notifications work","overlay":{"instagram":"Barulho parece importância.","tiktok":"Barulho parece importância.","youtube":"Barulho parece importância."},"support":{"instagram":"Mas nem sempre é.","tiktok":"Mas nem sempre é.","youtube":"Mas nem sempre é."},"narration":{"instagram":"Barulho parece importância, mas nem sempre é.","tiktok":"Barulho parece importância, mas nem sempre é.","youtube":"Barulho parece importância, mas nem sempre é."}},
+      {"role":"consequence","visual_intent":"tarefas importantes paradas na tela","pexels_query":"important tasks delayed laptop","overlay":{"instagram":"A cada interrupção, algo importante perde espaço.","tiktok":"A cada interrupção, algo importante perde espaço.","youtube":"A cada interrupção, algo importante perde espaço."},"support":{"instagram":"Foco fragmentado custa caro.","tiktok":"Foco fragmentado custa caro.","youtube":"Foco fragmentado custa caro."},"narration":{"instagram":"A cada interrupção, algo importante perde espaço.","tiktok":"A cada interrupção, algo importante perde espaço.","youtube":"A cada interrupção, algo importante perde espaço."}},
+      {"role":"turn","visual_intent":"gestor avaliando tarefa antes de aceitar","pexels_query":"manager evaluating task priority","overlay":{"instagram":"Pergunte: se esperar 24h, algo relevante quebra?","tiktok":"Se esperar 24h, algo relevante quebra?","youtube":"Pergunte: se esperar 24h, algo relevante quebra?"},"support":{"instagram":"Teste a urgência.","tiktok":"Teste a urgência.","youtube":"Teste a urgência."},"narration":{"instagram":"Pergunte: se isso esperar vinte e quatro horas, algo relevante realmente quebra?","tiktok":"Pergunte: se isso esperar vinte e quatro horas, algo relevante realmente quebra?","youtube":"Pergunte: se isso esperar vinte e quatro horas, algo relevante realmente quebra?"}},
+      {"role":"result","visual_intent":"profissional focado em uma tarefa importante","pexels_query":"focused professional single task office","overlay":{"instagram":"Menos falsa urgência. Mais resultado.","tiktok":"Menos falsa urgência. Mais resultado.","youtube":"Menos falsa urgência. Mais resultado."},"support":{"instagram":"Prioridade vira escolha.","tiktok":"Prioridade vira escolha.","youtube":"Prioridade vira escolha."},"narration":{"instagram":"Assim, prioridade deixa de ser pressão e vira escolha.","tiktok":"Assim, prioridade deixa de ser pressão e vira escolha.","youtube":"Assim, prioridade deixa de ser pressão e vira escolha."}},
+      {"role":"cta","visual_intent":"profissional abrindo material UGI no celular","pexels_query":"professional smartphone business workbook","overlay":{"instagram":"Quer a matriz? Kit UGI no perfil.","tiktok":"Quer a matriz? Kit UGI no perfil.","youtube":"Quer a matriz? Kit UGI no perfil."},"support":{"instagram":"Priorização Inteligente.","tiktok":"Priorização Inteligente.","youtube":"Priorização Inteligente."},"narration":{"instagram":"Encontre o Kit UGI - Priorização Inteligente em Materiais UGI, no link do perfil.","tiktok":"Encontre o Kit UGI - Priorização Inteligente em Materiais UGI, no link do perfil.","youtube":"Encontre o Kit UGI - Priorização Inteligente em Materiais UGI, no link do perfil."}}
+    ]
+  },
+  "smoke_test": false
+}
