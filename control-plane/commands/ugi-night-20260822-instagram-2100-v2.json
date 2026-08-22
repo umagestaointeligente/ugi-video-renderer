@@ -1,0 +1,25 @@
+{
+  "title": "Reunião boa termina com decisão, dono e prazo",
+  "duration": 18,
+  "render_id": "ugi-night-20260822-instagram-2100-v2",
+  "content_id": "UGI-NIGHT-20260822-IG-REUNIAO-DECISAO-001",
+  "experiment_id": "UGI-NIGHT-20260822-MULTINET-002",
+  "variant": "IG",
+  "commercial_intent": "direct_low_ticket_conversion",
+  "scenes_json": {
+    "cta": "Materiais UGI no link do perfil.",
+    "commercial_offer": true,
+    "commerce": {"materialId":"UGI-MAT-REUNIAO-DECISAO-001","productId":"UGI-PROD-REUNIAO-DECISAO-001","catalogTarget":"Materiais UGI"},
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "scenes": [
+      {"role":"hook","visual_intent":"gestores em reunião olhando uma pauta","pexels_query":"business meeting agenda executives","overlay":{"instagram":"Reunião boa não termina com ‘vamos vendo’.","tiktok":"Reunião boa não termina com ‘vamos vendo’.","youtube":"Reunião boa não termina com ‘vamos vendo’."},"support":{"instagram":"Ela termina com decisão.","tiktok":"Ela termina com decisão.","youtube":"Ela termina com decisão."},"narration":{"instagram":"Reunião boa não termina com vamos vendo. Ela termina com decisão.","tiktok":"Reunião boa não termina com vamos vendo. Ela termina com decisão.","youtube":"Reunião boa não termina com vamos vendo. Ela termina com decisão."}},
+      {"role":"pain","visual_intent":"reunião longa e cansativa","pexels_query":"long tiring office meeting","overlay":{"instagram":"Sem decisão, a reunião vira custo disfarçado.","tiktok":"Sem decisão, a reunião vira custo disfarçado.","youtube":"Sem decisão, a reunião vira custo disfarçado."},"support":{"instagram":"Tempo gasto. Nada fecha.","tiktok":"Tempo gasto. Nada fecha.","youtube":"Tempo gasto. Nada fecha."},"narration":{"instagram":"Sem decisão, a reunião vira custo disfarçado de alinhamento.","tiktok":"Sem decisão, a reunião vira custo disfarçado de alinhamento.","youtube":"Sem decisão, a reunião vira custo disfarçado de alinhamento."}},
+      {"role":"consequence","visual_intent":"profissional recebendo muitas mensagens após reunião","pexels_query":"office messages follow up meeting","overlay":{"instagram":"Depois vêm mensagens, dúvidas e retrabalho.","tiktok":"Depois vêm mensagens, dúvidas e retrabalho.","youtube":"Depois vêm mensagens, dúvidas e retrabalho."},"support":{"instagram":"O assunto volta para a agenda.","tiktok":"O assunto volta para a agenda.","youtube":"O assunto volta para a agenda."},"narration":{"instagram":"Depois vêm mensagens, dúvidas e o mesmo assunto volta para a agenda.","tiktok":"Depois vêm mensagens, dúvidas e o mesmo assunto volta para a agenda.","youtube":"Depois vêm mensagens, dúvidas e o mesmo assunto volta para a agenda."}},
+      {"role":"turn","visual_intent":"gestor anotando decisão e responsável","pexels_query":"manager writing decision action items","overlay":{"instagram":"Feche sempre: decisão + dono + prazo.","tiktok":"Feche sempre: decisão + dono + prazo.","youtube":"Feche sempre: decisão + dono + prazo."},"support":{"instagram":"Três campos. Sem ambiguidade.","tiktok":"Três campos. Sem ambiguidade.","youtube":"Três campos. Sem ambiguidade."},"narration":{"instagram":"Feche sempre com três coisas: decisão, dono e prazo.","tiktok":"Feche sempre com três coisas: decisão, dono e prazo.","youtube":"Feche sempre com três coisas: decisão, dono e prazo."}},
+      {"role":"result","visual_intent":"equipe saindo de reunião confiante","pexels_query":"team leaving successful meeting","overlay":{"instagram":"Menos reunião. Mais execução.","tiktok":"Menos reunião. Mais execução.","youtube":"Menos reunião. Mais execução."},"support":{"instagram":"Clareza vira movimento.","tiktok":"Clareza vira movimento.","youtube":"Clareza vira movimento."},"narration":{"instagram":"Quando a clareza vira compromisso, a reunião finalmente gera movimento.","tiktok":"Quando a clareza vira compromisso, a reunião finalmente gera movimento.","youtube":"Quando a clareza vira compromisso, a reunião finalmente gera movimento."}},
+      {"role":"cta","visual_intent":"profissional acessando material de gestão no celular","pexels_query":"professional smartphone business guide","overlay":{"instagram":"Quer o roteiro? Materiais UGI no perfil.","tiktok":"Quer o roteiro? Materiais UGI no perfil.","youtube":"Quer o roteiro? Materiais UGI no perfil."},"support":{"instagram":"Reunião que Termina com Decisão.","tiktok":"Reunião que Termina com Decisão.","youtube":"Reunião que Termina com Decisão."},"narration":{"instagram":"Quer o roteiro prático? Encontre Reunião que Termina com Decisão em Materiais UGI, no link do perfil.","tiktok":"Quer o roteiro prático? Encontre Reunião que Termina com Decisão em Materiais UGI, no link do perfil.","youtube":"Quer o roteiro prático? Encontre Reunião que Termina com Decisão em Materiais UGI, no link do perfil."}}
+    ]
+  },
+  "smoke_test": false
+}
