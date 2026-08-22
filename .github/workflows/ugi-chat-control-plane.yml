@@ -15,7 +15,7 @@ permissions:
 jobs:
   dispatch-render:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -144,3 +144,68 @@ jobs:
           git commit -m "chore: persist UGI dispatch receipt ${RENDER_ID}"
           git pull --rebase origin main
           git push origin HEAD:main
+
+      - name: Wait for renderer completion
+        id: final
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RENDER_ID: ${{ steps.dispatch.outputs.render_id }}
+          RENDER_RUN_ID: ${{ steps.dispatch.outputs.render_run_id }}
+        run: |
+          set -euo pipefail
+          set +e
+          gh run watch "$RENDER_RUN_ID" --repo "$GITHUB_REPOSITORY" --interval 10 --exit-status
+          WATCH_RC=$?
+          set -e
+          gh run view "$RENDER_RUN_ID" --repo "$GITHUB_REPOSITORY" --json databaseId,displayTitle,status,conclusion,url,createdAt,updatedAt > /tmp/final-run.json
+          FINAL_STATUS="$(python -c 'import json; print(json.load(open("/tmp/final-run.json"))["status"])')"
+          FINAL_CONCLUSION="$(python -c 'import json; print(json.load(open("/tmp/final-run.json"))["conclusion"] or "")')"
+          FINAL_URL="$(python -c 'import json; print(json.load(open("/tmp/final-run.json"))["url"])')"
+          echo "final_status=$FINAL_STATUS" >> "$GITHUB_OUTPUT"
+          echo "final_conclusion=$FINAL_CONCLUSION" >> "$GITHUB_OUTPUT"
+          echo "final_url=$FINAL_URL" >> "$GITHUB_OUTPUT"
+          echo "watch_rc=$WATCH_RC" >> "$GITHUB_OUTPUT"
+
+      - name: Persist final receipt
+        if: always()
+        shell: bash
+        env:
+          RENDER_ID: ${{ steps.dispatch.outputs.render_id }}
+          RENDER_RUN_ID: ${{ steps.dispatch.outputs.render_run_id }}
+          FINAL_STATUS: ${{ steps.final.outputs.final_status }}
+          FINAL_CONCLUSION: ${{ steps.final.outputs.final_conclusion }}
+          FINAL_URL: ${{ steps.final.outputs.final_url }}
+          WATCH_RC: ${{ steps.final.outputs.watch_rc }}
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/receipts
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          rid=os.environ['RENDER_ID']
+          payload={
+            'renderId': rid,
+            'githubRunId': int(os.environ['RENDER_RUN_ID']),
+            'workflowStatus': os.environ.get('FINAL_STATUS') or 'unknown',
+            'workflowConclusion': os.environ.get('FINAL_CONCLUSION') or None,
+            'githubRunUrl': os.environ.get('FINAL_URL') or None,
+            'watchExitCode': int(os.environ.get('WATCH_RC') or 99),
+            'completionReceipt': True,
+            'readyForMediaReadback': (os.environ.get('FINAL_STATUS')=='completed' and os.environ.get('FINAL_CONCLUSION')=='success')
+          }
+          Path(f'control-plane/receipts/{rid}.json').write_text(json.dumps(payload,indent=2),encoding='utf-8')
+          PY
+          git config user.name 'ugi-control-plane-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "control-plane/receipts/${RENDER_ID}.json"
+          git commit -m "chore: persist UGI final receipt ${RENDER_ID}" || true
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Fail control plane when renderer failed
+        if: ${{ steps.final.outputs.final_conclusion != 'success' }}
+        shell: bash
+        run: |
+          echo "Renderer failed or did not complete successfully"
+          exit 1
