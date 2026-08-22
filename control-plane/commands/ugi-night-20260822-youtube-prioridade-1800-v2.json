@@ -1,0 +1,25 @@
+{
+  "title": "Antes de aceitar uma nova prioridade, responda duas perguntas",
+  "duration": 20,
+  "render_id": "ugi-night-20260822-youtube-prioridade-1800-v2",
+  "content_id": "UGI-NIGHT-20260822-YT-PRIORIDADE-002-V2",
+  "experiment_id": "UGI-NIGHT-20260822-MULTIFORMAT-001",
+  "variant": "YT-V2",
+  "commercial_intent": "direct_low_ticket_conversion",
+  "scenes_json": {
+    "cta": "Kit UGI - Priorização Inteligente no link do perfil.",
+    "commercial_offer": true,
+    "commerce": {"materialId":"UGI-KIT-PRIORIZACAO-001","productId":"UGI-MATERIAL-PRIORIDADES-001","catalogTarget":"https://materiais.umagestaointeligente.com/materiais"},
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "scenes": [
+      {"role":"hook","visual_intent":"gestor olhando várias demandas no notebook","pexels_query":"manager many tasks laptop priorities","overlay":{"instagram":"Antes de aceitar: 2 perguntas.","tiktok":"Antes de aceitar: 2 perguntas.","youtube":"Antes de aceitar: 2 perguntas."},"support":{"instagram":"Evite falsa urgência.","tiktok":"Evite falsa urgência.","youtube":"Evite falsa urgência."},"narration":{"instagram":"Antes de aceitar uma nova prioridade, responda duas perguntas.","tiktok":"Antes de aceitar uma nova prioridade, responda duas perguntas.","youtube":"Antes de aceitar uma nova prioridade, responda duas perguntas."}},
+      {"role":"pain","visual_intent":"gestor alternando entre muitas tarefas","pexels_query":"manager multitasking office stressed","overlay":{"instagram":"1. Move resultado agora?","tiktok":"1. Move resultado agora?","youtube":"1. Move resultado agora?"},"support":{"instagram":"Impacto antes de pressão.","tiktok":"Impacto antes de pressão.","youtube":"Impacto antes de pressão."},"narration":{"instagram":"Primeiro: isso move um resultado importante agora?","tiktok":"Primeiro: isso move um resultado importante agora?","youtube":"Primeiro: isso move um resultado importante agora?"}},
+      {"role":"consequence","visual_intent":"agenda cheia com tarefas conflitantes","pexels_query":"busy calendar conflicting tasks","overlay":{"instagram":"2. O que sai se entrar?","tiktok":"2. O que sai se entrar?","youtube":"2. O que sai se entrar?"},"support":{"instagram":"Toda prioridade tem custo.","tiktok":"Toda prioridade tem custo.","youtube":"Toda prioridade tem custo."},"narration":{"instagram":"Segundo: o que sai da frente se isso entrar? Toda prioridade tem um custo.","tiktok":"Segundo: o que sai da frente se isso entrar? Toda prioridade tem um custo.","youtube":"Segundo: o que sai da frente se isso entrar? Toda prioridade tem um custo."}},
+      {"role":"turn","visual_intent":"gestor organizando matriz simples em quadro","pexels_query":"manager prioritization matrix whiteboard","overlay":{"instagram":"Decida antes de adicionar.","tiktok":"Decida antes de adicionar.","youtube":"Decida antes de adicionar."},"support":{"instagram":"A agenda não decide por você.","tiktok":"A agenda não decide por você.","youtube":"A agenda não decide por você."},"narration":{"instagram":"Se você não escolhe o custo, a agenda escolhe por você. Decida antes de adicionar.","tiktok":"Se você não escolhe o custo, a agenda escolhe por você. Decida antes de adicionar.","youtube":"Se você não escolhe o custo, a agenda escolhe por você. Decida antes de adicionar."}},
+      {"role":"result","visual_intent":"gestor com agenda organizada e foco","pexels_query":"focused manager organized schedule","overlay":{"instagram":"Menos urgência. Mais foco.","tiktok":"Menos urgência. Mais foco.","youtube":"Menos urgência. Mais foco."},"support":{"instagram":"Prioridade vira decisão.","tiktok":"Prioridade vira decisão.","youtube":"Prioridade vira decisão."},"narration":{"instagram":"Assim, prioridade deixa de ser sensação e vira decisão.","tiktok":"Assim, prioridade deixa de ser sensação e vira decisão.","youtube":"Assim, prioridade deixa de ser sensação e vira decisão."}},
+      {"role":"cta","visual_intent":"profissional acessando material UGI no celular","pexels_query":"professional smartphone productivity guide","overlay":{"instagram":"Kit UGI no perfil.","tiktok":"Kit UGI no perfil.","youtube":"Kit UGI no perfil."},"support":{"instagram":"Priorização Inteligente.","tiktok":"Priorização Inteligente.","youtube":"Priorização Inteligente."},"narration":{"instagram":"Quer aplicar isso na prática? Acesse o Kit UGI - Priorização Inteligente no link do perfil.","tiktok":"Quer aplicar isso na prática? Acesse o Kit UGI - Priorização Inteligente no link do perfil.","youtube":"Quer aplicar isso na prática? Acesse o Kit UGI - Priorização Inteligente no link do perfil."}}
+    ]
+  },
+  "smoke_test": false
+}
