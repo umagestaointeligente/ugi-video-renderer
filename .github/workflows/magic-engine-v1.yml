@@ -23,6 +23,8 @@ jobs:
     timeout-minutes: 10
     env:
       PYTHONUNBUFFERED: '1'
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      MAGIC_COUNCIL_MAX_MODELS: '3'
       YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
       YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
       YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
@@ -35,6 +37,9 @@ jobs:
       - name: Run autonomous trend radar
         run: python magic-engine/magic_engine.py
 
+      - name: Run zero-cost Multi-AI Council
+        run: python magic-engine/multi_ai_council.py
+
       - name: Check platform authorization matrix
         run: python magic-engine/publishers.py
 
@@ -46,12 +51,16 @@ jobs:
           from pathlib import Path
           p=json.loads(Path('magic-engine/output/latest.json').read_text())
           s=p['summary']
+          council_path=Path('magic-engine/output/multi-ai-council-latest.json')
+          council=json.loads(council_path.read_text()) if council_path.exists() else {}
           print('# Lola Magic Engine V1')
           print(f"- proposals: {s['total']}")
           print(f"- rights GREEN: {s['green']}")
           print(f"- rights YELLOW: {s['yellow']}")
           print(f"- rights RED: {s['red']}")
-          print('- COST_GATE: PASS (no paid fallback)')
+          print(f"- MULTI_AI_COUNCIL: {council.get('status','NOT_RUN')}")
+          print(f"- COUNCIL_MODELS: {council.get('calls',0)}")
+          print(f"- COST_GATE: {council.get('cost_gate','PASS')}")
           print('- Publication remains fail-closed until OAuth/API auth and downstream FACT/QA gates are PASS.')
           PY
 
