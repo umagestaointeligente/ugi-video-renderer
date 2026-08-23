@@ -1,0 +1,51 @@
+name: UGI Growth Policy Runtime Smoke
+run-name: UGI Growth Policy Smoke ${{ github.sha }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'config/ugi/growth-policy.json'
+      - 'magic-engine/magic_engine.py'
+      - '.github/workflows/ugi-growth-policy-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-policy-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prove engine loads persistent growth policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, importlib.util, json
+          from pathlib import Path
+          engine_path=Path('magic-engine/magic_engine.py')
+          spec=importlib.util.spec_from_file_location('ugi_magic_engine', engine_path)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          policy, sha=m.load_growth_policy()
+          raw=Path('config/ugi/growth-policy.json').read_bytes()
+          expected=hashlib.sha256(raw).hexdigest()
+          assert sha == expected
+          assert policy['policy_id']=='ugi-growth-engine'
+          assert policy['north_star']['organic_views_per_content_platform']==10000
+          assert policy['platform_independence']['default_cross_platform_replication'] is False
+          assert policy['creative_novelty']['window_days']==30
+          assert policy['commerce_gate']['fail_closed'] is True
+          plan=m.build_plan([], policy, sha)
+          gp=plan['growth_policy']
+          assert gp['loaded'] is True and gp['sha256']==expected
+          print('GROWTH_POLICY_RUNTIME_CONNECTED=true')
+          print('POLICY_ID='+policy['policy_id'])
+          print('POLICY_SHA256='+sha)
+          print('NORTH_STAR='+str(policy['north_star']['organic_views_per_content_platform']))
+          print('NOVELTY_WINDOW_DAYS='+str(policy['creative_novelty']['window_days']))
+          print('COMMERCE_FAIL_CLOSED='+str(policy['commerce_gate']['fail_closed']).lower())
+          print('CROSS_PLATFORM_REPLICATION_DEFAULT='+str(policy['platform_independence']['default_cross_platform_replication']).lower())
+          PY
