@@ -1,0 +1,155 @@
+name: UGI Buffer Emergency Readback
+run-name: UGI Buffer Emergency Readback ${{ github.run_id }}
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-buffer-emergency-readback.yml'
+
+permissions:
+  contents: write
+
+env:
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+  WORKER_NAME: lola-operacional-ugi
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch exact live Worker, temporary authenticated probe, restore exact live Worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$CLOUDFLARE_API_TOKEN"
+          python -m pip install --disable-pip-version-check requests
+          python - <<'PY'
+          import hashlib, json, os, re, secrets, time
+          from email.parser import BytesParser
+          from email.policy import default
+          import requests
+          from pathlib import Path
+
+          account=os.environ['CLOUDFLARE_ACCOUNT_ID']
+          token=os.environ['CLOUDFLARE_API_TOKEN']
+          worker=os.environ['WORKER_NAME']
+          base=os.environ['WORKER_URL']
+          api=f'https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts/{worker}'
+          H={'Authorization':f'Bearer {token}'}
+          r=requests.get(api,headers=H,timeout=60)
+          r.raise_for_status()
+          ctype=r.headers.get('content-type','')
+          raw=r.content
+          live_sha=hashlib.sha256(raw).hexdigest()
+          Path('/tmp/live.multipart').write_bytes(raw)
+          Path('/tmp/live.content-type').write_text(ctype)
+
+          msg=BytesParser(policy=default).parsebytes((f'Content-Type: {ctype}\r\nMIME-Version: 1.0\r\n\r\n').encode()+raw)
+          metadata=None; modules=[]
+          for part in msg.iter_parts():
+              name=part.get_param('name', header='content-disposition')
+              filename=part.get_filename()
+              body=part.get_payload(decode=True) or b''
+              ptype=part.get_content_type()
+              if name=='metadata':
+                  metadata=json.loads(body.decode())
+              else:
+                  modules.append({'name':name or filename,'filename':filename or name,'content_type':ptype,'body':body})
+          if not metadata or not modules:
+              raise SystemExit('Could not parse exact live Worker multipart')
+          main=metadata.get('main_module') or metadata.get('body_part')
+          target=None
+          for m in modules:
+              if m['filename']==main or m['name']==main:
+                  target=m; break
+          if target is None:
+              js=[m for m in modules if 'javascript' in m['content_type'] or (m['filename'] or '').endswith(('.js','.mjs'))]
+              if len(js)!=1: raise SystemExit(f'Unable to identify main module; main={main} modules={[m["filename"] for m in modules]}')
+              target=js[0]
+
+          source=target['body'].decode('utf-8')
+          source_sha=hashlib.sha256(target['body']).hexdigest()
+          eph=secrets.token_hex(32)
+          # Mask token in Actions logs.
+          print(f'::add-mask::{eph}')
+          patched=source
+          anchors=['function isAdminAuthorized(request, env) {','function isLolaUGIAuthorized(request, env) {']
+          injected=0
+          for a in anchors:
+              if a in patched:
+                  patched=patched.replace(a,a+f'\n  if (request.headers.get("x-ugi-ephemeral") === "{eph}") return true;',1)
+                  injected+=1
+          if injected < 1:
+              raise SystemExit('No auth anchor found in exact live source')
+
+          def upload(mod_source:bytes):
+              files=[]
+              files.append(('metadata',(None,json.dumps(metadata,separators=(',',':')),'application/json')))
+              for m in modules:
+                  body=mod_source if m is target else m['body']
+                  files.append((m['name'],(m['filename'],body,m['content_type'])))
+              u=requests.put(api,headers=H,files=files,timeout=90)
+              if not u.ok:
+                  raise RuntimeError(f'Cloudflare PUT failed {u.status_code}: {u.text[:600]}')
+              return u
+
+          receipt={
+            'project':'UGI','worker':worker,'publication_provider':'BUFFER','analytics_provider':'METRICOOL',
+            'metricool_publication_allowed':False,'live_worker_source_recovered':True,'live_multipart_sha256':live_sha,
+            'live_main_module':target['filename'],'live_main_bytes':len(target['body']),'live_main_sha256':source_sha,
+            'bindings_count':len(metadata.get('bindings') or []),'temporary_probe_deployed':False,'exact_live_restored':False,
+            'publication_triggered':False,'payment_triggered':False
+          }
+          try:
+              upload(patched.encode())
+              receipt['temporary_probe_deployed']=True
+              headers={'x-ugi-ephemeral':eph}
+              # Wait for edge propagation.
+              ok=False
+              for _ in range(20):
+                  h=requests.get(base+'/api/health',headers=headers,timeout=20)
+                  if h.status_code==200:
+                      ok=True; break
+                  time.sleep(2)
+              receipt['health_http']=h.status_code
+              receipt['health']=h.json() if 'json' in h.headers.get('content-type','') else h.text[:500]
+              if not ok: raise RuntimeError(f'health failed {h.status_code}')
+
+              d=requests.get(base+'/api/drafts',headers=headers,timeout=30)
+              receipt['drafts_http']=d.status_code
+              receipt['drafts']=d.json() if 'json' in d.headers.get('content-type','') else d.text[:1200]
+
+              b=requests.get(base+'/api/buffer/channels',headers=headers,timeout=30)
+              receipt['buffer_channels_http']=b.status_code
+              receipt['buffer_channels']=b.json() if 'json' in b.headers.get('content-type','') else b.text[:1200]
+
+              Path('/tmp/eph-token').write_text(eph)
+          finally:
+              upload(target['body'])
+              receipt['exact_live_restored']=True
+              time.sleep(3)
+              hh=requests.get(base+'/api/health',timeout=20)
+              receipt['health_after_restore_http']=hh.status_code
+
+          out=Path('control-plane/receipts/ugi-buffer/today.json')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          print('UGI_BUFFER_EMERGENCY_READBACK_COMPLETE=true')
+          PY
+      - name: Persist readback evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-autonomy-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git pull --rebase origin main
+          git add control-plane/receipts/ugi-buffer/today.json
+          git commit -m 'UGI: persist Buffer emergency readback [skip ci]' || true
+          git push
