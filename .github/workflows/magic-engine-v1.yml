@@ -31,8 +31,29 @@ jobs:
       META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
       META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
       META_FB_PAGE_ID: ${{ secrets.META_FB_PAGE_ID }}
+      UGI_PUBLISH_PROVIDER: 'buffer'
+      UGI_ANALYTICS_PROVIDER: 'metricool'
+      UGI_METRICOOL_PUBLICATION_ALLOWED: 'false'
     steps:
       - uses: actions/checkout@v4
+
+      - name: Enforce UGI publication routing lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$UGI_PUBLISH_PROVIDER" = 'buffer'
+          test "$UGI_ANALYTICS_PROVIDER" = 'metricool'
+          test "$UGI_METRICOOL_PUBLICATION_ALLOWED" = 'false'
+          python - <<'PY'
+          import json
+          p=json.load(open('config/ugi/growth-policy.json'))
+          r=p['integration_roles']
+          assert r['publisher']['primary']=='buffer'
+          assert r['publisher']['metricool_allowed'] is False
+          assert r['analytics']['primary']=='metricool'
+          assert r['analytics']['publishing_allowed'] is False
+          print('UGI_PUBLICATION_ROUTING_LOCK_PASS=true')
+          PY
 
       - name: Run autonomous trend radar
         run: python magic-engine/magic_engine.py
@@ -40,10 +61,11 @@ jobs:
       - name: Run zero-cost Multi-AI Council
         run: python magic-engine/multi_ai_council.py
 
-      - name: Validate YouTube OAuth health
+      - name: Validate YouTube native OAuth health (supplemental only)
+        continue-on-error: true
         run: python magic-engine/youtube_auth_health.py
 
-      - name: Check platform authorization matrix
+      - name: Check native platform authorization matrix (supplemental only)
         run: python magic-engine/publishers.py
 
       - name: Summarize gates
@@ -59,6 +81,9 @@ jobs:
           yt_path=Path('magic-engine/output/youtube-auth-health.json')
           yt=json.loads(yt_path.read_text()) if yt_path.exists() else {}
           print('# Lola Magic Engine V1')
+          print('- PUBLISH_PROVIDER: BUFFER')
+          print('- ANALYTICS_PROVIDER: METRICOOL')
+          print('- METRICOOL_PUBLICATION_ALLOWED: false')
           print(f"- proposals: {s['total']}")
           print(f"- rights GREEN: {s['green']}")
           print(f"- rights YELLOW: {s['yellow']}")
@@ -66,12 +91,8 @@ jobs:
           print(f"- MULTI_AI_COUNCIL: {council.get('status','NOT_RUN')}")
           print(f"- COUNCIL_MODELS: {council.get('calls',0)}")
           print(f"- COST_GATE: {council.get('cost_gate','PASS')}")
-          print(f"- YOUTUBE_AUTH_STATUS: {yt.get('auth_status','NOT_RUN')}")
-          print(f"- YOUTUBE_TOKEN_REFRESH: {yt.get('token_refresh','NOT_RUN')}")
-          print(f"- YOUTUBE_CHANNEL_ACCESS: {yt.get('channel_access','NOT_RUN')}")
-          if yt.get('channel_title'):
-              print(f"- YOUTUBE_CHANNEL: {yt.get('channel_title')}")
-          print('- Publication remains fail-closed until OAuth/API auth and downstream FACT/QA gates are PASS.')
+          print(f"- YOUTUBE_NATIVE_AUTH_STATUS: {yt.get('auth_status','NOT_RUN')} (supplemental; not publisher gate)")
+          print('- Publication remains fail-closed on UGI content/commerce gates and Buffer publication/readback.')
           PY
 
       - name: Persist lightweight evidence
