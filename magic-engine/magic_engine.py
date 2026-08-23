@@ -11,7 +11,7 @@ GROWTH_POLICY_PATH = REPO_ROOT / "config" / "ugi" / "growth-policy.json"
 OUT = ROOT / "output"
 OUT.mkdir(parents=True, exist_ok=True)
 
-UA = "Mozilla/5.0 LolaMagicEngine/1.0"
+UA = "Mozilla/5.0 LolaMagicEngine/1.1"
 
 
 def load_growth_policy() -> tuple[dict, str]:
@@ -62,37 +62,62 @@ def classify(title: str) -> str:
     return "curiosidades"
 
 
+def audience_fit_score(title: str, channel: str) -> int:
+    t = norm(title)
+    keyword_sets = {
+        "curiosidades": CONFIG["curiosity_keywords"],
+        "cinema_transformativo": CONFIG["cinema_keywords"],
+        "universo_esportes": CONFIG["sports_keywords"],
+        "podcast_intelligence": CONFIG["podcast_keywords"],
+        "sleep_focus": ["sleep", "sono", "relax", "focus", "foco", "noise", "rain", "chuva"]
+    }
+    kws = keyword_sets.get(channel, [])
+    if contains_any(t, kws): return 92
+    if len(t.split()) >= 4: return 72
+    return 60
+
+
 def trend_score(item: dict, cross_geo_count: int) -> int:
+    channel=classify(item["title"])
     position=max(0, 100 - (item["position"]-1)*4)
-    kw=85 if classify(item["title"]) != "curiosidades" else 70
+    kw=85 if channel != "curiosidades" else 70
     freshness=90
     cross=min(100, 55 + 22*max(0, cross_geo_count-1))
+    audience=audience_fit_score(item["title"], channel)
     w=CONFIG["scoring"]["trend"]
-    return round(position*w["position"] + kw*w["keyword_match"] + freshness*w["freshness"] + cross*w["cross_geo"])
+    return round(position*w["position"] + kw*w["keyword_match"] + freshness*w["freshness"] + cross*w["cross_geo"] + audience*w.get("audience_fit",0))
+
+
+def visual_strength_score(title: str, channel: str) -> int:
+    strong=["vulcao","vulcão","space","espaço","explosion","explosão","record","recorde","final","movie","filme","nba","f1","ufc"]
+    if contains_any(title,strong): return 90
+    if channel in {"cinema_transformativo","universo_esportes"}: return 82
+    return 70
 
 
 def virality_score(title: str, channel: str) -> int:
     t=norm(title)
-    curiosity_words=["why","por que","como","misterio","mystery","segredo","descoberta","revealed","surpreendente","incrivel"]
+    curiosity_words=["why","por que","como","misterio","mistério","mystery","segredo","descoberta","revealed","surpreendente","incrivel","incrível"]
     urgency_words=["hoje","today","agora","now","final","breaking","novo","new"]
-    emotion_words=["chocante","shocking","incrivel","amazing","historic","historico","recorde","record"]
+    emotion_words=["chocante","shocking","incrivel","incrível","amazing","historic","historico","histórico","recorde","record"]
     curiosity=85 if contains_any(t, curiosity_words) else 62
     urgency=82 if contains_any(t, urgency_words) else 58
     specificity=78 if re.search(r"\d", t) or len(t.split()) >= 4 else 60
     emotion=82 if contains_any(t, emotion_words) else 60
     series=88 if channel in {"cinema_transformativo","podcast_intelligence","universo_esportes"} else 72
+    visual=visual_strength_score(title,channel)
     w=CONFIG["scoring"]["virality"]
-    return round(curiosity*w["curiosity"] + urgency*w["urgency"] + specificity*w["specificity"] + emotion*w["emotion"] + series*w["series_potential"])
+    return round(curiosity*w["curiosity"] + urgency*w["urgency"] + specificity*w["specificity"] + emotion*w["emotion"] + series*w["series_potential"] + visual*w.get("visual_strength",0))
 
 
 def rights_gate(channel: str) -> tuple[str,str]:
     if channel in {"curiosidades","sleep_focus"}:
-        return "GREEN", "Use only original, public-domain, Pexels/Pixabay or separately verified commercial-license assets."
+        return "GREEN", "Use only original, public-domain or separately verified commercial-license assets."
     if channel == "universo_esportes":
-        return "YELLOW", "Analysis is allowed to proceed, but broadcast footage/reuploads are blocked until a lawful rights basis is recorded."
+        return "YELLOW", "Analysis may proceed, but broadcast footage/reuploads are blocked until a lawful rights basis is recorded."
     if channel == "podcast_intelligence":
-        return "YELLOW", "Requires creator permission/license or separately reviewed transformative basis before publication."
-    return "RED", "Film/TV clips are blocked from autonomous publication until a documented lawful rights basis exists."
+        return "YELLOW", "Requires creator permission/license or separately reviewed materially transformative basis before publication."
+    return "YELLOW", "Cinema topic may proceed only as original commentary/analysis; raw film/TV clip publication requires documented lawful rights basis."
 
 
 def build_plan(items: list[dict], growth_policy: dict, growth_policy_sha256: str) -> dict:
@@ -110,18 +135,23 @@ def build_plan(items: list[dict], growth_policy: dict, growth_policy_sha256: str
         if ts < CONFIG["scan"]["min_trend_score"] or vs < CONFIG["scan"]["min_virality_score"]: continue
         gate, note=rights_gate(ch)
         proposals.append({
-            "channel": ch, "topic": i["title"], "geo": i["geo"],
+            "channel": ch,
+            "public_name": c.get("public_name",ch),
+            "topic": i["title"], "geo": i["geo"],
             "trend_score": ts, "virality_score": vs,
             "rights_gate": gate, "rights_note": note,
             "fact_gate": "PENDING", "qa_gate": "PENDING", "cost_gate": "PASS",
+            "thumbnail_semantic_match": "PENDING",
+            "thumbnail_policy": CONFIG.get("thumbnail_policy",{}),
             "platform_auth": "PENDING", "platforms": c["platforms"], "format": c["format"],
             "publish_ready": False, "source": i["source"],
-            "status": "RESEARCH_REQUIRED" if gate != "RED" else "HARD_STOP_RIGHTS"
+            "status": "RESEARCH_REQUIRED"
         })
         channel_counts[ch]+=1
     proposals.sort(key=lambda x:(x["trend_score"]+x["virality_score"]), reverse=True)
     return {
         "engine": CONFIG["engine"], "version": CONFIG["version"],
+        "brand": CONFIG.get("brand"),
         "generated_at": datetime.now(timezone.utc).isoformat(), "autonomous": True, "paid_fallback": False,
         "growth_policy": {
             "loaded": True,
