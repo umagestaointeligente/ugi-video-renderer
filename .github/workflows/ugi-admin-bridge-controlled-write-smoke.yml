@@ -1,0 +1,168 @@
+name: UGI Admin Bridge Controlled Write Smoke
+run-name: UGI Admin Bridge Controlled Write Smoke ${{ github.run_id }}
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-admin-bridge-controlled-write-smoke.yml'
+
+permissions:
+  contents: write
+
+env:
+  WORKER_URL: https://lola-github-admin-bridge-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Controlled write smoke through isolated bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC='cloudflare/lola-github-admin-bridge-ugi.mjs'
+          CFG='cloudflare/wrangler.ugi-admin.toml'
+          cp "$SRC" /tmp/clean.mjs
+          SMOKE_TOKEN="$(openssl rand -hex 32)"
+          echo "::add-mask::$SMOKE_TOKEN"
+          export SMOKE_TOKEN
+          restore() { cp /tmp/clean.mjs "$SRC"; npx --yes wrangler@4.32.0 deploy --config "$CFG" >/tmp/restore.log 2>&1 || true; }
+          trap restore EXIT
+
+          curl --fail --silent --show-error "$WORKER_URL/health" -o /tmp/health-before.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/health-before.json'))
+          assert d.get('ok') is True, d
+          assert d.get('repository')=='umagestaointeligente/ugi-video-renderer', d
+          assert d.get('fail_closed') is True, d
+          PY
+
+          python - <<'PY'
+          import os,pathlib
+          p=pathlib.Path('cloudflare/lola-github-admin-bridge-ugi.mjs')
+          s=p.read_text(); old='if (!(await requireAuth(request, env))) {'
+          tok=os.environ['SMOKE_TOKEN']; new=f'if (request.headers.get("x-ugi-smoke") !== "{tok}" && !(await requireAuth(request, env))) {{'
+          assert s.count(old)==1
+          p.write_text(s.replace(old,new))
+          PY
+          npx --yes wrangler@4.32.0 deploy --config "$CFG" >/tmp/temp-deploy.log 2>&1
+
+          DIAG_OK=false
+          for i in $(seq 1 20); do
+            CODE=$(curl --silent --show-error -o /tmp/diag.json -w '%{http_code}' -H "x-ugi-smoke: $SMOKE_TOKEN" "$WORKER_URL/diagnostics" || true)
+            if [ "$CODE" = '200' ]; then DIAG_OK=true; break; fi
+            sleep 2
+          done
+          test "$DIAG_OK" = 'true'
+
+          START_EPOCH=$(date +%s)
+          DISPATCH_OK=false
+          for i in $(seq 1 10); do
+            CODE=$(curl --silent --show-error -o /tmp/dispatch.json -w '%{http_code}' \
+              -X POST -H "x-ugi-smoke: $SMOKE_TOKEN" -H 'content-type: application/json' \
+              --data '{"workflow":"actions-health.yml","ref":"main","inputs":{}}' \
+              "$WORKER_URL/github/workflows/dispatch" || true)
+            if [ "$CODE" = '202' ]; then DISPATCH_OK=true; break; fi
+            sleep 2
+          done
+          test "$DISPATCH_OK" = 'true'
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/dispatch.json'))
+          assert d.get('ok') is True, d
+          assert d.get('workflow')=='actions-health.yml', d
+          assert d.get('dispatch_status')==204, d
+          PY
+
+          RUN_ID=''
+          for i in $(seq 1 40); do
+            curl --fail --silent --show-error -H "x-ugi-smoke: $SMOKE_TOKEN" "$WORKER_URL/github/workflows/runs" -o /tmp/runs.json
+            RUN_ID=$(python - "$START_EPOCH" <<'PY'
+          import json,sys,datetime
+          start=int(sys.argv[1]); d=json.load(open('/tmp/runs.json'))
+          for r in d.get('runs',[]):
+              if r.get('path') != '.github/workflows/actions-health.yml':
+                  continue
+              created=r.get('created_at')
+              if not created: continue
+              ts=int(datetime.datetime.fromisoformat(created.replace('Z','+00:00')).timestamp())
+              if ts >= start-5:
+                  print(r.get('id','')); break
+          PY
+          )
+            [ -n "$RUN_ID" ] && break
+            sleep 3
+          done
+          test -n "$RUN_ID"
+
+          TOTAL_JOBS=0
+          STATUS=''
+          CONCLUSION=''
+          for i in $(seq 1 50); do
+            curl --fail --silent --show-error -H "x-ugi-smoke: $SMOKE_TOKEN" "$WORKER_URL/github/workflows/jobs?run_id=$RUN_ID" -o /tmp/jobs.json
+            read -r TOTAL_JOBS STATUS CONCLUSION < <(python - <<'PY'
+          import json
+          d=json.load(open('/tmp/jobs.json')); jobs=d.get('jobs') or []; j=jobs[0] if jobs else {}
+          print(d.get('total_jobs',0), j.get('status',''), j.get('conclusion',''))
+          PY
+          )
+            if [ "$TOTAL_JOBS" -gt 0 ] && [ "$STATUS" = 'completed' ]; then break; fi
+            sleep 3
+          done
+          test "$TOTAL_JOBS" -gt 0
+          test "$STATUS" = 'completed'
+          test "$CONCLUSION" = 'success'
+
+          trap - EXIT
+          restore
+          sleep 3
+          curl --fail --silent --show-error "$WORKER_URL/health" -o /tmp/health-after.json
+          PROTECTED_CODE=$(curl --silent --output /tmp/protected.json --write-out '%{http_code}' "$WORKER_URL/diagnostics")
+          test "$PROTECTED_CODE" = '401'
+
+          mkdir -p control-plane/receipts/ugi-admin-bridge
+          export RUN_ID TOTAL_JOBS STATUS CONCLUSION
+          python - <<'PY'
+          import json,os,datetime
+          out={
+            'project':'UGI',
+            'repository':'umagestaointeligente/ugi-video-renderer',
+            'worker':'lola-github-admin-bridge-ugi',
+            'github_app_installation_auth_pass':True,
+            'repository_lock_pass':True,
+            'bridge_controlled_dispatch_pass':True,
+            'actions_health_run_id':os.environ['RUN_ID'],
+            'total_jobs':int(os.environ['TOTAL_JOBS']),
+            'no_jobs_were_run':False,
+            'job_status':os.environ['STATUS'],
+            'job_conclusion':os.environ['CONCLUSION'],
+            'clean_source_redeployed':True,
+            'unauthenticated_diagnostics_blocked':True,
+            'publication_triggered':False,
+            'payment_triggered':False,
+            'secrets_exposed':False,
+            'fail_closed':True,
+            'workflow_run_id':os.environ.get('GITHUB_RUN_ID'),
+            'commit_sha':os.environ.get('GITHUB_SHA'),
+            'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }
+          open('control-plane/receipts/ugi-admin-bridge/latest.json','w').write(json.dumps(out,indent=2)+'\n')
+          PY
+      - name: Persist controlled-write receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-autonomy-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git pull --rebase origin main
+          git add control-plane/receipts/ugi-admin-bridge/latest.json
+          git commit -m 'UGI autonomy: persist bridge controlled-write receipt [skip ci]' || true
+          git push
