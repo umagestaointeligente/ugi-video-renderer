@@ -40,6 +40,9 @@ jobs:
       - name: Run zero-cost Multi-AI Council
         run: python magic-engine/multi_ai_council.py
 
+      - name: Validate YouTube OAuth health
+        run: python magic-engine/youtube_auth_health.py
+
       - name: Check platform authorization matrix
         run: python magic-engine/publishers.py
 
@@ -53,6 +56,8 @@ jobs:
           s=p['summary']
           council_path=Path('magic-engine/output/multi-ai-council-latest.json')
           council=json.loads(council_path.read_text()) if council_path.exists() else {}
+          yt_path=Path('magic-engine/output/youtube-auth-health.json')
+          yt=json.loads(yt_path.read_text()) if yt_path.exists() else {}
           print('# Lola Magic Engine V1')
           print(f"- proposals: {s['total']}")
           print(f"- rights GREEN: {s['green']}")
@@ -61,6 +66,11 @@ jobs:
           print(f"- MULTI_AI_COUNCIL: {council.get('status','NOT_RUN')}")
           print(f"- COUNCIL_MODELS: {council.get('calls',0)}")
           print(f"- COST_GATE: {council.get('cost_gate','PASS')}")
+          print(f"- YOUTUBE_AUTH_STATUS: {yt.get('auth_status','NOT_RUN')}")
+          print(f"- YOUTUBE_TOKEN_REFRESH: {yt.get('token_refresh','NOT_RUN')}")
+          print(f"- YOUTUBE_CHANNEL_ACCESS: {yt.get('channel_access','NOT_RUN')}")
+          if yt.get('channel_title'):
+              print(f"- YOUTUBE_CHANNEL: {yt.get('channel_title')}")
           print('- Publication remains fail-closed until OAuth/API auth and downstream FACT/QA gates are PASS.')
           PY
 
