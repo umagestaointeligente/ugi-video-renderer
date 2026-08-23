@@ -1,20 +1,40 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "policy_id": "ugi-growth-engine",
   "effective_date": "2026-08-23",
   "north_star": {"organic_views_per_content_platform": 10000, "guaranteed": false, "distribution_ladder": [100,500,1000,3000,10000]},
   "optimization_priority": ["retention_choose_to_view","distribution","engagement_save_share","qualified_store_traffic","conversion_revenue"],
   "pre_generation_inputs": ["ugi_recent_telemetry","platform_native_analytics","current_platform_trends","search_signals","market_management_ai_signals","creative_novelty_history","platform_audience_format_behavior","commerce_inventory","dynamic_time_day_signals"],
   "platform_independence": {"enabled": true, "default_cross_platform_replication": false, "require_evidence_for_reuse": true},
+  "integration_roles": {
+    "publisher": {
+      "primary": "buffer",
+      "metricool_allowed": false,
+      "required_actions": ["schedule","publish","publication_status","publication_readback"],
+      "hard_rule": "Metricool MUST NOT create, update, schedule, publish or retry UGI social posts. Buffer is the official publishing control plane."
+    },
+    "analytics": {
+      "primary": "metricool",
+      "publishing_allowed": false,
+      "allowed_actions": ["read_analytics","read_best_time_signals","read_post_performance","read_account_performance"],
+      "hard_rule": "Metricool is read-only for UGI analytics and timing intelligence."
+    },
+    "native_platforms": {
+      "role": "verification_and_supplemental_analytics",
+      "publishing_default": false
+    }
+  },
   "tiktok": {"experimental_duration_seconds":{"min":7,"max":12},"frame_zero_hook":true,"slow_intro":false,"zero_view_action":"diagnose_eligibility_processing_before_delete_or_repost","metrics":["views","for_you_share","avg_watch_time","completion","likes","comments","shares","search_source","profile_source"]},
   "instagram": {"formats":["reel","carousel","static"],"test_save_share_carousels":true,"avoid_repetitive_visual_templates":true,"metrics":["reach","non_follower_reach","views","watch_retention","saves","shares","comments","profile_store_actions"]},
   "youtube": {"formats":["short_video"],"optimize":["choose_to_view","average_view_duration","average_percentage_viewed","satisfaction_engagement"],"micro_winner_strategy":"descendants_not_copies","metrics":["shown_in_feed","views","choose_to_view","retention","likes","comments","shares","downstream_traffic"]},
   "creative_novelty": {"window_days":30,"compact_index_required":true,"fields":["date","platform","content_id","topic","hook","first_line","script_hash","script_summary","visual_concept","scene_summary","cta","product_id","performance"]},
   "commerce_gate": {"required_for_commercial_content":true,"sequence":["topic","matching_material","product_cover","ugi_store","checkout_destination_valid","platform_cta","publication"],"fail_closed":true,"product_topic_semantic_match":true},
-  "publication_evidence": {"distinguish_scheduled_published_verified":true,"verified_requires_readback":true,"no_unproven_pass":true},
+  "publication_evidence": {"distinguish_scheduled_published_verified":true,"verified_requires_readback":true,"no_unproven_pass":true,"publisher_source":"buffer"},
   "publication_recovery": {
     "enabled": true,
     "policy": "same_asset_same_caption_no_duplicate_retry_only_on_delivery_failure",
+    "publisher": "buffer",
+    "metricool_retry_forbidden": true,
     "max_attempts_total": 4,
     "attempts": [
       {"attempt":1,"offset_minutes":0,"label":"primary"},
@@ -29,6 +49,6 @@
     "final_failure_action": "record_incident_and_skip_until_next_planned_slot",
     "cross_platform_independent": true
   },
-  "experiment_loop":["observe","hypothesize","generate","rights_safety_quality_gates","commerce_gate","publish","readback","measure","learn","update_weights"],
-  "lifecycle_events":["STUDY_COMPLETE","CONTENT_READY","MATERIAL_READY","GATES_PASS","GATES_FAIL","SCHEDULE_CONFIRMED","T_MINUS_15","PUBLISHING","PUBLISHED","VERIFIED","RETRY_30M","RETRY_90M","RETRY_210M","PERFORMANCE_CHECKPOINT","INCIDENT"]
+  "experiment_loop":["observe","hypothesize","generate","rights_safety_quality_gates","commerce_gate","publish_via_buffer","buffer_readback","measure_via_metricool_and_native","learn","update_weights"],
+  "lifecycle_events":["STUDY_COMPLETE","CONTENT_READY","MATERIAL_READY","GATES_PASS","GATES_FAIL","BUFFER_SCHEDULE_CONFIRMED","T_MINUS_15","PUBLISHING","PUBLISHED","VERIFIED","RETRY_30M","RETRY_90M","RETRY_210M","PERFORMANCE_CHECKPOINT","INCIDENT"]
 }
