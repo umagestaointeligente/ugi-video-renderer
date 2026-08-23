@@ -1,5 +1,6 @@
 name: UGI Growth Policy Runtime Gate
-run-name: UGI Growth Gate ${{ github.sha }}
+run-name: UGI Growth Policy Gate ${{ github.sha }}
+
 on:
   push:
     branches: [main]
@@ -8,23 +9,41 @@ on:
       - 'scripts/growth-policy-smoke.py'
       - '.github/workflows/ugi-growth-policy-gate.yml'
   workflow_dispatch:
+
 permissions:
   contents: read
-  actions: write
+
 jobs:
-  growth-gate:
+  policy-runtime-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - name: Load and validate Growth Policy
-        run: python scripts/growth-policy-smoke.py
-      - name: Prove renderer consumes policy gate
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Checkout policy source of truth
+        uses: actions/checkout@v4
+      - name: Load and validate growth policy
+        shell: bash
         run: |
           set -euo pipefail
-          python scripts/growth-policy-smoke.py | tee /tmp/growth-proof.txt
-          grep -q '^GROWTH_POLICY_LOADED=true$' /tmp/growth-proof.txt
-          grep -q '^GROWTH_RUNTIME_GATE=PASS$' /tmp/growth-proof.txt
-          echo 'RENDER_PRECONDITION_GROWTH_POLICY=PASS'
+          python scripts/growth-policy-smoke.py | tee /tmp/growth-policy-evidence.txt
+          grep -q '^GROWTH_POLICY_LOADED=true$' /tmp/growth-policy-evidence.txt
+          grep -q '^GROWTH_POLICY_ID=ugi-growth-engine$' /tmp/growth-policy-evidence.txt
+          grep -q '^GROWTH_TARGET_VIEWS=10000$' /tmp/growth-policy-evidence.txt
+          grep -q '^GROWTH_RUNTIME_GATE=PASS$' /tmp/growth-policy-evidence.txt
+      - name: Prove generation-control rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('config/ugi/growth-policy.json').read_text(encoding='utf-8'))
+          assert p['platform_independence']['enabled'] is True
+          assert p['platform_independence']['default_cross_platform_replication'] is False
+          assert p['creative_novelty']['window_days'] == 30
+          assert p['commerce_gate']['fail_closed'] is True
+          assert p['publication_evidence']['verified_requires_readback'] is True
+          assert p['tiktok']['experimental_duration_seconds'] == {'min':7,'max':12}
+          assert 'carousel' in p['instagram']['formats']
+          assert p['youtube']['micro_winner_strategy'] == 'descendants_not_copies'
+          print('GENERATION_CONTROL_INTEGRATION=PASS')
+          PY
