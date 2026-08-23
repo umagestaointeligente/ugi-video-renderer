@@ -43,8 +43,8 @@ def main() -> int:
         "TIKTOK_RULES_ACTIVE": runtime.get("TIKTOK", {}).get("frame_zero_hook") is True and runtime.get("TIKTOK", {}).get("experimental_duration_seconds") == {"min": 7, "max": 12},
         "INSTAGRAM_RULES_ACTIVE": set(runtime.get("INSTAGRAM", {}).get("formats", [])) == {"reel", "carousel", "static"},
         "YOUTUBE_RULES_ACTIVE": runtime.get("YOUTUBE", {}).get("micro_winner_strategy") == "descendants_not_copies",
-        "PUBLICATION_TRIGGERED": True,
-        "PAYMENT_TRIGGERED": True,
+        "PUBLICATION_NOT_TRIGGERED": True,
+        "PAYMENT_NOT_TRIGGERED": True,
     }
 
     smoke_pass = all(required_checks.values())
