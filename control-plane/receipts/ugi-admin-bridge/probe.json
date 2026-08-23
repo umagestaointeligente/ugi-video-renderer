@@ -1,0 +1,29 @@
+{
+  "project": "UGI",
+  "worker": "lola-github-admin-bridge-ugi",
+  "worker_url": "https://lola-github-admin-bridge-ugi.umagestaointeligente.workers.dev",
+  "curl_exit": 0,
+  "http_code": 200,
+  "health_json": {
+    "ok": true,
+    "project": "UGI",
+    "worker": "lola-github-admin-bridge-ugi",
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "default_branch": "main",
+    "required_secrets_configured": {
+      "GITHUB_APP_ID": true,
+      "GITHUB_INSTALLATION_ID": true,
+      "GITHUB_APP_PRIVATE_KEY": true,
+      "BRIDGE_AUTH_SECRET": true
+    },
+    "github_called": false,
+    "secrets_exposed": false,
+    "fail_closed": true,
+    "request_id": "8b7071c5-7dac-4139-bd27-27d743ea726e"
+  },
+  "body_preview": null,
+  "error_preview": null,
+  "workflow_run_id": "32671932788",
+  "commit_sha": "4e7042ba1aefbcb383dd90ba62be820d2bf1e213",
+  "timestamp": "2026-08-23T22:52:59.870565+00:00"
+}
