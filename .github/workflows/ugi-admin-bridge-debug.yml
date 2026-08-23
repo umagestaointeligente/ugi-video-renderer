@@ -62,3 +62,5 @@ jobs:
           cat /tmp/actions.json
           trap - EXIT
           restore
+
+# trigger: 2026-08-23T23:00Z
