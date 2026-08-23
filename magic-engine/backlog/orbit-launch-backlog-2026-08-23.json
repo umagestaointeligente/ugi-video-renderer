@@ -1,0 +1,68 @@
+{
+  "brand": "Orbit Media Labs",
+  "date": "2026-08-23",
+  "status": "PRODUCTION_BACKLOG_READY",
+  "channels": {
+    "voce_sabia_agora": [
+      {
+        "priority": 1,
+        "topic": "O telescópio da NASA que nasceu de tecnologia de satélite-espião",
+        "hook": "Você sabia que um dos próximos grandes olhos da NASA usa um espelho criado originalmente para espionagem?",
+        "angle": "Explicar a origem do espelho do Nancy Grace Roman, o campo de visão e por que ele pode mapear o céu muito mais rápido que o Hubble.",
+        "target_seconds": 45,
+        "thumbnail_concept": "Telescópio espacial apontado para galáxias + elemento visual discreto de satélite de reconhecimento; texto curto: 'ERA PARA ESPIONAR?'",
+        "thumbnail_semantic_match": "PASS_BY_DESIGN",
+        "visual_policy": "NASA/public-domain imagery when verified plus original graphics; no unrelated telescope image presented as Roman.",
+        "source": "https://www1.folha.uol.com.br/ciencia/2026/08/novo-telescopio-espacial-da-nasa-e-satelite-espiao-cosmico.shtml"
+      },
+      {
+        "priority": 2,
+        "topic": "China lança missão para procurar água no polo sul da Lua",
+        "hook": "A próxima corrida pela Lua pode começar por algo simples: água.",
+        "angle": "Explicar a missão Chang'e-7, por que crateras permanentemente sombreadas interessam e como gelo lunar poderia mudar futuras bases humanas.",
+        "target_seconds": 50,
+        "thumbnail_concept": "Polo sul lunar com cratera escura + módulo de exploração; texto curto: 'ÁGUA NA LUA?'",
+        "thumbnail_semantic_match": "PASS_BY_DESIGN",
+        "visual_policy": "Use verified mission/public-domain/official imagery or clearly labeled original illustration.",
+        "source": "https://www1.folha.uol.com.br/ciencia/2026/08/china-fara-missao-em-busca-de-agua-no-polo-sul-da-lua-lancamento-e-previsto-para-este-domingo.shtml"
+      },
+      {
+        "priority": 3,
+        "topic": "O animal que vive a 1,3 km de profundidade e mudou o que sabemos sobre vida extrema",
+        "hook": "Existe um animal vivendo tão fundo na Terra que cientistas já acharam que isso era impossível.",
+        "angle": "Contar a descoberta do Halicephalobus mephisto e como ele ampliou os limites conhecidos da vida animal subterrânea.",
+        "target_seconds": 45,
+        "thumbnail_concept": "Micrografia/ilustração fiel de nematódeo em rocha profunda + profundidade 1,3 km; texto curto: 'VIDA AQUI EMBAIXO?'",
+        "thumbnail_semantic_match": "PASS_BY_DESIGN",
+        "visual_policy": "Use licensed/public-domain microscopy or original scientifically faithful illustration; no monster-like fake creature.",
+        "source": "https://www1.folha.uol.com.br/ciencia/2026/08/o-verme-do-diabo-e-o-animal-que-vive-no-lugar-mais-profundo-da-terra-e-ele-esta-redefinindo-os-limites-da-vida.shtml"
+      }
+    ],
+    "cena_certa": [
+      {
+        "priority": 1,
+        "topic": "Prime Video anuncia produções inspiradas em dois crimes brasileiros muito conhecidos",
+        "hook": "Dois casos que marcaram o Brasil estão virando novas produções no streaming.",
+        "angle": "Contextualizar os anúncios e discutir por que o true crime continua tão forte no streaming, sem reproduzir cenas das obras ou imagens sensíveis desnecessárias.",
+        "target_seconds": 50,
+        "thumbnail_concept": "Visual original de claquete/streaming com duas silhuetas documentais e texto 'VÃO VIRAR FILME/SÉRIE'; sem dramatização enganosa.",
+        "thumbnail_semantic_match": "PASS_BY_DESIGN",
+        "rights_gate": "YELLOW_COMMENTARY_ONLY",
+        "visual_policy": "Original graphics + licensed/public-domain news-context visuals only; no Prime Video footage/poster reuse unless separately cleared.",
+        "source": "https://natelinha.uol.com.br/natelona/2026/08/23/true-crime-os-detalhes-brutais-dos-casos-brasileiros-que-vao-virar-filme-no-prime-video-246556.php"
+      },
+      {
+        "priority": 2,
+        "topic": "Supergirl chega ao digital depois de desempenho fraco nos cinemas",
+        "hook": "Um filme pode fracassar no cinema e ganhar uma segunda vida no streaming?",
+        "angle": "Usar o caso recente de Supergirl como ponto de partida para explicar a segunda janela digital e como percepção de público pode mudar depois do cinema.",
+        "target_seconds": 45,
+        "thumbnail_concept": "Ilustração original de heroína genérica em frente a tela de streaming + gráfico cinema→digital; texto curto: 'SEGUNDA CHANCE?'",
+        "thumbnail_semantic_match": "PASS_BY_DESIGN",
+        "rights_gate": "YELLOW_COMMENTARY_ONLY",
+        "visual_policy": "No movie footage or copyrighted character likeness as primary asset without rights basis; favor original symbolic illustration and commentary.",
+        "source": "https://www.uol.com.br/splash/noticias/2026/08/21/ha-boa-diversao-por-tras-do-fracasso-de-supergirl.ghtm"
+      }
+    ]
+  }
+}
