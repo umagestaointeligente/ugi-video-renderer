@@ -12,7 +12,7 @@ on:
       - 'cloudflare/wrangler.ugi-admin.toml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ugi-actions-health
@@ -23,6 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Prove runner execution
         shell: bash
         run: |
@@ -35,6 +39,16 @@ jobs:
           echo "RUN_ID=${GITHUB_RUN_ID}"
           echo "RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"
           echo "COMMIT_SHA=${GITHUB_SHA}"
+
+      - name: Validate isolated bridge source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lola-github-admin-bridge-ugi.mjs
+          grep -q 'const OWNER = "umagestaointeligente"' cloudflare/lola-github-admin-bridge-ugi.mjs
+          grep -q 'const REPO = "ugi-video-renderer"' cloudflare/lola-github-admin-bridge-ugi.mjs
+          grep -q 'actions-health.yml' cloudflare/lola-github-admin-bridge-ugi.mjs
+          grep -q 'fail_closed' cloudflare/lola-github-admin-bridge-ugi.mjs
 
       - name: Write health receipt
         shell: bash
@@ -51,8 +65,14 @@ jobs:
             "run_attempt": "${GITHUB_RUN_ATTEMPT}",
             "commit_sha": "${GITHUB_SHA}",
             "runner_executed": true,
+            "bridge_source_syntax_ok": true,
+            "repository_lock_source_ok": true,
+            "workflow_allowlist_source_ok": true,
             "fail_closed": true,
-            "no_jobs_were_run": false
+            "total_jobs": 1,
+            "no_jobs_were_run": false,
+            "publication_triggered": false,
+            "payment_triggered": false
           }
           JSON
 
@@ -63,3 +83,17 @@ jobs:
           path: generated/evidence/actions-health.json
           retention-days: 30
           if-no-files-found: error
+
+      - name: Persist compact health receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-autonomy-health-bot'
+          git config user.email 'ugi-autonomy-health-bot@users.noreply.github.com'
+          git add generated/evidence/actions-health.json
+          if git diff --cached --quiet; then
+            echo 'No health receipt change found' >&2
+            exit 1
+          fi
+          git commit -m "UGI autonomy: persist actions health receipt [skip ci]"
+          git push origin HEAD:main
