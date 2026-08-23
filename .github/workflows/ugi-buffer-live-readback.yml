@@ -5,6 +5,8 @@ on:
   workflow_dispatch: {}
   issues:
     types: [opened]
+  pull_request:
+    types: [opened, synchronize]
   push:
     branches: [main]
     paths:
@@ -18,7 +20,9 @@ env:
 
 jobs:
   readback:
-    if: github.event_name != 'issues' || startsWith(github.event.issue.title, '[UGI-AUTONOMY]')
+    if: >-
+      (github.event_name != 'issues' || startsWith(github.event.issue.title, '[UGI-AUTONOMY]')) &&
+      (github.event_name != 'pull_request' || startsWith(github.event.pull_request.title, '[UGI-AUTONOMY]'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -79,7 +83,7 @@ jobs:
           if not all(x.get('http')==202 and x.get('response',{}).get('ok') for x in out['results']): raise SystemExit(2)
           PY
       - name: Persist readback and generation evidence
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
@@ -89,3 +93,13 @@ jobs:
           git add control-plane/receipts/ugi-buffer/live-readback.json control-plane/receipts/ugi-today/generation-live-bridge.json
           git commit -m 'UGI: persist live Buffer and today generation evidence [skip ci]' || true
           git push origin HEAD:main
+      - name: Upload PR-run evidence
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-autonomy-recovery-${{ github.run_id }}
+          path: |
+            control-plane/receipts/ugi-buffer/live-readback.json
+            control-plane/receipts/ugi-today/generation-live-bridge.json
+          retention-days: 3
+          if-no-files-found: warn
