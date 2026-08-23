@@ -1,0 +1,65 @@
+name: UGI Buffer Live Readback
+run-name: UGI Buffer Live Readback ${{ github.run_id }}
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-buffer-live-readback.yml'
+
+permissions:
+  contents: write
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read live UGI drafts and Buffer channels
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/receipts/ugi-buffer
+          if [ -z "${UGI_LOLA_COMMAND_KEY:-}" ]; then
+            printf '%s\n' '{"ok":false,"error":"UGI_LOLA_COMMAND_KEY_MISSING"}' > control-plane/receipts/ugi-buffer/live-readback.json
+            exit 2
+          fi
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          curl --fail --silent --show-error -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/health" -o /tmp/health.json
+          curl --fail --silent --show-error -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/drafts" -o /tmp/drafts.json
+          curl --fail --silent --show-error -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/buffer/channels" -o /tmp/channels.json
+          python - <<'PY'
+          import json,datetime
+          h=json.load(open('/tmp/health.json')); d=json.load(open('/tmp/drafts.json')); c=json.load(open('/tmp/channels.json'))
+          out={
+            'ok': bool(h.get('ok')) and bool(d.get('ok')) and bool(c.get('ok')),
+            'publication_provider':'BUFFER',
+            'analytics_provider':'METRICOOL',
+            'metricool_publication_allowed':False,
+            'health':h,
+            'drafts':d,
+            'buffer_channels':c,
+            'publication_triggered':False,
+            'payment_triggered':False,
+            'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }
+          open('control-plane/receipts/ugi-buffer/live-readback.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Persist readback
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-autonomy-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git pull --rebase origin main || true
+          git add control-plane/receipts/ugi-buffer/live-readback.json
+          git commit -m 'UGI: persist live Buffer readback [skip ci]' || true
+          git push origin HEAD:main
