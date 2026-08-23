@@ -3,6 +3,8 @@ run-name: UGI Buffer Live Readback ${{ github.run_id }}
 
 on:
   workflow_dispatch: {}
+  issues:
+    types: [opened]
   push:
     branches: [main]
     paths:
@@ -16,6 +18,7 @@ env:
 
 jobs:
   readback:
+    if: github.event_name != 'issues' || startsWith(github.event.issue.title, '[UGI-AUTONOMY]')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
