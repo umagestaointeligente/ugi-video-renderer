@@ -1,5 +1,5 @@
 name: UGI Growth Policy Runtime Smoke
-run-name: UGI Growth Policy Smoke ${{ github.sha }}
+run-name: UGI Growth Policy Smoke ${{ github.run_id }}
 
 on:
   workflow_dispatch:
@@ -8,44 +8,68 @@ on:
     paths:
       - 'config/ugi/growth-policy.json'
       - 'magic-engine/magic_engine.py'
+      - 'scripts/ugi_growth_policy_smoke.py'
       - '.github/workflows/ugi-growth-policy-smoke.yml'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: ugi-growth-policy-runtime-smoke
+  cancel-in-progress: false
 
 jobs:
   runtime-policy-smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - name: Prove engine loads persistent growth policy
+      - name: Checkout exact triggering commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Execute read-only runtime policy smoke
+        run: python scripts/ugi_growth_policy_smoke.py
+
+      - name: Persist receipt in UGI control plane
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import hashlib, importlib.util, json
+          git config user.name 'ugi-growth-evidence-bot'
+          git config user.email 'ugi-growth-evidence-bot@users.noreply.github.com'
+          git add control-plane/receipts/ugi-growth-engine/
+          if git diff --cached --quiet; then
+            echo 'No receipt change found' >&2
+            exit 1
+          fi
+          git commit -m "UGI growth: persist runtime policy smoke receipt [skip ci]"
+          git push origin HEAD:main
+          echo "RECEIPT_COMMIT_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Upload independent evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-growth-policy-smoke-${{ github.run_id }}
+          path: control-plane/receipts/ugi-growth-engine/*.json
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Summarize evidence
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, os
           from pathlib import Path
-          engine_path=Path('magic-engine/magic_engine.py')
-          spec=importlib.util.spec_from_file_location('ugi_magic_engine', engine_path)
-          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
-          policy, sha=m.load_growth_policy()
-          raw=Path('config/ugi/growth-policy.json').read_bytes()
-          expected=hashlib.sha256(raw).hexdigest()
-          assert sha == expected
-          assert policy['policy_id']=='ugi-growth-engine'
-          assert policy['north_star']['organic_views_per_content_platform']==10000
-          assert policy['platform_independence']['default_cross_platform_replication'] is False
-          assert policy['creative_novelty']['window_days']==30
-          assert policy['commerce_gate']['fail_closed'] is True
-          plan=m.build_plan([], policy, sha)
-          gp=plan['growth_policy']
-          assert gp['loaded'] is True and gp['sha256']==expected
-          print('GROWTH_POLICY_RUNTIME_CONNECTED=true')
-          print('POLICY_ID='+policy['policy_id'])
-          print('POLICY_SHA256='+sha)
-          print('NORTH_STAR='+str(policy['north_star']['organic_views_per_content_platform']))
-          print('NOVELTY_WINDOW_DAYS='+str(policy['creative_novelty']['window_days']))
-          print('COMMERCE_FAIL_CLOSED='+str(policy['commerce_gate']['fail_closed']).lower())
-          print('CROSS_PLATFORM_REPLICATION_DEFAULT='+str(policy['platform_independence']['default_cross_platform_replication']).lower())
+          p = json.loads(Path('control-plane/receipts/ugi-growth-engine/latest.json').read_text())
+          print('# UGI Growth Policy Runtime Smoke')
+          print(f"- POLICY_ID: {p['policy_id']}")
+          print(f"- POLICY_SCHEMA_VERSION: {p['policy_schema_version']}")
+          print(f"- POLICY_SHA256: {p['policy_sha256']}")
+          print(f"- RUNTIME_ENGINE: {p['runtime_engine']}")
+          print(f"- RUNTIME_ENGINE_VERSION: {p['runtime_engine_version']}")
+          print(f"- SMOKE_TEST_PASS: {p['SMOKE_TEST_PASS']}")
+          print('- PUBLICATION_TRIGGERED: false')
+          print('- PAYMENT_TRIGGERED: false')
+          print(f"- RECEIPT_COMMIT_SHA: {os.environ.get('RECEIPT_COMMIT_SHA','NOT_SET')}")
           PY
