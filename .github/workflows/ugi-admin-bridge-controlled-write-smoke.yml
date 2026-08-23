@@ -23,6 +23,17 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v4
+      - name: Persist controlled-write run identity first
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/receipts/ugi-admin-bridge
+          printf '{"run_id":"%s","commit_sha":"%s","stage":"STARTED"}\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" > control-plane/receipts/ugi-admin-bridge/controlled-start.json
+          git config user.name 'ugi-autonomy-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add control-plane/receipts/ugi-admin-bridge/controlled-start.json
+          git commit -m 'UGI autonomy: record bridge controlled-write run [skip ci]' || true
+          git push
       - name: Controlled write smoke through isolated bridge
         shell: bash
         run: |
@@ -166,3 +177,5 @@ jobs:
           git add control-plane/receipts/ugi-admin-bridge/latest.json
           git commit -m 'UGI autonomy: persist bridge controlled-write receipt [skip ci]' || true
           git push
+
+# trigger: 2026-08-23T23:06Z
