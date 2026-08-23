@@ -41,7 +41,7 @@ jobs:
             } > cloudflare/status/r44-5-21-store-v2.txt
             exit "$C"
           fi
-          python scripts/r44_5_21_store_v2.py > /tmp/run.out 2> /tmp/run.err
+          python -m scripts.r44_5_21_store_v2 > /tmp/run.out 2> /tmp/run.err
           R=$?
           if [ "$R" -ne 0 ]; then
             {
