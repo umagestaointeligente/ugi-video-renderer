@@ -2,72 +2,82 @@ UGI — AUTONOMOUS BRIDGE HANDOFF
 STANDARD: LAPB-1.0
 PROJECT: UGI — Uma Gestão Inteligente
 DATE: 2026-08-23
-STATUS: HUMAN_GATE_GITHUB_APP
+STATUS: AUTONOMY_FOUNDATION_READY
 FAIL_CLOSED=true
 
 1. PROJECT IDENTITY
 Repository: umagestaointeligente/ugi-video-renderer
 Default branch: main
-Admin bridge target Worker: lola-github-admin-bridge-ugi
+GitHub App: Lola Operations Bridge — UGI
+GitHub App ID: 4695561
+GitHub App Installation ID: 156040616
+Installation scope: ONLY SELECT REPOSITORIES -> umagestaointeligente/ugi-video-renderer only
+Admin bridge Worker: lola-github-admin-bridge-ugi
 Admin bridge source: cloudflare/lola-github-admin-bridge-ugi.mjs
 Wrangler config: cloudflare/wrangler.ugi-admin.toml
 Health workflow: .github/workflows/actions-health.yml
+Deploy workflow: .github/workflows/deploy-ugi-admin-bridge.yml
+Controlled-write smoke: .github/workflows/ugi-admin-bridge-controlled-write-smoke.yml
 
-2. ISOLATION RULE
-The UGI administrative bridge MUST use a GitHub App installation scoped only to:
+2. ISOLATION
+The UGI administrative production bridge is isolated to:
 umagestaointeligente/ugi-video-renderer
 
-The currently connected ChatGPT GitHub installation is NOT accepted as the UGI administrative bridge because installation 155297770 can access multiple project repositories:
-- umagestaointeligente/ugi-video-renderer
-- umagestaointeligente/bom-de-clique-automation
-- umagestaointeligente/orbit-media-labs-automation
-- umagestaointeligente/bfy-automation
+Repository hard lock in Worker source:
+OWNER=umagestaointeligente
+REPO=ugi-video-renderer
+DEFAULT_BRANCH=main
 
-It may remain a conversation connector, but it is not the project-isolated production bridge.
+The separate ChatGPT GitHub connector installation may access multiple projects and is NOT the UGI administrative production bridge. The dedicated GitHub App above is the production bridge identity.
 
-Never use All repositories for the UGI bridge.
-Never reuse another project's private key or BRIDGE_AUTH_SECRET.
-Never allow owner/repo to be supplied by request.
+Never use All repositories.
+Never reuse BFY, Bom de Clique, Orbit or another project's private key or BRIDGE_AUTH_SECRET.
+Never accept owner/repo from request input.
 
-3. REQUIRED GITHUB APP
-Preferred name: Lola Operations Bridge — UGI
-Installation scope: Only select repositories -> umagestaointeligente/ugi-video-renderer only
+3. GITHUB APP CONFIGURATION
+Name: Lola Operations Bridge — UGI
 OAuth user authorization: off
-Device flow: off
-Webhook: off unless later justified
+Device Flow: off
+Webhook: off
+Repository selection: Only select repositories -> ugi-video-renderer only
 
-Recommended repository permissions:
+Validated permissions include:
 Metadata: Read-only
 Actions: Read and write
 Administration: Read and write
-Contents: Read and write
-Issues: Read and write
+Contents/code: Read and write
 Checks: Read and write
 Commit statuses: Read and write
 Pull requests: Read and write
+Workflows: Read and write
 
-Optional only if later required:
-Actions variables, Deployments, Environments
+No organization-wide or enterprise access is required.
 
-4. REQUIRED CLOUDFLARE WORKER SECRETS — NAMES ONLY
+4. CLOUDFLARE WORKER SECRETS — NAMES ONLY
 GITHUB_APP_ID
 GITHUB_INSTALLATION_ID
 GITHUB_APP_PRIVATE_KEY
 BRIDGE_AUTH_SECRET
 
-No secret values belong in GitHub source or this handoff.
-After any Worker/App/schema/binding/credential change, re-save/revalidate all four credentials before declaring READY.
+Values are stored in Cloudflare encrypted secret storage and MUST NOT be committed or written into handoff documentation.
 
-5. WORKER HARD LOCK
-OWNER=umagestaointeligente
-REPO=ugi-video-renderer
-DEFAULT_BRANCH=main
+GitHub Actions deploy secrets — names only:
+UGI_ADMIN_CLOUDFLARE_API_TOKEN
+UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID
 
-Current workflow allowlist in bridge source:
+Cloudflare deploy token scope validated as account-scoped Workers Scripts: Edit only.
+
+5. WORKER ALLOWLIST / HARD GATES
+Current bridge workflow allowlist includes approved UGI workflows such as:
 actions-health.yml
 ugi-growth-policy-smoke.yml
 render-video.yml
 deploy-cloudflare-worker.yml
+deploy-ugi-admin-bridge.yml
+
+Worker rejects non-allowlisted workflows.
+Worker rejects refs other than main unless explicitly coded later.
+Worker uses request-size limits, no-store responses, secret redaction and fail-closed behavior.
 
 6. ADMIN ENDPOINTS
 Public:
@@ -86,119 +96,170 @@ POST /github/actions/enable
 POST /github/workflows/dispatch
 POST /github/recovery/repair
 
-All authenticated routes require BRIDGE_AUTH_SECRET bearer auth.
-The Worker rejects non-allowlisted workflows and refs other than main.
+Unauthenticated /diagnostics was independently verified to return HTTP 401 after clean production source was restored.
 
-7. STABLE UGI COMPONENTS TO PRESERVE
-Existing Lola Operacional UGI Worker and its live production routes
+7. STABLE UGI COMPONENTS PRESERVED
+Existing lola-operacional-ugi Worker and live routes
 UGI Store
 Commerce / checkout / fulfillment
 R2 storage and receipts
-Buffer as exclusive UGI publisher
-Metricool analytics-only role
+Buffer as UGI publishing path where currently configured
+Metricool analytics role where currently configured
 GitHub Actions renderer pipeline
 Semantic validation
 Copy lock
 Publication gates
 Growth Policy runtime loader and smoke evidence
 Control Plane documentation
-Existing credentials and integrations that are already stable
+Existing production credentials/integrations
 
-Do not replace the live Lola Operacional Worker with an older repository source.
-The new admin bridge is a separate Worker and must not share production secrets with the Lola Operacional Worker unless explicitly designed later.
+The admin bridge is separate from lola-operacional-ugi and does not replace it.
+No BFY, Bom de Clique, Orbit or other project Worker was modified by this foundation rollout.
 
-8. EXISTING GROWTH POLICY EVIDENCE
+8. GROWTH POLICY EVIDENCE
 Policy source: config/ugi/growth-policy.json
 Policy id: ugi-growth-engine
 Policy schema observed: 1.2
-Runtime smoke previously passed.
 Known receipt: control-plane/receipts/ugi-growth-engine/latest.json
-Known run id from prior validation: 32659766889
-Publication triggered during smoke: false
-Payment triggered during smoke: false
+Known runtime smoke run id: 32659766889
+Publication triggered during growth smoke: false
+Payment triggered during growth smoke: false
 
-9. ACTIONS HEALTH — PASS
+9. BASE ACTIONS HEALTH EVIDENCE
 Workflow: .github/workflows/actions-health.yml
-Health run id: 32660100669
-Trigger: push
-Head SHA: fb1589d8384e8ba2442f58d711f865c78a2c1400
+Earlier health run id: 32660100669
 Run status: completed
 Run conclusion: success
-Persistent receipt commit: a258cb168430f2ab530d78b2056698d690868fbc
-Receipt path: generated/evidence/actions-health.json
-
-Receipt readback proved:
+Persistent receipt proved:
 runner_executed=true
-bridge_source_syntax_ok=true
-repository_lock_source_ok=true
-workflow_allowlist_source_ok=true
-fail_closed=true
 total_jobs=1
 no_jobs_were_run=false
+fail_closed=true
 publication_triggered=false
 payment_triggered=false
 
-Therefore:
-ACTIONS_HEALTH_WORKFLOW_EXISTS=true
-WORKFLOW_RUN_CREATED=true
-TOTAL_JOBS=1
-NO_JOBS_WERE_RUN=false
-JOB_RUN_INFERRED_SUCCESS_FROM_COMPLETED_RUN_AND_PERSISTED_FINAL_STEP=true
-RUN_CONCLUSION_SUCCESS=true
+10. ADMIN BRIDGE DEPLOY EVIDENCE
+Deploy workflow run id: 32671687440
+Deploy job: completed
+Deploy conclusion: success
+Repository hard lock step: success
+Deploy credential presence step: success
+Cloudflare Worker deploy step: success
+Evidence upload step: success
+Deploy commit: 0950543983267c825036c48b2ebc90336b2ddd71
+Worker: lola-github-admin-bridge-ugi
 
-10. CURRENT HUMAN GATE
-A project-specific GitHub App suitable for UGI administrative production use has not yet been proven.
-The currently connected installation spans multiple project repositories and therefore cannot satisfy the LAPB isolation requirement for this bridge.
+11. PUBLIC HEALTH READBACK
+Probe workflow run id: 32671932788
+Receipt: control-plane/receipts/ugi-admin-bridge/probe.json
+Readback proved:
+http_code=200
+ok=true
+project=UGI
+worker=lola-github-admin-bridge-ugi
+repository=umagestaointeligente/ugi-video-renderer
+default_branch=main
+GITHUB_APP_ID configured=true
+GITHUB_INSTALLATION_ID configured=true
+GITHUB_APP_PRIVATE_KEY configured=true
+BRIDGE_AUTH_SECRET configured=true
+github_called=false
+secrets_exposed=false
+fail_closed=true
 
-FIRST HUMAN-REQUIRED ACTION:
-Create or install a dedicated GitHub App named approximately:
-Lola Operations Bridge — UGI
+12. GITHUB APP / DIAGNOSTICS EVIDENCE
+Debug run id: 32672102801
+Debug job conclusion: success
+Runtime diagnostics proved:
+ok=true
+repository=umagestaointeligente/ugi-video-renderer
+default_branch=main
+repository_lock_ok=true
+installation_auth_ok=true
+fail_closed=true
 
-Configure it with the repository permissions listed in section 3 and install it using:
-ONLY SELECT REPOSITORIES
--> select ONLY umagestaointeligente/ugi-video-renderer
+Actions status through isolated bridge proved:
+ok=true
+repository=umagestaointeligente/ugi-video-renderer
+enabled=true
+allowed_actions=all
 
-Generate the App private key securely.
-DO NOT paste the private key into ChatGPT.
+The temporary test authentication override existed only in the runner workspace/deployed smoke version and the exact clean source was redeployed immediately afterward. Production authentication remained protected.
 
-After that, operations resume autonomously from:
-- identify App ID and installation ID without exposing secrets;
-- configure Cloudflare Worker secrets in secure provider storage;
-- deploy lola-github-admin-bridge-ugi;
-- revalidate all four credential bindings;
+13. CONTROLLED WRITE + INDEPENDENT READBACK
+Controlled-write smoke workflow run id: 32672180963
+Workflow job: completed
+Workflow conclusion: success
+Persistent receipt: control-plane/receipts/ugi-admin-bridge/latest.json
+
+Bridge-dispatched Actions health run id: 32672202102
+Receipt readback proved:
+github_app_installation_auth_pass=true
+repository_lock_pass=true
+bridge_controlled_dispatch_pass=true
+total_jobs=1
+no_jobs_were_run=false
+job_status=completed
+job_conclusion=success
+clean_source_redeployed=true
+unauthenticated_diagnostics_blocked=true
+publication_triggered=false
+payment_triggered=false
+secrets_exposed=false
+fail_closed=true
+
+14. MOBILE / OPERATING MODEL
+Daily operating model:
+ChatGPT/Lola
+-> project-scoped GitHub connector/API operations where available
+-> dedicated UGI GitHub App / admin bridge
+-> GitHub Actions
+-> Cloudflare / UGI integrations
+
+Browser/mobile intervention is reserved for actions technically requiring human provider UI, OAuth, 2FA, CAPTCHA, consent or initial secret creation/rotation.
+Routine repository edits, workflow maintenance, deploys, health checks, diagnostics and controlled recovery should use the backend control plane first.
+
+15. CREDENTIAL REVALIDATION RULE
+After ANY Worker/App/schema/binding/credential/deployment migration:
+- revalidate all four Worker credential bindings;
 - GET /health;
-- GET /diagnostics;
+- GET /diagnostics through an authorized test path;
 - GET /github/actions/status;
-- dispatch actions-health.yml through the new bridge;
-- read run;
-- read jobs;
-- require total_jobs>0 and success;
-- persist evidence;
-- update this handoff;
-- only then set AUTONOMY_FOUNDATION_READY=true.
+- execute actions-health.yml;
+- require run exists;
+- require total_jobs > 0;
+- require no_jobs_were_run=false;
+- require job conclusion=success;
+- persist/read back evidence;
+- never infer READY from deploy/configuration alone.
 
-11. CURRENT FOUNDATION GATES
-PROJECT_REPOSITORY_IDENTIFIED=true
-DEFAULT_BRANCH_IDENTIFIED=true
-ACTIONS_HEALTH_WORKFLOW_EXISTS=true
+16. CURRENT FOUNDATION GATES
+PROJECT_ISOLATED=true
+GITHUB_APP_AUTH_OK=true
+INSTALLATION_AUTH_OK=true
+REPOSITORY_LOCK_OK=true
+ACTIONS_ENABLED=true
+HEALTH_WORKFLOW_DISPATCHED=true
 WORKFLOW_RUN_CREATED=true
 TOTAL_JOBS=1
 NO_JOBS_WERE_RUN=false
-RUN_CONCLUSION_SUCCESS=true
-BRIDGE_SOURCE_CREATED=true
-REPOSITORY_LOCK_SOURCE_OK=true
-WORKFLOW_ALLOWLIST_SOURCE_OK=true
-HANDOFF_CREATED=true
+JOB_CONCLUSION_SUCCESS=true
+BRIDGE_WORKER_DEPLOYED=true
+BRIDGE_HEALTH_PASS=true
+BRIDGE_DIAGNOSTICS_PASS=true
+ACTIONS_ENABLED_VIA_ISOLATED_BRIDGE=true
+CONTROLLED_WRITE_PASS=true
+RECEIPT_PERSISTED=true
+RECEIPT_READBACK_PASS=true
+MOBILE_OPERATION_PATH_AVAILABLE=true
 SECRETS_EXPOSED=false
 FAIL_CLOSED=true
+PUBLICATION_TRIGGERED_DURING_FOUNDATION_TESTS=false
+PAYMENT_TRIGGERED_DURING_FOUNDATION_TESTS=false
 
-PROJECT_ISOLATED=false
-GITHUB_APP_AUTH_OK=false
-INSTALLATION_AUTH_OK=false
-BRIDGE_WORKER_DEPLOYED=false
-BRIDGE_HEALTH_PASS=false
-BRIDGE_DIAGNOSTICS_PASS=false
-ACTIONS_ENABLED_VIA_ISOLATED_BRIDGE=false
-MOBILE_OPERATION_PATH_AVAILABLE=false
+AUTONOMY_FOUNDATION_READY=true
 
-AUTONOMY_FOUNDATION_READY=false
+17. NEXT OPERATIONAL PHASE
+Do not rebuild stable UGI production components.
+Use this bridge for UGI-only diagnostics, workflow dispatch, recovery and deployment control.
+Next audits should cover UGI-specific scheduled workflows/jobs and current production generation path, preserving all existing publication/commerce gates and isolating non-UGI projects.
