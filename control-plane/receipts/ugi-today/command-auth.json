@@ -1,0 +1,75 @@
+{
+  "http_code": 202,
+  "body": {
+    "ok": true,
+    "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+    "message": "Comando recebido e salvo.",
+    "command": {
+      "id": "a5063d03-0713-4a6f-b921-19b199e86c6e",
+      "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+      "source": "lola-chatgpt",
+      "type": "reel",
+      "contentId": null,
+      "experimentId": null,
+      "variant": null,
+      "commercialIntent": null,
+      "topic": "UGI auth diagnostic",
+      "objective": "organic_growth",
+      "audience": "gestores, líderes, coordenadores, empreendedores e profissionais responsáveis por equipes",
+      "hook": "",
+      "keyMessage": "",
+      "instructions": "",
+      "cta": "salvar e compartilhar",
+      "slides": 1,
+      "requestedVideoDuration": 8,
+      "videoDuration": 8,
+      "music": {
+        "requested": false,
+        "title": "",
+        "artist": "",
+        "audioId": "",
+        "source": "",
+        "startSeconds": 0,
+        "status": "none",
+        "policy": {
+          "provider": "beatly",
+          "currentAndModern": true,
+          "businessRelevant": true,
+          "professionalTone": true,
+          "avoidExplicit": true,
+          "avoidAggressiveOrDistracting": true,
+          "avoidRandomTrendWithoutContext": true,
+          "rotationWithoutRepeat": true,
+          "restartAfterCatalogExhausted": true
+        }
+      },
+      "commercialOffer": false,
+      "editorialMode": "standard",
+      "copyLock": {
+        "enabled": false
+      },
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "campaign": "UGI Organic Growth",
+      "experiment": "",
+      "requestedBy": "Lola",
+      "status": "received",
+      "generationStatus": "pending",
+      "createdAt": "2026-08-23T23:37:15.726Z"
+    },
+    "proposal": null,
+    "warning": null
+  },
+  "publication_triggered": false,
+  "payment_triggered": false
+}
