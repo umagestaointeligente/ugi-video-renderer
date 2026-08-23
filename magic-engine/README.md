@@ -21,7 +21,7 @@ Núcleo autônomo de mídia multi-canal, desenhado para custo marginal zero no M
 - Credenciais de plataforma são secrets; nunca entram no repositório.
 
 ## Status da V1
-O workflow `magic-engine-v1.yml` executa radar periódico, classifica oportunidades e produz manifests. Publicação só é habilitada quando as credenciais OAuth/API das contas forem conectadas e os gates de cada item estiverem verdes.
+O workflow `magic-engine-v1.yml` executa radar periódico a cada 3 horas, classifica oportunidades e produz manifests. Publicação só é habilitada quando as credenciais OAuth/API das contas forem conectadas e os gates de cada item estiverem verdes.
 
 ## Gates obrigatórios
 - `RIGHTS_GATE=GREEN`
