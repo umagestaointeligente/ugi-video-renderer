@@ -1,0 +1,194 @@
+{
+  "receipt_id": "ugi-growth-policy-smoke-20260823T185845Z",
+  "timestamp": "2026-08-23T18:58:45.181111+00:00",
+  "commit_sha": "04107c044e5aaa81161f4d3db3882a024d9a9d91",
+  "workflow_run_id": "32659750320",
+  "workflow_run_attempt": "1",
+  "policy_source": "config/ugi/growth-policy.json",
+  "policy_sha256": "ddb581512329447065bff0b2833c769e6a6abfc1465595cc6b5883582308e095",
+  "policy_id": "ugi-growth-engine",
+  "policy_schema_version": "1.2",
+  "runtime_engine": "UGI_GROWTH_RUNTIME",
+  "runtime_engine_version": "1.0",
+  "runtime_policy": {
+    "POLICY_REQUIRED": true,
+    "POLICY_LOADED": true,
+    "POLICY_ID": "ugi-growth-engine",
+    "POLICY_SCHEMA_VERSION": "1.2",
+    "POLICY_SOURCE": "config/ugi/growth-policy.json",
+    "POLICY_SHA256": "ddb581512329447065bff0b2833c769e6a6abfc1465595cc6b5883582308e095",
+    "RUNTIME_POLICY_ACTIVE": true,
+    "GROWTH_ENGINE_ACTIVE": true,
+    "NORTH_STAR_VIEWS": 10000,
+    "DISTRIBUTION_LADDER": [
+      100,
+      500,
+      1000,
+      3000,
+      10000
+    ],
+    "OPTIMIZATION_PRIORITY": [
+      "retention_choose_to_view",
+      "distribution",
+      "engagement_save_share",
+      "qualified_store_traffic",
+      "conversion_revenue"
+    ],
+    "PRE_GENERATION_INPUTS": [
+      "ugi_recent_telemetry",
+      "platform_native_analytics",
+      "current_platform_trends",
+      "search_signals",
+      "market_management_ai_signals",
+      "creative_novelty_history",
+      "platform_audience_format_behavior",
+      "commerce_inventory",
+      "dynamic_time_day_signals"
+    ],
+    "PLATFORM_INDEPENDENCE": true,
+    "DEFAULT_CROSS_PLATFORM_REPLICATION": false,
+    "TIKTOK": {
+      "experimental_duration_seconds": {
+        "min": 7,
+        "max": 12
+      },
+      "frame_zero_hook": true,
+      "slow_intro": false,
+      "zero_view_action": "diagnose_eligibility_processing_before_delete_or_repost",
+      "metrics": [
+        "views",
+        "for_you_share",
+        "avg_watch_time",
+        "completion",
+        "likes",
+        "comments",
+        "shares",
+        "search_source",
+        "profile_source"
+      ]
+    },
+    "INSTAGRAM": {
+      "formats": [
+        "reel",
+        "carousel",
+        "static"
+      ],
+      "test_save_share_carousels": true,
+      "avoid_repetitive_visual_templates": true,
+      "metrics": [
+        "reach",
+        "non_follower_reach",
+        "views",
+        "watch_retention",
+        "saves",
+        "shares",
+        "comments",
+        "profile_store_actions"
+      ]
+    },
+    "YOUTUBE": {
+      "formats": [
+        "short_video"
+      ],
+      "optimize": [
+        "choose_to_view",
+        "average_view_duration",
+        "average_percentage_viewed",
+        "satisfaction_engagement"
+      ],
+      "micro_winner_strategy": "descendants_not_copies",
+      "metrics": [
+        "shown_in_feed",
+        "views",
+        "choose_to_view",
+        "retention",
+        "likes",
+        "comments",
+        "shares",
+        "downstream_traffic"
+      ]
+    },
+    "NOVELTY_WINDOW_DAYS": 30,
+    "CREATIVE_NOVELTY": {
+      "window_days": 30,
+      "compact_index_required": true,
+      "fields": [
+        "date",
+        "platform",
+        "content_id",
+        "topic",
+        "hook",
+        "first_line",
+        "script_hash",
+        "script_summary",
+        "visual_concept",
+        "scene_summary",
+        "cta",
+        "product_id",
+        "performance"
+      ]
+    },
+    "COMMERCE_GATE_REQUIRED": true,
+    "COMMERCE_FAIL_CLOSED": true,
+    "PUBLICATION_EVIDENCE": {
+      "distinguish_scheduled_published_verified": true,
+      "verified_requires_readback": true,
+      "no_unproven_pass": true,
+      "publisher_source": "buffer"
+    },
+    "EXPERIMENT_LOOP": [
+      "observe",
+      "hypothesize",
+      "generate",
+      "rights_safety_quality_gates",
+      "commerce_gate",
+      "publish_via_buffer",
+      "buffer_readback",
+      "measure_via_metricool_and_native",
+      "learn",
+      "update_weights"
+    ],
+    "LIFECYCLE_EVENTS": [
+      "STUDY_COMPLETE",
+      "CONTENT_READY",
+      "MATERIAL_READY",
+      "GATES_PASS",
+      "GATES_FAIL",
+      "BUFFER_SCHEDULE_CONFIRMED",
+      "T_MINUS_15",
+      "PUBLISHING",
+      "PUBLISHED",
+      "VERIFIED",
+      "RETRY_30M",
+      "RETRY_90M",
+      "RETRY_210M",
+      "PERFORMANCE_CHECKPOINT",
+      "INCIDENT"
+    ]
+  },
+  "checks": {
+    "POLICY_REQUIRED": true,
+    "POLICY_LOADED": true,
+    "POLICY_ID_MATCH": true,
+    "RUNTIME_POLICY_ACTIVE": true,
+    "GROWTH_ENGINE_ACTIVE": true,
+    "PLATFORM_INDEPENDENCE": true,
+    "DEFAULT_CROSS_PLATFORM_REPLICATION": true,
+    "NORTH_STAR_VIEWS": true,
+    "DISTRIBUTION_LADDER": true,
+    "NOVELTY_WINDOW_DAYS": true,
+    "COMMERCE_GATE_REQUIRED": true,
+    "COMMERCE_FAIL_CLOSED": true,
+    "TIKTOK_RULES_ACTIVE": true,
+    "INSTAGRAM_RULES_ACTIVE": true,
+    "YOUTUBE_RULES_ACTIVE": true,
+    "PUBLICATION_TRIGGERED": true,
+    "PAYMENT_TRIGGERED": true
+  },
+  "SMOKE_TEST": true,
+  "SMOKE_TEST_PASS": true,
+  "PUBLICATION_TRIGGERED": false,
+  "PAYMENT_TRIGGERED": false,
+  "REGRESSION_CHECK_PASS": true,
+  "REGRESSION_SCOPE": "UGI-only read-only policy/runtime smoke; no Worker deploy, Store mutation, checkout/payment, social publication, Orbit/BFY/Bom de Clique/OGI mutation"
+}
