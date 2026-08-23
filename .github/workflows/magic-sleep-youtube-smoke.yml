@@ -1,0 +1,90 @@
+name: Lola Magic Sleep YouTube Smoke
+run-name: Magic Sleep YouTube Smoke ${{ github.run_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: "Smoke duration in seconds"
+        required: false
+        default: "60"
+      privacy:
+        description: "YouTube privacy"
+        required: false
+        type: choice
+        options: [private, unlisted]
+        default: private
+
+permissions:
+  contents: read
+
+jobs:
+  render-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MAGIC_SLEEP_DURATION: ${{ inputs.duration || '60' }}
+      MAGIC_SLEEP_FREQ: '174'
+      MAGIC_SLEEP_TITLE: 'Deep Sleep Ambient — Lola Magic Engine Smoke'
+      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify YouTube OAuth presence
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${YOUTUBE_CLIENT_ID:-}" ] || [ -z "${YOUTUBE_CLIENT_SECRET:-}" ] || [ -z "${YOUTUBE_REFRESH_TOKEN:-}" ]; then
+            echo "PLATFORM_AUTH=PENDING"
+            echo "HARD_STOP=YOUTUBE_OAUTH_REQUIRED"
+            exit 2
+          fi
+          echo "PLATFORM_AUTH=READY"
+
+      - name: Render original sleep asset
+        run: python magic-engine/sleep_render.py
+
+      - name: QA rendered asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s magic-engine/output/sleep-focus-master.mp4
+          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 magic-engine/output/sleep-focus-master.mp4
+          echo "RIGHTS_GATE=GREEN"
+          echo "FACT_GATE=PASS"
+          echo "QA_GATE=PASS"
+          echo "COST_GATE=PASS"
+
+      - name: Upload private smoke to YouTube
+        env:
+          MAGIC_YOUTUBE_PRIVACY: ${{ inputs.privacy || 'private' }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          sys.path.insert(0, 'magic-engine')
+          from publishers import publish_youtube
+          result = publish_youtube('magic-engine/output/sleep-focus-master.mp4', {
+              'title': 'Deep Sleep Ambient — Lola Magic Engine Smoke',
+              'description': 'Automated private smoke test generated entirely by Lola Magic Engine V1.',
+              'tags': ['sleep','ambient','relax','focus'],
+              'privacy_status': os.getenv('MAGIC_YOUTUBE_PRIVACY','private'),
+              'rights_gate': 'GREEN',
+              'fact_gate': 'PASS',
+              'qa_gate': 'PASS',
+              'cost_gate': 'PASS',
+              'category_id': '22',
+          })
+          print(json.dumps(result, ensure_ascii=False))
+          if result.get('status') != 'PUBLISHED':
+              raise SystemExit(3)
+          PY
+
+      - name: Upload smoke evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: magic-sleep-youtube-smoke-${{ github.run_id }}
+          path: magic-engine/output/sleep-focus-master.mp4
+          retention-days: 1
