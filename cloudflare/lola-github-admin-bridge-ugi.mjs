@@ -6,10 +6,11 @@ const ALLOWED_WORKFLOWS = new Set([
   "actions-health.yml",
   "ugi-growth-policy-smoke.yml",
   "render-video.yml",
-  "deploy-cloudflare-worker.yml"
+  "deploy-cloudflare-worker.yml",
+  "deploy-ugi-admin-bridge.yml"
 ]);
 const GITHUB_API = "https://api.github.com";
-const USER_AGENT = "lola-github-admin-bridge-ugi/1.0";
+const USER_AGENT = "lola-github-admin-bridge-ugi/1.1";
 const UPSTREAM_TIMEOUT_MS = 15000;
 
 function json(data, status = 200) {
@@ -40,15 +41,62 @@ function b64urlText(text) {
   return b64urlBytes(new TextEncoder().encode(text));
 }
 
-function pemToArrayBuffer(pem) {
+function pemBodyToBytes(pem, label) {
   const clean = String(pem || "")
-    .replace(/-----BEGIN PRIVATE KEY-----/g, "")
-    .replace(/-----END PRIVATE KEY-----/g, "")
+    .replace(`-----BEGIN ${label}-----`, "")
+    .replace(`-----END ${label}-----`, "")
     .replace(/\s+/g, "");
   const raw = atob(clean);
   const bytes = new Uint8Array(raw.length);
   for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-  return bytes.buffer;
+  return bytes;
+}
+
+function derLength(n) {
+  if (n < 128) return Uint8Array.of(n);
+  const out = [];
+  let v = n;
+  while (v > 0) { out.unshift(v & 255); v >>= 8; }
+  return Uint8Array.of(0x80 | out.length, ...out);
+}
+
+function der(tag, body) {
+  const len = derLength(body.length);
+  const out = new Uint8Array(1 + len.length + body.length);
+  out[0] = tag;
+  out.set(len, 1);
+  out.set(body, 1 + len.length);
+  return out;
+}
+
+function concatBytes(...parts) {
+  const total = parts.reduce((n, p) => n + p.length, 0);
+  const out = new Uint8Array(total);
+  let off = 0;
+  for (const p of parts) { out.set(p, off); off += p.length; }
+  return out;
+}
+
+function pkcs1ToPkcs8(pkcs1) {
+  const version = Uint8Array.of(0x02, 0x01, 0x00);
+  const rsaAlgId = Uint8Array.of(
+    0x30, 0x0d,
+    0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01,
+    0x05, 0x00
+  );
+  const privateKey = der(0x04, pkcs1);
+  return der(0x30, concatBytes(version, rsaAlgId, privateKey));
+}
+
+function pemToPkcs8ArrayBuffer(pem) {
+  const text = String(pem || "").trim();
+  if (text.includes("-----BEGIN PRIVATE KEY-----")) {
+    return pemBodyToBytes(text, "PRIVATE KEY").buffer;
+  }
+  if (text.includes("-----BEGIN RSA PRIVATE KEY-----")) {
+    return pkcs1ToPkcs8(pemBodyToBytes(text, "RSA PRIVATE KEY")).buffer;
+  }
+  throw new Error("unsupported GitHub App private key format");
 }
 
 async function timingSafeEqual(a, b) {
@@ -63,8 +111,7 @@ async function timingSafeEqual(a, b) {
 async function requireAuth(request, env) {
   const header = request.headers.get("authorization") || "";
   if (!header.startsWith("Bearer ")) return false;
-  const supplied = header.slice(7);
-  return timingSafeEqual(supplied, env.BRIDGE_AUTH_SECRET || "");
+  return timingSafeEqual(header.slice(7), env.BRIDGE_AUTH_SECRET || "");
 }
 
 function requiredSecretState(env) {
@@ -86,7 +133,7 @@ async function githubJwt(env) {
   const unsigned = `${header}.${payload}`;
   const key = await crypto.subtle.importKey(
     "pkcs8",
-    pemToArrayBuffer(env.GITHUB_APP_PRIVATE_KEY),
+    pemToPkcs8ArrayBuffer(env.GITHUB_APP_PRIVATE_KEY),
     { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
     false,
     ["sign"]
@@ -194,8 +241,9 @@ export default {
     try {
       if (request.method === "GET" && url.pathname === "/health") {
         const secrets = requiredSecretState(env);
+        const ok = Object.values(secrets).every(Boolean);
         return json({
-          ok: Object.values(secrets).every(Boolean),
+          ok,
           project: PROJECT,
           worker: "lola-github-admin-bridge-ugi",
           repository: `${OWNER}/${REPO}`,
@@ -205,7 +253,7 @@ export default {
           secrets_exposed: false,
           fail_closed: true,
           request_id: requestId
-        }, Object.values(secrets).every(Boolean) ? 200 : 503);
+        }, ok ? 200 : 503);
       }
 
       if (!(await requireAuth(request, env))) {
