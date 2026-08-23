@@ -17,7 +17,7 @@ env:
 jobs:
   readback:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
       UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
     steps:
@@ -26,15 +26,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p control-plane/receipts/ugi-buffer
+          mkdir -p control-plane/receipts/ugi-buffer control-plane/receipts/ugi-today
           if [ -z "${UGI_LOLA_COMMAND_KEY:-}" ]; then
             printf '%s\n' '{"ok":false,"error":"UGI_LOLA_COMMAND_KEY_MISSING"}' > control-plane/receipts/ugi-buffer/live-readback.json
             exit 2
           fi
           echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
-          curl --fail --silent --show-error -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/health" -o /tmp/health.json
-          curl --fail --silent --show-error -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/drafts" -o /tmp/drafts.json
-          curl --fail --silent --show-error -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/buffer/channels" -o /tmp/channels.json
+          curl --fail --silent --show-error -A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/health" -o /tmp/health.json
+          curl --fail --silent --show-error -A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/drafts" -o /tmp/drafts.json
+          curl --fail --silent --show-error -A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/buffer/channels" -o /tmp/channels.json
           python - <<'PY'
           import json,datetime
           h=json.load(open('/tmp/health.json')); d=json.load(open('/tmp/drafts.json')); c=json.load(open('/tmp/channels.json'))
@@ -52,7 +52,30 @@ jobs:
           }
           open('control-plane/receipts/ugi-buffer/live-readback.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           PY
-      - name: Persist readback
+      - name: Generate today independent platform content
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,subprocess,os,datetime,pathlib
+          base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
+          briefs=[
+            ('instagram',{'contentId':'UGI-20260823-IG-001','type':'reel','topic':'Checklist de 5 minutos para começar segunda-feira sem apagar incêndio','objective':'saves shares retention','keyMessage':'Antes de começar a segunda, elimine ruído: escolha três resultados, remova uma falsa urgência e delegue uma tarefa.','cta':'Salve para usar amanhã cedo.','commercialIntent':'none','instructions':'Conteúdo independente para Instagram. Reel profissional, direto, sem introdução lenta, foco em saves e shares. Não reutilizar criativo recente. Não citar link no perfil nem produto.'}),
+            ('tiktok',{'contentId':'UGI-20260823-TT-001','type':'reel','topic':'3 sinais de que sua segunda-feira vai começar apagando incêndio','objective':'choose to view retention completion shares','keyMessage':'Agenda lotada, nenhuma prioridade explícita e tudo marcado como urgente são sinais de segunda reativa.','cta':'Comenta qual dos três mais acontece na sua rotina.','commercialIntent':'none','requestedVideoDuration':10,'instructions':'Conteúdo independente para TikTok. 7 a 12 segundos, hook no frame zero, cortes rápidos, sem introdução lenta, linguagem natural. Não reutilizar criativo recente. Não usar link no perfil.'}),
+            ('youtube',{'contentId':'UGI-20260823-YT-001','type':'reel','topic':'Use IA em 2 minutos para transformar pendências em 3 prioridades de segunda','objective':'choose to view average percentage viewed satisfaction','keyMessage':'Liste as pendências, peça à IA para separar impacto, urgência real e delegação, e saia com três prioridades explícitas.','cta':'Teste antes de abrir sua agenda amanhã.','commercialIntent':'none','instructions':'Conteúdo independente para YouTube Short. Hook imediato, explicação prática e fechamento curto. Não reutilizar criativo recente. Não citar produto ou oferta.'})
+          ]
+          out={'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'publication_provider':'BUFFER','analytics_provider':'METRICOOL','metricool_publication_allowed':False,'results':[]}
+          for platform,payload in briefs:
+            body=json.dumps(payload,ensure_ascii=False)
+            p=subprocess.run(['curl','--silent','--show-error','--location','--max-time','180','-A','UGI-GitHub-Actions/1.0','-H','content-type: application/json','-H','accept: application/json','-H',f'x-lola-command-key: {key}','-o','/tmp/command-response.json','-w','%{http_code}','--data-binary',body,base+'/api/command'],text=True,capture_output=True)
+            code=int((p.stdout or '0').strip() or 0)
+            try: resp=json.load(open('/tmp/command-response.json'))
+            except Exception: resp={'raw':pathlib.Path('/tmp/command-response.json').read_text(errors='replace')[:2000] if pathlib.Path('/tmp/command-response.json').exists() else '', 'stderr':p.stderr[:1000]}
+            out['results'].append({'platform':platform,'http':code,'response':resp})
+          pathlib.Path('control-plane/receipts/ugi-today/generation-live-bridge.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          if not all(x.get('http')==202 and x.get('response',{}).get('ok') for x in out['results']): raise SystemExit(2)
+          PY
+      - name: Persist readback and generation evidence
         if: always()
         shell: bash
         run: |
@@ -60,6 +83,6 @@ jobs:
           git config user.name 'ugi-autonomy-bot'
           git config user.email 'actions@users.noreply.github.com'
           git pull --rebase origin main || true
-          git add control-plane/receipts/ugi-buffer/live-readback.json
-          git commit -m 'UGI: persist live Buffer readback [skip ci]' || true
+          git add control-plane/receipts/ugi-buffer/live-readback.json control-plane/receipts/ugi-today/generation-live-bridge.json
+          git commit -m 'UGI: persist live Buffer and today generation evidence [skip ci]' || true
           git push origin HEAD:main
