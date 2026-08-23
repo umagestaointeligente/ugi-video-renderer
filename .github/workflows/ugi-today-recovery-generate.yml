@@ -29,8 +29,9 @@ jobs:
           test -n "${UGI_LOLA_COMMAND_KEY:-}"
           echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
           mkdir -p control-plane/receipts/ugi-today
+          python -m pip install --disable-pip-version-check requests
           python - <<'PY'
-          import json,os,urllib.request,datetime
+          import json,os,datetime,requests
           base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
           briefs=[
             {
@@ -62,17 +63,25 @@ jobs:
               'instructions':'Conteúdo independente para YouTube Short. Hook imediato, explicação prática e fechamento curto. Não reutilizar criativo recente. Não citar produto ou oferta.'
             }
           ]
+          headers={
+            'content-type':'application/json',
+            'accept':'application/json',
+            'user-agent':'UGI-GitHub-Actions/1.0',
+            'x-lola-command-key':key
+          }
           out={'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'publication_provider':'BUFFER','analytics_provider':'METRICOOL','metricool_publication_allowed':False,'results':[]}
           for b in briefs:
             payload={k:v for k,v in b.items() if k!='platform'}
-            req=urllib.request.Request(base+'/api/command',data=json.dumps(payload,ensure_ascii=False).encode(),method='POST',headers={'content-type':'application/json','x-lola-command-key':key})
             try:
-              with urllib.request.urlopen(req,timeout=180) as r:
-                data=json.loads(r.read().decode())
-                out['results'].append({'platform':b['platform'],'http':r.status,'response':data})
+              r=requests.post(base+'/api/command',headers=headers,json=payload,timeout=180)
+              try: body=r.json()
+              except Exception: body={'raw':r.text[:1500]}
+              out['results'].append({'platform':b['platform'],'http':r.status_code,'response':body})
             except Exception as e:
-              out['results'].append({'platform':b['platform'],'error':str(e)})
+              out['results'].append({'platform':b['platform'],'error':repr(e)})
           open('control-plane/receipts/ugi-today/generation.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          if not all(x.get('http')==202 and x.get('response',{}).get('ok') for x in out['results']):
+            raise SystemExit(2)
           PY
       - name: Persist generation receipt
         if: always()
