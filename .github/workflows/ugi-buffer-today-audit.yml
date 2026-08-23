@@ -1,0 +1,93 @@
+name: UGI Buffer Today Audit
+run-name: UGI Buffer Today Audit ${{ github.run_id }}
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-buffer-today-audit.yml'
+
+permissions:
+  contents: write
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LOLA_COMMAND_KEY: ${{ secrets.LOLA_COMMAND_KEY }}
+      LOLA_AUTH_KEY: ${{ secrets.LOLA_AUTH_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read UGI production scheduling state
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/receipts/ugi-buffer
+          KEY="${LOLA_COMMAND_KEY:-}"
+          HEADER='x-lola-command-key'
+          if [ -z "$KEY" ]; then
+            KEY="${LOLA_AUTH_KEY:-}"
+            HEADER='x-lola-key'
+          fi
+          if [ -z "$KEY" ]; then
+            printf '{"ok":false,"error":"NO_LOLA_AUTH_SECRET_IN_GITHUB_ACTIONS","publication_provider":"BUFFER","analytics_provider":"METRICOOL","metricool_publication_allowed":false}\n' > control-plane/receipts/ugi-buffer/today.json
+            exit 20
+          fi
+          echo "::add-mask::$KEY"
+          DRAFT_CODE=$(curl --silent --show-error --max-time 30 -o /tmp/drafts.json -w '%{http_code}' -H "$HEADER: $KEY" "$WORKER_URL/api/drafts" || true)
+          CHANNEL_CODE=$(curl --silent --show-error --max-time 30 -o /tmp/channels.json -w '%{http_code}' -H "$HEADER: $KEY" "$WORKER_URL/api/buffer/channels" || true)
+          export DRAFT_CODE CHANNEL_CODE
+          python - <<'PY'
+          import json, os, datetime
+          def load(p):
+              try: return json.load(open(p))
+              except Exception: return None
+          drafts=load('/tmp/drafts.json')
+          channels=load('/tmp/channels.json')
+          today='2026-08-23'
+          items=[]
+          for d in ((drafts or {}).get('drafts') or []):
+              pubs=d.get('publications') or d.get('platformPublications') or {}
+              if isinstance(pubs, dict):
+                  for platform,p in pubs.items():
+                      if not isinstance(p,dict): continue
+                      due=p.get('dueAt')
+                      sent=p.get('sentAt')
+                      if (due and due.startswith(today)) or (sent and sent.startswith(today)):
+                          items.append({'draft_id':d.get('id'),'content_id':d.get('contentId') or d.get('content_id'),'platform':platform,'status':p.get('status') or p.get('publicationStatus'),'buffer_status':p.get('bufferStatus'),'dueAt':due,'sentAt':sent,'bufferPostId':p.get('bufferPostId'),'externalLink':p.get('externalLink')})
+              due=d.get('dueAt')
+              sent=d.get('sentAt')
+              if (due and str(due).startswith(today)) or (sent and str(sent).startswith(today)):
+                  items.append({'draft_id':d.get('id'),'content_id':d.get('contentId') or d.get('content_id'),'platform':'legacy','status':d.get('status'),'dueAt':due,'sentAt':sent,'bufferPostId':d.get('bufferPostId')})
+          out={
+            'ok': int(os.environ.get('DRAFT_CODE','0'))==200,
+            'date':'2026-08-23',
+            'timezone':'America/Sao_Paulo',
+            'publication_provider':'BUFFER',
+            'schedule_provider':'BUFFER',
+            'analytics_provider':'METRICOOL',
+            'metricool_publication_allowed':False,
+            'drafts_http':int(os.environ.get('DRAFT_CODE') or 0),
+            'channels_http':int(os.environ.get('CHANNEL_CODE') or 0),
+            'buffer_channels': (channels or {}).get('channels'),
+            'today_publications':items,
+            'today_count':len(items),
+            'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }
+          open('control-plane/receipts/ugi-buffer/today.json','w').write(json.dumps(out,indent=2,ensure_ascii=False)+'\n')
+          PY
+      - name: Persist audit receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-autonomy-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add control-plane/receipts/ugi-buffer/today.json || true
+          git commit -m 'UGI: persist Buffer today audit [skip ci]' || true
+          git push || true
