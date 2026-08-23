@@ -1,0 +1,22 @@
+{
+  "project": "UGI",
+  "repository": "umagestaointeligente/ugi-video-renderer",
+  "worker": "lola-github-admin-bridge-ugi",
+  "github_app_installation_auth_pass": true,
+  "repository_lock_pass": true,
+  "bridge_controlled_dispatch_pass": true,
+  "actions_health_run_id": "32672202102",
+  "total_jobs": 1,
+  "no_jobs_were_run": false,
+  "job_status": "completed",
+  "job_conclusion": "success",
+  "clean_source_redeployed": true,
+  "unauthenticated_diagnostics_blocked": true,
+  "publication_triggered": false,
+  "payment_triggered": false,
+  "secrets_exposed": false,
+  "fail_closed": true,
+  "workflow_run_id": "32672180963",
+  "commit_sha": "9c4870d95deaed341a92a4b16540fde057921510",
+  "timestamp": "2026-08-23T22:58:33.914589+00:00"
+}
