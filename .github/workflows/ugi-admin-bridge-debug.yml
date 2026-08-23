@@ -56,11 +56,23 @@ jobs:
           p.write_text(s.replace(old,new))
           PY
           npx --yes wrangler@4.32.0 deploy --config "$CFG"
-          curl --fail --silent --show-error -H "x-ugi-smoke: $SMOKE_TOKEN" "$WORKER_URL/diagnostics" -o /tmp/diag.json
+          DIAG_OK=false
+          for i in $(seq 1 20); do
+            CODE=$(curl --silent --show-error -o /tmp/diag.json -w '%{http_code}' -H "x-ugi-smoke: $SMOKE_TOKEN" "$WORKER_URL/diagnostics" || true)
+            if [ "$CODE" = '200' ]; then DIAG_OK=true; break; fi
+            sleep 2
+          done
+          test "$DIAG_OK" = 'true'
           cat /tmp/diag.json
-          curl --fail --silent --show-error -H "x-ugi-smoke: $SMOKE_TOKEN" "$WORKER_URL/github/actions/status" -o /tmp/actions.json
+          ACT_OK=false
+          for i in $(seq 1 10); do
+            CODE=$(curl --silent --show-error -o /tmp/actions.json -w '%{http_code}' -H "x-ugi-smoke: $SMOKE_TOKEN" "$WORKER_URL/github/actions/status" || true)
+            if [ "$CODE" = '200' ]; then ACT_OK=true; break; fi
+            sleep 2
+          done
+          test "$ACT_OK" = 'true'
           cat /tmp/actions.json
           trap - EXIT
           restore
 
-# trigger: 2026-08-23T23:00Z
+# trigger: 2026-08-23T23:03Z
