@@ -14,6 +14,12 @@ on:
         type: choice
         options: [private, unlisted]
         default: private
+  push:
+    paths:
+      - '.github/workflows/magic-sleep-youtube-smoke.yml'
+      - 'magic-engine/youtube_oauth.py'
+      - 'magic-engine/publishers.py'
+      - 'magic-engine/sleep_render.py'
 
 permissions:
   contents: read
