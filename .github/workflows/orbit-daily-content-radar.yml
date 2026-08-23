@@ -3,6 +3,12 @@ run-name: Orbit Content Radar ${{ github.run_id }}
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/orbit-daily-content-radar.yml'
+      - 'magic-engine/config.json'
+      - 'magic-engine/magic_engine.py'
+      - 'magic-engine/orbit-production-policy.md'
   schedule:
     - cron: '0 0 * * *'
     - cron: '0 14 * * *'
