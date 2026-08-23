@@ -1,0 +1,18 @@
+{
+  "project": "UGI",
+  "repository": "umagestaointeligente/ugi-video-renderer",
+  "default_branch": "main",
+  "workflow": "actions-health.yml",
+  "run_id": "32660100669",
+  "run_attempt": "1",
+  "commit_sha": "fb1589d8384e8ba2442f58d711f865c78a2c1400",
+  "runner_executed": true,
+  "bridge_source_syntax_ok": true,
+  "repository_lock_source_ok": true,
+  "workflow_allowlist_source_ok": true,
+  "fail_closed": true,
+  "total_jobs": 1,
+  "no_jobs_were_run": false,
+  "publication_triggered": false,
+  "payment_triggered": false
+}
