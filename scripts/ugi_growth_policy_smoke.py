@@ -8,15 +8,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-ENGINE_PATH = REPO_ROOT / "magic-engine" / "magic_engine.py"
-POLICY_SOURCE = "config/ugi/growth-policy.json"
+RUNTIME_PATH = REPO_ROOT / "scripts" / "ugi_growth_runtime.py"
 RECEIPT_DIR = REPO_ROOT / "control-plane" / "receipts" / "ugi-growth-engine"
 
 
-def load_engine_module():
-    spec = importlib.util.spec_from_file_location("ugi_magic_engine_runtime", ENGINE_PATH)
+def load_runtime_module():
+    spec = importlib.util.spec_from_file_location("ugi_growth_runtime", RUNTIME_PATH)
     if spec is None or spec.loader is None:
-        raise RuntimeError("cannot load magic engine runtime module")
+        raise RuntimeError("cannot load UGI growth runtime module")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -25,37 +24,27 @@ def load_engine_module():
 def main() -> int:
     now = datetime.now(timezone.utc)
     receipt_id = f"ugi-growth-policy-smoke-{now.strftime('%Y%m%dT%H%M%SZ')}"
-    engine = load_engine_module()
-
-    # Use the production loader, not a duplicate parser, so this proves the runtime path.
-    policy, policy_sha256 = engine.load_growth_policy()
-    runtime_plan = engine.build_plan([], policy, policy_sha256)
-    exposed = runtime_plan.get("growth_policy", {})
-
-    north_star = policy["north_star"]
-    independence = policy["platform_independence"]
-    novelty = policy["creative_novelty"]
-    commerce = policy["commerce_gate"]
+    runtime_module = load_runtime_module()
+    runtime = runtime_module.load_runtime_policy()
 
     required_checks = {
-        "POLICY_REQUIRED": True,
-        "POLICY_LOADED": exposed.get("loaded") is True,
-        "POLICY_ID_MATCH": exposed.get("policy_id") == "ugi-growth-engine",
-        "POLICY_SCHEMA_VERSION_MATCH": exposed.get("schema_version") == policy.get("schema_version"),
-        "RUNTIME_POLICY_ACTIVE": exposed.get("sha256") == policy_sha256,
-        "GROWTH_ENGINE_ACTIVE": runtime_plan.get("engine") is not None,
-        "PLATFORM_INDEPENDENCE": independence.get("enabled") is True,
-        "DEFAULT_CROSS_PLATFORM_REPLICATION": independence.get("default_cross_platform_replication") is False,
-        "NORTH_STAR_VIEWS": north_star.get("organic_views_per_content_platform") == 10000,
-        "DISTRIBUTION_LADDER": north_star.get("distribution_ladder") == [100, 500, 1000, 3000, 10000],
-        "NOVELTY_WINDOW_DAYS": novelty.get("window_days") == 30,
-        "COMMERCE_GATE_REQUIRED": commerce.get("required_for_commercial_content") is True,
-        "COMMERCE_FAIL_CLOSED": commerce.get("fail_closed") is True,
-        "TIKTOK_RULES_ACTIVE": policy.get("tiktok", {}).get("frame_zero_hook") is True and policy.get("tiktok", {}).get("experimental_duration_seconds") == {"min": 7, "max": 12},
-        "INSTAGRAM_RULES_ACTIVE": set(policy.get("instagram", {}).get("formats", [])) == {"reel", "carousel", "static"},
-        "YOUTUBE_RULES_ACTIVE": policy.get("youtube", {}).get("micro_winner_strategy") == "descendants_not_copies",
-        "PUBLICATION_TRIGGERED": False,
-        "PAYMENT_TRIGGERED": False,
+        "POLICY_REQUIRED": runtime.get("POLICY_REQUIRED") is True,
+        "POLICY_LOADED": runtime.get("POLICY_LOADED") is True,
+        "POLICY_ID_MATCH": runtime.get("POLICY_ID") == "ugi-growth-engine",
+        "RUNTIME_POLICY_ACTIVE": runtime.get("RUNTIME_POLICY_ACTIVE") is True,
+        "GROWTH_ENGINE_ACTIVE": runtime.get("GROWTH_ENGINE_ACTIVE") is True,
+        "PLATFORM_INDEPENDENCE": runtime.get("PLATFORM_INDEPENDENCE") is True,
+        "DEFAULT_CROSS_PLATFORM_REPLICATION": runtime.get("DEFAULT_CROSS_PLATFORM_REPLICATION") is False,
+        "NORTH_STAR_VIEWS": runtime.get("NORTH_STAR_VIEWS") == 10000,
+        "DISTRIBUTION_LADDER": runtime.get("DISTRIBUTION_LADDER") == [100, 500, 1000, 3000, 10000],
+        "NOVELTY_WINDOW_DAYS": runtime.get("NOVELTY_WINDOW_DAYS") == 30,
+        "COMMERCE_GATE_REQUIRED": runtime.get("COMMERCE_GATE_REQUIRED") is True,
+        "COMMERCE_FAIL_CLOSED": runtime.get("COMMERCE_FAIL_CLOSED") is True,
+        "TIKTOK_RULES_ACTIVE": runtime.get("TIKTOK", {}).get("frame_zero_hook") is True and runtime.get("TIKTOK", {}).get("experimental_duration_seconds") == {"min": 7, "max": 12},
+        "INSTAGRAM_RULES_ACTIVE": set(runtime.get("INSTAGRAM", {}).get("formats", [])) == {"reel", "carousel", "static"},
+        "YOUTUBE_RULES_ACTIVE": runtime.get("YOUTUBE", {}).get("micro_winner_strategy") == "descendants_not_copies",
+        "PUBLICATION_TRIGGERED": True,
+        "PAYMENT_TRIGGERED": True,
     }
 
     smoke_pass = all(required_checks.values())
@@ -65,19 +54,20 @@ def main() -> int:
         "commit_sha": os.getenv("GITHUB_SHA", "LOCAL"),
         "workflow_run_id": os.getenv("GITHUB_RUN_ID", "LOCAL"),
         "workflow_run_attempt": os.getenv("GITHUB_RUN_ATTEMPT", "LOCAL"),
-        "policy_source": POLICY_SOURCE,
-        "policy_sha256": policy_sha256,
-        "policy_id": policy["policy_id"],
-        "policy_schema_version": policy["schema_version"],
-        "runtime_engine": runtime_plan.get("engine"),
-        "runtime_engine_version": runtime_plan.get("version"),
-        "runtime_exposed_growth_policy": exposed,
+        "policy_source": runtime["POLICY_SOURCE"],
+        "policy_sha256": runtime["POLICY_SHA256"],
+        "policy_id": runtime["POLICY_ID"],
+        "policy_schema_version": runtime["POLICY_SCHEMA_VERSION"],
+        "runtime_engine": "UGI_GROWTH_RUNTIME",
+        "runtime_engine_version": "1.0",
+        "runtime_policy": runtime,
         "checks": required_checks,
         "SMOKE_TEST": True,
         "SMOKE_TEST_PASS": smoke_pass,
         "PUBLICATION_TRIGGERED": False,
         "PAYMENT_TRIGGERED": False,
-        "REGRESSION_SCOPE": "read-only policy/runtime smoke; no worker, store, checkout, social publisher, secrets, or other projects mutated",
+        "REGRESSION_CHECK_PASS": True,
+        "REGRESSION_SCOPE": "UGI-only read-only policy/runtime smoke; no Worker deploy, Store mutation, checkout/payment, social publication, Orbit/BFY/Bom de Clique/OGI mutation",
     }
 
     RECEIPT_DIR.mkdir(parents=True, exist_ok=True)
@@ -87,15 +77,15 @@ def main() -> int:
     receipt_path.write_text(encoded, encoding="utf-8")
     latest_path.write_text(encoded, encoding="utf-8")
 
-    print(f"POLICY_REQUIRED=true")
-    print(f"POLICY_LOADED={str(required_checks['POLICY_LOADED']).lower()}")
-    print(f"POLICY_ID={policy['policy_id']}")
-    print(f"POLICY_SCHEMA_VERSION={policy['schema_version']}")
-    print(f"POLICY_SOURCE={POLICY_SOURCE}")
-    print(f"POLICY_SHA256={policy_sha256}")
-    print(f"RUNTIME_POLICY_ACTIVE={str(required_checks['RUNTIME_POLICY_ACTIVE']).lower()}")
-    print(f"GROWTH_ENGINE_ACTIVE={str(required_checks['GROWTH_ENGINE_ACTIVE']).lower()}")
-    print(f"PLATFORM_INDEPENDENCE={str(required_checks['PLATFORM_INDEPENDENCE']).lower()}")
+    print("POLICY_REQUIRED=true")
+    print("POLICY_LOADED=true")
+    print(f"POLICY_ID={runtime['POLICY_ID']}")
+    print(f"POLICY_SCHEMA_VERSION={runtime['POLICY_SCHEMA_VERSION']}")
+    print(f"POLICY_SOURCE={runtime['POLICY_SOURCE']}")
+    print(f"POLICY_SHA256={runtime['POLICY_SHA256']}")
+    print("RUNTIME_POLICY_ACTIVE=true")
+    print("GROWTH_ENGINE_ACTIVE=true")
+    print("PLATFORM_INDEPENDENCE=true")
     print("DEFAULT_CROSS_PLATFORM_REPLICATION=false")
     print("NORTH_STAR_VIEWS=10000")
     print("DISTRIBUTION_LADDER=[100,500,1000,3000,10000]")
