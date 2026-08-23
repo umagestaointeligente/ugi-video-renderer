@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-08-23T23:36:27.534694+00:00",
+  "publication_provider": "BUFFER",
+  "analytics_provider": "METRICOOL",
+  "metricool_publication_allowed": false,
+  "results": [
+    {
+      "platform": "instagram",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "platform": "tiktok",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "platform": "youtube",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ]
+}
