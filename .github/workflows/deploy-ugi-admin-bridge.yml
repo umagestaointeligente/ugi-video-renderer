@@ -1,0 +1,81 @@
+name: Deploy UGI Admin Bridge
+run-name: Deploy UGI Admin Bridge ${{ github.run_id }}
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/lola-github-admin-bridge-ugi.mjs'
+      - 'cloudflare/wrangler.ugi-admin.toml'
+      - '.github/workflows/deploy-ugi-admin-bridge.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-ugi-admin-bridge
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout UGI repository
+        uses: actions/checkout@v4
+
+      - name: Validate repository hard lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'umagestaointeligente' cloudflare/lola-github-admin-bridge-ugi.mjs
+          grep -q 'ugi-video-renderer' cloudflare/lola-github-admin-bridge-ugi.mjs
+          grep -q 'name = "lola-github-admin-bridge-ugi"' cloudflare/wrangler.ugi-admin.toml
+          echo 'UGI_ADMIN_BRIDGE_SCOPE_OK=true'
+
+      - name: Verify deploy credentials are configured
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Missing UGI_ADMIN_CLOUDFLARE_API_TOKEN'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Missing UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID'; exit 1; }
+          echo 'UGI_ADMIN_DEPLOY_CREDENTIALS_PRESENT=true'
+
+      - name: Deploy isolated UGI admin Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.ugi-admin.toml
+
+      - name: Record deploy evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          cat > generated/evidence/ugi-admin-bridge-deploy.json <<JSON
+          {
+            "project": "UGI",
+            "repository": "umagestaointeligente/ugi-video-renderer",
+            "worker": "lola-github-admin-bridge-ugi",
+            "workflow": "deploy-ugi-admin-bridge.yml",
+            "run_id": "${GITHUB_RUN_ID}",
+            "commit_sha": "${GITHUB_SHA}",
+            "deploy_attempted": true,
+            "fail_closed": true,
+            "secrets_exposed": false
+          }
+          JSON
+
+      - name: Upload deploy evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-admin-bridge-deploy-${{ github.run_id }}
+          path: generated/evidence/ugi-admin-bridge-deploy.json
+          retention-days: 30
+          if-no-files-found: error
