@@ -1,22 +1,86 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "engine": "LOLA_MAGIC_ENGINE_V1",
+  "brand": "Orbit Media Labs",
   "cost_policy": {"mode": "zero_cost_first", "allow_paid_fallback": false},
-  "scan": {"geos": ["BR", "US"], "max_topics_per_geo": 20, "min_trend_score": 55, "min_virality_score": 58},
+  "scan": {"geos": ["BR", "US"], "max_topics_per_geo": 30, "min_trend_score": 55, "min_virality_score": 58},
   "channels": {
-    "curiosidades": {"enabled": true, "priority": 1, "platforms": ["youtube", "instagram", "facebook"], "max_per_run": 2, "rights_policy": "stock_public_original_only", "format": "short"},
-    "universo_esportes": {"enabled": true, "priority": 2, "platforms": ["youtube", "instagram", "facebook"], "max_per_run": 2, "rights_policy": "analysis_no_broadcast_reupload", "format": "short"},
-    "podcast_intelligence": {"enabled": true, "priority": 4, "platforms": ["youtube", "instagram", "facebook"], "max_per_run": 1, "rights_policy": "permission_or_transformative_review", "format": "short_2_part"},
-    "cinema_transformativo": {"enabled": true, "priority": 5, "platforms": ["youtube", "instagram", "facebook"], "max_per_run": 1, "rights_policy": "critique_with_registered_basis_only", "format": "short_3_part"},
-    "sleep_focus": {"enabled": true, "priority": 3, "platforms": ["youtube"], "max_per_run": 1, "rights_policy": "original_only", "format": "long"}
+    "curiosidades": {
+      "public_name": "Você Sabia Agora?",
+      "enabled": true,
+      "priority": 1,
+      "platforms": ["youtube", "instagram", "facebook", "tiktok"],
+      "max_per_run": 3,
+      "daily_target": 3,
+      "rights_policy": "original_public_domain_or_verified_license_only",
+      "format": "short",
+      "thumbnail_semantic_match_required": true
+    },
+    "universo_esportes": {
+      "public_name": "Joga Tudo",
+      "enabled": false,
+      "priority": 2,
+      "platforms": ["youtube", "instagram", "facebook", "tiktok"],
+      "max_per_run": 2,
+      "daily_target": 2,
+      "rights_policy": "analysis_no_broadcast_reupload",
+      "format": "short",
+      "thumbnail_semantic_match_required": true
+    },
+    "podcast_intelligence": {
+      "public_name": "Fala Que Vale",
+      "enabled": false,
+      "priority": 4,
+      "platforms": ["youtube", "instagram", "facebook", "tiktok"],
+      "max_per_run": 2,
+      "daily_target": 2,
+      "rights_policy": "permission_or_materially_transformative_review",
+      "format": "short_2_part",
+      "thumbnail_semantic_match_required": true
+    },
+    "cinema_transformativo": {
+      "public_name": "Cena Certa",
+      "enabled": true,
+      "priority": 3,
+      "platforms": ["youtube", "instagram", "facebook", "tiktok"],
+      "max_per_run": 2,
+      "daily_target": 2,
+      "rights_policy": "critique_commentary_or_documented_rights_basis_only",
+      "format": "short_series",
+      "thumbnail_semantic_match_required": true
+    },
+    "sleep_focus": {
+      "public_name": "MODO ZEN",
+      "enabled": false,
+      "priority": 5,
+      "platforms": ["youtube"],
+      "max_per_run": 1,
+      "daily_target": 1,
+      "rights_policy": "original_only",
+      "format": "long",
+      "thumbnail_semantic_match_required": true
+    }
   },
   "scoring": {
-    "trend": {"position": 0.35, "keyword_match": 0.25, "freshness": 0.20, "cross_geo": 0.20},
-    "virality": {"curiosity": 0.30, "urgency": 0.20, "specificity": 0.20, "emotion": 0.15, "series_potential": 0.15}
+    "trend": {"position": 0.30, "keyword_match": 0.20, "freshness": 0.20, "cross_geo": 0.15, "audience_fit": 0.15},
+    "virality": {"curiosity": 0.25, "urgency": 0.15, "specificity": 0.15, "emotion": 0.15, "series_potential": 0.15, "visual_strength": 0.15}
+  },
+  "thumbnail_policy": {
+    "semantic_match_required": true,
+    "clickbait_mismatch": "HARD_FAIL",
+    "topic_visual_required": true,
+    "emotion_must_match_video": true,
+    "misleading_text": "HARD_FAIL"
+  },
+  "monetization_policy": {
+    "original_value_required": true,
+    "mass_produced_template_content_blocked": true,
+    "reused_content_without_material_transformation_blocked": true,
+    "revenue_priority": ["platform_ads", "affiliate", "sponsorship", "owned_products"]
   },
   "sports_keywords": ["futebol", "football", "soccer", "champions", "libertadores", "brasileirao", "nba", "basketball", "basquete", "formula 1", "f1", "ufc", "mma", "volei", "volleyball", "skate"],
   "podcast_keywords": ["podcast", "interview", "entrevista"],
-  "cinema_keywords": ["movie", "film", "filme", "cinema", "netflix", "disney", "hbo"],
-  "curiosity_keywords": ["descoberta", "science", "ciencia", "space", "espaco", "technology", "tecnologia", "history", "historia", "misterio", "mystery", "why", "como", "por que"],
-  "hard_gates": ["RIGHTS_GATE", "FACT_GATE", "QA_GATE", "COST_GATE", "PLATFORM_AUTH"]
+  "cinema_keywords": ["movie", "film", "filme", "cinema", "netflix", "disney", "hbo", "streaming", "series", "série"],
+  "curiosity_keywords": ["descoberta", "science", "ciencia", "ciência", "space", "espaco", "espaço", "technology", "tecnologia", "history", "historia", "história", "misterio", "mistério", "mystery", "why", "como", "por que", "vulcao", "vulcão"],
+  "hard_gates": ["RIGHTS_GATE", "FACT_GATE", "QA_GATE", "COST_GATE", "PLATFORM_AUTH", "THUMBNAIL_SEMANTIC_MATCH"]
 }
