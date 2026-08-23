@@ -1,0 +1,30 @@
+name: UGI Growth Policy Runtime Gate
+run-name: UGI Growth Gate ${{ github.sha }}
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'config/ugi/growth-policy.json'
+      - 'scripts/growth-policy-smoke.py'
+      - '.github/workflows/ugi-growth-policy-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: write
+jobs:
+  growth-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Load and validate Growth Policy
+        run: python scripts/growth-policy-smoke.py
+      - name: Prove renderer consumes policy gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python scripts/growth-policy-smoke.py | tee /tmp/growth-proof.txt
+          grep -q '^GROWTH_POLICY_LOADED=true$' /tmp/growth-proof.txt
+          grep -q '^GROWTH_RUNTIME_GATE=PASS$' /tmp/growth-proof.txt
+          echo 'RENDER_PRECONDITION_GROWTH_POLICY=PASS'
