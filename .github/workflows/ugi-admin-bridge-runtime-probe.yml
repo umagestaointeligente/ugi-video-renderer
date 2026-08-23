@@ -1,0 +1,67 @@
+name: UGI Admin Bridge Runtime Probe
+run-name: UGI Admin Bridge Runtime Probe ${{ github.run_id }}
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-admin-bridge-runtime-probe.yml'
+
+permissions:
+  contents: write
+
+env:
+  WORKER_URL: https://lola-github-admin-bridge-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe live health without failing before evidence
+        shell: bash
+        run: |
+          set +e
+          mkdir -p control-plane/receipts/ugi-admin-bridge
+          BODY=/tmp/health-body.txt
+          ERR=/tmp/health-error.txt
+          CODE=$(curl --silent --show-error --max-time 20 --output "$BODY" --write-out '%{http_code}' "$WORKER_URL/health" 2>"$ERR")
+          CURL_EXIT=$?
+          export CODE CURL_EXIT
+          python - <<'PY'
+          import json, os, datetime
+          body=''
+          err=''
+          try: body=open('/tmp/health-body.txt').read()
+          except: pass
+          try: err=open('/tmp/health-error.txt').read()
+          except: pass
+          parsed=None
+          try: parsed=json.loads(body)
+          except: parsed=None
+          out={
+            'project':'UGI',
+            'worker':'lola-github-admin-bridge-ugi',
+            'worker_url':os.environ['WORKER_URL'],
+            'curl_exit':int(os.environ.get('CURL_EXIT','999')),
+            'http_code':int(os.environ.get('CODE') or 0),
+            'health_json':parsed,
+            'body_preview':body[:1200] if parsed is None else None,
+            'error_preview':err[:1200] or None,
+            'workflow_run_id':os.environ.get('GITHUB_RUN_ID'),
+            'commit_sha':os.environ.get('GITHUB_SHA'),
+            'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }
+          open('control-plane/receipts/ugi-admin-bridge/probe.json','w').write(json.dumps(out,indent=2)+'\n')
+          PY
+      - name: Persist probe evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-autonomy-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add control-plane/receipts/ugi-admin-bridge/probe.json
+          git commit -m 'UGI autonomy: persist admin bridge runtime probe [skip ci]' || true
+          git push
