@@ -33,40 +33,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p control-plane/receipts/ugi-buffer control-plane/receipts/ugi-today
+          mkdir -p control-plane/receipts/ugi-today
           test -n "${UGI_LOLA_COMMAND_KEY:-}"
           echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
           curl --fail --silent --show-error -A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/health" -o /tmp/health.json
           curl --fail --silent --show-error -A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/buffer/channels" -o /tmp/channels.json
-      - name: Ensure today independent drafts exist
+      - name: Lookup today independent drafts
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,subprocess,os,datetime,pathlib,urllib.parse
+          import json,subprocess,os,pathlib,urllib.parse
           base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
-          briefs=[
-            ('instagram','UGI-20260823-IG-001',{'contentId':'UGI-20260823-IG-001','type':'reel','topic':'Checklist de 5 minutos para começar segunda-feira sem apagar incêndio','objective':'saves shares retention','keyMessage':'Antes de começar a segunda, elimine ruído: escolha três resultados, remova uma falsa urgência e delegue uma tarefa.','cta':'Salve para usar amanhã cedo.','commercialIntent':'none','instructions':'Conteúdo independente para Instagram. Reel profissional, direto, sem introdução lenta, foco em saves e shares. Não reutilizar criativo recente. Não citar link no perfil nem produto.'}),
-            ('tiktok','UGI-20260823-TT-001',{'contentId':'UGI-20260823-TT-001','type':'reel','topic':'3 sinais de que sua segunda-feira vai começar apagando incêndio','objective':'choose to view retention completion shares','keyMessage':'Agenda lotada, nenhuma prioridade explícita e tudo marcado como urgente são sinais de segunda reativa.','cta':'Comenta qual dos três mais acontece na sua rotina.','commercialIntent':'none','requestedVideoDuration':10,'instructions':'Conteúdo independente para TikTok. 7 a 12 segundos, hook no frame zero, cortes rápidos, sem introdução lenta. Não reutilizar criativo recente. Não usar link no perfil.'}),
-            ('youtube','UGI-20260823-YT-001',{'contentId':'UGI-20260823-YT-001','type':'reel','topic':'Use IA em 2 minutos para transformar pendências em 3 prioridades de segunda','objective':'choose to view average percentage viewed satisfaction','keyMessage':'Liste as pendências, peça à IA para separar impacto, urgência real e delegação, e saia com três prioridades explícitas.','cta':'Teste antes de abrir sua agenda amanhã.','commercialIntent':'none','instructions':'Conteúdo independente para YouTube Short. Hook imediato, explicação prática e fechamento curto. Não reutilizar criativo recente. Não citar produto ou oferta.'})]
-          H=['-A','UGI-GitHub-Actions/1.0','-H',f'x-lola-command-key: {key}','-H','accept: application/json']
-          out=[]
-          for platform,cid,payload in briefs:
-            url=base+'/api/draft-lookup?content_id='+urllib.parse.quote(cid)
-            p=subprocess.run(['curl','--silent','--show-error',*H,url],text=True,capture_output=True)
+          rows=[]
+          for platform,cid in [('instagram','UGI-20260823-IG-001'),('tiktok','UGI-20260823-TT-001'),('youtube','UGI-20260823-YT-001')]:
+            p=subprocess.run(['curl','--silent','--show-error','-A','UGI-GitHub-Actions/1.0','-H',f'x-lola-command-key: {key}','-H','accept: application/json',base+'/api/draft-lookup?content_id='+urllib.parse.quote(cid)],text=True,capture_output=True)
             try: look=json.loads(p.stdout)
             except: look={}
-            draft=look.get('draft') if look.get('ok') else None
-            if not draft:
-              body=json.dumps(payload,ensure_ascii=False)
-              q=subprocess.run(['curl','--silent','--show-error','--location','--max-time','180',*H,'-H','content-type: application/json','--data-binary',body,base+'/api/command'],text=True,capture_output=True)
-              try: resp=json.loads(q.stdout)
-              except: resp={'raw':q.stdout[:1500]}
-              draft=(resp.get('proposal') or {})
-            out.append({'platform':platform,'contentId':cid,'draftId':draft.get('id'),'renderStatus':draft.get('renderStatus'),'allPlatformsReady':draft.get('allPlatformsReady',False),'qualityStatus':draft.get('qualityStatus')})
-          pathlib.Path('control-plane/receipts/ugi-today/drafts.json').write_text(json.dumps({'results':out},ensure_ascii=False,indent=2)+'\n')
+            d=look.get('draft') or {}
+            rows.append({'platform':platform,'contentId':cid,'draftId':d.get('id'),'allPlatformsReady':d.get('allPlatformsReady',False),'qualityStatus':d.get('qualityStatus'),'topic':d.get('topic'),'text':d.get('text'),'cta':d.get('cta')})
+          pathlib.Path('control-plane/receipts/ugi-today/drafts.json').write_text(json.dumps({'results':rows},ensure_ascii=False,indent=2)+'\n')
+          if not all(r.get('draftId') for r in rows): raise SystemExit(2)
           PY
-      - name: Dispatch zero-cost GitHub renders where needed
+      - name: Dispatch valid dynamic zero-cost renders
         shell: bash
         run: |
           set -euo pipefail
@@ -74,16 +63,43 @@ jobs:
           import json,subprocess,os,pathlib
           base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
           rows=json.load(open('control-plane/receipts/ugi-today/drafts.json'))['results']
+          cfg={
+            'instagram':[
+              ('hook','gestor abrindo agenda de segunda-feira com expressão focada','manager opening weekly planner office','Segunda não começa na agenda.','Começa nas prioridades.','Antes de abrir a agenda, escolha o que realmente precisa acontecer.'),
+              ('pain','agenda cheia de reuniões e notificações concorrendo por atenção','busy calendar notifications office','Agenda cheia não é prioridade.','É só volume.','Se tudo entra primeiro, o importante perde espaço.'),
+              ('consequence','gestor reagindo a mensagens urgentes no celular','manager urgent phone messages office','Urgência falsa rouba a manhã.','E empurra o importante.','Remova pelo menos uma falsa urgência antes que ela tome seu dia.'),
+              ('turn','gestor escrevendo três resultados essenciais em checklist','manager writing top three priorities checklist','Escolha 3 resultados.','Só três.','Defina três resultados que fariam a segunda valer a pena.'),
+              ('result','líder delegando uma tarefa para colega em ambiente profissional','manager delegating task colleague office','Delegue uma tarefa.','Abra espaço mental.','Tire da sua mão uma tarefa que não precisa ficar com você.'),
+              ('cta','checklist simples ao lado de café e notebook antes do início do expediente','morning checklist laptop coffee office','Salve este checklist.','Use amanhã cedo.','Salve e use antes de começar sua segunda-feira.')],
+            'tiktok':[
+              ('hook','profissional encarando calendário lotado logo ao iniciar o dia','busy calendar monday office','3 sinais de segunda caótica.','Veja antes de começar.','Três sinais de que sua segunda vai começar apagando incêndio.'),
+              ('pain','tela com blocos de reuniões ocupando toda a agenda','calendar full meetings laptop','1. Agenda lotada.','Sem espaço para decidir.','Primeiro sinal: a agenda já está lotada antes do dia começar.'),
+              ('consequence','múltiplas tarefas marcadas como urgentes ao mesmo tempo','urgent task list overload','2. Tudo é urgente.','Logo, nada é prioridade.','Segundo sinal: todas as tarefas aparecem como urgentes.'),
+              ('turn','quadro de tarefas sem nenhuma prioridade destacada','task board no priority office','3. Nenhuma prioridade explícita.','Você só reage.','Terceiro sinal: você ainda não escolheu a prioridade número um.'),
+              ('result','profissional reorganizando rapidamente três tarefas principais','manager reorganizing top tasks','Corrija antes de dormir.','Escolha três resultados.','Escolha três resultados agora e reduza a reação amanhã.'),
+              ('cta','profissional apontando para a câmera em vídeo vertical curto','professional pointing camera office','Qual acontece mais?','Comenta 1, 2 ou 3.','Comenta qual dos três mais acontece na sua rotina.')],
+            'youtube':[
+              ('hook','profissional diante de laptop com lista de pendências e ferramenta de IA','professional AI laptop task list','IA para priorizar em 2 minutos.','Sem terceirizar sua decisão.','Use a IA para organizar as pendências antes de abrir a agenda.'),
+              ('pain','lista longa de pendências sem ordem aparente','long task list laptop office','Cole suas pendências.','Sem editar demais.','Comece colando tudo o que está pendente.'),
+              ('consequence','profissional comparando tarefas por impacto e urgência real','manager comparing priorities impact urgency','Peça 3 filtros.','Impacto, urgência real, delegação.','Peça para separar impacto, urgência real e o que pode ser delegado.'),
+              ('turn','tela de laptop exibindo três prioridades resumidas','laptop three priorities business','Saia com 3 prioridades.','Claras e explícitas.','Transforme a lista em três prioridades para a segunda-feira.'),
+              ('result','gestor transferindo prioridades para agenda semanal organizada','manager planning weekly calendar priorities','Agora abra a agenda.','Primeiro prioridade, depois horário.','Só depois coloque essas três prioridades na agenda.'),
+              ('cta','profissional fechando laptop com plano simples ao lado','professional closing laptop plan office','Teste hoje à noite.','Amanhã começa diferente.','Teste antes de abrir sua agenda amanhã.')]
+          }
+          def scenes(platform):
+            out=[]
+            for role,visual,query,overlay,support,narr in cfg[platform]:
+              m=lambda s:{'instagram':s,'tiktok':s,'youtube':s}
+              out.append({'role':role,'visual_intent':visual,'pexels_query':query,'overlay':m(overlay),'support':m(support),'narration':m(narr)})
+            return out
           results=[]
           for r in rows:
-            if not r.get('draftId'):
-              results.append({**r,'ok':False,'error':'draft_missing'}); continue
             if r.get('allPlatformsReady'):
               results.append({**r,'ok':True,'skipped':'already_ready'}); continue
-            payload={'draftId':r['draftId'],'content_id':r['contentId']}
-            p=subprocess.run(['curl','--silent','--show-error','--location','--max-time','60','-A','UGI-GitHub-Actions/1.0','-H','content-type: application/json','-H','accept: application/json','-H',f'x-lola-command-key: {key}','--data-binary',json.dumps(payload),base+'/api/video-render'],text=True,capture_output=True)
+            payload={'draftId':r['draftId'],'content_id':r['contentId'],'scenes':scenes(r['platform'])}
+            p=subprocess.run(['curl','--silent','--show-error','--location','--max-time','60','-A','UGI-GitHub-Actions/1.0','-H','content-type: application/json','-H','accept: application/json','-H',f'x-lola-command-key: {key}','--data-binary',json.dumps(payload,ensure_ascii=False),base+'/api/video-render'],text=True,capture_output=True)
             try: resp=json.loads(p.stdout)
-            except: resp={'raw':p.stdout[:2000],'stderr':p.stderr[:1000]}
+            except: resp={'raw':p.stdout[:2500],'stderr':p.stderr[:1000]}
             results.append({**r,'renderResponse':resp,'ok':bool(resp.get('ok'))})
           pathlib.Path('control-plane/receipts/ugi-today/render-dispatch.json').write_text(json.dumps({'results':results},ensure_ascii=False,indent=2)+'\n')
           if not all(x.get('ok') for x in results): raise SystemExit(2)
