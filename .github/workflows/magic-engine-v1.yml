@@ -1,0 +1,64 @@
+name: Lola Magic Engine V1
+run-name: Magic Engine ${{ github.run_id }}
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */3 * * *'
+  push:
+    paths:
+      - 'magic-engine/**'
+      - '.github/workflows/magic-engine-v1.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lola-magic-engine-v1
+  cancel-in-progress: true
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONUNBUFFERED: '1'
+      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+      META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+      META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+      META_FB_PAGE_ID: ${{ secrets.META_FB_PAGE_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run autonomous trend radar
+        run: python magic-engine/magic_engine.py
+
+      - name: Check platform authorization matrix
+        run: python magic-engine/publishers.py
+
+      - name: Summarize gates
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          p=json.loads(Path('magic-engine/output/latest.json').read_text())
+          s=p['summary']
+          print('# Lola Magic Engine V1')
+          print(f"- proposals: {s['total']}")
+          print(f"- rights GREEN: {s['green']}")
+          print(f"- rights YELLOW: {s['yellow']}")
+          print(f"- rights RED: {s['red']}")
+          print('- COST_GATE: PASS (no paid fallback)')
+          print('- Publication remains fail-closed until OAuth/API auth and downstream FACT/QA gates are PASS.')
+          PY
+
+      - name: Persist lightweight evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: magic-engine-plan-${{ github.run_id }}
+          path: magic-engine/output/*.json
+          retention-days: 7
+          if-no-files-found: error
