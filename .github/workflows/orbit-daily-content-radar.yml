@@ -1,0 +1,51 @@
+name: Orbit Daily Content Radar
+run-name: Orbit Content Radar ${{ github.run_id }}
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+    - cron: '0 14 * * *'
+    - cron: '0 19 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  research-and-plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Lola Magic Engine trend radar
+        shell: bash
+        run: |
+          set -euo pipefail
+          python magic-engine/magic_engine.py
+
+      - name: Validate plan hard-gate fields
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          p=json.load(open('magic-engine/output/latest.json',encoding='utf-8'))
+          assert p.get('brand') == 'Orbit Media Labs'
+          for x in p.get('proposals',[]):
+              assert 'rights_gate' in x
+              assert 'fact_gate' in x
+              assert 'qa_gate' in x
+              assert 'cost_gate' in x
+              assert 'platform_auth' in x
+              assert 'thumbnail_semantic_match' in x
+          print('ORBIT_PLAN_SCHEMA=PASS')
+          print('PROPOSALS=',len(p.get('proposals',[])))
+          PY
+
+      - name: Upload content-plan evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: orbit-content-radar-${{ github.run_id }}
+          path: magic-engine/output/*.json
+          retention-days: 7
