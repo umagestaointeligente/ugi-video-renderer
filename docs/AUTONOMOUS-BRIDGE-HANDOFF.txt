@@ -2,7 +2,7 @@ UGI — AUTONOMOUS BRIDGE HANDOFF
 STANDARD: LAPB-1.0
 PROJECT: UGI — Uma Gestão Inteligente
 DATE: 2026-08-23
-STATUS: FOUNDATION_IN_PROGRESS
+STATUS: HUMAN_GATE_GITHUB_APP
 FAIL_CLOSED=true
 
 1. PROJECT IDENTITY
@@ -17,7 +17,13 @@ Health workflow: .github/workflows/actions-health.yml
 The UGI administrative bridge MUST use a GitHub App installation scoped only to:
 umagestaointeligente/ugi-video-renderer
 
-The currently connected ChatGPT GitHub installation is NOT accepted as the UGI administrative bridge because its installation can access multiple project repositories, including Bom de Clique, Orbit Media Labs and BFY. It may remain a conversation connector, but it is not the project-isolated production bridge.
+The currently connected ChatGPT GitHub installation is NOT accepted as the UGI administrative bridge because installation 155297770 can access multiple project repositories:
+- umagestaointeligente/ugi-video-renderer
+- umagestaointeligente/bom-de-clique-automation
+- umagestaointeligente/orbit-media-labs-automation
+- umagestaointeligente/bfy-automation
+
+It may remain a conversation connector, but it is not the project-isolated production bridge.
 
 Never use All repositories for the UGI bridge.
 Never reuse another project's private key or BRIDGE_AUTH_SECRET.
@@ -111,43 +117,59 @@ Known run id from prior validation: 32659766889
 Publication triggered during smoke: false
 Payment triggered during smoke: false
 
-9. ACTIONS HEALTH
+9. ACTIONS HEALTH — PASS
 Workflow: .github/workflows/actions-health.yml
-Required properties:
-workflow_dispatch: explicit
-push on main for bridge/health/handoff changes
-job always starts
-no job-level route gate
-runner execution step
-bridge source syntax check
-repository lock source check
-workflow allowlist source check
-compact receipt
-artifact evidence
-persistent receipt commit with [skip ci]
+Health run id: 32660100669
+Trigger: push
+Head SHA: fb1589d8384e8ba2442f58d711f865c78a2c1400
+Run status: completed
+Run conclusion: success
+Persistent receipt commit: a258cb168430f2ab530d78b2056698d690868fbc
+Receipt path: generated/evidence/actions-health.json
 
-READY requires:
+Receipt readback proved:
+runner_executed=true
+bridge_source_syntax_ok=true
+repository_lock_source_ok=true
+workflow_allowlist_source_ok=true
+fail_closed=true
+total_jobs=1
+no_jobs_were_run=false
+publication_triggered=false
+payment_triggered=false
+
+Therefore:
+ACTIONS_HEALTH_WORKFLOW_EXISTS=true
 WORKFLOW_RUN_CREATED=true
-TOTAL_JOBS>0
+TOTAL_JOBS=1
 NO_JOBS_WERE_RUN=false
-job conclusion=success
+JOB_RUN_INFERRED_SUCCESS_FROM_COMPLETED_RUN_AND_PERSISTED_FINAL_STEP=true
+RUN_CONCLUSION_SUCCESS=true
 
 10. CURRENT HUMAN GATE
 A project-specific GitHub App suitable for UGI administrative production use has not yet been proven.
 The currently connected installation spans multiple project repositories and therefore cannot satisfy the LAPB isolation requirement for this bridge.
 
-First human-required action when reached:
-Create or install a dedicated GitHub App named approximately 'Lola Operations Bridge — UGI' and scope its installation to ONLY umagestaointeligente/ugi-video-renderer. Generate the App private key securely without pasting it into ChatGPT.
+FIRST HUMAN-REQUIRED ACTION:
+Create or install a dedicated GitHub App named approximately:
+Lola Operations Bridge — UGI
+
+Configure it with the repository permissions listed in section 3 and install it using:
+ONLY SELECT REPOSITORIES
+-> select ONLY umagestaointeligente/ugi-video-renderer
+
+Generate the App private key securely.
+DO NOT paste the private key into ChatGPT.
 
 After that, operations resume autonomously from:
-- capture App ID and installation ID without exposing secrets;
+- identify App ID and installation ID without exposing secrets;
 - configure Cloudflare Worker secrets in secure provider storage;
 - deploy lola-github-admin-bridge-ugi;
 - revalidate all four credential bindings;
 - GET /health;
 - GET /diagnostics;
 - GET /github/actions/status;
-- dispatch actions-health.yml;
+- dispatch actions-health.yml through the new bridge;
 - read run;
 - read jobs;
 - require total_jobs>0 and success;
@@ -155,19 +177,28 @@ After that, operations resume autonomously from:
 - update this handoff;
 - only then set AUTONOMY_FOUNDATION_READY=true.
 
-11. SUCCESS DEFINITION
-PROJECT_ISOLATED=true
-GITHUB_APP_AUTH_OK=true
-INSTALLATION_AUTH_OK=true
-REPOSITORY_LOCK_OK=true
-ACTIONS_ENABLED=true
-HEALTH_WORKFLOW_DISPATCHED=true
+11. CURRENT FOUNDATION GATES
+PROJECT_REPOSITORY_IDENTIFIED=true
+DEFAULT_BRANCH_IDENTIFIED=true
+ACTIONS_HEALTH_WORKFLOW_EXISTS=true
 WORKFLOW_RUN_CREATED=true
-TOTAL_JOBS>0
+TOTAL_JOBS=1
 NO_JOBS_WERE_RUN=false
-MOBILE_OPERATION_PATH_AVAILABLE=true
+RUN_CONCLUSION_SUCCESS=true
+BRIDGE_SOURCE_CREATED=true
+REPOSITORY_LOCK_SOURCE_OK=true
+WORKFLOW_ALLOWLIST_SOURCE_OK=true
+HANDOFF_CREATED=true
 SECRETS_EXPOSED=false
 FAIL_CLOSED=true
 
-Until all gates pass:
+PROJECT_ISOLATED=false
+GITHUB_APP_AUTH_OK=false
+INSTALLATION_AUTH_OK=false
+BRIDGE_WORKER_DEPLOYED=false
+BRIDGE_HEALTH_PASS=false
+BRIDGE_DIAGNOSTICS_PASS=false
+ACTIONS_ENABLED_VIA_ISOLATED_BRIDGE=false
+MOBILE_OPERATION_PATH_AVAILABLE=false
+
 AUTONOMY_FOUNDATION_READY=false
