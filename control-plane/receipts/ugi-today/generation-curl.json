@@ -1,0 +1,2193 @@
+{
+  "generated_at": "2026-08-23T23:43:05.361133+00:00",
+  "publication_provider": "BUFFER",
+  "analytics_provider": "METRICOOL",
+  "metricool_publication_allowed": false,
+  "results": [
+    {
+      "platform": "instagram",
+      "http": 202,
+      "response": {
+        "ok": true,
+        "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+        "message": "Comando recebido e proposta criada pela Lola Operacional.",
+        "command": {
+          "id": "c7eb9084-3d86-4baa-9ed5-711e86270ea2",
+          "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+          "source": "lola-chatgpt",
+          "type": "reel",
+          "contentId": "UGI-20260823-IG-001",
+          "experimentId": null,
+          "variant": null,
+          "commercialIntent": "none",
+          "topic": "Checklist de 5 minutos para começar segunda-feira sem apagar incêndio",
+          "objective": "saves shares retention",
+          "audience": "gestores, líderes, coordenadores, empreendedores e profissionais responsáveis por equipes",
+          "hook": "",
+          "keyMessage": "Antes de começar a segunda, elimine ruído: escolha três resultados, remova uma falsa urgência e delegue uma tarefa.",
+          "instructions": "Conteúdo independente para Instagram. Reel profissional, direto, sem introdução lenta, foco em saves e shares. Não reutilizar criativo recente. Não citar link no perfil nem produto.",
+          "cta": "Salve para usar amanhã cedo.",
+          "slides": 1,
+          "requestedVideoDuration": 8,
+          "videoDuration": 8,
+          "music": {
+            "requested": false,
+            "title": "",
+            "artist": "",
+            "audioId": "",
+            "source": "",
+            "startSeconds": 0,
+            "status": "none",
+            "policy": {
+              "provider": "beatly",
+              "currentAndModern": true,
+              "businessRelevant": true,
+              "professionalTone": true,
+              "avoidExplicit": true,
+              "avoidAggressiveOrDistracting": true,
+              "avoidRandomTrendWithoutContext": true,
+              "rotationWithoutRepeat": true,
+              "restartAfterCatalogExhausted": true
+            }
+          },
+          "commercialOffer": false,
+          "editorialMode": "standard",
+          "copyLock": {
+            "enabled": false
+          },
+          "commerce": {
+            "required": false,
+            "productId": null,
+            "priceId": null,
+            "paymentLink": null,
+            "materialId": null,
+            "materialUrl": null,
+            "fulfillmentReady": false,
+            "provider": null,
+            "currency": "BRL",
+            "price": null
+          },
+          "campaign": "UGI Organic Growth",
+          "experiment": "",
+          "requestedBy": "Lola",
+          "status": "generated",
+          "generationStatus": "generated_needs_review",
+          "createdAt": "2026-08-23T23:43:05.481Z",
+          "generatedDraftId": "410c5928-d976-49bc-bf6c-daecf4b75323",
+          "updatedAt": "2026-08-23T23:43:40.585Z"
+        },
+        "proposal": {
+          "id": "410c5928-d976-49bc-bf6c-daecf4b75323",
+          "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+          "type": "reel",
+          "commandId": "c7eb9084-3d86-4baa-9ed5-711e86270ea2",
+          "contentId": "UGI-20260823-IG-001",
+          "experimentId": null,
+          "variant": null,
+          "commercialIntent": "none",
+          "topic": "Checklist de 5 minutos para começar segunda-feira sem apagar incêndio",
+          "area": "Checklist de 5 minutos para começar segunda-feira sem apagar incêndio",
+          "angle": "saves shares retention",
+          "text": "Antes de começar a segunda, elimine ruído: escolha três resultados, remova uma falsa urgência e delegue uma tarefa. Salve para usar amanhã cedo.\n\n#Gestao #Lideranca #UmaGestaoInteligente",
+          "captionWords": 23,
+          "videoPrompt": "Create a short, professional, realistic and useful Reel for Uma Gestão Inteligente. The Reel should be vertical, show real management action and not include text that can be read, logos, science fiction or people posing for the camera. The Reel should be independent for Instagram and not reuse recent creative. The Reel should not mention a link to the profile or a product. The Reel should have a CTA to save the Reel for the next morning.",
+          "videoUrl": null,
+          "videoKey": null,
+          "requestedVideoDuration": 8,
+          "videoDuration": null,
+          "generatedClipDuration": null,
+          "videoProvider": null,
+          "videoProviderOrder": [
+            "google/veo-3.1-fast",
+            "runwayml/gen-4.5",
+            "pruna/p-video"
+          ],
+          "videoAttempts": [
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            }
+          ],
+          "authDiagnostic": {
+            "aiBindingPresent": true,
+            "videoBindingPresent": true,
+            "mediaBindingPresent": true,
+            "gatewayBindingsDetected": [],
+            "bindings": {
+              "AI": {
+                "present": true,
+                "type": "object"
+              },
+              "AI_GATEWAY": {
+                "present": false,
+                "type": "absent"
+              },
+              "CLOUDFLARE_AI_GATEWAY": {
+                "present": false,
+                "type": "absent"
+              },
+              "CLOUDFLARE_API_TOKEN": {
+                "present": false,
+                "type": "absent"
+              },
+              "CF_API_TOKEN": {
+                "present": false,
+                "type": "absent"
+              },
+              "RUNWAY_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "PRUNA_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "GOOGLE_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "VEO_API_KEY": {
+                "present": false,
+                "type": "absent"
+              }
+            }
+          },
+          "status": "draft",
+          "renderStatus": "video_generation_failed",
+          "normalizationStatus": "pending",
+          "qualityStatus": "needs_review",
+          "qualityIssues": [
+            "legenda curta: 23 palavras",
+            "estrutura: 1 parágrafos",
+            "fechamento fraco",
+            "vídeo: nenhum provedor audiovisual retornou MP4 real. Último erro: 2021: Invalid User Credentials"
+          ],
+          "semanticAudit": {
+            "pass": true,
+            "aligned": true,
+            "specific": true,
+            "inventedRules": false,
+            "genericLanguage": false,
+            "reason": "A legenda segue o ângulo (saves shares retention) e a orientação (conteúdo independente para Instagram, Reel profissional, direto, sem introdução lenta, foco em saves e shares). Além disso, ela cumprir o critério obrigatório de aplicação prática concreta, sem trocar o assunto por um tema apenas relacionado."
+          },
+          "generationError": "2021: Invalid User Credentials",
+          "music": {
+            "requested": false,
+            "title": "",
+            "artist": "",
+            "audioId": "",
+            "source": "",
+            "startSeconds": 0,
+            "status": "none",
+            "policy": null
+          },
+          "musicTechnicalNote": "",
+          "source": "command-hub",
+          "experiment": "",
+          "createdAt": "2026-08-23T23:43:39.855Z"
+        },
+        "warning": null
+      }
+    },
+    {
+      "platform": "tiktok",
+      "http": 202,
+      "response": {
+        "ok": true,
+        "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+        "message": "Comando recebido e proposta criada pela Lola Operacional.",
+        "command": {
+          "id": "145dec28-0512-4ca8-89b7-1492d2b914cc",
+          "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+          "source": "lola-chatgpt",
+          "type": "reel",
+          "contentId": "UGI-20260823-TT-001",
+          "experimentId": null,
+          "variant": null,
+          "commercialIntent": "none",
+          "topic": "3 sinais de que sua segunda-feira vai começar apagando incêndio",
+          "objective": "choose to view retention completion shares",
+          "audience": "gestores, líderes, coordenadores, empreendedores e profissionais responsáveis por equipes",
+          "hook": "",
+          "keyMessage": "Agenda lotada, nenhuma prioridade explícita e tudo marcado como urgente são sinais de segunda reativa.",
+          "instructions": "Conteúdo independente para TikTok. 7 a 12 segundos, hook no frame zero, cortes rápidos, sem introdução lenta, linguagem natural. Não reutilizar criativo recente. Não usar link no perfil.",
+          "cta": "Comenta qual dos três mais acontece na sua rotina.",
+          "slides": 1,
+          "requestedVideoDuration": 8,
+          "videoDuration": 8,
+          "music": {
+            "requested": false,
+            "title": "",
+            "artist": "",
+            "audioId": "",
+            "source": "",
+            "startSeconds": 0,
+            "status": "none",
+            "policy": {
+              "provider": "beatly",
+              "currentAndModern": true,
+              "businessRelevant": true,
+              "professionalTone": true,
+              "avoidExplicit": true,
+              "avoidAggressiveOrDistracting": true,
+              "avoidRandomTrendWithoutContext": true,
+              "rotationWithoutRepeat": true,
+              "restartAfterCatalogExhausted": true
+            }
+          },
+          "commercialOffer": false,
+          "editorialMode": "standard",
+          "copyLock": {
+            "enabled": false
+          },
+          "commerce": {
+            "required": false,
+            "productId": null,
+            "priceId": null,
+            "paymentLink": null,
+            "materialId": null,
+            "materialUrl": null,
+            "fulfillmentReady": false,
+            "provider": null,
+            "currency": "BRL",
+            "price": null
+          },
+          "campaign": "UGI Organic Growth",
+          "experiment": "",
+          "requestedBy": "Lola",
+          "status": "generated",
+          "generationStatus": "generated_needs_review",
+          "createdAt": "2026-08-23T23:43:40.863Z",
+          "generatedDraftId": "65aea663-52a0-4eb6-a176-d40649e4faff",
+          "updatedAt": "2026-08-23T23:44:17.104Z"
+        },
+        "proposal": {
+          "id": "65aea663-52a0-4eb6-a176-d40649e4faff",
+          "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+          "type": "reel",
+          "commandId": "145dec28-0512-4ca8-89b7-1492d2b914cc",
+          "contentId": "UGI-20260823-TT-001",
+          "experimentId": null,
+          "variant": null,
+          "commercialIntent": "none",
+          "topic": "3 sinais de que sua segunda-feira vai começar apagando incêndio",
+          "area": "3 sinais de que sua segunda-feira vai começar apagando incêndio",
+          "angle": "choose to view retention completion shares",
+          "text": "Sua segunda-feira está começando em chamas? Talvez seja porque você tem vários projetos pendentes, todos com data-limite imediata. Isso pode ser um sinal de que precisa melhorar sua gestão de tempo.\n\nOutro sinal é quando você se sente sobrecarregado e não sabe onde começar. É como estar diante de um incêndio em uma floresta densa - difícil saber por onde começar a combater as chamas.\n\nE ainda, quando você percebe que suas tarefas estão sendo afetadas pelo estresse e pela falta de controle sobre seu tempo. Nesse caso, é hora de tomar medidas para evitar que o fogo cresça.\n\nAgora, peço que compartilhe: qual desses sinais mais acontece na sua rotina?\n\n#Gestao #Lideranca #UmaGestaoInteligente",
+          "captionWords": 111,
+          "videoPrompt": "A busy manager rushes to put out fires on a Monday morning, with a packed schedule, unclear priorities, and everything marked as urgent.",
+          "videoUrl": null,
+          "videoKey": null,
+          "requestedVideoDuration": 8,
+          "videoDuration": null,
+          "generatedClipDuration": null,
+          "videoProvider": null,
+          "videoProviderOrder": [
+            "google/veo-3.1-fast",
+            "runwayml/gen-4.5",
+            "pruna/p-video"
+          ],
+          "videoAttempts": [
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            }
+          ],
+          "authDiagnostic": {
+            "aiBindingPresent": true,
+            "videoBindingPresent": true,
+            "mediaBindingPresent": true,
+            "gatewayBindingsDetected": [],
+            "bindings": {
+              "AI": {
+                "present": true,
+                "type": "object"
+              },
+              "AI_GATEWAY": {
+                "present": false,
+                "type": "absent"
+              },
+              "CLOUDFLARE_AI_GATEWAY": {
+                "present": false,
+                "type": "absent"
+              },
+              "CLOUDFLARE_API_TOKEN": {
+                "present": false,
+                "type": "absent"
+              },
+              "CF_API_TOKEN": {
+                "present": false,
+                "type": "absent"
+              },
+              "RUNWAY_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "PRUNA_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "GOOGLE_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "VEO_API_KEY": {
+                "present": false,
+                "type": "absent"
+              }
+            }
+          },
+          "status": "draft",
+          "renderStatus": "video_generation_failed",
+          "normalizationStatus": "pending",
+          "qualityStatus": "needs_review",
+          "qualityIssues": [
+            "vídeo: nenhum provedor audiovisual retornou MP4 real. Último erro: 2021: Invalid User Credentials"
+          ],
+          "semanticAudit": {
+            "pass": true,
+            "aligned": true,
+            "specific": true,
+            "inventedRules": false,
+            "genericLanguage": false,
+            "reason": "A legenda aborda diretamente a área (sinais de que a segunda-feira está começando em chamas) e o ângulo (retenção de compartilhamento) do briefing. Além disso, a linguagem é natural e o conteúdo é independente para TikTok, com aplicação prática concreta."
+          },
+          "generationError": "2021: Invalid User Credentials",
+          "music": {
+            "requested": false,
+            "title": "",
+            "artist": "",
+            "audioId": "",
+            "source": "",
+            "startSeconds": 0,
+            "status": "none",
+            "policy": null
+          },
+          "musicTechnicalNote": "",
+          "source": "command-hub",
+          "experiment": "",
+          "createdAt": "2026-08-23T23:44:16.268Z"
+        },
+        "warning": null
+      }
+    },
+    {
+      "platform": "youtube",
+      "http": 202,
+      "response": {
+        "ok": true,
+        "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+        "message": "Comando recebido e proposta criada pela Lola Operacional.",
+        "command": {
+          "id": "d6e27840-c79c-43ca-99dc-84678e3f3e8d",
+          "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+          "source": "lola-chatgpt",
+          "type": "reel",
+          "contentId": "UGI-20260823-YT-001",
+          "experimentId": null,
+          "variant": null,
+          "commercialIntent": "none",
+          "topic": "Use IA em 2 minutos para transformar pendências em 3 prioridades de segunda",
+          "objective": "choose to view average percentage viewed satisfaction",
+          "audience": "gestores, líderes, coordenadores, empreendedores e profissionais responsáveis por equipes",
+          "hook": "",
+          "keyMessage": "Liste as pendências, peça à IA para separar impacto, urgência real e delegação, e saia com três prioridades explícitas.",
+          "instructions": "Conteúdo independente para YouTube Short. Hook imediato, explicação prática e fechamento curto. Não reutilizar criativo recente. Não citar produto ou oferta.",
+          "cta": "Teste antes de abrir sua agenda amanhã.",
+          "slides": 1,
+          "requestedVideoDuration": 8,
+          "videoDuration": 8,
+          "music": {
+            "requested": false,
+            "title": "",
+            "artist": "",
+            "audioId": "",
+            "source": "",
+            "startSeconds": 0,
+            "status": "none",
+            "policy": {
+              "provider": "beatly",
+              "currentAndModern": true,
+              "businessRelevant": true,
+              "professionalTone": true,
+              "avoidExplicit": true,
+              "avoidAggressiveOrDistracting": true,
+              "avoidRandomTrendWithoutContext": true,
+              "rotationWithoutRepeat": true,
+              "restartAfterCatalogExhausted": true
+            }
+          },
+          "commercialOffer": false,
+          "editorialMode": "standard",
+          "copyLock": {
+            "enabled": false
+          },
+          "commerce": {
+            "required": false,
+            "productId": null,
+            "priceId": null,
+            "paymentLink": null,
+            "materialId": null,
+            "materialUrl": null,
+            "fulfillmentReady": false,
+            "provider": null,
+            "currency": "BRL",
+            "price": null
+          },
+          "campaign": "UGI Organic Growth",
+          "experiment": "",
+          "requestedBy": "Lola",
+          "status": "generated",
+          "generationStatus": "generated_needs_review",
+          "createdAt": "2026-08-23T23:44:17.396Z",
+          "generatedDraftId": "dbf70f31-9f24-45c3-86dd-ff33dfbd9496",
+          "updatedAt": "2026-08-23T23:44:52.111Z"
+        },
+        "proposal": {
+          "id": "dbf70f31-9f24-45c3-86dd-ff33dfbd9496",
+          "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+          "type": "reel",
+          "commandId": "d6e27840-c79c-43ca-99dc-84678e3f3e8d",
+          "contentId": "UGI-20260823-YT-001",
+          "experimentId": null,
+          "variant": null,
+          "commercialIntent": "none",
+          "topic": "Use IA em 2 minutos para transformar pendências em 3 prioridades de segunda",
+          "area": "Use IA em 2 minutos para transformar pendências em 3 prioridades de segunda",
+          "angle": "choose to view average percentage viewed satisfaction",
+          "text": "Quando Use IA em 2 minutos para transformar pendências em 3 prioridades de segunda começa a depender apenas de esforço individual, o problema costuma aparecer em forma de atrasos, retrabalho e decisões que voltam sempre para a mesma pessoa.\n\nAntes de criar mais uma regra, observe onde a rotina trava. Identifique qual decisão está sem critério, quem depende de autorização e o que não está claro no resultado esperado.\n\nDepois transforme essa observação em um acordo simples: defina quem é responsável, qual resultado precisa ser entregue e em quais situações a decisão realmente deve subir para o gestor.\n\nTeste esse critério em uma situação real durante alguns dias. Compare o número de dúvidas, interrupções e retrabalhos antes e depois. Se houver melhora, transforme o acordo em rotina; se não houver, ajuste o critério.\n\nTeste antes de abrir sua agenda amanhã.\n\n#Gestao #Lideranca #UmaGestaoInteligente",
+          "captionWords": 140,
+          "videoPrompt": "Vertical cinematic editorial business video. A professional manager working with a small team in a realistic modern workplace. Natural movement, authentic leadership interaction, operational decision making. Subtle camera movement, realistic lighting, premium business aesthetic. No readable text, no logos, no watermarks.",
+          "videoUrl": null,
+          "videoKey": null,
+          "requestedVideoDuration": 8,
+          "videoDuration": null,
+          "generatedClipDuration": null,
+          "videoProvider": null,
+          "videoProviderOrder": [
+            "google/veo-3.1-fast",
+            "runwayml/gen-4.5",
+            "pruna/p-video"
+          ],
+          "videoAttempts": [
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "google/veo-3.1-fast",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "runwayml/gen-4.5",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 1,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 2,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            },
+            {
+              "provider": "pruna/p-video",
+              "attempt": 3,
+              "requestedDuration": 8,
+              "providerDuration": 8,
+              "state": null,
+              "remoteUrl": null,
+              "remoteContentType": null,
+              "remoteBytes": 0,
+              "mp4Signature": false,
+              "stored": false,
+              "authDiagnostic": {
+                "aiBindingPresent": true,
+                "videoBindingPresent": true,
+                "mediaBindingPresent": true,
+                "gatewayBindingsDetected": [],
+                "bindings": {
+                  "AI": {
+                    "present": true,
+                    "type": "object"
+                  },
+                  "AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_AI_GATEWAY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CLOUDFLARE_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "CF_API_TOKEN": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "RUNWAY_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "PRUNA_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "GOOGLE_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  },
+                  "VEO_API_KEY": {
+                    "present": false,
+                    "type": "absent"
+                  }
+                }
+              },
+              "gatewayId": "default",
+              "gatewayMode": "cloudflare_unified_billing",
+              "aiGatewayLogId": null,
+              "errorClass": "authentication_invalid_credentials",
+              "error": "2021: Invalid User Credentials"
+            }
+          ],
+          "authDiagnostic": {
+            "aiBindingPresent": true,
+            "videoBindingPresent": true,
+            "mediaBindingPresent": true,
+            "gatewayBindingsDetected": [],
+            "bindings": {
+              "AI": {
+                "present": true,
+                "type": "object"
+              },
+              "AI_GATEWAY": {
+                "present": false,
+                "type": "absent"
+              },
+              "CLOUDFLARE_AI_GATEWAY": {
+                "present": false,
+                "type": "absent"
+              },
+              "CLOUDFLARE_API_TOKEN": {
+                "present": false,
+                "type": "absent"
+              },
+              "CF_API_TOKEN": {
+                "present": false,
+                "type": "absent"
+              },
+              "RUNWAY_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "PRUNA_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "GOOGLE_API_KEY": {
+                "present": false,
+                "type": "absent"
+              },
+              "VEO_API_KEY": {
+                "present": false,
+                "type": "absent"
+              }
+            }
+          },
+          "status": "draft",
+          "renderStatus": "video_generation_failed",
+          "normalizationStatus": "pending",
+          "qualityStatus": "needs_review",
+          "qualityIssues": [
+            "fechamento fraco",
+            "vídeo: nenhum provedor audiovisual retornou MP4 real. Último erro: 2021: Invalid User Credentials"
+          ],
+          "semanticAudit": {
+            "pass": true,
+            "aligned": true,
+            "specific": true,
+            "inventedRules": false,
+            "genericLanguage": false,
+            "reason": "A legenda segue o ângulo de escolher a porcentagem média de satisfação e a orientação de conteúdo independente para YouTube Short, com aplicação prática concreta e sem trocar o assunto por um tema apenas relacionado."
+          },
+          "generationError": "2021: Invalid User Credentials",
+          "music": {
+            "requested": false,
+            "title": "",
+            "artist": "",
+            "audioId": "",
+            "source": "",
+            "startSeconds": 0,
+            "status": "none",
+            "policy": null
+          },
+          "musicTechnicalNote": "",
+          "source": "command-hub",
+          "experiment": "",
+          "createdAt": "2026-08-23T23:44:51.366Z"
+        },
+        "warning": null
+      }
+    }
+  ]
+}
