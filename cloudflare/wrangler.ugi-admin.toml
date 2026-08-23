@@ -1,0 +1,14 @@
+name = "lola-github-admin-bridge-ugi"
+main = "lola-github-admin-bridge-ugi.mjs"
+compatibility_date = "2026-08-23"
+workers_dev = true
+
+# UGI autonomous admin bridge only.
+# Secrets MUST be configured in Cloudflare secret storage, never here:
+# - GITHUB_APP_ID
+# - GITHUB_INSTALLATION_ID
+# - GITHUB_APP_PRIVATE_KEY
+# - BRIDGE_AUTH_SECRET
+
+[observability]
+enabled = true
