@@ -1,0 +1,41 @@
+name: UGI Command Auth Diagnostic
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ugi-command-auth-diagnostic.yml']
+permissions:
+  contents: write
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          set -euo pipefail
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          mkdir -p control-plane/receipts/ugi-today
+          code=$(curl --silent --show-error -o /tmp/body.json -w '%{http_code}' -X POST \
+            -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" -H 'content-type: application/json' \
+            --data '{"type":"reel","topic":"UGI auth diagnostic","generate_now":false}' \
+            "$WORKER_URL/api/command" || true)
+          python - "$code" <<'PY'
+          import json,sys,pathlib
+          code=sys.argv[1]; body=pathlib.Path('/tmp/body.json').read_text(errors='replace')
+          try: parsed=json.loads(body)
+          except: parsed=body[:1000]
+          out={'http_code':int(code or 0),'body':parsed,'publication_triggered':False,'payment_triggered':False}
+          pathlib.Path('control-plane/receipts/ugi-today/command-auth.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - if: always()
+        shell: bash
+        run: |
+          git config user.name 'ugi-autonomy-bot'; git config user.email 'actions@users.noreply.github.com'
+          git pull --rebase origin main || true
+          git add control-plane/receipts/ugi-today/command-auth.json
+          git commit -m 'UGI: persist command auth diagnostic [skip ci]' || true
+          git push origin HEAD:main
