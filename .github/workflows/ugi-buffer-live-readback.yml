@@ -38,19 +38,21 @@ jobs:
           echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
           curl --fail --silent --show-error -A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/health" -o /tmp/health.json
           curl --fail --silent --show-error -A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/buffer/channels" -o /tmp/channels.json
-      - name: Lookup today independent drafts
+          curl --fail --silent --show-error -A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" "$WORKER_URL/api/drafts" -o /tmp/drafts-live.json
+      - name: Resolve today independent drafts
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,subprocess,os,pathlib,urllib.parse
-          base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
+          import json,pathlib
+          payload=json.load(open('/tmp/drafts-live.json'))
+          items=payload.get('drafts') or []
+          wanted=[('instagram','UGI-20260823-IG-001'),('tiktok','UGI-20260823-TT-001'),('youtube','UGI-20260823-YT-001')]
           rows=[]
-          for platform,cid in [('instagram','UGI-20260823-IG-001'),('tiktok','UGI-20260823-TT-001'),('youtube','UGI-20260823-YT-001')]:
-            p=subprocess.run(['curl','--silent','--show-error','-A','UGI-GitHub-Actions/1.0','-H',f'x-lola-command-key: {key}','-H','accept: application/json',base+'/api/draft-lookup?content_id='+urllib.parse.quote(cid)],text=True,capture_output=True)
-            try: look=json.loads(p.stdout)
-            except: look={}
-            d=look.get('draft') or {}
+          for platform,cid in wanted:
+            matches=[d for d in items if str(d.get('contentId') or d.get('content_id') or '')==cid]
+            matches.sort(key=lambda d:str(d.get('updatedAt') or d.get('createdAt') or ''), reverse=True)
+            d=matches[0] if matches else {}
             rows.append({'platform':platform,'contentId':cid,'draftId':d.get('id'),'allPlatformsReady':d.get('allPlatformsReady',False),'qualityStatus':d.get('qualityStatus'),'topic':d.get('topic'),'text':d.get('text'),'cta':d.get('cta')})
           pathlib.Path('control-plane/receipts/ugi-today/drafts.json').write_text(json.dumps({'results':rows},ensure_ascii=False,indent=2)+'\n')
           if not all(r.get('draftId') for r in rows): raise SystemExit(2)
