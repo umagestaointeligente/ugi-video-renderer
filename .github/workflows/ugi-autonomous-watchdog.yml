@@ -1,0 +1,76 @@
+name: UGI Autonomous Policy Watchdog
+
+on:
+  workflow_dispatch: {}
+  workflow_run:
+    workflows:
+      - Lola Magic Engine V1
+      - UGI Reel Renderer R43.8.6 Correlated Dynamic Scenes + Semantic Callback
+      - UGI Growth Policy Runtime Gate
+      - UGI Growth Policy Runtime Smoke
+      - UGI Buffer Live Readback
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-autonomous-watchdog.yml'
+      - 'scripts/ugi_autonomous_watchdog.py'
+      - 'config/ugi/growth-policy.json'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ugi-autonomous-policy-watchdog
+  cancel-in-progress: false
+
+jobs:
+  inspect-existing-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate policy, existing receipts and provider isolation
+        run: python3 scripts/ugi_autonomous_watchdog.py
+
+      - name: Check deployed read-only worker health
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --max-time 30 --silent --show-error \
+            --output output/ugi/worker-health.json --write-out '%{http_code}' \
+            'https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health')"
+          echo "UGI_WORKER_HEALTH_HTTP=$code" >> "$GITHUB_STEP_SUMMARY"
+          test "$code" = '200'
+          jq -e '.ok == true' output/ugi/worker-health.json >/dev/null
+
+      - name: Persist bounded incident evidence without triggering publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          count="$(jq '.incidents | length' output/ugi/autonomous-watchdog.json)"
+          echo "UGI_INCIDENT_COUNT=$count" >> "$GITHUB_STEP_SUMMARY"
+          test "$count" -gt 0 || exit 0
+          while IFS= read -r incident; do
+            title="[UGI-AUTONOMOUS-INCIDENT] ${incident}"
+            present="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open \
+              --search "\"${incident}\" in:title" --json title \
+              --jq '.[] | select(.title == "'"$title"'") | .title')"
+            if [ -z "$present" ]; then
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" \
+                --body "STATUS=DEGRADED; INCIDENT=${incident}; PUBLICATION_PROVIDER=BUFFER; METRICOOL_PUBLICATION_ALLOWED=false; PUBLICATION_TRIGGERED=false; RUN_ID=${GITHUB_RUN_ID}"
+            fi
+          done < <(jq -r '.incidents[].class' output/ugi/autonomous-watchdog.json)
+
+      - name: Upload watchdog evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-autonomous-watchdog-${{ github.run_id }}
+          path: output/ugi/autonomous-watchdog.json
+          retention-days: 7
+          if-no-files-found: warn
