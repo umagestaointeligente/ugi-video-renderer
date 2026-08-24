@@ -1,0 +1,45 @@
+{
+  "batchId": "ugi-daily-commerce-20260825-26",
+  "materials": [
+    {
+      "materialId": "UGI-MAT-GOV-IA-20260825",
+      "productId": "UGI-PROD-GOV-IA-20260825",
+      "title": "Kit de Governança de IA para Gestores",
+      "theme": "governança de IA e responsabilidade do gestor",
+      "problem": "equipes começam a usar IA sem critérios claros de risco, revisão humana, dados sensíveis ou responsabilidade final",
+      "solution": "kit prático para gestores definirem limites, revisão humana, accountability e implantação segura de IA em rotinas de trabalho",
+      "price": 14.90,
+      "sections": [
+        {"heading": "1. Checklist antes de liberar IA em uma atividade", "body": ["Defina qual resultado a IA pode apoiar e qual decisão continua sendo humana.", "Classifique a atividade por impacto, reversibilidade e sensibilidade dos dados.", "Determine quem revisa o resultado antes de qualquer uso externo ou decisão relevante."]},
+        {"heading": "2. Matriz risco x autonomia", "body": ["Baixo risco + alta reversibilidade: IA pode operar com supervisão leve.", "Médio risco: exigir revisão humana antes de concluir.", "Alto risco, dado sensível ou decisão irreversível: IA apenas apoia; decisão final é humana."]},
+        {"heading": "3. Decisões que exigem revisão humana", "body": ["Contratação, desligamento, remuneração e avaliação de pessoas.", "Decisões financeiras relevantes ou compromissos com clientes.", "Uso de informação confidencial, regulada ou estratégica.", "Qualquer decisão com impacto reputacional, jurídico ou difícil de reverter."]},
+        {"heading": "4. Checklist de dados sensíveis", "body": ["Remova dados pessoais e confidenciais quando não forem necessários.", "Não envie credenciais, contratos restritos ou segredos comerciais para ferramentas sem aprovação.", "Valide a política interna e o fornecedor antes de usar dados de clientes ou funcionários."]},
+        {"heading": "5. Regras de responsabilidade", "body": ["Toda atividade com IA deve ter um responsável humano nomeado.", "O responsável valida premissas, fontes e exceções.", "IA recomenda; o gestor responde pela decisão e pelo efeito produzido."]},
+        {"heading": "6. Modelo de aprovação", "body": ["Objetivo: o que a IA fará.", "Dados: o que poderá acessar.", "Risco: baixo, médio ou alto.", "Revisão: quem valida e em qual momento.", "Evidência: onde ficará registrado o resultado e a decisão final."]},
+        {"heading": "7. Auditoria rápida de 10 minutos", "body": ["Escolha uma rotina já apoiada por IA.", "Verifique se existe responsável, critério de qualidade e regra para exceções.", "Confirme se dados sensíveis estão protegidos.", "Cheque se alguém consegue explicar como a decisão final foi tomada."]},
+        {"heading": "8. Cinco prompts seguros para gestores", "body": ["Liste riscos e premissas desta decisão sem tomar a decisão por mim.", "Mostre o que pode estar faltando neste plano e quais evidências devo buscar.", "Separe fatos, hipóteses e recomendações neste material.", "Atue como revisor crítico e identifique pontos que exigem validação humana.", "Crie um checklist de verificação antes de eu aprovar esta entrega."]},
+        {"heading": "9. Plano de implantação em 7 dias", "body": ["Dia 1: mapear usos atuais de IA.", "Dia 2: classificar riscos.", "Dia 3: definir responsáveis humanos.", "Dia 4: criar regras de dados e revisão.", "Dia 5: testar em uma rotina de baixo risco.", "Dia 6: revisar falhas e exceções.", "Dia 7: publicar regra operacional simples para o time."]}
+      ]
+    },
+    {
+      "materialId": "UGI-MAT-JULGAMENTO-IA-20260826",
+      "productId": "UGI-PROD-JULGAMENTO-IA-20260826",
+      "title": "Framework de Decisão Humana na Era da IA",
+      "theme": "julgamento humano, accountability e liderança com IA",
+      "problem": "gestores delegam à IA tarefas de análise e decisão sem distinguir onde automação ajuda e onde julgamento humano continua indispensável",
+      "solution": "framework para decidir o que delegar à IA, o que manter sob responsabilidade humana e como revisar decisões apoiadas por automação",
+      "price": 14.90,
+      "sections": [
+        {"heading": "1. O que delegar à IA", "body": ["Organização, síntese e comparação de grandes volumes de informação.", "Geração de alternativas e cenários para análise humana.", "Rascunhos, checklists e preparação de perguntas.", "Rotinas repetitivas com baixo impacto e fácil reversão."]},
+        {"heading": "2. O que nunca delegar integralmente", "body": ["Decisões de alto impacto sobre pessoas.", "Compromissos financeiros relevantes.", "Escolhas com efeito jurídico, regulatório ou reputacional.", "Decisões que dependem de contexto político, cultural, ético ou de relacionamento."]},
+        {"heading": "3. Matriz impacto x reversibilidade", "body": ["Baixo impacto + reversível: automatize mais.", "Alto impacto + reversível: use IA, mas com revisão explícita.", "Baixo impacto + difícil reversão: valide antes de executar.", "Alto impacto + difícil reversão: decisão humana obrigatória."]},
+        {"heading": "4. Checklist de julgamento humano", "body": ["Eu entendo as premissas usadas?", "Consigo explicar esta decisão sem citar apenas a IA?", "Há contexto humano que o modelo pode não enxergar?", "Que evidência mudaria minha decisão?", "Quem será responsável pelo resultado final?"]},
+        {"heading": "5. Sinais de decisão mal automatizada", "body": ["A equipe aceita a recomendação sem questionar.", "Ninguém sabe explicar a origem dos dados.", "A decisão parece precisa demais para informação incompleta.", "Exceções humanas são tratadas como erro do processo.", "Não existe dono claro quando o resultado dá errado."]},
+        {"heading": "6. Roteiro de revisão", "body": ["Fato: quais dados são verificáveis?", "Hipótese: o que estamos assumindo?", "Alternativas: que opções a IA não destacou?", "Risco: qual é o pior erro plausível?", "Decisão: quem assume a responsabilidade final?"]},
+        {"heading": "7. Matriz de accountability", "body": ["IA: recomenda, resume, simula e sinaliza.", "Analista: valida dados e premissas.", "Gestor: escolhe, prioriza e decide.", "Executivo responsável: responde por decisões de alto impacto."]},
+        {"heading": "8. Perguntas para líderes", "body": ["Estamos usando IA para pensar melhor ou apenas mais rápido?", "Qual decisão ainda precisa de coragem humana?", "O que estamos automatizando sem entender?", "Onde uma exceção pode valer mais que a média?", "Quem responde se esta recomendação estiver errada?"]},
+        {"heading": "9. Aplicação em reuniões e decisões", "body": ["Antes: peça à IA riscos, opções e lacunas.", "Durante: use o time para contexto, julgamento e trade-offs.", "Depois: registre a decisão humana, responsável e critérios usados.", "Na revisão: compare resultado real com a recomendação inicial e atualize a regra."]}
+      ]
+    }
+  ]
+}
