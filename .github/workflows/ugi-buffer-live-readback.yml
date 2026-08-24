@@ -1,10 +1,10 @@
 name: UGI Buffer Live Readback
 run-name: UGI Buffer Live Readback ${{ github.run_id }}
 
+# MUTATING WORKFLOW: explicit dispatch only.
+# Maintenance PRs, code pushes and watchdogs must never schedule social posts.
 on:
   workflow_dispatch: {}
-  pull_request:
-    types: [opened, synchronize]
 
 permissions:
   contents: read
@@ -14,7 +14,6 @@ env:
 
 jobs:
   schedule:
-    if: github.event_name != 'pull_request' || startsWith(github.event.pull_request.title, '[UGI-AUTONOMY]')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -44,10 +43,8 @@ jobs:
             p=subprocess.run(['curl','--silent','--show-error','--location','--max-time','90',*H,'-H','content-type: application/json','--data-binary',json.dumps(payload,ensure_ascii=False),base+path],text=True,capture_output=True)
             try:return json.loads(p.stdout)
             except:return {'ok':False,'raw':p.stdout[:2000],'stderr':p.stderr[:1000]}
-          # verify channels first
           channels=get_json(base+'/api/buffer/channels')
           if not channels.get('ok'): raise SystemExit('BUFFER_CHANNELS_NOT_READY')
-          # wait up to 12 minutes for all target drafts to have full multi-platform render assets
           resolved={}
           deadline=time.time()+720
           while time.time()<deadline:
@@ -69,7 +66,6 @@ jobs:
           if not ready:
             pathlib.Path('control-plane/receipts/ugi-today/final-schedule.json').write_text(json.dumps({'ok':False,'error':'RENDER_NOT_READY_BEFORE_DEADLINE','resolved':{k:{'id':v.get('id'),'allPlatformsReady':v.get('allPlatformsReady'),'qualityStatus':v.get('qualityStatus')} for k,v in resolved.items()}},ensure_ascii=False,indent=2)+'\n')
             raise SystemExit(2)
-          # if original slot is too close/past, shift preserving 30 minute spacing
           now=datetime.datetime.now(datetime.timezone.utc)
           first=datetime.datetime.fromisoformat(wanted[0][2].replace('Z','+00:00'))
           if first <= now + datetime.timedelta(minutes=8):
