@@ -1,1 +1,37 @@
-{"ok":false,"error":"NO_LOLA_AUTH_SECRET_IN_GITHUB_ACTIONS","publication_provider":"BUFFER","analytics_provider":"METRICOOL","metricool_publication_allowed":false}
+{
+  "ok": true,
+  "date": "2026-08-24",
+  "timezone": "America/Sao_Paulo",
+  "publication_provider": "BUFFER",
+  "schedule_provider": "BUFFER",
+  "analytics_provider": "METRICOOL",
+  "metricool_publication_allowed": false,
+  "drafts_http": 200,
+  "channels_http": 200,
+  "buffer_channels": [
+    {
+      "id": "6a7896cdb2d9d57743457e33",
+      "name": "umagestaointeligente",
+      "displayName": "umagestaointeligente",
+      "service": "instagram",
+      "isQueuePaused": false
+    },
+    {
+      "id": "6a789721b2d9d5774345839d",
+      "name": "umagestaointelige",
+      "displayName": "umagestaointelige",
+      "service": "tiktok",
+      "isQueuePaused": false
+    },
+    {
+      "id": "6a78974ab2d9d577434584b7",
+      "name": "Uma Gestão Inteligente ",
+      "displayName": "Uma Gestão Inteligente ",
+      "service": "youtube",
+      "isQueuePaused": false
+    }
+  ],
+  "today_publications": [],
+  "today_count": 0,
+  "timestamp": "2026-08-24T05:22:21.218928+00:00"
+}
