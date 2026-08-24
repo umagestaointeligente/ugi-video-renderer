@@ -58,6 +58,20 @@ class UgiAutonomousWatchdogTest(unittest.TestCase):
             self.assertEqual(status["status"], "DEGRADED")
             self.assertEqual(status["incidents"][0]["class"], "BUFFER_AUTH_OR_READBACK_UNAVAILABLE")
 
+    def test_newer_verified_auth_supersedes_historical_generation_403(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            buffer_path = root / "control-plane" / "receipts" / "ugi-buffer" / "today.json"
+            generation_path = root / "control-plane" / "receipts" / "ugi-today" / "generation.json"
+            buffer_path.parent.mkdir(parents=True)
+            generation_path.parent.mkdir(parents=True)
+            buffer_path.write_text(json.dumps({"ok": True, "drafts_http": 200, "channels_http": 200, "timestamp": "2026-08-24T05:22:00+00:00"}))
+            generation_path.write_text(json.dumps({"generated_at": "2026-08-23T23:36:00+00:00", "results": [{"platform": "instagram", "error": "HTTP Error 403: Forbidden"}]}))
+            status = WATCHDOG.build_status(root)
+            self.assertEqual(status["status"], "HEALTHY")
+            self.assertTrue(status["current_readonly_auth_verified"])
+
 
 if __name__ == "__main__":
     unittest.main()

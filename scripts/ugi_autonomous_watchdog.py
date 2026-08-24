@@ -25,6 +25,16 @@ def load_optional(path: Path) -> dict | None:
     return value
 
 
+def parse_timestamp(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+
+
 def build_status(root: Path) -> dict:
     policy_path = root / "config" / "ugi" / "growth-policy.json"
     if not policy_path.is_file():
@@ -65,7 +75,18 @@ def build_status(root: Path) -> dict:
 
     results = generation.get("results", []) if generation else []
     forbidden = [row for row in results if "403" in str(row.get("error", ""))]
-    if forbidden:
+    generation_time = parse_timestamp(generation.get("generated_at")) if generation else None
+    buffer_time = parse_timestamp(buffer_today.get("timestamp")) if buffer_today else None
+    newer_auth_proof = bool(
+        buffer_today
+        and buffer_today.get("ok") is True
+        and buffer_today.get("drafts_http") == 200
+        and buffer_today.get("channels_http") == 200
+        and buffer_time
+        and generation_time
+        and buffer_time >= generation_time
+    )
+    if forbidden and not newer_auth_proof:
         incidents.append({
             "class": "WORKER_COMMAND_AUTH_REJECTED",
             "severity": "high",
@@ -86,6 +107,7 @@ def build_status(root: Path) -> dict:
         "growth_runtime_evidence_present": growth is not None,
         "growth_policy_sha256": policy_hash,
         "recovery_max_attempts": recovery["max_attempts_total"],
+        "current_readonly_auth_verified": newer_auth_proof,
         "multi_ai_existing": (root / "magic-engine" / "multi_ai_council.py").is_file(),
         "incidents": incidents,
     }
