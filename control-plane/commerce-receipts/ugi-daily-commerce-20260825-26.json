@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "sourceCommand": "control-plane/commerce/ugi-daily-commerce-20260825-26.json",
+  "results": [
+    {
+      "materialId": "UGI-MAT-GOV-IA-20260825",
+      "productId": "UGI-PROD-GOV-IA-20260825",
+      "title": "Kit de Governança de IA para Gestores",
+      "price": 14.9,
+      "materialCreated": true,
+      "assetUploaded": true,
+      "productCreated": true,
+      "assetReady": null,
+      "deliveryEnabled": null,
+      "qualityStatus": null
+    },
+    {
+      "materialId": "UGI-MAT-JULGAMENTO-IA-20260826",
+      "productId": "UGI-PROD-JULGAMENTO-IA-20260826",
+      "title": "Framework de Decisão Humana na Era da IA",
+      "price": 14.9,
+      "materialCreated": true,
+      "assetUploaded": true,
+      "productCreated": true,
+      "assetReady": null,
+      "deliveryEnabled": null,
+      "qualityStatus": null
+    }
+  ]
+}
