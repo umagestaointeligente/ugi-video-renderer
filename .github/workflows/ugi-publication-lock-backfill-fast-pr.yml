@@ -1,0 +1,87 @@
+name: UGI Publication Lock Backfill Fast PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ugi-publication-lock-backfill-fast
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    if: startsWith(github.event.pull_request.title, '[UGI-AUTONOMY]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Backfill exactly-once locks for active scheduled posts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          mkdir -p output/ugi
+          python - <<'PY'
+          import json, os, pathlib, urllib.request, urllib.parse, datetime
+          from concurrent.futures import ThreadPoolExecutor, as_completed
+          base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
+          headers={'User-Agent':'UGI-Lock-Backfill-Fast/1.0','x-lola-command-key':key,'accept':'application/json'}
+          def request(path, method='GET', payload=None, timeout=15):
+              data=None
+              h=dict(headers)
+              if payload is not None:
+                  data=json.dumps(payload,ensure_ascii=False).encode(); h['content-type']='application/json'
+              req=urllib.request.Request(base+path,data=data,headers=h,method=method)
+              try:
+                  with urllib.request.urlopen(req,timeout=timeout) as r: return r.status,json.loads(r.read().decode())
+              except Exception as e:
+                  return 0,{'ok':False,'error':str(e)}
+          hc,health=request('/api/health')
+          caps=health.get('capabilities') or {}
+          if not (hc==200 and health.get('ok') is True and caps.get('publicationExactlyOnceGuard') is True and caps.get('publicationAssetLockR2') is True and caps.get('publicationSlotLockR2') is True):
+              raise SystemExit('GUARD_NOT_LIVE')
+          dc,drafts=request('/api/drafts',timeout=25)
+          if dc!=200 or not drafts.get('ok'): raise SystemExit('DRAFTS_READBACK_FAILED')
+          targets=[]
+          for d in drafts.get('drafts') or []:
+              did=str(d.get('id') or '')
+              for platform,asset in (d.get('assets') or {}).items():
+                  if platform not in {'instagram','tiktok','youtube'}: continue
+                  pub=(asset or {}).get('publication') or {}
+                  status=str(pub.get('status') or pub.get('bufferStatus') or '').lower()
+                  if pub.get('bufferPostId') and status not in {'error','cancelled','sent','published'}:
+                      targets.append({'id':did,'platform':platform,'pub':pub})
+          targets=targets[:30]
+          def one(t):
+              _,back=request('/api/publication-lock-backfill','POST',{'id':t['id'],'platform':t['platform']},15)
+              pub=t['pub']; mode=str(pub.get('mode') or 'customScheduled'); due=str(pub.get('dueAt') or '')
+              qs='?id='+urllib.parse.quote(t['id'])+'&platform='+t['platform']+'&mode='+urllib.parse.quote(mode)
+              if due: qs+='&dueAt='+urllib.parse.quote(due)
+              _,status=request('/api/publication-lock-status'+qs,timeout=15)
+              al=status.get('assetLock') or {}; sl=status.get('slotLock') or {}
+              ok=bool(back.get('ok') and status.get('ok') and al and sl)
+              return {'draftId':t['id'],'platform':t['platform'],'bufferPostId':pub.get('bufferPostId'),'dueAt':pub.get('dueAt'),'backfillOk':back.get('ok') is True,'assetLockState':al.get('state'),'slotLockState':sl.get('state'),'ok':ok}
+          results=[]
+          with ThreadPoolExecutor(max_workers=8) as ex:
+              futs=[ex.submit(one,t) for t in targets]
+              for f in as_completed(futs): results.append(f.result())
+          out={'project':'UGI','timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat(),'guard_live':True,'publication_provider':'BUFFER','analytics_provider':'METRICOOL','metricool_publication_allowed':False,'publication_triggered':False,'buffer_create_called':False,'active_targets':len(targets),'results':results,'all_active_scheduled_locked':all(x['ok'] for x in results)}
+          pathlib.Path('output/ugi/publication-lock-backfill-fast.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          if not out['all_active_scheduled_locked']: raise SystemExit(2)
+          PY
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-publication-lock-backfill-fast-${{ github.run_id }}
+          path: output/ugi/publication-lock-backfill-fast.json
+          retention-days: 7
+          if-no-files-found: error
