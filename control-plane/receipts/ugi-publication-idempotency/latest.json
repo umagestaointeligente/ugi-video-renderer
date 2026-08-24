@@ -1,0 +1,49 @@
+{
+  "project": "UGI",
+  "status": "LIVE_VERIFIED",
+  "worker": "lola-operacional-ugi",
+  "worker_version": "lola-v8-r44-5-22-publication-idempotency-2026-08-24",
+  "publication_provider": "BUFFER",
+  "schedule_provider": "BUFFER",
+  "analytics_provider": "METRICOOL",
+  "metricool_publication_allowed": false,
+  "publication_exactly_once_guard": true,
+  "publication_asset_lock_r2": true,
+  "publication_slot_lock_r2": true,
+  "uncertain_retry_create_blocked": true,
+  "media_r2": true,
+  "buffer_api_key": true,
+  "verified_deploy_run_id": 32729227645,
+  "verified_deploy_run_conclusion": "success",
+  "verified_deploy_artifact": "ugi-idempotency-recovery-32729227645",
+  "verified_deploy_artifact_ready": true,
+  "existing_publication_backfill_run_id": 32729571568,
+  "all_active_scheduled_locked": true,
+  "remaining_second_peak_protection_run_id": 32729686335,
+  "remaining_second_peak_protected": [
+    {
+      "platform": "instagram",
+      "target_brt": "2026-08-24T19:00:00-03:00",
+      "buffer_post_id": "6a8b91a17b646aa28b02239c",
+      "asset_lock_state": "backfilled_confirmed",
+      "slot_lock_state": "backfilled_confirmed"
+    },
+    {
+      "platform": "youtube",
+      "target_brt": "2026-08-24T20:30:00-03:00",
+      "buffer_post_id": "6a8b91b753c54dc08763b279",
+      "asset_lock_state": "backfilled_confirmed",
+      "slot_lock_state": "backfilled_confirmed"
+    }
+  ],
+  "mutating_scheduler_pull_request_trigger_removed": true,
+  "production_worker_deploy_workflow_explicit_dispatch_only": true,
+  "recovery_publication_triggered": false,
+  "recovery_buffer_create_called_for_protected_existing_slots": false,
+  "payment_triggered": false,
+  "notes": [
+    "The duplicate incident was addressed at the publication boundary, independently of creative anti-duplication.",
+    "Retries after uncertain Buffer responses must reconcile/read back and may not create again.",
+    "A post-merge automatic redeploy attempt failed Cloudflare validation before deployment because the guard was already present; the deploy workflow was then changed to explicit dispatch with live preflight, so the previously verified runtime remained active."
+  ]
+}
