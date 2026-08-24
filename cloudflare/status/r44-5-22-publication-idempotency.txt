@@ -1,6 +1,21 @@
 R44.5.22_STAGE=PUBLICATION_IDEMPOTENCY
-OK=false
-STATE=STARTED
-ERROR_TYPE=RuntimeError
-ERROR=version create failed HTTP=400 body={   "result": null,   "success": false,   "errors": [     {       "code": 10021,       "message": "Uncaught SyntaxError: Identifier 'publicationLocks' has already been declared\n  at worker.js:3505:14\n",       "documentation_url": "https://developers.cloudflare.com/workers/observability/errors/#validation-errors-10021"     }   ],   "messages": [] } 
-OK=false
+STATE=LIVE_VERIFIED
+WORKER_VERSION=lola-v8-r44-5-22-publication-idempotency-2026-08-24
+VERIFIED_DEPLOY_RUN_ID=32729227645
+WORKER_HEALTH_PASS=true
+PUBLICATION_EXACTLY_ONCE_GUARD=true
+PUBLICATION_ASSET_LOCK_R2=true
+PUBLICATION_SLOT_LOCK_R2=true
+UNCERTAIN_RETRY_CREATE_BLOCKED=true
+MEDIA_R2=true
+BUFFER_API_KEY=true
+BUFFER_PROVIDER_UNCHANGED=true
+ANALYTICS_PROVIDER=METRICOOL
+METRICOOL_PUBLICATION_ALLOWED=false
+MUTATING_SCHEDULER_PR_TRIGGER_REMOVED=true
+SECOND_PEAK_PROTECTION_RUN_ID=32729686335
+SECOND_PEAK_EXISTING_SLOTS_PROTECTED=true
+PUBLICATION_TRIGGERED_BY_RECOVERY=false
+PAYMENT_TRIGGERED=false
+NOTE=Post-merge automatic redeploy attempt failed validation before deployment; workflow was then hardened to explicit dispatch plus live preflight. Existing verified R44.5.22 runtime remained active.
+OK=true
