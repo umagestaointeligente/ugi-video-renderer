@@ -48,12 +48,33 @@ jobs:
           fi
           echo "live=$live" >> "$GITHUB_OUTPUT"
 
-      - name: Deploy guard only if not already live
+      - name: Capture exact live publication anchors
         if: steps.preflight.outputs.live != 'true'
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check requests
+          python - <<'PY'
+          import os, pathlib, requests
+          from scripts.r44_5_18_repair_v2 import extract_source
+          acct=os.environ['CF_ACCOUNT_ID']; tok=os.environ['CF_API_TOKEN']
+          api=f'https://api.cloudflare.com/client/v4/accounts/{acct}/workers/scripts/lola-operacional-ugi/content/v2'
+          r=requests.get(api,headers={'Authorization':f'Bearer {tok}'},timeout=45)
+          r.raise_for_status(); src=extract_source(r)
+          needles=['/api/platform-publish','const requestedAt','requestedAt =','createBufferPlatformVideoPost','currentPublication','platform_scheduled']
+          out=[]
+          for needle in needles:
+            pos=src.find(needle)
+            out.append(f'===== {needle} pos={pos} =====')
+            if pos>=0: out.append(src[max(0,pos-1800):pos+2600])
+          pathlib.Path('output/ugi/live-publication-anchors.txt').write_text('\n'.join(out),encoding='utf-8')
+          PY
+
+      - name: Deploy guard only if not already live
+        if: steps.preflight.outputs.live != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
           python -m py_compile scripts/r44_5_22_publication_idempotency.py
           python scripts/r44_5_22_publication_idempotency.py
 
