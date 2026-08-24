@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
       LOLA_COMMAND_KEY: ${{ secrets.LOLA_COMMAND_KEY }}
       LOLA_AUTH_KEY: ${{ secrets.LOLA_AUTH_KEY }}
     steps:
@@ -28,8 +29,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p control-plane/receipts/ugi-buffer
-          KEY="${LOLA_COMMAND_KEY:-}"
+          KEY="${UGI_LOLA_COMMAND_KEY:-}"
           HEADER='x-lola-command-key'
+          if [ -z "$KEY" ]; then
+            KEY="${LOLA_COMMAND_KEY:-}"
+          fi
           if [ -z "$KEY" ]; then
             KEY="${LOLA_AUTH_KEY:-}"
             HEADER='x-lola-key'
@@ -44,12 +48,22 @@ jobs:
           export DRAFT_CODE CHANNEL_CODE
           python - <<'PY'
           import json, os, datetime
+          from zoneinfo import ZoneInfo
           def load(p):
               try: return json.load(open(p))
               except Exception: return None
+          zone=ZoneInfo('America/Sao_Paulo')
+          today=datetime.datetime.now(zone).date().isoformat()
+          def is_today(value):
+              if not value: return False
+              try:
+                  parsed=datetime.datetime.fromisoformat(str(value).replace('Z','+00:00'))
+                  if parsed.tzinfo is None: parsed=parsed.replace(tzinfo=datetime.timezone.utc)
+                  return parsed.astimezone(zone).date().isoformat()==today
+              except (TypeError,ValueError):
+                  return str(value).startswith(today)
           drafts=load('/tmp/drafts.json')
           channels=load('/tmp/channels.json')
-          today='2026-08-23'
           items=[]
           for d in ((drafts or {}).get('drafts') or []):
               pubs=d.get('publications') or d.get('platformPublications') or {}
@@ -58,15 +72,15 @@ jobs:
                       if not isinstance(p,dict): continue
                       due=p.get('dueAt')
                       sent=p.get('sentAt')
-                      if (due and due.startswith(today)) or (sent and sent.startswith(today)):
+                      if is_today(due) or is_today(sent):
                           items.append({'draft_id':d.get('id'),'content_id':d.get('contentId') or d.get('content_id'),'platform':platform,'status':p.get('status') or p.get('publicationStatus'),'buffer_status':p.get('bufferStatus'),'dueAt':due,'sentAt':sent,'bufferPostId':p.get('bufferPostId'),'externalLink':p.get('externalLink')})
               due=d.get('dueAt')
               sent=d.get('sentAt')
-              if (due and str(due).startswith(today)) or (sent and str(sent).startswith(today)):
+              if is_today(due) or is_today(sent):
                   items.append({'draft_id':d.get('id'),'content_id':d.get('contentId') or d.get('content_id'),'platform':'legacy','status':d.get('status'),'dueAt':due,'sentAt':sent,'bufferPostId':d.get('bufferPostId')})
           out={
-            'ok': int(os.environ.get('DRAFT_CODE','0'))==200,
-            'date':'2026-08-23',
+            'ok': int(os.environ.get('DRAFT_CODE','0'))==200 and int(os.environ.get('CHANNEL_CODE','0'))==200,
+            'date':today,
             'timezone':'America/Sao_Paulo',
             'publication_provider':'BUFFER',
             'schedule_provider':'BUFFER',

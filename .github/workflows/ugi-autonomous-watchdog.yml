@@ -9,6 +9,7 @@ on:
       - UGI Growth Policy Runtime Gate
       - UGI Growth Policy Runtime Smoke
       - UGI Buffer Live Readback
+      - UGI Buffer Today Audit
     types: [completed]
   push:
     branches: [main]

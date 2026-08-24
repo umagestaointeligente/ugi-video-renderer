@@ -16,3 +16,9 @@ Worker deployment, credential change, or destructive operation is performed.
 The existing `magic-engine/multi_ai_council.py` remains the authorized
 zero-cost-first multi-model integration when its configured credentials and
 providers are available.
+
+The existing Buffer audit now also accepts the already-established
+`UGI_LOLA_COMMAND_KEY` secret before its legacy aliases. It calculates the
+current date in `America/Sao_Paulo`, converts receipt timestamps to the same
+timezone, and requires successful responses from both draft and Buffer-channel
+readback before claiming a healthy result.
