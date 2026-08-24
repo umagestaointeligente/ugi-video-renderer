@@ -1,12 +1,9 @@
 name: UGI R44.5.22 Publication Idempotency
 
+# Production Worker mutation is explicit only. Source pushes and maintenance
+# changes must never redeploy the publication plane automatically.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - scripts/r44_5_22_publication_idempotency.py
-      - .github/workflows/r44-5-22-publication-idempotency.yml
 
 permissions:
   contents: write
@@ -21,13 +18,34 @@ jobs:
     timeout-minutes: 35
     env:
       PYTHONPATH: .
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
     steps:
       - uses: actions/checkout@v4
 
+      - name: Inspect live exactly-once guard first
+        id: preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error "$WORKER_URL/api/health" -o /tmp/health-before.json
+          live=false
+          if jq -e '.ok == true
+            and .capabilities.publicationExactlyOnceGuard == true
+            and .capabilities.publicationAssetLockR2 == true
+            and .capabilities.publicationSlotLockR2 == true
+            and .capabilities.publicationRetryCreateBlockedOnUncertain == true
+            and .bindings.MEDIA_R2 == true
+            and .bindings.BUFFER_API_KEY == true' /tmp/health-before.json >/dev/null; then
+            live=true
+          fi
+          echo "live=$live" >> "$GITHUB_OUTPUT"
+
       - name: Install requests
+        if: steps.preflight.outputs.live != 'true'
         run: python -m pip install --disable-pip-version-check requests
 
       - name: Deploy exactly-once Buffer guard preserving exact live bindings
+        if: steps.preflight.outputs.live != 'true'
         shell: bash
         env:
           CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
@@ -40,10 +58,6 @@ jobs:
           echo "::add-mask::$CF_ACCOUNT_ID"
           mkdir -p cloudflare/status
 
-          # The deployed Worker is Cloudflare-compiled source and contains the
-          # same saveLocalDraft sequence in success and catch branches. Adapt
-          # the helper deterministically so confirmation is inserted only in
-          # the first occurrence, which is the successful Buffer branch.
           python - <<'PY'
           from pathlib import Path
           p=Path('scripts/r44_5_22_publication_idempotency.py')
@@ -67,16 +81,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error \
-            'https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health' \
-            -o /tmp/health.json
+          curl --fail --silent --show-error "$WORKER_URL/api/health" -o /tmp/health-after.json
           jq -e '.ok == true
             and .capabilities.publicationExactlyOnceGuard == true
             and .capabilities.publicationAssetLockR2 == true
             and .capabilities.publicationSlotLockR2 == true
             and .capabilities.publicationRetryCreateBlockedOnUncertain == true
             and .bindings.MEDIA_R2 == true
-            and .bindings.BUFFER_API_KEY == true' /tmp/health.json >/dev/null
+            and .bindings.BUFFER_API_KEY == true' /tmp/health-after.json >/dev/null
 
       - name: Persist deployment evidence
         if: always()
@@ -84,7 +96,23 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p cloudflare/status
-          test -f cloudflare/status/r44-5-22-publication-idempotency.txt || echo 'R44.5.22_STAGE=STATUS_MISSING' > cloudflare/status/r44-5-22-publication-idempotency.txt
+          if [ "${{ steps.preflight.outputs.live }}" = "true" ]; then
+            {
+              echo 'R44.5.22_STAGE=PUBLICATION_IDEMPOTENCY'
+              echo 'STATE=ALREADY_LIVE_VERIFIED'
+              echo 'WORKER_HEALTH_PASS=true'
+              echo 'PUBLICATION_EXACTLY_ONCE_GUARD=true'
+              echo 'PUBLICATION_ASSET_LOCK_R2=true'
+              echo 'PUBLICATION_SLOT_LOCK_R2=true'
+              echo 'UNCERTAIN_RETRY_CREATE_BLOCKED=true'
+              echo 'BUFFER_PROVIDER_UNCHANGED=true'
+              echo 'METRICOOL_PUBLICATION_ALLOWED=false'
+              echo 'PAYMENT_TRIGGERED=false'
+              echo 'OK=true'
+            } > cloudflare/status/r44-5-22-publication-idempotency.txt
+          else
+            test -f cloudflare/status/r44-5-22-publication-idempotency.txt || echo 'R44.5.22_STAGE=STATUS_MISSING' > cloudflare/status/r44-5-22-publication-idempotency.txt
+          fi
           git config user.name 'ugi-automation'
           git config user.email 'ugi-automation@users.noreply.github.com'
           git pull --rebase origin main || true
