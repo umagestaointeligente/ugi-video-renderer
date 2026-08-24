@@ -53,3 +53,5 @@ jobs:
           git add cloudflare/status/r44-5-22-publication-idempotency.txt
           git commit -m 'UGI R44.5.22 — deployment evidence [skip ci]' || true
           git push origin HEAD:main
+
+# retrigger-marker: 2026-08-24T09:36:00-03:00
