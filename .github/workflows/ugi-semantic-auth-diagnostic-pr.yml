@@ -1,0 +1,93 @@
+name: UGI Semantic Auth Diagnostic PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    if: startsWith(github.event.pull_request.title, '[UGI-TIKTOK-RECOVERY]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate secret presence without exposure
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${CF_API_TOKEN:-}"
+          test -n "${CF_ACCOUNT_ID:-}"
+          echo "::add-mask::$CF_API_TOKEN"
+          echo "::add-mask::$CF_ACCOUNT_ID"
+          [ -n "${UGI_VIDEO_UPLOAD_KEY:-}" ] && echo 'GITHUB_UGI_VIDEO_UPLOAD_KEY_PRESENT=true' || echo 'GITHUB_UGI_VIDEO_UPLOAD_KEY_PRESENT=false'
+          [ -n "${UGI_LOLA_COMMAND_KEY:-}" ] && echo 'GITHUB_UGI_LOLA_COMMAND_KEY_PRESENT=true' || echo 'GITHUB_UGI_LOLA_COMMAND_KEY_PRESENT=false'
+          [ -n "${UGI_VIDEO_UPLOAD_KEY:-}" ] && echo "::add-mask::$UGI_VIDEO_UPLOAD_KEY" || true
+          [ -n "${UGI_LOLA_COMMAND_KEY:-}" ] && echo "::add-mask::$UGI_LOLA_COMMAND_KEY" || true
+      - name: Capture exact live semantic auth code
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output/ugi
+          python -m pip install --disable-pip-version-check requests >/dev/null
+          python - <<'PY'
+          import os, pathlib, requests, json
+          from scripts.r44_5_18_repair_v2 import extract_source
+          acct=os.environ['CF_ACCOUNT_ID']; tok=os.environ['CF_API_TOKEN']
+          url=f'https://api.cloudflare.com/client/v4/accounts/{acct}/workers/scripts/lola-operacional-ugi/content/v2'
+          r=requests.get(url,headers={'Authorization':f'Bearer {tok}'},timeout=45); r.raise_for_status(); src=extract_source(r)
+          needles=['/api/video-semantic-result','video_semantic_authorization','isVideoUploadAuthorized','GITHUB_VIDEO_UPLOAD_KEY','isLolaUGIAuthorized']
+          out=[]
+          for n in needles:
+              start=0; found=0
+              while True:
+                  pos=src.find(n,start)
+                  if pos<0: break
+                  found+=1
+                  out.append(f'===== {n} occurrence={found} pos={pos} =====')
+                  out.append(src[max(0,pos-1800):pos+2600])
+                  start=pos+len(n)
+                  if found>=4: break
+          pathlib.Path('output/ugi/semantic-auth-live.txt').write_text('\n'.join(out),encoding='utf-8')
+          health=requests.get('https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health',timeout=20).json()
+          pathlib.Path('output/ugi/health.json').write_text(json.dumps(health,indent=2),encoding='utf-8')
+          PY
+      - name: Probe semantic endpoint auth modes without valid semantic mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-semantic-result'
+          printf '{}' >/tmp/empty.json
+          : > output/ugi/auth-probes.txt
+          code="$(curl --silent --show-error --output /tmp/noauth --write-out '%{http_code}' -X POST "$BASE" -H 'content-type: application/json' --data-binary @/tmp/empty.json)" || true
+          echo "NO_AUTH_HTTP=$code" >> output/ugi/auth-probes.txt
+          if [ -n "${UGI_VIDEO_UPLOAD_KEY:-}" ]; then
+            code="$(curl --silent --show-error --output /tmp/upload --write-out '%{http_code}' -X POST "$BASE" -H "Authorization: Bearer $UGI_VIDEO_UPLOAD_KEY" -H 'content-type: application/json' --data-binary @/tmp/empty.json)" || true
+            echo "UPLOAD_KEY_HTTP=$code" >> output/ugi/auth-probes.txt
+            sed -E 's/[A-Za-z0-9_-]{24,}/[REDACTED]/g' /tmp/upload | head -c 600 >> output/ugi/auth-probes.txt; echo >> output/ugi/auth-probes.txt
+          else
+            echo 'UPLOAD_KEY_HTTP=SECRET_MISSING' >> output/ugi/auth-probes.txt
+          fi
+          if [ -n "${UGI_LOLA_COMMAND_KEY:-}" ]; then
+            code="$(curl --silent --show-error --output /tmp/lola --write-out '%{http_code}' -X POST "$BASE" -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" -H 'content-type: application/json' --data-binary @/tmp/empty.json)" || true
+            echo "LOLA_COMMAND_KEY_HTTP=$code" >> output/ugi/auth-probes.txt
+            sed -E 's/[A-Za-z0-9_-]{24,}/[REDACTED]/g' /tmp/lola | head -c 600 >> output/ugi/auth-probes.txt; echo >> output/ugi/auth-probes.txt
+          else
+            echo 'LOLA_COMMAND_KEY_HTTP=SECRET_MISSING' >> output/ugi/auth-probes.txt
+          fi
+      - name: Upload diagnostic evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-semantic-auth-diagnostic-${{ github.run_id }}
+          path: output/ugi/
+          retention-days: 7
+          if-no-files-found: error
