@@ -1,0 +1,104 @@
+name: UGI Idempotency Recovery PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ugi-cloudflare-worker-production
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    if: startsWith(github.event.pull_request.title, '[UGI-AUTONOMY]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Mask and validate dedicated deploy credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${CF_API_TOKEN:-}"
+          test -n "${CF_ACCOUNT_ID:-}"
+          echo "::add-mask::$CF_API_TOKEN"
+          echo "::add-mask::$CF_ACCOUNT_ID"
+
+      - name: Inspect live guard before mutation
+        id: preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output/ugi
+          code="$(curl --silent --show-error --max-time 30 --output output/ugi/health-before.json --write-out '%{http_code}' "$WORKER_URL/api/health")"
+          echo "http=$code" >> "$GITHUB_OUTPUT"
+          live=false
+          if [ "$code" = "200" ] && jq -e '.capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true' output/ugi/health-before.json >/dev/null 2>&1; then
+            live=true
+          fi
+          echo "live=$live" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy guard only if not already live
+        if: steps.preflight.outputs.live != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check requests
+          python -m py_compile scripts/r44_5_22_publication_idempotency.py
+          python scripts/r44_5_22_publication_idempotency.py
+
+      - name: Terminal live health readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output/ugi
+          for i in $(seq 1 30); do
+            code="$(curl --silent --show-error --max-time 30 --output output/ugi/health-after.json --write-out '%{http_code}' "$WORKER_URL/api/health" || true)"
+            if [ "$code" = "200" ] && jq -e '.ok == true and .capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true and .bindings.MEDIA_R2 == true and .bindings.BUFFER_API_KEY == true' output/ugi/health-after.json >/dev/null 2>&1; then
+              break
+            fi
+            sleep 3
+          done
+          jq -e '.ok == true and .capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true and .bindings.MEDIA_R2 == true and .bindings.BUFFER_API_KEY == true' output/ugi/health-after.json >/dev/null
+
+      - name: Build fail-closed evidence
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, datetime
+          p=pathlib.Path('output/ugi/health-after.json')
+          h=json.loads(p.read_text()) if p.exists() else {}
+          c=h.get('capabilities') or {}; b=h.get('bindings') or {}
+          ok=bool(h.get('ok') is True and c.get('publicationExactlyOnceGuard') is True and c.get('publicationSlotLockR2') is True and c.get('publicationRetryCreateBlockedOnUncertain') is True and b.get('MEDIA_R2') is True and b.get('BUFFER_API_KEY') is True)
+          out={
+            'project':'UGI','checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'publication_provider':'BUFFER','analytics_provider':'METRICOOL','metricool_publication_allowed':False,
+            'publication_exactly_once_guard':c.get('publicationExactlyOnceGuard') is True,
+            'publication_slot_lock_r2':c.get('publicationSlotLockR2') is True,
+            'uncertain_retry_create_blocked':c.get('publicationRetryCreateBlockedOnUncertain') is True,
+            'media_r2':b.get('MEDIA_R2') is True,'buffer_api_key':b.get('BUFFER_API_KEY') is True,
+            'public_publish_triggered':False,'payment_triggered':False,'ready':ok,
+            'worker_version':h.get('version')
+          }
+          pathlib.Path('output/ugi/idempotency-recovery.json').write_text(json.dumps(out,indent=2)+'\n')
+          if not ok: raise SystemExit(2)
+          PY
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-idempotency-recovery-${{ github.run_id }}
+          path: output/ugi/
+          retention-days: 7
+          if-no-files-found: error
