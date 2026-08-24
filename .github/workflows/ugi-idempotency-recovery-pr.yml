@@ -48,26 +48,33 @@ jobs:
           fi
           echo "live=$live" >> "$GITHUB_OUTPUT"
 
-      - name: Capture exact live publication anchors
+      - name: Capture exact live publication anchors and deployment metadata
         if: steps.preflight.outputs.live != 'true'
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check requests
           python - <<'PY'
-          import os, pathlib, requests
+          import os, pathlib, requests, json
           from scripts.r44_5_18_repair_v2 import extract_source
           acct=os.environ['CF_ACCOUNT_ID']; tok=os.environ['CF_API_TOKEN']
-          api=f'https://api.cloudflare.com/client/v4/accounts/{acct}/workers/scripts/lola-operacional-ugi/content/v2'
-          r=requests.get(api,headers={'Authorization':f'Bearer {tok}'},timeout=45)
+          h={'Authorization':f'Bearer {tok}'}
+          base=f'https://api.cloudflare.com/client/v4/accounts/{acct}/workers/scripts/lola-operacional-ugi'
+          r=requests.get(base+'/content/v2',headers=h,timeout=45)
           r.raise_for_status(); src=extract_source(r)
           needles=['/api/platform-publish','const requestedAt','requestedAt =','createBufferPlatformVideoPost','currentPublication','platform_scheduled']
           out=[]
           for needle in needles:
             pos=src.find(needle)
             out.append(f'===== {needle} pos={pos} =====')
-            if pos>=0: out.append(src[max(0,pos-1800):pos+2600])
+            if pos>=0: out.append(src[max(0,pos-2200):pos+3600])
           pathlib.Path('output/ugi/live-publication-anchors.txt').write_text('\n'.join(out),encoding='utf-8')
+          for name,suffix in [('deployments','/deployments'),('settings','/settings')]:
+            rr=requests.get(base+suffix,headers=h,timeout=30)
+            payload={'http':rr.status_code}
+            try: payload['body']=rr.json()
+            except Exception: payload['body']=rr.text[:4000]
+            pathlib.Path(f'output/ugi/cloudflare-{name}.json').write_text(json.dumps(payload,indent=2),encoding='utf-8')
           PY
 
       - name: Deploy guard only if not already live
