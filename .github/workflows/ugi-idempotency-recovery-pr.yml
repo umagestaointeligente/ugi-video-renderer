@@ -43,7 +43,7 @@ jobs:
           code="$(curl --silent --show-error --max-time 30 --output output/ugi/health-before.json --write-out '%{http_code}' "$WORKER_URL/api/health")"
           echo "http=$code" >> "$GITHUB_OUTPUT"
           live=false
-          if [ "$code" = "200" ] && jq -e '.capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true' output/ugi/health-before.json >/dev/null 2>&1; then
+          if [ "$code" = "200" ] && jq -e '.capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationAssetLockR2 == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true' output/ugi/health-before.json >/dev/null 2>&1; then
             live=true
           fi
           echo "live=$live" >> "$GITHUB_OUTPUT"
@@ -82,6 +82,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # The currently deployed Worker has the same saveLocalDraft sequence in
+          # success and catch branches. Patch the deployment helper in-memory so
+          # only the first occurrence (the success branch) receives confirmation.
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/r44_5_22_publication_idempotency.py')
+          s=p.read_text(encoding='utf-8')
+          old='''    if route.count(success_anchor)!=1:\n        raise RuntimeError(f'platform publish success anchor count={route.count(success_anchor)}')\n    success_repl='''
+          new='''    success_pos=route.find(success_anchor)\n    if success_pos < 0:\n        raise RuntimeError('platform publish success anchor missing')\n    success_repl='''
+          if old not in s:
+              raise SystemExit('runtime helper patch anchor missing')
+          s=s.replace(old,new,1)
+          old2='''    route=route.replace(success_anchor,success_repl,1)\n\n    catch_candidates='''
+          new2='''    route=route[:success_pos]+success_repl+route[success_pos+len(success_anchor):]\n\n    catch_candidates='''
+          if old2 not in s:
+              raise SystemExit('runtime helper replacement anchor missing')
+          p.write_text(s.replace(old2,new2,1),encoding='utf-8')
+          PY
           python -m py_compile scripts/r44_5_22_publication_idempotency.py
           python scripts/r44_5_22_publication_idempotency.py
 
@@ -92,12 +110,12 @@ jobs:
           mkdir -p output/ugi
           for i in $(seq 1 30); do
             code="$(curl --silent --show-error --max-time 30 --output output/ugi/health-after.json --write-out '%{http_code}' "$WORKER_URL/api/health" || true)"
-            if [ "$code" = "200" ] && jq -e '.ok == true and .capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true and .bindings.MEDIA_R2 == true and .bindings.BUFFER_API_KEY == true' output/ugi/health-after.json >/dev/null 2>&1; then
+            if [ "$code" = "200" ] && jq -e '.ok == true and .capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationAssetLockR2 == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true and .bindings.MEDIA_R2 == true and .bindings.BUFFER_API_KEY == true' output/ugi/health-after.json >/dev/null 2>&1; then
               break
             fi
             sleep 3
           done
-          jq -e '.ok == true and .capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true and .bindings.MEDIA_R2 == true and .bindings.BUFFER_API_KEY == true' output/ugi/health-after.json >/dev/null
+          jq -e '.ok == true and .capabilities.publicationExactlyOnceGuard == true and .capabilities.publicationAssetLockR2 == true and .capabilities.publicationSlotLockR2 == true and .capabilities.publicationRetryCreateBlockedOnUncertain == true and .bindings.MEDIA_R2 == true and .bindings.BUFFER_API_KEY == true' output/ugi/health-after.json >/dev/null
 
       - name: Build fail-closed evidence
         if: always()
@@ -108,11 +126,12 @@ jobs:
           p=pathlib.Path('output/ugi/health-after.json')
           h=json.loads(p.read_text()) if p.exists() else {}
           c=h.get('capabilities') or {}; b=h.get('bindings') or {}
-          ok=bool(h.get('ok') is True and c.get('publicationExactlyOnceGuard') is True and c.get('publicationSlotLockR2') is True and c.get('publicationRetryCreateBlockedOnUncertain') is True and b.get('MEDIA_R2') is True and b.get('BUFFER_API_KEY') is True)
+          ok=bool(h.get('ok') is True and c.get('publicationExactlyOnceGuard') is True and c.get('publicationAssetLockR2') is True and c.get('publicationSlotLockR2') is True and c.get('publicationRetryCreateBlockedOnUncertain') is True and b.get('MEDIA_R2') is True and b.get('BUFFER_API_KEY') is True)
           out={
             'project':'UGI','checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'publication_provider':'BUFFER','analytics_provider':'METRICOOL','metricool_publication_allowed':False,
             'publication_exactly_once_guard':c.get('publicationExactlyOnceGuard') is True,
+            'publication_asset_lock_r2':c.get('publicationAssetLockR2') is True,
             'publication_slot_lock_r2':c.get('publicationSlotLockR2') is True,
             'uncertain_retry_create_blocked':c.get('publicationRetryCreateBlockedOnUncertain') is True,
             'media_r2':b.get('MEDIA_R2') is True,'buffer_api_key':b.get('BUFFER_API_KEY') is True,
