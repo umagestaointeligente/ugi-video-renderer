@@ -7,7 +7,7 @@ import scripts.r44_5_18_repair_v2 as base
 STATUS=Path('cloudflare/status/r44-5-22-publication-idempotency.txt')
 WORKER='lola-operacional-ugi'
 ORIGIN='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
-NEW='lola-v8-r44-5-22-publication-idempotency-2026-08-23'
+NEW='lola-v8-r44-5-22-publication-idempotency-2026-08-24'
 
 
 def write(lines):
@@ -21,41 +21,64 @@ def fetch_live(api,h):
     return base.extract_source(r)
 
 
-def bindings(api,h):
-    r=requests.get(api+f'/versions/{base.STABLE_VERSION_ID}',headers=h,timeout=30)
+def active_bindings(api,h):
+    """Recover bindings from the exact version currently receiving 100% traffic."""
+    r=requests.get(api+'/deployments',headers=h,timeout=30)
     r.raise_for_status()
-    return base.restored_bindings(r.json())
+    deployments=((r.json().get('result') or {}).get('deployments') or [])
+    if not deployments:
+        raise RuntimeError('no active Worker deployment returned')
+    versions=deployments[0].get('versions') or []
+    active=next((v for v in versions if float(v.get('percentage') or 0) >= 99.9), None) or (versions[0] if versions else None)
+    if not active or not active.get('version_id'):
+        raise RuntimeError('active Worker version id missing')
+    version_id=str(active['version_id'])
+    vr=requests.get(api+f'/versions/{version_id}',headers=h,timeout=30)
+    vr.raise_for_status()
+    restored=base.restored_bindings(vr.json())
+    return version_id, restored
+
+
+def replace_once(text, old, new, label):
+    if text.count(old) != 1:
+        raise RuntimeError(f'{label} anchor count={text.count(old)}')
+    return text.replace(old,new,1)
 
 
 def patch(src):
     t=base.strip_temp_routes(src)
-    # idempotent cleanup of any prior R44.5.22 block
     t=re.sub(r'\n\s*// BEGIN_R44_5_22_PUBLICATION_IDEMPOTENCY.*?// END_R44_5_22_PUBLICATION_IDEMPOTENCY\s*\n','\n',t,flags=re.S)
     t=re.sub(r'\n\s*// BEGIN_R44_5_22_LOCK_ROUTES.*?// END_R44_5_22_LOCK_ROUTES\s*\n','\n',t,flags=re.S)
 
-    # version is operational metadata only; preserve architecture and live source.
     t,n=re.subn(r'var VERSION = "[^"]+";', f'var VERSION = "{NEW}";', t, count=1)
     if n != 1:
         raise RuntimeError('VERSION anchor mismatch')
 
     const_anchor='var DELIVERY_PREFIX = "lola/commerce/deliveries/";\n'
-    if t.count(const_anchor)!=1:
-        raise RuntimeError('DELIVERY_PREFIX anchor mismatch')
-    t=t.replace(const_anchor,const_anchor+'var PUBLICATION_LOCK_PREFIX = "lola/publication-locks/";\n',1)
+    t=replace_once(t,const_anchor,const_anchor+'var PUBLICATION_LOCK_PREFIX = "lola/publication-locks/";\n','DELIVERY_PREFIX')
 
     helper_anchor='async function createBufferPlatformVideoPost(draft, platform, mode, dueAt, env) {\n'
-    if t.count(helper_anchor)!=1:
-        raise RuntimeError('createBufferPlatformVideoPost anchor mismatch')
     helper=r'''// BEGIN_R44_5_22_PUBLICATION_IDEMPOTENCY
-function publicationLockKey(draft, platform, mode, dueAt) {
+function publicationIdentity(draft) {
+  return String(draft?.contentId || draft?.content_id || draft?.renderId || draft?.id || "unknown");
+}
+__name(publicationIdentity, "publicationIdentity");
+
+function publicationAssetLockKey(draft, platform) {
+  const p = String(platform || "unknown").toLowerCase();
+  return PUBLICATION_LOCK_PREFIX + "asset/" + encodeURIComponent(p) + "/" + encodeURIComponent(publicationIdentity(draft)) + ".json";
+}
+__name(publicationAssetLockKey, "publicationAssetLockKey");
+
+function publicationSlotLockKey(platform, mode, dueAt) {
   const p = String(platform || "unknown").toLowerCase();
   const m = String(mode || "unknown");
-  const scheduled = m === "customScheduled" && dueAt
+  const slot = m === "customScheduled" && dueAt
     ? String(new Date(dueAt).toISOString())
-    : String(draft?.renderId || draft?.contentId || draft?.id || "unknown");
-  return PUBLICATION_LOCK_PREFIX + encodeURIComponent(p) + "/" + encodeURIComponent(m) + "/" + encodeURIComponent(scheduled) + ".json";
+    : "immediate";
+  return PUBLICATION_LOCK_PREFIX + "slot/" + encodeURIComponent(p) + "/" + encodeURIComponent(m) + "/" + encodeURIComponent(slot) + ".json";
 }
-__name(publicationLockKey, "publicationLockKey");
+__name(publicationSlotLockKey, "publicationSlotLockKey");
 
 async function readPublicationLock(env, key) {
   if (!env.MEDIA) return null;
@@ -65,127 +88,138 @@ async function readPublicationLock(env, key) {
 }
 __name(readPublicationLock, "readPublicationLock");
 
-async function acquirePublicationLock(env, draft, platform, mode, dueAt) {
-  if (!env.MEDIA) throw new Error("R2 MEDIA não conectado para publication lock");
-  const key = publicationLockKey(draft, platform, mode, dueAt);
-  const token = crypto.randomUUID();
-  const value = {
-    schemaVersion: "1.0",
-    key,
-    token,
-    state: "creating",
-    project: "UGI",
-    draftId: draft?.id || null,
-    renderId: draft?.renderId || null,
-    contentId: draft?.contentId || null,
-    platform,
-    mode,
-    dueAt: dueAt || null,
-    requestedAt: new Date().toISOString(),
-    bufferPostId: null
-  };
+async function createPublicationLock(env, key, value) {
   const created = await env.MEDIA.put(key, JSON.stringify(value, null, 2), {
     onlyIf: { etagDoesNotMatch: "*" },
     httpMetadata: { contentType: "application/json" }
   });
-  if (!created) return { acquired: false, key, existing: await readPublicationLock(env, key) };
-  return { acquired: true, key, token, value };
+  if (!created) return { acquired:false, key, existing:await readPublicationLock(env,key) };
+  return { acquired:true, key, token:value.token, value };
 }
-__name(acquirePublicationLock, "acquirePublicationLock");
+__name(createPublicationLock, "createPublicationLock");
+
+async function acquirePublicationLocks(env, draft, platform, mode, dueAt) {
+  if (!env.MEDIA) throw new Error("R2 MEDIA não conectado para publication lock");
+  const token = crypto.randomUUID();
+  const requestedAt = new Date().toISOString();
+  const common = {
+    schemaVersion:"1.1", token, state:"creating", project:"UGI",
+    draftId:draft?.id || null, renderId:draft?.renderId || null,
+    contentId:draft?.contentId || draft?.content_id || null,
+    platform, mode, dueAt:dueAt || null, requestedAt, bufferPostId:null
+  };
+  const assetKey = publicationAssetLockKey(draft, platform);
+  const asset = await createPublicationLock(env, assetKey, {...common, lockType:"asset", key:assetKey});
+  if (!asset.acquired) return { acquired:false, failedType:"asset", existing:asset.existing, locks:[asset] };
+  const slotKey = publicationSlotLockKey(platform, mode, dueAt);
+  const slot = await createPublicationLock(env, slotKey, {...common, lockType:"slot", key:slotKey});
+  if (!slot.acquired) {
+    await updatePublicationLock(env, asset, {state:"blocked_by_existing_slot", blockedBy:slotKey});
+    return { acquired:false, failedType:"slot", existing:slot.existing, locks:[asset,slot] };
+  }
+  return { acquired:true, token, locks:[asset,slot], assetKey, slotKey };
+}
+__name(acquirePublicationLocks, "acquirePublicationLocks");
 
 async function updatePublicationLock(env, lock, patch) {
   if (!env.MEDIA || !lock?.key) return null;
   const current = (await readPublicationLock(env, lock.key)) || {};
-  if (lock.token && current.token && current.token !== lock.token) {
-    throw new Error("publication_lock_owner_mismatch");
-  }
-  const next = { ...current, ...patch, updatedAt: new Date().toISOString() };
-  await env.MEDIA.put(lock.key, JSON.stringify(next, null, 2), {
-    httpMetadata: { contentType: "application/json" }
-  });
+  if (lock.token && current.token && current.token !== lock.token) throw new Error("publication_lock_owner_mismatch");
+  const next = { ...current, ...patch, updatedAt:new Date().toISOString() };
+  await env.MEDIA.put(lock.key, JSON.stringify(next, null, 2), { httpMetadata:{contentType:"application/json"} });
   return next;
 }
 __name(updatePublicationLock, "updatePublicationLock");
+
+async function updatePublicationLocks(env, group, patch) {
+  const results=[];
+  for (const lock of group?.locks || []) if (lock?.acquired) results.push(await updatePublicationLock(env,lock,patch));
+  return results;
+}
+__name(updatePublicationLocks, "updatePublicationLocks");
 // END_R44_5_22_PUBLICATION_IDEMPOTENCY
 
 '''
-    t=t.replace(helper_anchor,helper+helper_anchor,1)
+    t=replace_once(t,helper_anchor,helper+helper_anchor,'createBufferPlatformVideoPost')
 
-    route_anchor='''        const requestedAt =\n          new Date().toISOString();\n        try {\n'''
-    if t.count(route_anchor)!=1:
+    route_start=t.find('      if (path === "/api/platform-publish" && request.method === "POST") {')
+    route_end=t.find('      if (path.startsWith("/api/platform-publication-eligibility/")', route_start)
+    if route_start < 0 or route_end < 0:
+        raise RuntimeError('platform publish route bounds missing')
+    route=t[route_start:route_end]
+
+    requested_candidates=[
+        '        const requestedAt = (/* @__PURE__ */ new Date()).toISOString();\n        try {',
+        '        const requestedAt = new Date().toISOString();\n        try {'
+    ]
+    requested_anchor=next((x for x in requested_candidates if route.count(x)==1),None)
+    if not requested_anchor:
         raise RuntimeError('platform publish requestedAt anchor mismatch')
-    route_repl='''        // R44.5.22 — atomic-ish R2 slot lock BEFORE any Buffer mutation.\n        // For customScheduled the key is platform+exact dueAt, so even two different\n        // drafts cannot create two posts for the same UGI platform slot.\n        const publicationLock = await acquirePublicationLock(\n          env, draft, platform, mode, dueAt\n        );\n        if (!publicationLock.acquired) {\n          return json({\n            ok: false,\n            version: VERSION,\n            route: "/api/platform-publish",\n            errorClass: "publication_idempotency_lock_exists",\n            error: `Slot ${platform} já possui publication lock; criação Buffer bloqueada.`,\n            publicationLockKey: publicationLock.key,\n            existingLock: publicationLock.existing || null,\n            publicationTriggered: false,\n            bufferMutationPerformed: false\n          }, 409);\n        }\n\n        const requestedAt =\n          new Date().toISOString();\n        try {\n'''
-    t=t.replace(route_anchor,route_repl,1)
+    requested_repl='''        // R44.5.22 — exactly-once gate before any Buffer mutation.\n        // Asset lock blocks repeated publication of the same UGI content on the same platform.\n        // Slot lock blocks different drafts from occupying the same platform/time slot.\n        const publicationLocks = await acquirePublicationLocks(env, draft, platform, mode, dueAt);\n        if (!publicationLocks.acquired) {\n          return json({\n            ok:false, version:VERSION, route:"/api/platform-publish",\n            errorClass:"publication_idempotency_lock_exists",\n            error:`Publicação ${platform} bloqueada por exactly-once lock (${publicationLocks.failedType}).`,\n            lockType:publicationLocks.failedType, existingLock:publicationLocks.existing || null,\n            publicationTriggered:false, bufferMutationPerformed:false\n          },409);\n        }\n\n''' + requested_anchor
+    route=route.replace(requested_anchor,requested_repl,1)
 
-    success_anchor='''          const saved =\n            await saveLocalDraft(\n              env,\n              draft\n            );\n\n          await syncPlatformApprovalToVideoResult(\n'''
-    if t.count(success_anchor)!=1:
-        raise RuntimeError('platform publish save success anchor mismatch')
-    success_repl='''          const saved =\n            await saveLocalDraft(\n              env,\n              draft\n            );\n\n          await updatePublicationLock(env, publicationLock, {\n            state: "confirmed",\n            bufferPostId: publication.bufferPostId || null,\n            bufferStatus: publication.bufferStatus || null,\n            dueAt: publication.dueAt || dueAt || null,\n            externalLink: publication.externalLink || null\n          });\n\n          await syncPlatformApprovalToVideoResult(\n'''
-    t=t.replace(success_anchor,success_repl,1)
+    success_anchor='''          const saved = await saveLocalDraft(\n            env,\n            draft\n          );\n          await syncPlatformApprovalToVideoResult(\n'''
+    if route.count(success_anchor)!=1:
+        raise RuntimeError(f'platform publish success anchor count={route.count(success_anchor)}')
+    success_repl='''          const saved = await saveLocalDraft(\n            env,\n            draft\n          );\n          await updatePublicationLocks(env, publicationLocks, {\n            state:"confirmed", bufferPostId:publication.bufferPostId || null,\n            bufferStatus:publication.bufferStatus || null, dueAt:publication.dueAt || dueAt || null,\n            externalLink:publication.externalLink || null\n          });\n          await syncPlatformApprovalToVideoResult(\n'''
+    route=route.replace(success_anchor,success_repl,1)
 
-    catch_anchor='''        } catch (error) {\n          const failedAt =\n            new Date().toISOString();\n'''
-    if t.count(catch_anchor)!=1:
+    catch_candidates=[
+        '        } catch (error) {\n          const failedAt = (/* @__PURE__ */ new Date()).toISOString();',
+        '        } catch (error) {\n          const failedAt = new Date().toISOString();'
+    ]
+    catch_anchor=next((x for x in catch_candidates if route.count(x)==1),None)
+    if not catch_anchor:
         raise RuntimeError('platform publish catch anchor mismatch')
-    catch_repl='''        } catch (error) {\n          const failedAt =\n            new Date().toISOString();\n          // Never release an uncertain lock automatically. A timeout may have\n          // created a Buffer post even when the response was lost. Keeping the\n          // lock forces readback/reconciliation instead of duplicate creation.\n          try {\n            await updatePublicationLock(env, publicationLock, {\n              state: "uncertain",\n              failureAt: failedAt,\n              error: error?.message || String(error)\n            });\n          } catch (_) {}\n'''
-    t=t.replace(catch_anchor,catch_repl,1)
+    catch_repl=catch_anchor+'''\n          // Fail closed: never release locks after an uncertain Buffer failure.\n          // A timeout can mean the remote post was created but the response was lost.\n          try {\n            await updatePublicationLocks(env, publicationLocks, {\n              state:"uncertain", failureAt:failedAt, error:error?.message || String(error)\n            });\n          } catch (_) {}'''
+    route=route.replace(catch_anchor,catch_repl,1)
+    t=t[:route_start]+route+t[route_end:]
 
-    health_anchor='            multiPlatformPublishing: true,\n'
-    if t.count(health_anchor)!=1:
+    health_pat=r'(\n\s*multiPlatformPublishing: true,\n)'
+    if len(re.findall(health_pat,t))!=1:
         raise RuntimeError('health multiPlatformPublishing anchor mismatch')
-    t=t.replace(health_anchor,health_anchor+'            publicationExactlyOnceGuard: true,\n            publicationSlotLockR2: true,\n            publicationRetryCreateBlockedOnUncertain: true,\n',1)
+    t=re.sub(health_pat,r'\1            publicationExactlyOnceGuard: true,\n            publicationAssetLockR2: true,\n            publicationSlotLockR2: true,\n            publicationRetryCreateBlockedOnUncertain: true,\n',t,count=1)
 
-    routes_anchor='''      // ========================================================\n      // R44.4 — PLATFORM PUBLICATION STATUS\n      // ========================================================\n'''
-    if t.count(routes_anchor)!=1:
-        raise RuntimeError('publication status route anchor mismatch')
+    insert_anchor='      if (path.startsWith("/api/platform-publication-eligibility/")'
+    if t.count(insert_anchor)!=1:
+        raise RuntimeError('publication eligibility route anchor mismatch')
     routes=r'''      // BEGIN_R44_5_22_LOCK_ROUTES
       if (path === "/api/publication-lock-status" && request.method === "GET") {
-        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
-          return json({ ok:false, error:"Não autorizado" }, 401);
-        }
-        const id = String(url.searchParams.get("id") || "").trim();
-        const platform = normalizeApprovalPlatform(url.searchParams.get("platform"));
-        const mode = normalizePublishMode(url.searchParams.get("mode") || "customScheduled");
-        const dueAtRaw = String(url.searchParams.get("dueAt") || "").trim();
-        const draft = id ? await getLocalDraft(env, id) : null;
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) return json({ok:false,error:"Não autorizado"},401);
+        const id=String(url.searchParams.get("id") || "").trim();
+        const platform=normalizeApprovalPlatform(url.searchParams.get("platform"));
+        const mode=normalizePublishMode(url.searchParams.get("mode") || "customScheduled");
+        const dueAtRaw=String(url.searchParams.get("dueAt") || "").trim();
+        const draft=id ? await getLocalDraft(env,id) : null;
         if (!draft || !platform || !mode) return json({ok:false,error:"id/platform/mode inválidos"},400);
-        const dueAt = mode === "customScheduled" && dueAtRaw ? new Date(dueAtRaw).toISOString() : null;
-        const key = publicationLockKey(draft, platform, mode, dueAt);
-        return json({ok:true,version:VERSION,key,lock:await readPublicationLock(env,key),publicationTriggered:false,bufferMutationPerformed:false});
+        const dueAt=mode === "customScheduled" && dueAtRaw ? new Date(dueAtRaw).toISOString() : null;
+        const assetKey=publicationAssetLockKey(draft,platform);
+        const slotKey=publicationSlotLockKey(platform,mode,dueAt);
+        return json({ok:true,version:VERSION,assetKey,slotKey,assetLock:await readPublicationLock(env,assetKey),slotLock:await readPublicationLock(env,slotKey),publicationTriggered:false,bufferMutationPerformed:false});
       }
 
       if (path === "/api/publication-lock-backfill" && request.method === "POST") {
-        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
-          return json({ ok:false, error:"Não autorizado" }, 401);
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) return json({ok:false,error:"Não autorizado"},401);
+        const body=await readBody(request);
+        const id=String(body?.id || "").trim();
+        const platform=normalizeApprovalPlatform(body?.platform);
+        const draft=id ? await getLocalDraft(env,id) : null;
+        const asset=draft?.assets?.[platform];
+        const pub=asset?.publication || null;
+        if (!draft || !platform || !pub?.bufferPostId) return json({ok:false,error:"existing active Buffer publication required",publicationTriggered:false,bufferMutationPerformed:false},409);
+        const mode=normalizePublishMode(pub.mode || "customScheduled") || "customScheduled";
+        const dueAt=pub.dueAt || null;
+        const group=await acquirePublicationLocks(env,draft,platform,mode,dueAt);
+        if (group.acquired) {
+          const locks=await updatePublicationLocks(env,group,{state:"backfilled_confirmed",bufferPostId:pub.bufferPostId,bufferStatus:pub.bufferStatus || pub.status || null,dueAt});
+          return json({ok:true,created:true,locks,publicationTriggered:false,bufferMutationPerformed:false});
         }
-        const body = await readBody(request);
-        const id = String(body?.id || "").trim();
-        const platform = normalizeApprovalPlatform(body?.platform);
-        const draft = id ? await getLocalDraft(env,id) : null;
-        const asset = draft?.assets?.[platform];
-        const pub = asset?.publication || null;
-        if (!draft || !platform || !pub?.bufferPostId) {
-          return json({ok:false,error:"existing active Buffer publication required",publicationTriggered:false,bufferMutationPerformed:false},409);
-        }
-        const mode = normalizePublishMode(pub.mode || "customScheduled") || "customScheduled";
-        const dueAt = pub.dueAt || null;
-        const lock = await acquirePublicationLock(env,draft,platform,mode,dueAt);
-        if (lock.acquired) {
-          const finalLock = await updatePublicationLock(env,lock,{state:"backfilled_confirmed",bufferPostId:pub.bufferPostId,bufferStatus:pub.bufferStatus||pub.status||null,dueAt});
-          return json({ok:true,created:true,key:lock.key,lock:finalLock,publicationTriggered:false,bufferMutationPerformed:false});
-        }
-        return json({ok:true,created:false,key:lock.key,lock:lock.existing||null,publicationTriggered:false,bufferMutationPerformed:false});
+        return json({ok:true,created:false,failedType:group.failedType,existingLock:group.existing || null,publicationTriggered:false,bufferMutationPerformed:false});
       }
       // END_R44_5_22_LOCK_ROUTES
 
 '''
-    t=t.replace(routes_anchor,routes+routes_anchor,1)
-
-    # Allow Lola operational auth on the two new non-public routes.
-    auth_anchor='''        "/api/platform-publication-status",\n        "/api/carousel-slide-recovery"\n'''
-    auth_repl='''        "/api/platform-publication-status",\n        "/api/carousel-slide-recovery",\n        "/api/publication-lock-status",\n        "/api/publication-lock-backfill"\n'''
-    if t.count(auth_anchor)!=1:
-        raise RuntimeError('LOLA_OPERATIONAL_ROUTES anchor mismatch')
-    t=t.replace(auth_anchor,auth_repl,1)
+    t=t.replace(insert_anchor,routes+insert_anchor,1)
     return t
 
 
@@ -198,12 +232,15 @@ def wait_health(ver):
                 last=r.json(); c=last.get('capabilities') or {}; b=last.get('bindings') or {}
                 if (last.get('ok') is True and last.get('version')==ver
                     and c.get('publicationExactlyOnceGuard') is True
+                    and c.get('publicationAssetLockR2') is True
                     and c.get('publicationSlotLockR2') is True
+                    and c.get('publicationRetryCreateBlockedOnUncertain') is True
                     and b.get('MEDIA_R2') is True and b.get('BUFFER_API_KEY') is True):
                     return last
-        except Exception: pass
+        except Exception:
+            pass
         time.sleep(3)
-    raise RuntimeError('health timeout '+json.dumps(last,ensure_ascii=False)[:1400])
+    raise RuntimeError('health timeout '+json.dumps(last,ensure_ascii=False)[:1600])
 
 
 def main():
@@ -213,17 +250,18 @@ def main():
     h={'Authorization':f'Bearer {tok}'}
     api=f'https://api.cloudflare.com/client/v4/accounts/{acct}/workers/scripts/{WORKER}'
     live=fetch_live(api,h)
+    current_version,b=active_bindings(api,h)
     final=patch(live)
-    b=bindings(api,h)
-    lines += [f'BASE_SOURCE_BYTES={len(live.encode())}',f'PATCHED_SOURCE_BYTES={len(final.encode())}',f'BINDINGS_PRESERVED={len(b)}']
+    lines += [f'BASE_SOURCE_BYTES={len(live.encode())}',f'PATCHED_SOURCE_BYTES={len(final.encode())}',f'ACTIVE_BASE_VERSION_ID={current_version}',f'BINDINGS_PRESERVED={len(b)}']
     v=base.create_version(api,h,final,b,'UGI R44.5.22 exactly-once Buffer guard')
     d=base.deploy(api,h,v,'UGI R44.5.22 exactly-once Buffer guard')
     wait_health(NEW)
-    lines += ['FINAL_VERSION_ID='+v,'FINAL_DEPLOYMENT_ID='+d,'WORKER_HEALTH_PASS=true','PUBLICATION_EXACTLY_ONCE_GUARD=true','PUBLICATION_SLOT_LOCK_R2=true','UNCERTAIN_RETRY_CREATE_BLOCKED=true','BUFFER_PROVIDER_UNCHANGED=true','METRICOOL_PUBLICATION_ALLOWED=false','PAYMENT_TRIGGERED=false','OK=true']
+    lines += ['FINAL_VERSION_ID='+v,'FINAL_DEPLOYMENT_ID='+d,'WORKER_HEALTH_PASS=true','PUBLICATION_EXACTLY_ONCE_GUARD=true','PUBLICATION_ASSET_LOCK_R2=true','PUBLICATION_SLOT_LOCK_R2=true','UNCERTAIN_RETRY_CREATE_BLOCKED=true','BUFFER_PROVIDER_UNCHANGED=true','METRICOOL_PUBLICATION_ALLOWED=false','PAYMENT_TRIGGERED=false','OK=true']
     write(lines)
 
 if __name__=='__main__':
-    try: main()
+    try:
+        main()
     except BaseException as e:
         try: x=STATUS.read_text(encoding='utf-8').splitlines() if STATUS.exists() else []
         except Exception: x=[]
