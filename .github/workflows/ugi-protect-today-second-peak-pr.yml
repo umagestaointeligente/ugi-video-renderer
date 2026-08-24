@@ -1,0 +1,68 @@
+name: UGI Protect Today Second Peak PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  protect:
+    if: startsWith(github.event.pull_request.title, '[UGI-AUTONOMY]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Backfill locks for already-scheduled remaining slots
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          mkdir -p output/ugi
+          python - <<'PY'
+          import json, os, pathlib, urllib.request, urllib.parse, datetime
+          base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
+          H={'User-Agent':'UGI-SecondPeak-Protection/1.0','x-lola-command-key':key,'accept':'application/json'}
+          targets=[
+            {'renderId':'ugi-20260824002624-9b6720458483','platform':'instagram','expectedBufferPostId':'6a8b91a17b646aa28b02239c','expectedDueAt':'2026-08-24T22:00:00.000Z'},
+            {'renderId':'ugi-20260824002706-488fd73de7ef','platform':'youtube','expectedBufferPostId':'6a8b91b753c54dc08763b279','expectedDueAt':'2026-08-24T23:30:00.000Z'}
+          ]
+          def call(path,method='GET',payload=None,timeout=18):
+            data=None; h=dict(H)
+            if payload is not None: data=json.dumps(payload).encode(); h['content-type']='application/json'
+            req=urllib.request.Request(base+path,data=data,headers=h,method=method)
+            try:
+              with urllib.request.urlopen(req,timeout=timeout) as r:return r.status,json.loads(r.read().decode())
+            except Exception as e:return 0,{'ok':False,'error':str(e)}
+          results=[]
+          for t in targets:
+            _,vr=call('/api/video-result/'+urllib.parse.quote(t['renderId']))
+            draft_id=str(vr.get('approvalDraftId') or vr.get('draftId') or (vr.get('result') or {}).get('approvalDraftId') or '')
+            row={'renderId':t['renderId'],'platform':t['platform'],'expectedBufferPostId':t['expectedBufferPostId'],'draftId':draft_id,'videoResultOk':vr.get('ok') is True}
+            if not draft_id:
+              row.update(ok=False,error='DRAFT_ID_NOT_RESOLVED');results.append(row);continue
+            _,back=call('/api/publication-lock-backfill','POST',{'id':draft_id,'platform':t['platform']})
+            qs='?id='+urllib.parse.quote(draft_id)+'&platform='+t['platform']+'&mode=customScheduled&dueAt='+urllib.parse.quote(t['expectedDueAt'])
+            _,lock=call('/api/publication-lock-status'+qs)
+            actual=(lock.get('assetLock') or {}).get('bufferPostId') or (lock.get('slotLock') or {}).get('bufferPostId')
+            row.update(backfillOk=back.get('ok') is True,lockReadbackOk=lock.get('ok') is True,actualBufferPostId=actual,assetLockState=(lock.get('assetLock') or {}).get('state'),slotLockState=(lock.get('slotLock') or {}).get('state'))
+            row['ok']=bool(row['backfillOk'] and row['lockReadbackOk'] and actual==t['expectedBufferPostId'] and row['assetLockState'] and row['slotLockState'])
+            results.append(row)
+          out={'project':'UGI','timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat(),'publication_provider':'BUFFER','metricool_publication_allowed':False,'publication_triggered':False,'buffer_create_called':False,'results':results,'all_remaining_existing_slots_protected':all(r.get('ok') for r in results)}
+          pathlib.Path('output/ugi/second-peak-protection.json').write_text(json.dumps(out,indent=2)+'\n')
+          if not out['all_remaining_existing_slots_protected']: raise SystemExit(2)
+          PY
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-second-peak-protection-${{ github.run_id }}
+          path: output/ugi/second-peak-protection.json
+          retention-days: 7
+          if-no-files-found: error
