@@ -1,0 +1,99 @@
+name: UGI Commerce Recovery
+run-name: UGI Commerce Recovery ${{ github.sha }}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/commerce-recovery-trigger/*.json'
+
+permissions:
+  contents: write
+
+jobs:
+  build-commerce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      UGI_BASE_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      CMD_FILE: control-plane/commerce/ugi-daily-commerce-20260825-26.json
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate environment and command
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_BASE_URL:-}"
+          test -n "${LOLA_COMMAND_KEY:-}"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          d=json.loads(Path(os.environ['CMD_FILE']).read_text())
+          items=d.get('materials')
+          if not isinstance(items,list) or not items: raise SystemExit('materials[] required')
+          for i,m in enumerate(items):
+            for k in ['materialId','productId','title','theme','problem','solution','price','sections']:
+              if k not in m: raise SystemExit(f'materials[{i}].{k} missing')
+          print('COMMERCE_COMMAND_VALID')
+          PY
+      - name: Install PDF dependency
+        run: pip install --quiet reportlab
+      - name: Build PDFs and register materials/products
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ugi-commerce control-plane/commerce-receipts
+          python - <<'PY'
+          import json, os, subprocess, hashlib
+          from pathlib import Path
+          from reportlab.lib.pagesizes import A4
+          from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+          from reportlab.lib.enums import TA_CENTER
+          from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+          from reportlab.lib.units import mm
+          base=os.environ['UGI_BASE_URL'].rstrip('/'); key=os.environ['LOLA_COMMAND_KEY']
+          cmd_path=Path(os.environ['CMD_FILE']); data=json.loads(cmd_path.read_text(encoding='utf-8')); results=[]
+          def curl_json(method,url,payload=None,extra=None,binary=None):
+            args=['curl','--fail-with-body','--silent','--show-error','--connect-timeout','15','--max-time','120','-X',method,url,'-H',f'x-lola-command-key: {key}']
+            if payload is not None:
+              p='/tmp/ugi-commerce/payload.json'; Path(p).write_text(json.dumps(payload,ensure_ascii=False),encoding='utf-8')
+              args += ['-H','Content-Type: application/json','--data-binary',f'@{p}']
+            if extra:
+              for h in extra: args += ['-H',h]
+            if binary: args += ['--data-binary',f'@{binary}']
+            out=subprocess.check_output(args,text=True); return json.loads(out)
+          for m in data['materials']:
+            mid=m['materialId']; pid=m['productId']; pdf=Path(f'/tmp/ugi-commerce/{mid}.pdf')
+            styles=getSampleStyleSheet(); title_style=ParagraphStyle('TitleUGI',parent=styles['Title'],alignment=TA_CENTER,fontSize=20,leading=24,spaceAfter=10)
+            sub_style=ParagraphStyle('SubUGI',parent=styles['BodyText'],alignment=TA_CENTER,fontSize=10,leading=14,spaceAfter=14)
+            h_style=ParagraphStyle('HUGI',parent=styles['Heading2'],fontSize=14,leading=18,spaceBefore=8,spaceAfter=6)
+            b_style=ParagraphStyle('BUGI',parent=styles['BodyText'],fontSize=10.5,leading=15,spaceAfter=7)
+            story=[Paragraph(m['title'],title_style),Paragraph('Material prático UGI - aplicação imediata para gestores',sub_style),Spacer(1,4*mm)]
+            for s in m['sections']:
+              story.append(Paragraph(str(s.get('heading','')),h_style)); body=s.get('body',[]); body=[body] if isinstance(body,str) else body
+              for p in body: story.append(Paragraph(str(p),b_style))
+            story += [Spacer(1,5*mm),Paragraph('Uma Gestão Inteligente - UGI',sub_style)]
+            SimpleDocTemplate(str(pdf),pagesize=A4,rightMargin=16*mm,leftMargin=16*mm,topMargin=16*mm,bottomMargin=16*mm,title=m['title']).build(story)
+            checksum=hashlib.sha256(pdf.read_bytes()).hexdigest()
+            mr=curl_json('POST',base+'/api/materials',{'materialId':mid,'title':m['title'],'theme':m['theme'],'problem':m['problem'],'solution':m['solution'],'version':'1','qualityStatus':'PASS','deliveryEnabled':True,'assetReady':False,'mimeType':'application/pdf','checksum':checksum})
+            ar=curl_json('POST',base+f'/api/materials/{mid}/asset',None,['Content-Type: application/pdf'],str(pdf))
+            pr=curl_json('POST',base+'/api/products',{'productId':pid,'materialId':mid,'title':m['title'],'price':float(m['price']),'currency':'BRL','active':True,'description':m['solution']})
+            results.append({'materialId':mid,'productId':pid,'title':m['title'],'price':m['price'],'materialCreated':mr.get('ok') is True,'assetUploaded':ar.get('ok') is True,'productCreated':pr.get('ok') is True,'assetReady':(ar.get('material') or {}).get('assetReady'),'deliveryEnabled':(ar.get('material') or {}).get('deliveryEnabled'),'qualityStatus':(ar.get('material') or {}).get('qualityStatus')})
+          receipt={'ok':all(r['materialCreated'] and r['assetUploaded'] and r['productCreated'] for r in results),'sourceCommand':str(cmd_path),'results':results}
+          rid=data.get('batchId','commerce-batch'); Path(f'control-plane/commerce-receipts/{rid}.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(receipt,ensure_ascii=False,indent=2))
+          if not receipt['ok']: raise SystemExit('COMMERCE_BUILD_FAILED')
+          PY
+      - name: Persist receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-control-plane-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add control-plane/commerce-receipts/*.json
+          git commit -m 'chore: persist UGI commerce recovery receipt' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
