@@ -28,13 +28,14 @@ jobs:
       - name: Deploy exactly-once Buffer guard preserving live bindings
         shell: bash
         env:
-          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
           test -n "${CF_API_TOKEN:-}"
           test -n "${CF_ACCOUNT_ID:-}"
           echo "::add-mask::$CF_API_TOKEN"
+          echo "::add-mask::$CF_ACCOUNT_ID"
           mkdir -p cloudflare/status
           python -m py_compile scripts/r44_5_22_publication_idempotency.py
           python scripts/r44_5_22_publication_idempotency.py
