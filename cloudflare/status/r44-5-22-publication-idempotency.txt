@@ -1,1 +1,6 @@
-R44.5.22_STAGE=STATUS_MISSING
+R44.5.22_STAGE=PUBLICATION_IDEMPOTENCY
+OK=false
+STATE=STARTED
+ERROR_TYPE=RuntimeError
+ERROR=version create failed HTTP=400 body={   "result": null,   "success": false,   "errors": [     {       "code": 10021,       "message": "Uncaught SyntaxError: Identifier 'publicationLocks' has already been declared\n  at worker.js:3505:14\n",       "documentation_url": "https://developers.cloudflare.com/workers/observability/errors/#validation-errors-10021"     }   ],   "messages": [] } 
+OK=false
