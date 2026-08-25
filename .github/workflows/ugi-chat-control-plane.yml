@@ -1,211 +1,30 @@
-name: UGI Chat Control Plane
-run-name: UGI Chat Control Plane ${{ github.sha }}
+name: UGI Legacy Render Bridge (Deprecated)
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'control-plane/commands/*.json'
 
 permissions:
-  contents: write
   actions: write
+  contents: read
 
 jobs:
-  dispatch-render:
+  forward-to-publisher-hub:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Resolve latest command
-        id: cmd
+      - name: Forward command reconciliation to canonical hub
         shell: bash
         run: |
           set -euo pipefail
-          FILE="$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep '^control-plane/commands/.*\.json$' | tail -n1)"
-          [ -n "$FILE" ] || { echo 'No command file found'; exit 1; }
-          echo "file=$FILE" >> "$GITHUB_OUTPUT"
-
-      - name: Validate command
-        shell: bash
-        env:
-          CMD_FILE: ${{ steps.cmd.outputs.file }}
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          p=Path(os.environ['CMD_FILE'])
-          d=json.loads(p.read_text(encoding='utf-8'))
-          required=['title','duration','render_id','content_id','experiment_id','variant','commercial_intent','scenes_json']
-          missing=[k for k in required if k not in d]
-          if missing: raise SystemExit(f'missing fields: {missing}')
-          if not isinstance(d['scenes_json'], dict): raise SystemExit('scenes_json must be object')
-          scenes=d['scenes_json'].get('scenes')
-          if not isinstance(scenes, list) or len(scenes)!=6: raise SystemExit('exactly 6 scenes required')
-          print('COMMAND_VALID')
-          PY
-
-      - name: Dispatch and correlate renderer
-        id: dispatch
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          CMD_FILE: ${{ steps.cmd.outputs.file }}
-        run: |
-          set -euo pipefail
-          python - <<'PY' > /tmp/args.env
-          import json, os, shlex
-          from pathlib import Path
-          d=json.loads(Path(os.environ['CMD_FILE']).read_text(encoding='utf-8'))
-          vals={
-            'TITLE':d['title'],
-            'DURATION':str(d['duration']),
-            'RENDER_ID':d['render_id'],
-            'CONTENT_ID':d['content_id'],
-            'EXPERIMENT_ID':d['experiment_id'],
-            'VARIANT':d['variant'],
-            'COMMERCIAL_INTENT':d['commercial_intent'],
-            'SCENES_JSON':json.dumps(d['scenes_json'],ensure_ascii=False,separators=(',',':')),
-            'SMOKE_TEST':'true' if d.get('smoke_test',True) else 'false',
-            'SMOKE_TEST_DURATION':str(d.get('smoke_test_duration',4)),
-            'SMOKE_TEST_PLATFORM':d.get('smoke_test_platform','instagram'),
-          }
-          for k,v in vals.items(): print(f'{k}={shlex.quote(v)}')
-          PY
-          source /tmp/args.env
-          gh workflow run render-video.yml \
+          gh workflow run ugi-publisher-hub.yml \
             --repo "$GITHUB_REPOSITORY" \
             --ref main \
-            -f title="$TITLE" \
-            -f duration="$DURATION" \
-            -f render_id="$RENDER_ID" \
-            -f content_id="$CONTENT_ID" \
-            -f experiment_id="$EXPERIMENT_ID" \
-            -f variant="$VARIANT" \
-            -f commercial_intent="$COMMERCIAL_INTENT" \
-            -f scenes_json="$SCENES_JSON" \
-            -f smoke_test="$SMOKE_TEST" \
-            -f smoke_test_duration="$SMOKE_TEST_DURATION" \
-            -f smoke_test_platform="$SMOKE_TEST_PLATFORM"
-
-          EXPECTED="UGI ${RENDER_ID}"
-          RUN_JSON=''
-          for i in $(seq 1 20); do
-            RUN_JSON="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow render-video.yml --event workflow_dispatch --limit 30 --json databaseId,displayTitle,status,conclusion,createdAt,url | EXPECTED="$EXPECTED" python -c 'import json,sys,os; data=json.load(sys.stdin); exp=os.environ["EXPECTED"]; m=[x for x in data if x.get("displayTitle")==exp]; print(json.dumps(m[0] if m else {}))' 2>/dev/null || true)"
-            if [ -n "$RUN_JSON" ] && [ "$RUN_JSON" != '{}' ]; then break; fi
-            sleep 2
-          done
-          [ -n "$RUN_JSON" ] && [ "$RUN_JSON" != '{}' ] || { echo "RUN_CORRELATION_FAILED $EXPECTED"; exit 1; }
-          printf '%s' "$RUN_JSON" > /tmp/render-run.json
-          RENDER_RUN_ID="$(python -c 'import json; print(json.load(open("/tmp/render-run.json"))["databaseId"])')"
-          RENDER_STATUS="$(python -c 'import json; print(json.load(open("/tmp/render-run.json"))["status"])')"
-          RENDER_URL="$(python -c 'import json; print(json.load(open("/tmp/render-run.json"))["url"])')"
-          echo "render_id=$RENDER_ID" >> "$GITHUB_OUTPUT"
-          echo "render_run_id=$RENDER_RUN_ID" >> "$GITHUB_OUTPUT"
-          echo "render_status=$RENDER_STATUS" >> "$GITHUB_OUTPUT"
-          echo "render_url=$RENDER_URL" >> "$GITHUB_OUTPUT"
-          echo "DISPATCH_OK render_id=$RENDER_ID run_id=$RENDER_RUN_ID status=$RENDER_STATUS"
-
-      - name: Persist dispatch receipt
-        shell: bash
-        env:
-          RENDER_ID: ${{ steps.dispatch.outputs.render_id }}
-          RENDER_RUN_ID: ${{ steps.dispatch.outputs.render_run_id }}
-          RENDER_STATUS: ${{ steps.dispatch.outputs.render_status }}
-          RENDER_URL: ${{ steps.dispatch.outputs.render_url }}
-        run: |
-          set -euo pipefail
-          mkdir -p control-plane/dispatch
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          rid=os.environ['RENDER_ID']
-          Path(f'control-plane/dispatch/{rid}.json').write_text(json.dumps({
-            'renderId': rid,
-            'dispatchAccepted': True,
-            'runCorrelated': True,
-            'githubRunId': int(os.environ['RENDER_RUN_ID']),
-            'githubWorkflowStatus': os.environ['RENDER_STATUS'],
-            'githubRunUrl': os.environ['RENDER_URL'],
-            'source': 'ugi-chat-control-plane',
-            'commandCommit': os.environ['GITHUB_SHA'],
-            'controlRunId': os.environ['GITHUB_RUN_ID']
-          }, indent=2), encoding='utf-8')
-          PY
-          git config user.name 'ugi-control-plane-bot'
-          git config user.email 'actions@users.noreply.github.com'
-          git add "control-plane/dispatch/${RENDER_ID}.json"
-          git commit -m "chore: persist UGI dispatch receipt ${RENDER_ID}"
-          git pull --rebase origin main
-          git push origin HEAD:main
-
-      - name: Wait for renderer completion
-        id: final
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RENDER_ID: ${{ steps.dispatch.outputs.render_id }}
-          RENDER_RUN_ID: ${{ steps.dispatch.outputs.render_run_id }}
-        run: |
-          set -euo pipefail
-          set +e
-          gh run watch "$RENDER_RUN_ID" --repo "$GITHUB_REPOSITORY" --interval 10 --exit-status
-          WATCH_RC=$?
-          set -e
-          gh run view "$RENDER_RUN_ID" --repo "$GITHUB_REPOSITORY" --json databaseId,displayTitle,status,conclusion,url,createdAt,updatedAt > /tmp/final-run.json
-          FINAL_STATUS="$(python -c 'import json; print(json.load(open("/tmp/final-run.json"))["status"])')"
-          FINAL_CONCLUSION="$(python -c 'import json; print(json.load(open("/tmp/final-run.json"))["conclusion"] or "")')"
-          FINAL_URL="$(python -c 'import json; print(json.load(open("/tmp/final-run.json"))["url"])')"
-          echo "final_status=$FINAL_STATUS" >> "$GITHUB_OUTPUT"
-          echo "final_conclusion=$FINAL_CONCLUSION" >> "$GITHUB_OUTPUT"
-          echo "final_url=$FINAL_URL" >> "$GITHUB_OUTPUT"
-          echo "watch_rc=$WATCH_RC" >> "$GITHUB_OUTPUT"
-
-      - name: Persist final receipt
-        if: always()
-        shell: bash
-        env:
-          RENDER_ID: ${{ steps.dispatch.outputs.render_id }}
-          RENDER_RUN_ID: ${{ steps.dispatch.outputs.render_run_id }}
-          FINAL_STATUS: ${{ steps.final.outputs.final_status }}
-          FINAL_CONCLUSION: ${{ steps.final.outputs.final_conclusion }}
-          FINAL_URL: ${{ steps.final.outputs.final_url }}
-          WATCH_RC: ${{ steps.final.outputs.watch_rc }}
-        run: |
-          set -euo pipefail
-          mkdir -p control-plane/receipts
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          rid=os.environ['RENDER_ID']
-          payload={
-            'renderId': rid,
-            'githubRunId': int(os.environ['RENDER_RUN_ID']),
-            'workflowStatus': os.environ.get('FINAL_STATUS') or 'unknown',
-            'workflowConclusion': os.environ.get('FINAL_CONCLUSION') or None,
-            'githubRunUrl': os.environ.get('FINAL_URL') or None,
-            'watchExitCode': int(os.environ.get('WATCH_RC') or 99),
-            'completionReceipt': True,
-            'readyForMediaReadback': (os.environ.get('FINAL_STATUS')=='completed' and os.environ.get('FINAL_CONCLUSION')=='success')
-          }
-          Path(f'control-plane/receipts/{rid}.json').write_text(json.dumps(payload,indent=2),encoding='utf-8')
-          PY
-          git config user.name 'ugi-control-plane-bot'
-          git config user.email 'actions@users.noreply.github.com'
-          git add "control-plane/receipts/${RENDER_ID}.json"
-          git commit -m "chore: persist UGI final receipt ${RENDER_ID}" || true
-          git pull --rebase origin main
-          git push origin HEAD:main
-
-      - name: Fail control plane when renderer failed
-        if: ${{ steps.final.outputs.final_conclusion != 'success' }}
-        shell: bash
-        run: |
-          echo "Renderer failed or did not complete successfully"
-          exit 1
+            -f wait_seconds=0
+          echo "LEGACY_RENDER_FORWARD_OK"
+          echo "Direct render-video dispatch is disabled here."
+          echo "UGI Publisher Hub owns render -> draft -> Buffer reconciliation."
