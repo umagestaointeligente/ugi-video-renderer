@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "paymentTriggered": false,
+  "store": {
+    "http": 200,
+    "governanca": true,
+    "decisao": true,
+    "premium": true
+  },
+  "products": {
+    "priorizacao": {
+      "pageHttp": 200,
+      "buyPresent": true,
+      "checkoutHttp": 303,
+      "checkoutAsaas": true
+    },
+    "governanca-ia": {
+      "pageHttp": 200,
+      "buyPresent": true,
+      "checkoutHttp": 303,
+      "checkoutAsaas": true
+    },
+    "decisao-humana-ia": {
+      "pageHttp": 200,
+      "buyPresent": true,
+      "checkoutHttp": 303,
+      "checkoutAsaas": true
+    }
+  }
+}
