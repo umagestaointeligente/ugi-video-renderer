@@ -8,7 +8,7 @@ on:
         required: false
         type: string
       wait_seconds:
-        description: Seconds to wait for renders (0 = probe only)
+        description: Seconds to wait for draft/media readiness (0 = reconcile and exit)
         required: false
         default: '0'
         type: string
@@ -30,10 +30,13 @@ env:
   WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
 
 jobs:
-  schedule-and-prove:
+  render-schedule-and-prove:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
+      # Neutral runtime name. The repository secret keeps its legacy name only
+      # for backward compatibility; no ChatGPT/Lola 5.3 session is required.
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
       UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +47,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 -m py_compile scripts/ugi_publisher_hub.py scripts/ugi_render_reconciler.py
           MANIFEST="${{ github.event.inputs.manifest || '' }}"
           if [ -n "$MANIFEST" ]; then
             python3 scripts/ugi_publisher_hub.py --validate-only --manifest "$MANIFEST"
@@ -51,12 +55,20 @@ jobs:
             python3 scripts/ugi_publisher_hub.py --validate-only
           fi
 
+      - name: Ensure missing renders through authoritative Worker bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python3 scripts/ugi_render_reconciler.py
+
       - name: Schedule through Buffer and prove by readback
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${UGI_LOLA_COMMAND_KEY:-}"
-          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
           MANIFEST="${{ github.event.inputs.manifest || '' }}"
           WAIT="${{ github.event.inputs.wait_seconds || '0' }}"
           if [ -n "$MANIFEST" ]; then
@@ -65,20 +77,24 @@ jobs:
             python3 scripts/ugi_publisher_hub.py --wait-seconds "$WAIT"
           fi
 
-      - name: Persist Publisher Hub receipts and status
+      - name: Persist Publisher Hub render state, receipts and status
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
 
-          # Do not create a commit when only volatile timestamps changed.
-          files=(control-plane/publisher-hub/receipts/*.json control-plane/publisher-hub/status/latest.json)
+          # Do not create commits when only volatile timestamps changed.
+          files=(
+            control-plane/publisher-hub/render-state/*.json
+            control-plane/publisher-hub/receipts/*.json
+            control-plane/publisher-hub/status/latest.json
+          )
           for f in "${files[@]}"; do
             if git cat-file -e "HEAD:$f" 2>/dev/null; then
               if diff -q \
-                <(git show "HEAD:$f" | jq -S 'del(.timestamp)') \
-                <(jq -S 'del(.timestamp)' "$f") >/dev/null; then
+                <(git show "HEAD:$f" | jq -S 'del(.timestamp,.updatedAt)') \
+                <(jq -S 'del(.timestamp,.updatedAt)' "$f") >/dev/null; then
                 git checkout HEAD -- "$f"
               fi
             fi
@@ -86,12 +102,13 @@ jobs:
 
           git config user.name 'ugi-publisher-hub-bot'
           git config user.email 'ugi-publisher-hub@users.noreply.github.com'
+          git add control-plane/publisher-hub/render-state/*.json 2>/dev/null || true
           git add control-plane/publisher-hub/receipts/*.json 2>/dev/null || true
           git add control-plane/publisher-hub/status/latest.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No Publisher Hub state changes"
             exit 0
           fi
-          git commit -m "chore: persist UGI Publisher Hub readback"
+          git commit -m "chore: persist UGI Publisher Hub reconciliation"
           git pull --rebase origin main
           git push origin HEAD:main

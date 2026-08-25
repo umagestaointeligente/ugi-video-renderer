@@ -1,17 +1,41 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "effective_date": "2026-08-25",
   "project": "UGI",
   "control_plane": {
     "canonical_publication_hub": "UGI Publisher Hub",
     "queue_path": "control-plane/publisher-hub/queue",
+    "render_state_path": "control-plane/publisher-hub/render-state",
     "receipt_path": "control-plane/publisher-hub/receipts",
     "status_path": "control-plane/publisher-hub/status/latest.json",
     "chat_runtime_required": false,
+    "canonical_flow": [
+      "publisher_hub_queue",
+      "worker_video_render",
+      "editorial_draft",
+      "r2_platform_assets",
+      "platform_approval",
+      "publication_eligibility",
+      "buffer_schedule",
+      "buffer_readback",
+      "publisher_hub_receipt"
+    ],
+    "render_bridge": {
+      "authority": "UGI Worker /api/video-render",
+      "direct_github_renderer_dispatch_allowed": false,
+      "approval_draft_id_required": true,
+      "render_state_persisted": true
+    },
     "legacy_chat_publication_path": {
       "path": "control-plane/chat-publication",
       "status": "compatibility_only",
       "mutates_publication": false,
+      "forward_target": "UGI Publisher Hub"
+    },
+    "legacy_chat_render_control_plane": {
+      "workflow": ".github/workflows/ugi-chat-control-plane.yml",
+      "status": "compatibility_only",
+      "direct_render_dispatch": false,
       "forward_target": "UGI Publisher Hub"
     }
   },
@@ -59,8 +83,10 @@
     "Metricool must never mutate the UGI publishing plan.",
     "Metricool must never be used as fallback publisher.",
     "Buffer is the sole official scheduler and publisher for UGI.",
-    "UGI Publisher Hub is the sole canonical publication orchestrator.",
-    "Chat runtimes, including Lola 5.3, are optional command clients and are never required for scheduled publication.",
+    "UGI Publisher Hub is the sole canonical render and publication orchestrator.",
+    "Production video renders must enter through Worker /api/video-render so approvalDraftId is persisted before media upload.",
+    "Direct production dispatch from legacy chat control planes to render-video.yml is forbidden.",
+    "Chat runtimes, including Lola 5.3, are optional command clients and are never required for render, scheduling or publication.",
     "If Buffer publication cannot be proven by readback, status is BLOCKED, WAITING or NOT_PROVEN.",
     "Any migration away from Buffer requires an explicit ADR, smoke test, rollback plan and policy update before production use."
   ]
