@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "standard_id": "ugi-pdf-premium-v6",
+  "effective_date": "2026-08-24",
+  "canonical_master": "Kit_UGI_Priorizacao_Inteligente_PREMIUM_V4_UPLOAD_CANONICO-1.pdf",
+  "commercial_intent": "deliver_value_above_price",
+  "visual": {
+    "palette": ["navy", "gold", "white", "cream"],
+    "safe_margins_required": true,
+    "text_overlap_allowed": false,
+    "mobile_readability_required": true,
+    "prompt_box_padding_required": true,
+    "contextual_workplace_visuals_preferred": true,
+    "repeat_images_within_pdf": false,
+    "premium_icons_and_diagrams": true
+  },
+  "editorial": {
+    "target_pages_min": 14,
+    "target_pages_max": 20,
+    "proprietary_or_structured_method_required": true,
+    "ready_to_copy_prompts_required": true,
+    "practical_framework_required": true,
+    "implementation_plan_required": true,
+    "measurement_or_review_required": true,
+    "references_required": true,
+    "next_level_path_required": true
+  },
+  "qa": {
+    "UGI_PDF_MASTER_STANDARD_PASS": true,
+    "MASTER_LAYOUT_PASS": true,
+    "EDITORIAL_DEPTH_PASS": true,
+    "VISUAL_COMPONENTS_PASS": true,
+    "PRACTICAL_APPLICATION_PASS": true,
+    "UGI_PROMPTS_PASS": true,
+    "REFERENCES_PASS": true,
+    "SAFE_MARGINS_PASS": true,
+    "TEXT_OVERLAP_PASS": true,
+    "MOBILE_READABILITY_PASS": true,
+    "PDF_RENDER_QA_PASS": true,
+    "HUMAN_REVIEW_REQUIRED": true,
+    "REVIEW_PDF_AVAILABLE": true,
+    "STORE_PUBLICATION_ALLOWED_BEFORE_HUMAN_APPROVAL": false
+  }
+}
