@@ -25,6 +25,7 @@ QUEUE = ROOT / "control-plane" / "publisher-hub" / "queue"
 COMMANDS = ROOT / "control-plane" / "commands"
 STATE_DIR = ROOT / "control-plane" / "publisher-hub" / "render-state"
 DEFAULT_WORKER_URL = "https://lola-operacional-ugi.umagestaointeligente.workers.dev"
+MAX_RENDER_ATTEMPTS = 3
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -64,7 +65,7 @@ class WorkerClient:
     def get(self, path: str) -> dict[str, Any]:
         return self._run([
             "curl", "--silent", "--show-error", "--location", "--max-time", "90",
-            "-A", "UGI-Publisher-Hub-Render-Reconciler/1.0",
+            "-A", "UGI-Publisher-Hub-Render-Reconciler/1.1",
             "-H", f"x-lola-command-key: {self.key}",
             "-H", "accept: application/json",
             self.base_url + path,
@@ -73,7 +74,7 @@ class WorkerClient:
     def post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
         return self._run([
             "curl", "--silent", "--show-error", "--location", "--max-time", "120",
-            "-A", "UGI-Publisher-Hub-Render-Reconciler/1.0",
+            "-A", "UGI-Publisher-Hub-Render-Reconciler/1.1",
             "-H", f"x-lola-command-key: {self.key}",
             "-H", "accept: application/json",
             "-H", "content-type: application/json",
@@ -129,7 +130,6 @@ def command_for_content(content_id: str) -> tuple[Path, dict[str, Any]]:
                 matches.append((path, data))
     if not matches:
         raise RuntimeError(f"COMMAND_NOT_FOUND:{content_id}")
-    # Deterministic choice; canonical command names are unique by contentId.
     return matches[-1]
 
 
@@ -159,8 +159,17 @@ def is_draft_media_ready(draft: dict[str, Any] | None) -> bool:
     )
 
 
-def refresh_existing_state(client: WorkerClient, content_id: str, draft: dict[str, Any] | None) -> tuple[bool, bool]:
-    """Return (handled, hard_failure)."""
+def refresh_existing_state(
+    client: WorkerClient,
+    content_id: str,
+    draft: dict[str, Any] | None,
+) -> tuple[bool, bool]:
+    """Return (handled, hard_failure).
+
+    A prior dispatch that the Worker explicitly rejected is retryable. We never
+    reinterpret a rejected dispatch as RENDER_IN_PROGRESS merely because it had
+    a renderId allocated for diagnostics.
+    """
     path = state_path(content_id)
     if not path.exists():
         return False, False
@@ -183,6 +192,23 @@ def refresh_existing_state(client: WorkerClient, content_id: str, draft: dict[st
         })
         return True, False
 
+    dispatch_response = old.get("dispatchResponse") or {}
+    explicitly_rejected = (
+        old.get("state") == "RENDER_DISPATCH_FAILED"
+        or dispatch_response.get("ok") is False
+        or ("githubAccepted" in dispatch_response and dispatch_response.get("githubAccepted") is False)
+    )
+    if explicitly_rejected:
+        if attempts >= MAX_RENDER_ATTEMPTS:
+            write_state(content_id, {
+                **old,
+                "state": "RENDER_FAILED_TERMINAL",
+                "attempts": attempts,
+                "failureReason": "previous_worker_dispatch_rejected",
+            })
+            return True, True
+        return False, False
+
     if not rid:
         return False, False
 
@@ -199,11 +225,14 @@ def refresh_existing_state(client: WorkerClient, content_id: str, draft: dict[st
             "approvalDraftId": approval_draft,
             "allPlatformsReady": True,
             "attempts": attempts,
+            "lastResult": result,
         })
         return True, False
 
-    if status in {"failed", "error", "cancelled"} or result.get("ok") is False and result.get("errorClass"):
-        if attempts >= 2:
+    if status in {"failed", "error", "cancelled"} or (
+        result.get("ok") is False and result.get("errorClass")
+    ):
+        if attempts >= MAX_RENDER_ATTEMPTS:
             write_state(content_id, {
                 **old,
                 "state": "RENDER_FAILED_TERMINAL",
@@ -218,11 +247,57 @@ def refresh_existing_state(client: WorkerClient, content_id: str, draft: dict[st
         **old,
         "state": "RENDER_IN_PROGRESS",
         "workerRenderId": rid,
-        "approvalDraftId": approval_draft,
+        "approvalDraftId": approval_draft or old.get("approvalDraftId"),
         "attempts": attempts,
         "lastKnownStatus": status or "unknown",
+        "lastResult": result,
     })
     return True, False
+
+
+def build_worker_payload(command: dict[str, Any], content_id: str) -> dict[str, Any]:
+    """Translate the durable command schema into the live Worker schema.
+
+    Durable commands store the full scene package under `scenes_json`. The live
+    Worker `/api/video-render` intentionally validates `body.scenes` as a 4-10
+    item array. Passing the package object as `scenes_json` makes the Worker
+    fail closed with dynamic_video_scenes_required, so we unwrap it here.
+    """
+    scene_package = command.get("scenes_json") or command.get("scenesJson") or command.get("scenes")
+    package_meta: dict[str, Any] = {}
+    if isinstance(scene_package, dict):
+        dynamic_scenes = scene_package.get("scenes")
+        package_meta = scene_package
+    else:
+        dynamic_scenes = scene_package
+
+    if not isinstance(dynamic_scenes, list) or not (4 <= len(dynamic_scenes) <= 10):
+        raise RuntimeError(f"DYNAMIC_SCENES_INVALID_LOCAL:{content_id}")
+
+    payload: dict[str, Any] = {
+        "title": command.get("title"),
+        "duration": command.get("duration"),
+        "content_id": content_id,
+        "experiment_id": command.get("experiment_id") or command.get("experimentId"),
+        "variant": command.get("variant"),
+        "commercial_intent": command.get("commercial_intent") or command.get("commercialIntent"),
+        "scenes": dynamic_scenes,
+        "smoke_test": bool(command.get("smoke_test", False)),
+        "smoke_test_duration": command.get("smoke_test_duration", 4),
+        "smoke_test_platform": command.get("smoke_test_platform", "instagram"),
+    }
+
+    for key in ("cta", "commercial_offer", "copy_lock", "exact_copy", "editorial_mode", "commerce"):
+        value = command.get(key)
+        if value is None:
+            value = package_meta.get(key)
+        if value is not None:
+            payload[key] = value
+
+    if command.get("draft_id") or command.get("draftId"):
+        payload["draft_id"] = command.get("draft_id") or command.get("draftId")
+
+    return payload
 
 
 def dispatch_render(client: WorkerClient, content_id: str) -> bool:
@@ -236,21 +311,23 @@ def dispatch_render(client: WorkerClient, content_id: str) -> bool:
             old = {}
     attempts = int(old.get("attempts") or 0) + 1
 
-    # The Worker is authoritative for renderId + approvalDraftId correlation.
-    payload = {
-        "title": command.get("title"),
-        "duration": command.get("duration"),
-        "content_id": content_id,
-        "experiment_id": command.get("experiment_id") or command.get("experimentId"),
-        "variant": command.get("variant"),
-        "commercial_intent": command.get("commercial_intent") or command.get("commercialIntent"),
-        "scenes_json": command.get("scenes_json") or command.get("scenesJson"),
-        "smoke_test": bool(command.get("smoke_test", False)),
-        "smoke_test_duration": command.get("smoke_test_duration", 4),
-        "smoke_test_platform": command.get("smoke_test_platform", "instagram"),
-    }
-    if command.get("draft_id") or command.get("draftId"):
-        payload["draft_id"] = command.get("draft_id") or command.get("draftId")
+    try:
+        payload = build_worker_payload(command, content_id)
+    except Exception as exc:
+        write_state(content_id, {
+            "state": "RENDER_DISPATCH_FAILED",
+            "workerRenderId": None,
+            "approvalDraftId": None,
+            "githubAccepted": False,
+            "commandPath": str(command_path.relative_to(ROOT)),
+            "attempts": attempts,
+            "dispatchResponse": {
+                "ok": False,
+                "errorClass": "local_dynamic_scene_validation_failed",
+                "error": str(exc),
+            },
+        })
+        return False
 
     response = client.post("/api/video-render", payload)
     rid = str(response.get("renderId") or "").strip()
