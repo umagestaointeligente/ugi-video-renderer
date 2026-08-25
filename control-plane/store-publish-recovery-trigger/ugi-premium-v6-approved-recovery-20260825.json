@@ -1,0 +1,10 @@
+{
+  "project": "UGI",
+  "action": "recover_store_v3_after_binding_readback_fix",
+  "approved_products": [
+    "UGI-PROD-GOV-IA-20260825",
+    "UGI-PROD-JULGAMENTO-IA-20260826"
+  ],
+  "payment_test_allowed": false,
+  "requested_at": "2026-08-25T01:56:00-03:00"
+}
