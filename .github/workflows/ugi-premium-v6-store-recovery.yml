@@ -1,0 +1,64 @@
+name: UGI Premium V6 Store Recovery
+run-name: UGI Premium V6 Store Recovery ${{ github.sha }}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/store-publish-recovery-trigger/*.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-premium-v6-store-production
+  cancel-in-progress: false
+
+jobs:
+  recover-store:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install requests
+        run: python -m pip install --disable-pip-version-check --quiet requests
+      - name: Deploy recovered Store V3
+        run: python -m scripts.r44_5_23_store_multi_product_v2
+      - name: Final public readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, requests
+          from pathlib import Path
+          base='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
+          out={'store':{},'products':{}}
+          r=requests.get(base+'/materiais',timeout=20)
+          out['store']={'http':r.status_code,'governanca':'Governança' in r.text,'decisao':'Decisão' in r.text,'premium':'Premium V6' in r.text or 'PREMIUM V6' in r.text}
+          if r.status_code!=200 or not all(out['store'][k] for k in ['governanca','decisao','premium']): raise SystemExit('STORE_READBACK_FAILED')
+          for slug in ['priorizacao','governanca-ia','decisao-humana-ia']:
+            p=requests.get(base+'/'+slug,timeout=20)
+            c=requests.get(base+'/comprar/'+slug+'?source=store_recovery_readback',timeout=30,allow_redirects=False)
+            loc=c.headers.get('location','')
+            out['products'][slug]={'pageHttp':p.status_code,'buyPresent':'Comprar agora' in p.text,'checkoutHttp':c.status_code,'checkoutAsaas':'asaas.com/checkoutSession/show' in loc}
+            if p.status_code!=200 or 'Comprar agora' not in p.text or c.status_code not in (301,302,303,307,308) or 'asaas.com/checkoutSession/show' not in loc: raise SystemExit('PRODUCT_READBACK_FAILED '+slug)
+          receipt={'ok':True,'paymentTriggered':False,**out}
+          Path('control-plane/commerce-receipts/ugi-premium-v6-store-readback.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(receipt,ensure_ascii=False,indent=2))
+          PY
+      - name: Persist final evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-control-plane-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add cloudflare/status/r44-5-23-store-multi-product.txt control-plane/commerce-receipts/ugi-premium-v6-store-readback.json 2>/dev/null || true
+          git commit -m 'chore: persist UGI Premium V6 Store recovery evidence' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
