@@ -1,5 +1,4 @@
-name: UGI Chat Publication
-run-name: UGI Chat Publication ${{ github.sha }}
+name: UGI Legacy Publication Bridge (Deprecated)
 
 on:
   push:
@@ -8,120 +7,39 @@ on:
       - 'control-plane/chat-publication/*.json'
 
 permissions:
-  contents: write
-
-env:
-  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+  actions: write
+  contents: read
 
 jobs:
-  publish:
+  forward-to-publisher-hub:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 5
     env:
-      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Resolve manifest
-        id: mf
+
+      - name: Resolve legacy manifest
+        id: manifest
         shell: bash
         run: |
           set -euo pipefail
           FILE="$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep '^control-plane/chat-publication/.*\.json$' | tail -n1)"
           test -n "$FILE"
           echo "file=$FILE" >> "$GITHUB_OUTPUT"
-      - name: Validate policy and schedule via Buffer
+
+      - name: Forward only
         shell: bash
         env:
-          MANIFEST: ${{ steps.mf.outputs.file }}
+          MANIFEST: ${{ steps.manifest.outputs.file }}
         run: |
           set -euo pipefail
-          test -n "${UGI_LOLA_COMMAND_KEY:-}"
-          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
-          mkdir -p control-plane/chat-publication-receipts
-          python - <<'PY'
-          import json, os, subprocess, time, datetime, pathlib, urllib.parse, hashlib
-          from pathlib import Path
-          base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']; mf=Path(os.environ['MANIFEST'])
-          data=json.loads(mf.read_text(encoding='utf-8'))
-          policy=json.loads(Path('config/ugi/growth-policy.json').read_text(encoding='utf-8'))
-          if data.get('project')!='UGI': raise SystemExit('PROJECT_ISOLATION_FAIL')
-          if str(((policy.get('integration_roles') or {}).get('publisher') or {}).get('primary')).lower()!='buffer': raise SystemExit('BUFFER_POLICY_FAIL')
-          if ((policy.get('integration_roles') or {}).get('analytics') or {}).get('publishing_allowed') is not False: raise SystemExit('METRICOOL_POLICY_FAIL')
-          rows=data.get('posts') or []
-          if not rows: raise SystemExit('NO_POSTS')
-          H=['-A','UGI-Chat-Control/1.0','-H',f'x-lola-command-key: {key}','-H','accept: application/json']
-          def getj(path):
-            p=subprocess.run(['curl','--silent','--show-error',*H,base+path],text=True,capture_output=True)
-            try:return json.loads(p.stdout)
-            except:return {'ok':False,'raw':p.stdout[:1200],'stderr':p.stderr[:800]}
-          def postj(path,payload):
-            p=subprocess.run(['curl','--silent','--show-error','--location','--max-time','90',*H,'-H','content-type: application/json','--data-binary',json.dumps(payload,ensure_ascii=False),base+path],text=True,capture_output=True)
-            try:return json.loads(p.stdout)
-            except:return {'ok':False,'raw':p.stdout[:1600],'stderr':p.stderr[:800]}
-          health=getj('/api/health'); channels=getj('/api/buffer/channels')
-          if not health.get('ok'): raise SystemExit('WORKER_HEALTH_FAIL')
-          if not channels.get('ok'): raise SystemExit('BUFFER_CHANNELS_FAIL')
-          drafts=getj('/api/drafts').get('drafts') or []
-          # fail closed on duplicate active platform/slot in manifest and active publications
-          seen=set()
-          for r in rows:
-            k=(r['platform'],r['dueAt'])
-            if k in seen: raise SystemExit('MANIFEST_DUPLICATE_SLOT')
-            seen.add(k)
-          deadline=time.time()+1500
-          resolved={}
-          while time.time()<deadline:
-            drafts=getj('/api/drafts').get('drafts') or []
-            resolved={}
-            ok=True
-            for r in rows:
-              cid=r['contentId']; plat=r['platform']
-              ms=[d for d in drafts if str(d.get('contentId') or d.get('content_id') or '')==cid]
-              ms.sort(key=lambda d:str(d.get('updatedAt') or d.get('createdAt') or ''),reverse=True)
-              if not ms: ok=False; continue
-              d=ms[0]; resolved[cid]=d
-              a=(d.get('assets') or {}).get(plat) or {}
-              if not (d.get('allPlatformsReady') is True and a.get('ready') is True and a.get('videoUrl')): ok=False
-            if ok: break
-            time.sleep(20)
-          if not ok:
-            raise SystemExit('RENDER_NOT_READY')
-          results=[]
-          for r in rows:
-            cid=r['contentId']; plat=r['platform']; due=r['dueAt']; d=resolved[cid]; did=d['id']; asset=(d.get('assets') or {}).get(plat) or {}
-            existing=asset.get('publication') or {}
-            if existing.get('bufferPostId') and str(existing.get('status','')).lower() not in {'error','cancelled'}:
-              pub={'ok':True,'publication':existing,'alreadyActive':True}
-            else:
-              ap=postj('/api/platform-approval',{'id':did,'platform':plat,'decision':'approved'})
-              if not ap.get('ok'):
-                results.append({'contentId':cid,'platform':plat,'ok':False,'gate':'APPROVAL','detail':ap}); continue
-              el=getj('/api/platform-publication-eligibility/'+urllib.parse.quote(did)); st=((el.get('platformStates') or {}).get(plat) or {})
-              if not st.get('eligible'):
-                results.append({'contentId':cid,'platform':plat,'ok':False,'gate':'ELIGIBILITY','detail':st}); continue
-              pub=postj('/api/platform-publish',{'id':did,'platform':plat,'mode':'customScheduled','dueAt':due})
-            if not pub.get('ok'):
-              results.append({'contentId':cid,'platform':plat,'ok':False,'gate':'BUFFER_CREATE','detail':pub}); continue
-            rb=getj('/api/platform-publication-status?id='+urllib.parse.quote(did)+'&platform='+plat)
-            publication=rb.get('publication') or pub.get('publication') or {}
-            passed=bool(publication.get('bufferPostId')) and str(publication.get('dueAt') or '')[:16]==str(due)[:16]
-            results.append({'contentId':cid,'platform':plat,'draftId':did,'dueAt':publication.get('dueAt'),'bufferPostId':publication.get('bufferPostId'),'status':publication.get('bufferStatus') or publication.get('status'),'externalLink':publication.get('externalLink'),'readbackPass':passed,'ok':passed})
-          out={'ok':all(x.get('ok') for x in results),'project':'UGI','publisher':'BUFFER','metricoolPublicationAllowed':False,'policyId':policy.get('policy_id'),'policySchema':policy.get('schema_version'),'publicationTriggered':True,'paymentTriggered':False,'results':results,'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()}
-          rid=data.get('batchId') or mf.stem
-          Path(f'control-plane/chat-publication-receipts/{rid}.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print(json.dumps(out,ensure_ascii=False,indent=2))
-          if not out['ok']: raise SystemExit('PUBLICATION_BATCH_FAIL')
-          PY
-      - name: Persist receipt
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'ugi-chat-control-bot'
-          git config user.email 'ugi-chat-control@users.noreply.github.com'
-          git add control-plane/chat-publication-receipts/*.json || true
-          git commit -m 'chore: persist UGI chat publication receipt' || true
-          git pull --rebase origin main
-          git push origin HEAD:main
+          gh workflow run ugi-publisher-hub.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f manifest="$MANIFEST" \
+            -f wait_seconds=600
+          echo "LEGACY_FORWARD_OK manifest=$MANIFEST"
+          echo "No publication is executed in the legacy bridge."

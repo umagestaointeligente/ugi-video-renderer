@@ -1,20 +1,54 @@
 {
-  "schema_version": "1.0",
-  "effective_date": "2026-08-23",
+  "schema_version": "1.1",
+  "effective_date": "2026-08-25",
   "project": "UGI",
+  "control_plane": {
+    "canonical_publication_hub": "UGI Publisher Hub",
+    "queue_path": "control-plane/publisher-hub/queue",
+    "receipt_path": "control-plane/publisher-hub/receipts",
+    "status_path": "control-plane/publisher-hub/status/latest.json",
+    "chat_runtime_required": false,
+    "legacy_chat_publication_path": {
+      "path": "control-plane/chat-publication",
+      "status": "compatibility_only",
+      "mutates_publication": false,
+      "forward_target": "UGI Publisher Hub"
+    }
+  },
   "routing_policy": {
     "publishing": {
       "provider": "buffer",
       "exclusive": true,
-      "allowed_operations": ["schedule","queue","publish","retry","publication_status","publication_readback"],
+      "orchestrator": "UGI Publisher Hub",
+      "allowed_operations": [
+        "schedule",
+        "queue",
+        "publish",
+        "retry",
+        "publication_status",
+        "publication_readback"
+      ],
       "fallback_provider": null,
       "fail_closed_if_unavailable": true
     },
     "analytics": {
       "provider": "metricool",
       "read_only": true,
-      "allowed_operations": ["analytics_read","best_time_read","performance_read","historical_analysis"],
-      "forbidden_operations": ["create_post","update_post","schedule_post","reschedule_post","queue_post","publish_post","retry_publication"]
+      "allowed_operations": [
+        "analytics_read",
+        "best_time_read",
+        "performance_read",
+        "historical_analysis"
+      ],
+      "forbidden_operations": [
+        "create_post",
+        "update_post",
+        "schedule_post",
+        "reschedule_post",
+        "queue_post",
+        "publish_post",
+        "retry_publication"
+      ]
     },
     "native_platforms": {
       "role": "verification_and_supplemental_analytics",
@@ -25,7 +59,9 @@
     "Metricool must never mutate the UGI publishing plan.",
     "Metricool must never be used as fallback publisher.",
     "Buffer is the sole official scheduler and publisher for UGI.",
-    "If Buffer publication cannot be proven by readback, status is BLOCKED or NOT_PROVEN.",
+    "UGI Publisher Hub is the sole canonical publication orchestrator.",
+    "Chat runtimes, including Lola 5.3, are optional command clients and are never required for scheduled publication.",
+    "If Buffer publication cannot be proven by readback, status is BLOCKED, WAITING or NOT_PROVEN.",
     "Any migration away from Buffer requires an explicit ADR, smoke test, rollback plan and policy update before production use."
   ]
 }

@@ -1,0 +1,97 @@
+name: UGI Publisher Hub
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: Optional repo-relative manifest path
+        required: false
+        type: string
+      wait_seconds:
+        description: Seconds to wait for renders (0 = probe only)
+        required: false
+        default: '0'
+        type: string
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/publisher-hub/queue/*.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-publisher-hub
+  cancel-in-progress: false
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  schedule-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate hub policy and manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANIFEST="${{ github.event.inputs.manifest || '' }}"
+          if [ -n "$MANIFEST" ]; then
+            python3 scripts/ugi_publisher_hub.py --validate-only --manifest "$MANIFEST"
+          else
+            python3 scripts/ugi_publisher_hub.py --validate-only
+          fi
+
+      - name: Schedule through Buffer and prove by readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          MANIFEST="${{ github.event.inputs.manifest || '' }}"
+          WAIT="${{ github.event.inputs.wait_seconds || '0' }}"
+          if [ -n "$MANIFEST" ]; then
+            python3 scripts/ugi_publisher_hub.py --manifest "$MANIFEST" --wait-seconds "$WAIT"
+          else
+            python3 scripts/ugi_publisher_hub.py --wait-seconds "$WAIT"
+          fi
+
+      - name: Persist Publisher Hub receipts and status
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+
+          # Do not create a commit when only volatile timestamps changed.
+          files=(control-plane/publisher-hub/receipts/*.json control-plane/publisher-hub/status/latest.json)
+          for f in "${files[@]}"; do
+            if git cat-file -e "HEAD:$f" 2>/dev/null; then
+              if diff -q \
+                <(git show "HEAD:$f" | jq -S 'del(.timestamp)') \
+                <(jq -S 'del(.timestamp)' "$f") >/dev/null; then
+                git checkout HEAD -- "$f"
+              fi
+            fi
+          done
+
+          git config user.name 'ugi-publisher-hub-bot'
+          git config user.email 'ugi-publisher-hub@users.noreply.github.com'
+          git add control-plane/publisher-hub/receipts/*.json 2>/dev/null || true
+          git add control-plane/publisher-hub/status/latest.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No Publisher Hub state changes"
+            exit 0
+          fi
+          git commit -m "chore: persist UGI Publisher Hub readback"
+          git pull --rebase origin main
+          git push origin HEAD:main
