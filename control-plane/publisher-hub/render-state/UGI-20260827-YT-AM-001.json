@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T21:52:00.291562+00:00",
+  "updatedAt": "2026-08-25T23:01:21.727422+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -189,7 +189,33 @@
         "githubRunId": "32902355415",
         "r2Etag": "da13c668516a099c9f7da09a1fc669b1",
         "uploadedAt": "2026-08-25T21:48:49.677Z",
-        "approvalStatus": "pending_approval"
+        "approvalStatus": "approved",
+        "approvalDecisionAt": "2026-08-25T21:58:48.137Z",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a8e101a4236595eb3cb47c9",
+          "channelId": "6a78974ab2d9d577434584b7",
+          "channelService": "youtube",
+          "channelSource": "BUFFER_CHANNEL_YOUTUBE",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-27T10:30:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-25T21:58:50.096Z",
+          "updatedAt": "2026-08-25T21:58:53.087Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a30ddc551d29aef5-ORD",
+            "rateLimitRemaining": "2415",
+            "graphqlErrors": [],
+            "postError": null
+          }
+        }
       }
     },
     "readyPlatforms": [
@@ -713,6 +739,19 @@
       }
     ],
     "finalCta": "Siga a UGI para gestão prática.",
-    "updatedAt": "2026-08-25T21:48:52.465Z"
+    "updatedAt": "2026-08-25T21:58:53.850Z",
+    "approvalSummary": {
+      "workflowStatus": "partially_approved",
+      "approvedCount": 1,
+      "rejectedCount": 0,
+      "pendingCount": 2,
+      "platformStates": {
+        "instagram": "pending_approval",
+        "tiktok": "pending_approval",
+        "youtube": "approved"
+      },
+      "allReviewed": false
+    },
+    "approvalWorkflowStatus": "partially_approved"
   }
 }

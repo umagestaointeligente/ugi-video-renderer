@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T21:52:00.616348+00:00",
+  "updatedAt": "2026-08-25T23:01:21.923551+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -174,7 +174,33 @@
         "githubRunId": "32902390742",
         "r2Etag": "5a04d3e88afe25ddfef5bbec80e22fd6",
         "uploadedAt": "2026-08-25T21:48:58.188Z",
-        "approvalStatus": "pending_approval"
+        "approvalStatus": "approved",
+        "approvalDecisionAt": "2026-08-25T21:58:54.416Z",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a8e10214236595eb3cb47f5",
+          "channelId": "6a789721b2d9d5774345839d",
+          "channelService": "tiktok",
+          "channelSource": "BUFFER_CHANNEL_TIKTOK",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-27T11:00:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-25T21:58:56.272Z",
+          "updatedAt": "2026-08-25T21:58:59.227Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a30ddc7bad850011-ORD",
+            "rateLimitRemaining": "2413",
+            "graphqlErrors": [],
+            "postError": null
+          }
+        }
       },
       "youtube": {
         "platform": "youtube",
@@ -713,6 +739,19 @@
       }
     ],
     "finalCta": "Siga a UGI para gestão prática.",
-    "updatedAt": "2026-08-25T21:49:02.805Z"
+    "updatedAt": "2026-08-25T21:58:59.981Z",
+    "approvalSummary": {
+      "workflowStatus": "partially_approved",
+      "approvedCount": 1,
+      "rejectedCount": 0,
+      "pendingCount": 2,
+      "platformStates": {
+        "instagram": "pending_approval",
+        "tiktok": "approved",
+        "youtube": "pending_approval"
+      },
+      "allReviewed": false
+    },
+    "approvalWorkflowStatus": "partially_approved"
   }
 }
