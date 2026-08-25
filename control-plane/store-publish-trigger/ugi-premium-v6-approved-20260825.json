@@ -1,0 +1,12 @@
+{
+  "project": "UGI",
+  "action": "publish_approved_premium_v6_store_products",
+  "approved": true,
+  "standard": "UGI_PREMIUM_V6",
+  "products": [
+    "UGI-PROD-GOV-IA-20260825",
+    "UGI-PROD-JULGAMENTO-IA-20260826"
+  ],
+  "payment_test_allowed": false,
+  "requested_at": "2026-08-25T01:53:00-03:00"
+}
