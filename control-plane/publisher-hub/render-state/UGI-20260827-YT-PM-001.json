@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260827-YT-PM-001",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260825214322-7bd4970251d2",
   "approvalDraftId": "ugi-20260825214322-7bd4970251d2",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T21:43:44.098455+00:00"
+  "updatedAt": "2026-08-25T21:52:01.961889+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260825214322-7bd4970251d2",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "32902530892",
+    "githubRunNumber": 139,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-25T21:43:39Z",
+    "githubRunUpdatedAt": "2026-08-25T21:43:39Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/32902530892",
+    "githubRunDisplayTitle": "UGI ugi-20260825214322-7bd4970251d2",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "915339fc8959ce87cb4bcc4dd8da9edc3125a3bd",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "A competência que o gestor precisa na era da IA: julgamento",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214322-7bd4970251d2/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214322-7bd4970251d2%2Finstagram.mp4",
+        "videoBytes": 12933287,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "32902530892",
+        "r2Etag": "dd538442c2b74a38c7683a3d47eeddc6",
+        "uploadedAt": "2026-08-25T21:50:10.108Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214322-7bd4970251d2/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214322-7bd4970251d2%2Ftiktok.mp4",
+        "videoBytes": 9874342,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "32902530892",
+        "r2Etag": "22268eb8a7f10fda201dbb23b4a92bf9",
+        "uploadedAt": "2026-08-25T21:50:12.517Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214322-7bd4970251d2/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214322-7bd4970251d2%2Fyoutube.mp4",
+        "videoBytes": 14487500,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "32902530892",
+        "r2Etag": "598a43a27ae72560b6d46d1642e1b776",
+        "uploadedAt": "2026-08-25T21:50:15.330Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214322-7bd4970251d2%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260825214322-7bd4970251d2/instagram.mp4",
+    "approvalDraftId": "ugi-20260825214322-7bd4970251d2",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260827-YT-PM-001",
+    "experimentId": "UGI-GROWTH-20260827-TRENDS",
+    "variant": "B",
+    "commercialIntent": "direct_low_ticket",
+    "commercialOffer": true,
+    "editorialMode": "standard",
+    "commerce": {
+      "required": true,
+      "productId": "UGI-PROD-JULGAMENTO-IA-20260826",
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": "UGI-MAT-JULGAMENTO-IA-20260826",
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": 14.9
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-25T21:50:17.645Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "a8e07e54a4925ad0b4e189dc2095bccc212ac34f336ef604f081646ed54d4c68",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-25T21:43:39.886Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260825214322-7bd4970251d2",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 12933287,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-25T21:50:15.330Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260825214322-7bd4970251d2",
+      "githubRunId": "32902530892",
+      "contentId": "UGI-20260827-YT-PM-001",
+      "experimentId": "UGI-GROWTH-20260827-TRENDS",
+      "variant": "B",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "gestor analisando painel de IA com equipe ao fundo",
+          "pexels_query": "manager ai dashboard team office",
+          "overlay": {
+            "instagram": "A competência mais valiosa não é prompt. É julgamento.",
+            "tiktok": "A competência mais valiosa não é prompt. É julgamento.",
+            "youtube": "A competência mais valiosa não é prompt. É julgamento."
+          },
+          "support": {
+            "instagram": "A IA aumenta opções. O líder escolhe o trade-off.",
+            "tiktok": "A IA aumenta opções. O líder escolhe o trade-off.",
+            "youtube": "A IA aumenta opções. O líder escolhe o trade-off."
+          },
+          "narration": {
+            "instagram": "Na era da IA, saber pedir é útil. Saber decidir é indispensável.",
+            "tiktok": "Na era da IA, saber pedir é útil. Saber decidir é indispensável.",
+            "youtube": "Na era da IA, saber pedir é útil. Saber decidir é indispensável."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "resposta de IA aparentemente precisa em tela",
+          "pexels_query": "ai precise answer computer screen business",
+          "overlay": {
+            "instagram": "Precisão aparente não é certeza",
+            "tiktok": "Precisão aparente não é certeza",
+            "youtube": "Precisão aparente não é certeza"
+          },
+          "support": {
+            "instagram": "Toda recomendação carrega premissas.",
+            "tiktok": "Toda recomendação carrega premissas.",
+            "youtube": "Toda recomendação carrega premissas."
+          },
+          "narration": {
+            "instagram": "A resposta pode soar precisa mesmo quando faltam contexto e dados.",
+            "tiktok": "A resposta pode soar precisa mesmo quando faltam contexto e dados.",
+            "youtube": "A resposta pode soar precisa mesmo quando faltam contexto e dados."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "líder ouvindo equipe em reunião",
+          "pexels_query": "leader listening team meeting context",
+          "overlay": {
+            "instagram": "Contexto humano ainda muda a decisão",
+            "tiktok": "Contexto humano ainda muda a decisão",
+            "youtube": "Contexto humano ainda muda a decisão"
+          },
+          "support": {
+            "instagram": "Cultura, timing e pessoas não cabem só no modelo.",
+            "tiktok": "Cultura, timing e pessoas não cabem só no modelo.",
+            "youtube": "Cultura, timing e pessoas não cabem só no modelo."
+          },
+          "narration": {
+            "instagram": "O líder enxerga relações, timing e consequências que o modelo pode não captar.",
+            "tiktok": "O líder enxerga relações, timing e consequências que o modelo pode não captar.",
+            "youtube": "O líder enxerga relações, timing e consequências que o modelo pode não captar."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "gestor avaliando impacto e reversibilidade em quadro",
+          "pexels_query": "manager impact reversibility matrix whiteboard",
+          "overlay": {
+            "instagram": "Cheque: impacto, reversibilidade e accountability",
+            "tiktok": "Cheque: impacto, reversibilidade e accountability",
+            "youtube": "Cheque: impacto, reversibilidade e accountability"
+          },
+          "support": {
+            "instagram": "Quanto maior o risco, maior o julgamento humano.",
+            "tiktok": "Quanto maior o risco, maior o julgamento humano.",
+            "youtube": "Quanto maior o risco, maior o julgamento humano."
+          },
+          "narration": {
+            "instagram": "Antes de decidir, avalie impacto, reversibilidade e quem responde pelo resultado.",
+            "tiktok": "Antes de decidir, avalie impacto, reversibilidade e quem responde pelo resultado.",
+            "youtube": "Antes de decidir, avalie impacto, reversibilidade e quem responde pelo resultado."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "executivo registrando decisão em documento",
+          "pexels_query": "executive documenting decision office",
+          "overlay": {
+            "instagram": "Boa decisão é explicável depois",
+            "tiktok": "Boa decisão é explicável depois",
+            "youtube": "Boa decisão é explicável depois"
+          },
+          "support": {
+            "instagram": "Não basta parecer convincente agora.",
+            "tiktok": "Não basta parecer convincente agora.",
+            "youtube": "Não basta parecer convincente agora."
+          },
+          "narration": {
+            "instagram": "Registre por que a decisão foi tomada e quando ela deve ser revista.",
+            "tiktok": "Registre por que a decisão foi tomada e quando ela deve ser revista.",
+            "youtube": "Registre por que a decisão foi tomada e quando ela deve ser revista."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "framework de decisão em mesa executiva",
+          "pexels_query": "decision framework executive desk",
+          "overlay": {
+            "instagram": "Framework Decisão Humana + IA — R$ 14,90",
+            "tiktok": "Framework Decisão Humana + IA — R$ 14,90",
+            "youtube": "Framework Decisão Humana + IA — R$ 14,90"
+          },
+          "support": {
+            "instagram": "Disponível na loja UGI.",
+            "tiktok": "Disponível na loja UGI.",
+            "youtube": "Disponível na loja UGI."
+          },
+          "narration": {
+            "instagram": "O Framework de Decisão Humana está disponível na loja UGI.",
+            "tiktok": "O Framework de Decisão Humana está disponível na loja UGI.",
+            "youtube": "O Framework de Decisão Humana está disponível na loja UGI."
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "A competência mais valiosa não é prompt. É julgamento.",
+            "tiktok": "A competência mais valiosa não é prompt. É julgamento.",
+            "youtube": "A competência mais valiosa não é prompt. É julgamento."
+          },
+          "support": {
+            "instagram": "A IA aumenta opções. O líder escolhe o trade-off.",
+            "tiktok": "A IA aumenta opções. O líder escolhe o trade-off.",
+            "youtube": "A IA aumenta opções. O líder escolhe o trade-off."
+          },
+          "narration": {
+            "instagram": "Na era da IA, saber pedir é útil. Saber decidir é indispensável.",
+            "tiktok": "Na era da IA, saber pedir é útil. Saber decidir é indispensável.",
+            "youtube": "Na era da IA, saber pedir é útil. Saber decidir é indispensável."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "Precisão aparente não é certeza",
+            "tiktok": "Precisão aparente não é certeza",
+            "youtube": "Precisão aparente não é certeza"
+          },
+          "support": {
+            "instagram": "Toda recomendação carrega premissas.",
+            "tiktok": "Toda recomendação carrega premissas.",
+            "youtube": "Toda recomendação carrega premissas."
+          },
+          "narration": {
+            "instagram": "A resposta pode soar precisa mesmo quando faltam contexto e dados.",
+            "tiktok": "A resposta pode soar precisa mesmo quando faltam contexto e dados.",
+            "youtube": "A resposta pode soar precisa mesmo quando faltam contexto e dados."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "Contexto humano ainda muda a decisão",
+            "tiktok": "Contexto humano ainda muda a decisão",
+            "youtube": "Contexto humano ainda muda a decisão"
+          },
+          "support": {
+            "instagram": "Cultura, timing e pessoas não cabem só no modelo.",
+            "tiktok": "Cultura, timing e pessoas não cabem só no modelo.",
+            "youtube": "Cultura, timing e pessoas não cabem só no modelo."
+          },
+          "narration": {
+            "instagram": "O líder enxerga relações, timing e consequências que o modelo pode não captar.",
+            "tiktok": "O líder enxerga relações, timing e consequências que o modelo pode não captar.",
+            "youtube": "O líder enxerga relações, timing e consequências que o modelo pode não captar."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "Cheque: impacto, reversibilidade e accountability",
+            "tiktok": "Cheque: impacto, reversibilidade e accountability",
+            "youtube": "Cheque: impacto, reversibilidade e accountability"
+          },
+          "support": {
+            "instagram": "Quanto maior o risco, maior o julgamento humano.",
+            "tiktok": "Quanto maior o risco, maior o julgamento humano.",
+            "youtube": "Quanto maior o risco, maior o julgamento humano."
+          },
+          "narration": {
+            "instagram": "Antes de decidir, avalie impacto, reversibilidade e quem responde pelo resultado.",
+            "tiktok": "Antes de decidir, avalie impacto, reversibilidade e quem responde pelo resultado.",
+            "youtube": "Antes de decidir, avalie impacto, reversibilidade e quem responde pelo resultado."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "Boa decisão é explicável depois",
+            "tiktok": "Boa decisão é explicável depois",
+            "youtube": "Boa decisão é explicável depois"
+          },
+          "support": {
+            "instagram": "Não basta parecer convincente agora.",
+            "tiktok": "Não basta parecer convincente agora.",
+            "youtube": "Não basta parecer convincente agora."
+          },
+          "narration": {
+            "instagram": "Registre por que a decisão foi tomada e quando ela deve ser revista.",
+            "tiktok": "Registre por que a decisão foi tomada e quando ela deve ser revista.",
+            "youtube": "Registre por que a decisão foi tomada e quando ela deve ser revista."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Framework Decisão Humana + IA — R$ 14,90",
+            "tiktok": "Framework Decisão Humana + IA — R$ 14,90",
+            "youtube": "Framework Decisão Humana + IA — R$ 14,90"
+          },
+          "support": {
+            "instagram": "Disponível na loja UGI.",
+            "tiktok": "Disponível na loja UGI.",
+            "youtube": "Disponível na loja UGI."
+          },
+          "narration": {
+            "instagram": "O Framework de Decisão Humana está disponível na loja UGI.",
+            "tiktok": "O Framework de Decisão Humana está disponível na loja UGI.",
+            "youtube": "O Framework de Decisão Humana está disponível na loja UGI."
+          }
+        }
+      ],
+      "canonicalCopySha256": "a8e07e54a4925ad0b4e189dc2095bccc212ac34f336ef604f081646ed54d4c68",
+      "canonicalPayloadSha256": "e127d6ef662000f8041ac9fb616ea76e45b979fc65d6fa6b96fbaf04f541d363",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Conheça o Framework de Decisão Humana na loja UGI.",
+      "finalCtaByPlatform": {
+        "instagram": "Conheça o Framework de Decisão Humana na loja UGI.",
+        "tiktok": "Conheça o Framework de Decisão Humana na loja UGI.",
+        "youtube": "Conheça o Framework de Decisão Humana na loja UGI."
+      },
+      "commercialOffer": true,
+      "commerce": {
+        "required": true,
+        "productId": "UGI-PROD-JULGAMENTO-IA-20260826",
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": "UGI-MAT-JULGAMENTO-IA-20260826",
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": 14.9
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "manager ai dashboard team office",
+        "provider_video_id": 38901962,
+        "provider_page_url": "https://www.pexels.com/video/agile-project-management-on-digital-tablet-38901962/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "ai precise answer computer screen business",
+        "provider_video_id": 29669602,
+        "provider_page_url": "https://www.pexels.com/video/digital-eye-examination-in-clinic-29669602/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "leader listening team meeting context",
+        "provider_video_id": 8344234,
+        "provider_page_url": "https://www.pexels.com/video/a-businesswomen-having-a-meeting-8344234/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "manager impact reversibility matrix whiteboard",
+        "provider_video_id": 7691600,
+        "provider_page_url": "https://www.pexels.com/video/man-and-a-woman-writing-on-a-whiteboard-7691600/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "executive documenting decision office",
+        "provider_video_id": 8847929,
+        "provider_page_url": "https://www.pexels.com/video/professionals-working-together-8847929/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "decision framework executive desk",
+        "provider_video_id": 8124273,
+        "provider_page_url": "https://www.pexels.com/video/a-businessman-talking-8124273/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Conheça o Framework de Decisão Humana na loja UGI.",
+    "updatedAt": "2026-08-25T21:50:17.645Z"
+  }
 }

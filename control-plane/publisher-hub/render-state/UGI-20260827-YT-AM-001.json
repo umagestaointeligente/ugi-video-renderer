@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260827-YT-AM-001",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260825214123-8e3b5ddad007",
   "approvalDraftId": "ugi-20260825214123-8e3b5ddad007",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T21:41:50.528684+00:00"
+  "updatedAt": "2026-08-25T21:52:00.291562+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260825214123-8e3b5ddad007",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "32902355415",
+    "githubRunNumber": 134,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-25T21:41:44Z",
+    "githubRunUpdatedAt": "2026-08-25T21:41:44Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/32902355415",
+    "githubRunDisplayTitle": "UGI ugi-20260825214123-8e3b5ddad007",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "915339fc8959ce87cb4bcc4dd8da9edc3125a3bd",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Por que investir em IA não garante resultado",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214123-8e3b5ddad007/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214123-8e3b5ddad007%2Finstagram.mp4",
+        "videoBytes": 13074453,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "32902355415",
+        "r2Etag": "2b382a46f9007ec5ca1f20b0943279e9",
+        "uploadedAt": "2026-08-25T21:48:43.938Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214123-8e3b5ddad007/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214123-8e3b5ddad007%2Ftiktok.mp4",
+        "videoBytes": 10138179,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "32902355415",
+        "r2Etag": "a57ff5419785da0c9b30589b5ea52bd5",
+        "uploadedAt": "2026-08-25T21:48:46.616Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214123-8e3b5ddad007/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214123-8e3b5ddad007%2Fyoutube.mp4",
+        "videoBytes": 14575334,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "32902355415",
+        "r2Etag": "da13c668516a099c9f7da09a1fc669b1",
+        "uploadedAt": "2026-08-25T21:48:49.677Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214123-8e3b5ddad007%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260825214123-8e3b5ddad007/instagram.mp4",
+    "approvalDraftId": "ugi-20260825214123-8e3b5ddad007",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260827-YT-AM-001",
+    "experimentId": "UGI-GROWTH-20260827-TRENDS",
+    "variant": "A",
+    "commercialIntent": "organic_growth",
+    "commercialOffer": false,
+    "editorialMode": "standard",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-25T21:48:52.465Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "d3c2d5d0425f1924835d727ff7146c2cfd9b907b0ebf1a7bd5f3d5a28ee3fe39",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-25T21:41:44.918Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260825214123-8e3b5ddad007",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 13074453,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-25T21:48:49.677Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260825214123-8e3b5ddad007",
+      "githubRunId": "32902355415",
+      "contentId": "UGI-20260827-YT-AM-001",
+      "experimentId": "UGI-GROWTH-20260827-TRENDS",
+      "variant": "A",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "líder olhando dashboard de IA e equipe em reunião",
+          "pexels_query": "manager ai dashboard team meeting",
+          "overlay": {
+            "instagram": "Sua empresa comprou IA. Mas mudou o trabalho?",
+            "tiktok": "Sua empresa comprou IA. Mas mudou o trabalho?",
+            "youtube": "Sua empresa comprou IA. Mas mudou o trabalho?"
+          },
+          "support": {
+            "instagram": "Tecnologia sozinha não muda resultado.",
+            "tiktok": "Tecnologia sozinha não muda resultado.",
+            "youtube": "Tecnologia sozinha não muda resultado."
+          },
+          "narration": {
+            "instagram": "Investir em IA é fácil. Difícil é redesenhar o trabalho.",
+            "tiktok": "Investir em IA é fácil. Difícil é redesenhar o trabalho.",
+            "youtube": "Investir em IA é fácil. Difícil é redesenhar o trabalho."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "equipe usando ferramenta nova com processo antigo",
+          "pexels_query": "team using ai old workflow office",
+          "overlay": {
+            "instagram": "Processo antigo + IA = gargalo novo",
+            "tiktok": "Processo antigo + IA = gargalo novo",
+            "youtube": "Processo antigo + IA = gargalo novo"
+          },
+          "support": {
+            "instagram": "Automação em processo ruim só acelera o ruído.",
+            "tiktok": "Automação em processo ruim só acelera o ruído.",
+            "youtube": "Automação em processo ruim só acelera o ruído."
+          },
+          "narration": {
+            "instagram": "Se o processo continua igual, a IA apenas acelera o que já era ineficiente.",
+            "tiktok": "Se o processo continua igual, a IA apenas acelera o que já era ineficiente.",
+            "youtube": "Se o processo continua igual, a IA apenas acelera o que já era ineficiente."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "gestor revisando tarefas repetitivas e retrabalho",
+          "pexels_query": "manager reviewing rework tasks",
+          "overlay": {
+            "instagram": "O custo escondido: retrabalho",
+            "tiktok": "O custo escondido: retrabalho",
+            "youtube": "O custo escondido: retrabalho"
+          },
+          "support": {
+            "instagram": "Ferramenta sem adoção vira custo.",
+            "tiktok": "Ferramenta sem adoção vira custo.",
+            "youtube": "Ferramenta sem adoção vira custo."
+          },
+          "narration": {
+            "instagram": "O problema aparece quando ninguém muda hábito, papel ou decisão.",
+            "tiktok": "O problema aparece quando ninguém muda hábito, papel ou decisão.",
+            "youtube": "O problema aparece quando ninguém muda hábito, papel ou decisão."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "líder redesenhando fluxo com equipe em quadro",
+          "pexels_query": "leader redesigning workflow whiteboard",
+          "overlay": {
+            "instagram": "Mude 3 coisas: processo, capacidade, comportamento",
+            "tiktok": "Mude 3 coisas: processo, capacidade, comportamento",
+            "youtube": "Mude 3 coisas: processo, capacidade, comportamento"
+          },
+          "support": {
+            "instagram": "Adoção é trabalho de liderança.",
+            "tiktok": "Adoção é trabalho de liderança.",
+            "youtube": "Adoção é trabalho de liderança."
+          },
+          "narration": {
+            "instagram": "Resultado começa quando o gestor redesenha processo, treina o time e muda a rotina.",
+            "tiktok": "Resultado começa quando o gestor redesenha processo, treina o time e muda a rotina.",
+            "youtube": "Resultado começa quando o gestor redesenha processo, treina o time e muda a rotina."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "time trabalhando com fluxo simplificado e IA",
+          "pexels_query": "focused team ai workflow office",
+          "overlay": {
+            "instagram": "IA que entra no fluxo gera valor",
+            "tiktok": "IA que entra no fluxo gera valor",
+            "youtube": "IA que entra no fluxo gera valor"
+          },
+          "support": {
+            "instagram": "Menos ferramenta. Mais método.",
+            "tiktok": "Menos ferramenta. Mais método.",
+            "youtube": "Menos ferramenta. Mais método."
+          },
+          "narration": {
+            "instagram": "A IA começa a gerar valor quando vira parte clara do trabalho.",
+            "tiktok": "A IA começa a gerar valor quando vira parte clara do trabalho.",
+            "youtube": "A IA começa a gerar valor quando vira parte clara do trabalho."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "gestor anotando plano de implantação em notebook",
+          "pexels_query": "manager implementation plan notebook",
+          "overlay": {
+            "instagram": "Qual processo você redesenharia primeiro?",
+            "tiktok": "Qual processo você redesenharia primeiro?",
+            "youtube": "Qual processo você redesenharia primeiro?"
+          },
+          "support": {
+            "instagram": "Escolha um caso real esta semana.",
+            "tiktok": "Escolha um caso real esta semana.",
+            "youtube": "Escolha um caso real esta semana."
+          },
+          "narration": {
+            "instagram": "Antes de comprar mais IA, escolha um processo para redesenhar.",
+            "tiktok": "Antes de comprar mais IA, escolha um processo para redesenhar.",
+            "youtube": "Antes de comprar mais IA, escolha um processo para redesenhar."
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "Sua empresa comprou IA. Mas mudou o trabalho?",
+            "tiktok": "Sua empresa comprou IA. Mas mudou o trabalho?",
+            "youtube": "Sua empresa comprou IA. Mas mudou o trabalho?"
+          },
+          "support": {
+            "instagram": "Tecnologia sozinha não muda resultado.",
+            "tiktok": "Tecnologia sozinha não muda resultado.",
+            "youtube": "Tecnologia sozinha não muda resultado."
+          },
+          "narration": {
+            "instagram": "Investir em IA é fácil. Difícil é redesenhar o trabalho.",
+            "tiktok": "Investir em IA é fácil. Difícil é redesenhar o trabalho.",
+            "youtube": "Investir em IA é fácil. Difícil é redesenhar o trabalho."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "Processo antigo + IA = gargalo novo",
+            "tiktok": "Processo antigo + IA = gargalo novo",
+            "youtube": "Processo antigo + IA = gargalo novo"
+          },
+          "support": {
+            "instagram": "Automação em processo ruim só acelera o ruído.",
+            "tiktok": "Automação em processo ruim só acelera o ruído.",
+            "youtube": "Automação em processo ruim só acelera o ruído."
+          },
+          "narration": {
+            "instagram": "Se o processo continua igual, a IA apenas acelera o que já era ineficiente.",
+            "tiktok": "Se o processo continua igual, a IA apenas acelera o que já era ineficiente.",
+            "youtube": "Se o processo continua igual, a IA apenas acelera o que já era ineficiente."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "O custo escondido: retrabalho",
+            "tiktok": "O custo escondido: retrabalho",
+            "youtube": "O custo escondido: retrabalho"
+          },
+          "support": {
+            "instagram": "Ferramenta sem adoção vira custo.",
+            "tiktok": "Ferramenta sem adoção vira custo.",
+            "youtube": "Ferramenta sem adoção vira custo."
+          },
+          "narration": {
+            "instagram": "O problema aparece quando ninguém muda hábito, papel ou decisão.",
+            "tiktok": "O problema aparece quando ninguém muda hábito, papel ou decisão.",
+            "youtube": "O problema aparece quando ninguém muda hábito, papel ou decisão."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "Mude 3 coisas: processo, capacidade, comportamento",
+            "tiktok": "Mude 3 coisas: processo, capacidade, comportamento",
+            "youtube": "Mude 3 coisas: processo, capacidade, comportamento"
+          },
+          "support": {
+            "instagram": "Adoção é trabalho de liderança.",
+            "tiktok": "Adoção é trabalho de liderança.",
+            "youtube": "Adoção é trabalho de liderança."
+          },
+          "narration": {
+            "instagram": "Resultado começa quando o gestor redesenha processo, treina o time e muda a rotina.",
+            "tiktok": "Resultado começa quando o gestor redesenha processo, treina o time e muda a rotina.",
+            "youtube": "Resultado começa quando o gestor redesenha processo, treina o time e muda a rotina."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "IA que entra no fluxo gera valor",
+            "tiktok": "IA que entra no fluxo gera valor",
+            "youtube": "IA que entra no fluxo gera valor"
+          },
+          "support": {
+            "instagram": "Menos ferramenta. Mais método.",
+            "tiktok": "Menos ferramenta. Mais método.",
+            "youtube": "Menos ferramenta. Mais método."
+          },
+          "narration": {
+            "instagram": "A IA começa a gerar valor quando vira parte clara do trabalho.",
+            "tiktok": "A IA começa a gerar valor quando vira parte clara do trabalho.",
+            "youtube": "A IA começa a gerar valor quando vira parte clara do trabalho."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Qual processo você redesenharia primeiro?",
+            "tiktok": "Qual processo você redesenharia primeiro?",
+            "youtube": "Qual processo você redesenharia primeiro?"
+          },
+          "support": {
+            "instagram": "Escolha um caso real esta semana.",
+            "tiktok": "Escolha um caso real esta semana.",
+            "youtube": "Escolha um caso real esta semana."
+          },
+          "narration": {
+            "instagram": "Antes de comprar mais IA, escolha um processo para redesenhar.",
+            "tiktok": "Antes de comprar mais IA, escolha um processo para redesenhar.",
+            "youtube": "Antes de comprar mais IA, escolha um processo para redesenhar."
+          }
+        }
+      ],
+      "canonicalCopySha256": "d3c2d5d0425f1924835d727ff7146c2cfd9b907b0ebf1a7bd5f3d5a28ee3fe39",
+      "canonicalPayloadSha256": "ebdaa762ef46eab3460bfa5926492eecc2a8dbd4b43921598db9840418b78596",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Siga a UGI para gestão prática.",
+      "finalCtaByPlatform": {
+        "instagram": "Siga a UGI para gestão prática.",
+        "tiktok": "Siga a UGI para gestão prática.",
+        "youtube": "Siga a UGI para gestão prática."
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "manager ai dashboard team meeting",
+        "provider_video_id": 38902001,
+        "provider_page_url": "https://www.pexels.com/video/efficient-task-management-on-digital-device-38902001/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "team using ai old workflow office",
+        "provider_video_id": 8125751,
+        "provider_page_url": "https://www.pexels.com/video/man-talking-at-a-meeting-8125751/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "manager reviewing rework tasks",
+        "provider_video_id": 37116258,
+        "provider_page_url": "https://www.pexels.com/video/marking-checklist-for-task-management-efficiency-37116258/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "leader redesigning workflow whiteboard",
+        "provider_video_id": 12893609,
+        "provider_page_url": "https://www.pexels.com/video/woman-presenting-with-notes-on-wall-12893609/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "focused team ai workflow office",
+        "provider_video_id": 6325842,
+        "provider_page_url": "https://www.pexels.com/video/office-workers-working-independently-6325842/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "manager implementation plan notebook",
+        "provider_video_id": 7252715,
+        "provider_page_url": "https://www.pexels.com/video/person-typing-on-a-laptop-7252715/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Siga a UGI para gestão prática.",
+    "updatedAt": "2026-08-25T21:48:52.465Z"
+  }
 }

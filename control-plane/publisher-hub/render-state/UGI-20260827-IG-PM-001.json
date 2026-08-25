@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260827-IG-PM-001",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260825214236-329ba5ec0f73",
   "approvalDraftId": "ugi-20260825214236-329ba5ec0f73",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T21:42:58.725652+00:00"
+  "updatedAt": "2026-08-25T21:52:01.321933+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260825214236-329ba5ec0f73",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "32902459783",
+    "githubRunNumber": 137,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-25T21:42:53Z",
+    "githubRunUpdatedAt": "2026-08-25T21:42:53Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/32902459783",
+    "githubRunDisplayTitle": "UGI ugi-20260825214236-329ba5ec0f73",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "915339fc8959ce87cb4bcc4dd8da9edc3125a3bd",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "3 regras antes de liberar IA para o time",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214236-329ba5ec0f73/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214236-329ba5ec0f73%2Finstagram.mp4",
+        "videoBytes": 12670368,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "32902459783",
+        "r2Etag": "e068ea12bc550fa05c523b1fbcce06b3",
+        "uploadedAt": "2026-08-25T21:50:32.218Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214236-329ba5ec0f73/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214236-329ba5ec0f73%2Ftiktok.mp4",
+        "videoBytes": 9885527,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "32902459783",
+        "r2Etag": "d1bdc0ea56fe0407812b95399972cf30",
+        "uploadedAt": "2026-08-25T21:50:35.445Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214236-329ba5ec0f73/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214236-329ba5ec0f73%2Fyoutube.mp4",
+        "videoBytes": 14331468,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "32902459783",
+        "r2Etag": "8c44ffa09506d3b00b4c25dfd16402c2",
+        "uploadedAt": "2026-08-25T21:50:39.404Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214236-329ba5ec0f73%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260825214236-329ba5ec0f73/instagram.mp4",
+    "approvalDraftId": "ugi-20260825214236-329ba5ec0f73",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260827-IG-PM-001",
+    "experimentId": "UGI-GROWTH-20260827-TRENDS",
+    "variant": "B",
+    "commercialIntent": "direct_low_ticket",
+    "commercialOffer": true,
+    "editorialMode": "standard",
+    "commerce": {
+      "required": true,
+      "productId": "UGI-PROD-GOV-IA-20260825",
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": "UGI-MAT-GOV-IA-20260825",
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": 14.9
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-25T21:50:44.890Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "e734f7139f39386336ed35eb4bdf236d88683a91a9f5f16eb9d6cf0fc72b29f6",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-25T21:42:53.430Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260825214236-329ba5ec0f73",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 12670368,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-25T21:50:39.404Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260825214236-329ba5ec0f73",
+      "githubRunId": "32902459783",
+      "contentId": "UGI-20260827-IG-PM-001",
+      "experimentId": "UGI-GROWTH-20260827-TRENDS",
+      "variant": "B",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "gestor prestes a liberar IA para equipe",
+          "pexels_query": "manager team ai approval office",
+          "overlay": {
+            "instagram": "Antes de liberar IA para o time: 3 regras",
+            "tiktok": "Antes de liberar IA para o time: 3 regras",
+            "youtube": "Antes de liberar IA para o time: 3 regras"
+          },
+          "support": {
+            "instagram": "Autonomia sem regra vira risco.",
+            "tiktok": "Autonomia sem regra vira risco.",
+            "youtube": "Autonomia sem regra vira risco."
+          },
+          "narration": {
+            "instagram": "Antes de escalar IA, o gestor precisa definir três regras.",
+            "tiktok": "Antes de escalar IA, o gestor precisa definir três regras.",
+            "youtube": "Antes de escalar IA, o gestor precisa definir três regras."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "equipe protegendo dados em notebook",
+          "pexels_query": "team data privacy laptop office",
+          "overlay": {
+            "instagram": "1. Que dados podem entrar?",
+            "tiktok": "1. Que dados podem entrar?",
+            "youtube": "1. Que dados podem entrar?"
+          },
+          "support": {
+            "instagram": "Classifique antes de usar.",
+            "tiktok": "Classifique antes de usar.",
+            "youtube": "Classifique antes de usar."
+          },
+          "narration": {
+            "instagram": "Primeiro: deixe claro quais dados podem ou não entrar na ferramenta.",
+            "tiktok": "Primeiro: deixe claro quais dados podem ou não entrar na ferramenta.",
+            "youtube": "Primeiro: deixe claro quais dados podem ou não entrar na ferramenta."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "gestor revisando saída de IA",
+          "pexels_query": "manager reviewing ai output office",
+          "overlay": {
+            "instagram": "2. O que exige revisão humana?",
+            "tiktok": "2. O que exige revisão humana?",
+            "youtube": "2. O que exige revisão humana?"
+          },
+          "support": {
+            "instagram": "Impacto alto pede revisão.",
+            "tiktok": "Impacto alto pede revisão.",
+            "youtube": "Impacto alto pede revisão."
+          },
+          "narration": {
+            "instagram": "Segundo: defina quando a saída da IA precisa de revisão humana.",
+            "tiktok": "Segundo: defina quando a saída da IA precisa de revisão humana.",
+            "youtube": "Segundo: defina quando a saída da IA precisa de revisão humana."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "líder atribuindo responsabilidade em quadro",
+          "pexels_query": "leader assigning accountability whiteboard",
+          "overlay": {
+            "instagram": "3. Quem responde pela decisão?",
+            "tiktok": "3. Quem responde pela decisão?",
+            "youtube": "3. Quem responde pela decisão?"
+          },
+          "support": {
+            "instagram": "Toda decisão relevante precisa de dono.",
+            "tiktok": "Toda decisão relevante precisa de dono.",
+            "youtube": "Toda decisão relevante precisa de dono."
+          },
+          "narration": {
+            "instagram": "Terceiro: toda decisão relevante precisa de um responsável humano.",
+            "tiktok": "Terceiro: toda decisão relevante precisa de um responsável humano.",
+            "youtube": "Terceiro: toda decisão relevante precisa de um responsável humano."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "equipe usando IA com regras claras",
+          "pexels_query": "team ai governance workflow office",
+          "overlay": {
+            "instagram": "Clareza libera velocidade com controle",
+            "tiktok": "Clareza libera velocidade com controle",
+            "youtube": "Clareza libera velocidade com controle"
+          },
+          "support": {
+            "instagram": "Governança prática, não burocracia.",
+            "tiktok": "Governança prática, não burocracia.",
+            "youtube": "Governança prática, não burocracia."
+          },
+          "narration": {
+            "instagram": "Governança boa não trava. Ela deixa a autonomia mais segura.",
+            "tiktok": "Governança boa não trava. Ela deixa a autonomia mais segura.",
+            "youtube": "Governança boa não trava. Ela deixa a autonomia mais segura."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "capa de kit de governança em tela de notebook",
+          "pexels_query": "business guide laptop desk",
+          "overlay": {
+            "instagram": "Kit de Governança de IA — R$ 14,90",
+            "tiktok": "Kit de Governança de IA — R$ 14,90",
+            "youtube": "Kit de Governança de IA — R$ 14,90"
+          },
+          "support": {
+            "instagram": "Na loja UGI.",
+            "tiktok": "Na loja UGI.",
+            "youtube": "Na loja UGI."
+          },
+          "narration": {
+            "instagram": "O Kit de Governança de IA está disponível na loja UGI.",
+            "tiktok": "O Kit de Governança de IA está disponível na loja UGI.",
+            "youtube": "O Kit de Governança de IA está disponível na loja UGI."
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "Antes de liberar IA para o time: 3 regras",
+            "tiktok": "Antes de liberar IA para o time: 3 regras",
+            "youtube": "Antes de liberar IA para o time: 3 regras"
+          },
+          "support": {
+            "instagram": "Autonomia sem regra vira risco.",
+            "tiktok": "Autonomia sem regra vira risco.",
+            "youtube": "Autonomia sem regra vira risco."
+          },
+          "narration": {
+            "instagram": "Antes de escalar IA, o gestor precisa definir três regras.",
+            "tiktok": "Antes de escalar IA, o gestor precisa definir três regras.",
+            "youtube": "Antes de escalar IA, o gestor precisa definir três regras."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "1. Que dados podem entrar?",
+            "tiktok": "1. Que dados podem entrar?",
+            "youtube": "1. Que dados podem entrar?"
+          },
+          "support": {
+            "instagram": "Classifique antes de usar.",
+            "tiktok": "Classifique antes de usar.",
+            "youtube": "Classifique antes de usar."
+          },
+          "narration": {
+            "instagram": "Primeiro: deixe claro quais dados podem ou não entrar na ferramenta.",
+            "tiktok": "Primeiro: deixe claro quais dados podem ou não entrar na ferramenta.",
+            "youtube": "Primeiro: deixe claro quais dados podem ou não entrar na ferramenta."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "2. O que exige revisão humana?",
+            "tiktok": "2. O que exige revisão humana?",
+            "youtube": "2. O que exige revisão humana?"
+          },
+          "support": {
+            "instagram": "Impacto alto pede revisão.",
+            "tiktok": "Impacto alto pede revisão.",
+            "youtube": "Impacto alto pede revisão."
+          },
+          "narration": {
+            "instagram": "Segundo: defina quando a saída da IA precisa de revisão humana.",
+            "tiktok": "Segundo: defina quando a saída da IA precisa de revisão humana.",
+            "youtube": "Segundo: defina quando a saída da IA precisa de revisão humana."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "3. Quem responde pela decisão?",
+            "tiktok": "3. Quem responde pela decisão?",
+            "youtube": "3. Quem responde pela decisão?"
+          },
+          "support": {
+            "instagram": "Toda decisão relevante precisa de dono.",
+            "tiktok": "Toda decisão relevante precisa de dono.",
+            "youtube": "Toda decisão relevante precisa de dono."
+          },
+          "narration": {
+            "instagram": "Terceiro: toda decisão relevante precisa de um responsável humano.",
+            "tiktok": "Terceiro: toda decisão relevante precisa de um responsável humano.",
+            "youtube": "Terceiro: toda decisão relevante precisa de um responsável humano."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "Clareza libera velocidade com controle",
+            "tiktok": "Clareza libera velocidade com controle",
+            "youtube": "Clareza libera velocidade com controle"
+          },
+          "support": {
+            "instagram": "Governança prática, não burocracia.",
+            "tiktok": "Governança prática, não burocracia.",
+            "youtube": "Governança prática, não burocracia."
+          },
+          "narration": {
+            "instagram": "Governança boa não trava. Ela deixa a autonomia mais segura.",
+            "tiktok": "Governança boa não trava. Ela deixa a autonomia mais segura.",
+            "youtube": "Governança boa não trava. Ela deixa a autonomia mais segura."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Kit de Governança de IA — R$ 14,90",
+            "tiktok": "Kit de Governança de IA — R$ 14,90",
+            "youtube": "Kit de Governança de IA — R$ 14,90"
+          },
+          "support": {
+            "instagram": "Na loja UGI.",
+            "tiktok": "Na loja UGI.",
+            "youtube": "Na loja UGI."
+          },
+          "narration": {
+            "instagram": "O Kit de Governança de IA está disponível na loja UGI.",
+            "tiktok": "O Kit de Governança de IA está disponível na loja UGI.",
+            "youtube": "O Kit de Governança de IA está disponível na loja UGI."
+          }
+        }
+      ],
+      "canonicalCopySha256": "e734f7139f39386336ed35eb4bdf236d88683a91a9f5f16eb9d6cf0fc72b29f6",
+      "canonicalPayloadSha256": "2c75ebd03bb3fdaeaefaf7aa7266ffb90eb9c7808c39b2b7ccadc98dd8dcb5a6",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Acesse o Kit de Governança de IA na loja UGI.",
+      "finalCtaByPlatform": {
+        "instagram": "Acesse o Kit de Governança de IA na loja UGI.",
+        "tiktok": "Acesse o Kit de Governança de IA na loja UGI.",
+        "youtube": "Acesse o Kit de Governança de IA na loja UGI."
+      },
+      "commercialOffer": true,
+      "commerce": {
+        "required": true,
+        "productId": "UGI-PROD-GOV-IA-20260825",
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": "UGI-MAT-GOV-IA-20260825",
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": 14.9
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "manager team ai approval office",
+        "provider_video_id": 7643614,
+        "provider_page_url": "https://www.pexels.com/video/professional-people-brainstorming-during-meeting-7643614/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "team data privacy laptop office",
+        "provider_video_id": 7252716,
+        "provider_page_url": "https://www.pexels.com/video/people-discussing-chart-on-computer-screen-7252716/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "manager reviewing ai output office",
+        "provider_video_id": 7581274,
+        "provider_page_url": "https://www.pexels.com/video/man-holding-a-folder-7581274/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "leader assigning accountability whiteboard",
+        "provider_video_id": 7593219,
+        "provider_page_url": "https://www.pexels.com/video/businessman-writing-on-white-board-7593219/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "team ai governance workflow office",
+        "provider_video_id": 7989418,
+        "provider_page_url": "https://www.pexels.com/video/team-are-happy-being-together-7989418/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "business guide laptop desk",
+        "provider_video_id": 6101149,
+        "provider_page_url": "https://www.pexels.com/video/a-person-holding-eyeglasses-while-scrolling-through-the-laptop-6101149/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Acesse o Kit de Governança de IA na loja UGI.",
+    "updatedAt": "2026-08-25T21:50:44.890Z"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260827-TT-AM-001",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260825214150-386b52203cc1",
   "approvalDraftId": "ugi-20260825214150-386b52203cc1",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T21:42:13.618535+00:00"
+  "updatedAt": "2026-08-25T21:52:00.616348+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260825214150-386b52203cc1",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "32902390742",
+    "githubRunNumber": 135,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-25T21:42:08Z",
+    "githubRunUpdatedAt": "2026-08-25T21:42:08Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/32902390742",
+    "githubRunDisplayTitle": "UGI ugi-20260825214150-386b52203cc1",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "915339fc8959ce87cb4bcc4dd8da9edc3125a3bd",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "O erro de comprar IA antes de preparar o gestor",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214150-386b52203cc1/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214150-386b52203cc1%2Finstagram.mp4",
+        "videoBytes": 16458508,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "32902390742",
+        "r2Etag": "2add6dd873e042ca09901f1c4027febd",
+        "uploadedAt": "2026-08-25T21:48:55.969Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214150-386b52203cc1/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214150-386b52203cc1%2Ftiktok.mp4",
+        "videoBytes": 12551739,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "32902390742",
+        "r2Etag": "5a04d3e88afe25ddfef5bbec80e22fd6",
+        "uploadedAt": "2026-08-25T21:48:58.188Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214150-386b52203cc1/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214150-386b52203cc1%2Fyoutube.mp4",
+        "videoBytes": 18154853,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "32902390742",
+        "r2Etag": "3dac1a7fa01df349edc2f208516b8401",
+        "uploadedAt": "2026-08-25T21:49:00.778Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214150-386b52203cc1%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260825214150-386b52203cc1/instagram.mp4",
+    "approvalDraftId": "ugi-20260825214150-386b52203cc1",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260827-TT-AM-001",
+    "experimentId": "UGI-GROWTH-20260827-TRENDS",
+    "variant": "A",
+    "commercialIntent": "organic_growth",
+    "commercialOffer": false,
+    "editorialMode": "standard",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-25T21:49:02.805Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "4a8596b9d990ca44b0d9252d6c370fbb7f4a06906ac95601742d127ab3a203b1",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-25T21:42:08.441Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260825214150-386b52203cc1",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 16458508,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-25T21:49:00.778Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260825214150-386b52203cc1",
+      "githubRunId": "32902390742",
+      "contentId": "UGI-20260827-TT-AM-001",
+      "experimentId": "UGI-GROWTH-20260827-TRENDS",
+      "variant": "A",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "gestor abrindo várias ferramentas de IA no notebook",
+          "pexels_query": "manager multiple ai tools laptop",
+          "overlay": {
+            "instagram": "Comprou IA? Não comece pela ferramenta.",
+            "tiktok": "Comprou IA? Não comece pela ferramenta.",
+            "youtube": "Comprou IA? Não comece pela ferramenta."
+          },
+          "support": {
+            "instagram": "Comece pelo comportamento.",
+            "tiktok": "Comece pelo comportamento.",
+            "youtube": "Comece pelo comportamento."
+          },
+          "narration": {
+            "instagram": "Seu erro pode estar acontecendo antes mesmo do primeiro prompt.",
+            "tiktok": "Seu erro pode estar acontecendo antes mesmo do primeiro prompt.",
+            "youtube": "Seu erro pode estar acontecendo antes mesmo do primeiro prompt."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "equipe confusa diante de nova ferramenta",
+          "pexels_query": "confused team ai tool office",
+          "overlay": {
+            "instagram": "Ferramenta nova. Processo velho.",
+            "tiktok": "Ferramenta nova. Processo velho.",
+            "youtube": "Ferramenta nova. Processo velho."
+          },
+          "support": {
+            "instagram": "Isso trava adoção.",
+            "tiktok": "Isso trava adoção.",
+            "youtube": "Isso trava adoção."
+          },
+          "narration": {
+            "instagram": "Ferramenta nova em processo velho vira frustração.",
+            "tiktok": "Ferramenta nova em processo velho vira frustração.",
+            "youtube": "Ferramenta nova em processo velho vira frustração."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "gestor centralizando decisões enquanto equipe espera",
+          "pexels_query": "manager bottleneck team waiting",
+          "overlay": {
+            "instagram": "Sem gestor preparado, a IA vira gargalo.",
+            "tiktok": "Sem gestor preparado, a IA vira gargalo.",
+            "youtube": "Sem gestor preparado, a IA vira gargalo."
+          },
+          "support": {
+            "instagram": "Ninguém sabe quando usar ou revisar.",
+            "tiktok": "Ninguém sabe quando usar ou revisar.",
+            "youtube": "Ninguém sabe quando usar ou revisar."
+          },
+          "narration": {
+            "instagram": "Se o gestor não define limites, o time hesita ou exagera.",
+            "tiktok": "Se o gestor não define limites, o time hesita ou exagera.",
+            "youtube": "Se o gestor não define limites, o time hesita ou exagera."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "líder definindo regras simples em quadro",
+          "pexels_query": "leader setting ai rules whiteboard",
+          "overlay": {
+            "instagram": "Regra simples: quando usar, revisar e parar.",
+            "tiktok": "Regra simples: quando usar, revisar e parar.",
+            "youtube": "Regra simples: quando usar, revisar e parar."
+          },
+          "support": {
+            "instagram": "Clareza antes de escala.",
+            "tiktok": "Clareza antes de escala.",
+            "youtube": "Clareza antes de escala."
+          },
+          "narration": {
+            "instagram": "Defina três regras antes de escalar o uso.",
+            "tiktok": "Defina três regras antes de escalar o uso.",
+            "youtube": "Defina três regras antes de escalar o uso."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "equipe usando IA com confiança em reunião",
+          "pexels_query": "team using ai confidently meeting",
+          "overlay": {
+            "instagram": "Adoção cresce quando a liderança é clara.",
+            "tiktok": "Adoção cresce quando a liderança é clara.",
+            "youtube": "Adoção cresce quando a liderança é clara."
+          },
+          "support": {
+            "instagram": "Menos medo. Mais critério.",
+            "tiktok": "Menos medo. Mais critério.",
+            "youtube": "Menos medo. Mais critério."
+          },
+          "narration": {
+            "instagram": "A clareza do gestor transforma ferramenta em rotina.",
+            "tiktok": "A clareza do gestor transforma ferramenta em rotina.",
+            "youtube": "A clareza do gestor transforma ferramenta em rotina."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "close de checklist no celular",
+          "pexels_query": "ai checklist smartphone",
+          "overlay": {
+            "instagram": "Seu time tem essas 3 regras?",
+            "tiktok": "Seu time tem essas 3 regras?",
+            "youtube": "Seu time tem essas 3 regras?"
+          },
+          "support": {
+            "instagram": "Comenta: sim ou não.",
+            "tiktok": "Comenta: sim ou não.",
+            "youtube": "Comenta: sim ou não."
+          },
+          "narration": {
+            "instagram": "Seu time já sabe quando usar, revisar e parar?",
+            "tiktok": "Seu time já sabe quando usar, revisar e parar?",
+            "youtube": "Seu time já sabe quando usar, revisar e parar?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "Comprou IA? Não comece pela ferramenta.",
+            "tiktok": "Comprou IA? Não comece pela ferramenta.",
+            "youtube": "Comprou IA? Não comece pela ferramenta."
+          },
+          "support": {
+            "instagram": "Comece pelo comportamento.",
+            "tiktok": "Comece pelo comportamento.",
+            "youtube": "Comece pelo comportamento."
+          },
+          "narration": {
+            "instagram": "Seu erro pode estar acontecendo antes mesmo do primeiro prompt.",
+            "tiktok": "Seu erro pode estar acontecendo antes mesmo do primeiro prompt.",
+            "youtube": "Seu erro pode estar acontecendo antes mesmo do primeiro prompt."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "Ferramenta nova. Processo velho.",
+            "tiktok": "Ferramenta nova. Processo velho.",
+            "youtube": "Ferramenta nova. Processo velho."
+          },
+          "support": {
+            "instagram": "Isso trava adoção.",
+            "tiktok": "Isso trava adoção.",
+            "youtube": "Isso trava adoção."
+          },
+          "narration": {
+            "instagram": "Ferramenta nova em processo velho vira frustração.",
+            "tiktok": "Ferramenta nova em processo velho vira frustração.",
+            "youtube": "Ferramenta nova em processo velho vira frustração."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "Sem gestor preparado, a IA vira gargalo.",
+            "tiktok": "Sem gestor preparado, a IA vira gargalo.",
+            "youtube": "Sem gestor preparado, a IA vira gargalo."
+          },
+          "support": {
+            "instagram": "Ninguém sabe quando usar ou revisar.",
+            "tiktok": "Ninguém sabe quando usar ou revisar.",
+            "youtube": "Ninguém sabe quando usar ou revisar."
+          },
+          "narration": {
+            "instagram": "Se o gestor não define limites, o time hesita ou exagera.",
+            "tiktok": "Se o gestor não define limites, o time hesita ou exagera.",
+            "youtube": "Se o gestor não define limites, o time hesita ou exagera."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "Regra simples: quando usar, revisar e parar.",
+            "tiktok": "Regra simples: quando usar, revisar e parar.",
+            "youtube": "Regra simples: quando usar, revisar e parar."
+          },
+          "support": {
+            "instagram": "Clareza antes de escala.",
+            "tiktok": "Clareza antes de escala.",
+            "youtube": "Clareza antes de escala."
+          },
+          "narration": {
+            "instagram": "Defina três regras antes de escalar o uso.",
+            "tiktok": "Defina três regras antes de escalar o uso.",
+            "youtube": "Defina três regras antes de escalar o uso."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "Adoção cresce quando a liderança é clara.",
+            "tiktok": "Adoção cresce quando a liderança é clara.",
+            "youtube": "Adoção cresce quando a liderança é clara."
+          },
+          "support": {
+            "instagram": "Menos medo. Mais critério.",
+            "tiktok": "Menos medo. Mais critério.",
+            "youtube": "Menos medo. Mais critério."
+          },
+          "narration": {
+            "instagram": "A clareza do gestor transforma ferramenta em rotina.",
+            "tiktok": "A clareza do gestor transforma ferramenta em rotina.",
+            "youtube": "A clareza do gestor transforma ferramenta em rotina."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Seu time tem essas 3 regras?",
+            "tiktok": "Seu time tem essas 3 regras?",
+            "youtube": "Seu time tem essas 3 regras?"
+          },
+          "support": {
+            "instagram": "Comenta: sim ou não.",
+            "tiktok": "Comenta: sim ou não.",
+            "youtube": "Comenta: sim ou não."
+          },
+          "narration": {
+            "instagram": "Seu time já sabe quando usar, revisar e parar?",
+            "tiktok": "Seu time já sabe quando usar, revisar e parar?",
+            "youtube": "Seu time já sabe quando usar, revisar e parar?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "4a8596b9d990ca44b0d9252d6c370fbb7f4a06906ac95601742d127ab3a203b1",
+      "canonicalPayloadSha256": "de3c767af1b9d28777d4d1987603d58d81736372cd11b716383587a34c03fd40",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Siga a UGI para gestão prática.",
+      "finalCtaByPlatform": {
+        "instagram": "Siga a UGI para gestão prática.",
+        "tiktok": "Siga a UGI para gestão prática.",
+        "youtube": "Siga a UGI para gestão prática."
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "manager multiple ai tools laptop",
+        "provider_video_id": 7448471,
+        "provider_page_url": "https://www.pexels.com/video/video-of-a-laptop-screen-7448471/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "confused team ai tool office",
+        "provider_video_id": 7685204,
+        "provider_page_url": "https://www.pexels.com/video/people-working-together-7685204/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "manager bottleneck team waiting",
+        "provider_video_id": 7643614,
+        "provider_page_url": "https://www.pexels.com/video/professional-people-brainstorming-during-meeting-7643614/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "leader setting ai rules whiteboard",
+        "provider_video_id": 12893609,
+        "provider_page_url": "https://www.pexels.com/video/woman-presenting-with-notes-on-wall-12893609/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "team using ai confidently meeting",
+        "provider_video_id": 8125750,
+        "provider_page_url": "https://www.pexels.com/video/people-having-a-meeting-8125750/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "ai checklist smartphone",
+        "provider_video_id": 5083551,
+        "provider_page_url": "https://www.pexels.com/video/a-black-iphone-with-a-white-screen-and-a-white-background-5083551/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Siga a UGI para gestão prática.",
+    "updatedAt": "2026-08-25T21:49:02.805Z"
+  }
 }

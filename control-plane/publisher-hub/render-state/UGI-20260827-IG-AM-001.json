@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260827-IG-AM-001",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260825214213-9f41c29396f6",
   "approvalDraftId": "ugi-20260825214213-9f41c29396f6",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T21:42:36.128886+00:00"
+  "updatedAt": "2026-08-25T21:52:01.010340+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260825214213-9f41c29396f6",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "32902425156",
+    "githubRunNumber": 136,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-25T21:42:30Z",
+    "githubRunUpdatedAt": "2026-08-25T21:42:30Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/32902425156",
+    "githubRunDisplayTitle": "UGI ugi-20260825214213-9f41c29396f6",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "915339fc8959ce87cb4bcc4dd8da9edc3125a3bd",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "3 sinais de que sua empresa está comprando IA sem adoção",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214213-9f41c29396f6/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214213-9f41c29396f6%2Finstagram.mp4",
+        "videoBytes": 15068161,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "32902425156",
+        "r2Etag": "934b1203d918fc9934a779655e0676cc",
+        "uploadedAt": "2026-08-25T21:49:01.363Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214213-9f41c29396f6/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214213-9f41c29396f6%2Ftiktok.mp4",
+        "videoBytes": 11501378,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "32902425156",
+        "r2Etag": "2abdd5fc49c1612034f1f9d1bcfedaad",
+        "uploadedAt": "2026-08-25T21:49:03.913Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260825214213-9f41c29396f6/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214213-9f41c29396f6%2Fyoutube.mp4",
+        "videoBytes": 17087767,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "32902425156",
+        "r2Etag": "180fa94bb2fa9caa79a3d2731cfecbae",
+        "uploadedAt": "2026-08-25T21:49:06.194Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260825214213-9f41c29396f6%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260825214213-9f41c29396f6/instagram.mp4",
+    "approvalDraftId": "ugi-20260825214213-9f41c29396f6",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260827-IG-AM-001",
+    "experimentId": "UGI-GROWTH-20260827-TRENDS",
+    "variant": "A",
+    "commercialIntent": "organic_growth",
+    "commercialOffer": false,
+    "editorialMode": "standard",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-25T21:49:09.465Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "3133806b7ff3020e61c70a1d548e0302121f742450d5e4047ee19840624a8690",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-25T21:42:30.909Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260825214213-9f41c29396f6",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 15068161,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-25T21:49:06.194Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260825214213-9f41c29396f6",
+      "githubRunId": "32902425156",
+      "contentId": "UGI-20260827-IG-AM-001",
+      "experimentId": "UGI-GROWTH-20260827-TRENDS",
+      "variant": "A",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "gestor em escritório cercado de telas com IA",
+          "pexels_query": "manager office ai screens",
+          "overlay": {
+            "instagram": "3 sinais de que sua IA não virou adoção",
+            "tiktok": "3 sinais de que sua IA não virou adoção",
+            "youtube": "3 sinais de que sua IA não virou adoção"
+          },
+          "support": {
+            "instagram": "Comprar ferramenta não é transformar trabalho.",
+            "tiktok": "Comprar ferramenta não é transformar trabalho.",
+            "youtube": "Comprar ferramenta não é transformar trabalho."
+          },
+          "narration": {
+            "instagram": "Se esses sinais aparecem, o problema não é tecnologia.",
+            "tiktok": "Se esses sinais aparecem, o problema não é tecnologia.",
+            "youtube": "Se esses sinais aparecem, o problema não é tecnologia."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "equipe com documentos e ferramentas diferentes",
+          "pexels_query": "team fragmented tools office",
+          "overlay": {
+            "instagram": "1. Cada pessoa usa de um jeito",
+            "tiktok": "1. Cada pessoa usa de um jeito",
+            "youtube": "1. Cada pessoa usa de um jeito"
+          },
+          "support": {
+            "instagram": "Sem padrão, não há aprendizado coletivo.",
+            "tiktok": "Sem padrão, não há aprendizado coletivo.",
+            "youtube": "Sem padrão, não há aprendizado coletivo."
+          },
+          "narration": {
+            "instagram": "Quando cada pessoa improvisa, a empresa não aprende.",
+            "tiktok": "Quando cada pessoa improvisa, a empresa não aprende.",
+            "youtube": "Quando cada pessoa improvisa, a empresa não aprende."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "gestor corrigindo resposta de IA tarde demais",
+          "pexels_query": "manager reviewing ai output late",
+          "overlay": {
+            "instagram": "2. A revisão acontece só depois do erro",
+            "tiktok": "2. A revisão acontece só depois do erro",
+            "youtube": "2. A revisão acontece só depois do erro"
+          },
+          "support": {
+            "instagram": "Controle tardio custa caro.",
+            "tiktok": "Controle tardio custa caro.",
+            "youtube": "Controle tardio custa caro."
+          },
+          "narration": {
+            "instagram": "Se a revisão só aparece quando algo dá errado, falta governança.",
+            "tiktok": "Se a revisão só aparece quando algo dá errado, falta governança.",
+            "youtube": "Se a revisão só aparece quando algo dá errado, falta governança."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "líder com quadro de processo e responsabilidades",
+          "pexels_query": "leader workflow responsibilities board",
+          "overlay": {
+            "instagram": "3. Ninguém mede mudança no processo",
+            "tiktok": "3. Ninguém mede mudança no processo",
+            "youtube": "3. Ninguém mede mudança no processo"
+          },
+          "support": {
+            "instagram": "Uso não é resultado.",
+            "tiktok": "Uso não é resultado.",
+            "youtube": "Uso não é resultado."
+          },
+          "narration": {
+            "instagram": "Adoção real muda tempo, qualidade ou decisão.",
+            "tiktok": "Adoção real muda tempo, qualidade ou decisão.",
+            "youtube": "Adoção real muda tempo, qualidade ou decisão."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "equipe com fluxo padronizado e reunião curta",
+          "pexels_query": "team standardized workflow short meeting",
+          "overlay": {
+            "instagram": "Adoção = processo + capacidade + comportamento",
+            "tiktok": "Adoção = processo + capacidade + comportamento",
+            "youtube": "Adoção = processo + capacidade + comportamento"
+          },
+          "support": {
+            "instagram": "É gestão, não instalação.",
+            "tiktok": "É gestão, não instalação.",
+            "youtube": "É gestão, não instalação."
+          },
+          "narration": {
+            "instagram": "Transformação acontece quando o trabalho muda.",
+            "tiktok": "Transformação acontece quando o trabalho muda.",
+            "youtube": "Transformação acontece quando o trabalho muda."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "gestor salvando checklist de adoção",
+          "pexels_query": "manager saving checklist phone",
+          "overlay": {
+            "instagram": "Salve e audite seu time hoje",
+            "tiktok": "Salve e audite seu time hoje",
+            "youtube": "Salve e audite seu time hoje"
+          },
+          "support": {
+            "instagram": "Use os 3 sinais na próxima reunião.",
+            "tiktok": "Use os 3 sinais na próxima reunião.",
+            "youtube": "Use os 3 sinais na próxima reunião."
+          },
+          "narration": {
+            "instagram": "Salve este diagnóstico e leve para a próxima reunião.",
+            "tiktok": "Salve este diagnóstico e leve para a próxima reunião.",
+            "youtube": "Salve este diagnóstico e leve para a próxima reunião."
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "3 sinais de que sua IA não virou adoção",
+            "tiktok": "3 sinais de que sua IA não virou adoção",
+            "youtube": "3 sinais de que sua IA não virou adoção"
+          },
+          "support": {
+            "instagram": "Comprar ferramenta não é transformar trabalho.",
+            "tiktok": "Comprar ferramenta não é transformar trabalho.",
+            "youtube": "Comprar ferramenta não é transformar trabalho."
+          },
+          "narration": {
+            "instagram": "Se esses sinais aparecem, o problema não é tecnologia.",
+            "tiktok": "Se esses sinais aparecem, o problema não é tecnologia.",
+            "youtube": "Se esses sinais aparecem, o problema não é tecnologia."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "1. Cada pessoa usa de um jeito",
+            "tiktok": "1. Cada pessoa usa de um jeito",
+            "youtube": "1. Cada pessoa usa de um jeito"
+          },
+          "support": {
+            "instagram": "Sem padrão, não há aprendizado coletivo.",
+            "tiktok": "Sem padrão, não há aprendizado coletivo.",
+            "youtube": "Sem padrão, não há aprendizado coletivo."
+          },
+          "narration": {
+            "instagram": "Quando cada pessoa improvisa, a empresa não aprende.",
+            "tiktok": "Quando cada pessoa improvisa, a empresa não aprende.",
+            "youtube": "Quando cada pessoa improvisa, a empresa não aprende."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "2. A revisão acontece só depois do erro",
+            "tiktok": "2. A revisão acontece só depois do erro",
+            "youtube": "2. A revisão acontece só depois do erro"
+          },
+          "support": {
+            "instagram": "Controle tardio custa caro.",
+            "tiktok": "Controle tardio custa caro.",
+            "youtube": "Controle tardio custa caro."
+          },
+          "narration": {
+            "instagram": "Se a revisão só aparece quando algo dá errado, falta governança.",
+            "tiktok": "Se a revisão só aparece quando algo dá errado, falta governança.",
+            "youtube": "Se a revisão só aparece quando algo dá errado, falta governança."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "3. Ninguém mede mudança no processo",
+            "tiktok": "3. Ninguém mede mudança no processo",
+            "youtube": "3. Ninguém mede mudança no processo"
+          },
+          "support": {
+            "instagram": "Uso não é resultado.",
+            "tiktok": "Uso não é resultado.",
+            "youtube": "Uso não é resultado."
+          },
+          "narration": {
+            "instagram": "Adoção real muda tempo, qualidade ou decisão.",
+            "tiktok": "Adoção real muda tempo, qualidade ou decisão.",
+            "youtube": "Adoção real muda tempo, qualidade ou decisão."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "Adoção = processo + capacidade + comportamento",
+            "tiktok": "Adoção = processo + capacidade + comportamento",
+            "youtube": "Adoção = processo + capacidade + comportamento"
+          },
+          "support": {
+            "instagram": "É gestão, não instalação.",
+            "tiktok": "É gestão, não instalação.",
+            "youtube": "É gestão, não instalação."
+          },
+          "narration": {
+            "instagram": "Transformação acontece quando o trabalho muda.",
+            "tiktok": "Transformação acontece quando o trabalho muda.",
+            "youtube": "Transformação acontece quando o trabalho muda."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Salve e audite seu time hoje",
+            "tiktok": "Salve e audite seu time hoje",
+            "youtube": "Salve e audite seu time hoje"
+          },
+          "support": {
+            "instagram": "Use os 3 sinais na próxima reunião.",
+            "tiktok": "Use os 3 sinais na próxima reunião.",
+            "youtube": "Use os 3 sinais na próxima reunião."
+          },
+          "narration": {
+            "instagram": "Salve este diagnóstico e leve para a próxima reunião.",
+            "tiktok": "Salve este diagnóstico e leve para a próxima reunião.",
+            "youtube": "Salve este diagnóstico e leve para a próxima reunião."
+          }
+        }
+      ],
+      "canonicalCopySha256": "3133806b7ff3020e61c70a1d548e0302121f742450d5e4047ee19840624a8690",
+      "canonicalPayloadSha256": "20ef406d126dcb7899743de0a9f5e05788206d60451eaab1fc9f789d2a4bf176",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Siga a UGI para gestão prática.",
+      "finalCtaByPlatform": {
+        "instagram": "Siga a UGI para gestão prática.",
+        "tiktok": "Siga a UGI para gestão prática.",
+        "youtube": "Siga a UGI para gestão prática."
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "manager office ai screens",
+        "provider_video_id": 7691585,
+        "provider_page_url": "https://www.pexels.com/video/businesswoman-presenting-the-graph-7691585/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "team fragmented tools office",
+        "provider_video_id": 7706613,
+        "provider_page_url": "https://www.pexels.com/video/call-center-representatives-working-in-the-office-7706613/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "manager reviewing ai output late",
+        "provider_video_id": 38901962,
+        "provider_page_url": "https://www.pexels.com/video/agile-project-management-on-digital-tablet-38901962/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "leader workflow responsibilities board",
+        "provider_video_id": 7252935,
+        "provider_page_url": "https://www.pexels.com/video/close-up-footage-of-sticky-notes-posted-on-a-board-7252935/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "team standardized workflow short meeting",
+        "provider_video_id": 7989418,
+        "provider_page_url": "https://www.pexels.com/video/team-are-happy-being-together-7989418/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "manager saving checklist phone",
+        "provider_video_id": 33194181,
+        "provider_page_url": "https://www.pexels.com/video/efficient-desk-organization-with-checklist-33194181/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Siga a UGI para gestão prática.",
+    "updatedAt": "2026-08-25T21:49:09.465Z"
+  }
 }
