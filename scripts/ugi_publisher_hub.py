@@ -9,7 +9,9 @@ The script is intentionally fail-closed:
 - Buffer must remain the exclusive publisher;
 - Metricool must remain analytics-only;
 - Worker health and Buffer channels must be proven before mutation;
-- a publication is successful only after Buffer readback returns a post id and slot.
+- content -> render -> draft correlation must be proven before approval;
+- a publication is successful only after Buffer readback returns a post id,
+  scheduled state and the exact requested slot.
 """
 
 from __future__ import annotations
@@ -28,6 +30,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_QUEUE = ROOT / "control-plane" / "publisher-hub" / "queue"
 LEGACY_QUEUE = ROOT / "control-plane" / "chat-publication"
+RENDER_STATE = ROOT / "control-plane" / "publisher-hub" / "render-state"
 RECEIPTS = ROOT / "control-plane" / "publisher-hub" / "receipts"
 STATUS = ROOT / "control-plane" / "publisher-hub" / "status" / "latest.json"
 GROWTH_POLICY = ROOT / "config" / "ugi" / "growth-policy.json"
@@ -42,6 +45,10 @@ def load_json(path: Path) -> dict[str, Any]:
 
 def canonical_hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def safe_name(value: str) -> str:
+    return "".join(ch if ch.isalnum() or ch in "-_." else "_" for ch in value)
 
 
 class WorkerClient:
@@ -69,7 +76,7 @@ class WorkerClient:
     def get(self, path: str) -> dict[str, Any]:
         return self._run([
             "curl", "--silent", "--show-error", "--location", "--max-time", "90",
-            "-A", "UGI-Publisher-Hub/1.0",
+            "-A", "UGI-Publisher-Hub/1.1",
             "-H", f"x-lola-command-key: {self.key}",
             "-H", "accept: application/json",
             self.base_url + path,
@@ -78,7 +85,7 @@ class WorkerClient:
     def post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
         return self._run([
             "curl", "--silent", "--show-error", "--location", "--max-time", "90",
-            "-A", "UGI-Publisher-Hub/1.0",
+            "-A", "UGI-Publisher-Hub/1.1",
             "-H", f"x-lola-command-key: {self.key}",
             "-H", "accept: application/json",
             "-H", "content-type: application/json",
@@ -143,17 +150,17 @@ def discover_manifests(explicit: str | None) -> list[Path]:
             raise SystemExit(f"MANIFEST_NOT_FOUND:{p}")
         return [p]
 
-    candidates: list[Path] = []
-    for folder in (CANONICAL_QUEUE, LEGACY_QUEUE):
-        if folder.exists():
-            candidates.extend(sorted(folder.glob("*.json")))
-    return candidates
+    # Canonical queue is authoritative. Legacy chat manifests are read only
+    # when no canonical queue exists, preventing duplicate reconciliation.
+    canonical = sorted(CANONICAL_QUEUE.glob("*.json")) if CANONICAL_QUEUE.exists() else []
+    if canonical:
+        return canonical
+    return sorted(LEGACY_QUEUE.glob("*.json")) if LEGACY_QUEUE.exists() else []
 
 
 def receipt_path(data: dict[str, Any], manifest: Path) -> Path:
     rid = str(data.get("batchId") or manifest.stem)
-    safe = "".join(ch if ch.isalnum() or ch in "-_." else "_" for ch in rid)
-    return RECEIPTS / f"{safe}.json"
+    return RECEIPTS / f"{safe_name(rid)}.json"
 
 
 def is_terminal_success(path: Path, manifest_hash: str) -> bool:
@@ -170,41 +177,129 @@ def is_terminal_success(path: Path, manifest_hash: str) -> bool:
     )
 
 
-def resolve_ready_drafts(client: WorkerClient, rows: list[dict[str, Any]], wait_seconds: int) -> tuple[bool, dict[str, dict[str, Any]]]:
+def _target_from_render_state(
+    client: WorkerClient,
+    content_id: str,
+    platform: str,
+) -> dict[str, Any] | None:
+    state_file = RENDER_STATE / f"{safe_name(content_id)}.json"
+    if not state_file.exists():
+        return None
+
+    state = load_json(state_file)
+    render_id = str(state.get("workerRenderId") or "").strip()
+    expected_draft_id = str(state.get("approvalDraftId") or "").strip()
+    if not render_id or not expected_draft_id:
+        return None
+
+    video = client.get("/api/video-result/" + urllib.parse.quote(render_id))
+    asset = ((video.get("assets") or {}).get(platform) or {})
+    if not (
+        video.get("ok") is True
+        and video.get("allPlatformsReady") is True
+        and asset.get("ready") is True
+        and asset.get("videoUrl")
+    ):
+        return None
+
+    # Strict video/copy QA proof before any approval mutation.
+    if video.get("semanticValidationRequired") is True:
+        if video.get("semanticValidationAvailable") is not True:
+            return None
+        if ((video.get("semanticValidation") or {}).get("pass")) is not True:
+            raise RuntimeError(f"SEMANTIC_VALIDATION_FAIL:{content_id}")
+    if ((video.get("copyLock") or {}).get("enabled")) is True:
+        if ((video.get("copyLockValidation") or {}).get("pass")) is not True:
+            raise RuntimeError(f"COPY_LOCK_VALIDATION_FAIL:{content_id}")
+    if video.get("legacyContentLeakDetected") is True:
+        raise RuntimeError(f"LEGACY_CONTENT_LEAK_FAIL:{content_id}")
+
+    # Correlate contentId -> draftId via the paginated Worker lookup rather
+    # than /api/drafts, whose collection endpoint is capped.
+    lookup = client.get(
+        "/api/draft-lookup?content_id=" + urllib.parse.quote(content_id)
+    )
+    if lookup.get("ok") is not True or lookup.get("found") is not True:
+        return None
+
+    live_draft_id = str(lookup.get("draftId") or "").strip()
+    if not live_draft_id:
+        return None
+    if live_draft_id != expected_draft_id:
+        raise RuntimeError(
+            f"DRAFT_CORRELATION_MISMATCH:{content_id}:{expected_draft_id}:{live_draft_id}"
+        )
+
+    eligibility = client.get(
+        "/api/platform-publication-eligibility/" + urllib.parse.quote(live_draft_id)
+    )
+    if eligibility.get("ok") is not True:
+        return None
+    pstate = ((eligibility.get("platformStates") or {}).get(platform) or {})
+    if pstate.get("assetExists") is not True or pstate.get("ready") is not True:
+        return None
+
+    return {
+        "id": live_draft_id,
+        "renderId": render_id,
+        "eligibility": pstate,
+        "videoStatus": video.get("status"),
+        "allPlatformsReady": video.get("allPlatformsReady") is True,
+    }
+
+
+def resolve_ready_drafts(
+    client: WorkerClient,
+    rows: list[dict[str, Any]],
+    wait_seconds: int,
+) -> tuple[bool, dict[str, dict[str, Any]]]:
     deadline = time.time() + max(0, wait_seconds)
     first = True
     last: dict[str, dict[str, Any]] = {}
+
     while first or time.time() < deadline:
         first = False
-        drafts_resp = client.get("/api/drafts")
-        if not drafts_resp.get("ok") and "drafts" not in drafts_resp:
-            return False, {}
-        drafts = drafts_resp.get("drafts") or []
         resolved: dict[str, dict[str, Any]] = {}
         ready = True
+
         for row in rows:
             cid = str(row["contentId"])
             plat = str(row["platform"]).lower()
-            matches = [d for d in drafts if str(d.get("contentId") or d.get("content_id") or "") == cid]
-            matches.sort(key=lambda d: str(d.get("updatedAt") or d.get("createdAt") or ""), reverse=True)
-            if not matches:
+            target = _target_from_render_state(client, cid, plat)
+            if target is None:
                 ready = False
                 continue
-            draft = matches[0]
-            resolved[cid] = draft
-            asset = (draft.get("assets") or {}).get(plat) or {}
-            if not (draft.get("allPlatformsReady") is True and asset.get("ready") is True and asset.get("videoUrl")):
-                ready = False
+            resolved[cid] = target
+
         last = resolved
-        if ready:
+        if ready and len(resolved) == len(rows):
             return True, resolved
         if time.time() >= deadline:
             break
         time.sleep(min(20, max(1, deadline - time.time())))
+
     return False, last
 
 
-def process_manifest(client: WorkerClient, manifest: Path, growth: dict[str, Any], routing: dict[str, Any], wait_seconds: int) -> dict[str, Any]:
+def _scheduled_readback_pass(readback: dict[str, Any], requested_due: str) -> tuple[bool, dict[str, Any]]:
+    publication = readback.get("publication") or {}
+    status = str(publication.get("status") or "").lower()
+    passed = (
+        readback.get("ok") is True
+        and bool(publication.get("bufferPostId"))
+        and str(publication.get("dueAt") or "")[:16] == requested_due[:16]
+        and status == "scheduled"
+    )
+    return passed, publication
+
+
+def process_manifest(
+    client: WorkerClient,
+    manifest: Path,
+    growth: dict[str, Any],
+    routing: dict[str, Any],
+    wait_seconds: int,
+) -> dict[str, Any]:
     data = load_json(manifest)
     rows = validate_manifest(data, manifest)
     mf_hash = canonical_hash(manifest)
@@ -228,7 +323,7 @@ def process_manifest(client: WorkerClient, manifest: Path, growth: dict[str, Any
         result = {
             "ok": False,
             "retryable": True,
-            "state": "WAITING_FOR_RENDER",
+            "state": "WAITING_FOR_RENDER_OR_DRAFT",
             "project": "UGI",
             "publisher": "BUFFER",
             "manifest": str(manifest.relative_to(ROOT)),
@@ -239,6 +334,8 @@ def process_manifest(client: WorkerClient, manifest: Path, growth: dict[str, Any
             "routingSha256": canonical_hash(ROUTING_POLICY),
             "publicationTriggered": False,
             "paymentTriggered": False,
+            "resolvedTargets": len(resolved),
+            "expectedTargets": len(rows),
             "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(),
             "results": [],
         }
@@ -247,54 +344,154 @@ def process_manifest(client: WorkerClient, manifest: Path, growth: dict[str, Any
         return result
 
     results: list[dict[str, Any]] = []
+    any_mutation = False
+
     for row in rows:
         cid = str(row["contentId"])
         plat = str(row["platform"]).lower()
         due = str(row["dueAt"])
-        draft = resolved[cid]
-        draft_id = str(draft["id"])
-        asset = (draft.get("assets") or {}).get(plat) or {}
-        existing = asset.get("publication") or {}
+        target = resolved[cid]
+        draft_id = str(target["id"])
+        pre = target.get("eligibility") or {}
 
-        if existing.get("bufferPostId") and str(existing.get("status", "")).lower() not in {"error", "cancelled"}:
-            publish = {"ok": True, "publication": existing, "alreadyActive": True}
-        else:
-            approval = client.post("/api/platform-approval", {"id": draft_id, "platform": plat, "decision": "approved"})
-            if not approval.get("ok"):
-                results.append({"contentId": cid, "platform": plat, "ok": False, "gate": "APPROVAL", "detail": approval})
-                continue
-
-            eligibility = client.get("/api/platform-publication-eligibility/" + urllib.parse.quote(draft_id))
-            state = ((eligibility.get("platformStates") or {}).get(plat) or {})
-            if not state.get("eligible"):
-                results.append({"contentId": cid, "platform": plat, "ok": False, "gate": "ELIGIBILITY", "detail": state})
-                continue
-
-            publish = client.post("/api/platform-publish", {"id": draft_id, "platform": plat, "mode": "customScheduled", "dueAt": due})
-
-        if not publish.get("ok"):
-            results.append({"contentId": cid, "platform": plat, "ok": False, "gate": "BUFFER_CREATE", "detail": publish})
+        # Exactly-once: if Worker already reports an active Buffer post, do not
+        # approve or create another one; prove the existing post by readback.
+        active_id = str(pre.get("bufferPostId") or "").strip()
+        active_status = str(pre.get("publicationStatus") or "").lower()
+        if active_id and active_status not in {"error", "cancelled"}:
+            readback = client.get(
+                "/api/platform-publication-status?id=" + urllib.parse.quote(draft_id)
+                + "&platform=" + urllib.parse.quote(plat)
+            )
+            passed, publication = _scheduled_readback_pass(readback, due)
+            results.append({
+                "contentId": cid,
+                "platform": plat,
+                "draftId": draft_id,
+                "renderId": target.get("renderId"),
+                "dueAt": publication.get("dueAt"),
+                "bufferPostId": publication.get("bufferPostId"),
+                "status": publication.get("status"),
+                "bufferStatus": publication.get("bufferStatus"),
+                "externalLink": publication.get("externalLink"),
+                "alreadyActive": True,
+                "readbackPass": passed,
+                "ok": passed,
+            })
             continue
+
+        # Before approval, only pending_approval is acceptable as a blocker.
+        pre_reasons = set(pre.get("reasons") or [])
+        unexpected_pre = pre_reasons - {"pending_approval"}
+        if unexpected_pre:
+            results.append({
+                "contentId": cid,
+                "platform": plat,
+                "draftId": draft_id,
+                "ok": False,
+                "gate": "PRE_APPROVAL_ELIGIBILITY",
+                "detail": pre,
+            })
+            continue
+
+        if str(pre.get("approvalStatus") or "").lower() != "approved":
+            approval = client.post(
+                "/api/platform-approval",
+                {"id": draft_id, "platform": plat, "decision": "approved"},
+            )
+            if not approval.get("ok"):
+                results.append({
+                    "contentId": cid,
+                    "platform": plat,
+                    "draftId": draft_id,
+                    "ok": False,
+                    "gate": "APPROVAL",
+                    "detail": approval,
+                })
+                continue
+            any_mutation = True
+
+        eligibility = client.get(
+            "/api/platform-publication-eligibility/" + urllib.parse.quote(draft_id)
+        )
+        state = ((eligibility.get("platformStates") or {}).get(plat) or {})
+
+        # Another exactly-once check after approval, before create.
+        if state.get("bufferPostId") and str(state.get("publicationStatus") or "").lower() not in {"error", "cancelled"}:
+            readback = client.get(
+                "/api/platform-publication-status?id=" + urllib.parse.quote(draft_id)
+                + "&platform=" + urllib.parse.quote(plat)
+            )
+            passed, publication = _scheduled_readback_pass(readback, due)
+            results.append({
+                "contentId": cid,
+                "platform": plat,
+                "draftId": draft_id,
+                "renderId": target.get("renderId"),
+                "dueAt": publication.get("dueAt"),
+                "bufferPostId": publication.get("bufferPostId"),
+                "status": publication.get("status"),
+                "bufferStatus": publication.get("bufferStatus"),
+                "externalLink": publication.get("externalLink"),
+                "alreadyActive": True,
+                "readbackPass": passed,
+                "ok": passed,
+            })
+            continue
+
+        if eligibility.get("ok") is not True or not state.get("eligible"):
+            results.append({
+                "contentId": cid,
+                "platform": plat,
+                "draftId": draft_id,
+                "ok": False,
+                "gate": "ELIGIBILITY",
+                "detail": state,
+            })
+            continue
+
+        publish = client.post(
+            "/api/platform-publish",
+            {
+                "id": draft_id,
+                "platform": plat,
+                "mode": "customScheduled",
+                "dueAt": due,
+            },
+        )
+        if not publish.get("ok"):
+            results.append({
+                "contentId": cid,
+                "platform": plat,
+                "draftId": draft_id,
+                "ok": False,
+                "gate": "BUFFER_CREATE",
+                "detail": publish,
+            })
+            continue
+        any_mutation = True
 
         readback = client.get(
             "/api/platform-publication-status?id=" + urllib.parse.quote(draft_id)
             + "&platform=" + urllib.parse.quote(plat)
         )
-        publication = readback.get("publication") or publish.get("publication") or {}
-        passed = bool(publication.get("bufferPostId")) and str(publication.get("dueAt") or "")[:16] == due[:16]
+        passed, publication = _scheduled_readback_pass(readback, due)
         results.append({
             "contentId": cid,
             "platform": plat,
             "draftId": draft_id,
+            "renderId": target.get("renderId"),
             "dueAt": publication.get("dueAt"),
             "bufferPostId": publication.get("bufferPostId"),
-            "status": publication.get("bufferStatus") or publication.get("status"),
+            "status": publication.get("status"),
+            "bufferStatus": publication.get("bufferStatus"),
             "externalLink": publication.get("externalLink"),
+            "alreadyActive": False,
             "readbackPass": passed,
             "ok": passed,
         })
 
-    ok = bool(results) and all(x.get("ok") for x in results)
+    ok = len(results) == len(rows) and all(x.get("ok") for x in results)
     out = {
         "ok": ok,
         "retryable": not ok,
@@ -310,7 +507,7 @@ def process_manifest(client: WorkerClient, manifest: Path, growth: dict[str, Any
         "policySha256": canonical_hash(GROWTH_POLICY),
         "routingSchema": routing.get("schema_version"),
         "routingSha256": canonical_hash(ROUTING_POLICY),
-        "publicationTriggered": True,
+        "publicationTriggered": any_mutation,
         "paymentTriggered": False,
         "results": results,
         "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -322,8 +519,15 @@ def process_manifest(client: WorkerClient, manifest: Path, growth: dict[str, Any
 
 def write_status(results: list[dict[str, Any]]) -> None:
     proven = sum(1 for x in results if x.get("ok") is True)
-    waiting = sum(1 for x in results if x.get("state") == "WAITING_FOR_RENDER")
-    degraded = sum(1 for x in results if x.get("ok") is not True and x.get("state") != "WAITING_FOR_RENDER")
+    waiting = sum(
+        1 for x in results
+        if x.get("state") in {"WAITING_FOR_RENDER", "WAITING_FOR_RENDER_OR_DRAFT"}
+    )
+    degraded = sum(
+        1 for x in results
+        if x.get("ok") is not True
+        and x.get("state") not in {"WAITING_FOR_RENDER", "WAITING_FOR_RENDER_OR_DRAFT"}
+    )
     state = "READY" if degraded == 0 and waiting == 0 else ("WAITING" if degraded == 0 else "DEGRADED")
     payload = {
         "project": "UGI",
@@ -365,9 +569,9 @@ def main() -> int:
         }))
         return 0
 
-    key = os.getenv("UGI_LOLA_COMMAND_KEY", "")
+    key = os.getenv("UGI_WORKER_COMMAND_KEY") or os.getenv("UGI_LOLA_COMMAND_KEY", "")
     if not key:
-        raise SystemExit("UGI_LOLA_COMMAND_KEY_MISSING")
+        raise SystemExit("UGI_WORKER_COMMAND_KEY_MISSING")
     client = WorkerClient(os.getenv("WORKER_URL", DEFAULT_WORKER_URL), key)
 
     results: list[dict[str, Any]] = []
@@ -401,7 +605,8 @@ def main() -> int:
 
     write_status(results)
 
-    if hard_fail or any(r.get("ok") is not True and r.get("state") != "WAITING_FOR_RENDER" for r in results):
+    waiting_states = {"WAITING_FOR_RENDER", "WAITING_FOR_RENDER_OR_DRAFT"}
+    if hard_fail or any(r.get("ok") is not True and r.get("state") not in waiting_states for r in results):
         return 1
     return 0
 
