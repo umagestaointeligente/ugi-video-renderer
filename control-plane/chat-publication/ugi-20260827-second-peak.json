@@ -1,0 +1,9 @@
+{
+  "project": "UGI",
+  "batchId": "ugi-20260827-second-peak",
+  "posts": [
+    {"contentId":"UGI-20260827-IG-PM-001","platform":"instagram","dueAt":"2026-08-27T22:00:00.000Z"},
+    {"contentId":"UGI-20260827-TT-PM-001","platform":"tiktok","dueAt":"2026-08-27T23:00:00.000Z"},
+    {"contentId":"UGI-20260827-YT-PM-001","platform":"youtube","dueAt":"2026-08-27T23:30:00.000Z"}
+  ]
+}
