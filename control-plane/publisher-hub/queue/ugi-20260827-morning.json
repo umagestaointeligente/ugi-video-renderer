@@ -1,0 +1,10 @@
+{
+  "project": "UGI",
+  "batchId": "ugi-20260827-morning",
+  "retryRequestedAt": "2026-08-25T14:20:00Z",
+  "posts": [
+    {"contentId":"UGI-20260827-YT-AM-001","platform":"youtube","dueAt":"2026-08-27T10:30:00.000Z"},
+    {"contentId":"UGI-20260827-TT-AM-001","platform":"tiktok","dueAt":"2026-08-27T11:00:00.000Z"},
+    {"contentId":"UGI-20260827-IG-AM-001","platform":"instagram","dueAt":"2026-08-27T11:30:00.000Z"}
+  ]
+}
