@@ -1,0 +1,17 @@
+{
+  "ok": false,
+  "retryable": true,
+  "state": "WAITING_FOR_RENDER",
+  "project": "UGI",
+  "publisher": "BUFFER",
+  "manifest": "control-plane/chat-publication/ugi-20260827-second-peak.json",
+  "manifestSha256": "caa5c9220acd9714a11f312195e9ad37984b4e66c584dc87416caa371b13245f",
+  "policyId": "ugi-growth-engine",
+  "policySchema": "1.2",
+  "policySha256": "ddb581512329447065bff0b2833c769e6a6abfc1465595cc6b5883582308e095",
+  "routingSha256": "f9378b7abce7f09f65779be1a55719cb21d26dec03d377732f6082b3289a7d3e",
+  "publicationTriggered": false,
+  "paymentTriggered": false,
+  "timestamp": "2026-08-25T17:32:31.863422+00:00",
+  "results": []
+}
