@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "standard": "UGI_PREMIUM_V6",
+  "results": [
+    {
+      "slug": "governanca-ia",
+      "materialId": "UGI-MAT-GOV-IA-20260825",
+      "productId": "UGI-PROD-GOV-IA-20260825",
+      "title": "Kit de Governança de IA para Gestores",
+      "price": 14.9,
+      "pdf": "generated/commerce/premium-v6/governanca-ia-premium-v6.pdf",
+      "bytes": 101010,
+      "sha256": "205f2232c26f6fefc593ac7e82aea01ba20c6930cb2ba20bfb54fdd8c63c8c37",
+      "materialCreated": true,
+      "assetUploaded": true,
+      "productCreated": true
+    },
+    {
+      "slug": "decisao-humana-ia",
+      "materialId": "UGI-MAT-JULGAMENTO-IA-20260826",
+      "productId": "UGI-PROD-JULGAMENTO-IA-20260826",
+      "title": "Framework de Decisão Humana na Era da IA",
+      "price": 14.9,
+      "pdf": "generated/commerce/premium-v6/decisao-humana-ia-premium-v6.pdf",
+      "bytes": 99569,
+      "sha256": "9d53765d68c92e642c1532ef1c6686773262ccae6cae71c97831f7140be130da",
+      "materialCreated": true,
+      "assetUploaded": true,
+      "productCreated": true
+    }
+  ]
+}
