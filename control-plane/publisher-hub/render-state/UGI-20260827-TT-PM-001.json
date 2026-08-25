@@ -1,9 +1,9 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260827-TT-PM-001",
-  "state": "RENDER_DISPATCH_FAILED",
+  "state": "RENDER_IN_PROGRESS",
   "workerRenderId": "ugi-20260825174929-a6bcc87c9d91",
-  "approvalDraftId": "ugi-20260825174929-a6bcc87c9d91",
+  "approvalDraftId": null,
   "existingDraftReused": false,
   "githubAccepted": false,
   "githubStatus": null,
@@ -30,5 +30,6 @@
     "mutationPerformed": false,
     "note": "R44.4.11 FAIL-CLOSED: o GitHub não é acionado sem cenas dinâmicas válidas."
   },
-  "updatedAt": "2026-08-25T17:49:39.111344+00:00"
+  "updatedAt": "2026-08-25T19:18:54.517347+00:00",
+  "lastKnownStatus": "processing"
 }
