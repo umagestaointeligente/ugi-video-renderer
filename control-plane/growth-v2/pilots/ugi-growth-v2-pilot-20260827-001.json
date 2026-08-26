@@ -1,0 +1,148 @@
+{
+  "title": "Ele acabou de enviar isso para uma IA. Podia?",
+  "duration": 15,
+  "render_id": "ugi-growth-v2-pilot-20260827-001",
+  "content_id": "UGI-GROWTH-V2-PILOT-20260827-001",
+  "experiment_id": "UGI-GROWTH-V2-HOOK-RECOVERY-001",
+  "variant": "A",
+  "commercial_intent": "organic_growth",
+  "publish": false,
+  "schedule": false,
+  "buffer_mutation_allowed": false,
+  "scenes_json": {
+    "creative_version": "UGI-GROWTH-V2",
+    "creative_family": "expensive_mistake",
+    "commercial_offer": false,
+    "cta": "Salve antes de liberar IA no time.",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true
+    },
+    "exact_copy": {
+      "enabled": true
+    },
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "close-up employee uploading confidential spreadsheet on laptop in office, immediate tension",
+        "pexels_query": "employee laptop spreadsheet office close up",
+        "overlay": {
+          "instagram": "ELE ACABOU DE ENVIAR ISSO PARA UMA IA.",
+          "tiktok": "ELE ACABOU DE ENVIAR ISSO PARA UMA IA.",
+          "youtube": "ELE ACABOU DE ENVIAR ISSO PARA UMA IA."
+        },
+        "support": {
+          "instagram": "SALÁRIOS_2026.xlsx",
+          "tiktok": "SALÁRIOS_2026.xlsx",
+          "youtube": "SALÁRIOS_2026.xlsx"
+        },
+        "narration": {
+          "instagram": "Seu funcionário acabou de mandar a planilha de salários para uma IA.",
+          "tiktok": "Seu funcionário acabou de mandar a planilha de salários para uma IA.",
+          "youtube": "Seu funcionário acabou de mandar a planilha de salários para uma IA."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "manager suddenly concerned looking at laptop, freeze moment, office tension",
+        "pexels_query": "manager worried laptop office close up",
+        "overlay": {
+          "instagram": "PODIA?",
+          "tiktok": "PODIA?",
+          "youtube": "PODIA?"
+        },
+        "support": {
+          "instagram": "Se ninguém sabe responder, já existe um risco.",
+          "tiktok": "Se ninguém sabe responder, já existe um risco.",
+          "youtube": "Se ninguém sabe responder, já existe um risco."
+        },
+        "narration": {
+          "instagram": "Podia? Se ninguém sabe responder, sua empresa já tem um risco.",
+          "tiktok": "Podia? Se ninguém sabe responder, sua empresa já tem um risco.",
+          "youtube": "Podia? Se ninguém sabe responder, sua empresa já tem um risco."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "data privacy cybersecurity office laptop sensitive information",
+        "pexels_query": "data privacy laptop cybersecurity office",
+        "overlay": {
+          "instagram": "1. DADO SENSÍVEL? NÃO ENVIA.",
+          "tiktok": "1. DADO SENSÍVEL? NÃO ENVIA.",
+          "youtube": "1. DADO SENSÍVEL? NÃO ENVIA."
+        },
+        "support": {
+          "instagram": "Primeiro classifique o dado.",
+          "tiktok": "Primeiro classifique o dado.",
+          "youtube": "Primeiro classifique o dado."
+        },
+        "narration": {
+          "instagram": "Regra um: dado sensível não entra sem política clara.",
+          "tiktok": "Regra um: dado sensível não entra sem política clara.",
+          "youtube": "Regra um: dado sensível não entra sem política clara."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "manager reviewing AI recommendation with human oversight at desk",
+        "pexels_query": "manager reviewing computer decision office",
+        "overlay": {
+          "instagram": "2. DECISÃO CRÍTICA? REVISÃO HUMANA.",
+          "tiktok": "2. DECISÃO CRÍTICA? REVISÃO HUMANA.",
+          "youtube": "2. DECISÃO CRÍTICA? REVISÃO HUMANA."
+        },
+        "support": {
+          "instagram": "Impacto alto não roda no automático.",
+          "tiktok": "Impacto alto não roda no automático.",
+          "youtube": "Impacto alto não roda no automático."
+        },
+        "narration": {
+          "instagram": "Regra dois: decisão crítica exige revisão humana.",
+          "tiktok": "Regra dois: decisão crítica exige revisão humana.",
+          "youtube": "Regra dois: decisão crítica exige revisão humana."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "team leader assigning clear responsibility in fast business meeting",
+        "pexels_query": "team leader responsibility business meeting",
+        "overlay": {
+          "instagram": "3. SEM DONO? NÃO AUTOMATIZA.",
+          "tiktok": "3. SEM DONO? NÃO AUTOMATIZA.",
+          "youtube": "3. SEM DONO? NÃO AUTOMATIZA."
+        },
+        "support": {
+          "instagram": "Toda decisão relevante precisa de responsável.",
+          "tiktok": "Toda decisão relevante precisa de responsável.",
+          "youtube": "Toda decisão relevante precisa de responsável."
+        },
+        "narration": {
+          "instagram": "Regra três: toda automação relevante precisa de um dono humano.",
+          "tiktok": "Regra três: toda automação relevante precisa de um dono humano.",
+          "youtube": "Regra três: toda automação relevante precisa de um dono humano."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "confident manager closing laptop after making safe AI governance decision",
+        "pexels_query": "confident manager laptop office decision",
+        "overlay": {
+          "instagram": "IA RÁPIDA SEM REGRA = RISCO MAIS RÁPIDO.",
+          "tiktok": "IA RÁPIDA SEM REGRA = RISCO MAIS RÁPIDO.",
+          "youtube": "IA RÁPIDA SEM REGRA = RISCO MAIS RÁPIDO."
+        },
+        "support": {
+          "instagram": "Salve antes de liberar IA no time.",
+          "tiktok": "Salve antes de liberar IA no time.",
+          "youtube": "Salve antes de liberar IA no time."
+        },
+        "narration": {
+          "instagram": "IA rápida sem regra só cria risco mais rápido. Salve isso antes de liberar IA no time.",
+          "tiktok": "IA rápida sem regra só cria risco mais rápido. Salve isso antes de liberar IA no time.",
+          "youtube": "IA rápida sem regra só cria risco mais rápido. Salve isso antes de liberar IA no time."
+        }
+      }
+    ]
+  }
+}
