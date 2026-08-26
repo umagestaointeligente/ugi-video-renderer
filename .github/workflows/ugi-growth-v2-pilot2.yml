@@ -37,12 +37,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          need_apt=0
+          command -v ffmpeg >/dev/null 2>&1 || need_apt=1
+          command -v ffprobe >/dev/null 2>&1 || need_apt=1
+          command -v espeak-ng >/dev/null 2>&1 || need_apt=1
+          if [ "$need_apt" -eq 1 ]; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends ffmpeg espeak-ng
+          fi
           command -v ffmpeg
           command -v ffprobe
-          if ! command -v espeak-ng >/dev/null 2>&1; then
-            sudo apt-get update -y
-            sudo apt-get install -y --no-install-recommends espeak-ng
-          fi
+          command -v espeak-ng
           python -m pip install --upgrade pip
           python -m pip install 'kokoro>=0.9.4' soundfile numpy requests pillow
 
