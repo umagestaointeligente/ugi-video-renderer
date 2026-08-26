@@ -1,0 +1,31 @@
+{
+  "project": "UGI",
+  "policyId": "ugi-editorial-trend-gate-v2-2",
+  "effectiveDate": "2026-08-27",
+  "status": "canonical_for_new_content",
+  "nonRegression": true,
+  "trendWindowsHours": [72, 168],
+  "minimumTopicScore": 70,
+  "scoring": {
+    "audienceRelevance": 25,
+    "trendVelocity": 20,
+    "hookPotential": 20,
+    "shareSavePotential": 15,
+    "productConnection": 10,
+    "novelty30d": 10
+  },
+  "requiredFlow": [
+    "trend_scan",
+    "topic_score",
+    "script",
+    "approved_video_pattern",
+    "frame_by_frame_qa",
+    "publication",
+    "readback",
+    "analytics",
+    "kill_retest_scale"
+  ],
+  "approvedVideoReference": "UGI_Growth_V2_Pilot_CORRIGIDO_PADRAO_APROVADO.mp4",
+  "approvedCTA": "Quer organizar sua gestão com mais clareza? Acesse o Kit UGI. Link na bio.",
+  "preserveExistingScheduledPosts": true
+}
