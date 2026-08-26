@@ -1,0 +1,63 @@
+{
+  "pilot_id": "UGI-GROWTH-V2-PILOT-002",
+  "title": "Seu funcionário acabou de colar a folha de salários numa IA",
+  "voice_speed": 1.0,
+  "music": "assets/music/innovation/dreamstate_library-modern-tech-corporate-theme-469710 (1).mp3",
+  "safety": {
+    "render_only": true,
+    "buffer_mutation": false,
+    "publication": false,
+    "checkout": false
+  },
+  "scenes": [
+    {
+      "layout": "hook",
+      "headline": "ELE COLOU A FOLHA DE SALÁRIOS NUMA IA.",
+      "support": "SALÁRIOS_2026.xlsx",
+      "narration": "Seu funcionário acabou de colar a folha de salários numa inteligência artificial.",
+      "query": "employee laptop spreadsheet office close up",
+      "min_duration": 4.8
+    },
+    {
+      "layout": "question",
+      "headline": "VOCÊ DEMITE, BLOQUEIA A IA OU MUDA A REGRA?",
+      "support": "Decida antes de o problema acontecer.",
+      "narration": "Você demite, bloqueia a IA ou muda a regra?",
+      "query": "manager serious laptop office decision",
+      "min_duration": 3.8
+    },
+    {
+      "layout": "twist",
+      "headline": "SE NINGUÉM SABE RESPONDER...",
+      "support": "o problema começou antes dele.",
+      "narration": "Se ninguém sabe responder, o problema começou antes dele.",
+      "query": "business team meeting confusion office",
+      "min_duration": 4.2
+    },
+    {
+      "layout": "rules",
+      "headline": "REGRA 1 + REGRA 2",
+      "support": "Dados sensíveis não entram. Decisão crítica exige revisão humana.",
+      "narration": "Primeiro: dados sensíveis não entram. Segundo: decisão crítica exige revisão humana.",
+      "query": "cyber security data privacy laptop business",
+      "min_duration": 6.0
+    },
+    {
+      "layout": "rule3",
+      "headline": "REGRA 3",
+      "support": "Alguém precisa ser dono do resultado.",
+      "narration": "Terceiro: alguém precisa ser dono do resultado.",
+      "query": "manager reviewing document office leadership",
+      "min_duration": 3.8
+    },
+    {
+      "layout": "cta",
+      "headline": "IA COM REGRA ECONOMIZA TEMPO.",
+      "support": "Sem regra, multiplica risco.",
+      "button": "CHECKLIST NO PERFIL",
+      "narration": "IA com regra economiza tempo. Sem regra, multiplica risco. Salve este vídeo e veja o checklist completo no perfil.",
+      "query": "confident manager office team success",
+      "min_duration": 6.5
+    }
+  ]
+}
