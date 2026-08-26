@@ -1,0 +1,148 @@
+{
+  "project": "UGI",
+  "pilot_id": "UGI-GROWTH-V2-PILOT-003-STABLE",
+  "mode": "render_only",
+  "title": "O erro de IA que começa antes do clique",
+  "cta": "ACESSE O KIT UGI",
+  "commercial_intent": "atracao_com_conversao_kit_ugi",
+  "safety": {
+    "render_only": true,
+    "publication": false,
+    "buffer_mutation": false,
+    "checkout": false,
+    "r2_upload": false
+  },
+  "creative_contract": {
+    "use_stable_ugi_renderer": true,
+    "real_video_background_required": true,
+    "still_image_montage_forbidden": true,
+    "brand_signature_required": true,
+    "brand_position": "upper_right",
+    "lower_panel_only": true,
+    "natural_voice": true,
+    "global_speed_up": false,
+    "full_cta_narration": "Quer organizar sua gestão com mais clareza? Acesse o Kit UGI. Link na bio."
+  },
+  "scenes": [
+    {
+      "role": "hook",
+      "visual_intent": "employee handling confidential payroll spreadsheet on laptop in modern office",
+      "pexels_query": "employee confidential spreadsheet laptop office",
+      "overlay": {
+        "instagram": "Ele enviou a folha de salários para uma IA.",
+        "tiktok": "Ele enviou salários para uma IA.",
+        "youtube": "Ele enviou a folha de salários para uma IA."
+      },
+      "support": {
+        "instagram": "Um clique. Um dado sensível. Um risco real.",
+        "tiktok": "Um clique. Um risco real.",
+        "youtube": "Um clique. Um dado sensível. Um risco real."
+      },
+      "narration": {
+        "instagram": "Ele enviou a folha de salários para uma IA.",
+        "tiktok": "Ele enviou a folha de salários para uma IA.",
+        "youtube": "Ele enviou a folha de salários para uma IA."
+      }
+    },
+    {
+      "role": "pain",
+      "visual_intent": "concerned manager looking at laptop after serious workplace mistake",
+      "pexels_query": "concerned manager laptop office decision",
+      "overlay": {
+        "instagram": "Você demite, bloqueia ou muda a regra?",
+        "tiktok": "Demite, bloqueia ou muda a regra?",
+        "youtube": "Você demite, bloqueia ou muda a regra?"
+      },
+      "support": {
+        "instagram": "A decisão parece óbvia. Não é.",
+        "tiktok": "A resposta não é tão simples.",
+        "youtube": "A decisão parece óbvia. Mas não é."
+      },
+      "narration": {
+        "instagram": "Você demite, bloqueia ou muda a regra?",
+        "tiktok": "Você demite, bloqueia ou muda a regra?",
+        "youtube": "Você demite, bloqueia ou muda a regra?"
+      }
+    },
+    {
+      "role": "consequence",
+      "visual_intent": "business team confused around computer because policy is unclear",
+      "pexels_query": "business team confusion laptop meeting office",
+      "overlay": {
+        "instagram": "Sem regra, o erro era previsível.",
+        "tiktok": "Sem regra, o erro era previsível.",
+        "youtube": "Sem regra clara, o erro era previsível."
+      },
+      "support": {
+        "instagram": "O problema começou antes do clique.",
+        "tiktok": "Começou antes do clique.",
+        "youtube": "O problema começou antes do clique."
+      },
+      "narration": {
+        "instagram": "Sem regra clara, o problema começou antes do clique.",
+        "tiktok": "Sem regra clara, o problema começou antes do clique.",
+        "youtube": "Sem regra clara, o problema começou antes do clique."
+      }
+    },
+    {
+      "role": "turn",
+      "visual_intent": "professional reviewing sensitive business documents carefully before using technology",
+      "pexels_query": "manager reviewing documents office data privacy",
+      "overlay": {
+        "instagram": "Dados sensíveis não entram.",
+        "tiktok": "Dados sensíveis não entram.",
+        "youtube": "Dados sensíveis não entram na IA."
+      },
+      "support": {
+        "instagram": "Decisão crítica exige revisão humana.",
+        "tiktok": "Decisão crítica? Revisão humana.",
+        "youtube": "Decisão crítica exige revisão humana."
+      },
+      "narration": {
+        "instagram": "Dados sensíveis não entram. Decisão crítica exige revisão humana.",
+        "tiktok": "Dados sensíveis não entram. Decisão crítica exige revisão humana.",
+        "youtube": "Dados sensíveis não entram. Decisão crítica exige revisão humana."
+      }
+    },
+    {
+      "role": "result",
+      "visual_intent": "two business leaders reviewing tablet and taking ownership of decision",
+      "pexels_query": "business leaders tablet office responsibility",
+      "overlay": {
+        "instagram": "Todo resultado precisa de um dono.",
+        "tiktok": "Todo resultado precisa de um dono.",
+        "youtube": "Toda automação precisa de um responsável."
+      },
+      "support": {
+        "instagram": "Automação não elimina responsabilidade.",
+        "tiktok": "Automação não elimina responsabilidade.",
+        "youtube": "Automação não elimina responsabilidade."
+      },
+      "narration": {
+        "instagram": "E toda automação precisa de um dono.",
+        "tiktok": "E toda automação precisa de um dono.",
+        "youtube": "E toda automação precisa de um responsável pelo resultado."
+      }
+    },
+    {
+      "role": "cta",
+      "visual_intent": "confident business manager in organized modern office after solving management problem",
+      "pexels_query": "confident manager modern office business success",
+      "overlay": {
+        "instagram": "Gestão clara reduz risco.",
+        "tiktok": "Gestão clara reduz risco.",
+        "youtube": "Gestão clara reduz risco e retrabalho."
+      },
+      "support": {
+        "instagram": "Kit UGI: método prático para sua rotina.",
+        "tiktok": "Kit UGI: método prático para sua rotina.",
+        "youtube": "Kit UGI: método prático para aplicar na rotina."
+      },
+      "narration": {
+        "instagram": "Quer organizar sua gestão com mais clareza? Acesse o Kit UGI. Link na bio.",
+        "tiktok": "Quer organizar sua gestão com mais clareza? Acesse o Kit UGI. Link na bio.",
+        "youtube": "Quer organizar sua gestão com mais clareza? Acesse o Kit UGI. Link na bio."
+      }
+    }
+  ]
+}
