@@ -3,6 +3,7 @@ import importlib.util
 import json
 import os
 import shutil
+import sys
 import time
 from pathlib import Path
 
@@ -189,8 +190,10 @@ def main():
         "VIDEO_BRAND_RIGHT_MARGIN": "58",
     })
 
-    spec = importlib.util.spec_from_file_location("ugi_stable_renderer", ROOT / "render-reel.py")
+    module_name = "ugi_stable_renderer"
+    spec = importlib.util.spec_from_file_location(module_name, ROOT / "render-reel.py")
     renderer = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = renderer
     spec.loader.exec_module(renderer)
 
     if renderer.WORK.exists():
