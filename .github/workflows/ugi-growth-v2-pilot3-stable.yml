@@ -1,0 +1,111 @@
+name: UGI Growth V2 Pilot 003 Stable Video
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/ugi-growth-v2/pilot-003-stable.json'
+      - 'scripts/ugi_growth_v2_pilot3_stable.py'
+      - '.github/workflows/ugi-growth-v2-pilot3-stable.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ugi-growth-v2-pilot-003-stable
+  cancel-in-progress: true
+
+jobs:
+  render-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Ensure FFmpeg and espeak-ng
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v ffmpeg
+          command -v ffprobe
+          if ! command -v espeak-ng >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends espeak-ng
+          fi
+
+      - name: Install stable UGI renderer dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install 'kokoro>=0.9.4' soundfile numpy requests
+
+      - name: Validate render-only contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          p=json.load(open('experiments/ugi-growth-v2/pilot-003-stable.json',encoding='utf-8'))
+          s=p['safety']
+          assert s['render_only'] is True
+          assert s['publication'] is False
+          assert s['buffer_mutation'] is False
+          assert s['checkout'] is False
+          assert s['r2_upload'] is False
+          c=p['creative_contract']
+          assert c['use_stable_ugi_renderer'] is True
+          assert c['real_video_background_required'] is True
+          assert c['still_image_montage_forbidden'] is True
+          assert c['brand_signature_required'] is True
+          print('UGI_PILOT_003_RENDER_ONLY_CONTRACT_PASS')
+          PY
+
+      - name: Render with stable UGI video engine
+        run: python scripts/ugi_growth_v2_pilot3_stable.py
+
+      - name: Validate corrected pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          VIDEO='output/growth-v2-pilot3/UGI_Growth_V2_Pilot_003_Corrected.mp4'
+          EVIDENCE='output/growth-v2-pilot3/UGI_Growth_V2_Pilot_003_EVIDENCE.json'
+          test -s "$VIDEO"
+          test -s "$EVIDENCE"
+          python - <<'PY'
+          import json
+          e=json.load(open('output/growth-v2-pilot3/UGI_Growth_V2_Pilot_003_EVIDENCE.json',encoding='utf-8'))
+          assert e['publicationTriggered'] is False
+          assert e['bufferMutationPerformed'] is False
+          assert e['r2UploadPerformed'] is False
+          assert e['checkoutTriggered'] is False
+          assert e['realVideoScenes'] == 6
+          assert all(x == 'video' for x in e['mediaKinds'])
+          assert e['qa']['quality_status'] == 'pass'
+          print('UGI_PILOT_003_REAL_VIDEO_QA_PASS')
+          PY
+          ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_name,codec_type,width,height,r_frame_rate,sample_rate,channels -of json "$VIDEO" | tee output/growth-v2-pilot3/ffprobe.json
+
+      - name: Upload render-only artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-growth-v2-pilot-003-corrected
+          path: |
+            output/growth-v2-pilot3/UGI_Growth_V2_Pilot_003_Corrected.mp4
+            output/growth-v2-pilot3/UGI_Growth_V2_Pilot_003_EVIDENCE.json
+            output/growth-v2-pilot3/media-attribution.json
+            output/growth-v2-pilot3/ffprobe.json
+            output/r42-storyboard-instagram.json
+            output/r42-platform-manifest.json
+          if-no-files-found: error
+          retention-days: 7
