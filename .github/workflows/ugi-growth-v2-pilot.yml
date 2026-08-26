@@ -1,0 +1,96 @@
+name: UGI Growth V2 Pilot Render
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/growth-v2/pilots/*.json'
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  dispatch-render-only-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Resolve pilot file
+        id: pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE="$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep '^control-plane/growth-v2/pilots/.*\.json$' | tail -n1)"
+          test -n "$FILE"
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+          echo "PILOT_FILE=$FILE"
+
+      - name: Validate render-only safety contract
+        shell: bash
+        env:
+          PILOT_FILE: ${{ steps.pilot.outputs.file }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ['PILOT_FILE'])
+          d=json.loads(p.read_text(encoding='utf-8'))
+          required=['title','duration','render_id','content_id','experiment_id','variant','commercial_intent','scenes_json']
+          for k in required:
+              if k not in d: raise SystemExit(f'{k} missing')
+          if d.get('publish') is not False: raise SystemExit('PILOT_FAIL_CLOSED: publish must be false')
+          if d.get('schedule') is not False: raise SystemExit('PILOT_FAIL_CLOSED: schedule must be false')
+          if d.get('buffer_mutation_allowed') is not False: raise SystemExit('PILOT_FAIL_CLOSED: buffer_mutation_allowed must be false')
+          sj=d.get('scenes_json') or {}
+          if sj.get('commercial_offer') is True: raise SystemExit('PILOT_FAIL_CLOSED: commercial_offer must not be true')
+          scenes=sj.get('scenes') if isinstance(sj,dict) else None
+          if not isinstance(scenes,list) or not 4 <= len(scenes) <= 10: raise SystemExit('PILOT_FAIL_CLOSED: scenes must contain 4-10 items')
+          if not str(d.get('render_id','')).startswith('ugi-growth-v2-pilot-'): raise SystemExit('PILOT_FAIL_CLOSED: render_id namespace invalid')
+          if not str(d.get('content_id','')).startswith('UGI-GROWTH-V2-PILOT-'): raise SystemExit('PILOT_FAIL_CLOSED: content_id namespace invalid')
+          print('UGI_GROWTH_V2_PILOT_SAFETY_PASS')
+          print('BUFFER_MUTATION=false')
+          print('PUBLISH=false')
+          print('SCHEDULE=false')
+          PY
+
+      - name: Dispatch existing renderer without publication
+        shell: bash
+        env:
+          PILOT_FILE: ${{ steps.pilot.outputs.file }}
+        run: |
+          set -euo pipefail
+          TITLE="$(jq -r '.title' "$PILOT_FILE")"
+          DURATION="$(jq -r '.duration|tostring' "$PILOT_FILE")"
+          RENDER_ID="$(jq -r '.render_id' "$PILOT_FILE")"
+          CONTENT_ID="$(jq -r '.content_id' "$PILOT_FILE")"
+          EXPERIMENT_ID="$(jq -r '.experiment_id' "$PILOT_FILE")"
+          VARIANT="$(jq -r '.variant' "$PILOT_FILE")"
+          COMMERCIAL_INTENT="$(jq -r '.commercial_intent' "$PILOT_FILE")"
+          SCENES_JSON="$(jq -c '.scenes_json' "$PILOT_FILE")"
+
+          gh workflow run render-video.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f title="$TITLE" \
+            -f duration="$DURATION" \
+            -f render_id="$RENDER_ID" \
+            -f content_id="$CONTENT_ID" \
+            -f experiment_id="$EXPERIMENT_ID" \
+            -f variant="$VARIANT" \
+            -f commercial_intent="$COMMERCIAL_INTENT" \
+            -f scenes_json="$SCENES_JSON" \
+            -f smoke_test=false \
+            -f smoke_test_platform=tiktok
+
+          echo "GROWTH_V2_RENDER_DISPATCHED=true"
+          echo "BUFFER_MUTATION=false"
+          echo "PUBLISH=false"
+          echo "SCHEDULE=false"
