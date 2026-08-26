@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+import importlib.util
 import json
 import os
-import subprocess
+import shutil
 import time
 from pathlib import Path
 
@@ -169,8 +170,7 @@ def main():
         encoding="utf-8",
     )
 
-    env = os.environ.copy()
-    env.update({
+    os.environ.update({
         "VIDEO_TITLE": payload["title"],
         "VIDEO_RENDER_ID": payload["pilot_id"],
         "VIDEO_CONTENT_ID": payload["pilot_id"],
@@ -189,13 +189,22 @@ def main():
         "VIDEO_BRAND_RIGHT_MARGIN": "58",
     })
 
-    subprocess.run(["python", "render-reel.py"], cwd=ROOT, env=env, check=True)
+    spec = importlib.util.spec_from_file_location("ugi_stable_renderer", ROOT / "render-reel.py")
+    renderer = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(renderer)
 
+    if renderer.WORK.exists():
+        shutil.rmtree(renderer.WORK)
+    renderer.WORK.mkdir(parents=True, exist_ok=True)
+    renderer.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    result = renderer.render_platform("instagram")
     src = OUTPUT / "instagram-reel.mp4"
     dst = PILOT_OUT / "UGI_Growth_V2_Pilot_003_Corrected.mp4"
     dst.write_bytes(src.read_bytes())
 
-    storyboard = json.loads((OUTPUT / "r42-storyboard-instagram.json").read_text(encoding="utf-8"))
+    storyboard_path = OUTPUT / "r42-storyboard-instagram.json"
+    storyboard = json.loads(storyboard_path.read_text(encoding="utf-8"))
     if storyboard.get("qa", {}).get("quality_status") != "pass":
         raise RuntimeError("Stable renderer QA failed")
     scene_media = [s.get("media_kind") for s in storyboard.get("scenes", [])]
@@ -204,10 +213,13 @@ def main():
 
     evidence = {
         "pilotId": payload["pilot_id"],
-        "renderer": "render-reel.py stable UGI renderer",
+        "renderer": "render-reel.py stable UGI renderer / instagram master only",
+        "durationSeconds": result.get("actual_duration"),
         "realVideoScenes": len(scene_media),
         "mediaKinds": scene_media,
-        "brandSignature": storyboard.get("qa", {}).get("checks", {}).get("safe_zone_applied"),
+        "brandSignatureRequired": True,
+        "brandAsset": "assets/branding/ugi-symbol-transparent.png",
+        "brandPosition": "upper_right",
         "publicationTriggered": False,
         "bufferMutationPerformed": False,
         "r2UploadPerformed": False,
