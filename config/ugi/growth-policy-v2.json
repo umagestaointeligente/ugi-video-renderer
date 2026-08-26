@@ -1,0 +1,74 @@
+{
+  "policyId": "ugi-growth-engine-v2",
+  "schemaVersion": "2.0",
+  "mode": "pilot_overlay",
+  "effectivePilotDate": "2026-08-27",
+  "productionMutationAllowed": false,
+  "preserve": {
+    "growthPolicyV1": true,
+    "publisherHub": true,
+    "bufferExclusivePublisher": true,
+    "metricoolAnalyticsOnly": true,
+    "cloudflareWorker": true,
+    "existingQueues": true,
+    "existingReceipts": true,
+    "existingDrafts": true,
+    "existingR2Assets": true,
+    "existingContentIds": true,
+    "existingBufferSchedules": true
+  },
+  "creative": {
+    "targetDurationSeconds": {"min": 10, "max": 18},
+    "hookWindowSeconds": 1.0,
+    "visualChangeTargetSeconds": {"min": 0.7, "max": 1.5},
+    "introAllowed": false,
+    "logoBeforeHookAllowed": false,
+    "firstFrameMustWorkWithoutAudio": true,
+    "captionsRequired": true,
+    "ptBrNeutralNarration": true,
+    "families": [
+      "expensive_mistake",
+      "what_would_you_do",
+      "looks_right_but_wrong",
+      "manager_test",
+      "corporate_mini_story"
+    ]
+  },
+  "platformTreatment": {
+    "tiktok": "faster_raw_provocative_participation_first",
+    "instagram": "share_save_first_grid_legibility",
+    "youtube": "curiosity_story_payoff_series_ready"
+  },
+  "commercialMix": {
+    "valueShare": 0.8,
+    "commercialShare": 0.2,
+    "defaultRecoveryCta": "behavior_not_purchase"
+  },
+  "learningStates": ["NO_SIGNAL", "KILL", "RETEST", "SCALE"],
+  "classification": {
+    "thresholdMode": "calibrate_from_ugi_baseline",
+    "absoluteUniversalThresholdsAllowed": false,
+    "primarySignals": [
+      "views",
+      "reach",
+      "average_watch_time",
+      "retention",
+      "completion",
+      "shares",
+      "saves",
+      "comments",
+      "followers_generated",
+      "distribution_source"
+    ]
+  },
+  "pilotSafety": {
+    "renderOnly": true,
+    "bufferMutationAllowed": false,
+    "publisherHubQueueInsertionAllowed": false,
+    "automaticPublicationAllowed": false,
+    "checkoutAllowed": false,
+    "paymentAllowed": false,
+    "uniquePilotIdsRequired": true,
+    "rollback": "growth-policy-v1-remains-intact"
+  }
+}
