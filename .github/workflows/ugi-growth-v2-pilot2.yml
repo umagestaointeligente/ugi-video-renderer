@@ -1,0 +1,84 @@
+name: UGI Growth V2.1 Pilot 002 Render Only
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/ugi-growth-v2/pilot-002.json'
+      - 'scripts/ugi_growth_v2_pilot_renderer.py'
+      - '.github/workflows/ugi-growth-v2-pilot2.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ugi-growth-v2-pilot-002
+  cancel-in-progress: true
+
+jobs:
+  render-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      UGI_GROWTH_PILOT_FILE: experiments/ugi-growth-v2/pilot-002.json
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Ensure media and TTS dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v ffmpeg
+          command -v ffprobe
+          if ! command -v espeak-ng >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends espeak-ng
+          fi
+          python -m pip install --upgrade pip
+          python -m pip install 'kokoro>=0.9.4' soundfile numpy requests pillow
+
+      - name: Validate render-only safety contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          p=json.load(open('experiments/ugi-growth-v2/pilot-002.json',encoding='utf-8'))
+          s=p['safety']
+          assert s['render_only'] is True
+          assert s['buffer_mutation'] is False
+          assert s['publication'] is False
+          assert s['checkout'] is False
+          print('UGI_GROWTH_V2_1_RENDER_ONLY_SAFETY_PASS')
+          PY
+
+      - name: Render V2.1 pilot
+        run: python scripts/ugi_growth_v2_pilot_renderer.py
+
+      - name: Validate output
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s output/growth-v2-pilot/UGI_Growth_V2_1_Pilot_002.mp4
+          test -s output/growth-v2-pilot/UGI_Growth_V2_1_Pilot_002_EVIDENCE.json
+          ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_name,codec_type,width,height,r_frame_rate,sample_rate,channels -of json output/growth-v2-pilot/UGI_Growth_V2_1_Pilot_002.mp4 | tee output/growth-v2-pilot/ffprobe.json
+
+      - name: Preserve pilot artifact only
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-growth-v2-1-pilot-002
+          path: |
+            output/growth-v2-pilot/UGI_Growth_V2_1_Pilot_002.mp4
+            output/growth-v2-pilot/UGI_Growth_V2_1_Pilot_002_EVIDENCE.json
+            output/growth-v2-pilot/ffprobe.json
+          if-no-files-found: error
+          retention-days: 7
