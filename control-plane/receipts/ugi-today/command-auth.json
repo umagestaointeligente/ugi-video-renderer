@@ -2,11 +2,11 @@
   "http_code": 202,
   "body": {
     "ok": true,
-    "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+    "version": "lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25",
     "message": "Comando recebido e salvo.",
     "command": {
-      "id": "a5063d03-0713-4a6f-b921-19b199e86c6e",
-      "version": "lola-v8-r44-5-21-ugi-store-v2-2026-08-22",
+      "id": "8d249c69-755d-46f8-a2eb-4f2031bce82f",
+      "version": "lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25",
       "source": "lola-chatgpt",
       "type": "reel",
       "contentId": null,
@@ -65,7 +65,7 @@
       "requestedBy": "Lola",
       "status": "received",
       "generationStatus": "pending",
-      "createdAt": "2026-08-23T23:37:15.726Z"
+      "createdAt": "2026-08-26T22:49:15.523Z"
     },
     "proposal": null,
     "warning": null
