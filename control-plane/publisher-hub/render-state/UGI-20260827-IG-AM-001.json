@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T23:01:22.343366+00:00",
+  "updatedAt": "2026-08-28T01:31:19.318421+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -174,14 +174,14 @@
           "externalLink": null,
           "sharedNow": false,
           "requestedAt": "2026-08-25T21:59:02.587Z",
-          "updatedAt": "2026-08-25T21:59:05.754Z",
+          "updatedAt": "2026-08-27T11:11:42.821Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a30ddca4189a0011-ORD",
-            "rateLimitRemaining": "2411",
+            "requestId": "a31aa2788b6b64b4-GIG",
+            "rateLimitRemaining": "2379",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Siga a UGI para gestão prática.",
-    "updatedAt": "2026-08-25T21:59:06.560Z",
+    "updatedAt": "2026-08-27T11:11:44.647Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,

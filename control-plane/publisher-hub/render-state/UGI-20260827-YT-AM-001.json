@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T23:01:21.727422+00:00",
+  "updatedAt": "2026-08-28T01:31:18.946712+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -192,26 +192,26 @@
         "approvalStatus": "approved",
         "approvalDecisionAt": "2026-08-25T21:58:48.137Z",
         "publication": {
-          "status": "scheduled",
-          "bufferStatus": "scheduled",
+          "status": "published",
+          "bufferStatus": "sent",
           "bufferPostId": "6a8e101a4236595eb3cb47c9",
           "channelId": "6a78974ab2d9d577434584b7",
           "channelService": "youtube",
           "channelSource": "BUFFER_CHANNEL_YOUTUBE",
           "mode": "customScheduled",
           "dueAt": "2026-08-27T10:30:00.000Z",
-          "sentAt": null,
-          "externalLink": null,
+          "sentAt": "2026-08-27T10:30:21.655Z",
+          "externalLink": "https://www.youtube.com/shorts/C67MRG0fqkY",
           "sharedNow": false,
           "requestedAt": "2026-08-25T21:58:50.096Z",
-          "updatedAt": "2026-08-25T21:58:53.087Z",
+          "updatedAt": "2026-08-27T11:11:04.699Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a30ddc551d29aef5-ORD",
-            "rateLimitRemaining": "2415",
+            "requestId": "a31aa2253ae9b9d5-MIA",
+            "rateLimitRemaining": "2381",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Siga a UGI para gestão prática.",
-    "updatedAt": "2026-08-25T21:58:53.850Z",
+    "updatedAt": "2026-08-27T11:11:05.468Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,

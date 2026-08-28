@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-25T23:01:21.923551+00:00",
+  "updatedAt": "2026-08-28T01:31:19.135526+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -177,26 +177,26 @@
         "approvalStatus": "approved",
         "approvalDecisionAt": "2026-08-25T21:58:54.416Z",
         "publication": {
-          "status": "scheduled",
-          "bufferStatus": "scheduled",
+          "status": "published",
+          "bufferStatus": "sent",
           "bufferPostId": "6a8e10214236595eb3cb47f5",
           "channelId": "6a789721b2d9d5774345839d",
           "channelService": "tiktok",
           "channelSource": "BUFFER_CHANNEL_TIKTOK",
           "mode": "customScheduled",
           "dueAt": "2026-08-27T11:00:00.000Z",
-          "sentAt": null,
-          "externalLink": null,
+          "sentAt": "2026-08-27T11:06:22.422Z",
+          "externalLink": "https://tiktok.com/@umagestaointelige/video/7678665165834915090",
           "sharedNow": false,
           "requestedAt": "2026-08-25T21:58:56.272Z",
-          "updatedAt": "2026-08-25T21:58:59.227Z",
+          "updatedAt": "2026-08-27T11:11:11.308Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a30ddc7bad850011-ORD",
-            "rateLimitRemaining": "2413",
+            "requestId": "a31aa24f192b17a9-MIA",
+            "rateLimitRemaining": "2380",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Siga a UGI para gestão prática.",
-    "updatedAt": "2026-08-25T21:58:59.981Z",
+    "updatedAt": "2026-08-27T11:11:12.033Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,
