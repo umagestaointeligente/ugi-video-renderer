@@ -1,5 +1,11 @@
-const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
-const VERSION = "lsi-zero-cost-broker-r1-2026-08-28";
+const MODEL_ROUTES = Object.freeze({
+  cheap_text: "@cf/meta/llama-3.1-8b-instruct-fast",
+  fast_text: "@cf/zai-org/glm-4.7-flash",
+  structured_json: "@cf/zai-org/glm-4.7-flash",
+  deep_text: "@cf/google/gemma-4-26b-a4b-it",
+});
+const DEFAULT_ROLE = "cheap_text";
+const VERSION = "lsi-zero-cost-broker-r2-specialist-router-2026-08-29";
 const OIDC_ISSUER = "https://token.actions.githubusercontent.com";
 const OIDC_AUDIENCE = "lsi-zero-cost-broker";
 const ALLOWED_REPOSITORY = "umagestaointeligente/ugi-video-renderer";
@@ -98,11 +104,20 @@ async function encryptEnvelope(payload, responsePublicJwk, aadText) {
   return { alg: "RSA-OAEP-256+A256GCM", wrapped_key: bytesToB64url(wrapped), iv: bytesToB64url(iv), aad: bytesToB64url(aad), ciphertext: bytesToB64url(ciphertext) };
 }
 
+export function resolveRole(role) {
+  const normalized = String(role || DEFAULT_ROLE).trim().toLowerCase();
+  const model = MODEL_ROUTES[normalized];
+  if (!model) throw new Error(`task_role_not_allowed:${normalized || "empty"}`);
+  return { role: normalized, model };
+}
+
 function validatePayload(payload) {
   if (!payload || !Array.isArray(payload.tasks)) throw new Error("tasks_required");
   if (payload.tasks.length < 1 || payload.tasks.length > MAX_TASKS) throw new Error("task_count_out_of_range");
   for (const task of payload.tasks) {
     if (!task || typeof task.id !== "string" || !task.id) throw new Error("task_id_required");
+    if (Object.prototype.hasOwnProperty.call(task, "model")) throw new Error(`task_model_override_forbidden:${task.id}`);
+    resolveRole(task.role);
     const system = String(task.system || "");
     const user = String(task.user || "");
     if (!user) throw new Error(`task_user_required:${task.id}`);
@@ -120,16 +135,18 @@ function normalizeModelOutput(result) {
 
 async function executeTask(task, env) {
   const started = Date.now();
+  let route;
   try {
-    const result = await env.AI.run(MODEL, {
+    route = resolveRole(task.role);
+    const result = await env.AI.run(route.model, {
       messages: [...(task.system ? [{ role: "system", content: String(task.system) }] : []), { role: "user", content: String(task.user) }],
       temperature: Math.max(0, Math.min(1, Number(task.temperature ?? 0.2))),
       max_tokens: Math.min(MAX_OUTPUT_TOKENS, Number(task.max_tokens ?? 500)),
     });
     const text = normalizeModelOutput(result);
-    return { id: task.id, ok: true, text, latency_ms: Date.now() - started, model: MODEL };
+    return { id: task.id, ok: true, role: route.role, text, latency_ms: Date.now() - started, model: route.model };
   } catch (error) {
-    return { id: task.id, ok: false, error: String(error?.message ?? error).slice(0, 500), latency_ms: Date.now() - started, model: MODEL };
+    return { id: task.id, ok: false, role: route?.role || String(task.role || DEFAULT_ROLE), error: String(error?.message ?? error).slice(0, 500), latency_ms: Date.now() - started, model: route?.model || null };
   }
 }
 
@@ -137,7 +154,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname === "/health") {
-      return json({ ok: true, service: "lsi-zero-cost-broker", version: VERSION, workers_ai_bound: Boolean(env.AI), broker_key_configured: Boolean(env.BROKER_PRIVATE_JWK), model: MODEL, max_parallel_tasks: MAX_TASKS, production_publication: false, external_paid_provider: false });
+      return json({ ok: true, service: "lsi-zero-cost-broker", version: VERSION, workers_ai_bound: Boolean(env.AI), broker_key_configured: Boolean(env.BROKER_PRIVATE_JWK), default_role: DEFAULT_ROLE, role_models: MODEL_ROUTES, max_parallel_tasks: MAX_TASKS, production_publication: false, external_paid_provider: false });
     }
     if (request.method === "POST" && url.pathname === "/v1/execute") {
       if (!env.AI) return json({ ok: false, error: "workers_ai_binding_missing" }, 503);
@@ -152,10 +169,11 @@ export default {
       try { payload = await decryptEnvelope(body.encrypted, env); validatePayload(payload); } catch (error) { return json({ ok: false, error: "payload_decrypt_or_validate_failed", detail: String(error?.message ?? error) }, 400); }
       const started = Date.now();
       const results = await Promise.all(payload.tasks.map((task) => executeTask(task, env)));
-      const responsePayload = { schema_version: "1.0", mission_id: missionId, provider: "cloudflare_workers_ai", model: MODEL, zero_cost_route: true, external_paid_provider: false, identity: { repository: identity.repository, ref: identity.ref, run_id: identity.run_id }, task_count: results.length, success_count: results.filter((x) => x.ok).length, elapsed_ms: Date.now() - started, results };
+      const modelsUsed = [...new Set(results.filter((x) => x.model).map((x) => x.model))];
+      const responsePayload = { schema_version: "1.1", mission_id: missionId, provider: "cloudflare_workers_ai", router: "allowlisted_role_router", default_role: DEFAULT_ROLE, models_used: modelsUsed, zero_cost_route: true, external_paid_provider: false, identity: { repository: identity.repository, ref: identity.ref, run_id: identity.run_id }, task_count: results.length, success_count: results.filter((x) => x.ok).length, elapsed_ms: Date.now() - started, results };
       try {
         const encrypted = await encryptEnvelope(responsePayload, body.response_public_jwk, missionId);
-        return json({ ok: true, schema_version: "1.0", mission_id: missionId, encrypted, plaintext_returned: false });
+        return json({ ok: true, schema_version: "1.1", mission_id: missionId, encrypted, plaintext_returned: false });
       } catch (error) {
         return json({ ok: false, error: "response_encrypt_failed", detail: String(error?.message ?? error) }, 500);
       }
