@@ -1,0 +1,94 @@
+name: LSI Revenue R100 Infra Probe
+run-name: LSI Revenue Probe ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-r100-infra-probe-20260829]
+    paths:
+      - '.github/workflows/lsi-revenue-r100-infra-probe-20260829.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_BASE_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      LOLA_COMMAND_KEY: ${{ secrets.LOLA_COMMAND_KEY }}
+      ASAAS_API_KEY: ${{ secrets.ASAAS_API_KEY }}
+      ASAAS_ACCESS_TOKEN: ${{ secrets.ASAAS_ACCESS_TOKEN }}
+      UGI_ASAAS_API_KEY: ${{ secrets.UGI_ASAAS_API_KEY }}
+    steps:
+      - name: Probe secret presence without disclosure
+        shell: bash
+        run: |
+          set -euo pipefail
+          bool(){ if [ -n "${1:-}" ]; then printf true; else printf false; fi; }
+          jq -n \
+            --argjson base "$(bool "$UGI_BASE_URL")" \
+            --argjson cmd "$(bool "$LOLA_COMMAND_KEY")" \
+            --argjson a1 "$(bool "$ASAAS_API_KEY")" \
+            --argjson a2 "$(bool "$ASAAS_ACCESS_TOKEN")" \
+            --argjson a3 "$(bool "$UGI_ASAAS_API_KEY")" \
+            '{ugi_base_url:$base,lola_command_key:$cmd,asaas_api_key:$a1,asaas_access_token:$a2,ugi_asaas_api_key:$a3,secrets_exposed:false}' > /tmp/secrets.json
+
+      - name: Probe public UGI commerce entrypoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --silent --show-error --output /tmp/priorizacao.html --write-out '%{http_code}' 'https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao')"
+          title=false; price=false; buy=false
+          grep -q 'Kit UGI' /tmp/priorizacao.html && title=true || true
+          grep -q 'R$ 14,99' /tmp/priorizacao.html && price=true || true
+          grep -q 'Comprar agora' /tmp/priorizacao.html && buy=true || true
+          jq -n --arg code "$code" --argjson title "$title" --argjson price "$price" --argjson buy "$buy" '{http_code:$code,kit_visible:$title,price_visible:$price,buy_cta_visible:$buy}' > /tmp/store.json
+
+      - name: Probe authenticated Worker commerce read routes
+        if: env.UGI_BASE_URL != '' && env.LOLA_COMMAND_KEY != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${UGI_BASE_URL%/}"
+          probe(){
+            local path="$1" out="$2"
+            curl --silent --show-error --output "$out" --write-out '%{http_code}' \
+              -H "x-lola-command-key: $LOLA_COMMAND_KEY" "$base$path"
+          }
+          products_code="$(probe '/api/products' /tmp/products.json)"
+          orders_code="$(probe '/api/commerce/orders' /tmp/orders.json)"
+          checkouts_code="$(probe '/api/commerce/checkouts' /tmp/checkouts.json)"
+          products_count="$(jq -r '.count // (.products|length) // 0' /tmp/products.json 2>/dev/null || echo 0)"
+          jq -n --arg pc "$products_code" --arg oc "$orders_code" --arg cc "$checkouts_code" --arg products "$products_count" '{products_http:$pc,orders_http:$oc,checkouts_http:$cc,products_count:($products|tonumber? // 0),sensitive_payload_retained:false}' > /tmp/worker.json
+
+      - name: Probe direct Asaas auth only if a GitHub secret exists
+        if: env.ASAAS_API_KEY != '' || env.ASAAS_ACCESS_TOKEN != '' || env.UGI_ASAAS_API_KEY != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          key="$ASAAS_API_KEY"; [ -n "$key" ] || key="$ASAAS_ACCESS_TOKEN"; [ -n "$key" ] || key="$UGI_ASAAS_API_KEY"
+          echo "::add-mask::$key"
+          code="$(curl --silent --show-error --output /tmp/asaas.json --write-out '%{http_code}' \
+            -H "access_token: $key" \
+            'https://api.asaas.com/v3/payments?limit=1&offset=0')"
+          total="$(jq -r '.totalCount // 0' /tmp/asaas.json 2>/dev/null || echo 0)"
+          jq -n --arg code "$code" --arg total "$total" '{http_code:$code,authenticated:($code=="200"),total_count:($total|tonumber? // 0),payment_data_retained:false}' > /tmp/asaas-probe.json
+
+      - name: Consolidate safe receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -n \
+            --slurpfile secrets /tmp/secrets.json \
+            --slurpfile store /tmp/store.json \
+            --argjson worker "$(cat /tmp/worker.json 2>/dev/null || echo null)" \
+            --argjson asaas "$(cat /tmp/asaas-probe.json 2>/dev/null || echo null)" \
+            '{mission:"R100_24H",timestamp:(now|todate),secrets:$secrets[0],store:$store[0],worker:$worker,asaas:$asaas,zero_cost_probe:true,secrets_exposed:false}' | tee /tmp/revenue-probe.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-revenue-r100-infra-probe-${{ github.run_id }}
+          path: /tmp/revenue-probe.json
+          retention-days: 7
+          if-no-files-found: error
