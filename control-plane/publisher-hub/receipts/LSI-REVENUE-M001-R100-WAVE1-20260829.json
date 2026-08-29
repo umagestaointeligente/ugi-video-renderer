@@ -1,0 +1,19 @@
+{
+  "ok": false,
+  "retryable": true,
+  "state": "WAITING_FOR_RENDER_OR_DRAFT",
+  "project": "UGI",
+  "publisher": "BUFFER",
+  "manifest": "control-plane/publisher-hub/queue/ugi-revenue-r100-wave1-20260829.json",
+  "manifestSha256": "2dced32045cbb940fda87f162cd22294a24afda1dfc92efea4bd519423598ae2",
+  "policyId": "ugi-growth-engine",
+  "policySchema": "1.2",
+  "policySha256": "ddb581512329447065bff0b2833c769e6a6abfc1465595cc6b5883582308e095",
+  "routingSha256": "f648be966155fb460634dd9cd0652f15bb86cae4cbb1f2f9a4bd170c5abd5d8a",
+  "publicationTriggered": false,
+  "paymentTriggered": false,
+  "resolvedTargets": 0,
+  "expectedTargets": 3,
+  "timestamp": "2026-08-29T22:44:32.574910+00:00",
+  "results": []
+}
