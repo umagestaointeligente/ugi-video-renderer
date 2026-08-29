@@ -1,0 +1,42 @@
+name: LSI Revenue R2 Binding Probe
+run-name: LSI Revenue R2 Binding Probe ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-r2-binding-probe-20260829]
+    paths:
+      - '.github/workflows/lsi-revenue-r2-binding-probe-20260829.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CF_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      SCRIPT: lola-operacional-ugi
+    steps:
+      - name: Get sanitized live Worker binding metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_TOKEN"; test -n "$CF_ACCOUNT"
+          echo "::add-mask::$CF_TOKEN"; echo "::add-mask::$CF_ACCOUNT"
+          code="$(curl --silent --show-error --output /tmp/settings.json --write-out '%{http_code}' \
+            -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/workers/scripts/$SCRIPT/settings")"
+          test "$code" = 200
+          jq -e '.success==true' /tmp/settings.json >/dev/null
+          jq '[.result.bindings[]? | select(.type=="r2_bucket") | {name,type,bucket_name}]' /tmp/settings.json > /tmp/r2.json
+          jq '[.result.bindings[]? | {name,type} | select(.type != "secret_text" and .type != "plain_text")]' /tmp/settings.json > /tmp/nonsecret.json
+          jq -n --arg code "$code" --slurpfile r2 /tmp/r2.json --slurpfile ns /tmp/nonsecret.json \
+            '{http_code:$code,success:true,r2_bindings:$r2[0],nonsecret_bindings:$ns[0],secret_values_exposed:false}' | tee /tmp/receipt.json
+          test "$(jq '.r2_bindings|length' /tmp/receipt.json)" -ge 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-revenue-r2-binding-probe-${{ github.run_id }}
+          path: /tmp/receipt.json
+          retention-days: 7
