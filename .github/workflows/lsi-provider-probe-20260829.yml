@@ -55,18 +55,23 @@ jobs:
           code="$(curl --silent --show-error --output /tmp/groq-models.json --write-out '%{http_code}' -H "Authorization: Bearer $GROQ_API_KEY" 'https://api.groq.com/openai/v1/models')"
           if [ "$code" = 200 ]; then echo '{"auth":true,"inference_tested":false,"billing_risk_taken":false}' > generated/evidence/groq-probe.json; else jq -n --arg code "$code" '{auth:false,http_code:$code,inference_tested:false,billing_risk_taken:false}' > generated/evidence/groq-probe.json; fi
 
-      - name: Probe OpenRouter using explicitly free router
+      - name: Probe OpenRouter with explicit zero-dollar model
         if: env.OPENROUTER_API_KEY != ''
         shell: bash
         run: |
           set -euo pipefail
+          MODEL='google/gemma-4-26b-a4b-it:free'
           code="$(curl --silent --show-error --output /tmp/openrouter.json --write-out '%{http_code}' \
             -X POST 'https://openrouter.ai/api/v1/chat/completions' \
             -H "Authorization: Bearer $OPENROUTER_API_KEY" \
             -H 'Content-Type: application/json' \
-            --data '{"model":"openrouter/free","messages":[{"role":"user","content":"Reply exactly OPENROUTER_FREE_OK"}],"max_tokens":20,"temperature":0}')"
+            --data "{\"model\":\"$MODEL\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply exactly OPENROUTER_FREE_OK\"}],\"max_tokens\":40,\"temperature\":0}")"
           text="$(jq -r '.choices[0].message.content // empty' /tmp/openrouter.json 2>/dev/null || true)"
-          jq -n --arg code "$code" --arg text "$text" '{http_code:$code,free_router:true,marker:($text|contains("OPENROUTER_FREE_OK")),response_present:($text|length>0)}' > generated/evidence/openrouter-free-probe.json
+          err="$(jq -r '.error.message // empty' /tmp/openrouter.json 2>/dev/null || true)"
+          model_returned="$(jq -r '.model // empty' /tmp/openrouter.json 2>/dev/null || true)"
+          jq -n --arg code "$code" --arg text "$text" --arg error "$err" --arg requested "$MODEL" --arg returned "$model_returned" \
+            '{http_code:$code,free_model:true,requested_model:$requested,returned_model:$returned,marker:($text|contains("OPENROUTER_FREE_OK")),response_present:($text|length>0),error:$error}' \
+            > generated/evidence/openrouter-free-probe.json
 
       - name: Record Anthropic as no-call paid candidate
         if: env.ANTHROPIC_API_KEY != ''
@@ -84,7 +89,7 @@ jobs:
             --argjson groq "$(cat generated/evidence/groq-probe.json 2>/dev/null || echo null)" \
             --argjson openrouter "$(cat generated/evidence/openrouter-free-probe.json 2>/dev/null || echo null)" \
             --argjson anthropic "$(cat generated/evidence/anthropic-probe.json 2>/dev/null || echo null)" \
-            '{schema_version:"1.0",secrets:$secrets[0],gemini:$gemini,groq:$groq,openrouter:$openrouter,anthropic:$anthropic,secrets_exposed:false,zero_cost_policy:true}' \
+            '{schema_version:"1.1",secrets:$secrets[0],gemini:$gemini,groq:$groq,openrouter:$openrouter,anthropic:$anthropic,secrets_exposed:false,zero_cost_policy:true}' \
             > generated/evidence/lsi-provider-probe.json
           cat generated/evidence/lsi-provider-probe.json
 
