@@ -112,6 +112,12 @@ function validatePayload(payload) {
   }
 }
 
+function normalizeModelOutput(result) {
+  const raw = result?.response ?? result?.result?.response ?? result?.result ?? result ?? "";
+  if (typeof raw === "string") return raw.trim();
+  try { return JSON.stringify(raw); } catch { return String(raw); }
+}
+
 async function executeTask(task, env) {
   const started = Date.now();
   try {
@@ -120,7 +126,7 @@ async function executeTask(task, env) {
       temperature: Math.max(0, Math.min(1, Number(task.temperature ?? 0.2))),
       max_tokens: Math.min(MAX_OUTPUT_TOKENS, Number(task.max_tokens ?? 500)),
     });
-    const text = String(result?.response ?? result?.result?.response ?? "").trim();
+    const text = normalizeModelOutput(result);
     return { id: task.id, ok: true, text, latency_ms: Date.now() - started, model: MODEL };
   } catch (error) {
     return { id: task.id, ok: false, error: String(error?.message ?? error).slice(0, 500), latency_ms: Date.now() - started, model: MODEL };
