@@ -1,0 +1,50 @@
+name: LSI Revenue R100 Wave1 Validate
+run-name: LSI Revenue Wave1 Validate ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-r100-wave1-20260829]
+    paths:
+      - '.github/workflows/lsi-revenue-r100-wave1-validate-20260829.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON and Publisher Hub contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in \
+            control-plane/commands/ugi-revenue-r100-ig-a-20260829.json \
+            control-plane/commands/ugi-revenue-r100-tt-a-20260829.json \
+            control-plane/commands/ugi-revenue-r100-yt-a-20260829.json \
+            control-plane/publisher-hub/queue/ugi-revenue-r100-wave1-20260829.json; do
+            jq -e . "$f" >/dev/null
+          done
+          python3 -m py_compile scripts/ugi_publisher_hub.py scripts/ugi_render_reconciler.py
+          python3 scripts/ugi_publisher_hub.py --validate-only --manifest control-plane/publisher-hub/queue/ugi-revenue-r100-wave1-20260829.json
+          python3 - <<'PY'
+          import json, pathlib
+          for p in pathlib.Path('control-plane/commands').glob('ugi-revenue-r100-*-a-20260829.json'):
+              d=json.loads(p.read_text())
+              s=d['scenes_json']['scenes']
+              assert 4 <= len(s) <= 10
+              assert d['commercial_offer'] is True
+              c=d['commerce']
+              assert c['productId']=='UGI-MATERIAL-PRIORIDADES-001'
+              assert c['materialId']=='UGI-KIT-PRIORIZACAO-001'
+              assert c['paymentLink'].endswith('/priorizacao')
+              assert c['price']==14.99
+              for x in s:
+                  assert x['role'] in {'hook','pain','consequence','turn','result','cta'}
+                  assert x['visual_intent'] and x['pexels_query']
+                  for k in ('overlay','support','narration'):
+                      assert set(x[k]) >= {'instagram','tiktok','youtube'}
+          print('LSI_REVENUE_WAVE1_CONTRACT_PASS')
+          PY
