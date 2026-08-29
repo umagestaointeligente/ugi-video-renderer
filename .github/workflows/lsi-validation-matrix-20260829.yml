@@ -1,0 +1,63 @@
+name: LSI Validation Matrix 20260829
+run-name: LSI Validation Matrix ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-validation-matrix-20260829]
+    paths:
+      - '.github/workflows/lsi-validation-matrix-20260829.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate production text broker health
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error https://lsi-zero-cost-broker.umagestaointeligente.workers.dev/health -o /tmp/broker.json
+          jq -e '.ok==true and .workers_ai_bound==true and .broker_key_configured==true and .external_paid_provider==false and .production_publication==false and .max_parallel_tasks==8' /tmp/broker.json >/dev/null
+          jq -e '.role_models.cheap_text=="@cf/meta/llama-3.1-8b-instruct-fast" and .role_models.fast_text=="@cf/zai-org/glm-4.7-flash" and .role_models.structured_json=="@cf/zai-org/glm-4.7-flash" and .role_models.deep_text=="@cf/google/gemma-4-26b-a4b-it"' /tmp/broker.json >/dev/null
+          echo 'BROKER_HEALTH=PASS'
+          cat /tmp/broker.json
+
+      - name: Prove broker rejects unauthenticated execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --silent --show-error --output /tmp/deny.json --write-out '%{http_code}' -X POST -H 'Content-Type: application/json' --data '{}' https://lsi-zero-cost-broker.umagestaointeligente.workers.dev/v1/execute)"
+          test "$code" = 401
+          jq -e '.ok==false and .error=="oidc_denied"' /tmp/deny.json >/dev/null
+          echo 'BROKER_FAIL_CLOSED=PASS'
+
+      - name: Validate production media worker health
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error https://lsi-media-worker.umagestaointeligente.workers.dev/health -o /tmp/media.json
+          jq -e '.ok==true and .workers_ai_bound==true and .external_paid_provider==false and .production_publication==false and .image_model=="@cf/black-forest-labs/flux-1-schnell" and .transcribe_model=="@cf/openai/whisper-large-v3-turbo"' /tmp/media.json >/dev/null
+          echo 'MEDIA_HEALTH=PASS'
+          cat /tmp/media.json
+
+      - name: Write compact validation receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n \
+            --arg run "$GITHUB_RUN_ID" \
+            --slurpfile broker /tmp/broker.json \
+            --slurpfile media /tmp/media.json \
+            '{schema_version:"1.0",validated_at:"2026-08-29",run_id:$run,broker_health:true,broker_fail_closed:true,media_health:true,broker:$broker[0],media:$media[0],zero_cost_route:true,production_changed:false}' \
+            > generated/evidence/lsi-validation-matrix.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-validation-matrix-${{ github.run_id }}
+          path: generated/evidence/lsi-validation-matrix.json
+          retention-days: 14
+          if-no-files-found: error
