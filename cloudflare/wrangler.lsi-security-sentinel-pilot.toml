@@ -1,0 +1,10 @@
+name = "lsi-security-sentinel-pilot"
+main = "lsi-security-sentinel-pilot.mjs"
+compatibility_date = "2026-08-29"
+workers_dev = true
+
+[ai]
+binding = "AI"
+
+[observability]
+enabled = true
