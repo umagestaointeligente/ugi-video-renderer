@@ -1,0 +1,19 @@
+name: LSI Runner Smoke
+
+on:
+  push:
+    branches:
+      - lsi-runner-smoke-20260828
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Prove runner assignment
+        run: |
+          echo "LSI_RUNNER_SMOKE=PASS"
+          uname -a
