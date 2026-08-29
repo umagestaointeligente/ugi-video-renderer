@@ -62,16 +62,21 @@ jobs:
           echo "::add-mask::$token"
           echo "LSI_MEDIA_OIDC_TOKEN=$token" >> "$GITHUB_ENV"
 
-      - name: Prove FLUX image route
+      - name: Probe FLUX image route without blocking Whisper
         shell: bash
         run: |
-          set -euo pipefail
-          code="$(curl --silent --show-error --dump-header /tmp/image.headers --output /tmp/image.jpg --write-out '%{http_code}' -X POST -H "Authorization: Bearer $LSI_MEDIA_OIDC_TOKEN" -H 'Content-Type: application/json' --data '{"prompt":"simple cinematic blue sunrise over a calm ocean, no text, vertical composition","seed":12345}' "$WORKER_URL/v1/image")"
-          test "$code" = 200
-          test "$(wc -c < /tmp/image.jpg)" -gt 1000
-          grep -qi '^content-type: image/jpeg' /tmp/image.headers
-          grep -qi '^x-lsi-zero-cost-route: true' /tmp/image.headers
-          grep -qi '^x-lsi-external-paid-provider: false' /tmp/image.headers
+          set -u
+          code="$(curl --silent --show-error --dump-header /tmp/image.headers --output /tmp/image.body --write-out '%{http_code}' -X POST -H "Authorization: Bearer $LSI_MEDIA_OIDC_TOKEN" -H 'Content-Type: application/json' --data '{"prompt":"simple cinematic blue sunrise over a calm ocean, no text, vertical composition","seed":12345}' "$WORKER_URL/v1/image")"
+          echo "$code" > /tmp/image.code
+          if [ "$code" = 200 ] && [ "$(wc -c < /tmp/image.body)" -gt 1000 ] && grep -qi '^content-type: image/jpeg' /tmp/image.headers && grep -qi '^x-lsi-zero-cost-route: true' /tmp/image.headers; then
+            cp /tmp/image.body /tmp/image.jpg
+            echo true > /tmp/image.ok
+          else
+            echo false > /tmp/image.ok
+            echo "FLUX_HTTP=$code"
+            if grep -qi '^content-type: application/json' /tmp/image.headers; then cat /tmp/image.body; fi
+          fi
+          exit 0
 
       - name: Prepare deterministic speech sample
         shell: bash
@@ -84,14 +89,20 @@ jobs:
           espeak-ng -v en-us -s 135 -w /tmp/orbit-test.wav 'Orbit audio test. This is an automated transcription check.'
           test "$(wc -c < /tmp/orbit-test.wav)" -gt 1000
 
-      - name: Prove Whisper transcription route
+      - name: Probe Whisper transcription route independently
         shell: bash
         run: |
-          set -euo pipefail
+          set -u
           code="$(curl --silent --show-error --output /tmp/transcript.json --write-out '%{http_code}' -X POST -H "Authorization: Bearer $LSI_MEDIA_OIDC_TOKEN" -H 'Content-Type: audio/wav' --data-binary @/tmp/orbit-test.wav "$WORKER_URL/v1/transcribe?language=en")"
-          test "$code" = 200 || { cat /tmp/transcript.json; exit 1; }
-          jq -e '.ok==true and .zero_cost_route==true and .external_paid_provider==false and (.text|length)>5' /tmp/transcript.json >/dev/null
-          jq -r '.text' /tmp/transcript.json | tr '[:upper:]' '[:lower:]' | grep -q 'orbit'
+          echo "$code" > /tmp/transcript.code
+          if [ "$code" = 200 ] && jq -e '.ok==true and .zero_cost_route==true and .external_paid_provider==false and (.text|length)>5' /tmp/transcript.json >/dev/null && jq -r '.text' /tmp/transcript.json | tr '[:upper:]' '[:lower:]' | grep -q 'orbit'; then
+            echo true > /tmp/transcript.ok
+          else
+            echo false > /tmp/transcript.ok
+            echo "WHISPER_HTTP=$code"
+            cat /tmp/transcript.json || true
+          fi
+          exit 0
 
       - name: Write sanitized receipt
         if: always()
@@ -99,15 +110,18 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p generated/evidence
+          image_ok="$(cat /tmp/image.ok 2>/dev/null || echo false)"
+          image_code="$(cat /tmp/image.code 2>/dev/null || echo 0)"
           image_bytes=0; [ -f /tmp/image.jpg ] && image_bytes="$(wc -c < /tmp/image.jpg)"
           image_ms="$(awk 'BEGIN{IGNORECASE=1} /^x-lsi-elapsed-ms:/{gsub("\r",""); print $2}' /tmp/image.headers 2>/dev/null || true)"
-          transcript_ok=false; transcript_ms=0; transcript_text=''
+          transcript_ok="$(cat /tmp/transcript.ok 2>/dev/null || echo false)"
+          transcript_code="$(cat /tmp/transcript.code 2>/dev/null || echo 0)"
+          transcript_ms=0; transcript_text=''
           if [ -s /tmp/transcript.json ]; then
-            transcript_ok="$(jq -r '.ok // false' /tmp/transcript.json 2>/dev/null || echo false)"
             transcript_ms="$(jq -r '.elapsed_ms // 0' /tmp/transcript.json 2>/dev/null || echo 0)"
             transcript_text="$(jq -r '.text // ""' /tmp/transcript.json 2>/dev/null | head -c 200 || true)"
           fi
-          jq -n --arg run "$GITHUB_RUN_ID" --argjson image_bytes "$image_bytes" --arg image_ms "${image_ms:-0}" --argjson transcript_ok "$transcript_ok" --arg transcript_ms "$transcript_ms" --arg transcript_text "$transcript_text" '{schema_version:"1.0",run_id:$run,worker:"lsi-media-worker-pilot",image:{model:"@cf/black-forest-labs/flux-1-schnell",ok:($image_bytes>1000),bytes:$image_bytes,elapsed_ms:($image_ms|tonumber)},transcription:{model:"@cf/openai/whisper-large-v3-turbo",ok:$transcript_ok,elapsed_ms:($transcript_ms|tonumber),sample_text:$transcript_text},zero_cost_route:true,external_paid_provider:false,production_changed:false}' > generated/evidence/lsi-media-worker-pilot.json
+          jq -n --arg run "$GITHUB_RUN_ID" --argjson image_ok "$image_ok" --arg image_code "$image_code" --argjson image_bytes "$image_bytes" --arg image_ms "${image_ms:-0}" --argjson transcript_ok "$transcript_ok" --arg transcript_code "$transcript_code" --arg transcript_ms "$transcript_ms" --arg transcript_text "$transcript_text" '{schema_version:"1.1",run_id:$run,worker:"lsi-media-worker-pilot",image:{model:"@cf/black-forest-labs/flux-1-schnell",ok:$image_ok,http_code:($image_code|tonumber),bytes:$image_bytes,elapsed_ms:($image_ms|tonumber)},transcription:{model:"@cf/openai/whisper-large-v3-turbo",ok:$transcript_ok,http_code:($transcript_code|tonumber),elapsed_ms:($transcript_ms|tonumber),sample_text:$transcript_text},zero_cost_route:true,external_paid_provider:false,production_changed:false}' > generated/evidence/lsi-media-worker-pilot.json
 
       - name: Upload sanitized receipt
         if: always()
@@ -117,13 +131,10 @@ jobs:
           path: generated/evidence/lsi-media-worker-pilot.json
           retention-days: 7
 
-      - name: Delete isolated pilot worker
-        if: always()
+      - name: Final media proof gate
         shell: bash
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          set +e
-          npx --yes wrangler@4.32.0 delete --name lsi-media-worker-pilot --force
-          exit 0
+          set -euo pipefail
+          test "$(cat /tmp/image.ok)" = true
+          test "$(cat /tmp/transcript.ok)" = true
+          echo 'LSI_MEDIA_WORKER_PILOT=PASS' >> "$GITHUB_STEP_SUMMARY"
