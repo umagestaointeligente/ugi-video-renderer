@@ -1,0 +1,91 @@
+name: LSI DeepSeek Zero-Cost Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/lsi-deepseek-pilot.mjs'
+      - '.github/workflows/lsi-deepseek-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      WORKER_NAME: lsi-deepseek-pilot-20260829
+      WORKER_URL: https://lsi-deepseek-pilot-20260829.umagestaointeligente.workers.dev
+    steps:
+      - name: Checkout isolated pilot
+        uses: actions/checkout@v4
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'HARD_STOP_CLOUDFLARE_TOKEN_MISSING'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'HARD_STOP_CLOUDFLARE_ACCOUNT_MISSING'; exit 1; }
+
+      - name: Write temporary Wrangler config
+        shell: bash
+        run: |
+          cat > /tmp/wrangler.lsi-deepseek-pilot.toml <<'EOF'
+          name = "lsi-deepseek-pilot-20260829"
+          main = "cloudflare/lsi-deepseek-pilot.mjs"
+          compatibility_date = "2026-08-29"
+
+          [ai]
+          binding = "AI"
+          EOF
+
+      - name: Deploy temporary pilot Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config /tmp/wrangler.lsi-deepseek-pilot.toml
+
+      - name: Probe DeepSeek and require exact marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in 1 2 3 4 5 6 7 8; do
+            code="$(curl --silent --show-error --output /tmp/deepseek.json --write-out '%{http_code}' -X POST "$WORKER_URL/probe" || true)"
+            if [ "$code" = '200' ] && jq -e '.ok == true and .marker == "DEEPSEEK_OK" and .production == false and .external_paid_provider == false' /tmp/deepseek.json >/dev/null 2>&1; then
+              ok=true
+              break
+            fi
+            sleep 3
+          done
+          cat /tmp/deepseek.json || true
+          test "$ok" = true || { echo 'HARD_STOP_DEEPSEEK_PROBE_FAILED'; exit 1; }
+          mkdir -p generated/evidence
+          jq '{schema_version:"1.0", project:"LSI", provider:"cloudflare_workers_ai", specialist:"deepseek_r1_distill_qwen_32b", zero_cost_route:true, production:false, marker, model, elapsed_ms}' /tmp/deepseek.json > generated/evidence/lsi-deepseek-pilot.json
+          echo 'LSI_DEEPSEEK_PILOT=PASS' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload sanitized receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-deepseek-pilot-${{ github.run_id }}
+          path: generated/evidence/lsi-deepseek-pilot.json
+          if-no-files-found: warn
+          retention-days: 3
+
+      - name: Delete temporary pilot Worker
+        if: always()
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set +e
+          npx --yes wrangler@4.32.0 delete --name "$WORKER_NAME" --force
+          exit 0
