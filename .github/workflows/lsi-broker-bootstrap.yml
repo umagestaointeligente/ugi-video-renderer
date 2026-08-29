@@ -48,10 +48,10 @@ jobs:
           });
           const pub = publicKey.export({ format: 'jwk' });
           const priv = privateKey.export({ format: 'jwk' });
-          fs.writeFileSync('cloudflare/lsi-broker-public.jwk.json', JSON.stringify(pub, null, 2) + '\n');
+          fs.writeFileSync('/tmp/lsi-broker-public.jwk.json', JSON.stringify(pub, null, 2) + '\n');
           fs.writeFileSync('/tmp/lsi-broker-private.jwk.json', JSON.stringify(priv));
           NODE
-          test -s cloudflare/lsi-broker-public.jwk.json
+          test -s /tmp/lsi-broker-public.jwk.json
           test -s /tmp/lsi-broker-private.jwk.json
           echo 'BROKER_KEYPAIR_GENERATED=true' >> "$GITHUB_STEP_SUMMARY"
 
@@ -91,13 +91,20 @@ jobs:
           jq -e '.ok == true and .workers_ai_bound == true and .broker_key_configured == true and .external_paid_provider == false' /tmp/health.json >/dev/null
           echo 'LSI_BROKER_HEALTH=PASS' >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Publish public encryption key to branch
+      - name: Publish matching public encryption key to current branch head
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'LSI Broker Bootstrap'
           git config user.email 'actions@users.noreply.github.com'
+
+          # The branch may have advanced while this job was deploying. The generated
+          # public key lives in /tmp, so safely sync to the latest remote head first.
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --hard "origin/$GITHUB_REF_NAME"
+          cp /tmp/lsi-broker-public.jwk.json cloudflare/lsi-broker-public.jwk.json
           git add cloudflare/lsi-broker-public.jwk.json
+
           if git diff --cached --quiet; then
             echo 'PUBLIC_KEY_UNCHANGED=true' >> "$GITHUB_STEP_SUMMARY"
           else
@@ -107,6 +114,7 @@ jobs:
           fi
 
       - name: Write bootstrap receipt
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
@@ -124,11 +132,12 @@ jobs:
             "production_publication": false,
             "external_paid_provider": false,
             "private_key_exposed": false,
-            "status": "BOOTSTRAPPED"
+            "status": "BOOTSTRAP_ATTEMPTED"
           }
           JSON
 
       - name: Upload bootstrap receipt
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lsi-broker-bootstrap-${{ github.run_id }}
