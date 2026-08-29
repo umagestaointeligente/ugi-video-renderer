@@ -1,0 +1,59 @@
+name: Deploy LSI HyperWork Core
+run-name: Deploy LSI HyperWork Core ${{ github.run_id }}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/lsi-hyperwork-core.mjs'
+      - 'cloudflare/wrangler.lsi-hyperwork-core.toml'
+      - '.github/workflows/lsi-hyperwork-core-deploy.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lsi-hyperwork-core-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      URL: https://lsi-hyperwork-core.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source invariants
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-hyperwork-core.mjs
+          grep -q 'production_actions:false' cloudflare/lsi-hyperwork-core.mjs
+          grep -q 'external_paid_provider:false' cloudflare/lsi-hyperwork-core.mjs
+          grep -q 'zero_cost_only' cloudflare/lsi-hyperwork-core.mjs
+          grep -q 'instruction_authority:false' cloudflare/lsi-hyperwork-core.mjs
+      - name: Deploy production core
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-hyperwork-core.toml
+      - name: Verify health
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6 7 8; do
+            code="$(curl -sS -o /tmp/health.json -w '%{http_code}' "$URL/health")"
+            if [ "$code" = 200 ] && jq -e '.ok==true and .security_sentinel==true and .background_engine==true and .durable_objects_bound==true and .zero_cost_policy==true and .production_actions==false and .external_paid_provider==false' /tmp/health.json >/dev/null; then break; fi
+            sleep 3
+          done
+          jq -e '.ok==true and .auth=="github_oidc"' /tmp/health.json >/dev/null
+      - name: Receipt
+        run: |
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",service:"lsi-hyperwork-core",run_id:$run,commit:$sha,deploy:true,health:true,security_sentinel:true,background_engine:true,zero_cost_route:true,production_actions:false,external_paid_provider:false}' > generated/evidence/lsi-hyperwork-core-deploy.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-hyperwork-core-deploy-${{ github.run_id }}
+          path: generated/evidence/lsi-hyperwork-core-deploy.json
+          retention-days: 14
