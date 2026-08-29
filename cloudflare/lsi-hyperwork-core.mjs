@@ -37,44 +37,37 @@ async function verifyGithubOidc(request){
   if(parts.length!==3) throw new Error("invalid_jwt");
   const header=decodeJwtPart(parts[0]), claims=decodeJwtPart(parts[1]);
   if(header.alg!=="RS256"||!header.kid) throw new Error("unsupported_jwt_header");
-  const config=await (await fetch(`${OIDC_ISSUER}/.well-known/openid-configuration`,{cf:{cacheTtl:3600}})).json();
-  const jwks=await (await fetch(config.jwks_uri,{cf:{cacheTtl:3600}})).json();
-  const jwk=(jwks.keys||[]).find(k=>k.kid===header.kid); if(!jwk) throw new Error("oidc_kid_not_found");
+  const configResp=await fetch(`${OIDC_ISSUER}/.well-known/openid-configuration`,{cf:{cacheTtl:3600}}); if(!configResp.ok) throw new Error("oidc_config_unavailable");
+  const config=await configResp.json(); const jwksResp=await fetch(config.jwks_uri,{cf:{cacheTtl:3600}}); if(!jwksResp.ok) throw new Error("oidc_jwks_unavailable");
+  const jwks=await jwksResp.json(); const jwk=(jwks.keys||[]).find(k=>k.kid===header.kid); if(!jwk) throw new Error("oidc_kid_not_found");
   const key=await crypto.subtle.importKey("jwk",jwk,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"]);
-  const ok=await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,b64urlToBytes(parts[2]),new TextEncoder().encode(`${parts[0]}.${parts[1]}`));
-  if(!ok) throw new Error("oidc_signature_invalid");
+  const ok=await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,b64urlToBytes(parts[2]),new TextEncoder().encode(`${parts[0]}.${parts[1]}`)); if(!ok) throw new Error("oidc_signature_invalid");
   const now=Math.floor(Date.now()/1000), aud=Array.isArray(claims.aud)?claims.aud:[claims.aud];
-  if(claims.iss!==OIDC_ISSUER) throw new Error("oidc_issuer_invalid");
-  if(!aud.includes(OIDC_AUDIENCE)) throw new Error("oidc_audience_invalid");
-  if(!claims.exp||claims.exp<now-30) throw new Error("oidc_expired");
+  if(claims.iss!==OIDC_ISSUER) throw new Error("oidc_issuer_invalid"); if(!aud.includes(OIDC_AUDIENCE)) throw new Error("oidc_audience_invalid"); if(!claims.exp||claims.exp<now-30) throw new Error("oidc_expired");
   if(claims.repository!==ALLOWED_REPOSITORY) throw new Error("oidc_repository_denied");
-  const ref=String(claims.ref||"");
-  if(!(ref==="refs/heads/main"||ref.startsWith("refs/heads/lsi-hyperwork-core-prod-")||ref.startsWith("refs/heads/lsi-hyperwork-job-"))) throw new Error("oidc_ref_denied");
+  const ref=String(claims.ref||""); if(!(ref==="refs/heads/main"||ref.startsWith("refs/heads/lsi-hyperwork-core-prod-")||ref.startsWith("refs/heads/lsi-hyperwork-job-"))) throw new Error("oidc_ref_denied");
   if(claims.event_name&&claims.event_name!=="push") throw new Error("oidc_event_denied");
   return {repository:claims.repository,ref,run_id:claims.run_id||null};
 }
 
 function scan(content){
-  const text=String(content||""); const hits=[];
+  const text=String(content||""), hits=[];
   for(const p of INJECTION_PATTERNS) if(p.test(text)) hits.push("prompt_injection");
   for(const p of SECRET_PATTERNS) if(p.test(text)) hits.push("secret_like");
   if(/(?:base64|rot13|unicode|hex)\s+(?:decode|payload|instruction)/i.test(text)) hits.push("encoded_instruction_hint");
-  const decision=hits.includes("secret_like")?"BLOCK":hits.length?"QUARANTINE":"PASS";
-  return {decision,hits:[...new Set(hits)],instruction_authority:false,trust_zone:"UNTRUSTED_EXTERNAL_DATA",sanitized_for_downstream:decision==="PASS"};
+  const unique=[...new Set(hits)], decision=unique.includes("secret_like")?"BLOCK":unique.length?"QUARANTINE":"PASS";
+  return {decision,hits:unique,instruction_authority:false,trust_zone:"UNTRUSTED_EXTERNAL_DATA",sanitized_for_downstream:decision==="PASS"};
 }
 
 function cleanId(value){const id=String(value||"").trim();if(!/^[A-Za-z0-9._-]{8,120}$/.test(id))throw new Error("mission_id_invalid");return id}
 function validateMission(body,id){
   const objective=String(body?.objective||"").trim(); if(!objective||objective.length>8000) throw new Error("objective_invalid");
   const budget=Number(body?.monetary_budget??0); if(!Number.isFinite(budget)||budget!==0) throw new Error("zero_cost_only");
-  const cadence=Math.max(MIN_CADENCE_MS,Math.min(MAX_CADENCE_MS,Number(body?.cadence_ms??60000)));
-  const maxCycles=Math.max(1,Math.min(1000,Number(body?.max_cycles??3)));
+  const cadence=Math.max(MIN_CADENCE_MS,Math.min(MAX_CADENCE_MS,Number(body?.cadence_ms??60000))), maxCycles=Math.max(1,Math.min(1000,Number(body?.max_cycles??3)));
   const caps=Array.isArray(body?.allowed_capabilities)?body.allowed_capabilities.slice(0,32).map(String):["state","research_queue"];
-  const denied=caps.filter(x=>["payment","purchase","credential_export","secret_read","production_publish","delete_production"].includes(x));
-  if(denied.length) throw new Error(`capability_denied:${denied.join(",")}`);
+  const denied=caps.filter(x=>["payment","purchase","credential_export","secret_read","production_publish","delete_production"].includes(x)); if(denied.length) throw new Error(`capability_denied:${denied.join(",")}`);
   const external=String(body?.external_content||""); if(external.length>MAX_CONTENT) throw new Error("external_content_too_large");
-  const security=external?scan(external):{decision:"PASS",hits:[],instruction_authority:false,trust_zone:"NO_EXTERNAL_CONTENT",sanitized_for_downstream:true};
-  if(security.decision!=="PASS") throw new Error(`security_${security.decision.toLowerCase()}`);
+  const security=external?scan(external):{decision:"PASS",hits:[],instruction_authority:false,trust_zone:"NO_EXTERNAL_CONTENT",sanitized_for_downstream:true}; if(security.decision!=="PASS") throw new Error(`security_${security.decision.toLowerCase()}`);
   const now=new Date().toISOString();
   return {mission_id:id,project_id:String(body?.project_id||"LSI").slice(0,120),objective,success_metric:String(body?.success_metric||"bounded_background_progress").slice(0,500),cadence_ms:cadence,max_cycles:maxCycles,monetary_budget:0,allowed_capabilities:caps,status:"ACTIVE",cycle_count:0,created_at:now,updated_at:now,last_cycle_at:null,next_alarm_at:null,security,execution_mode:"PERSISTENT_BOUNDED_CORE",production_actions:false,external_paid_provider:false};
 }
@@ -116,7 +109,7 @@ export default{async fetch(request,env){
     const content=String(body?.content||"");if(!content||content.length>MAX_CONTENT)return json({ok:false,error:"content_invalid"},400);const result=scan(content);return json({ok:true,security:result,identity:gate.identity,production_actions:false});
   }
   const match=url.pathname.match(/^\/v1\/missions\/([A-Za-z0-9._-]{8,120})(?:\/(start|tick|pause))?$/);if(!match)return json({ok:false,error:"not_found"},404);
-  const missionId=match[1],suffix=match[2]||"";const id=env.MISSIONS.idFromName(missionId),stub=env.MISSIONS.get(id);const forward=new URL(request.url);forward.pathname=`/mission/${missionId}/${suffix}`;
+  const missionId=match[1],suffix=match[2]||"",id=env.MISSIONS.idFromName(missionId),stub=env.MISSIONS.get(id),forward=new URL(request.url);forward.pathname=`/mission/${missionId}/${suffix}`;
   let body;if(request.method!=="GET"){const raw=await request.text();if(raw){try{const p=JSON.parse(raw);p.mission_id=missionId;body=JSON.stringify(p)}catch{body=raw}}}
   const resp=await stub.fetch(new Request(forward.toString(),{method:request.method,headers:{"content-type":"application/json"},body}));const data=await resp.json();return json({...data,identity:gate.identity},resp.status);
-}}};
+}};
