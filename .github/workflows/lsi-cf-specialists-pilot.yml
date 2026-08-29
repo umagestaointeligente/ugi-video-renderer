@@ -1,0 +1,94 @@
+name: LSI Cloudflare Specialists Pilot
+run-name: LSI CF Specialists ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - lsi-cf-specialists-pilot-20260829
+    paths:
+      - '.github/workflows/lsi-cf-specialists-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Require existing Cloudflare credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$ACCOUNT_ID"
+          test -n "$API_TOKEN"
+
+      - name: Probe fast text specialist
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $API_TOKEN" \
+            -H 'Content-Type: application/json' \
+            --data '{"messages":[{"role":"user","content":"Return exactly CF_GLM_OK"}],"max_tokens":32,"temperature":0}' \
+            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai/run/@cf/zai-org/glm-4.7-flash" > /tmp/glm.json
+          jq -e '.success == true' /tmp/glm.json >/dev/null
+          jq -r '.result.response // .result // empty | tostring' /tmp/glm.json | grep -q 'CF_GLM_OK'
+          echo 'CF_GLM_4_7_FLASH=PASS' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Probe deep vision-capable specialist
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $API_TOKEN" \
+            -H 'Content-Type: application/json' \
+            --data '{"messages":[{"role":"user","content":"Return exactly CF_GEMMA_OK"}],"max_tokens":32,"temperature":0}' \
+            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai/run/@cf/google/gemma-4-26b-a4b-it" > /tmp/gemma.json
+          jq -e '.success == true' /tmp/gemma.json >/dev/null
+          jq -r '.result.response // .result // empty | tostring' /tmp/gemma.json | grep -q 'CF_GEMMA_OK'
+          echo 'CF_GEMMA_4_26B=PASS' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Probe image specialist
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $API_TOKEN" \
+            -H 'Content-Type: application/json' \
+            --data '{"prompt":"minimal abstract sunrise gradient, no text","steps":4}' \
+            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai/run/@cf/black-forest-labs/flux-1-schnell" > /tmp/flux.json
+          jq -e '.success == true' /tmp/flux.json >/dev/null
+          bytes="$(jq -r '.result.image // empty' /tmp/flux.json | wc -c)"
+          test "$bytes" -gt 1000 || { echo "HARD_STOP_FLUX_IMAGE_EMPTY"; exit 1; }
+          echo 'CF_FLUX_1_SCHNELL=PASS' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Write sanitized specialist receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          cat > generated/evidence/lsi-cf-specialists-pilot.json <<JSON
+          {
+            "schema_version":"1.0",
+            "route":"cloudflare_workers_ai",
+            "specialists":[
+              {"role":"fast_text","model":"@cf/zai-org/glm-4.7-flash","ok":true},
+              {"role":"deep_vision","model":"@cf/google/gemma-4-26b-a4b-it","ok":true},
+              {"role":"image","model":"@cf/black-forest-labs/flux-1-schnell","ok":true}
+            ],
+            "external_paid_provider":false,
+            "production_changed":false,
+            "publication":false,
+            "run_id":"${GITHUB_RUN_ID}"
+          }
+          JSON
+      - name: Upload sanitized receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-cf-specialists-pilot-${{ github.run_id }}
+          path: generated/evidence/lsi-cf-specialists-pilot.json
+          retention-days: 7
