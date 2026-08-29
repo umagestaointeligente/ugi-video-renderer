@@ -128,7 +128,25 @@ function validatePayload(payload) {
 }
 
 function normalizeModelOutput(result) {
-  const raw = result?.response ?? result?.result?.response ?? result?.result ?? result ?? "";
+  const direct = result?.response ?? result?.result?.response;
+  if (typeof direct === "string" && direct.trim()) return direct.trim();
+
+  const message = result?.choices?.[0]?.message ?? result?.result?.choices?.[0]?.message;
+  if (message) {
+    const content = message.content;
+    if (typeof content === "string" && content.trim()) return content.trim();
+    if (Array.isArray(content)) {
+      const joined = content
+        .map((part) => typeof part === "string" ? part : (part?.text ?? part?.content ?? ""))
+        .filter(Boolean)
+        .join("\n")
+        .trim();
+      if (joined) return joined;
+    }
+    return "";
+  }
+
+  const raw = result?.result ?? result ?? "";
   if (typeof raw === "string") return raw.trim();
   try { return JSON.stringify(raw); } catch { return String(raw); }
 }
@@ -144,6 +162,7 @@ async function executeTask(task, env) {
       max_tokens: Math.min(MAX_OUTPUT_TOKENS, Number(task.max_tokens ?? 500)),
     });
     const text = normalizeModelOutput(result);
+    if (!text) throw new Error("empty_model_output");
     return { id: task.id, ok: true, role: route.role, text, latency_ms: Date.now() - started, model: route.model };
   } catch (error) {
     return { id: task.id, ok: false, role: route?.role || String(task.role || DEFAULT_ROLE), error: String(error?.message ?? error).slice(0, 500), latency_ms: Date.now() - started, model: route?.model || null };
