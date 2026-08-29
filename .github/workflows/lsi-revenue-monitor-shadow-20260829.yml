@@ -1,0 +1,74 @@
+name: LSI Revenue Monitor Shadow Proof
+run-name: LSI Revenue Monitor Shadow ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-monitor-r1-20260829]
+    paths:
+      - 'cloudflare/lsi-revenue-monitor.mjs'
+      - 'cloudflare/wrangler.lsi-revenue-monitor.toml'
+      - '.github/workflows/lsi-revenue-monitor-shadow-20260829.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      MONITOR_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      SHADOW: lsi-revenue-monitor-shadow
+      URL: https://lsi-revenue-monitor-shadow.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate read-only invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-revenue-monitor.mjs
+          grep -q 'write_capability:false' cloudflare/lsi-revenue-monitor.mjs
+          ! grep -E 'MEDIA\.(put|delete|createMultipartUpload)' cloudflare/lsi-revenue-monitor.mjs
+          test -n "$MONITOR_KEY"; test -n "$CF_TOKEN"; test -n "$CF_ACCOUNT"
+      - name: Deploy isolated shadow with same R2 bucket
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-revenue-monitor.toml --name lsi-revenue-monitor-shadow
+      - name: Install monitor auth secret without disclosure
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::add-mask::$MONITOR_KEY"
+          printf '%s' "$MONITOR_KEY" | npx --yes wrangler@4.32.0 secret put MONITOR_KEY --name "$SHADOW" --config cloudflare/wrangler.lsi-revenue-monitor.toml
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      - name: Prove health auth and authoritative aggregate
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent "$URL/health" -o /tmp/health.json
+          jq -e '.ok==true and .r2_bound==true and .read_only==true and .write_capability==false' /tmp/health.json >/dev/null
+          unauth="$(curl --silent --output /tmp/unauth.json --write-out '%{http_code}' "$URL/v1/summary")"
+          test "$unauth" = 401
+          echo "::add-mask::$MONITOR_KEY"
+          code="$(curl --silent --show-error --output /tmp/summary.json --write-out '%{http_code}' -H "x-lsi-revenue-key: $MONITOR_KEY" "$URL/v1/summary?start=2026-08-29T22%3A23%3A00.000Z&target=100&product_id=UGI-MATERIAL-PRIORIDADES-001")"
+          test "$code" = 200
+          jq -e '.ok==true and .pii_exposed==false and .write_capability==false and .authoritative_source=="UGI_R2_ORDER_LEDGER_UPDATED_BY_PROVIDER_WEBHOOK"' /tmp/summary.json >/dev/null
+          mkdir -p generated/evidence
+          jq '{ok,paid_count,gross_brl,target_brl,target_met,start,product_id,latest_paid_at,orders_inspected,invalid_order_json,authoritative_source,pii_exposed,write_capability}' /tmp/summary.json | tee generated/evidence/lsi-revenue-monitor-shadow.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-revenue-monitor-shadow-${{ github.run_id }}
+          path: generated/evidence/lsi-revenue-monitor-shadow.json
+          retention-days: 7
+      - name: Cleanup shadow
+        if: always()
+        shell: bash
+        run: |
+          curl -sS -X DELETE -H "Authorization: Bearer $CF_TOKEN" "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/workers/scripts/$SHADOW" >/tmp/delete.json || true
