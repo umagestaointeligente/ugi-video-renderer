@@ -1,0 +1,12 @@
+{
+  "mission_id": "prod-smoke-20260829",
+  "action": "start",
+  "project_id": "LSI",
+  "objective": "Prove production HyperWork mission command path, persistent state, Security Sentinel gate and background alarm without any production publication or paid provider.",
+  "success_metric": "mission accepted and Durable Object background cycle executes",
+  "cadence_ms": 10000,
+  "max_cycles": 2,
+  "monetary_budget": 0,
+  "allowed_capabilities": ["state", "research_queue"],
+  "external_content": "This is a benign production smoke-test evidence payload."
+}
