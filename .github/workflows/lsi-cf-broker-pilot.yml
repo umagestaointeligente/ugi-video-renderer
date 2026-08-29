@@ -1,0 +1,117 @@
+name: LSI Cloudflare Broker Pilot
+run-name: LSI Cloudflare Broker Pilot ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - lsi-zero-cost-broker-pilot-20260828
+    paths:
+      - 'cloudflare/lsi-zero-cost-broker-pilot.mjs'
+      - 'cloudflare/wrangler.lsi-broker-pilot.toml'
+      - '.github/workflows/lsi-cf-broker-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      WORKER_URL: https://lsi-zero-cost-broker-pilot.umagestaointeligente.workers.dev
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Require existing Cloudflare deploy credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'HARD_STOP_CLOUDFLARE_TOKEN_MISSING'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'HARD_STOP_CLOUDFLARE_ACCOUNT_MISSING'; exit 1; }
+          echo 'CLOUDFLARE_DEPLOY_CREDENTIALS_PRESENT=true' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Deploy isolated LSI broker pilot
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-broker-pilot.toml
+
+      - name: Install ephemeral pilot token in Cloudflare secret storage
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          token="$(openssl rand -hex 32)"
+          printf '%s' "$token" | npx --yes wrangler@4.32.0 secret put PILOT_TOKEN --config cloudflare/wrangler.lsi-broker-pilot.toml >/tmp/secret-put.log 2>&1
+          echo "PILOT_TOKEN=$token" >> "$GITHUB_ENV"
+          echo 'PILOT_SECRET_INSTALLED=true' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify health and Workers AI inference
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5; do
+            if curl --fail --silent --show-error "$WORKER_URL/health" -o /tmp/health.json; then break; fi
+            sleep 2
+          done
+          jq -e '.ok == true and .workers_ai_bound == true and .external_paid_provider == false' /tmp/health.json >/dev/null
+
+          code="$(curl --silent --show-error --output /tmp/probe.json --write-out '%{http_code}' \
+            -X POST \
+            -H "Authorization: Bearer $PILOT_TOKEN" \
+            -H 'Content-Type: application/json' \
+            "$WORKER_URL/probe")"
+          test "$code" = '200' || { echo "HARD_STOP_PROBE_HTTP_$code"; cat /tmp/probe.json; exit 1; }
+          jq -e '.ok == true and .probe == "LSI_CF_AI_OK" and .provider == "cloudflare_workers_ai" and .model_response_nonempty == true and .secret_exposed == false' /tmp/probe.json >/dev/null
+
+          echo 'LSI_CLOUDFLARE_BROKER_CONNECTIVITY=PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo "LSI_CLOUDFLARE_BROKER_LATENCY_MS=$(jq -r '.latency_ms' /tmp/probe.json)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Write sanitized receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          health_ok=false
+          probe_ok=false
+          latency=null
+          if [ -s /tmp/health.json ]; then health_ok="$(jq -r '.ok // false' /tmp/health.json 2>/dev/null || echo false)"; fi
+          if [ -s /tmp/probe.json ]; then
+            probe_ok="$(jq -r '.ok // false' /tmp/probe.json 2>/dev/null || echo false)"
+            latency="$(jq -r '.latency_ms // "null"' /tmp/probe.json 2>/dev/null || echo null)"
+          fi
+          cat > generated/evidence/lsi-cf-broker-pilot.json <<JSON
+          {
+            "schema_version": "1.0",
+            "project": "LSI",
+            "route": "cloudflare_workers_ai",
+            "worker": "lsi-zero-cost-broker-pilot",
+            "run_id": "${GITHUB_RUN_ID}",
+            "commit_sha": "${GITHUB_SHA}",
+            "health_ok": ${health_ok},
+            "probe_ok": ${probe_ok},
+            "latency_ms": ${latency},
+            "model": "@cf/meta/llama-3.1-8b-instruct-fast",
+            "publication": false,
+            "external_paid_provider": false,
+            "secret_exposed": false
+          }
+          JSON
+
+      - name: Upload sanitized receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-cf-broker-pilot-${{ github.run_id }}
+          path: generated/evidence/lsi-cf-broker-pilot.json
+          retention-days: 7
+          if-no-files-found: error
