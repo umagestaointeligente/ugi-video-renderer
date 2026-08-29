@@ -1,0 +1,75 @@
+name: LSI Encrypted Broker Job
+run-name: LSI Broker Job ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - 'lsi-broker-job-*'
+    paths:
+      - 'lsi/jobs/*.json'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      BROKER_URL: https://lsi-zero-cost-broker.umagestaointeligente.workers.dev
+    steps:
+      - name: Checkout encrypted job
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Resolve exactly one encrypted job file
+        id: job
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep '^lsi/jobs/.*\.json$' || true)
+          test "${#files[@]}" -eq 1 || { echo "HARD_STOP_JOB_FILE_COUNT_${#files[@]}"; exit 1; }
+          file="${files[0]}"
+          mission_id="$(jq -r '.mission_id // empty' "$file")"
+          [[ "$mission_id" =~ ^[A-Za-z0-9._-]{8,120}$ ]] || { echo 'HARD_STOP_MISSION_ID_INVALID'; exit 1; }
+          echo "file=$file" >> "$GITHUB_OUTPUT"
+          echo "mission_id=$mission_id" >> "$GITHUB_OUTPUT"
+          echo "LSI_JOB_FILE=$file" >> "$GITHUB_ENV"
+          echo "LSI_MISSION_ID=$mission_id" >> "$GITHUB_ENV"
+
+      - name: Acquire short-lived GitHub OIDC identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl --fail --silent --show-error \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=lsi-zero-cost-broker")"
+          token="$(printf '%s' "$response" | jq -r '.value // empty')"
+          test -n "$token" || { echo 'HARD_STOP_OIDC_TOKEN_MISSING'; exit 1; }
+          echo "::add-mask::$token"
+          echo "LSI_OIDC_TOKEN=$token" >> "$GITHUB_ENV"
+
+      - name: Execute encrypted batch through Cloudflare Workers AI
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --silent --show-error --output /tmp/lsi-broker-result.json --write-out '%{http_code}' \
+            -X POST \
+            -H "Authorization: Bearer $LSI_OIDC_TOKEN" \
+            -H 'Content-Type: application/json' \
+            --data-binary "@$LSI_JOB_FILE" \
+            "$BROKER_URL/v1/execute")"
+          test "$code" = '200' || { echo "HARD_STOP_BROKER_HTTP_$code"; cat /tmp/lsi-broker-result.json; exit 1; }
+          jq -e --arg mission "$LSI_MISSION_ID" '.ok == true and .mission_id == $mission and .plaintext_returned == false and .encrypted.alg == "RSA-OAEP-256+A256GCM"' /tmp/lsi-broker-result.json >/dev/null
+          echo 'LSI_BROKER_JOB=PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo "LSI_MISSION_ID=$LSI_MISSION_ID" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload encrypted result only
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-broker-result-${{ steps.job.outputs.mission_id }}
+          path: /tmp/lsi-broker-result.json
+          retention-days: 3
+          if-no-files-found: error

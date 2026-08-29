@@ -1,0 +1,89 @@
+name: LSI Broker Deploy
+run-name: LSI Broker Deploy ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'cloudflare/lsi-zero-cost-broker.mjs'
+      - 'cloudflare/wrangler.lsi-broker.toml'
+      - '.github/workflows/lsi-broker-deploy.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      WORKER_URL: https://lsi-zero-cost-broker.umagestaointeligente.workers.dev
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'HARD_STOP_CLOUDFLARE_TOKEN_MISSING'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'HARD_STOP_CLOUDFLARE_ACCOUNT_MISSING'; exit 1; }
+
+      - name: Deploy LSI broker without rotating keys
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-broker.toml
+
+      - name: Verify broker health and fail closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6; do
+            code="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' "$WORKER_URL/health")"
+            if [ "$code" = '200' ] && jq -e '.ok == true and .workers_ai_bound == true and .broker_key_configured == true and .external_paid_provider == false' /tmp/health.json >/dev/null; then
+              break
+            fi
+            sleep 3
+          done
+          jq -e '.ok == true and .workers_ai_bound == true and .broker_key_configured == true and .external_paid_provider == false' /tmp/health.json >/dev/null
+          echo 'LSI_BROKER_DEPLOY=PASS' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Write sanitized deploy receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          health_ok=false
+          if [ -s /tmp/health.json ]; then health_ok="$(jq -r '.ok // false' /tmp/health.json 2>/dev/null || echo false)"; fi
+          cat > generated/evidence/lsi-broker-deploy.json <<JSON
+          {
+            "schema_version": "1.0",
+            "project": "LSI",
+            "worker": "lsi-zero-cost-broker",
+            "run_id": "${GITHUB_RUN_ID}",
+            "commit_sha": "${GITHUB_SHA}",
+            "health_ok": ${health_ok},
+            "workers_ai": true,
+            "oidc_required": true,
+            "production_publication": false,
+            "external_paid_provider": false,
+            "secret_exposed": false
+          }
+          JSON
+
+      - name: Upload deploy receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-broker-deploy-${{ github.run_id }}
+          path: generated/evidence/lsi-broker-deploy.json
+          retention-days: 14
+          if-no-files-found: error

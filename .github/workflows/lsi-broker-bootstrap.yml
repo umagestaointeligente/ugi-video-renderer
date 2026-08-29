@@ -1,0 +1,137 @@
+name: LSI Broker Key Rotation
+run-name: LSI Broker Key Rotation ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'lsi/broker/rotate-key.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  rotate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      WORKER_URL: https://lsi-zero-cost-broker.umagestaointeligente.workers.dev
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'HARD_STOP_CLOUDFLARE_TOKEN_MISSING'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'HARD_STOP_CLOUDFLARE_ACCOUNT_MISSING'; exit 1; }
+
+      - name: Generate broker encryption keypair
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+            modulusLength: 2048,
+            publicExponent: 0x10001,
+          });
+          const pub = publicKey.export({ format: 'jwk' });
+          const priv = privateKey.export({ format: 'jwk' });
+          fs.writeFileSync('/tmp/lsi-broker-public.jwk.json', JSON.stringify(pub, null, 2) + '\n');
+          fs.writeFileSync('/tmp/lsi-broker-private.jwk.json', JSON.stringify(priv));
+          NODE
+          test -s /tmp/lsi-broker-public.jwk.json
+          test -s /tmp/lsi-broker-private.jwk.json
+          echo 'BROKER_KEYPAIR_GENERATED=true' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Deploy current LSI broker before key rotation
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-broker.toml
+
+      - name: Install private broker key in Cloudflare secret storage
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          private_jwk="$(cat /tmp/lsi-broker-private.jwk.json)"
+          echo "::add-mask::$private_jwk"
+          printf '%s' "$private_jwk" | npx --yes wrangler@4.32.0 secret put BROKER_PRIVATE_JWK --config cloudflare/wrangler.lsi-broker.toml >/tmp/broker-secret-put.log 2>&1
+          rm -f /tmp/lsi-broker-private.jwk.json
+          sleep 3
+          echo 'BROKER_PRIVATE_KEY_INSTALLED=true' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify broker health
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6; do
+            code="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' "$WORKER_URL/health")"
+            if [ "$code" = '200' ] && jq -e '.ok == true and .workers_ai_bound == true and .broker_key_configured == true and .external_paid_provider == false' /tmp/health.json >/dev/null; then
+              break
+            fi
+            sleep 3
+          done
+          jq -e '.ok == true and .workers_ai_bound == true and .broker_key_configured == true and .external_paid_provider == false' /tmp/health.json >/dev/null
+          echo 'LSI_BROKER_HEALTH=PASS' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish matching public encryption key to current main head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'LSI Broker Key Rotation'
+          git config user.email 'actions@users.noreply.github.com'
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --hard "origin/$GITHUB_REF_NAME"
+          cp /tmp/lsi-broker-public.jwk.json cloudflare/lsi-broker-public.jwk.json
+          git add cloudflare/lsi-broker-public.jwk.json
+          if git diff --cached --quiet; then
+            echo 'PUBLIC_KEY_UNCHANGED=true' >> "$GITHUB_STEP_SUMMARY"
+          else
+            git commit -m 'LSI: rotate broker public encryption key'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo 'PUBLIC_KEY_PUBLISHED=true' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Write rotation receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          cat > generated/evidence/lsi-broker-key-rotation.json <<JSON
+          {
+            "schema_version": "1.0",
+            "project": "LSI",
+            "worker": "lsi-zero-cost-broker",
+            "run_id": "${GITHUB_RUN_ID}",
+            "encryption": "RSA-OAEP-256+A256GCM",
+            "oidc_required": true,
+            "external_paid_provider": false,
+            "private_key_exposed": false,
+            "status": "ROTATION_ATTEMPTED"
+          }
+          JSON
+
+      - name: Upload rotation receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-broker-key-rotation-${{ github.run_id }}
+          path: generated/evidence/lsi-broker-key-rotation.json
+          retention-days: 14
+          if-no-files-found: error
