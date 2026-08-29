@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 5
     env:
       UGI_BASE_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
-      LOLA_COMMAND_KEY: ${{ secrets.LOLA_COMMAND_KEY }}
+      LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
       ASAAS_API_KEY: ${{ secrets.ASAAS_API_KEY }}
       ASAAS_ACCESS_TOKEN: ${{ secrets.ASAAS_ACCESS_TOKEN }}
       UGI_ASAAS_API_KEY: ${{ secrets.UGI_ASAAS_API_KEY }}
@@ -60,7 +60,9 @@ jobs:
           orders_code="$(probe '/api/commerce/orders' /tmp/orders.json)"
           checkouts_code="$(probe '/api/commerce/checkouts' /tmp/checkouts.json)"
           products_count="$(jq -r '.count // (.products|length) // 0' /tmp/products.json 2>/dev/null || echo 0)"
-          jq -n --arg pc "$products_code" --arg oc "$orders_code" --arg cc "$checkouts_code" --arg products "$products_count" '{products_http:$pc,orders_http:$oc,checkouts_http:$cc,products_count:($products|tonumber? // 0),sensitive_payload_retained:false}' > /tmp/worker.json
+          orders_shape="$(jq -r 'if type=="object" then ([keys[]]|join(",")) else type end' /tmp/orders.json 2>/dev/null || echo invalid)"
+          checkouts_shape="$(jq -r 'if type=="object" then ([keys[]]|join(",")) else type end' /tmp/checkouts.json 2>/dev/null || echo invalid)"
+          jq -n --arg pc "$products_code" --arg oc "$orders_code" --arg cc "$checkouts_code" --arg products "$products_count" --arg os "$orders_shape" --arg cs "$checkouts_shape" '{products_http:$pc,orders_http:$oc,checkouts_http:$cc,products_count:($products|tonumber? // 0),orders_shape:$os,checkouts_shape:$cs,sensitive_payload_retained:false}' > /tmp/worker.json
 
       - name: Probe direct Asaas auth only if a GitHub secret exists
         if: env.ASAAS_API_KEY != '' || env.ASAAS_ACCESS_TOKEN != '' || env.UGI_ASAAS_API_KEY != ''
