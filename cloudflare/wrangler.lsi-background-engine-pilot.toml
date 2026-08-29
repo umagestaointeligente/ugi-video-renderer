@@ -1,0 +1,15 @@
+name = "lsi-background-engine-pilot"
+main = "lsi-background-engine-pilot.mjs"
+compatibility_date = "2026-08-29"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "MISSIONS"
+class_name = "MissionState"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["MissionState"]
+
+[observability]
+enabled = true
