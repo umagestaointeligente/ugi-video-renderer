@@ -1,0 +1,73 @@
+name: Deploy LSI Media Worker
+run-name: Deploy LSI Media Worker ${{ github.run_id }}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/lsi-media-worker.mjs'
+      - 'cloudflare/wrangler.lsi-media.toml'
+      - '.github/workflows/lsi-media-deploy.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lsi-media-worker-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      WORKER_URL: https://lsi-media-worker.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate source fail-closed invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-media-worker.mjs
+          grep -q "production_publication:false" cloudflare/lsi-media-worker.mjs
+          grep -q "external_paid_provider:false" cloudflare/lsi-media-worker.mjs
+          grep -q "@cf/black-forest-labs/flux-1-schnell" cloudflare/lsi-media-worker.mjs
+          grep -q "@cf/openai/whisper-large-v3-turbo" cloudflare/lsi-media-worker.mjs
+          if grep -q "body?.model" cloudflare/lsi-media-worker.mjs; then echo 'HARD_STOP_MODEL_OVERRIDE'; exit 1; fi
+
+      - name: Deploy production media worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-media.toml
+
+      - name: Verify production health
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6 7 8; do
+            code="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' "$WORKER_URL/health")"
+            if [ "$code" = 200 ] && jq -e '.ok==true and .workers_ai_bound==true and .production_publication==false and .external_paid_provider==false and .image_model=="@cf/black-forest-labs/flux-1-schnell" and .transcribe_model=="@cf/openai/whisper-large-v3-turbo"' /tmp/health.json >/dev/null; then
+              break
+            fi
+            sleep 3
+          done
+          jq -e '.ok==true and .workers_ai_bound==true and .production_publication==false and .external_paid_provider==false' /tmp/health.json >/dev/null
+
+      - name: Write deployment receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",service:"lsi-media-worker",run_id:$run,commit:$sha,deploy:true,health:true,image_model:"@cf/black-forest-labs/flux-1-schnell",transcribe_model:"@cf/openai/whisper-large-v3-turbo",zero_cost_route:true,external_paid_provider:false,production_publication:false}' > generated/evidence/lsi-media-deploy.json
+
+      - name: Upload deployment receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-media-deploy-${{ github.run_id }}
+          path: generated/evidence/lsi-media-deploy.json
+          retention-days: 14
+          if-no-files-found: error
