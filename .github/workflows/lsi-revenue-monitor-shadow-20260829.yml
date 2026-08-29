@@ -52,12 +52,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --silent "$URL/health" -o /tmp/health.json
+          hcode="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' "$URL/health")"
+          echo "health_http=$hcode"; cat /tmp/health.json
+          test "$hcode" = 200
           jq -e '.ok==true and .r2_bound==true and .read_only==true and .write_capability==false' /tmp/health.json >/dev/null
           unauth="$(curl --silent --output /tmp/unauth.json --write-out '%{http_code}' "$URL/v1/summary")"
+          echo "unauth_http=$unauth"
           test "$unauth" = 401
           echo "::add-mask::$MONITOR_KEY"
           code="$(curl --silent --show-error --output /tmp/summary.json --write-out '%{http_code}' -H "x-lsi-revenue-key: $MONITOR_KEY" "$URL/v1/summary?start=2026-08-29T22%3A23%3A00.000Z&target=100&product_id=UGI-MATERIAL-PRIORIDADES-001")"
+          echo "summary_http=$code"; cat /tmp/summary.json
           test "$code" = 200
           jq -e '.ok==true and .pii_exposed==false and .write_capability==false and .authoritative_source=="UGI_R2_ORDER_LEDGER_UPDATED_BY_PROVIDER_WEBHOOK"' /tmp/summary.json >/dev/null
           mkdir -p generated/evidence
