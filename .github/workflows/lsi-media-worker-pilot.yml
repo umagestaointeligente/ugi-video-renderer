@@ -1,0 +1,129 @@
+name: LSI Media Worker Pilot
+run-name: LSI Media Worker Pilot ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - lsi-media-worker-pilot-20260829
+    paths:
+      - 'cloudflare/lsi-media-worker.mjs'
+      - 'cloudflare/wrangler.lsi-media-pilot.toml'
+      - '.github/workflows/lsi-media-worker-pilot.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      WORKER_URL: https://lsi-media-worker-pilot.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy isolated media worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-media-pilot.toml
+
+      - name: Verify health
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6; do
+            code="$(curl --silent --show-error --output /tmp/health.json --write-out '%{http_code}' "$WORKER_URL/health")"
+            if [ "$code" = 200 ] && jq -e '.ok==true and .workers_ai_bound==true and .external_paid_provider==false and .production_publication==false' /tmp/health.json >/dev/null; then break; fi
+            sleep 3
+          done
+          jq -e '.ok==true and .workers_ai_bound==true and .external_paid_provider==false' /tmp/health.json >/dev/null
+
+      - name: Acquire OIDC identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl --fail --silent --show-error -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=lsi-media-worker")"
+          token="$(printf '%s' "$response" | jq -r '.value // empty')"
+          test -n "$token"
+          echo "::add-mask::$token"
+          echo "LSI_MEDIA_OIDC_TOKEN=$token" >> "$GITHUB_ENV"
+
+      - name: Prove FLUX image route
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --silent --show-error --dump-header /tmp/image.headers --output /tmp/image.jpg --write-out '%{http_code}' -X POST -H "Authorization: Bearer $LSI_MEDIA_OIDC_TOKEN" -H 'Content-Type: application/json' --data '{"prompt":"simple cinematic blue sunrise over a calm ocean, no text, vertical composition","seed":12345}' "$WORKER_URL/v1/image")"
+          test "$code" = 200
+          test "$(wc -c < /tmp/image.jpg)" -gt 1000
+          grep -qi '^content-type: image/jpeg' /tmp/image.headers
+          grep -qi '^x-lsi-zero-cost-route: true' /tmp/image.headers
+          grep -qi '^x-lsi-external-paid-provider: false' /tmp/image.headers
+
+      - name: Prepare deterministic speech sample
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v espeak-ng >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq espeak-ng >/dev/null
+          fi
+          espeak-ng -v en-us -s 135 -w /tmp/orbit-test.wav 'Orbit audio test. This is an automated transcription check.'
+          test "$(wc -c < /tmp/orbit-test.wav)" -gt 1000
+
+      - name: Prove Whisper transcription route
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --silent --show-error --output /tmp/transcript.json --write-out '%{http_code}' -X POST -H "Authorization: Bearer $LSI_MEDIA_OIDC_TOKEN" -H 'Content-Type: audio/wav' --data-binary @/tmp/orbit-test.wav "$WORKER_URL/v1/transcribe?language=en")"
+          test "$code" = 200 || { cat /tmp/transcript.json; exit 1; }
+          jq -e '.ok==true and .zero_cost_route==true and .external_paid_provider==false and (.text|length)>5' /tmp/transcript.json >/dev/null
+          jq -r '.text' /tmp/transcript.json | tr '[:upper:]' '[:lower:]' | grep -q 'orbit'
+
+      - name: Write sanitized receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          image_bytes=0; [ -f /tmp/image.jpg ] && image_bytes="$(wc -c < /tmp/image.jpg)"
+          image_ms="$(awk 'BEGIN{IGNORECASE=1} /^x-lsi-elapsed-ms:/{gsub("\r",""); print $2}' /tmp/image.headers 2>/dev/null || true)"
+          transcript_ok=false; transcript_ms=0; transcript_text=''
+          if [ -s /tmp/transcript.json ]; then
+            transcript_ok="$(jq -r '.ok // false' /tmp/transcript.json 2>/dev/null || echo false)"
+            transcript_ms="$(jq -r '.elapsed_ms // 0' /tmp/transcript.json 2>/dev/null || echo 0)"
+            transcript_text="$(jq -r '.text // ""' /tmp/transcript.json 2>/dev/null | head -c 200 || true)"
+          fi
+          jq -n --arg run "$GITHUB_RUN_ID" --argjson image_bytes "$image_bytes" --arg image_ms "${image_ms:-0}" --argjson transcript_ok "$transcript_ok" --arg transcript_ms "$transcript_ms" --arg transcript_text "$transcript_text" '{schema_version:"1.0",run_id:$run,worker:"lsi-media-worker-pilot",image:{model:"@cf/black-forest-labs/flux-1-schnell",ok:($image_bytes>1000),bytes:$image_bytes,elapsed_ms:($image_ms|tonumber)},transcription:{model:"@cf/openai/whisper-large-v3-turbo",ok:$transcript_ok,elapsed_ms:($transcript_ms|tonumber),sample_text:$transcript_text},zero_cost_route:true,external_paid_provider:false,production_changed:false}' > generated/evidence/lsi-media-worker-pilot.json
+
+      - name: Upload sanitized receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-media-worker-pilot-${{ github.run_id }}
+          path: generated/evidence/lsi-media-worker-pilot.json
+          retention-days: 7
+
+      - name: Delete isolated pilot worker
+        if: always()
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set +e
+          npx --yes wrangler@4.32.0 delete --name lsi-media-worker-pilot --force
+          exit 0
