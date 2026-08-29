@@ -58,16 +58,15 @@ async function handleImage(request,env,identity){
   let body; try{body=await request.json();}catch{return json({ok:false,error:'invalid_json'},400);}
   const prompt=String(body?.prompt||'').trim();
   if(!prompt||prompt.length>MAX_IMAGE_PROMPT_CHARS) return json({ok:false,error:'prompt_invalid'},400);
-  const seed=Number.isInteger(body?.seed)&&body.seed>=0?body.seed:Math.floor(Math.random()*2147483647);
   const started=Date.now();
   try{
-    const result=await env.AI.run(IMAGE_MODEL,{prompt,steps:4,seed});
+    const result=await env.AI.run(IMAGE_MODEL,{prompt,steps:4});
     const image=String(result?.image??result?.result?.image??'');
     if(image.length<1000) throw new Error('image_empty');
     const bytes=Uint8Array.from(atob(image),c=>c.charCodeAt(0));
     return new Response(bytes,{status:200,headers:{
       'content-type':'image/jpeg','cache-control':'no-store','x-lsi-model':IMAGE_MODEL,'x-lsi-zero-cost-route':'true',
-      'x-lsi-external-paid-provider':'false','x-lsi-elapsed-ms':String(Date.now()-started),'x-lsi-seed':String(seed),
+      'x-lsi-external-paid-provider':'false','x-lsi-elapsed-ms':String(Date.now()-started),
       'x-lsi-prompt-sha256':await sha256Hex(prompt),'x-lsi-run-id':String(identity.run_id||'')
     }});
   }catch(e){ return json({ok:false,error:'image_generation_failed',detail:String(e?.message??e).slice(0,300),external_paid_provider:false},503); }
