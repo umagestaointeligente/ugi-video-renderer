@@ -1,0 +1,55 @@
+name: LSI HyperWork Mission Job
+run-name: LSI Mission ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['lsi-hyperwork-job-*']
+    paths: ['lsi/hyperwork/jobs/*.json']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CORE_URL: https://lsi-hyperwork-core.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - name: Resolve exactly one mission job
+        id: job
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep '^lsi/hyperwork/jobs/.*\.json$' || true)
+          test "${#files[@]}" -eq 1
+          file="${files[0]}"; mission="$(jq -r '.mission_id // empty' "$file")"; action="$(jq -r '.action // "start"' "$file")"
+          [[ "$mission" =~ ^[A-Za-z0-9._-]{8,120}$ ]]; [[ "$action" =~ ^(start|tick|pause|get|scan)$ ]]
+          echo "file=$file" >> "$GITHUB_OUTPUT"; echo "mission=$mission" >> "$GITHUB_OUTPUT"; echo "action=$action" >> "$GITHUB_OUTPUT"
+      - name: Acquire short-lived OIDC identity
+        run: |
+          set -euo pipefail
+          response="$(curl --fail -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=lsi-hyperwork-core")"
+          token="$(printf '%s' "$response" | jq -r '.value // empty')"; test -n "$token"; echo "::add-mask::$token"; echo "TOKEN=$token" >> "$GITHUB_ENV"
+      - name: Execute mission command
+        run: |
+          set -euo pipefail
+          file='${{ steps.job.outputs.file }}'; mission='${{ steps.job.outputs.mission }}'; action='${{ steps.job.outputs.action }}'
+          case "$action" in
+            start) method=POST; url="$CORE_URL/v1/missions/$mission/start"; body="$(jq 'del(.action,.mission_id)' "$file")" ;;
+            tick|pause) method=POST; url="$CORE_URL/v1/missions/$mission/$action"; body='{}' ;;
+            get) method=GET; url="$CORE_URL/v1/missions/$mission"; body='' ;;
+            scan) method=POST; url="$CORE_URL/v1/scan"; body="$(jq '{content:(.content // "")}' "$file")" ;;
+          esac
+          if [ "$method" = GET ]; then code="$(curl -sS -o /tmp/result.json -w '%{http_code}' -H "Authorization: Bearer $TOKEN" "$url")"; else code="$(curl -sS -o /tmp/result.json -w '%{http_code}' -X "$method" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' --data "$body" "$url")"; fi
+          test "$code" -ge 200 -a "$code" -lt 300 || { cat /tmp/result.json; exit 1; }
+          jq -e '.ok==true and (.identity.repository // "") == "umagestaointeligente/ugi-video-renderer"' /tmp/result.json >/dev/null
+      - name: Upload sanitized result
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-hyperwork-result-${{ steps.job.outputs.mission }}-${{ github.run_id }}
+          path: /tmp/result.json
+          retention-days: 7
+          if-no-files-found: error
