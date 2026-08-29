@@ -42,7 +42,7 @@ jobs:
           wranglerVersion: '4.32.0'
           command: deploy --config cloudflare/wrangler.lsi-broker-pilot.toml
 
-      - name: Install ephemeral pilot token in Cloudflare secret storage
+      - name: Rotate masked ephemeral pilot token in Cloudflare secret storage
         shell: bash
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
@@ -50,9 +50,11 @@ jobs:
         run: |
           set -euo pipefail
           token="$(openssl rand -hex 32)"
+          echo "::add-mask::$token"
           printf '%s' "$token" | npx --yes wrangler@4.32.0 secret put PILOT_TOKEN --config cloudflare/wrangler.lsi-broker-pilot.toml >/tmp/secret-put.log 2>&1
           echo "PILOT_TOKEN=$token" >> "$GITHUB_ENV"
-          echo 'PILOT_SECRET_INSTALLED=true' >> "$GITHUB_STEP_SUMMARY"
+          echo 'PILOT_SECRET_ROTATED_AND_MASKED=true' >> "$GITHUB_STEP_SUMMARY"
+          sleep 3
 
       - name: Verify health and Workers AI inference
         shell: bash
@@ -64,11 +66,17 @@ jobs:
           done
           jq -e '.ok == true and .workers_ai_bound == true and .external_paid_provider == false' /tmp/health.json >/dev/null
 
-          code="$(curl --silent --show-error --output /tmp/probe.json --write-out '%{http_code}' \
-            -X POST \
-            -H "Authorization: Bearer $PILOT_TOKEN" \
-            -H 'Content-Type: application/json' \
-            "$WORKER_URL/probe")"
+          code='000'
+          for i in 1 2 3 4 5 6; do
+            code="$(curl --silent --show-error --output /tmp/probe.json --write-out '%{http_code}' \
+              -X POST \
+              -H "Authorization: Bearer $PILOT_TOKEN" \
+              -H 'Content-Type: application/json' \
+              "$WORKER_URL/probe")"
+            if [ "$code" = '200' ]; then break; fi
+            if [ "$code" = '401' ]; then sleep 3; continue; fi
+            break
+          done
           test "$code" = '200' || { echo "HARD_STOP_PROBE_HTTP_$code"; cat /tmp/probe.json; exit 1; }
           jq -e '.ok == true and .probe == "LSI_CF_AI_OK" and .provider == "cloudflare_workers_ai" and .model_response_nonempty == true and .secret_exposed == false' /tmp/probe.json >/dev/null
 
