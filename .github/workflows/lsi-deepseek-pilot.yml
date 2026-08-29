@@ -79,13 +79,27 @@ jobs:
           if-no-files-found: warn
           retention-days: 3
 
-      - name: Delete temporary pilot Worker
+      - name: Delete temporary pilot Worker by API
         if: always()
         shell: bash
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          set +e
-          npx --yes wrangler@4.32.0 delete --name "$WORKER_NAME" --force
-          exit 0
+          set -euo pipefail
+          code="$(curl --silent --show-error --output /tmp/delete.json --write-out '%{http_code}' \
+            -X DELETE \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H 'Content-Type: application/json' \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$WORKER_NAME" || true)"
+          cat /tmp/delete.json || true
+          if [ "$code" = '200' ] && jq -e '.success == true' /tmp/delete.json >/dev/null 2>&1; then
+            echo 'LSI_DEEPSEEK_CLEANUP=PASS' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if [ "$code" = '404' ]; then
+            echo 'LSI_DEEPSEEK_CLEANUP=ALREADY_ABSENT' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "HARD_STOP_DEEPSEEK_CLEANUP_FAILED http=$code"
+          exit 1
