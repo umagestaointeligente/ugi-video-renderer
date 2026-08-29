@@ -1,0 +1,38 @@
+name: LSI Specialist Normalization CI
+run-name: LSI Specialist Normalization CI ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - lsi-specialist-normalization-20260829
+    paths:
+      - 'cloudflare/lsi-zero-cost-broker.mjs'
+      - '.github/workflows/lsi-specialist-normalization-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate syntax and specialist output normalization
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-zero-cost-broker.mjs
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs/promises';
+          let source = await fs.readFile('cloudflare/lsi-zero-cost-broker.mjs', 'utf8');
+          source = source.replace('function normalizeModelOutput(result) {', 'export function normalizeModelOutput(result) {');
+          await fs.writeFile('/tmp/broker-normalization-test.mjs', source);
+          const mod = await import('file:///tmp/broker-normalization-test.mjs');
+          const n = mod.normalizeModelOutput;
+          if (n({response:'DIRECT_OK'}) !== 'DIRECT_OK') throw new Error('direct_response_failed');
+          if (n({choices:[{message:{content:'FINAL_OK',reasoning_content:'hidden'}}]}) !== 'FINAL_OK') throw new Error('openai_content_failed');
+          if (n({choices:[{message:{content:null,reasoning_content:'hidden reasoning'}}]}) !== '') throw new Error('reasoning_leak_failed');
+          if (n({choices:[{message:{content:[{type:'text',text:'ARRAY_OK'}]}}]}) !== 'ARRAY_OK') throw new Error('array_content_failed');
+          console.log('LSI_SPECIALIST_NORMALIZATION=PASS');
+          NODE
