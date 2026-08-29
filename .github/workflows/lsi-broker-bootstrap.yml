@@ -1,20 +1,18 @@
-name: LSI Broker Bootstrap
-run-name: LSI Broker Bootstrap ${{ github.run_id }}
+name: LSI Broker Key Rotation
+run-name: LSI Broker Key Rotation ${{ github.run_id }}
 
 on:
   push:
     branches:
-      - lsi-zero-cost-broker-pilot-20260828
+      - main
     paths:
-      - 'cloudflare/lsi-zero-cost-broker.mjs'
-      - 'cloudflare/wrangler.lsi-broker.toml'
-      - '.github/workflows/lsi-broker-bootstrap.yml'
+      - 'lsi/broker/rotate-key.trigger'
 
 permissions:
   contents: write
 
 jobs:
-  bootstrap:
+  rotate:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
@@ -55,7 +53,7 @@ jobs:
           test -s /tmp/lsi-broker-private.jwk.json
           echo 'BROKER_KEYPAIR_GENERATED=true' >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Deploy isolated LSI broker
+      - name: Deploy current LSI broker before key rotation
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
@@ -91,56 +89,49 @@ jobs:
           jq -e '.ok == true and .workers_ai_bound == true and .broker_key_configured == true and .external_paid_provider == false' /tmp/health.json >/dev/null
           echo 'LSI_BROKER_HEALTH=PASS' >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Publish matching public encryption key to current branch head
+      - name: Publish matching public encryption key to current main head
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name 'LSI Broker Bootstrap'
+          git config user.name 'LSI Broker Key Rotation'
           git config user.email 'actions@users.noreply.github.com'
-
-          # The branch may have advanced while this job was deploying. The generated
-          # public key lives in /tmp, so safely sync to the latest remote head first.
           git fetch origin "$GITHUB_REF_NAME"
           git reset --hard "origin/$GITHUB_REF_NAME"
           cp /tmp/lsi-broker-public.jwk.json cloudflare/lsi-broker-public.jwk.json
           git add cloudflare/lsi-broker-public.jwk.json
-
           if git diff --cached --quiet; then
             echo 'PUBLIC_KEY_UNCHANGED=true' >> "$GITHUB_STEP_SUMMARY"
           else
-            git commit -m 'LSI: publish broker public encryption key'
+            git commit -m 'LSI: rotate broker public encryption key'
             git push origin "HEAD:${GITHUB_REF_NAME}"
             echo 'PUBLIC_KEY_PUBLISHED=true' >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Write bootstrap receipt
+      - name: Write rotation receipt
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p generated/evidence
-          cat > generated/evidence/lsi-broker-bootstrap.json <<JSON
+          cat > generated/evidence/lsi-broker-key-rotation.json <<JSON
           {
             "schema_version": "1.0",
             "project": "LSI",
             "worker": "lsi-zero-cost-broker",
             "run_id": "${GITHUB_RUN_ID}",
-            "commit_sha": "${GITHUB_SHA}",
-            "workers_ai": true,
             "encryption": "RSA-OAEP-256+A256GCM",
             "oidc_required": true,
-            "production_publication": false,
             "external_paid_provider": false,
             "private_key_exposed": false,
-            "status": "BOOTSTRAP_ATTEMPTED"
+            "status": "ROTATION_ATTEMPTED"
           }
           JSON
 
-      - name: Upload bootstrap receipt
+      - name: Upload rotation receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lsi-broker-bootstrap-${{ github.run_id }}
-          path: generated/evidence/lsi-broker-bootstrap.json
+          name: lsi-broker-key-rotation-${{ github.run_id }}
+          path: generated/evidence/lsi-broker-key-rotation.json
           retention-days: 14
           if-no-files-found: error
