@@ -1,0 +1,7 @@
+name = "lsi-cf-specialists-pilot"
+main = "lsi-cf-specialists-pilot.mjs"
+compatibility_date = "2026-08-29"
+workers_dev = true
+
+[ai]
+binding = "AI"
