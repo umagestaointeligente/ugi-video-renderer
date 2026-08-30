@@ -1,0 +1,171 @@
+name: LSI PackValue402 Shadow R1
+run-name: LSI PackValue402 Shadow R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/lsi-packvalue402-shadow-r1.mjs'
+      - 'cloudflare/wrangler.lsi-packvalue402-shadow-r1.toml'
+      - '.github/workflows/lsi-packvalue402-shadow-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test-deploy-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      WORKER_URL: https://lsi-packvalue402-shadow-r1.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static safety checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-packvalue402-shadow-r1.mjs
+          grep -q 'SHADOW_NO_SETTLEMENT' cloudflare/lsi-packvalue402-shadow-r1.mjs
+          grep -q 'wallet_bound:false' cloudflare/lsi-packvalue402-shadow-r1.mjs
+          grep -q 'money_movement:false' cloudflare/lsi-packvalue402-shadow-r1.mjs
+          grep -q 'production_payments:false' cloudflare/lsi-packvalue402-shadow-r1.mjs
+          grep -q 'external_paid_provider:false' cloudflare/lsi-packvalue402-shadow-r1.mjs
+
+      - name: Deterministic unit tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { parsePackText, normalizeOffer, compareOffers } from './cloudflare/lsi-packvalue402-shadow-r1.mjs';
+
+          let x = parsePackText('6x330 ml');
+          assert.equal(x.dimension, 'volume');
+          assert.equal(x.base_quantity, 1980);
+          assert.equal(x.count, 6);
+
+          x = parsePackText('3 packs of 200 g');
+          assert.equal(x.dimension, 'mass');
+          assert.equal(x.base_quantity, 600);
+
+          x = parsePackText('case of 4, 6 x 330 ml');
+          assert.equal(x.count, 24);
+          assert.equal(x.base_quantity, 7920);
+
+          x = parsePackText('12 units');
+          assert.equal(x.dimension, 'count');
+          assert.equal(x.base_quantity, 12);
+
+          const y = normalizeOffer({text:'750 ml', price:8.99, shipping:1, tax:.5, discount:.49, currency:'USD'});
+          assert.equal(y.effective_cost, 10);
+          assert.equal(y.display_basis, 'L');
+          assert.equal(y.display_price, 13.333333);
+
+          const c = compareOffers([
+            {label:'6-pack', text:'6x330 ml', price:5.94, currency:'USD'},
+            {label:'2-liter', text:'2 L', price:5.60, currency:'USD'}
+          ]);
+          assert.equal(c.winner, '2-liter');
+          assert.equal(c.offers[0].rank, 1);
+          assert.ok(c.saving_vs_most_expensive_pct > 6 && c.saving_vs_most_expensive_pct < 7);
+
+          assert.throws(() => compareOffers([
+            {label:'mass', text:'1 kg', price:3},
+            {label:'volume', text:'1 L', price:3}
+          ]), /incompatible_dimensions/);
+
+          assert.throws(() => compareOffers([
+            {label:'usd', text:'1 kg', price:3, currency:'USD'},
+            {label:'eur', text:'1 kg', price:3, currency:'EUR'}
+          ]), /mixed_currencies_not_supported/);
+
+          console.log('PACKVALUE_UNIT_TESTS=PASS');
+          NODE
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy isolated PackValue402 shadow Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-packvalue402-shadow-r1.toml
+
+      - name: Wait for Worker propagation
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$WORKER_URL/health?ts=$RANDOM" > /tmp/health.json 2>/dev/null && jq -e '.ok==true and .mode=="SHADOW_NO_SETTLEMENT" and .target_price_usd==0.001 and .wallet_bound==false and .money_movement==false and .production_payments==false and .external_paid_provider==false' /tmp/health.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+
+      - name: Prove live normalize endpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSG "$WORKER_URL/v1/normalize" \
+            --data-urlencode 'text=case of 4, 6 x 330 ml' \
+            --data-urlencode 'price=23.76' \
+            --data-urlencode 'currency=USD' > /tmp/normalize.json
+          jq -e '.ok==true and .mode=="SHADOW_NO_SETTLEMENT" and .result.count==24 and .result.base_quantity==7920 and .result.dimension=="volume" and .result.display_basis=="L" and .result.display_price==3' /tmp/normalize.json >/dev/null
+
+      - name: Prove live comparison endpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST "$WORKER_URL/v1/compare" \
+            -H 'content-type: application/json' \
+            --data '{"offers":[{"label":"6-pack","text":"6x330 ml","price":5.94,"currency":"USD"},{"label":"2-liter","text":"2 L","price":5.60,"currency":"USD"}]}' > /tmp/compare.json
+          jq -e '.ok==true and .mode=="SHADOW_NO_SETTLEMENT" and .target_price_usd==0.001 and .result.winner=="2-liter" and .result.offers[0].rank==1 and .result.dimension=="volume"' /tmp/compare.json >/dev/null
+
+      - name: Prove fail-closed incompatible dimensions
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl -sS -o /tmp/bad.json -w '%{http_code}' -X POST "$WORKER_URL/v1/compare" -H 'content-type: application/json' --data '{"offers":[{"label":"rice","text":"1 kg","price":3},{"label":"juice","text":"1 L","price":3}]}' )"
+          test "$code" = "400"
+          jq -e '.ok==false and .error=="incompatible_dimensions"' /tmp/bad.json >/dev/null
+
+      - name: Prove discovery metadata stays non-financial
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$WORKER_URL/.well-known/agent.json" > /tmp/agent.json
+          jq -e '.name=="PackValue402" and .payment.mode=="SHADOW_NO_SETTLEMENT" and .payment.wallet_bound==false and .tools|length==2' /tmp/agent.json >/dev/null
+
+      - name: Write sanitized receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n \
+            --arg run "$GITHUB_RUN_ID" \
+            --arg sha "$GITHUB_SHA" \
+            '{schema_version:"1.0",project:"PACKVALUE402_SHADOW_R1",run_id:$run,commit:$sha,target_price_usd:0.001,shadow_mode:true,wallet_bound:false,money_movement:false,production_payments:false,external_paid_provider:false,tests:{unit:true,live_normalize:true,live_compare:true,incompatible_dimension_block:true,discovery:true}}' \
+            > generated/evidence/packvalue402-shadow-r1.json
+
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packvalue402-shadow-${{ github.run_id }}
+          path: generated/evidence/packvalue402-shadow-r1.json
+          retention-days: 14
+          if-no-files-found: error
