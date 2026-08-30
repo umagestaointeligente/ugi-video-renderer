@@ -1,0 +1,360 @@
+       return json({ ok: true, draft: savedDraft });
+      }
+      if (path === "/api/discard" && request.method === "POST") {
+        const body = await readBody(request);
+        if (!body?.id) {
+          return json({ ok: false, error: "id ausente" }, 400);
+        }
+        const draft = await getLocalDraft(env, body.id);
+        if (!draft) {
+          return json({ ok: true });
+        }
+        await archiveApprovalRecord(
+          env,
+          draft,
+          "rejected",
+          { rejectedAt: (/* @__PURE__ */ new Date()).toISOString() }
+        );
+        await saveContentEvent(env, draft, "rejected");
+        await deleteDraftMedia(env, draft);
+        await env.MEDIA.delete(`${DRAFT_PREFIX}${body.id}.json`);
+        return json({ ok: true, archived: true });
+      }
+      if (path === "/api/platform-approval" && request.method === "POST") {
+        const body = await readBody(request);
+        if (!body?.id) {
+          return json({ ok: false, error: "id ausente" }, 400);
+        }
+        const platform = normalizeApprovalPlatform(body.platform);
+        if (!platform) {
+          return json({
+            ok: false,
+            error: "platform inv\xE1lida",
+            allowedPlatforms: VIDEO_PLATFORMS
+          }, 400);
+        }
+        const decision = String(body.decision || "").trim().toLowerCase();
+        if (!["approved", "rejected"].includes(decision)) {
+          return json({
+            ok: false,
+            error: "decision deve ser approved ou rejected"
+          }, 400);
+        }
+        const draft = await getLocalDraft(env, body.id);
+        if (!draft) {
+          return json({ ok: false, error: "Rascunho n\xE3o encontrado" }, 404);
+        }
+        if (!hasMultiPlatformAssets(draft)) {
+          return json({
+            ok: false,
+            error: "Este conte\xFAdo n\xE3o possui assets multi-plataforma."
+          }, 409);
+        }
+        const currentAsset = draft.assets?.[platform];
+        if (!currentAsset) {
+          return json({
+            ok: false,
+            error: `Asset ${platform} ainda n\xE3o existe.`
+          }, 409);
+        }
+        if (currentAsset.ready !== true || !currentAsset.videoUrl) {
+          return json({
+            ok: false,
+            error: `Asset ${platform} ainda n\xE3o est\xE1 pronto para revis\xE3o.`
+          }, 409);
+        }
+        if (currentAsset?.publication?.bufferPostId && !["error", "cancelled"].includes(
+          String(
+            currentAsset?.publication?.status || ""
+          ).toLowerCase()
+        )) {
+          return json({
+            ok: false,
+            error: `A decis\xE3o de ${platform} n\xE3o pode ser alterada porque a publica\xE7\xE3o j\xE1 foi enviada ao Buffer.`,
+            publication: currentAsset.publication
+          }, 409);
+        }
+        const decidedAt = (/* @__PURE__ */ new Date()).toISOString();
+        draft.assets = {
+          ...draft.assets,
+          [platform]: {
+            ...currentAsset,
+            approvalStatus: decision,
+            approvalDecisionAt: decidedAt
+          }
+        };
+        const summary = approvalSummaryFromAssets(draft.assets);
+        draft.status = "draft";
+        draft.workflowStatus = summary.workflowStatus;
+        draft.approvalSummary = summary;
+        draft.updatedAt = decidedAt;
+        const savedDraft = await saveLocalDraft(env, draft);
+        await syncPlatformApprovalToVideoResult(
+          env,
+          draft.renderId || draft.id,
+          savedDraft.assets
+        );
+        await saveContentEvent(
+          env,
+          savedDraft,
+          decision === "approved" ? "platform_approved" : "platform_rejected",
+          {
+            platform,
+            decision,
+            approvalWorkflowStatus: summary.workflowStatus,
+            approvedCount: summary.approvedCount,
+            rejectedCount: summary.rejectedCount,
+            pendingCount: summary.pendingCount
+          }
+        );
+        return json({
+          ok: true,
+          version: VERSION,
+          route: "/api/platform-approval",
+          renderId: draft.renderId || draft.id,
+          draftId: draft.id,
+          platform,
+          decision,
+          asset: savedDraft.assets?.[platform] || null,
+          approvalSummary: summary,
+          workflowStatus: summary.workflowStatus,
+          publicationTriggered: false,
+          note: "Decis\xE3o registrada na Central. Nenhuma publica\xE7\xE3o autom\xE1tica foi executada."
+        });
+      }
+      if (path === "/api/approve" && request.method === "POST") {
+        const body = await readBody(request);
+        if (!body?.id) {
+          return json({ ok: false, error: "id ausente" }, 400);
+        }
+        const draft = await getLocalDraft(env, body.id);
+        if (!draft) {
+          return json({ ok: false, error: "Rascunho n\xE3o encontrado" }, 404);
+        }
+        if (hasMultiPlatformAssets(draft)) {
+          return json(
+            {
+              ok: false,
+              error: "Conte\xFAdo multi-asset deve ser revisado por plataforma na Central R43.3.",
+              route: "/api/platform-approval",
+              platforms: VIDEO_PLATFORMS
+            },
+            409
+          );
+        }
+        if (draft.renderStatus !== "ready") {
+          return json(
+            {
+              ok: false,
+              error: "O conte\xFAdo ainda n\xE3o est\xE1 completamente renderizado."
+            },
+            409
+          );
+        }
+        let result;
+        if (draft.type === "carousel") {
+          if (!Array.isArray(draft.imageUrls) || draft.imageUrls.length < 2) {
+            return json(
+              {
+                ok: false,
+                error: "Carrossel sem imagens suficientes."
+              },
+              409
+            );
+          }
+          result = await bufferCreateCarousel(draft, env);
+        } else if (draft.type === "reel" || draft.type === "video") {
+          if (!draft.videoUrl) {
+            return json(
+              {
+                ok: false,
+                error: "V\xEDdeo ainda n\xE3o dispon\xEDvel."
+              },
+              409
+            );
+          }
+          result = await bufferCreateVideo(draft, env);
+        } else {
+          if (!draft.imageUrl) {
+            return json(
+              {
+                ok: false,
+                error: "Imagem ainda n\xE3o dispon\xEDvel."
+              },
+              409
+            );
+          }
+          result = await bufferCreatePost(draft, env);
+        }
+        const created = result?.data?.createPost;
+        if (!created?.post) {
+          throw new Error(
+            created?.message || firstGraphQLError(result) || "O Buffer n\xE3o criou a publica\xE7\xE3o."
+          );
+        }
+        draft.status = created.post.status || "scheduled";
+        draft.workflowStatus = draft.status;
+        draft.bufferPostId = created.post.id;
+        draft.dueAt = created.post.dueAt || null;
+        draft.approvedAt = (/* @__PURE__ */ new Date()).toISOString();
+        draft.updatedAt = draft.approvedAt;
+        await archiveApprovalRecord(
+          env,
+          draft,
+          draft.status,
+          {
+            bufferPostId: draft.bufferPostId,
+            dueAt: draft.dueAt
+          }
+        );
+        await saveContentEvent(
+          env,
+          draft,
+          "approved_to_buffer",
+          {
+            bufferPostId: draft.bufferPostId,
+            dueAt: draft.dueAt
+          }
+        );
+        await env.MEDIA.delete(`${DRAFT_PREFIX}${draft.id}.json`);
+        return json({
+          ok: true,
+          post: created.post,
+          draft,
+          musicNotice: draft.music?.requested ? "A faixa foi mantida como metadata. Esta vers\xE3o n\xE3o anexa automaticamente m\xFAsica da biblioteca do Instagram." : null
+        });
+      }
+      return json({
+        ok: true,
+        version: VERSION,
+        message: "Lola Operacional UGI ativa",
+        multimedia: true,
+        post: true,
+        carousel: true,
+        carouselExactText: true,
+        carouselNoAITextRendering: true,
+        video: true,
+        mediaTransformations: Boolean(env.VIDEO),
+        imagesBinding: Boolean(env.IMAGES),
+        carouselRenderer: "r19-browser-photo-editorial-png",
+        semanticValidation: true,
+        editorialSelfRepair: true,
+        visualBackgroundGeneration: true,
+        exactTextOverlay: true,
+        terminalStyleRemoved: true,
+        browserRunRenderer: true,
+        browserRunRequiredForCarousel: true,
+        photoPerCarouselSlide: true,
+        automaticImageFallbackDisabled: true,
+        beatlyMusicMetadataReady: true,
+        beatlyCatalogRotation: true,
+        beatlyBusinessRelevancePolicy: true,
+        semanticGateSelfHealing: true,
+        musicMetadata: true,
+        musicMixingAutomatic: false,
+        central: "/approve",
+        health: "/api/health",
+        command: "POST /api/command",
+        commands: "GET /api/commands",
+        drafts: "GET /api/drafts",
+        musicCatalogStatus: "GET /api/music/catalog/status",
+        musicPolicyStatus: "GET /api/music/policy/status",
+        buffer: "somente na aprova\xE7\xE3o"
+      });
+    } catch (error) {
+      if (request.method === "POST" && new URL(request.url).pathname === "/api/video-render") {
+        return json(
+          {
+            ok: false,
+            version: VERSION,
+            route: "/api/video-render",
+            errorClass: "video_render_unexpected_exception",
+            error: error?.message || String(error),
+            stack: String(error?.stack || "").slice(0, 2e3),
+            diagnosticHttpStatus: 200,
+            note: "Erro inesperado capturado em HTTP 200 para evitar ClientResponseError e permitir diagn\xF3stico."
+          },
+          200
+        );
+      }
+      return json(
+        {
+          ok: false,
+          version: VERSION,
+          error: error?.message || String(error)
+        },
+        500
+      );
+    }
+  }
+};
+function isAdminAuthorized(request, env) {
+  const expected = env.LOLA_AUTH_KEY;
+  if (!expected)
+    return false;
+  if (request.headers.get("x-lola-key") === expected) {
+    return true;
+  }
+  const authorization = request.headers.get("authorization") || "";
+  if (authorization.startsWith("Bearer ")) {
+    return authorization.slice(7).trim() === expected;
+  }
+  return false;
+}
+__name(isAdminAuthorized, "isAdminAuthorized");
+function buildSafeAuthDiagnostic(request, env) {
+  const authorization = request.headers.get("authorization") || "";
+  const bearer = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+  const xLolaKey = request.headers.get("x-lola-key") || "";
+  const xCommandKey = request.headers.get("x-lola-command-key") || "";
+  return {
+    authorizationPresent: Boolean(authorization),
+    bearerPresent: Boolean(bearer),
+    xLolaKeyPresent: Boolean(xLolaKey),
+    xLolaCommandKeyPresent: Boolean(xCommandKey),
+    lolaAuthKeyConfigured: Boolean(env.LOLA_AUTH_KEY),
+    lolaCommandKeyConfigured: Boolean(env.LOLA_COMMAND_KEY),
+    bearerMatchesLolaAuthKey: Boolean(bearer) && Boolean(env.LOLA_AUTH_KEY) && bearer === env.LOLA_AUTH_KEY,
+    bearerMatchesLolaCommandKey: Boolean(bearer) && Boolean(env.LOLA_COMMAND_KEY) && bearer === env.LOLA_COMMAND_KEY,
+    xLolaKeyMatches: Boolean(xLolaKey) && Boolean(env.LOLA_AUTH_KEY) && xLolaKey === env.LOLA_AUTH_KEY,
+    xLolaCommandKeyMatches: Boolean(xCommandKey) && Boolean(env.LOLA_COMMAND_KEY) && xCommandKey === env.LOLA_COMMAND_KEY
+  };
+}
+__name(buildSafeAuthDiagnostic, "buildSafeAuthDiagnostic");
+function isLolaUGIAuthorized(request, env) {
+  const expected = env.LOLA_COMMAND_KEY;
+  if (!expected)
+    return false;
+  const custom = request.headers.get("x-lola-command-key");
+  if (custom === expected)
+    return true;
+  const authorization = request.headers.get("authorization") || "";
+  if (authorization.startsWith("Bearer ")) {
+    return authorization.slice(7).trim() === expected;
+  }
+  return false;
+}
+__name(isLolaUGIAuthorized, "isLolaUGIAuthorized");
+function isGithubVideoUploadAuthorized(request, env) {
+  const expected = env.GITHUB_VIDEO_UPLOAD_KEY;
+  if (!expected)
+    return false;
+  const custom = request.headers.get("x-ugi-video-upload-key");
+  if (custom && custom === expected)
+    return true;
+  const authorization = request.headers.get("authorization") || "";
+  if (authorization.startsWith("Bearer ")) {
+    return authorization.slice(7).trim() === expected;
+  }
+  return false;
+}
+__name(isGithubVideoUploadAuthorized, "isGithubVideoUploadAuthorized");
+function sanitizeRenderId(value) {
+  const raw = String(value || "").trim();
+  if (!raw)
+    return "";
+  return /^[a-zA-Z0-9][a-zA-Z0-9._-]{5,119}$/.test(raw) ? raw : "";
+}
+__name(sanitizeRenderId, "sanitizeRenderId");
+function createRenderId() {
+  const 

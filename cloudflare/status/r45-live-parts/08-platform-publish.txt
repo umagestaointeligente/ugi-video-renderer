@@ -1,0 +1,303 @@
+     existingSlides,
+          missingSlides,
+          totalExpectedSlides: slides.length,
+          totalExistingSlides: existingSlides.length,
+          renderStatus: saved.renderStatus,
+          generationStatus: saved.generationStatus,
+          qualityStatus: saved.qualityStatus,
+          workflowStatus: saved.workflowStatus,
+          approvalStatus: saved.approvalStatus || "pending_approval",
+          publicationTriggered: false,
+          imageUrls: saved.imageUrls || [],
+          imageKeys: saved.imageKeys || [],
+          renderErrors: saved.renderErrors || [],
+          note: rendered ? "Recovery aplicado no draft existente. Nenhum novo draft foi criado." : "Recovery n\xE3o concluiu o slide. O draft existente foi preservado."
+        }, rendered ? 200 : 502);
+      }
+      if (path === "/api/platform-publish" && request.method === "POST") {
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+          return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+        }
+        const body = await readBody(request);
+        if (!body?.id) {
+          return json({ ok: false, error: "id ausente" }, 400);
+        }
+        const platform = normalizeApprovalPlatform(body.platform);
+        if (!platform) {
+          return json({
+            ok: false,
+            error: "platform inv\xE1lida",
+            allowedPlatforms: VIDEO_PLATFORMS
+          }, 400);
+        }
+        const mode = normalizePublishMode(body.mode);
+        if (!mode) {
+          return json({
+            ok: false,
+            error: "mode inv\xE1lido",
+            allowedModes: [
+              "shareNow",
+              "customScheduled",
+              "addToQueue"
+            ]
+          }, 400);
+        }
+        let dueAt = null;
+        if (mode === "customScheduled") {
+          const parsed = new Date(body.dueAt || "");
+          if (!body.dueAt || Number.isNaN(parsed.getTime())) {
+            return json({
+              ok: false,
+              error: "dueAt ISO 8601 v\xE1lido \xE9 obrigat\xF3rio para customScheduled."
+            }, 400);
+          }
+          if (parsed.getTime() <= Date.now() + 6e4) {
+            return json({
+              ok: false,
+              error: "O agendamento precisa estar pelo menos 1 minuto no futuro."
+            }, 400);
+          }
+          dueAt = parsed.toISOString();
+        }
+        const draft = await getLocalDraft(env, body.id);
+        if (!draft) {
+          return json({
+            ok: false,
+            error: "Rascunho n\xE3o encontrado"
+          }, 404);
+        }
+        const commerceReasons = commerceGateReasons(draft);
+        const semanticReasons = semanticGateReasons(draft);
+        const publicationGateReasons = [...commerceReasons, ...semanticReasons];
+        if (publicationGateReasons.length) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/platform-publish",
+            errorClass: "commerce_or_semantic_gate_blocked",
+            error: "Publica\xE7\xE3o bloqueada por hard gate Commerce/Semantic.",
+            reasons: publicationGateReasons,
+            publicationTriggered: false,
+            bufferMutationPerformed: false
+          }, 409);
+        }
+        if (!hasMultiPlatformAssets(draft)) {
+          return json({
+            ok: false,
+            error: "Este conte\xFAdo n\xE3o possui assets multi-plataforma."
+          }, 409);
+        }
+        const asset = draft.assets?.[platform];
+        if (!asset?.ready || !asset?.videoUrl) {
+          return json({
+            ok: false,
+            error: `Asset ${platform} ainda n\xE3o est\xE1 pronto.`
+          }, 409);
+        }
+        if (normalizeAssetApprovalStatus(
+          asset.approvalStatus
+        ) !== "approved") {
+          return json({
+            ok: false,
+            error: `Asset ${platform} precisa estar aprovado antes da publica\xE7\xE3o.`
+          }, 409);
+        }
+        const currentPublication = asset.publication || {};
+        if (currentPublication.bufferPostId && !["error", "cancelled"].includes(
+          String(
+            currentPublication.status || ""
+          ).toLowerCase()
+        )) {
+          return json({
+            ok: false,
+            error: `Asset ${platform} j\xE1 possui publica\xE7\xE3o Buffer ativa.`,
+            publication: currentPublication
+          }, 409);
+        }
+        // R44.5.22 — exactly-once gate before any Buffer mutation.
+        // Asset lock blocks repeated publication of the same UGI content on the same platform.
+        // Slot lock blocks different drafts from occupying the same platform/time slot.
+        const publicationLocks = await acquirePublicationLocks(env, draft, platform, mode, dueAt);
+        if (!publicationLocks.acquired) {
+          return json({
+            ok:false, version:VERSION, route:"/api/platform-publish",
+            errorClass:"publication_idempotency_lock_exists",
+            error:`Publicação ${platform} bloqueada por exactly-once lock (${publicationLocks.failedType}).`,
+            lockType:publicationLocks.failedType, existingLock:publicationLocks.existing || null,
+            publicationTriggered:false, bufferMutationPerformed:false
+          },409);
+        }
+
+        const requestedAt = (/* @__PURE__ */ new Date()).toISOString();
+        try {
+          const created = await createBufferPlatformVideoPost(
+            draft,
+            platform,
+            mode,
+            dueAt,
+            env
+          );
+          const post = created.post;
+          const publication = {
+            status: publicationStateFromBufferPost(
+              post
+            ),
+            bufferStatus: post.status || null,
+            bufferPostId: post.id || null,
+            channelId: created.channel?.id || null,
+            channelService: post.channelService || created.channel?.service || platform,
+            channelSource: created.channel?.source || null,
+            mode,
+            dueAt: post.dueAt || dueAt || null,
+            sentAt: post.sentAt || null,
+            externalLink: post.externalLink || null,
+            sharedNow: Boolean(post.sharedNow),
+            requestedAt,
+            updatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+            error: post?.error?.message || null,
+            bufferError: post?.error || null,
+            bufferDiagnostics: created.bufferDiagnostics || null
+          };
+          draft.assets = {
+            ...draft.assets,
+            [platform]: {
+              ...asset,
+              publication
+            }
+          };
+          draft.updatedAt = publication.updatedAt;
+          const saved = await saveLocalDraft(
+            env,
+            draft
+          );
+          await updatePublicationLocks(env, publicationLocks, {
+            state:"confirmed", bufferPostId:publication.bufferPostId || null,
+            bufferStatus:publication.bufferStatus || null, dueAt:publication.dueAt || dueAt || null,
+            externalLink:publication.externalLink || null
+          });
+          await syncPlatformApprovalToVideoResult(
+            env,
+            draft.renderId || draft.id,
+            saved.assets
+          );
+          await saveContentEvent(
+            env,
+            saved,
+            mode === "shareNow" ? "platform_publish_requested" : "platform_scheduled",
+            {
+              platform,
+              bufferPostId: publication.bufferPostId,
+              bufferStatus: publication.bufferStatus,
+              publicationStatus: publication.status,
+              dueAt: publication.dueAt,
+              externalLink: publication.externalLink
+            }
+          );
+          return json({
+            ok: true,
+            version: VERSION,
+            route: "/api/platform-publish",
+            platform,
+            mode,
+            publication,
+            post,
+            assetValidation: created.assetValidation || null,
+            publicationTriggered: true,
+            otherPlatformsUnaffected: true
+          });
+        } catch (error) {
+          const failedAt = (/* @__PURE__ */ new Date()).toISOString();
+          // Fail closed: never release locks after an uncertain Buffer failure.
+          // A timeout can mean the remote post was created but the response was lost.
+          try {
+            await updatePublicationLocks(env, publicationLocks, {
+              state:"uncertain", failureAt:failedAt, error:error?.message || String(error)
+            });
+          } catch (_) {}
+          draft.assets = {
+            ...draft.assets,
+            [platform]: {
+              ...asset,
+              publication: {
+                ...currentPublication,
+                status: "error",
+                mode,
+                dueAt,
+                requestedAt,
+                updatedAt: failedAt,
+                error: error?.message || String(error),
+                bufferDiagnostics: error?.bufferDiagnostics || null,
+                bufferPayload: error?.bufferPayload || null
+              }
+            }
+          };
+          const saved = await saveLocalDraft(
+            env,
+            draft
+          );
+          await syncPlatformApprovalToVideoResult(
+            env,
+            draft.renderId || draft.id,
+            saved.assets
+          );
+          await saveContentEvent(
+            env,
+            saved,
+            "platform_publish_error",
+            {
+              platform,
+              mode,
+              error: error?.message || String(error)
+            }
+          );
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/platform-publish",
+            platform,
+            mode,
+            errorClass: "platform_publish_failed",
+            error: error?.message || String(error),
+            bufferDiagnostics: error?.bufferDiagnostics || null,
+            bufferPayload: error?.bufferPayload || null,
+            otherPlatformsUnaffected: true
+          }, 400);
+        }
+      }
+      // BEGIN_R44_5_22_LOCK_ROUTES
+      if (path === "/api/publication-lock-status" && request.method === "GET") {
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) return json({ok:false,error:"Não autorizado"},401);
+        const id=String(url.searchParams.get("id") || "").trim();
+        const platform=normalizeApprovalPlatform(url.searchParams.get("platform"));
+        const mode=normalizePublishMode(url.searchParams.get("mode") || "customScheduled");
+        const dueAtRaw=String(url.searchParams.get("dueAt") || "").trim();
+        const draft=id ? await getLocalDraft(env,id) : null;
+        if (!draft || !platform || !mode) return json({ok:false,error:"id/platform/mode inválidos"},400);
+        const dueAt=mode === "customScheduled" && dueAtRaw ? new Date(dueAtRaw).toISOString() : null;
+        const assetKey=publicationAssetLockKey(draft,platform);
+        const slotKey=publicationSlotLockKey(platform,mode,dueAt);
+        return json({ok:true,version:VERSION,assetKey,slotKey,assetLock:await readPublicationLock(env,assetKey),slotLock:await readPublicationLock(env,slotKey),publicationTriggered:false,bufferMutationPerformed:false});
+      }
+
+      if (path === "/api/publication-lock-backfill" && request.method === "POST") {
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) return json({ok:false,error:"Não autorizado"},401);
+        const body=await readBody(request);
+        const id=String(body?.id || "").trim();
+        const platform=normalizeApprovalPlatform(body?.platform);
+        const draft=id ? await getLocalDraft(env,id) : null;
+        const asset=draft?.assets?.[platform];
+        const pub=asset?.publication || null;
+        if (!draft || !platform || !pub?.bufferPostId) return json({ok:false,error:"existing active Buffer publication required",publicationTriggered:false,bufferMutationPerformed:false},409);
+        const mode=normalizePublishMode(pub.mode || "customScheduled") || "customScheduled";
+        const dueAt=pub.dueAt || null;
+        const group=await acquirePublicationLocks(env,draft,platform,mode,dueAt);
+        if (group.acquired) {
+          const locks=await updatePublicationLocks(env,group,{state:"backfilled_confirmed",bufferPostId:pub.bufferPostId,bufferStatus:pub.bufferStatus || pub.status || null,dueAt});
+          return json({ok:true,created:true,locks,publicationTriggered:false,bufferMutationPerformed:false});
+        }
+        return json({ok:true,created:false,failedType:group.failedType,existingLock:group.existing || null,publicationTriggered:false,bufferMutationPerformed:false});
+      }
+      // END_R44_5_22_LOCK_ROUTES
+
+      if (path.startsWith("/api/platform-publication-eligibility/") && request.method === "GET") {
+  

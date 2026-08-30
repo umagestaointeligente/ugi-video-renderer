@@ -1,0 +1,386 @@
+ands;
+}
+__name(listCommands, "listCommands");
+async function generateFromCommand(env, command, origin) {
+  if (command.type === "carousel") {
+    return generateCarousel(env, command, origin);
+  }
+  if (command.type === "reel" || command.type === "video") {
+    return generateVideoDraft(env, command, origin);
+  }
+  const brief = {
+    id: `command-${command.id}`,
+    area: command.topic,
+    angle: command.objective,
+    hashtags: ["#Gestao", "#Lideranca", BRAND_HASHTAG],
+    instruction: [command.keyMessage, command.instructions].filter(Boolean).join(" ") || `Desenvolva uma orienta\xE7\xE3o pr\xE1tica sobre ${command.topic}.`,
+    cta: command.cta
+  };
+  return generateStandardProposal(
+    env,
+    brief,
+    origin,
+    command
+  );
+}
+__name(generateFromCommand, "generateFromCommand");
+async function generateCarousel(env, command, origin) {
+  let packageResult = null;
+  let audit = null;
+  let lastError = null;
+  let fallbackUsed = false;
+  let semanticRepairExhausted = false;
+  for (let generationAttempt = 0; generationAttempt < FULL_GENERATION_ATTEMPTS; generationAttempt++) {
+    let result = null;
+    for (let attempt = 0; attempt < CAROUSEL_ATTEMPTS; attempt++) {
+      try {
+        result = await aiCarouselJSON(
+          env,
+          command,
+          generationAttempt * 10 + attempt
+        );
+        if (result && Array.isArray(result.slides) && result.slides.length >= 4) {
+          break;
+        }
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    if (!result || !Array.isArray(result.slides) || result.slides.length < 4) {
+      fallbackUsed = true;
+      result = deterministicCarouselFallback(command);
+    }
+    try {
+      result = await repairCarouselText(env, command, result);
+      packageResult = await normalizeCarouselPackage(
+        env,
+        command,
+        result
+      );
+      audit = await auditCarouselPackage(
+        env,
+        command,
+        packageResult
+      );
+      for (let repairAttempt = 0; repairAttempt < CAROUSEL_PACKAGE_REPAIRS && !audit.pass; repairAttempt++) {
+        packageResult = await repairCarouselPackage(
+          env,
+          command,
+          packageResult,
+          audit,
+          generationAttempt * 10 + repairAttempt
+        );
+        packageResult = await normalizeCarouselPackage(
+          env,
+          command,
+          packageResult
+        );
+        audit = await auditCarouselPackage(
+          env,
+          command,
+          packageResult
+        );
+      }
+      if (audit?.pass)
+        break;
+      if (audit?.hardPass && !audit?.semanticPass) {
+        semanticRepairExhausted = true;
+      }
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  if (!packageResult) {
+    fallbackUsed = true;
+    packageResult = await normalizeCarouselPackage(
+      env,
+      command,
+      deterministicCarouselFallback(command)
+    );
+    audit = await auditCarouselPackage(
+      env,
+      command,
+      packageResult,
+      { skipAI: true }
+    );
+  }
+  if (!audit?.hardPass) {
+    const hardIssues = Array.isArray(audit?.hardIssues) ? audit.hardIssues : [];
+    let deterministicRepairApplied = false;
+    if (hardIssues.includes("capa expl\xEDcita n\xE3o foi preservada") && hasExplicitCarouselCover(command) && Array.isArray(packageResult?.slides) && packageResult.slides[0]) {
+      packageResult.slides[0].headline = sanitizeSlideText(
+        resolveRequiredCover(command)
+      );
+      deterministicRepairApplied = true;
+    }
+    if (hardIssues.includes("fechamento n\xE3o preservou o CTA do briefing") && Array.isArray(packageResult?.slides) && packageResult.slides.length) {
+      packageResult.slides[packageResult.slides.length - 1].body = sanitizeSlideText(
+        resolveRequiredCarouselCTA(command)
+      );
+      deterministicRepairApplied = true;
+    }
+    if (deterministicRepairApplied) {
+      packageResult = await normalizeCarouselPackage(
+        env,
+        command,
+        packageResult
+      );
+      if (hasExplicitCarouselCover(command) && packageResult?.slides?.[0]) {
+        packageResult.slides[0].headline = sanitizeSlideText(
+          resolveRequiredCover(command)
+        );
+      }
+      if (packageResult?.slides?.length && resolveRequiredCarouselCTA(command)) {
+        packageResult.slides[packageResult.slides.length - 1].body = sanitizeSlideText(
+          resolveRequiredCarouselCTA(command)
+        );
+      }
+      audit = await auditCarouselPackage(
+        env,
+        command,
+        packageResult,
+        { skipAI: true }
+      );
+    }
+  }
+  if (command?.copyLock?.enabled) {
+    packageResult = applyCarouselCopyLock(command, packageResult);
+    const copyLockValidation = validateCarouselCopyLock(command, packageResult);
+    if (!copyLockValidation.pass) {
+      throw new Error(
+        `COPY_LOCK_FAILED: ${copyLockValidation.mismatches.join(" | ")}`
+      );
+    }
+    audit = await auditCarouselPackage(
+      env,
+      command,
+      packageResult,
+      { skipAI: true }
+    );
+  }
+  if (!audit?.hardPass) {
+    throw new Error(
+      `Carrossel bloqueado por requisito objetivo ap\xF3s autorreparo: ${(audit?.hardIssues || audit?.issues || ["erro editorial"]).join(" | ")}`
+    );
+  }
+  const semanticAdvisory = !audit.semanticPass ? audit.semanticIssues || [] : [];
+  const slides = packageResult.slides;
+  const caption = packageResult.caption;
+  const hashtags = carouselHashtags(command);
+  const finalText = `${caption}
+
+${hashtags.join(" ")}`;
+  const id = crypto.randomUUID();
+  const imageUrls = [];
+  const imageKeys = [];
+  const renderErrors = [];
+  const compositor = "r19-browser-photo-editorial-png";
+  let pendingSlides = [...slides];
+  const renderedByNumber = /* @__PURE__ */ new Map();
+  for (let pass = 0; pass < CAROUSEL_RENDER_PASSES && pendingSlides.length; pass++) {
+    if (pass > 0) {
+      await sleep(CAROUSEL_FAILED_PASS_COOLDOWN_MS);
+    }
+    const nextPending = [];
+    for (let index = 0; index < pendingSlides.length; index++) {
+      const slide = pendingSlides[index];
+      try {
+        if (index > 0 || pass > 0) {
+          await sleep(CAROUSEL_SLIDE_SPACING_MS);
+        }
+        const rendered = await renderCarouselSlideExact(
+          env,
+          command,
+          slide,
+          id,
+          origin
+        );
+        renderedByNumber.set(slide.number, rendered);
+      } catch (error) {
+        nextPending.push(slide);
+        if (pass === CAROUSEL_RENDER_PASSES - 1) {
+          renderErrors.push(
+            `Slide ${slide.number}: ${error?.message || "erro"}`
+          );
+        }
+      }
+    }
+    pendingSlides = nextPending;
+  }
+  for (const slide of slides) {
+    const rendered = renderedByNumber.get(slide.number);
+    if (!rendered)
+      continue;
+    imageUrls.push(rendered.url);
+    imageKeys.push(rendered.key);
+  }
+  const ready = imageUrls.length === slides.length && renderErrors.length === 0;
+  const music = await resolveMusicForDraft(
+    env,
+    command,
+    "carousel"
+  );
+  const draft = {
+    id,
+    version: VERSION,
+    type: "carousel",
+    commandId: command.id,
+    contentId: command.contentId || id,
+    experimentId: command.experimentId || command.experiment || null,
+    variant: command.variant || null,
+    commercialIntent: command.commercialIntent || null,
+    commercialOffer: command.commercialOffer === true,
+    editorialMode: command.editorialMode || "standard",
+    copyLock: command.copyLock || { enabled: false },
+    exactCopy: command.copyLock || { enabled: false },
+    copyLockValidation: validateCarouselCopyLock(command, packageResult),
+    semanticValidationRequired: command.copyLock?.enabled === true,
+    semanticValidationAvailable: true,
+    semanticValidation: {
+      pass: audit?.hardPass === true && validateCarouselCopyLock(command, packageResult).pass === true,
+      source: "worker_carousel_deterministic_qa",
+      hardPass: audit?.hardPass === true,
+      semanticPass: audit?.semanticPass === true
+    },
+    legacyContentLeakDetected: false,
+    commerce: command.commerce || normalizeUGICommerce({}),
+    topic: cleanTopic(
+      packageResult.topic || command.topic
+    ),
+    area: command.topic,
+    angle: command.objective,
+    slides,
+    text: finalText,
+    captionWords: wordCount(caption),
+    hashtags,
+    imageUrls,
+    imageKeys,
+    imageUrl: imageUrls[0] || null,
+    imageKey: imageKeys[0] || null,
+    status: "draft",
+    renderStatus: ready ? "ready" : "partial",
+    qualityStatus: ready && audit.semanticPass ? "ready_for_review" : "needs_review",
+    qualityIssues: [
+      ...semanticAdvisory,
+      ...renderErrors
+    ],
+    carouselAudit: audit,
+    renderer: compositor,
+    renderErrors,
+    generationFallback: fallbackUsed,
+    semanticRepairExhausted,
+    generationError: fallbackUsed ? lastError?.message || "fallback editorial estrutural utilizado" : null,
+    music,
+    source: "command-hub",
+    experiment: command.experiment,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  await saveLocalDraft(env, draft);
+  await saveHistory(env, {
+    briefId: `command-${command.id}`,
+    topic: draft.topic,
+    area: command.topic,
+    angle: command.objective,
+    type: "carousel",
+    createdAt: draft.createdAt
+  });
+  return draft;
+}
+__name(generateCarousel, "generateCarousel");
+async function normalizeCarouselPackage(env, command, value) {
+  const fallback = deterministicCarouselFallback(command);
+  const requiredCTA = resolveRequiredCarouselCTA(command);
+  let rawSlides = Array.isArray(value?.slides) ? value.slides.slice(0, command.slides) : [];
+  while (rawSlides.length < command.slides) {
+    const source = fallback.slides[rawSlides.length] || fallback.slides[fallback.slides.length - 1];
+    rawSlides.push(source);
+  }
+  let slides = rawSlides.map((slide, index) => ({
+    number: index + 1,
+    headline: sanitizeSlideText(
+      slide?.headline || editorialHeadlineFor(index + 1, command.slides, command)
+    ),
+    body: sanitizeSlideText(slide?.body || "")
+  }));
+  slides = slides.map((slide, index) => ({
+    ...slide,
+    headline: isGenericCarouselHeadline(slide.headline) ? editorialHeadlineFor(index + 1, command.slides, command) : slide.headline,
+    body: enforceSlideBodyDensity(
+      slide.body,
+      index + 1,
+      command.slides
+    )
+  }));
+  const coverHeadline = await ensureCarouselCoverHeadline(
+    env,
+    command,
+    slides[0]?.headline
+  );
+  slides[0].headline = sanitizeSlideText(coverHeadline);
+  if (!slides[0].body) {
+    slides[0].body = sanitizeSlideText(
+      command.keyMessage || command.objective || fallback.slides[0].body
+    );
+  }
+  slides[0].body = enforceSlideBodyDensity(
+    slides[0].body,
+    1,
+    command.slides
+  );
+  for (let i = 1; i < slides.length - 1; i++) {
+    if (isGenericCarouselHeadline(slides[i].headline) || wordCount(slides[i].headline) > 9) {
+      slides[i].headline = editorialHeadlineFor(i + 1, command.slides, command);
+    }
+    slides[i].body = enforceSlideBodyDensity(
+      slides[i].body,
+      i + 1,
+      command.slides
+    );
+  }
+  const lastIndex = command.slides - 1;
+  slides[lastIndex].headline = sanitizeSlideText(resolveClosingHeadline(command));
+  slides[lastIndex].body = enforceSlideBodyDensity(
+    sanitizeSlideText(requiredCTA),
+    command.slides,
+    command.slides
+  );
+  const caption = await ensureCarouselCaption(
+    env,
+    command,
+    cleanCaption(value?.caption || "")
+  );
+  return {
+    topic: cleanTopic(value?.topic || command.topic),
+    caption,
+    slides
+  };
+}
+__name(normalizeCarouselPackage, "normalizeCarouselPackage");
+async function ensureCarouselCoverHeadline(env, command, existingHeadline) {
+  const explicit = extractExplicitCarouselCover(command);
+  if (explicit) {
+    return explicit;
+  }
+  const existing = sanitizeSlideText(existingHeadline || "");
+  if (existing && !isGenericCarouselHeadline(existing) && wordCount(existing) <= CAROUSEL_COVER_MAX_WORDS && !looksLikeBriefDump(existing)) {
+    return existing;
+  }
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const result = await env.AI.run(
+        TXT,
+        {
+          messages: [
+            {
+              role: "system",
+              content: [
+                "Voc\xEA cria headlines de capa para carross\xE9is da Uma Gest\xE3o Inteligente.",
+                "Escreva uma \xFAnica headline curta e forte em portugu\xEAs brasileiro.",
+                `Use no m\xE1ximo ${CAROUSEL_COVER_MAX_WORDS} palavras.`,
+                "N\xE3o use dois-pontos.",
+                "N\xE3o use aspas.",
+                "N\xE3o use Tema, Parte, Slide, Card ou Insight.",
+                "N\xE3o prometa resultados absolutos.",
+                "A headline deve traduzir o problema gerencial do briefing em linguagem natural.",
+                "Retorne somente a headline."
+              ].

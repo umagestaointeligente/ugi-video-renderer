@@ -1,0 +1,438 @@
+d.instructions
+  ].filter(Boolean).join(" "));
+  for (const mood of profile.mood || []) {
+    if (tags.includes(
+      normalizeText(mood)
+    )) {
+      score += 1.2;
+    }
+  }
+  const topicTokens = commandText.split(/\s+/).filter((token) => token.length >= 5).slice(0, 24);
+  for (const token of topicTokens) {
+    if (tags.includes(token)) {
+      score += 0.22;
+    }
+  }
+  if (track.businessRelevant === true) {
+    score += 1.4;
+  }
+  if (track.professional === true) {
+    score += 1.2;
+  }
+  if (track.modern === true) {
+    score += 1;
+  }
+  if (track.explicit === true) {
+    score -= 100;
+  }
+  for (const avoid of profile.avoid || []) {
+    if (tags.includes(
+      normalizeText(avoid)
+    )) {
+      score -= 2;
+    }
+  }
+  return score;
+}
+__name(scoreBeatlyTrack, "scoreBeatlyTrack");
+async function generateStandardProposal(env, brief, origin, command = null) {
+  const history = await loadHistory(env);
+  const recentTopics = history.map((item) => item.topic).filter(Boolean).slice(0, 20);
+  let best = null;
+  let lastError = null;
+  for (let completeAttempt = 0; completeAttempt < FULL_GENERATION_ATTEMPTS; completeAttempt++) {
+    try {
+      const style = pick(STYLES);
+      const seed = randomSeed() + completeAttempt;
+      let proposal = await createProposal(
+        env,
+        brief,
+        style,
+        recentTopics,
+        seed
+      );
+      proposal = normalizeProposal(proposal);
+      if (topicInvalid(proposal.topic) || isTooSimilar(
+        proposal.topic,
+        recentTopics
+      )) {
+        try {
+          proposal.topic = await repairTopic(
+            env,
+            brief,
+            proposal.topic,
+            recentTopics,
+            seed + 1
+          );
+        } catch {
+          proposal.topic = safeTopicFromBrief(brief);
+        }
+      }
+      if (topicInvalid(proposal.topic)) {
+        proposal.topic = safeTopicFromBrief(brief);
+      }
+      let caption2 = cleanCaption(proposal.caption);
+      let issues = validateCaption(caption2);
+      for (let rewriteAttempt = 0; rewriteAttempt < CAPTION_REWRITE_ATTEMPTS && issues.length; rewriteAttempt++) {
+        try {
+          caption2 = await rewriteCaption(
+            env,
+            brief,
+            caption2,
+            issues,
+            seed + 20 + rewriteAttempt
+          );
+          caption2 = cleanCaption(caption2);
+          issues = validateCaption(caption2);
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      let semantic = {
+        pass: false,
+        aligned: false,
+        specific: false,
+        inventedRules: false,
+        genericLanguage: false,
+        reason: "auditoria pendente"
+      };
+      if (!issues.length) {
+        semantic = await semanticAudit(
+          env,
+          brief,
+          caption2,
+          seed + 70
+        );
+        for (let semanticAttempt = 0; semanticAttempt < MAX_SEMANTIC_REWRITES && !semantic.pass; semanticAttempt++) {
+          try {
+            caption2 = await semanticRewrite(
+              env,
+              brief,
+              caption2,
+              semantic,
+              seed + 80 + semanticAttempt
+            );
+            caption2 = cleanCaption(caption2);
+            issues = validateCaption(caption2);
+            if (issues.length) {
+              break;
+            }
+            semantic = await semanticAudit(
+              env,
+              brief,
+              caption2,
+              seed + 90 + semanticAttempt
+            );
+          } catch (error) {
+            lastError = error;
+            break;
+          }
+        }
+      }
+      const candidate = {
+        proposal,
+        caption: caption2,
+        issues,
+        semantic,
+        style,
+        score: scoreCaptionCandidate(
+          caption2,
+          issues
+        ) + (semantic.pass ? 35 : -25)
+      };
+      if (!best || candidate.score > best.score) {
+        best = candidate;
+      }
+      if (issues.length === 0 && semantic.pass) {
+        break;
+      }
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  if (!best) {
+    const fallbackCaption = await resilientFallbackCaption(
+      env,
+      brief
+    );
+    best = {
+      proposal: {
+        topic: safeTopicFromBrief(brief),
+        caption: fallbackCaption,
+        imagePrompt: buildFallbackImagePrompt(
+          brief
+        )
+      },
+      caption: fallbackCaption,
+      issues: validateCaption(
+        fallbackCaption
+      ),
+      semantic: {
+        pass: false,
+        aligned: false,
+        specific: false,
+        inventedRules: MONEY_OR_PERCENT_PATTERN.test(
+          fallbackCaption
+        ),
+        genericLanguage: false,
+        reason: "fallback editorial utilizado"
+      },
+      style: pick(STYLES),
+      score: 0
+    };
+  }
+  let caption = cleanCaption(best.caption);
+  if (wordCount(caption) < 70) {
+    try {
+      caption = await resilientFallbackCaption(
+        env,
+        brief,
+        caption
+      );
+    } catch {
+    }
+  }
+  if (!caption) {
+    caption = buildFallbackCaption(
+      brief.angle || brief.area || "gest\xE3o",
+      brief.cta
+    );
+  }
+  const finalIssues = validateCaption(caption);
+  let finalSemantic = best.semantic || {
+    pass: false,
+    aligned: false,
+    specific: false,
+    inventedRules: MONEY_OR_PERCENT_PATTERN.test(caption),
+    genericLanguage: false,
+    reason: "auditoria sem\xE2ntica ausente"
+  };
+  if (!finalIssues.length) {
+    try {
+      finalSemantic = await semanticAudit(
+        env,
+        brief,
+        caption,
+        (best.seed || randomSeed()) + 140
+      );
+    } catch {
+    }
+  }
+  const qualityStatus = finalIssues.length || !finalSemantic.pass ? "needs_review" : "ready_for_review";
+  const finalCaption = `${caption}
+
+${brief.hashtags.join(" ")}`;
+  const visualPrompt = buildImagePrompt(
+    best.proposal?.imagePrompt || buildFallbackImagePrompt(brief),
+    best.style || pick(STYLES),
+    brief
+  );
+  const image = await generateImageResilient(
+    env,
+    visualPrompt,
+    best.seed || randomSeed()
+  );
+  const id = crypto.randomUUID();
+  let imageKey = null;
+  let imageUrl = null;
+  let renderStatus = "ready";
+  if (image?.bytes) {
+    imageKey = `${IMAGE_PREFIX}${Date.now()}-${id}.jpg`;
+    await env.MEDIA.put(
+      imageKey,
+      image.bytes,
+      {
+        httpMetadata: {
+          contentType: "image/jpeg",
+          cacheControl: "public,max-age=31536000,immutable"
+        }
+      }
+    );
+    const stored = await env.MEDIA.head(imageKey);
+    if (stored) {
+      imageUrl = `${origin}/media/${imageKey}`;
+    } else {
+      imageKey = null;
+      renderStatus = "image_storage_failed";
+    }
+  } else {
+    renderStatus = "image_generation_failed";
+  }
+  const draft = {
+    id,
+    version: VERSION,
+    type: "post",
+    commandId: command?.id || null,
+    topic: cleanTopic(
+      best.proposal?.topic || safeTopicFromBrief(brief)
+    ),
+    area: brief.area,
+    angle: brief.angle,
+    text: finalCaption,
+    captionWords: wordCount(caption),
+    hashtags: brief.hashtags,
+    imageUrl,
+    imageKey,
+    status: "draft",
+    renderStatus,
+    qualityStatus,
+    qualityIssues: [
+      ...finalIssues,
+      ...finalSemantic.pass ? [] : [
+        `sem\xE2ntica: ${finalSemantic.reason || "ader\xEAncia insuficiente"}`
+      ]
+    ],
+    semanticAudit: finalSemantic,
+    music: command ? await resolveMusicForDraft(
+      env,
+      command,
+      "post"
+    ) : normalizeMusic(null, "post"),
+    automaticRetries: {
+      proposal: FULL_GENERATION_ATTEMPTS,
+      caption: CAPTION_REWRITE_ATTEMPTS,
+      image: IMAGE_ATTEMPTS
+    },
+    source: command ? "command-hub" : "automatic",
+    experiment: command?.experiment || "",
+    generationWarning: lastError?.message || null,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  await saveLocalDraft(env, draft);
+  await saveHistory(env, {
+    briefId: brief.id,
+    topic: draft.topic,
+    area: brief.area,
+    angle: brief.angle,
+    qualityStatus,
+    createdAt: draft.createdAt
+  });
+  return draft;
+}
+__name(generateStandardProposal, "generateStandardProposal");
+async function resilientFallbackCaption(env, brief, previous = "") {
+  try {
+    const result = await env.AI.run(
+      TXT,
+      {
+        messages: [
+          {
+            role: "system",
+            content: [
+              "Voc\xEA escreve conte\xFAdo pr\xE1tico de gest\xE3o para a marca Uma Gest\xE3o Inteligente.",
+              "Produza apenas uma legenda em portugu\xEAs brasileiro.",
+              "Use entre 120 e 180 palavras.",
+              "Use 4 ou 5 par\xE1grafos curtos.",
+              "Explique um problema real de gest\xE3o e uma a\xE7\xE3o concreta.",
+              "N\xE3o use t\xEDtulo.",
+              "N\xE3o use hashtags.",
+              "N\xE3o use Markdown.",
+              "Evite motiva\xE7\xE3o gen\xE9rica."
+            ].join(" ")
+          },
+          {
+            role: "user",
+            content: [
+              `Tema: ${brief.area}.`,
+              `Recorte: ${brief.angle}.`,
+              `Orienta\xE7\xE3o: ${brief.instruction}.`,
+              `Fechamento: ${brief.cta}.`,
+              previous ? `Aproveite apenas o que for \xFAtil desta tentativa: ${previous}` : ""
+            ].filter(Boolean).join("\n")
+          }
+        ],
+        max_tokens: 900,
+        temperature: 0.28
+      }
+    );
+    const text = cleanCaption(
+      result?.response || ""
+    );
+    if (text && wordCount(text) >= 70) {
+      return text;
+    }
+  } catch {
+  }
+  return buildFallbackCaption(
+    brief.angle || brief.area,
+    brief.cta
+  );
+}
+__name(resilientFallbackCaption, "resilientFallbackCaption");
+function buildFallbackCaption(topic, cta) {
+  const subject = String(topic || "gest\xE3o").trim();
+  const close = String(
+    cta || "Qual mudan\xE7a voc\xEA pode testar hoje?"
+  ).trim();
+  return [
+    `Quando ${subject} come\xE7a a depender apenas de esfor\xE7o individual, o problema costuma aparecer em forma de atrasos, retrabalho e decis\xF5es que voltam sempre para a mesma pessoa.`,
+    `Antes de criar mais uma regra, observe onde a rotina trava. Identifique qual decis\xE3o est\xE1 sem crit\xE9rio, quem depende de autoriza\xE7\xE3o e o que n\xE3o est\xE1 claro no resultado esperado.`,
+    `Depois transforme essa observa\xE7\xE3o em um acordo simples: defina quem \xE9 respons\xE1vel, qual resultado precisa ser entregue e em quais situa\xE7\xF5es a decis\xE3o realmente deve subir para o gestor.`,
+    `Teste esse crit\xE9rio em uma situa\xE7\xE3o real durante alguns dias. Compare o n\xFAmero de d\xFAvidas, interrup\xE7\xF5es e retrabalhos antes e depois. Se houver melhora, transforme o acordo em rotina; se n\xE3o houver, ajuste o crit\xE9rio.`,
+    close
+  ].join("\n\n");
+}
+__name(buildFallbackCaption, "buildFallbackCaption");
+async function generateImageResilient(env, prompt, baseSeed) {
+  let lastError = null;
+  for (let attempt = 0; attempt < IMAGE_ATTEMPTS; attempt++) {
+    try {
+      const result = await env.AI.run(
+        IMG,
+        {
+          prompt,
+          steps: 6
+        }
+      );
+      if (result?.image) {
+        const bytes = base64ToBytes(
+          result.image
+        );
+        if (bytes.length > 1e3) {
+          return {
+            bytes,
+            attempt: attempt + 1
+          };
+        }
+      }
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  return {
+    bytes: null,
+    error: lastError?.message || "Imagem n\xE3o gerada."
+  };
+}
+__name(generateImageResilient, "generateImageResilient");
+function base64ToBytes(base64) {
+  return Uint8Array.from(
+    atob(base64),
+    (char) => char.charCodeAt(0)
+  );
+}
+__name(base64ToBytes, "base64ToBytes");
+async function createProposal(env, brief, style, recentTopics, seed) {
+  return aiJSON(
+    env,
+    [
+      {
+        role: "system",
+        content: [
+          "Voc\xEA \xE9 a estrategista editorial da marca Uma Gest\xE3o Inteligente.",
+          "P\xFAblico: gestores, l\xEDderes, donos de pequenos neg\xF3cios e empreendedores.",
+          "Escreva em portugu\xEAs brasileiro natural.",
+          "Tom: consultoria pr\xE1tica, humana, direta e espec\xEDfica.",
+          "N\xE3o use motiva\xE7\xE3o gen\xE9rica.",
+          "N\xE3o descreva fotografia na legenda.",
+          "N\xE3o use hashtags dentro da legenda.",
+          "N\xE3o use Markdown.",
+          `Legenda preferencial entre ${TARGET_MIN} e ${TARGET_MAX} palavras.`,
+          "Use 4 ou 5 par\xE1grafos curtos.",
+          "Apresente problema real, causa ou diagn\xF3stico, consequ\xEAncia, m\xE9todo pr\xE1tico e fechamento.",
+          "Cada par\xE1grafo deve acrescentar informa\xE7\xE3o nova.",
+          "topic deve ter entre 3 e 9 palavras.",
+          `\xC1rea: ${brief.area}.`,
+          `\xC2ngulo: ${brief.angle}.`,
+          `Orienta\xE7\xE3o: ${brief.instruction}`,
+          `Crit\
