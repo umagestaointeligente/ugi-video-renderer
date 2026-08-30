@@ -3,5 +3,10 @@ main = "lsi-revenue-velocity-r1.mjs"
 compatibility_date = "2026-08-30"
 workers_dev = true
 
+[[durable_objects.bindings]]
+name = "LEARNING"
+class_name = "LearningState"
+script_name = "lsi-continual-learning-r1"
+
 [observability]
 enabled = true
