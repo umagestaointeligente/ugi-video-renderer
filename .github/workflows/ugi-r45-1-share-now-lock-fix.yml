@@ -1,0 +1,64 @@
+name: UGI R45.1 ShareNow Lock Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-r45-1-share-now-lock-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-cloudflare-worker-production
+  cancel-in-progress: false
+
+jobs:
+  deploy-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preflight
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"
+          test -n "$CF_ACCOUNT_ID"
+          test -n "$UGI_WORKER_COMMAND_KEY"
+          echo "::add-mask::$CF_API_TOKEN"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python -m pip install --disable-pip-version-check --quiet requests
+          python -m py_compile scripts/r45_1_share_now_lock_fix.py scripts/r45_instagram_multiformat_deploy.py
+      - name: Deploy live R45.1
+        run: |
+          set -euo pipefail
+          PYTHONPATH=scripts python scripts/r45_1_share_now_lock_fix.py
+      - name: Verify live health
+        run: |
+          set -euo pipefail
+          BASE='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
+          curl --fail --silent --show-error "$BASE/api/health" | tee /tmp/r45-1-health.json
+          jq -e '.ok == true and .version == "lola-v8-r45-1-share-now-lock-fix-2026-08-30"' /tmp/r45-1-health.json >/dev/null
+      - name: Persist deployment proof
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p cloudflare/status
+          test -f cloudflare/status/r45-1-share-now-lock-fix.txt || echo -e 'R45_1_STATUS=missing\nOK=false' > cloudflare/status/r45-1-share-now-lock-fix.txt
+          git config user.name 'ugi-r45-1-deploy-bot'
+          git config user.email 'ugi-r45-1-deploy@users.noreply.github.com'
+          git add cloudflare/status/r45-1-share-now-lock-fix.txt
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'chore: persist R45.1 shareNow lock fix evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
