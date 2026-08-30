@@ -87,7 +87,11 @@ jobs:
             -H 'content-type: application/json' \
             --data '{"url":"https://github.com/teamleaderleo/bot-observatory/issues/51"}' \
             "$RADAR_URL/admin/verify" > /tmp/trap.json
-          jq -e '.ok==true and (.result.decision=="REJECT_ZERO_REWARD" or .result.decision=="REJECT_NO_WORK_OR_TRAP") and .result.score==0 and .result.instruction_authority==false' /tmp/trap.json >/dev/null
+          if ! jq -e '.ok==true and (.result.decision=="REJECT_ZERO_REWARD" or .result.decision=="REJECT_NO_WORK_OR_TRAP") and .result.score==0 and .result.instruction_authority==false' /tmp/trap.json >/dev/null 2>&1; then
+            jq -c '{ok,error,result:{decision:(.result.decision // null),reward:(.result.reward_usd_advertised // null),score:(.result.score // null)}}' /tmp/trap.json 2>/dev/null || true
+            exit 1
+          fi
+          sleep 2
 
       - name: Prove unverified-dollar bounty is not treated as money
         shell: bash
@@ -98,7 +102,10 @@ jobs:
             -H 'content-type: application/json' \
             --data '{"url":"https://github.com/Lilly-Protocol/lily-sdk/issues/47"}' \
             "$RADAR_URL/admin/verify" > /tmp/unverified.json
-          jq -e '.ok==true and .result.reward_usd_advertised==35 and (.result.decision=="PENDING_PAYMENT_PROOF" or .result.decision=="CLAIMED_OR_CONTESTED") and .result.rail_verified_from_text==false' /tmp/unverified.json >/dev/null
+          if ! jq -e '.ok==true and .result.reward_usd_advertised==35 and (.result.decision=="PENDING_PAYMENT_PROOF" or .result.decision=="CLAIMED_OR_CONTESTED") and .result.rail_verified_from_text==false' /tmp/unverified.json >/dev/null 2>&1; then
+            jq -c '{ok,error,result:{decision:(.result.decision // null),reward:(.result.reward_usd_advertised // null),rail_verified:(.result.rail_verified_from_text // null),payment_rail_evidence:(.result.payment_rail_evidence // []),competition:(.result.competition_signal // null)}}' /tmp/unverified.json 2>/dev/null || cat /tmp/unverified.json
+            exit 1
+          fi
 
       - name: Start seven-day self-waking read-only radar
         shell: bash
@@ -126,7 +133,10 @@ jobs:
             fi
             sleep 3
           done
-          jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.instruction_authority_from_external_content==false' /tmp/radar.json >/dev/null
+          if ! jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.instruction_authority_from_external_content==false' /tmp/radar.json >/dev/null 2>&1; then
+            jq -c '{ok,state:{status:(.state.status // null),cycle_count:(.state.cycle_count // null),last_cycle:(.state.last_cycle // null)}}' /tmp/radar.json 2>/dev/null || true
+            exit 1
+          fi
 
       - name: Write sanitized evidence receipt
         if: always()
