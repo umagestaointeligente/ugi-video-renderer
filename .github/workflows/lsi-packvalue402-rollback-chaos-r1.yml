@@ -1,0 +1,195 @@
+name: LSI PackValue402 Rollback Chaos Proof R1
+run-name: LSI PackValue402 Rollback Chaos Proof R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - '.github/workflows/lsi-packvalue402-rollback-chaos-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove-post-deploy-rollback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      SHADOW_NAME: lsi-packvalue402-rollback-shadow
+      SHADOW_URL: https://lsi-packvalue402-rollback-shadow.umagestaointeligente.workers.dev
+      FACILITATOR_URL: https://facilitator.payai.network
+      TEST_PAY_TO: 0x3333333333333333333333333333333333333333
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Audit stack before chaos proof
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --ignore-scripts --no-audit --no-fund
+          npm audit --omit=dev --audit-level=high
+          npm audit --audit-level=high
+          npm run check
+          npm run test:e2e-mock
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Build isolated active and rollback configs
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > .wrangler.rollback.active.toml <<EOF
+          name = "$SHADOW_NAME"
+          main = "src/index.mjs"
+          compatibility_date = "2026-08-30"
+          workers_dev = true
+
+          [vars]
+          PAYMENTS_ENABLED = "true"
+          PAY_TO = "$TEST_PAY_TO"
+          NETWORK = "eip155:8453"
+          FACILITATOR_URL = "https://facilitator.payai.network"
+          EOF
+          cat > .wrangler.rollback.disabled.toml <<EOF
+          name = "$SHADOW_NAME"
+          main = "src/index.mjs"
+          compatibility_date = "2026-08-30"
+          workers_dev = true
+
+          [vars]
+          PAYMENTS_ENABLED = "false"
+          NETWORK = "eip155:8453"
+          FACILITATOR_URL = "https://facilitator.payai.network"
+          EOF
+          grep -q 'PAYMENTS_ENABLED = "true"' .wrangler.rollback.active.toml
+          grep -q 'PAYMENTS_ENABLED = "false"' .wrangler.rollback.disabled.toml
+
+      - name: Deploy isolated active shadow
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config .wrangler.rollback.active.toml
+
+      - name: Prove shadow reached payment-ready state without settlement
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$SHADOW_URL/health?ts=$RANDOM" > /tmp/shadow-health.json 2>/dev/null && jq -e '.ok==true and .mode=="PAYMENT_READY" and .payment.enabled==true and .payment.pay_to_configured==true and .payment.ready==true and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/shadow-health.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+          code="$(curl -sS -D /tmp/shadow-h -o /tmp/shadow-b -w '%{http_code}' -X POST "$SHADOW_URL/v1/compare" -H 'content-type: application/json' --data '{"offers":[{"label":"a","text":"1 L","price":3},{"label":"b","text":"2 L","price":5}]}' )"
+          test "$code" = "402"
+          HDR="$(awk 'BEGIN{IGNORECASE=1} /^payment-required:/{sub(/^[^:]+:[[:space:]]*/,""); gsub(/\r/,""); print; exit}' /tmp/shadow-h)"
+          test -n "$HDR"
+          TEST_PAY_TO="$TEST_PAY_TO" HDR="$HDR" node --input-type=module <<'NODE'
+          const p=JSON.parse(Buffer.from(process.env.HDR.replace(/-/g,'+').replace(/_/g,'/'),'base64').toString('utf8'));
+          const a=p.accepts?.[0];
+          if(p.x402Version!==2||a?.scheme!=='exact'||a?.network!=='eip155:8453'||a?.amount!=='1000'||a?.payTo?.toLowerCase()!==process.env.TEST_PAY_TO.toLowerCase()) throw new Error('shadow_402_invalid');
+          console.log('SHADOW_ACTIVE_402=PASS');
+          NODE
+          echo 'REAL_SETTLEMENT=false'
+          echo 'REAL_VALUE_MOVED=false'
+
+      - name: Inject controlled post-deploy failure
+        id: chaos
+        continue-on-error: true
+        shell: bash
+        run: |
+          echo 'CHAOS_INJECTION=POST_DEPLOY_FAILURE'
+          exit 42
+
+      - name: Require chaos failure was observed
+        if: ${{ steps.chaos.outcome == 'failure' }}
+        shell: bash
+        run: echo 'CHAOS_FAILURE_OBSERVED=PASS'
+
+      - name: Roll shadow back to payment-disabled
+        if: ${{ steps.chaos.outcome == 'failure' }}
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config .wrangler.rollback.disabled.toml
+          echo 'SHADOW_ROLLBACK_DEPLOY=PASS'
+
+      - name: Prove rollback ended disabled and fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$SHADOW_URL/health?ts=$RANDOM" > /tmp/shadow-disabled.json 2>/dev/null && jq -e '.ok==true and .payment.enabled==false and .payment.pay_to_configured==false and .payment.ready==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/shadow-disabled.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+          code="$(curl -sS -o /tmp/shadow-blocked.json -w '%{http_code}' -X POST "$SHADOW_URL/v1/compare" -H 'content-type: application/json' --data '{"offers":[{"label":"a","text":"1 L","price":3},{"label":"b","text":"2 L","price":5}]}' )"
+          test "$code" = "503"
+          jq -e '.ok==false and .error=="payments_not_activated" and .money_movement==false' /tmp/shadow-blocked.json >/dev/null
+          echo 'POST_DEPLOY_ROLLBACK_SAFE_STATE=PASS'
+
+      - name: Delete isolated shadow Worker
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          curl -fsS -X DELETE "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$SHADOW_NAME" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H 'Content-Type: application/json' > /tmp/delete.json
+          jq -e '.success==true' /tmp/delete.json >/dev/null
+          echo 'SHADOW_CLEANUP=PASS'
+
+      - name: Write rollback chaos receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"PACKVALUE402_ROLLBACK_CHAOS_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,isolated_shadow:true,active_402_verified:true,chaos_failure_injected:true,rollback_deploy_verified:true,disabled_503_verified:true,shadow_deleted:true,blockchain_broadcast:false,real_settlement:false,real_value_moved:false,production_endpoint_touched:false}' > generated/evidence/packvalue402-rollback-chaos-r1.json
+
+      - name: Upload rollback chaos receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: packvalue402-rollback-chaos-${{ github.run_id }}
+          path: generated/evidence/packvalue402-rollback-chaos-r1.json
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Emergency cleanup if workflow fails
+        if: failure()
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set +e
+          curl -sS -X DELETE "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$SHADOW_NAME" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H 'Content-Type: application/json' >/tmp/emergency-delete.json
+          echo 'EMERGENCY_SHADOW_CLEANUP_ATTEMPTED=true'
