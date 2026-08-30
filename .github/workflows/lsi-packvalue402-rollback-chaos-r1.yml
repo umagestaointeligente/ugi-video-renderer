@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      SHADOW_NAME: lsi-packvalue402-rollback-shadow
-      SHADOW_URL: https://lsi-packvalue402-rollback-shadow.umagestaointeligente.workers.dev
-      FACILITATOR_URL: https://facilitator.payai.network
-      TEST_PAY_TO: 0x3333333333333333333333333333333333333333
+      SHADOW_NAME: "lsi-packvalue402-rollback-shadow"
+      SHADOW_URL: "https://lsi-packvalue402-rollback-shadow.umagestaointeligente.workers.dev"
+      FACILITATOR_URL: "https://facilitator.payai.network"
+      TEST_PAY_TO: "0x3333333333333333333333333333333333333333"
     steps:
       - uses: actions/checkout@v4
 
