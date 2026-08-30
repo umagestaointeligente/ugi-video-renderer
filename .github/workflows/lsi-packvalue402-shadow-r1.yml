@@ -147,10 +147,9 @@ jobs:
         run: |
           set -euo pipefail
           curl -fsS "$WORKER_URL/.well-known/agent.json" > /tmp/agent.json
-          jq -e '.name=="PackValue402" and .payment.mode=="SHADOW_NO_SETTLEMENT" and .payment.wallet_bound==false and .tools|length==2' /tmp/agent.json >/dev/null
+          jq -e '.name=="PackValue402" and .payment.mode=="SHADOW_NO_SETTLEMENT" and .payment.wallet_bound==false and ((.tools|length)==2)' /tmp/agent.json >/dev/null
 
-      - name: Write sanitized receipt
-        if: always()
+      - name: Write acceptance receipt
         shell: bash
         run: |
           set -euo pipefail
@@ -158,11 +157,10 @@ jobs:
           jq -n \
             --arg run "$GITHUB_RUN_ID" \
             --arg sha "$GITHUB_SHA" \
-            '{schema_version:"1.0",project:"PACKVALUE402_SHADOW_R1",run_id:$run,commit:$sha,target_price_usd:0.001,shadow_mode:true,wallet_bound:false,money_movement:false,production_payments:false,external_paid_provider:false,tests:{unit:true,live_normalize:true,live_compare:true,incompatible_dimension_block:true,discovery:true}}' \
+            '{schema_version:"1.1",project:"PACKVALUE402_SHADOW_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,target_price_usd:0.001,shadow_mode:true,wallet_bound:false,money_movement:false,production_payments:false,external_paid_provider:false,tests:{unit:true,live_normalize:true,live_compare:true,incompatible_dimension_block:true,discovery:true}}' \
             > generated/evidence/packvalue402-shadow-r1.json
 
-      - name: Upload receipt
-        if: always()
+      - name: Upload acceptance receipt
         uses: actions/upload-artifact@v4
         with:
           name: packvalue402-shadow-${{ github.run_id }}
