@@ -1,0 +1,2145 @@
+{
+  "project": "UGI",
+  "component": "PRODUCTION-SMOKE-NOW",
+  "startedAt": "2026-08-30T17:08:56.410959+00:00",
+  "health": {
+    "ok": true,
+    "service": "Lola Operacional UGI",
+    "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+    "status": "online",
+    "multimedia": true,
+    "capabilities": {
+      "post": true,
+      "carousel": true,
+      "carouselExactText": true,
+      "carouselNoAITextRendering": true,
+      "carouselComposer": "R19 sequential two-pass Browser Run with adaptive 429 backoff",
+      "semanticValidation": true,
+      "editorialSelfRepair": true,
+      "visualBackgroundGeneration": true,
+      "exactTextOverlay": true,
+      "terminalStyleRemoved": true,
+      "browserRunRenderer": true,
+      "browserRunRequiredForCarousel": true,
+      "photoPerCarouselSlide": true,
+      "automaticImageFallbackDisabled": true,
+      "beatlyMusicMetadataReady": true,
+      "beatlyCatalogRotation": true,
+      "beatlyBusinessRelevancePolicy": true,
+      "semanticGateSelfHealing": true,
+      "video": true,
+      "reel": true,
+      "videoNormalization": true,
+      "videoProcessor": "Cloudflare Media Transformations binding",
+      "musicMetadata": true,
+      "musicMixingAutomatic": false,
+      "instagramLibraryMusicAutomatic": false,
+      "musicMultiplatformPolicy": true,
+      "musicContextFirst": true,
+      "musicExplicitFilter": true,
+      "musicPerPlatformRights": true,
+      "musicFallbackAutomatic": true,
+      "browser429Backoff": true,
+      "browserTwoPassRecovery": true,
+      "realVideoMimeValidation": true,
+      "videoStaticImageFallbackDisabled": true,
+      "videoProvider": "google/veo-3.1-fast",
+      "videoFallbackProviders": [
+        "runwayml/gen-4.5",
+        "pruna/p-video"
+      ],
+      "videoProviderCascade": true,
+      "directVideoDiagnostic": "/api/video-test",
+      "videoRoutingLocked": true,
+      "videoAuthDiagnostic": true,
+      "videoGatewayId": "default",
+      "videoUnifiedBilling": true,
+      "zeroCostGithubRenderer": true,
+      "dynamicVideoScenes": true,
+      "dynamicVideoScenesRequired": true,
+      "commerceBridge": true,
+      "lsiFiatRail": true,
+      "lsiFiatRailOidc": true,
+      "lsiFiatRailFixedOfferOnly": true,
+      "lsiFiatRailUgiFulfillmentBlocked": true,
+      "commerceHardGate": true,
+      "materialStore": true,
+      "materialJsonUploadBridge": true,
+      "materialAttachmentFetchBridge": true,
+      "materialDirectUploadSession": true,
+      "materialBrowserUploadPage": true,
+      "materialUploadOneShot": true,
+      "materialUploadSha256Gate": true,
+      "materialQualityApprovalGate": true,
+      "materialDeliveryEnableGate": true,
+      "asaasCanonicalCheckoutPayload": true,
+      "asaasCheckoutProductPriceLocked": true,
+      "asaasCheckoutCallbackSameOrigin": true,
+      "asaasCheckoutUrlDerivation": true,
+      "asaasCheckoutItemExternalReference": true,
+      "asaasCheckoutBrandedImageBase64": true,
+      "asaasProviderErrorsExposed": true,
+      "asaasUserAgentHeader": true,
+      "asaasPixOptionalByCapabilityFlag": false,
+      "asaasPixCardProductionEnabled": true,
+      "compactAntiDupCheck": true,
+      "contentIdIndex": true,
+      "experimentVariantIndex": true,
+      "antiDupFailClosedOnIncompleteScan": true,
+      "githubDispatch204NoRunIdExpected": true,
+      "githubRunCorrelationByRenderId": true,
+      "githubLegacyTemporalCorrelationFailClosed": true,
+      "commercePublicationGateV2": true,
+      "permanentCommerceEntrypoint": true,
+      "commerceHubEntrypoint": true,
+      "commerceHubUrl": "/materiais",
+      "visualCaptionBlocks": true,
+      "visualCaptionEmojiPolicy": "semantic_light",
+      "commercialCaptionCta": "link_na_bio",
+      "permanentCommercePublicationLinkPolicy": true,
+      "directAsaasCheckoutInPublicTextBlocked": true,
+      "permanentCommercePublicUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/priorizacao",
+      "permanentCommerceUrlPrioritization": "/priorizacao",
+      "justInTimeAsaasCheckout": true,
+      "expiredCheckoutReturnsToPermalink": true,
+      "directAsaasCheckoutPublishingDeprecated": true,
+      "commercePublicationRequiresFulfillmentReady": false,
+      "commercePublicationRequiresMaterialUrl": false,
+      "commercePublicationRequiresPriceId": false,
+      "commercePublicationRequiresPaymentLink": true,
+      "commerceTokenizedDeliveryCompatible": true,
+      "asaasCreditCardDefaultCheckout": true,
+      "asaasItemNameMax30": true,
+      "asaasItemDescriptionMax150": true,
+      "checkoutFailureNoPersistence": true,
+      "materialAssetIntegrityGate": true,
+      "productCatalog": true,
+      "commerceAdapter": true,
+      "commerceWebhookFailClosed": true,
+      "commerceFulfillment": true,
+      "materialDeliveryTokenized": true,
+      "copyLock": true,
+      "carouselCopyLock": true,
+      "videoCopyLock": true,
+      "semanticSuccessCallback": true,
+      "semanticSuccessCallbackRoute": "/api/video-semantic-result",
+      "legacyHardcodedScenesDisabled": true,
+      "videoSceneInput": "workflow_dispatch.inputs.scenes_json",
+      "githubVideoRenderRoute": "/api/video-render",
+      "githubVideoUploadRoute": "/api/video-upload",
+      "githubVideoStatusRoute": "/api/video-status",
+      "githubVideoResultRoute": "/api/video-result/{renderId}",
+      "githubVideoLatestRoute": "/api/video-results/latest",
+      "githubR2AutomaticDelivery": true,
+      "videoMultiAsset": true,
+      "videoPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "videoIndependentPlatformAssets": true,
+      "centralMultiAssetApproval": true,
+      "platformApprovalIndependent": true,
+      "platformApprovalPublishesAutomatically": false,
+      "platformApprovalRoute": "/api/platform-approval",
+      "multiPlatformPublishing": true,
+      "r45InstagramMultiFormat": true,
+      "r45InstagramCarousel": true,
+      "r45InstagramVisualPost": true,
+      "r45InstagramStoryImage": true,
+      "publicationExactlyOnceGuard": true,
+      "publicationAssetLockR2": true,
+      "publicationSlotLockR2": true,
+      "publicationRetryCreateBlockedOnUncertain": true,
+      "platformPublishRoute": "/api/platform-publish",
+      "platformPublicationStatusRoute": "/api/platform-publication-status",
+      "carouselSlideRecoveryRoute": "/api/carousel-slide-recovery",
+      "carouselSlideRecoveryInPlace": true,
+      "bufferChannelsRoute": "/api/buffer/channels",
+      "approvalSeparatedFromPublishing": true,
+      "operationalAuthFix": true,
+      "r2AssetValidationFix": true,
+      "publicationAssetValidation": "R2 binding first, public HEAD fallback",
+      "operationalAuthRoutes": [
+        "/api/platform-approval",
+        "/api/platform-publish",
+        "/api/platform-publication-status"
+      ],
+      "supportedPublishModes": [
+        "shareNow",
+        "customScheduled",
+        "addToQueue"
+      ],
+      "bufferChannelOverrides": {
+        "instagram": true,
+        "tiktok": true,
+        "youtube": true
+      },
+      "githubActionHttp200Compatibility": true,
+      "videoImageFallbackDisabled": true,
+      "videoGateway": "workers-ai-direct"
+    },
+    "bindings": {
+      "AI": true,
+      "IMAGES": true,
+      "MEDIA_R2": true,
+      "VIDEO": true,
+      "LOLA_AUTH_KEY": true,
+      "LOLA_COMMAND_KEY": true,
+      "BUFFER_API_KEY": true,
+      "BROWSER": true,
+      "MUSIC_CATALOG_JSON": true,
+      "GITHUB_VIDEO_TOKEN": true,
+      "GITHUB_VIDEO_OWNER": true,
+      "GITHUB_VIDEO_REPO": true,
+      "GITHUB_VIDEO_WORKFLOW": true,
+      "GITHUB_VIDEO_UPLOAD_KEY": true,
+      "ASAAS_API_KEY": true,
+      "ASAAS_WEBHOOK_TOKEN": true,
+      "PAGBANK_TOKEN": false
+    },
+    "endpoints": {
+      "central": "/approve",
+      "approvalMvp": true,
+      "contentLifecycleTracking": true,
+      "approvalArchive": true,
+      "videoToApprovalBridge": true,
+      "health": "/api/health",
+      "command": "POST /api/command",
+      "commands": "GET /api/commands",
+      "drafts": "GET /api/drafts",
+      "draftLookup": "GET /api/draft-lookup?content_id={content_id}",
+      "contentAntiDupCheck": "POST /api/content-anti-dup-check",
+      "musicCatalog": "POST /api/music/catalog",
+      "musicCatalogStatus": "GET /api/music/catalog/status",
+      "musicPolicyStatus": "GET /api/music/policy/status",
+      "videoRender": "POST /api/video-render",
+      "videoUpload": "POST /api/video-upload",
+      "videoStatus": "POST /api/video-status",
+      "videoSemanticResult": "POST /api/video-semantic-result",
+      "videoResult": "GET /api/video-result/{renderId}",
+      "videoLatest": "GET /api/video-results/latest",
+      "materials": "GET|POST /api/materials",
+      "material": "GET /api/materials/{materialId}",
+      "materialAsset": "POST /api/materials/{materialId}/asset",
+      "materialAssetJson": "POST /api/materials/{materialId}/asset-json",
+      "materialAssetFile": "POST /api/materials/{materialId}/asset-file",
+      "materialUploadSession": "POST /api/materials/{materialId}/upload-session",
+      "materialUploadPage": "GET|POST /api/material-upload/{sessionId}?token=...",
+      "materialUploadStatus": "GET /api/material-upload/{sessionId}/status",
+      "materialQualityApproval": "POST /api/materials/{materialId}/quality-approval",
+      "materialDeliveryEnable": "POST /api/materials/{materialId}/delivery-enable",
+      "products": "GET|POST /api/products",
+      "product": "GET /api/products/{productId}",
+      "commerceCheckout": "POST /api/commerce/checkout",
+      "commerceCheckoutGet": "GET /api/commerce/checkout/{checkoutId}",
+      "commerceOrder": "GET /api/commerce/order/{referenceId}",
+      "asaasWebhook": "POST /api/commerce/webhook/asaas",
+      "materialDelivery": "GET /api/material-delivery/{token}"
+    },
+    "timestamp": "2026-08-30T17:08:55.932Z"
+  },
+  "channels": {
+    "ok": true,
+    "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+    "organization": {
+      "id": "6a78957b595d5fd443b5a27a",
+      "name": "My Organization"
+    },
+    "channels": [
+      {
+        "id": "6a7896cdb2d9d57743457e33",
+        "name": "umagestaointeligente",
+        "displayName": "umagestaointeligente",
+        "service": "instagram",
+        "isQueuePaused": false
+      },
+      {
+        "id": "6a789721b2d9d5774345839d",
+        "name": "umagestaointelige",
+        "displayName": "umagestaointelige",
+        "service": "tiktok",
+        "isQueuePaused": false
+      },
+      {
+        "id": "6a78974ab2d9d577434584b7",
+        "name": "Uma Gestão Inteligente ",
+        "displayName": "Uma Gestão Inteligente ",
+        "service": "youtube",
+        "isQueuePaused": false
+      }
+    ],
+    "note": "Use os IDs retornados em BUFFER_CHANNEL_INSTAGRAM, BUFFER_CHANNEL_TIKTOK e BUFFER_CHANNEL_YOUTUBE se houver múltiplos canais da mesma rede."
+  },
+  "results": [
+    {
+      "platform": "tiktok",
+      "contentId": "UGI-20260830-TT-01-MEETINGS",
+      "purpose": "verify_existing_13h_delivery",
+      "draftLookup": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/draft-lookup",
+        "content_id": "UGI-20260830-TT-01-MEETINGS",
+        "found": true,
+        "draftId": "ugi-20260830145024-2afd13cbf76d",
+        "renderId": "ugi-20260830145024-2afd13cbf76d",
+        "status": "draft",
+        "workflowStatus": "partially_approved",
+        "createdAt": "2026-08-30T14:50:50.526Z",
+        "updatedAt": "2026-08-30T15:39:35.995Z",
+        "publicationTriggered": false,
+        "mutationPerformed": false
+      },
+      "draftId": "ugi-20260830145024-2afd13cbf76d",
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/platform-publication-status",
+        "platform": "tiktok",
+        "publication": {
+          "status": "published",
+          "bufferStatus": "sent",
+          "bufferPostId": "6a944eb0e7e04684c6fef14e",
+          "channelId": "6a789721b2d9d5774345839d",
+          "channelService": "tiktok",
+          "channelSource": "BUFFER_CHANNEL_TIKTOK",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-30T16:00:00.000Z",
+          "sentAt": "2026-08-30T16:02:57.108Z",
+          "externalLink": "https://tiktok.com/@umagestaointelige/video/7679855168443157781",
+          "sharedNow": false,
+          "requestedAt": "2026-08-30T15:39:27.630Z",
+          "updatedAt": "2026-08-30T17:09:07.496Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a33566c13b70d925-DFW",
+            "rateLimitRemaining": "2127",
+            "graphqlErrors": [],
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a944eb0e7e04684c6fef14e",
+          "text": "🗓️ 20 pessoas na sala? Primeiro pergunte: é para decidir, trabalhar ou só informar?\n\nSe é só informação, talvez não precise ocupar o calendário de todo mundo. Quantas reuniões da sua empresa poderiam ter sido uma mensagem?\n\n#UmaGestaoInteligente #Gestao #Reunioes #Produtividade",
+          "status": "sent",
+          "dueAt": "2026-08-30T16:00:00.000Z",
+          "sentAt": "2026-08-30T16:02:57.108Z",
+          "externalLink": "https://tiktok.com/@umagestaointelige/video/7679855168443157781",
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "tiktok",
+          "error": null
+        },
+        "bufferDiagnostics": {
+          "httpStatus": 200,
+          "httpOk": true,
+          "requestId": "a33566c13b70d925-DFW",
+          "rateLimitRemaining": "2127",
+          "graphqlErrors": [],
+          "postError": null
+        }
+      },
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679855168443157781"
+      },
+      "ok": true,
+      "state": "DELIVERED"
+    },
+    {
+      "platform": "instagram",
+      "contentId": "UGI-SMOKE-20260830-INSTAGRAM-R45",
+      "generateHttp": 200,
+      "generation": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/r45/generate",
+        "commandId": "1be74012-b5e7-437f-a8fa-771b682f325c",
+        "draftId": "bb19ddeb-bd96-41cb-bf55-cffaa3f6f7e7",
+        "contentId": "UGI-SMOKE-20260830-INSTAGRAM-R45",
+        "type": "visual_post",
+        "draft": {
+          "id": "bb19ddeb-bd96-41cb-bf55-cffaa3f6f7e7",
+          "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+          "type": "visual_post",
+          "commandId": "1be74012-b5e7-437f-a8fa-771b682f325c",
+          "contentId": "UGI-SMOKE-20260830-INSTAGRAM-R45",
+          "experimentId": "UGI-PRODUCTION-SMOKE-20260830",
+          "variant": "IG",
+          "commercialIntent": null,
+          "commercialOffer": false,
+          "editorialMode": "human_utility_first",
+          "copyLock": {
+            "enabled": false
+          },
+          "commerce": {
+            "required": false,
+            "productId": null,
+            "priceId": null,
+            "paymentLink": null,
+            "materialId": null,
+            "materialUrl": null,
+            "fulfillmentReady": false,
+            "provider": null,
+            "currency": "BRL",
+            "price": null
+          },
+          "topic": "Publicação com evidência real",
+          "area": "Publicação com evidência real",
+          "angle": "provar execução end-to-end sem Lola 5.3",
+          "hook": "AGENDAR NÃO BASTA.",
+          "cta": "Teste operacional UGI — pode ser removido após a validação.",
+          "text": "AGENDAR NÃO BASTA.\n\nA UGI só considera uma publicação concluída quando o sistema confirma que ela foi realmente entregue.\n\nTeste operacional UGI — pode ser removido após a validação.\n\n#UmaGestaoInteligente",
+          "imageUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/posts-visuais/1788109754023-bb19ddeb-bd96-41cb-bf55-cffaa3f6f7e7.png",
+          "imageKey": "geradas/posts-visuais/1788109754023-bb19ddeb-bd96-41cb-bf55-cffaa3f6f7e7.png",
+          "status": "draft",
+          "renderStatus": "ready",
+          "qualityStatus": "ready_for_review",
+          "qualityIssues": [],
+          "semanticValidationRequired": false,
+          "semanticValidationAvailable": true,
+          "semanticValidation": {
+            "pass": true,
+            "source": "r45_deterministic_visual_static",
+            "visualType": "visual_post"
+          },
+          "legacyContentLeakDetected": false,
+          "renderer": "r45-browser-human-utility",
+          "source": "r45-multiformat",
+          "createdAt": "2026-08-30T17:09:14.338Z"
+        },
+        "publicationTriggered": false
+      },
+      "draftId": "bb19ddeb-bd96-41cb-bf55-cffaa3f6f7e7",
+      "approvalHttp": 200,
+      "approval": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/r45/static-approval",
+        "draftId": "bb19ddeb-bd96-41cb-bf55-cffaa3f6f7e7",
+        "platform": "instagram",
+        "decision": "approved",
+        "asset": {
+          "kind": "image",
+          "ready": true,
+          "imageUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/posts-visuais/1788109754023-bb19ddeb-bd96-41cb-bf55-cffaa3f6f7e7.png",
+          "approvalStatus": "approved",
+          "approvalDecisionAt": "2026-08-30T17:09:15.776Z"
+        },
+        "publicationTriggered": false
+      },
+      "publishHttp": 409,
+      "publish": {
+        "ok": false,
+        "errorClass": "publication_idempotency_lock_exists",
+        "lockType": "slot",
+        "existingLock": {
+          "schemaVersion": "1.1",
+          "token": "539a26d0-3838-45c2-ac5c-826af0f4f9a9",
+          "state": "backfilled_confirmed",
+          "project": "UGI",
+          "draftId": "ugi-20260817050811-9d0de8f1e5ab",
+          "renderId": "ugi-20260817050811-9d0de8f1e5ab",
+          "contentId": "UGI-R44-4-5-INSTAGRAM-AUTH-SMOKE",
+          "platform": "instagram",
+          "mode": "shareNow",
+          "dueAt": "2026-08-17T05:18:23.469Z",
+          "requestedAt": "2026-08-24T12:53:32.244Z",
+          "bufferPostId": "6a82999fcb308e1e8d9a7480",
+          "lockType": "slot",
+          "key": "lola/publication-locks/slot/instagram/shareNow/immediate.json",
+          "bufferStatus": "sent",
+          "updatedAt": "2026-08-24T12:53:33.492Z"
+        },
+        "publicationTriggered": false
+      },
+      "ok": false,
+      "state": "PUBLISH_FAILED"
+    },
+    {
+      "platform": "tiktok",
+      "contentId": "UGI-SMOKE-20260830-TIKTOK-R43",
+      "dispatchHttp": 200,
+      "dispatch": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/video-render",
+        "routing": "LOLA_TO_GITHUB_ACTIONS_FFMPEG",
+        "renderer": "github-actions-ffmpeg",
+        "costMode": "zero_cost_initial",
+        "renderId": "ugi-20260830170918-b68935abb819",
+        "githubAccepted": true,
+        "githubStatus": 204,
+        "githubRunId": 33324456755,
+        "githubRunNumber": 176,
+        "githubRunAttempt": 1,
+        "githubWorkflowStatus": "queued",
+        "githubWorkflowConclusion": null,
+        "githubRunCreatedAt": "2026-08-30T17:09:29Z",
+        "githubRunUpdatedAt": "2026-08-30T17:09:29Z",
+        "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33324456755",
+        "githubRunDisplayTitle": "UGI ugi-20260830170918-b68935abb819",
+        "githubRunEvent": "workflow_dispatch",
+        "githubRunHeadBranch": "main",
+        "githubRunHeadSha": "89f7e2ad622c3608bf5c33a8e9e502e80bbebab1",
+        "githubCorrelationMethod": "render_id_run_name",
+        "githubRunIdExpectedInDispatchResponse": false,
+        "repository": "umagestaointeligente/ugi-video-renderer",
+        "workflow": "render-video.yml",
+        "ref": "main",
+        "title": "UGI production smoke tiktok",
+        "duration": 8,
+        "status": "queued",
+        "ready": false,
+        "assets": {},
+        "readyPlatforms": [],
+        "expectedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "allPlatformsReady": false,
+        "videoUrl": null,
+        "videoKey": null,
+        "approvalDraftId": "ugi-20260830170918-b68935abb819",
+        "existingDraftReused": false,
+        "contentId": "UGI-SMOKE-20260830-TIKTOK-R43",
+        "experimentId": "UGI-PRODUCTION-SMOKE-20260830",
+        "variant": "TIKTOK",
+        "commercialIntent": "none",
+        "commercialOffer": false,
+        "editorialMode": "smoke_test",
+        "commerce": {
+          "required": false,
+          "productId": null,
+          "priceId": null,
+          "paymentLink": null,
+          "materialId": null,
+          "materialUrl": null,
+          "fulfillmentReady": false,
+          "provider": null,
+          "currency": "BRL",
+          "price": null
+        },
+        "copyLock": {
+          "enabled": false
+        },
+        "exactCopy": {
+          "enabled": false
+        },
+        "semanticValidationRequired": false,
+        "semanticValidationAvailable": false,
+        "semanticValidation": null,
+        "copyLockValidation": null,
+        "legacyContentLeakDetected": false,
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true,
+        "requestedAt": "2026-08-30T17:09:29.342Z",
+        "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260830170918-b68935abb819",
+        "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+        "centralApproval": true,
+        "approvalBridgeError": null
+      },
+      "renderId": "ugi-20260830170918-b68935abb819",
+      "videoResult": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/video-upload",
+        "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+        "renderer": "github-actions-ffmpeg",
+        "costMode": "zero_cost_initial",
+        "renderId": "ugi-20260830170918-b68935abb819",
+        "githubAccepted": true,
+        "githubStatus": 204,
+        "githubRunId": "33324456755",
+        "githubRunNumber": 176,
+        "githubRunAttempt": 1,
+        "githubWorkflowStatus": "queued",
+        "githubWorkflowConclusion": null,
+        "githubRunCreatedAt": "2026-08-30T17:09:29Z",
+        "githubRunUpdatedAt": "2026-08-30T17:09:29Z",
+        "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33324456755",
+        "githubRunDisplayTitle": "UGI ugi-20260830170918-b68935abb819",
+        "githubRunEvent": "workflow_dispatch",
+        "githubRunHeadBranch": "main",
+        "githubRunHeadSha": "89f7e2ad622c3608bf5c33a8e9e502e80bbebab1",
+        "githubCorrelationMethod": "render_id_run_name",
+        "githubRunIdExpectedInDispatchResponse": false,
+        "repository": "umagestaointeligente/ugi-video-renderer",
+        "workflow": "render-video.yml",
+        "ref": "main",
+        "title": "UGI production smoke tiktok",
+        "duration": 32,
+        "status": "ready",
+        "ready": true,
+        "assets": {
+          "instagram": {
+            "platform": "instagram",
+            "status": "ready",
+            "ready": true,
+            "videoKey": "geradas/videos/ugi-20260830170918-b68935abb819/instagram.mp4",
+            "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170918-b68935abb819%2Finstagram.mp4",
+            "videoBytes": 12050336,
+            "contentType": "video/mp4",
+            "mp4Signature": true,
+            "duration": 32,
+            "githubRunId": "33324456755",
+            "r2Etag": "a960eb59a3e576694ca509ef44988d08",
+            "uploadedAt": "2026-08-30T17:15:58.383Z",
+            "approvalStatus": "pending_approval"
+          },
+          "tiktok": {
+            "platform": "tiktok",
+            "status": "ready",
+            "ready": true,
+            "videoKey": "geradas/videos/ugi-20260830170918-b68935abb819/tiktok.mp4",
+            "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170918-b68935abb819%2Ftiktok.mp4",
+            "videoBytes": 9233483,
+            "contentType": "video/mp4",
+            "mp4Signature": true,
+            "duration": 24,
+            "githubRunId": "33324456755",
+            "r2Etag": "c08d7f5f734ea7e238245c1b702d33c7",
+            "uploadedAt": "2026-08-30T17:16:00.799Z",
+            "approvalStatus": "pending_approval"
+          },
+          "youtube": {
+            "platform": "youtube",
+            "status": "ready",
+            "ready": true,
+            "videoKey": "geradas/videos/ugi-20260830170918-b68935abb819/youtube.mp4",
+            "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170918-b68935abb819%2Fyoutube.mp4",
+            "videoBytes": 13426279,
+            "contentType": "video/mp4",
+            "mp4Signature": true,
+            "duration": 36,
+            "githubRunId": "33324456755",
+            "r2Etag": "6d2174fa0523f81682681d47cc144266",
+            "uploadedAt": "2026-08-30T17:16:03.482Z",
+            "approvalStatus": "pending_approval"
+          }
+        },
+        "readyPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "expectedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "allPlatformsReady": true,
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170918-b68935abb819%2Finstagram.mp4",
+        "videoKey": "geradas/videos/ugi-20260830170918-b68935abb819/instagram.mp4",
+        "approvalDraftId": "ugi-20260830170918-b68935abb819",
+        "existingDraftReused": false,
+        "contentId": "UGI-SMOKE-20260830-TIKTOK-R43",
+        "experimentId": "UGI-PRODUCTION-SMOKE-20260830",
+        "variant": "TIKTOK",
+        "commercialIntent": "none",
+        "commercialOffer": false,
+        "editorialMode": "smoke_test",
+        "commerce": {
+          "required": false,
+          "productId": null,
+          "priceId": null,
+          "paymentLink": null,
+          "materialId": null,
+          "materialUrl": null,
+          "fulfillmentReady": false,
+          "provider": null,
+          "currency": "BRL",
+          "price": null
+        },
+        "copyLock": {
+          "enabled": false
+        },
+        "exactCopy": {
+          "enabled": false
+        },
+        "semanticValidationRequired": false,
+        "semanticValidationAvailable": true,
+        "semanticValidation": {
+          "pass": true,
+          "qaPass": true,
+          "copyLockPass": true,
+          "canonicalCopyPass": true,
+          "renderedCopyPass": true,
+          "validatedPlatforms": [
+            "instagram",
+            "tiktok",
+            "youtube"
+          ],
+          "declaredSceneCount": 6,
+          "canonicalSceneCount": 6,
+          "renderedSceneCounts": {
+            "instagram": 6,
+            "tiktok": 6,
+            "youtube": 6
+          },
+          "exactCopyScope": "canonical_payload",
+          "smokeTest": false,
+          "mismatches": [],
+          "receivedAt": "2026-08-30T17:16:05.858Z"
+        },
+        "copyLockValidation": {
+          "required": false,
+          "exactCopyRequired": false,
+          "pass": true,
+          "mode": "exact",
+          "strict": true,
+          "scope": "canonical_payload",
+          "canonicalCopyPass": true,
+          "renderedCopyPass": true,
+          "canonicalCopySha256": "5ab440057f22c2e470d00bd35ac27bcf4ae7775bec9362b83aa0ecda0975054d",
+          "mismatches": []
+        },
+        "legacyContentLeakDetected": false,
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true,
+        "requestedAt": "2026-08-30T17:09:29.342Z",
+        "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260830170918-b68935abb819",
+        "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+        "videoBytes": 12050336,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "uploadedAt": "2026-08-30T17:16:03.482Z",
+        "semanticEvidence": {
+          "version": "R43.8.6",
+          "renderId": "ugi-20260830170918-b68935abb819",
+          "githubRunId": "33324456755",
+          "contentId": "UGI-SMOKE-20260830-TIKTOK-R43",
+          "experimentId": "UGI-PRODUCTION-SMOKE-20260830",
+          "variant": "TIKTOK",
+          "sceneCount": 6,
+          "sceneRoles": [
+            "hook",
+            "pain",
+            "consequence",
+            "turn",
+            "result",
+            "cta"
+          ],
+          "canonicalSceneCount": 6,
+          "canonicalSceneRoles": [
+            "hook",
+            "pain",
+            "consequence",
+            "turn",
+            "result",
+            "cta"
+          ],
+          "canonicalScenes": [
+            {
+              "role": "hook",
+              "visual_intent": "gestor conferindo painel digital em ambiente de trabalho",
+              "pexels_query": "manager digital dashboard office",
+              "overlay": {
+                "instagram": "TIKTOK: teste real",
+                "tiktok": "TIKTOK: teste real",
+                "youtube": "TIKTOK: teste real"
+              },
+              "support": {
+                "instagram": "Publicação validada ponta a ponta",
+                "tiktok": "Publicação validada ponta a ponta",
+                "youtube": "Publicação validada ponta a ponta"
+              },
+              "narration": {
+                "instagram": "Este é um teste operacional real da Uma Gestão Inteligente.",
+                "tiktok": "Este é um teste operacional real da Uma Gestão Inteligente.",
+                "youtube": "Este é um teste operacional real da Uma Gestão Inteligente."
+              }
+            },
+            {
+              "role": "pain",
+              "visual_intent": "profissional vendo alertas de tarefas e sistema",
+              "pexels_query": "professional task alerts computer office",
+              "overlay": {
+                "instagram": "Agendar não basta",
+                "tiktok": "Agendar não basta",
+                "youtube": "Agendar não basta"
+              },
+              "support": {
+                "instagram": "Precisamos provar a entrega",
+                "tiktok": "Precisamos provar a entrega",
+                "youtube": "Precisamos provar a entrega"
+              },
+              "narration": {
+                "instagram": "Agendar não basta. O sistema precisa provar que a publicação foi entregue.",
+                "tiktok": "Agendar não basta. O sistema precisa provar que a publicação foi entregue.",
+                "youtube": "Agendar não basta. O sistema precisa provar que a publicação foi entregue."
+              }
+            },
+            {
+              "role": "consequence",
+              "visual_intent": "fluxo digital com etapa pendente e verificação",
+              "pexels_query": "workflow verification technology office",
+              "overlay": {
+                "instagram": "Sem confirmação, sem sucesso",
+                "tiktok": "Sem confirmação, sem sucesso",
+                "youtube": "Sem confirmação, sem sucesso"
+              },
+              "support": {
+                "instagram": "Fail closed",
+                "tiktok": "Fail closed",
+                "youtube": "Fail closed"
+              },
+              "narration": {
+                "instagram": "Sem confirmação real, a operação não pode ser classificada como sucesso.",
+                "tiktok": "Sem confirmação real, a operação não pode ser classificada como sucesso.",
+                "youtube": "Sem confirmação real, a operação não pode ser classificada como sucesso."
+              }
+            },
+            {
+              "role": "turn",
+              "visual_intent": "automação conectando etapas de um processo",
+              "pexels_query": "automation workflow business technology",
+              "overlay": {
+                "instagram": "Control Plane UGI",
+                "tiktok": "Control Plane UGI",
+                "youtube": "Control Plane UGI"
+              },
+              "support": {
+                "instagram": "Render, QA, Buffer, readback",
+                "tiktok": "Render, QA, Buffer, readback",
+                "youtube": "Render, QA, Buffer, readback"
+              },
+              "narration": {
+                "instagram": "O novo Control Plane conecta render, qualidade, Buffer e readback.",
+                "tiktok": "O novo Control Plane conecta render, qualidade, Buffer e readback.",
+                "youtube": "O novo Control Plane conecta render, qualidade, Buffer e readback."
+              }
+            },
+            {
+              "role": "result",
+              "visual_intent": "painel de processo concluído com indicador verde",
+              "pexels_query": "successful workflow dashboard office",
+              "overlay": {
+                "instagram": "Evidência real",
+                "tiktok": "Evidência real",
+                "youtube": "Evidência real"
+              },
+              "support": {
+                "instagram": "POST ID + sentAt",
+                "tiktok": "POST ID + sentAt",
+                "youtube": "POST ID + sentAt"
+              },
+              "narration": {
+                "instagram": "Só consideramos concluído quando existe evidência real de entrega.",
+                "tiktok": "Só consideramos concluído quando existe evidência real de entrega.",
+                "youtube": "Só consideramos concluído quando existe evidência real de entrega."
+              }
+            },
+            {
+              "role": "cta",
+              "visual_intent": "gestor finalizando tarefa no notebook",
+              "pexels_query": "manager completing task laptop office",
+              "overlay": {
+                "instagram": "Teste operacional UGI",
+                "tiktok": "Teste operacional UGI",
+                "youtube": "Teste operacional UGI"
+              },
+              "support": {
+                "instagram": "Pode ser removido após a validação",
+                "tiktok": "Pode ser removido após a validação",
+                "youtube": "Pode ser removido após a validação"
+              },
+              "narration": {
+                "instagram": "Teste operacional concluído.",
+                "tiktok": "Teste operacional concluído.",
+                "youtube": "Teste operacional concluído."
+              }
+            }
+          ],
+          "canonicalCopy": [
+            {
+              "index": 1,
+              "role": "hook",
+              "overlay": {
+                "instagram": "TIKTOK: teste real",
+                "tiktok": "TIKTOK: teste real",
+                "youtube": "TIKTOK: teste real"
+              },
+              "support": {
+                "instagram": "Publicação validada ponta a ponta",
+                "tiktok": "Publicação validada ponta a ponta",
+                "youtube": "Publicação validada ponta a ponta"
+              },
+              "narration": {
+                "instagram": "Este é um teste operacional real da Uma Gestão Inteligente.",
+                "tiktok": "Este é um teste operacional real da Uma Gestão Inteligente.",
+                "youtube": "Este é um teste operacional real da Uma Gestão Inteligente."
+              }
+            },
+            {
+              "index": 2,
+              "role": "pain",
+              "overlay": {
+                "instagram": "Agendar não basta",
+                "tiktok": "Agendar não basta",
+                "youtube": "Agendar não basta"
+              },
+              "support": {
+                "instagram": "Precisamos provar a entrega",
+                "tiktok": "Precisamos provar a entrega",
+                "youtube": "Precisamos provar a entrega"
+              },
+              "narration": {
+                "instagram": "Agendar não basta. O sistema precisa provar que a publicação foi entregue.",
+                "tiktok": "Agendar não basta. O sistema precisa provar que a publicação foi entregue.",
+                "youtube": "Agendar não basta. O sistema precisa provar que a publicação foi entregue."
+              }
+            },
+            {
+              "index": 3,
+              "role": "consequence",
+              "overlay": {
+                "instagram": "Sem confirmação, sem sucesso",
+                "tiktok": "Sem confirmação, sem sucesso",
+                "youtube": "Sem confirmação, sem sucesso"
+              },
+              "support": {
+                "instagram": "Fail closed",
+                "tiktok": "Fail closed",
+                "youtube": "Fail closed"
+              },
+              "narration": {
+                "instagram": "Sem confirmação real, a operação não pode ser classificada como sucesso.",
+                "tiktok": "Sem confirmação real, a operação não pode ser classificada como sucesso.",
+                "youtube": "Sem confirmação real, a operação não pode ser classificada como sucesso."
+              }
+            },
+            {
+              "index": 4,
+              "role": "turn",
+              "overlay": {
+                "instagram": "Control Plane UGI",
+                "tiktok": "Control Plane UGI",
+                "youtube": "Control Plane UGI"
+              },
+              "support": {
+                "instagram": "Render, QA, Buffer, readback",
+                "tiktok": "Render, QA, Buffer, readback",
+                "youtube": "Render, QA, Buffer, readback"
+              },
+              "narration": {
+                "instagram": "O novo Control Plane conecta render, qualidade, Buffer e readback.",
+                "tiktok": "O novo Control Plane conecta render, qualidade, Buffer e readback.",
+                "youtube": "O novo Control Plane conecta render, qualidade, Buffer e readback."
+              }
+            },
+            {
+              "index": 5,
+              "role": "result",
+              "overlay": {
+                "instagram": "Evidência real",
+                "tiktok": "Evidência real",
+                "youtube": "Evidência real"
+              },
+              "support": {
+                "instagram": "POST ID + sentAt",
+                "tiktok": "POST ID + sentAt",
+                "youtube": "POST ID + sentAt"
+              },
+              "narration": {
+                "instagram": "Só consideramos concluído quando existe evidência real de entrega.",
+                "tiktok": "Só consideramos concluído quando existe evidência real de entrega.",
+                "youtube": "Só consideramos concluído quando existe evidência real de entrega."
+              }
+            },
+            {
+              "index": 6,
+              "role": "cta",
+              "overlay": {
+                "instagram": "Teste operacional UGI",
+                "tiktok": "Teste operacional UGI",
+                "youtube": "Teste operacional UGI"
+              },
+              "support": {
+                "instagram": "Pode ser removido após a validação",
+                "tiktok": "Pode ser removido após a validação",
+                "youtube": "Pode ser removido após a validação"
+              },
+              "narration": {
+                "instagram": "Teste operacional concluído.",
+                "tiktok": "Teste operacional concluído.",
+                "youtube": "Teste operacional concluído."
+              }
+            }
+          ],
+          "canonicalCopySha256": "5ab440057f22c2e470d00bd35ac27bcf4ae7775bec9362b83aa0ecda0975054d",
+          "canonicalPayloadSha256": "c46309168927cb599c3200bc8745341869cc896b7be99d9349fe1762d7607c21",
+          "canonicalCopyValidation": {
+            "pass": true,
+            "sceneCount": 6,
+            "sceneRoles": [
+              "hook",
+              "pain",
+              "consequence",
+              "turn",
+              "result",
+              "cta"
+            ],
+            "validatedPlatforms": [
+              "instagram",
+              "tiktok",
+              "youtube"
+            ],
+            "validatedFields": [
+              "overlay",
+              "support",
+              "narration"
+            ],
+            "mismatches": []
+          },
+          "validatedPlatforms": [
+            "instagram",
+            "tiktok",
+            "youtube"
+          ],
+          "renderedSceneCounts": {
+            "instagram": 6,
+            "tiktok": 6,
+            "youtube": 6
+          },
+          "renderedCopyValidation": {
+            "pass": true,
+            "mismatches": []
+          },
+          "smokeTest": false,
+          "exactCopyScope": "canonical_payload",
+          "renderedValidationScope": "all_rendered_platform_scenes",
+          "finalCta": "Teste operacional UGI concluído.",
+          "finalCtaByPlatform": {
+            "instagram": "Teste operacional UGI concluído.",
+            "tiktok": "Teste operacional UGI concluído.",
+            "youtube": "Teste operacional UGI concluído."
+          },
+          "commercialOffer": false,
+          "commerce": {
+            "required": false,
+            "productId": null,
+            "priceId": null,
+            "paymentLink": null,
+            "materialId": null,
+            "materialUrl": null,
+            "fulfillmentReady": false,
+            "provider": null,
+            "currency": "BRL",
+            "price": null
+          },
+          "copyLock": {
+            "enabled": false
+          },
+          "exactCopy": {
+            "enabled": false
+          },
+          "manifest": {
+            "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+            "sceneSource": "dynamic",
+            "sceneCount": 6,
+            "sceneRoles": [
+              "hook",
+              "pain",
+              "consequence",
+              "turn",
+              "result",
+              "cta"
+            ],
+            "legacyHardcodedScenesDisabled": true
+          },
+          "legacyContentLeakDetected": false,
+          "legacyHits": []
+        },
+        "mediaProviders": [
+          {
+            "scene": 1,
+            "provider": "Pexels",
+            "query": "manager digital dashboard office",
+            "provider_video_id": 38901962,
+            "provider_page_url": "https://www.pexels.com/video/agile-project-management-on-digital-tablet-38901962/",
+            "local_file": "output/media/scene-1.mp4"
+          },
+          {
+            "scene": 2,
+            "provider": "Pexels",
+            "query": "professional task alerts computer office",
+            "provider_video_id": 12896415,
+            "provider_page_url": "https://www.pexels.com/video/businesswoman-using-a-computer-in-an-office-12896415/",
+            "local_file": "output/media/scene-2.mp4"
+          },
+          {
+            "scene": 3,
+            "provider": "Pexels",
+            "query": "workflow verification technology office",
+            "provider_video_id": 12896413,
+            "provider_page_url": "https://www.pexels.com/video/over-the-shoulder-view-of-a-working-businessman-12896413/",
+            "local_file": "output/media/scene-3.mp4"
+          },
+          {
+            "scene": 4,
+            "provider": "Pexels",
+            "query": "automation workflow business technology",
+            "provider_video_id": 38901947,
+            "provider_page_url": "https://www.pexels.com/video/tech-project-management-on-tablet-38901947/",
+            "local_file": "output/media/scene-4.mp4"
+          },
+          {
+            "scene": 5,
+            "provider": "Pexels",
+            "query": "successful workflow dashboard office",
+            "provider_video_id": 35544532,
+            "provider_page_url": "https://www.pexels.com/video/dynamic-trading-dashboard-with-tablet-analysis-35544532/",
+            "local_file": "output/media/scene-5.mp4"
+          },
+          {
+            "scene": 6,
+            "provider": "Pexels",
+            "query": "manager completing task laptop office",
+            "provider_video_id": 31485697,
+            "provider_page_url": "https://www.pexels.com/video/efficient-office-task-management-with-notes-and-calculator-31485697/",
+            "local_file": "output/media/scene-6.mp4"
+          }
+        ],
+        "finalCta": "Teste operacional UGI concluído.",
+        "updatedAt": "2026-08-30T17:16:05.858Z"
+      },
+      "draftLookup": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/draft-lookup",
+        "content_id": "UGI-SMOKE-20260830-TIKTOK-R43",
+        "found": true,
+        "draftId": "ugi-20260830170918-b68935abb819",
+        "renderId": "ugi-20260830170918-b68935abb819",
+        "status": "draft",
+        "workflowStatus": "pending_approval",
+        "createdAt": "2026-08-30T17:09:29.342Z",
+        "updatedAt": "2026-08-30T17:16:06.196Z",
+        "publicationTriggered": false,
+        "mutationPerformed": false
+      },
+      "draftId": "ugi-20260830170918-b68935abb819",
+      "approvalHttp": 200,
+      "approval": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/platform-approval",
+        "renderId": "ugi-20260830170918-b68935abb819",
+        "draftId": "ugi-20260830170918-b68935abb819",
+        "platform": "tiktok",
+        "decision": "approved",
+        "asset": {
+          "platform": "tiktok",
+          "status": "ready",
+          "ready": true,
+          "videoKey": "geradas/videos/ugi-20260830170918-b68935abb819/tiktok.mp4",
+          "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170918-b68935abb819%2Ftiktok.mp4",
+          "videoBytes": 9233483,
+          "contentType": "video/mp4",
+          "mp4Signature": true,
+          "duration": 24,
+          "githubRunId": "33324456755",
+          "r2Etag": "c08d7f5f734ea7e238245c1b702d33c7",
+          "uploadedAt": "2026-08-30T17:16:00.799Z",
+          "approvalStatus": "approved",
+          "approvalDecisionAt": "2026-08-30T17:16:25.227Z"
+        },
+        "approvalSummary": {
+          "workflowStatus": "partially_approved",
+          "approvedCount": 1,
+          "rejectedCount": 0,
+          "pendingCount": 2,
+          "platformStates": {
+            "instagram": "pending_approval",
+            "tiktok": "approved",
+            "youtube": "pending_approval"
+          },
+          "allReviewed": false
+        },
+        "workflowStatus": "partially_approved",
+        "publicationTriggered": false,
+        "note": "Decisão registrada na Central. Nenhuma publicação automática foi executada."
+      },
+      "publishHttp": 200,
+      "publish": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/platform-publish",
+        "platform": "tiktok",
+        "mode": "shareNow",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "sending",
+          "bufferPostId": "6a94656cd58664eabd796ea8",
+          "channelId": "6a789721b2d9d5774345839d",
+          "channelService": "tiktok",
+          "channelSource": "BUFFER_CHANNEL_TIKTOK",
+          "mode": "shareNow",
+          "dueAt": "2026-08-30T17:16:28.174Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": true,
+          "requestedAt": "2026-08-30T17:16:27.365Z",
+          "updatedAt": "2026-08-30T17:16:38.391Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a335717f6ac2f2a2-DFW",
+            "rateLimitRemaining": "2120",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a94656cd58664eabd796ea8",
+          "text": "💡 UGI production smoke tiktok",
+          "status": "sending",
+          "dueAt": "2026-08-30T17:16:28.174Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": true,
+          "shareMode": "shareNow",
+          "channelService": "tiktok",
+          "error": null
+        },
+        "assetValidation": {
+          "source": "r2_binding",
+          "videoKey": "geradas/videos/ugi-20260830170918-b68935abb819/tiktok.mp4",
+          "videoBytes": 9233483,
+          "contentType": "video/mp4"
+        },
+        "publicationTriggered": true,
+        "otherPlatformsUnaffected": true
+      },
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/platform-publication-status",
+        "platform": "tiktok",
+        "publication": {
+          "status": "published",
+          "bufferStatus": "sent",
+          "bufferPostId": "6a94656cd58664eabd796ea8",
+          "channelId": "6a789721b2d9d5774345839d",
+          "channelService": "tiktok",
+          "channelSource": "BUFFER_CHANNEL_TIKTOK",
+          "mode": "shareNow",
+          "dueAt": "2026-08-30T17:16:28.174Z",
+          "sentAt": "2026-08-30T17:18:11.585Z",
+          "externalLink": "https://tiktok.com/@umagestaointelige/video/7679874802584259860",
+          "sharedNow": true,
+          "requestedAt": "2026-08-30T17:16:27.365Z",
+          "updatedAt": "2026-08-30T17:18:17.488Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a335740d399fd925-DFW",
+            "rateLimitRemaining": "2112",
+            "graphqlErrors": [],
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a94656cd58664eabd796ea8",
+          "text": "💡 UGI production smoke tiktok",
+          "status": "sent",
+          "dueAt": "2026-08-30T17:16:28.174Z",
+          "sentAt": "2026-08-30T17:18:11.585Z",
+          "externalLink": "https://tiktok.com/@umagestaointelige/video/7679874802584259860",
+          "sharedNow": true,
+          "shareMode": "shareNow",
+          "channelService": "tiktok",
+          "error": null
+        },
+        "bufferDiagnostics": {
+          "httpStatus": 200,
+          "httpOk": true,
+          "requestId": "a335740d399fd925-DFW",
+          "rateLimitRemaining": "2112",
+          "graphqlErrors": [],
+          "postError": null
+        }
+      },
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679874802584259860"
+      },
+      "ok": true,
+      "state": "DELIVERED"
+    },
+    {
+      "platform": "youtube",
+      "contentId": "UGI-SMOKE-20260830-YOUTUBE-R43",
+      "dispatchHttp": 200,
+      "dispatch": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/video-render",
+        "routing": "LOLA_TO_GITHUB_ACTIONS_FFMPEG",
+        "renderer": "github-actions-ffmpeg",
+        "costMode": "zero_cost_initial",
+        "renderId": "ugi-20260830170933-20faa3a0737d",
+        "githubAccepted": true,
+        "githubStatus": 204,
+        "githubRunId": 33324456755,
+        "githubRunNumber": 176,
+        "githubRunAttempt": 1,
+        "githubWorkflowStatus": "in_progress",
+        "githubWorkflowConclusion": null,
+        "githubRunCreatedAt": "2026-08-30T17:09:29Z",
+        "githubRunUpdatedAt": "2026-08-30T17:09:34Z",
+        "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33324456755",
+        "githubRunDisplayTitle": "UGI ugi-20260830170918-b68935abb819",
+        "githubRunEvent": "workflow_dispatch",
+        "githubRunHeadBranch": "main",
+        "githubRunHeadSha": "89f7e2ad622c3608bf5c33a8e9e502e80bbebab1",
+        "githubCorrelationMethod": "legacy_unique_temporal_window",
+        "githubRunIdExpectedInDispatchResponse": false,
+        "repository": "umagestaointeligente/ugi-video-renderer",
+        "workflow": "render-video.yml",
+        "ref": "main",
+        "title": "UGI production smoke youtube",
+        "duration": 8,
+        "status": "queued",
+        "ready": false,
+        "assets": {},
+        "readyPlatforms": [],
+        "expectedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "allPlatformsReady": false,
+        "videoUrl": null,
+        "videoKey": null,
+        "approvalDraftId": "ugi-20260830170933-20faa3a0737d",
+        "existingDraftReused": false,
+        "contentId": "UGI-SMOKE-20260830-YOUTUBE-R43",
+        "experimentId": "UGI-PRODUCTION-SMOKE-20260830",
+        "variant": "YOUTUBE",
+        "commercialIntent": "none",
+        "commercialOffer": false,
+        "editorialMode": "smoke_test",
+        "commerce": {
+          "required": false,
+          "productId": null,
+          "priceId": null,
+          "paymentLink": null,
+          "materialId": null,
+          "materialUrl": null,
+          "fulfillmentReady": false,
+          "provider": null,
+          "currency": "BRL",
+          "price": null
+        },
+        "copyLock": {
+          "enabled": false
+        },
+        "exactCopy": {
+          "enabled": false
+        },
+        "semanticValidationRequired": false,
+        "semanticValidationAvailable": false,
+        "semanticValidation": null,
+        "copyLockValidation": null,
+        "legacyContentLeakDetected": false,
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true,
+        "requestedAt": "2026-08-30T17:09:43.149Z",
+        "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260830170933-20faa3a0737d",
+        "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+        "centralApproval": true,
+        "approvalBridgeError": null
+      },
+      "renderId": "ugi-20260830170933-20faa3a0737d",
+      "videoResult": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/video-upload",
+        "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+        "renderer": "github-actions-ffmpeg",
+        "costMode": "zero_cost_initial",
+        "renderId": "ugi-20260830170933-20faa3a0737d",
+        "githubAccepted": true,
+        "githubStatus": 204,
+        "githubRunId": "33324467269",
+        "githubRunNumber": 176,
+        "githubRunAttempt": 1,
+        "githubWorkflowStatus": "in_progress",
+        "githubWorkflowConclusion": null,
+        "githubRunCreatedAt": "2026-08-30T17:09:29Z",
+        "githubRunUpdatedAt": "2026-08-30T17:09:34Z",
+        "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33324456755",
+        "githubRunDisplayTitle": "UGI ugi-20260830170918-b68935abb819",
+        "githubRunEvent": "workflow_dispatch",
+        "githubRunHeadBranch": "main",
+        "githubRunHeadSha": "89f7e2ad622c3608bf5c33a8e9e502e80bbebab1",
+        "githubCorrelationMethod": "legacy_unique_temporal_window",
+        "githubRunIdExpectedInDispatchResponse": false,
+        "repository": "umagestaointeligente/ugi-video-renderer",
+        "workflow": "render-video.yml",
+        "ref": "main",
+        "title": "UGI production smoke youtube",
+        "duration": 32,
+        "status": "ready",
+        "ready": true,
+        "assets": {
+          "instagram": {
+            "platform": "instagram",
+            "status": "ready",
+            "ready": true,
+            "videoKey": "geradas/videos/ugi-20260830170933-20faa3a0737d/instagram.mp4",
+            "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170933-20faa3a0737d%2Finstagram.mp4",
+            "videoBytes": 12049191,
+            "contentType": "video/mp4",
+            "mp4Signature": true,
+            "duration": 32,
+            "githubRunId": "33324467269",
+            "r2Etag": "85caf8a08ae905e5339898fba74fa7fd",
+            "uploadedAt": "2026-08-30T17:16:24.279Z",
+            "approvalStatus": "pending_approval"
+          },
+          "tiktok": {
+            "platform": "tiktok",
+            "status": "ready",
+            "ready": true,
+            "videoKey": "geradas/videos/ugi-20260830170933-20faa3a0737d/tiktok.mp4",
+            "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170933-20faa3a0737d%2Ftiktok.mp4",
+            "videoBytes": 9232754,
+            "contentType": "video/mp4",
+            "mp4Signature": true,
+            "duration": 24,
+            "githubRunId": "33324467269",
+            "r2Etag": "4c959640fa73d717b274b5b7273a0ff9",
+            "uploadedAt": "2026-08-30T17:16:26.445Z",
+            "approvalStatus": "pending_approval"
+          },
+          "youtube": {
+            "platform": "youtube",
+            "status": "ready",
+            "ready": true,
+            "videoKey": "geradas/videos/ugi-20260830170933-20faa3a0737d/youtube.mp4",
+            "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170933-20faa3a0737d%2Fyoutube.mp4",
+            "videoBytes": 13429749,
+            "contentType": "video/mp4",
+            "mp4Signature": true,
+            "duration": 36,
+            "githubRunId": "33324467269",
+            "r2Etag": "0fc8506afcab5ed8d522b3e0e95595c1",
+            "uploadedAt": "2026-08-30T17:16:28.216Z",
+            "approvalStatus": "pending_approval"
+          }
+        },
+        "readyPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "expectedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "allPlatformsReady": true,
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170933-20faa3a0737d%2Finstagram.mp4",
+        "videoKey": "geradas/videos/ugi-20260830170933-20faa3a0737d/instagram.mp4",
+        "approvalDraftId": "ugi-20260830170933-20faa3a0737d",
+        "existingDraftReused": false,
+        "contentId": "UGI-SMOKE-20260830-YOUTUBE-R43",
+        "experimentId": "UGI-PRODUCTION-SMOKE-20260830",
+        "variant": "YOUTUBE",
+        "commercialIntent": "none",
+        "commercialOffer": false,
+        "editorialMode": "smoke_test",
+        "commerce": {
+          "required": false,
+          "productId": null,
+          "priceId": null,
+          "paymentLink": null,
+          "materialId": null,
+          "materialUrl": null,
+          "fulfillmentReady": false,
+          "provider": null,
+          "currency": "BRL",
+          "price": null
+        },
+        "copyLock": {
+          "enabled": false
+        },
+        "exactCopy": {
+          "enabled": false
+        },
+        "semanticValidationRequired": false,
+        "semanticValidationAvailable": true,
+        "semanticValidation": {
+          "pass": true,
+          "qaPass": true,
+          "copyLockPass": true,
+          "canonicalCopyPass": true,
+          "renderedCopyPass": true,
+          "validatedPlatforms": [
+            "instagram",
+            "tiktok",
+            "youtube"
+          ],
+          "declaredSceneCount": 6,
+          "canonicalSceneCount": 6,
+          "renderedSceneCounts": {
+            "instagram": 6,
+            "tiktok": 6,
+            "youtube": 6
+          },
+          "exactCopyScope": "canonical_payload",
+          "smokeTest": false,
+          "mismatches": [],
+          "receivedAt": "2026-08-30T17:16:30.665Z"
+        },
+        "copyLockValidation": {
+          "required": false,
+          "exactCopyRequired": false,
+          "pass": true,
+          "mode": "exact",
+          "strict": true,
+          "scope": "canonical_payload",
+          "canonicalCopyPass": true,
+          "renderedCopyPass": true,
+          "canonicalCopySha256": "29a890e78e4d66417a1c5bc2c18d4401a8f6471c0945246a26c627e88ed31dd6",
+          "mismatches": []
+        },
+        "legacyContentLeakDetected": false,
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true,
+        "requestedAt": "2026-08-30T17:09:43.149Z",
+        "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260830170933-20faa3a0737d",
+        "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+        "videoBytes": 12049191,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "uploadedAt": "2026-08-30T17:16:28.216Z",
+        "semanticEvidence": {
+          "version": "R43.8.6",
+          "renderId": "ugi-20260830170933-20faa3a0737d",
+          "githubRunId": "33324467269",
+          "contentId": "UGI-SMOKE-20260830-YOUTUBE-R43",
+          "experimentId": "UGI-PRODUCTION-SMOKE-20260830",
+          "variant": "YOUTUBE",
+          "sceneCount": 6,
+          "sceneRoles": [
+            "hook",
+            "pain",
+            "consequence",
+            "turn",
+            "result",
+            "cta"
+          ],
+          "canonicalSceneCount": 6,
+          "canonicalSceneRoles": [
+            "hook",
+            "pain",
+            "consequence",
+            "turn",
+            "result",
+            "cta"
+          ],
+          "canonicalScenes": [
+            {
+              "role": "hook",
+              "visual_intent": "gestor conferindo painel digital em ambiente de trabalho",
+              "pexels_query": "manager digital dashboard office",
+              "overlay": {
+                "instagram": "YOUTUBE: teste real",
+                "tiktok": "YOUTUBE: teste real",
+                "youtube": "YOUTUBE: teste real"
+              },
+              "support": {
+                "instagram": "Publicação validada ponta a ponta",
+                "tiktok": "Publicação validada ponta a ponta",
+                "youtube": "Publicação validada ponta a ponta"
+              },
+              "narration": {
+                "instagram": "Este é um teste operacional real da Uma Gestão Inteligente.",
+                "tiktok": "Este é um teste operacional real da Uma Gestão Inteligente.",
+                "youtube": "Este é um teste operacional real da Uma Gestão Inteligente."
+              }
+            },
+            {
+              "role": "pain",
+              "visual_intent": "profissional vendo alertas de tarefas e sistema",
+              "pexels_query": "professional task alerts computer office",
+              "overlay": {
+                "instagram": "Agendar não basta",
+                "tiktok": "Agendar não basta",
+                "youtube": "Agendar não basta"
+              },
+              "support": {
+                "instagram": "Precisamos provar a entrega",
+                "tiktok": "Precisamos provar a entrega",
+                "youtube": "Precisamos provar a entrega"
+              },
+              "narration": {
+                "instagram": "Agendar não basta. O sistema precisa provar que a publicação foi entregue.",
+                "tiktok": "Agendar não basta. O sistema precisa provar que a publicação foi entregue.",
+                "youtube": "Agendar não basta. O sistema precisa provar que a publicação foi entregue."
+              }
+            },
+            {
+              "role": "consequence",
+              "visual_intent": "fluxo digital com etapa pendente e verificação",
+              "pexels_query": "workflow verification technology office",
+              "overlay": {
+                "instagram": "Sem confirmação, sem sucesso",
+                "tiktok": "Sem confirmação, sem sucesso",
+                "youtube": "Sem confirmação, sem sucesso"
+              },
+              "support": {
+                "instagram": "Fail closed",
+                "tiktok": "Fail closed",
+                "youtube": "Fail closed"
+              },
+              "narration": {
+                "instagram": "Sem confirmação real, a operação não pode ser classificada como sucesso.",
+                "tiktok": "Sem confirmação real, a operação não pode ser classificada como sucesso.",
+                "youtube": "Sem confirmação real, a operação não pode ser classificada como sucesso."
+              }
+            },
+            {
+              "role": "turn",
+              "visual_intent": "automação conectando etapas de um processo",
+              "pexels_query": "automation workflow business technology",
+              "overlay": {
+                "instagram": "Control Plane UGI",
+                "tiktok": "Control Plane UGI",
+                "youtube": "Control Plane UGI"
+              },
+              "support": {
+                "instagram": "Render, QA, Buffer, readback",
+                "tiktok": "Render, QA, Buffer, readback",
+                "youtube": "Render, QA, Buffer, readback"
+              },
+              "narration": {
+                "instagram": "O novo Control Plane conecta render, qualidade, Buffer e readback.",
+                "tiktok": "O novo Control Plane conecta render, qualidade, Buffer e readback.",
+                "youtube": "O novo Control Plane conecta render, qualidade, Buffer e readback."
+              }
+            },
+            {
+              "role": "result",
+              "visual_intent": "painel de processo concluído com indicador verde",
+              "pexels_query": "successful workflow dashboard office",
+              "overlay": {
+                "instagram": "Evidência real",
+                "tiktok": "Evidência real",
+                "youtube": "Evidência real"
+              },
+              "support": {
+                "instagram": "POST ID + sentAt",
+                "tiktok": "POST ID + sentAt",
+                "youtube": "POST ID + sentAt"
+              },
+              "narration": {
+                "instagram": "Só consideramos concluído quando existe evidência real de entrega.",
+                "tiktok": "Só consideramos concluído quando existe evidência real de entrega.",
+                "youtube": "Só consideramos concluído quando existe evidência real de entrega."
+              }
+            },
+            {
+              "role": "cta",
+              "visual_intent": "gestor finalizando tarefa no notebook",
+              "pexels_query": "manager completing task laptop office",
+              "overlay": {
+                "instagram": "Teste operacional UGI",
+                "tiktok": "Teste operacional UGI",
+                "youtube": "Teste operacional UGI"
+              },
+              "support": {
+                "instagram": "Pode ser removido após a validação",
+                "tiktok": "Pode ser removido após a validação",
+                "youtube": "Pode ser removido após a validação"
+              },
+              "narration": {
+                "instagram": "Teste operacional concluído.",
+                "tiktok": "Teste operacional concluído.",
+                "youtube": "Teste operacional concluído."
+              }
+            }
+          ],
+          "canonicalCopy": [
+            {
+              "index": 1,
+              "role": "hook",
+              "overlay": {
+                "instagram": "YOUTUBE: teste real",
+                "tiktok": "YOUTUBE: teste real",
+                "youtube": "YOUTUBE: teste real"
+              },
+              "support": {
+                "instagram": "Publicação validada ponta a ponta",
+                "tiktok": "Publicação validada ponta a ponta",
+                "youtube": "Publicação validada ponta a ponta"
+              },
+              "narration": {
+                "instagram": "Este é um teste operacional real da Uma Gestão Inteligente.",
+                "tiktok": "Este é um teste operacional real da Uma Gestão Inteligente.",
+                "youtube": "Este é um teste operacional real da Uma Gestão Inteligente."
+              }
+            },
+            {
+              "index": 2,
+              "role": "pain",
+              "overlay": {
+                "instagram": "Agendar não basta",
+                "tiktok": "Agendar não basta",
+                "youtube": "Agendar não basta"
+              },
+              "support": {
+                "instagram": "Precisamos provar a entrega",
+                "tiktok": "Precisamos provar a entrega",
+                "youtube": "Precisamos provar a entrega"
+              },
+              "narration": {
+                "instagram": "Agendar não basta. O sistema precisa provar que a publicação foi entregue.",
+                "tiktok": "Agendar não basta. O sistema precisa provar que a publicação foi entregue.",
+                "youtube": "Agendar não basta. O sistema precisa provar que a publicação foi entregue."
+              }
+            },
+            {
+              "index": 3,
+              "role": "consequence",
+              "overlay": {
+                "instagram": "Sem confirmação, sem sucesso",
+                "tiktok": "Sem confirmação, sem sucesso",
+                "youtube": "Sem confirmação, sem sucesso"
+              },
+              "support": {
+                "instagram": "Fail closed",
+                "tiktok": "Fail closed",
+                "youtube": "Fail closed"
+              },
+              "narration": {
+                "instagram": "Sem confirmação real, a operação não pode ser classificada como sucesso.",
+                "tiktok": "Sem confirmação real, a operação não pode ser classificada como sucesso.",
+                "youtube": "Sem confirmação real, a operação não pode ser classificada como sucesso."
+              }
+            },
+            {
+              "index": 4,
+              "role": "turn",
+              "overlay": {
+                "instagram": "Control Plane UGI",
+                "tiktok": "Control Plane UGI",
+                "youtube": "Control Plane UGI"
+              },
+              "support": {
+                "instagram": "Render, QA, Buffer, readback",
+                "tiktok": "Render, QA, Buffer, readback",
+                "youtube": "Render, QA, Buffer, readback"
+              },
+              "narration": {
+                "instagram": "O novo Control Plane conecta render, qualidade, Buffer e readback.",
+                "tiktok": "O novo Control Plane conecta render, qualidade, Buffer e readback.",
+                "youtube": "O novo Control Plane conecta render, qualidade, Buffer e readback."
+              }
+            },
+            {
+              "index": 5,
+              "role": "result",
+              "overlay": {
+                "instagram": "Evidência real",
+                "tiktok": "Evidência real",
+                "youtube": "Evidência real"
+              },
+              "support": {
+                "instagram": "POST ID + sentAt",
+                "tiktok": "POST ID + sentAt",
+                "youtube": "POST ID + sentAt"
+              },
+              "narration": {
+                "instagram": "Só consideramos concluído quando existe evidência real de entrega.",
+                "tiktok": "Só consideramos concluído quando existe evidência real de entrega.",
+                "youtube": "Só consideramos concluído quando existe evidência real de entrega."
+              }
+            },
+            {
+              "index": 6,
+              "role": "cta",
+              "overlay": {
+                "instagram": "Teste operacional UGI",
+                "tiktok": "Teste operacional UGI",
+                "youtube": "Teste operacional UGI"
+              },
+              "support": {
+                "instagram": "Pode ser removido após a validação",
+                "tiktok": "Pode ser removido após a validação",
+                "youtube": "Pode ser removido após a validação"
+              },
+              "narration": {
+                "instagram": "Teste operacional concluído.",
+                "tiktok": "Teste operacional concluído.",
+                "youtube": "Teste operacional concluído."
+              }
+            }
+          ],
+          "canonicalCopySha256": "29a890e78e4d66417a1c5bc2c18d4401a8f6471c0945246a26c627e88ed31dd6",
+          "canonicalPayloadSha256": "8eedaf4ba998fe9889c00127dd14f4f6b5f2b5e2e33c6bc0cb197ea67d644292",
+          "canonicalCopyValidation": {
+            "pass": true,
+            "sceneCount": 6,
+            "sceneRoles": [
+              "hook",
+              "pain",
+              "consequence",
+              "turn",
+              "result",
+              "cta"
+            ],
+            "validatedPlatforms": [
+              "instagram",
+              "tiktok",
+              "youtube"
+            ],
+            "validatedFields": [
+              "overlay",
+              "support",
+              "narration"
+            ],
+            "mismatches": []
+          },
+          "validatedPlatforms": [
+            "instagram",
+            "tiktok",
+            "youtube"
+          ],
+          "renderedSceneCounts": {
+            "instagram": 6,
+            "tiktok": 6,
+            "youtube": 6
+          },
+          "renderedCopyValidation": {
+            "pass": true,
+            "mismatches": []
+          },
+          "smokeTest": false,
+          "exactCopyScope": "canonical_payload",
+          "renderedValidationScope": "all_rendered_platform_scenes",
+          "finalCta": "Teste operacional UGI concluído.",
+          "finalCtaByPlatform": {
+            "instagram": "Teste operacional UGI concluído.",
+            "tiktok": "Teste operacional UGI concluído.",
+            "youtube": "Teste operacional UGI concluído."
+          },
+          "commercialOffer": false,
+          "commerce": {
+            "required": false,
+            "productId": null,
+            "priceId": null,
+            "paymentLink": null,
+            "materialId": null,
+            "materialUrl": null,
+            "fulfillmentReady": false,
+            "provider": null,
+            "currency": "BRL",
+            "price": null
+          },
+          "copyLock": {
+            "enabled": false
+          },
+          "exactCopy": {
+            "enabled": false
+          },
+          "manifest": {
+            "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+            "sceneSource": "dynamic",
+            "sceneCount": 6,
+            "sceneRoles": [
+              "hook",
+              "pain",
+              "consequence",
+              "turn",
+              "result",
+              "cta"
+            ],
+            "legacyHardcodedScenesDisabled": true
+          },
+          "legacyContentLeakDetected": false,
+          "legacyHits": []
+        },
+        "mediaProviders": [
+          {
+            "scene": 1,
+            "provider": "Pexels",
+            "query": "manager digital dashboard office",
+            "provider_video_id": 38901962,
+            "provider_page_url": "https://www.pexels.com/video/agile-project-management-on-digital-tablet-38901962/",
+            "local_file": "output/media/scene-1.mp4"
+          },
+          {
+            "scene": 2,
+            "provider": "Pexels",
+            "query": "professional task alerts computer office",
+            "provider_video_id": 12896415,
+            "provider_page_url": "https://www.pexels.com/video/businesswoman-using-a-computer-in-an-office-12896415/",
+            "local_file": "output/media/scene-2.mp4"
+          },
+          {
+            "scene": 3,
+            "provider": "Pexels",
+            "query": "workflow verification technology office",
+            "provider_video_id": 12896413,
+            "provider_page_url": "https://www.pexels.com/video/over-the-shoulder-view-of-a-working-businessman-12896413/",
+            "local_file": "output/media/scene-3.mp4"
+          },
+          {
+            "scene": 4,
+            "provider": "Pexels",
+            "query": "automation workflow business technology",
+            "provider_video_id": 38901947,
+            "provider_page_url": "https://www.pexels.com/video/tech-project-management-on-tablet-38901947/",
+            "local_file": "output/media/scene-4.mp4"
+          },
+          {
+            "scene": 5,
+            "provider": "Pexels",
+            "query": "successful workflow dashboard office",
+            "provider_video_id": 35544532,
+            "provider_page_url": "https://www.pexels.com/video/dynamic-trading-dashboard-with-tablet-analysis-35544532/",
+            "local_file": "output/media/scene-5.mp4"
+          },
+          {
+            "scene": 6,
+            "provider": "Pexels",
+            "query": "manager completing task laptop office",
+            "provider_video_id": 31485697,
+            "provider_page_url": "https://www.pexels.com/video/efficient-office-task-management-with-notes-and-calculator-31485697/",
+            "local_file": "output/media/scene-6.mp4"
+          }
+        ],
+        "finalCta": "Teste operacional UGI concluído.",
+        "updatedAt": "2026-08-30T17:16:30.665Z"
+      },
+      "draftLookup": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/draft-lookup",
+        "content_id": "UGI-SMOKE-20260830-YOUTUBE-R43",
+        "found": true,
+        "draftId": "ugi-20260830170933-20faa3a0737d",
+        "renderId": "ugi-20260830170933-20faa3a0737d",
+        "status": "draft",
+        "workflowStatus": "pending_approval",
+        "createdAt": "2026-08-30T17:09:43.149Z",
+        "updatedAt": "2026-08-30T17:16:31.148Z",
+        "publicationTriggered": false,
+        "mutationPerformed": false
+      },
+      "draftId": "ugi-20260830170933-20faa3a0737d",
+      "approvalHttp": 200,
+      "approval": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/platform-approval",
+        "renderId": "ugi-20260830170933-20faa3a0737d",
+        "draftId": "ugi-20260830170933-20faa3a0737d",
+        "platform": "youtube",
+        "decision": "approved",
+        "asset": {
+          "platform": "youtube",
+          "status": "ready",
+          "ready": true,
+          "videoKey": "geradas/videos/ugi-20260830170933-20faa3a0737d/youtube.mp4",
+          "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260830170933-20faa3a0737d%2Fyoutube.mp4",
+          "videoBytes": 13429749,
+          "contentType": "video/mp4",
+          "mp4Signature": true,
+          "duration": 36,
+          "githubRunId": "33324467269",
+          "r2Etag": "0fc8506afcab5ed8d522b3e0e95595c1",
+          "uploadedAt": "2026-08-30T17:16:28.216Z",
+          "approvalStatus": "approved",
+          "approvalDecisionAt": "2026-08-30T17:18:30.078Z"
+        },
+        "approvalSummary": {
+          "workflowStatus": "partially_approved",
+          "approvedCount": 1,
+          "rejectedCount": 0,
+          "pendingCount": 2,
+          "platformStates": {
+            "instagram": "pending_approval",
+            "tiktok": "pending_approval",
+            "youtube": "approved"
+          },
+          "allReviewed": false
+        },
+        "workflowStatus": "partially_approved",
+        "publicationTriggered": false,
+        "note": "Decisão registrada na Central. Nenhuma publicação automática foi executada."
+      },
+      "publishHttp": 200,
+      "publish": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/platform-publish",
+        "platform": "youtube",
+        "mode": "shareNow",
+        "publication": {
+          "status": "published",
+          "bufferStatus": "sent",
+          "bufferPostId": "6a9465e894904b3a23ed4999",
+          "channelId": "6a78974ab2d9d577434584b7",
+          "channelService": "youtube",
+          "channelSource": "BUFFER_CHANNEL_YOUTUBE",
+          "mode": "shareNow",
+          "dueAt": "2026-08-30T17:18:32.639Z",
+          "sentAt": "2026-08-30T17:18:34.193Z",
+          "externalLink": "https://www.youtube.com/watch?v=9k9olWCdG1k",
+          "sharedNow": true,
+          "requestedAt": "2026-08-30T17:18:31.921Z",
+          "updatedAt": "2026-08-30T17:18:34.777Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a3357489e999d925-DFW",
+            "rateLimitRemaining": "2111",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a9465e894904b3a23ed4999",
+          "text": "💡 UGI production smoke youtube",
+          "status": "sent",
+          "dueAt": "2026-08-30T17:18:32.639Z",
+          "sentAt": "2026-08-30T17:18:34.193Z",
+          "externalLink": "https://www.youtube.com/watch?v=9k9olWCdG1k",
+          "sharedNow": true,
+          "shareMode": "shareNow",
+          "channelService": "youtube",
+          "error": null
+        },
+        "assetValidation": {
+          "source": "r2_binding",
+          "videoKey": "geradas/videos/ugi-20260830170933-20faa3a0737d/youtube.mp4",
+          "videoBytes": 13429749,
+          "contentType": "video/mp4"
+        },
+        "publicationTriggered": true,
+        "otherPlatformsUnaffected": true
+      },
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/platform-publication-status",
+        "platform": "youtube",
+        "publication": {
+          "status": "published",
+          "bufferStatus": "sent",
+          "bufferPostId": "6a9465e894904b3a23ed4999",
+          "channelId": "6a78974ab2d9d577434584b7",
+          "channelService": "youtube",
+          "channelSource": "BUFFER_CHANNEL_YOUTUBE",
+          "mode": "shareNow",
+          "dueAt": "2026-08-30T17:18:32.639Z",
+          "sentAt": "2026-08-30T17:18:34.193Z",
+          "externalLink": "https://www.youtube.com/watch?v=9k9olWCdG1k",
+          "sharedNow": true,
+          "requestedAt": "2026-08-30T17:18:31.921Z",
+          "updatedAt": "2026-08-30T17:18:37.440Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a33574ab5fe0f0a0-DFW",
+            "rateLimitRemaining": "2110",
+            "graphqlErrors": [],
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a9465e894904b3a23ed4999",
+          "text": "💡 UGI production smoke youtube",
+          "status": "sent",
+          "dueAt": "2026-08-30T17:18:32.639Z",
+          "sentAt": "2026-08-30T17:18:34.193Z",
+          "externalLink": "https://www.youtube.com/watch?v=9k9olWCdG1k",
+          "sharedNow": true,
+          "shareMode": "shareNow",
+          "channelService": "youtube",
+          "error": null
+        },
+        "bufferDiagnostics": {
+          "httpStatus": 200,
+          "httpOk": true,
+          "requestId": "a33574ab5fe0f0a0-DFW",
+          "rateLimitRemaining": "2110",
+          "graphqlErrors": [],
+          "postError": null
+        }
+      },
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.youtube.com/watch?v=9k9olWCdG1k"
+      },
+      "ok": true,
+      "state": "DELIVERED"
+    }
+  ],
+  "ok": false,
+  "state": "DEGRADED",
+  "finishedAt": "2026-08-30T17:18:39.350086+00:00"
+}
