@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "product": "PackValue402",
+  "disable_payments": true,
+  "requested_by": "Lola",
+  "reason": "validation of emergency fail-closed rollback path"
+}
