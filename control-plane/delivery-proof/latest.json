@@ -1,12 +1,12 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T23:34:20.983200+00:00",
+  "checkedAt": "2026-08-30T23:44:02.643066+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 1,
-  "late": 11,
+  "late": 12,
   "failed": 0,
   "state": "ALERT",
   "results": [
@@ -100,7 +100,7 @@
       "sentAt": null,
       "externalLink": null,
       "error": null,
-      "state": "PENDING_WITHIN_GRACE",
+      "state": "LATE",
       "externalProof": {
         "attempted": false
       }
@@ -215,6 +215,25 @@
       "externalLink": null,
       "error": null,
       "state": "LATE",
+      "externalProof": {
+        "attempted": false
+      }
+    },
+    {
+      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-04-EBIT",
+      "platform": "instagram",
+      "kind": "r453",
+      "bufferPostId": "6a94885ffd31f7e50b775fbe",
+      "draftId": "c9bb3eb6-2cdb-4fe7-bfaf-253f30665a8f",
+      "dueAt": "2026-08-30T23:35:00+00:00",
+      "readbackHttp": 500,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
+      "error": null,
+      "state": "PENDING_WITHIN_GRACE",
       "externalProof": {
         "attempted": false
       }
