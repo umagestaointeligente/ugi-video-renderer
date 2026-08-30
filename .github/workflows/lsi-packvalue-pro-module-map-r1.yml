@@ -1,0 +1,62 @@
+name: LSI PackValue PRO Module Map R1
+run-name: LSI PackValue PRO Module Map R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-revenue-asaas-greenfield-r1-20260830]
+    paths: ['.github/workflows/lsi-packvalue-pro-module-map-r1.yml']
+permissions:
+  contents: read
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Configure Cloudflare read access
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail; test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"
+          echo "CF_API_TOKEN=$CF_API_TOKEN" >> "$GITHUB_ENV"; echo "CF_ACCOUNT_ID=$CF_ACCOUNT_ID" >> "$GITHUB_ENV"; echo "::add-mask::$CF_API_TOKEN"
+      - name: Map safe anchors
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$base" > /tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1'); b=open('/tmp/b','rb').read(); ct=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h).group(1).strip()
+          if 'multipart/' in ct:
+            msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+b)
+            parts=[]
+            for p in msg.iter_parts():
+              q=p.get_payload(decode=True) or b''
+              if b'createProviderCheckout' in q and b'/api/commerce/webhook/asaas' in q: parts.append(q)
+            if len(parts)!=1: raise SystemExit(f'MODULE_COUNT_{len(parts)}')
+            s=parts[0].decode('utf-8')
+          else: s=b.decode('utf-8')
+          lines=s.splitlines()
+          print('MODULE_BYTES='+str(len(s.encode())))
+          wanted=[]
+          for i,line in enumerate(lines,1):
+            t=line.strip()
+            if ('VERSION' in t and ('const ' in t or 'let ' in t or 'version:' in t or 'version =' in t)) or t.startswith('const VERSION'):
+              wanted.append((i,t[:400]))
+          print('VERSION_RELATED_LINES='+str(len(wanted)))
+          for i,t in wanted[:25]: print(f'VERSION_LINE {i}: {t}')
+          anchors={
+            'admin_checkout':'if (request.method === "POST" && path === "/api/commerce/checkout") {',
+            'asaas_webhook':'if (request.method === "POST" && path === "/api/commerce/webhook/asaas") {',
+            'delivery':'if (request.method === "GET" && path.startsWith("/api/material-delivery/")) {',
+            'provider':'async function createProviderCheckout(env, provider, product, material, body, origin) {',
+            'commerce_status':'function commerceProviderStatus(env) {',
+            'checkout_image':'imageBase64: UGI_CHECKOUT_IMAGE_BASE64',
+            'callback_allowed':'const allowed = new Set(["success", "cancel", "expired"]);'
+          }
+          for k,a in anchors.items(): print(f'ANCHOR_{k.upper()}={s.count(a)}')
+          # Do not print surrounding business source; only structural counts and version declarations.
+          PY
