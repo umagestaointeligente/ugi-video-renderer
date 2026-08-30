@@ -1,0 +1,161 @@
+name: LSI Revenue Mass-Market Radar R1
+run-name: LSI Revenue Radar R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - lsi-revenue-mass-market-r1-20260829
+    paths:
+      - 'cloudflare/lsi-revenue-radar-r1.mjs'
+      - 'cloudflare/wrangler.lsi-revenue-radar-r1.toml'
+      - '.github/workflows/lsi-revenue-mass-market-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RADAR_URL: https://lsi-revenue-radar-r1.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static fail-closed checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-revenue-radar-r1.mjs
+          grep -q 'production_actions: false' cloudflare/lsi-revenue-radar-r1.mjs
+          grep -q 'money_movement: false' cloudflare/lsi-revenue-radar-r1.mjs
+          grep -q 'x402_paid_routes_active: false' cloudflare/lsi-revenue-radar-r1.mjs
+          grep -q 'NO_SECURE_RECEIVE_WALLET_BOUND' cloudflare/lsi-revenue-radar-r1.mjs
+          grep -q 'new_sqlite_classes' cloudflare/wrangler.lsi-revenue-radar-r1.toml
+          ! grep -Eq '(BEGIN (RSA|OPENSSH|EC) PRIVATE KEY|sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,})' cloudflare/lsi-revenue-radar-r1.mjs
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo HARD_STOP_CLOUDFLARE_TOKEN_MISSING; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo HARD_STOP_CLOUDFLARE_ACCOUNT_MISSING; exit 1; }
+
+      - name: Deploy isolated Revenue Radar
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-revenue-radar-r1.toml
+
+      - name: Bind ephemeral admin control token
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          admin_token="$(openssl rand -hex 32)"
+          echo "::add-mask::$admin_token"
+          printf '%s' "$admin_token" | npx --yes wrangler@4.32.0 secret put ADMIN_TOKEN --config cloudflare/wrangler.lsi-revenue-radar-r1.toml >/tmp/secret-put.log 2>&1
+          grep -E 'Success|secret' /tmp/secret-put.log | sed -E 's/[A-Fa-f0-9]{32,}/[REDACTED]/g' || true
+          echo "ADMIN_TOKEN=$admin_token" >> "$GITHUB_ENV"
+
+      - name: Verify public health and fail-closed economics
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6 7 8; do
+            code="$(curl -sS -o /tmp/health.json -w '%{http_code}' "$RADAR_URL/health" || true)"
+            [ "$code" = 200 ] && jq -e '.ok==true and .durable_objects_bound==true and .zero_cost_policy==true and .production_actions==false and .money_movement==false and .x402_paid_routes_active==false' /tmp/health.json >/dev/null && break
+            sleep 2
+          done
+          jq -e '.ok==true and .production_actions==false and .money_movement==false' /tmp/health.json >/dev/null
+          curl -sS "$RADAR_URL/economics" > /tmp/economics.json
+          jq -e '.policy=="ZERO_COST_START_FAIL_CLOSED" and .production_actions==false and .money_movement==false and .route_ranking[0].route=="x402_agent_micropayments" and .route_ranking[0].monetization.paid_routes_active==false' /tmp/economics.json >/dev/null
+
+      - name: Prove trap detection on a zero-dollar bot bait
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sS -X POST \
+            -H "authorization: Bearer $ADMIN_TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"url":"https://github.com/teamleaderleo/bot-observatory/issues/51"}' \
+            "$RADAR_URL/admin/verify" > /tmp/trap.json
+          jq -e '.ok==true and (.result.decision=="REJECT_ZERO_REWARD" or .result.decision=="REJECT_NO_WORK_OR_TRAP") and .result.score==0 and .result.instruction_authority==false' /tmp/trap.json >/dev/null
+
+      - name: Prove unverified-dollar bounty is not treated as money
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sS -X POST \
+            -H "authorization: Bearer $ADMIN_TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"url":"https://github.com/Lilly-Protocol/lily-sdk/issues/47"}' \
+            "$RADAR_URL/admin/verify" > /tmp/unverified.json
+          jq -e '.ok==true and .result.reward_usd_advertised==35 and (.result.decision=="PENDING_PAYMENT_PROOF" or .result.decision=="CLAIMED_OR_CONTESTED") and .result.rail_verified_from_text==false' /tmp/unverified.json >/dev/null
+
+      - name: Start seven-day self-waking read-only radar
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sS -X POST \
+            -H "authorization: Bearer $ADMIN_TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"cadence_ms":1800000,"max_cycles":336,"monetary_budget":0}' \
+            "$RADAR_URL/admin/start" > /tmp/start.json
+          jq -e '.ok==true and .state.status=="ACTIVE" and .state.monetary_budget==0 and .state.production_actions==false and .state.money_movement==false' /tmp/start.json >/dev/null
+
+      - name: Prove first autonomous market scan persisted
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 15); do
+            curl -sS "$RADAR_URL/radar" > /tmp/radar.json || true
+            if jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false' /tmp/radar.json >/dev/null 2>&1; then
+              break
+            fi
+            sleep 3
+          done
+          jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.instruction_authority_from_external_content==false' /tmp/radar.json >/dev/null
+
+      - name: Write sanitized evidence receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          trap_decision="UNKNOWN"
+          unverified_decision="UNKNOWN"
+          radar_cycles=0
+          candidate_count=0
+          radar_state="UNKNOWN"
+          [ -s /tmp/trap.json ] && trap_decision="$(jq -r '.result.decision // "UNKNOWN"' /tmp/trap.json)"
+          [ -s /tmp/unverified.json ] && unverified_decision="$(jq -r '.result.decision // "UNKNOWN"' /tmp/unverified.json)"
+          [ -s /tmp/radar.json ] && radar_cycles="$(jq -r '.state.cycle_count // 0' /tmp/radar.json)"
+          [ -s /tmp/radar.json ] && candidate_count="$(jq -r '.state.last_cycle.candidate_count // 0' /tmp/radar.json)"
+          [ -s /tmp/radar.json ] && radar_state="$(jq -r '.state.last_cycle.state // "UNKNOWN"' /tmp/radar.json)"
+          jq -n \
+            --arg run "$GITHUB_RUN_ID" \
+            --arg sha "$GITHUB_SHA" \
+            --arg trap "$trap_decision" \
+            --arg unverified "$unverified_decision" \
+            --arg radar_state "$radar_state" \
+            --argjson cycles "$radar_cycles" \
+            --argjson candidate_count "$candidate_count" \
+            '{schema_version:"1.0",project:"LSI_REVENUE_MASS_MARKET_R1",run_id:$run,commit:$sha,trap_test:$trap,unverified_money_test:$unverified,background_radar:{state:$radar_state,cycles:$cycles,candidate_count:$candidate_count,cadence_minutes:30,max_cycles:336,open_chat_required:false},zero_cost_route:true,production_actions:false,money_movement:false,x402_paid_routes_active:false}' \
+            > generated/evidence/lsi-revenue-mass-market-r1.json
+
+      - name: Upload sanitized proof receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-revenue-radar-${{ github.run_id }}
+          path: generated/evidence/lsi-revenue-mass-market-r1.json
+          retention-days: 14
+          if-no-files-found: error
