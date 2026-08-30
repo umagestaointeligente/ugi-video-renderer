@@ -5,7 +5,7 @@ workers_dev = true
 
 [vars]
 PAYMENTS_ENABLED = "false"
-NETWORK = "base"
+NETWORK = "eip155:8453"
 FACILITATOR_URL = "https://facilitator.payai.network"
 
 [observability]
