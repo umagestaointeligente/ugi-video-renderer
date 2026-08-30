@@ -1,0 +1,133 @@
+name: LSI PackValue Tools Organic R1
+run-name: LSI PackValue Tools Organic R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/packvalue-tools-r1/**'
+      - '.github/workflows/lsi-packvalue-tools-organic-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-validate-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SITE_URL: https://lsi-packvalue-tools-r1.umagestaointeligente.workers.dev
+      INDEXNOW_KEY: 20c4b7acde517f7ccdb4bfbf55baf9d6b9e5674b73ee29cec14368d431dc0673
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static greenfield and safety gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=cloudflare/packvalue-tools-r1/index.mjs
+          test -f "$F"
+          grep -q 'greenfield:true' "$F"
+          grep -q 'ugi_content:false' "$F"
+          grep -q 'payment:false' "$F"
+          grep -q 'pii_collection:false' "$F"
+          ! grep -qiE 'Kit UGI|Priorização Inteligente|Uma Gestão Inteligente' "$F"
+          grep -q '/preco-por-kg' "$F"
+          grep -q '/preco-por-litro' "$F"
+          grep -q '/comparar-pacotes' "$F"
+          grep -q '/rendimento-diluicao' "$F"
+          echo 'GREENFIELD_STATIC_GATES=PASS'
+
+      - name: Require Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy isolated organic Worker
+        working-directory: cloudflare/packvalue-tools-r1
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config wrangler.toml | tee /tmp/deploy.log
+
+      - name: Wait for propagated health
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$SITE_URL/health?ts=$RANDOM" > /tmp/health.json 2>/dev/null && jq -e '.ok==true and .service=="packvalue-tools" and .greenfield==true and .ugi_content==false and .payment==false and .pii_collection==false' /tmp/health.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+          echo 'ORGANIC_WORKER_HEALTH=PASS'
+
+      - name: Validate useful public pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          paths=(/ /preco-por-kg /preco-por-litro /preco-por-unidade /comparar-pacotes /desconto-real /leve-mais-pague-menos /rendimento-diluicao /custo-com-frete /sobre /privacidade)
+          for p in "${paths[@]}"; do
+            code="$(curl -sS -o /tmp/page.html -w '%{http_code}' "$SITE_URL$p?ts=$RANDOM")"
+            test "$code" = 200
+            grep -q '<html lang="pt-BR">' /tmp/page.html
+            if [ "$p" != "/sobre" ] && [ "$p" != "/privacidade" ]; then
+              grep -q 'PackValue Tools' /tmp/page.html
+            fi
+          done
+          curl -fsS "$SITE_URL/robots.txt?ts=$RANDOM" | grep -q 'sitemap.xml'
+          curl -fsS "$SITE_URL/sitemap.xml?ts=$RANDOM" > /tmp/sitemap.xml
+          for p in /preco-por-kg /preco-por-litro /preco-por-unidade /comparar-pacotes /desconto-real /leve-mais-pague-menos /rendimento-diluicao /custo-com-frete; do
+            grep -q "$p" /tmp/sitemap.xml
+          done
+          curl -fsS "$SITE_URL/llms.txt?ts=$RANDOM" | grep -q 'Free deterministic calculators'
+          echo 'PUBLIC_CONTENT_ACCEPTANCE=PASS'
+
+      - name: Prove IndexNow key is served
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(curl -fsS "$SITE_URL/$INDEXNOW_KEY.txt?ts=$RANDOM")"
+          test "$actual" = "$INDEXNOW_KEY"
+          echo 'INDEXNOW_KEY_PROOF=PASS'
+
+      - name: Submit useful URLs to IndexNow
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOST="lsi-packvalue-tools-r1.umagestaointeligente.workers.dev"
+          jq -n --arg host "$HOST" --arg key "$INDEXNOW_KEY" --arg keyLocation "$SITE_URL/$INDEXNOW_KEY.txt" --arg base "$SITE_URL" '{host:$host,key:$key,keyLocation:$keyLocation,urlList:[($base+"/"),($base+"/preco-por-kg"),($base+"/preco-por-litro"),($base+"/preco-por-unidade"),($base+"/comparar-pacotes"),($base+"/desconto-real"),($base+"/leve-mais-pague-menos"),($base+"/rendimento-diluicao"),($base+"/custo-com-frete")]}' > /tmp/indexnow.json
+          accepted=false
+          for i in $(seq 1 5); do
+            code="$(curl -sS -o /tmp/indexnow-body -w '%{http_code}' -X POST 'https://api.indexnow.org/indexnow' -H 'content-type: application/json; charset=utf-8' --data-binary @/tmp/indexnow.json || true)"
+            if [ "$code" = 200 ] || [ "$code" = 202 ]; then accepted=true; break; fi
+            sleep 4
+          done
+          test "$accepted" = true
+          echo "INDEXNOW_SUBMISSION_HTTP=$code"
+
+      - name: Write organic acquisition receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg site "$SITE_URL" '{schema_version:"1.0",project:"PACKVALUE_TOOLS_ORGANIC_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,site:$site,greenfield:true,ugi_content:false,pages_live:11,calculator_routes:8,indexnow_submitted:true,payment_enabled:false,pii_collection:false,incremental_cost_usd:0}' > generated/evidence/packvalue-tools-organic-r1.json
+          cat generated/evidence/packvalue-tools-organic-r1.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packvalue-tools-organic-${{ github.run_id }}
+          path: generated/evidence/packvalue-tools-organic-r1.json
+          retention-days: 30
+          if-no-files-found: error
