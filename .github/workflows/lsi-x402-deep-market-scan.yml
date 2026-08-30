@@ -1,0 +1,55 @@
+name: LSI x402 Deep Market Scan
+run-name: LSI x402 Deep Market Scan ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'scripts/lsi_x402_deep_market_scan.py'
+      - '.github/workflows/lsi-x402-deep-market-scan.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deep-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static safety checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/lsi_x402_deep_market_scan.py
+          grep -q 'monetary_budget": 0' scripts/lsi_x402_deep_market_scan.py
+          grep -q 'production_actions": False' scripts/lsi_x402_deep_market_scan.py
+          grep -q 'money_movement": False' scripts/lsi_x402_deep_market_scan.py
+          grep -q 'buyer-days are summed daily distinct buyers, NOT 30-day unique buyers' scripts/lsi_x402_deep_market_scan.py
+          grep -q 'series_fingerprint' scripts/lsi_x402_deep_market_scan.py
+
+      - name: Scan full public x402 market
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/lsi_x402_deep_market_scan.py | tee /tmp/deep-scan.log
+
+      - name: Validate evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          f=generated/evidence/lsi-x402-deep-market-scan.json
+          jq -e '.methodology.monetary_budget==0 and .methodology.production_actions==false and .methodology.money_movement==false' "$f" >/dev/null
+          jq -e '.market.catalog_services>100 and .market.series_success>=50 and .market.unique_series_clusters>0 and .market.active_unique_clusters>0' "$f" >/dev/null
+          jq -e '(.top_unique_demand|length)>0 and .top_unique_demand[0].tx_count_30d>0 and .top_unique_demand[0].buyer_days_30d>0' "$f" >/dev/null
+          jq -e '.methodology.buyer_metric=="buyer_days_30d"' "$f" >/dev/null
+
+      - name: Upload deep market evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-x402-deep-market-scan-${{ github.run_id }}
+          path: generated/evidence/lsi-x402-deep-market-scan.json
+          retention-days: 14
+          if-no-files-found: error
