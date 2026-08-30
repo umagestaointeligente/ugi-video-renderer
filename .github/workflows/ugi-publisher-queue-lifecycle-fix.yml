@@ -1,0 +1,50 @@
+name: UGI Publisher Queue Lifecycle Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-publisher-queue-lifecycle-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      UGI_QUEUE_STALE_HOURS: '6'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply lifecycle patch
+        run: |
+          set -euo pipefail
+          python3 scripts/patch_ugi_publisher_queue_lifecycle.py
+          python3 -m py_compile scripts/ugi_publisher_hub.py scripts/ugi_render_reconciler.py
+      - name: Smoke reconciler
+        run: |
+          set -euo pipefail
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python3 scripts/ugi_render_reconciler.py
+      - name: Smoke Publisher Hub
+        run: |
+          set -euo pipefail
+          python3 scripts/ugi_publisher_hub.py --validate-only
+          python3 scripts/ugi_publisher_hub.py --wait-seconds 0
+      - name: Commit lifecycle fix and evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-publisher-lifecycle-bot'
+          git config user.email 'ugi-publisher-lifecycle@users.noreply.github.com'
+          git add scripts/ugi_publisher_hub.py scripts/ugi_render_reconciler.py control-plane/publisher-hub/status/latest.json control-plane/publisher-hub/render-state/*.json control-plane/publisher-hub/receipts/*.json 2>/dev/null || true
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'fix: quarantine stale Publisher Hub queue entries'
+          git pull --rebase origin main
+          git push origin HEAD:main
