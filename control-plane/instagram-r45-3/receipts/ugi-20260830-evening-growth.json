@@ -470,6 +470,242 @@
       "dueAtMatch": true,
       "state": "PROVEN_SCHEDULED",
       "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-CAROUSEL-TRUST-HDFC",
+      "platform": "instagram",
+      "type": "carousel_mixed_media_music",
+      "draftId": "cf51ce9a-6353-40f5-b9c2-47bc03829816",
+      "dueAtRequested": "2026-08-30T19:50:00-03:00",
+      "topic": "Confiança executiva e governança — HDFC Bank",
+      "qa": [
+        {
+          "url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/cf51ce9a-6353-40f5-b9c2-47bc03829816-slide-1.png",
+          "width": 1080,
+          "height": 1350,
+          "bytes": 1142271,
+          "pass": true
+        },
+        {
+          "url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/cf51ce9a-6353-40f5-b9c2-47bc03829816-slide-2.png",
+          "width": 1080,
+          "height": 1350,
+          "bytes": 782716,
+          "pass": true
+        },
+        {
+          "url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/cf51ce9a-6353-40f5-b9c2-47bc03829816-slide-3.png",
+          "width": 1080,
+          "height": 1350,
+          "bytes": 1167397,
+          "pass": true
+        },
+        {
+          "url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/cf51ce9a-6353-40f5-b9c2-47bc03829816-slide-4.png",
+          "width": 1080,
+          "height": 1350,
+          "bytes": 914177,
+          "pass": true
+        },
+        {
+          "url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/cf51ce9a-6353-40f5-b9c2-47bc03829816-slide-5.png",
+          "width": 1080,
+          "height": 1350,
+          "bytes": 1010754,
+          "pass": true
+        },
+        {
+          "url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/cf51ce9a-6353-40f5-b9c2-47bc03829816-slide-6.png",
+          "width": 1080,
+          "height": 1350,
+          "bytes": 806843,
+          "pass": true
+        },
+        {
+          "url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/cf51ce9a-6353-40f5-b9c2-47bc03829816-slide-7.png",
+          "width": 1080,
+          "height": 1350,
+          "bytes": 1041569,
+          "pass": true
+        }
+      ],
+      "music": {
+        "name": "Trust Momentum",
+        "bpm": 116,
+        "mode": "embedded_audio_on_video_card",
+        "nativeInstagramMusic": false
+      },
+      "videoBytes": 317242,
+      "upload": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-2/media-upload",
+        "contentId": "UGI-20260830-IG-CAROUSEL-TRUST-HDFC",
+        "videoKey": "geradas/r45-2/1788119877599-UGI-20260830-IG-CAROUSEL-TRUST-HDFC.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/r45-2/1788119877599-UGI-20260830-IG-CAROUSEL-TRUST-HDFC.mp4",
+        "videoBytes": 317242,
+        "smokeOnly": true
+      },
+      "publishHttp": 200,
+      "publish": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-3/instagram-publish",
+        "kind": "mixed_carousel",
+        "mode": "customScheduled",
+        "post": {
+          "id": "6a948b466bbc8c9a02f5b914",
+          "text": "Resultado não é a única moeda de um líder. O caso HDFC Bank recolocou uma pergunta incômoda no centro da gestão: o que acontece quando desempenho, governança e confiança deixam de caminhar juntos? Liderança executiva depende de entrega, mas também de transparência, credibilidade e legitimidade para continuar tomando decisões. Fonte do caso: Reuters, 30/08/2026. Salve este carrossel para a próxima conversa sobre liderança e governança. #UmaGestaoInteligente #Lideranca #Governanca #Gestao",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T22:50:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "channel": {
+          "id": "6a7896cdb2d9d57743457e33",
+          "service": "instagram",
+          "source": "BUFFER_CHANNEL_INSTAGRAM"
+        }
+      },
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-2/buffer-status",
+        "post": {
+          "id": "6a948b466bbc8c9a02f5b914",
+          "text": "Resultado não é a única moeda de um líder. O caso HDFC Bank recolocou uma pergunta incômoda no centro da gestão: o que acontece quando desempenho, governança e confiança deixam de caminhar juntos? Liderança executiva depende de entrega, mas também de transparência, credibilidade e legitimidade para continuar tomando decisões. Fonte do caso: Reuters, 30/08/2026. Salve este carrossel para a próxima conversa sobre liderança e governança. #UmaGestaoInteligente #Lideranca #Governanca #Gestao",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T22:50:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "smokeOnly": true
+      },
+      "bufferPostId": "6a948b466bbc8c9a02f5b914",
+      "status": "scheduled",
+      "dueAt": "2026-08-30T22:50:00.000Z",
+      "dueAtMatch": true,
+      "state": "PROVEN_SCHEDULED",
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-STATIC-PIVOT-145B",
+      "platform": "instagram",
+      "type": "visual_post",
+      "draftId": "01278c54-9f37-490f-90b4-c5d5f400c192",
+      "dueAtRequested": "2026-08-30T21:15:00-03:00",
+      "topic": "Coragem de voltar atrás — decisão de US$ 14,5 bi",
+      "qa": {
+        "url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/posts-visuais/1788119882884-01278c54-9f37-490f-90b4-c5d5f400c192.png",
+        "width": 1080,
+        "height": 1350,
+        "bytes": 1446018,
+        "pass": true
+      },
+      "music": {
+        "mode": "none",
+        "reason": "true_static_post; native Instagram music is not automatable through current Buffer API"
+      },
+      "publish": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45/static-publish",
+        "platform": "instagram",
+        "type": "visual_post",
+        "mode": "customScheduled",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a948b4efd31f7e50b777ed8",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-31T00:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-30T19:58:05.739Z",
+          "updatedAt": "2026-08-30T19:58:06.129Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a3365e45e90efe41-IAD",
+            "rateLimitRemaining": "2023",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a948b4efd31f7e50b777ed8",
+          "text": "💡 VOLTAR ATRÁS TAMBÉM É DECIDIR BEM\n\nSolstice e Element abandonaram uma fusão de US$ 14,5 bilhões depois de ouvir os acionistas. Uma decisão madura tem critérios para continuar — e critérios para morrer.\n\nPremissas mudaram? Reabra a decisão.\n\n#UmaGestaoInteligente",
+          "status": "scheduled",
+          "dueAt": "2026-08-31T00:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "assetValidation": {
+          "ok": true,
+          "kind": "image",
+          "count": 1
+        },
+        "publicationTriggered": true
+      },
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45/static-publication-status",
+        "draftId": "01278c54-9f37-490f-90b4-c5d5f400c192",
+        "platform": "instagram",
+        "type": "visual_post",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a948b4efd31f7e50b777ed8",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-31T00:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-30T19:58:05.739Z",
+          "updatedAt": "2026-08-30T19:58:07.553Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a3365e45e90efe41-IAD",
+            "rateLimitRemaining": "2023",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        }
+      },
+      "bufferPostId": "6a948b4efd31f7e50b777ed8",
+      "status": "scheduled",
+      "dueAt": "2026-08-31T00:15:00.000Z",
+      "dueAtMatch": true,
+      "state": "PROVEN_SCHEDULED",
+      "ok": true
     }
   ],
   "health": {
@@ -775,5 +1011,197 @@
     },
     "state": "PRESERVED_PROVEN_SCHEDULED",
     "ok": true
-  }
+  },
+  "recoveryStartedAt": "2026-08-30T19:55:55.150664+00:00",
+  "recoveryChecks": [
+    {
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-01-TRUST",
+      "bufferPostId": "6a948831d58664eabd7be158",
+      "dueAtExpected": "2026-08-30T17:15:00-03:00",
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-2/buffer-status",
+        "post": {
+          "id": "6a948831d58664eabd7be158",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T20:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "smokeOnly": true
+      },
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-02-PIVOT",
+      "bufferPostId": "6a948844d58664eabd7be258",
+      "dueAtExpected": "2026-08-30T17:55:00-03:00",
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-2/buffer-status",
+        "post": {
+          "id": "6a948844d58664eabd7be258",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T20:55:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "smokeOnly": true
+      },
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-03-TRANSFORM",
+      "bufferPostId": "6a948851d58664eabd7be3fc",
+      "dueAtExpected": "2026-08-30T19:20:00-03:00",
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-2/buffer-status",
+        "post": {
+          "id": "6a948851d58664eabd7be3fc",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T22:20:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "smokeOnly": true
+      },
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-04-EBIT",
+      "bufferPostId": "6a94885ffd31f7e50b775fbe",
+      "dueAtExpected": "2026-08-30T20:35:00-03:00",
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-2/buffer-status",
+        "post": {
+          "id": "6a94885ffd31f7e50b775fbe",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T23:35:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "smokeOnly": true
+      },
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-05-COMMERCE",
+      "bufferPostId": "6a94886bfd31f7e50b776037",
+      "dueAtExpected": "2026-08-30T21:50:00-03:00",
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-2/buffer-status",
+        "post": {
+          "id": "6a94886bfd31f7e50b776037",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-31T00:50:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "smokeOnly": true
+      },
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-01-CISCO-AGENTS",
+      "bufferPostId": "6a944edbd076c0e5835e88a2",
+      "dueAtExpected": "2026-08-30T18:30:00-03:00",
+      "readback": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45-2/buffer-status",
+        "post": {
+          "id": "6a944edbd076c0e5835e88a2",
+          "text": "💡 90 mil funcionários. Um agente pessoal de IA chegando ao fluxo de trabalho de cada um.\n\nA Cisco diz que o MyAgent está sendo levado a 90 mil funcionários e pode atuar além do chat, com execução autônoma supervisionada. Para gestores, a mudança é maior que a ferramenta: começa uma camada operacional em que pessoas, agentes, permissões e resultados precisam ser coordenados.\n\nA próxima equipe que você liderar talvez tenha pessoas e agentes. Fonte: Cisco, 27/08/2026.\n\n#UmaGestaoInteligente #Gestao #AgentesDeIA #Lideranca",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T21:30:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "smokeOnly": true
+      },
+      "ok": true
+    }
+  ],
+  "agenda": [
+    {
+      "time": "17:15",
+      "type": "Story",
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-01-TRUST"
+    },
+    {
+      "time": "17:55",
+      "type": "Story",
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-02-PIVOT"
+    },
+    {
+      "time": "18:30",
+      "type": "Reel",
+      "contentId": "UGI-20260830-IG-01-CISCO-AGENTS"
+    },
+    {
+      "time": "19:20",
+      "type": "Story",
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-03-TRANSFORM"
+    },
+    {
+      "time": "19:50",
+      "type": "Carousel",
+      "contentId": "UGI-20260830-IG-CAROUSEL-TRUST-HDFC"
+    },
+    {
+      "time": "20:35",
+      "type": "Story",
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-04-EBIT"
+    },
+    {
+      "time": "21:15",
+      "type": "Static",
+      "contentId": "UGI-20260830-IG-STATIC-PIVOT-145B"
+    },
+    {
+      "time": "21:50",
+      "type": "Story",
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-05-COMMERCE"
+    }
+  ],
+  "ok": true,
+  "state": "PROVEN_SCHEDULED_8_OF_8",
+  "recoveryFinishedAt": "2026-08-30T19:58:08.282490+00:00"
 }
