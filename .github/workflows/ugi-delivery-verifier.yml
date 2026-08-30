@@ -1,0 +1,70 @@
+name: UGI Delivery Verifier
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-delivery-verifier.yml'
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: ugi-delivery-verifier
+  cancel-in-progress: false
+
+jobs:
+  verify-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install runtime
+        run: python -m pip install requests
+      - name: Verify due publications
+        id: verify
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python scripts/ugi_delivery_verifier.py
+      - name: Persist delivery proof
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-delivery-verifier-bot'
+          git config user.email 'ugi-delivery-verifier@users.noreply.github.com'
+          git add control-plane/delivery-proof/latest.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No delivery proof change'
+          else
+            git commit -m 'chore: persist UGI delivery proof'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Open or update delivery alert
+        if: steps.verify.outcome == 'failure'
+        run: |
+          set -euo pipefail
+          TITLE='UGI ALERT — publicação atrasada ou falhou'
+          BODY_FILE=control-plane/delivery-proof/latest.json
+          EXISTING=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file "$BODY_FILE"
+          else
+            gh issue create --title "$TITLE" --body-file "$BODY_FILE"
+          fi
+          exit 1
