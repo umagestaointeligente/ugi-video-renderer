@@ -1,0 +1,57 @@
+name: UGI R45 Instagram MultiFormat Pilot
+
+on:
+  push:
+    branches: [ugi-r45-multiformat-20260830]
+    paths:
+      - 'control-plane/r45/pilot-manifest.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-r45-instagram-multiformat-pilot
+  cancel-in-progress: false
+
+jobs:
+  generate-qa-schedule-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Runtime setup
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UGI_WORKER_COMMAND_KEY"
+          python -m pip install --disable-pip-version-check --quiet requests pillow
+          python -m py_compile scripts/r45_instagram_multiformat_pilot.py
+      - name: Generate, QA, schedule and prove
+        id: pilot
+        shell: bash
+        run: |
+          set +e
+          python scripts/r45_instagram_multiformat_pilot.py control-plane/r45/pilot-manifest.json --receipt control-plane/r45/receipts/pilot-latest.json
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit "$code"
+      - name: Persist pilot receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/r45/receipts
+          if [ ! -f control-plane/r45/receipts/pilot-latest.json ]; then
+            echo '{"ok":false,"state":"RECEIPT_MISSING"}' > control-plane/r45/receipts/pilot-latest.json
+          fi
+          git config user.name 'ugi-r45-pilot-bot'
+          git config user.email 'ugi-r45-pilot@users.noreply.github.com'
+          git add control-plane/r45/receipts/pilot-latest.json
+          git commit -m 'chore: persist R45 Instagram pilot receipt' || true
+          git pull --rebase origin ugi-r45-multiformat-20260830
+          git push origin HEAD:ugi-r45-multiformat-20260830
