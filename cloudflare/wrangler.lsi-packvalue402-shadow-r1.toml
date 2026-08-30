@@ -1,0 +1,7 @@
+name = "lsi-packvalue402-shadow-r1"
+main = "lsi-packvalue402-shadow-r1.mjs"
+compatibility_date = "2026-08-30"
+workers_dev = true
+
+[observability]
+enabled = true
