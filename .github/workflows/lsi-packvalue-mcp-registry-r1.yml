@@ -1,0 +1,85 @@
+name: LSI PackValue MCP Registry R1
+run-name: LSI PackValue MCP Registry R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/packvalue-mcp-r1/server.json'
+      - '.github/workflows/lsi-packvalue-mcp-registry-r1.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  validate-publish-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify remote MCP health before publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS https://lsi-packvalue-mcp-r1.umagestaointeligente.workers.dev/health > /tmp/mcp-health.json
+          jq -e '.ok==true' /tmp/mcp-health.json >/dev/null
+
+      - name: Install official MCP publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+          chmod +x mcp-publisher
+          ./mcp-publisher --help >/dev/null
+
+      - name: Validate registry metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./mcp-publisher validate cloudflare/packvalue-mcp-r1/server.json
+
+      - name: Authenticate to official registry with GitHub OIDC
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./mcp-publisher login github-oidc --registry=https://registry.modelcontextprotocol.io
+
+      - name: Publish PackValue MCP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./mcp-publisher publish cloudflare/packvalue-mcp-r1/server.json --registry=https://registry.modelcontextprotocol.io | tee /tmp/publish.log
+
+      - name: Verify registry discovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          found=false
+          for i in $(seq 1 20); do
+            curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.umagestaointeligente%2Fpackvalue-tools' > /tmp/registry.json || true
+            if jq -e '[.servers[]? | select((.server.name // .name)=="io.github.umagestaointeligente/packvalue-tools")] | length > 0' /tmp/registry.json >/dev/null 2>&1; then
+              found=true
+              break
+            fi
+            sleep 3
+          done
+          test "$found" = true
+
+      - name: Write distribution receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"LSI_PACKVALUE_MCP_REGISTRY_R1",run_id:$run,commit:$sha,server_name:"io.github.umagestaointeligente/packvalue-tools",remote_url:"https://lsi-packvalue-mcp-r1.umagestaointeligente.workers.dev/mcp",registry:"https://registry.modelcontextprotocol.io",zero_cost_route:true,payment_activation:false,money_movement:false}' > generated/evidence/lsi-packvalue-mcp-registry-r1.json
+
+      - name: Upload distribution receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-packvalue-mcp-registry-${{ github.run_id }}
+          path: generated/evidence/lsi-packvalue-mcp-registry-r1.json
+          retention-days: 30
+          if-no-files-found: error
