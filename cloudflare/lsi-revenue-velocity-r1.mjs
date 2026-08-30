@@ -1,5 +1,4 @@
 const VERSION = "lsi-revenue-velocity-r1-2026-08-30";
-const LEARNING_STATE = "https://lsi-continual-learning-r1.umagestaointeligente.workers.dev/state";
 const TARGET_USD_PER_MINUTE = 0.10;
 
 function json(data, status = 200) {
@@ -18,10 +17,12 @@ function round(n, d = 8) {
   return Math.round(Number(n || 0) * p) / p;
 }
 
-async function fetchLearningState() {
-  const response = await fetch(LEARNING_STATE, {
+async function fetchLearningState(env) {
+  if (!env.LEARNING_SERVICE) throw new Error("learning_service_binding_missing");
+  const response = await env.LEARNING_SERVICE.fetch(new Request("https://learning.internal/state", {
+    method: "GET",
     headers: { "user-agent": "LSI-Revenue-Velocity-R1/1.0" },
-  });
+  }));
   if (!response.ok) throw new Error(`learning_state_${response.status}`);
   const body = await response.json();
   if (!body?.ok || !body.state || typeof body.state.routes !== "object") throw new Error("learning_state_invalid");
@@ -70,13 +71,14 @@ function aggregate(state) {
 }
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname === "/health") {
       return json({
         ok: true,
         service: "lsi-revenue-velocity-r1",
         version: VERSION,
+        learning_service_bound: Boolean(env.LEARNING_SERVICE),
         target_usd_per_minute: TARGET_USD_PER_MINUTE,
         revenue_source: "VERIFIED_PERSISTENT_ROUTE_STATE_ONLY",
         projections_count_as_revenue: false,
@@ -86,7 +88,7 @@ export default {
     }
     if (request.method === "GET" && url.pathname === "/velocity") {
       try {
-        const state = await fetchLearningState();
+        const state = await fetchLearningState(env);
         const result = aggregate(state);
         const best = result.routes[0] || null;
         return json({
