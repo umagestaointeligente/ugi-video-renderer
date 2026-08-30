@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T20:54:08.113967+00:00",
+  "checkedAt": "2026-08-30T21:04:18.426876+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 5,
+  "delivered": 6,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -72,7 +72,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975308333553371867&is_from_rle"
       }
     },
@@ -94,7 +94,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975383834690139409&is_from_rle"
       }
     },
@@ -116,8 +116,30 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975368739474580414&is_from_rle"
+      }
+    },
+    {
+      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-02-PIVOT",
+      "platform": "instagram",
+      "kind": "r453",
+      "bufferPostId": "6a948844d58664eabd7be258",
+      "draftId": "438a23fb-2c01-494b-a373-80e6b185297f",
+      "dueAt": "2026-08-30T20:55:00+00:00",
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-30T20:55:55.725Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975388857629652386",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975388857629652386&is_from_rle"
       }
     }
   ]
