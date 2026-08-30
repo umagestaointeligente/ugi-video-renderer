@@ -1,5 +1,5 @@
 const VERSION = "lsi-revenue-velocity-r1-2026-08-30";
-const LEARNING_EVENTS = "https://lsi-continual-learning-r1.umagestaointeligente.workers.dev/events?limit=50";
+const LEARNING_EVENTS = "https://lsi-continual-learning-r1.umagestaointeligente.workers.dev/events";
 const TARGET_USD_PER_MINUTE = 0.10;
 
 function json(data, status = 200) {
