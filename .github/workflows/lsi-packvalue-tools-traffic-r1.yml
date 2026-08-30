@@ -32,7 +32,7 @@ jobs:
           grep -q 'user_agent_stored: false' "$F"
           grep -q 'referrer_stored: false' "$F"
           grep -q 'form_values_stored: false' "$F"
-          ! grep -qE 'request\.headers\.get\(["'"'](cf-connecting-ip|user-agent|referer|cookie)' "$F"
+          ! grep -qiE 'cf-connecting-ip|request\.headers\.get.*user-agent|request\.headers\.get.*referer|request\.headers\.get.*cookie' "$F"
           grep -q 'class TrafficCounter' "$F"
           grep -q 'new_sqlite_classes = \["TrafficCounter"\]' cloudflare/packvalue-tools-r1/wrangler.toml
           echo 'TRAFFIC_PRIVACY_STATIC=PASS'
