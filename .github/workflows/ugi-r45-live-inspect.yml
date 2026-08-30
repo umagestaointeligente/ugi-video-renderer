@@ -1,0 +1,80 @@
+name: UGI R45 Live Worker Inspect
+
+on:
+  push:
+    branches: [ugi-r45-multiformat-20260830]
+    paths:
+      - 'control-plane/r45/inspect-trigger.json'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Inspect live worker source anchors
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet requests
+          python - <<'PY'
+          import os
+          from email.parser import BytesParser
+          from email.policy import default
+          from pathlib import Path
+          import requests
+
+          account=os.environ['CF_ACCOUNT_ID']; token=os.environ['CF_API_TOKEN']
+          base=f'https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts/lola-operacional-ugi/content/v2'
+          r=requests.get(base,headers={'Authorization':f'Bearer {token}'},timeout=30); r.raise_for_status()
+          ctype=r.headers.get('content-type',''); body=r.content
+          if 'multipart/' in ctype.lower():
+              env=(f'Content-Type: {ctype}\r\nMIME-Version: 1.0\r\n\r\n'.encode()+body)
+              msg=BytesParser(policy=default).parsebytes(env); cand=[]
+              for part in msg.iter_parts():
+                  ptype=(part.get_content_type() or '').lower(); fn=(part.get_filename() or '').lower(); payload=part.get_payload(decode=True) or b''
+                  if 'javascript' in ptype or fn.endswith(('.js','.mjs')): cand.append(payload)
+              src=max(cand,key=len).decode('utf-8')
+          else: src=body.decode('utf-8')
+
+          patterns=[
+            'var VERSION =',
+            'function validateCommand(',
+            'async function generateFromCommand(',
+            'async function saveLocalDraft(',
+            'if (path === "/api/platform-publication-eligibility/"',
+            'if (path === "/api/platform-publish"',
+            'if (path === "/api/platform-approval"',
+            'async function createBufferPlatformVideoPost(',
+            'function platformMetadataGraphQL(',
+            'async function bufferCreateWithAssets(',
+            'if (path === "/api/drafts"',
+          ]
+          out=['UGI_R45_LIVE_SOURCE_CONTEXT',f'BYTES={len(src.encode("utf-8"))}']
+          for pat in patterns:
+              count=src.count(pat); out.append(f'PATTERN={pat} COUNT={count}')
+              pos=src.find(pat)
+              if pos>=0:
+                  snippet=src[max(0,pos-1000):min(len(src),pos+4500)].replace('\n','\\n')
+                  out.append('SNIPPET='+snippet)
+          p=Path('cloudflare/status/r45-live-context.txt'); p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          PY
+      - name: Persist inspection only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-r45-inspect-bot'
+          git config user.email 'ugi-r45-inspect@users.noreply.github.com'
+          git add cloudflare/status/r45-live-context.txt
+          git commit -m 'chore: inspect live worker for R45 multiformat'
+          git pull --rebase origin ugi-r45-multiformat-20260830
+          git push origin HEAD:ugi-r45-multiformat-20260830
