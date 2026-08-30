@@ -1,10 +1,13 @@
 import { Hono } from "hono";
-import { paymentMiddleware } from "x402-hono";
+import { paymentMiddleware } from "@x402/hono";
+import { x402ResourceServer, HTTPFacilitatorClient } from "@x402/core/server";
+import { registerExactEvmScheme } from "@x402/evm/exact/server";
 import { normalizeOffer, compareOffers } from "../../lsi-packvalue402-shadow-r1.mjs";
 
-const VERSION = "packvalue402-paid-r1-preprod-2026-08-30.3";
+const VERSION = "packvalue402-paid-r1-preprod-2026-08-30.4";
 const TARGET_PRICE = "$0.001";
 const DEFAULT_FACILITATOR = "https://facilitator.payai.network";
+const DEFAULT_NETWORK = "eip155:8453";
 
 const app = new Hono();
 
@@ -17,19 +20,43 @@ function validEvmAddress(v) {
 function paymentState(env) {
   const enabled = paymentsEnabled(env);
   const payToConfigured = validEvmAddress(env.PAY_TO);
+  const network = env.NETWORK || DEFAULT_NETWORK;
   return {
     enabled,
     pay_to_configured: payToConfigured,
-    ready: enabled && payToConfigured,
-    network: env.NETWORK || "base",
+    ready: enabled && payToConfigured && network === DEFAULT_NETWORK,
+    network,
     target_price_usd: 0.001,
     facilitator: env.FACILITATOR_URL || DEFAULT_FACILITATOR,
+    protocol: "x402-v2",
+    scheme: "exact",
     server_private_key_required: false,
     server_can_spend: false,
   };
 }
 function err(c, e) {
   return c.json({ ok: false, error: String(e?.message || e).slice(0, 200) }, 400);
+}
+function buildPaymentMiddleware(env) {
+  const p = paymentState(env);
+  const facilitatorClient = new HTTPFacilitatorClient({ url: p.facilitator });
+  const resourceServer = new x402ResourceServer(facilitatorClient);
+  registerExactEvmScheme(resourceServer);
+  return paymentMiddleware(
+    {
+      "POST /v1/compare": {
+        accepts: {
+          scheme: "exact",
+          network: p.network,
+          payTo: env.PAY_TO,
+          price: TARGET_PRICE,
+        },
+        description: "Compare multipack and effective unit economics for 2-25 offers",
+        mimeType: "application/json",
+      },
+    },
+    resourceServer,
+  );
 }
 
 app.get("/health", (c) => {
@@ -55,7 +82,8 @@ app.get("/.well-known/agent.json", (c) => {
     mode: p.ready ? "PAYMENT_READY" : "PREPROD_DISABLED",
     core_mode: "shared-proven-deterministic-core",
     payment: {
-      protocol: "x402-v2",
+      protocol: p.protocol,
+      scheme: p.scheme,
       enabled: p.enabled,
       ready: p.ready,
       network: p.network,
@@ -109,18 +137,15 @@ app.use("/v1/compare", async (c, next) => {
       money_movement: false,
     }, 503);
   }
-  const mw = paymentMiddleware(
-    c.env.PAY_TO,
-    {
-      "/v1/compare": {
-        price: TARGET_PRICE,
-        network: p.network,
-        config: { description: "Compare multipack and effective unit economics for 2-25 offers" },
-      },
-    },
-    { url: p.facilitator },
-  );
-  return mw(c, next);
+  if (p.network !== DEFAULT_NETWORK) {
+    return c.json({
+      ok: false,
+      error: "unsupported_production_network",
+      mode: "FAIL_CLOSED",
+      money_movement: false,
+    }, 503);
+  }
+  return buildPaymentMiddleware(c.env)(c, next);
 });
 
 app.post("/v1/compare", async (c) => {
