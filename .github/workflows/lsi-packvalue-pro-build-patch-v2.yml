@@ -1,0 +1,89 @@
+name: LSI PackValue PRO Build + Live Patch V2
+run-name: LSI PackValue PRO Build + Live Patch V2 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-revenue-asaas-greenfield-r1-20260830]
+    paths:
+      - 'greenfield/packvalue-pro/patch_worker_v2.py'
+      - '.github/workflows/lsi-packvalue-pro-build-patch-v2.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test product
+        shell: bash
+        run: |
+          set -euo pipefail
+          node greenfield/packvalue-pro/test.mjs
+          node greenfield/packvalue-pro/build.mjs
+          jq -e '.network_capability==false and .pii_collection==false' greenfield/packvalue-pro/dist/manifest.json >/dev/null
+      - name: Configure Cloudflare read access
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail; test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"
+          echo "CF_API_TOKEN=$CF_API_TOKEN" >> "$GITHUB_ENV"; echo "CF_ACCOUNT_ID=$CF_ACCOUNT_ID" >> "$GITHUB_ENV"; echo "::add-mask::$CF_API_TOKEN"
+      - name: Require live core R44.5.23 and extract module
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEALTH=https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health
+          curl -fsS "$HEALTH" >/tmp/health.json
+          jq -e '.ok==true and .version=="lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25"' /tmp/health.json >/dev/null
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$base" >/tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1');b=open('/tmp/b','rb').read();ct=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h).group(1).strip()
+          if 'multipart/' in ct:
+            msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+b)
+            parts=[p.get_payload(decode=True) or b'' for p in msg.iter_parts()]
+            c=[x for x in parts if b'createProviderCheckout' in x and b'/api/commerce/webhook/asaas' in x]
+            if len(c)!=1: raise SystemExit(f'MODULE_COUNT_{len(c)}')
+            payload=c[0]
+          else: payload=b
+          open('/tmp/current.mjs','wb').write(payload)
+          print('LIVE_MODULE_EXTRACT=PASS')
+          PY
+      - name: Patch V2 and static acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python greenfield/packvalue-pro/patch_worker_v2.py --source /tmp/current.mjs --asset greenfield/packvalue-pro/dist/packvalue-pro.html --output /tmp/patched.mjs
+          node --check /tmp/patched.mjs
+          grep -Fq 'const PACKVALUE_PRO_PRICE = 49.90;' /tmp/patched.mjs
+          grep -Fq '/api/greenfield/packvalue-pro/checkout' /tmp/patched.mjs
+          grep -Fq 'fixed_offer_accepts_no_client_parameters' /tmp/patched.mjs
+          grep -Fq 'product?.greenfield === true ? `${origin}/api/greenfield/packvalue-pro/checkout-return`' /tmp/patched.mjs
+          grep -Fq 'if (!isCommerceAdminAuthorized(request, env))' /tmp/patched.mjs
+          grep -Fq 'if (!env.ASAAS_WEBHOOK_TOKEN)' /tmp/patched.mjs
+          echo 'PATCH_V2_STATIC_ACCEPTANCE=PASS'
+      - name: Diff invariant counts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          old=open('/tmp/current.mjs',encoding='utf-8').read(); new=open('/tmp/patched.mjs',encoding='utf-8').read()
+          for a in ['/api/video-render','/api/video-upload','/api/platform-approval','/api/commerce/webhook/asaas','BUFFER_ACCESS_TOKEN','ASAAS_WEBHOOK_TOKEN']:
+            if old.count(a)!=new.count(a): raise SystemExit('INVARIANT_CHANGED:'+a)
+          if old.count('/api/commerce/checkout')>new.count('/api/commerce/checkout'): raise SystemExit('ADMIN_CHECKOUT_REMOVED')
+          print('LEGACY_INVARIANT_COUNTS=PASS')
+          PY
+      - name: Receipt
+        shell: bash
+        run: |
+          set -euo pipefail; mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg commit "$GITHUB_SHA" --arg source "$(sha256sum /tmp/current.mjs|awk '{print $1}')" --arg patched "$(sha256sum /tmp/patched.mjs|awk '{print $1}')" --argjson product "$(cat greenfield/packvalue-pro/dist/manifest.json)" '{schema_version:"1.0",project:"PACKVALUE_PRO_GREENFIELD_R1",stage:"PATCH_V2",acceptance_state:"PASS",run_id:$run,commit:$commit,core_version_preserved:"R44.5.23",extension_version:"packvalue-pro-commerce-r1-2026-08-30",fixed_price_brl:49.90,current_source_sha256:$source,patched_source_sha256:$patched,product:$product,production_deployed:false,provider_checkout_created:false,real_value_moved:false}' | tee generated/evidence/packvalue-pro-patch-v2.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packvalue-pro-patch-v2-${{ github.run_id }}
+          path: generated/evidence/packvalue-pro-patch-v2.json
+          retention-days: 14
