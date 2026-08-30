@@ -62,20 +62,22 @@ jobs:
           printf '%s' "$admin_token" | npx --yes wrangler@4.32.0 secret put ADMIN_TOKEN --config cloudflare/wrangler.lsi-x402-demand-radar-r1.toml >/dev/null
           echo "ADMIN_TOKEN=$admin_token" >> "$GITHUB_ENV"
 
-      - name: Wait for admin readiness
+      - name: Wait for stable admin readiness
         shell: bash
         run: |
           set -euo pipefail
-          ready=false
-          for i in $(seq 1 15); do
+          streak=0
+          for i in $(seq 1 30); do
             code="$(curl -sS -o /tmp/auth.json -w '%{http_code}' -X POST -H "authorization: Bearer $ADMIN_TOKEN" "$DEMAND_URL/admin/auth-probe" || true)"
             if [ "$code" = "200" ] && jq -e '.ok==true and .admin_ready==true' /tmp/auth.json >/dev/null 2>&1; then
-              ready=true
-              break
+              streak=$((streak+1))
+              if [ "$streak" -ge 3 ]; then break; fi
+            else
+              streak=0
             fi
             sleep 2
           done
-          test "$ready" = true
+          test "$streak" -ge 3
 
       - name: Verify public fail-closed health
         shell: bash
@@ -88,21 +90,37 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsS -X POST \
-            -H "authorization: Bearer $ADMIN_TOKEN" \
-            -H 'content-type: application/json' \
-            --data '{"cadence_ms":3600000,"max_cycles":168,"monetary_budget":0}' \
-            "$DEMAND_URL/admin/start" > /tmp/start.json
-          jq -e '.ok==true and .state.status=="ACTIVE" and .state.monetary_budget==0 and .state.production_actions==false and .state.paid_routes_active==false and .state.money_movement==false' /tmp/start.json >/dev/null
+          ok=false
+          for i in $(seq 1 20); do
+            code="$(curl -sS -o /tmp/start.json -w '%{http_code}' -X POST \
+              -H "authorization: Bearer $ADMIN_TOKEN" \
+              -H 'content-type: application/json' \
+              --data '{"cadence_ms":3600000,"max_cycles":168,"monetary_budget":0}' \
+              "$DEMAND_URL/admin/start" || true)"
+            if [ "$code" = "200" ] && jq -e '.ok==true and .state.status=="ACTIVE" and .state.monetary_budget==0 and .state.production_actions==false and .state.paid_routes_active==false and .state.money_movement==false' /tmp/start.json >/dev/null 2>&1; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
 
       - name: Force one current-code market scan
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --max-time 120 -X POST \
-            -H "authorization: Bearer $ADMIN_TOKEN" \
-            "$DEMAND_URL/admin/tick" > /tmp/tick.json
-          jq -e '.ok==true and .state.last_cycle.reason=="admin_tick" and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.paid_routes_active==false and .state.last_cycle.money_movement==false' /tmp/tick.json >/dev/null
+          ok=false
+          for i in $(seq 1 10); do
+            code="$(curl -sS --max-time 120 -o /tmp/tick.json -w '%{http_code}' -X POST \
+              -H "authorization: Bearer $ADMIN_TOKEN" \
+              "$DEMAND_URL/admin/tick" || true)"
+            if [ "$code" = "200" ] && jq -e '.ok==true and .state.last_cycle.reason=="admin_tick" and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.paid_routes_active==false and .state.last_cycle.money_movement==false' /tmp/tick.json >/dev/null 2>&1; then
+              ok=true
+              break
+            fi
+            sleep 3
+          done
+          test "$ok" = true
 
       - name: Prove enriched autonomous market scan persisted
         shell: bash
