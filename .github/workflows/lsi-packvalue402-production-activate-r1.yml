@@ -23,6 +23,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Require production starts payment-disabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 20); do
+            if curl -fsS "$PROD_URL/health?ts=$RANDOM" > /tmp/prestate.json 2>/dev/null && jq -e '.ok==true and .payment.enabled==false and .payment.pay_to_configured==false and .payment.ready==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/prestate.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+          echo 'PRE_ACTIVATION_DISABLED_STATE=PASS'
+
       - name: Validate explicit activation contract shape
         shell: bash
         run: |
@@ -143,7 +158,15 @@ jobs:
           grep -q 'PAYMENTS_ENABLED = "true"' .wrangler.production.active.toml
           grep -q "PAY_TO = \"$PAY_TO\"" .wrangler.production.active.toml
 
+      - name: Mark activation deployment attempt
+        id: activation_attempt
+        shell: bash
+        run: |
+          echo 'attempted=true' >> "$GITHUB_OUTPUT"
+          echo 'ACTIVATION_DEPLOYMENT_ATTEMPT=ARMED'
+
       - name: Activate receive-only production Worker
+        id: activate_deploy
         working-directory: cloudflare/packvalue402-paid-r1
         shell: bash
         env:
@@ -194,7 +217,7 @@ jobs:
           set -euo pipefail
           mkdir -p generated/evidence
           PAY_HASH="$(printf '%s' "$PAY_TO" | sha256sum | awk '{print $1}')"
-          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg pay_hash "$PAY_HASH" '{schema_version:"1.0",project:"PACKVALUE402_PRODUCTION_ACTIVATION_R1",acceptance_state:"PASS_PAYMENT_READY_NO_SETTLEMENT",run_id:$run,commit:$sha,receive_address_sha256:$pay_hash,protocol:"x402-v2",scheme:"exact",network:"eip155:8453",target_price_usd:0.001,facilitator:"https://facilitator.payai.network",payments_enabled:true,server_private_key_required:false,server_can_spend:false,unpaid_live_402_verified:true,real_settlement:false,real_value_moved:false,bazaar_indexed:false,next_gate:"FIRST_REAL_BUYER_SETTLEMENT"}' > generated/evidence/packvalue402-production-activation-r1.json
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg pay_hash "$PAY_HASH" '{schema_version:"1.1",project:"PACKVALUE402_PRODUCTION_ACTIVATION_R1",acceptance_state:"PASS_PAYMENT_READY_NO_SETTLEMENT",run_id:$run,commit:$sha,receive_address_sha256:$pay_hash,protocol:"x402-v2",scheme:"exact",network:"eip155:8453",target_price_usd:0.001,facilitator:"https://facilitator.payai.network",pre_activation_disabled_state:true,payments_enabled:true,server_private_key_required:false,server_can_spend:false,unpaid_live_402_verified:true,real_settlement:false,real_value_moved:false,bazaar_indexed:false,next_gate:"FIRST_REAL_BUYER_SETTLEMENT"}' > generated/evidence/packvalue402-production-activation-r1.json
 
       - name: Upload activation receipt
         uses: actions/upload-artifact@v4
@@ -210,15 +233,35 @@ jobs:
         shell: bash
         run: rm -f .wrangler.production.active.toml
 
-      - name: Roll back to payment-disabled shell on activation failure
-        if: failure()
+      - name: Roll back to payment-disabled shell after attempted activation failure
+        if: ${{ failure() && steps.activation_attempt.outputs.attempted == 'true' }}
         working-directory: cloudflare/packvalue402-paid-r1
         shell: bash
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          set -u
-          if [ -n "${CLOUDFLARE_API_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
-            npx wrangler deploy --config wrangler.production-shell.toml || true
-          fi
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npx wrangler deploy --config wrangler.production-shell.toml
+          echo 'ACTIVATION_ROLLBACK_DEPLOY=PASS'
+
+      - name: Prove any failed activation ends payment-disabled
+        if: failure()
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$PROD_URL/health?ts=$RANDOM" > /tmp/failed-state.json 2>/dev/null && jq -e '.ok==true and .payment.enabled==false and .payment.pay_to_configured==false and .payment.ready==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/failed-state.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+          code="$(curl -sS -o /tmp/failed-compare.json -w '%{http_code}' -X POST "$PROD_URL/v1/compare" -H 'content-type: application/json' --data '{"offers":[{"label":"a","text":"1 L","price":3},{"label":"b","text":"2 L","price":5}]}' )"
+          test "$code" = "503"
+          jq -e '.ok==false and .error=="payments_not_activated" and .money_movement==false' /tmp/failed-compare.json >/dev/null
+          echo 'FAILED_ACTIVATION_SAFE_STATE=PASS'
