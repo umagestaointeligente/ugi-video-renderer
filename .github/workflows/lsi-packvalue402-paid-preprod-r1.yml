@@ -38,6 +38,8 @@ jobs:
           grep -q '"@x402/core": "2.24.0"' cloudflare/packvalue402-paid-r1/package.json
           grep -q '"@x402/evm": "2.24.0"' cloudflare/packvalue402-paid-r1/package.json
           grep -q '"@x402/extensions": "2.24.0"' cloudflare/packvalue402-paid-r1/package.json
+          grep -q '"@x402/fetch": "2.24.0"' cloudflare/packvalue402-paid-r1/package.json
+          grep -q '"viem": "2.48.11"' cloudflare/packvalue402-paid-r1/package.json
           grep -q '"hono": "4.13.5"' cloudflare/packvalue402-paid-r1/package.json
           ! grep -q '"x402-hono"' cloudflare/packvalue402-paid-r1/package.json
           ! grep -q '"x402"' cloudflare/packvalue402-paid-r1/package.json
@@ -49,13 +51,15 @@ jobs:
           set -euo pipefail
           npm install --ignore-scripts --no-audit --no-fund
           npm audit --omit=dev --audit-level=high
+          npm audit --audit-level=high
           npm run check
           node --input-type=module <<'NODE'
-          const [honoX402, coreServer, evmServer, bazaar] = await Promise.all([
+          const [honoX402, coreServer, evmServer, bazaar, fetchX402] = await Promise.all([
             import('@x402/hono'),
             import('@x402/core/server'),
             import('@x402/evm/exact/server'),
             import('@x402/extensions/bazaar'),
+            import('@x402/fetch'),
           ]);
           if (typeof honoX402.paymentMiddleware !== 'function') process.exit(2);
           if (typeof coreServer.x402ResourceServer !== 'function') process.exit(3);
@@ -63,7 +67,8 @@ jobs:
           if (typeof evmServer.registerExactEvmScheme !== 'function') process.exit(5);
           if (typeof bazaar.declareDiscoveryExtension !== 'function') process.exit(6);
           if (!bazaar.bazaarResourceServerExtension) process.exit(7);
-          console.log('X402_V2_BAZAAR_IMPORTS=PASS');
+          if (typeof fetchX402.wrapFetchWithPaymentFromConfig !== 'function') process.exit(8);
+          console.log('X402_V2_BAZAAR_CLIENT_IMPORTS=PASS');
           NODE
 
       - name: Verify live facilitator supports x402 v2 Base mainnet
@@ -113,6 +118,13 @@ jobs:
           if (required.resource?.serviceName !== 'PackValue402') throw new Error('service_name_missing');
           console.log('UNPAID_X402_V2_BAZAAR_CHALLENGE=PASS');
           NODE
+
+      - name: Prove cryptographic x402 client verify settle E2E without value
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run test:e2e-mock
 
       - name: Require autonomous Cloudflare credentials
         shell: bash
@@ -178,7 +190,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p generated/evidence
-          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.3",project:"PACKVALUE402_PAID_PREPROD_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,protocol:"x402-v2",scheme:"exact",x402_stack:"native-scoped-v2",target_price_usd:0.001,network:"eip155:8453",facilitator:"https://facilitator.payai.network",facilitator_live_support_verified:true,dependency_high_critical_gate:"PASS",unpaid_402_challenge_verified:true,bazaar_declared:true,bazaar_challenge_verified:true,bazaar_indexed:false,indexing_requires_valid_settlement:true,payments_enabled:false,pay_to_configured:false,server_private_key_required:false,server_can_spend:false,money_movement:false,origin_shadow_proven:true,activation_gate:"EXPLICIT_APPROVAL_PLUS_RECEIVE_ADDRESS"}' > generated/evidence/packvalue402-paid-preprod-r1.json
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.4",project:"PACKVALUE402_PAID_PREPROD_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,protocol:"x402-v2",scheme:"exact",x402_stack:"native-scoped-v2",target_price_usd:0.001,network:"eip155:8453",facilitator:"https://facilitator.payai.network",facilitator_live_support_verified:true,dependency_high_critical_gate:"PASS",ci_dependency_high_critical_gate:"PASS",unpaid_402_challenge_verified:true,bazaar_declared:true,bazaar_challenge_verified:true,bazaar_indexed:false,indexing_requires_valid_settlement:true,cryptographic_eip712_signature_verified:true,mock_verify_verified:true,mock_settle_verified:true,client_retry_to_200_verified:true,payment_response_receipt_verified:true,blockchain_broadcast:false,real_value_moved:false,private_key_persisted:false,payments_enabled:false,pay_to_configured:false,server_private_key_required:false,server_can_spend:false,money_movement:false,origin_shadow_proven:true,activation_gate:"EXPLICIT_APPROVAL_PLUS_RECEIVE_ADDRESS"}' > generated/evidence/packvalue402-paid-preprod-r1.json
 
       - name: Upload preprod acceptance receipt
         uses: actions/upload-artifact@v4
