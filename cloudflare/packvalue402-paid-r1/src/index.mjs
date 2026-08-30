@@ -2,9 +2,9 @@ import { Hono } from "hono";
 import { paymentMiddleware } from "x402-hono";
 import { normalizeOffer, compareOffers } from "../../lsi-packvalue402-shadow-r1.mjs";
 
-const VERSION = "packvalue402-paid-r1-preprod-2026-08-30.2";
+const VERSION = "packvalue402-paid-r1-preprod-2026-08-30.3";
 const TARGET_PRICE = "$0.001";
-const DEFAULT_FACILITATOR = "https://x402.org/facilitator";
+const DEFAULT_FACILITATOR = "https://facilitator.payai.network";
 
 const app = new Hono();
 
@@ -61,6 +61,7 @@ app.get("/.well-known/agent.json", (c) => {
       network: p.network,
       price_usd: 0.001,
       pay_to_configured: p.pay_to_configured,
+      facilitator: p.facilitator,
       server_can_spend: false,
     },
     tools: [
