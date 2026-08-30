@@ -1,0 +1,153 @@
+name: LSI PackValue MCP R1
+run-name: LSI PackValue MCP R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/packvalue-mcp-r1/**'
+      - '.github/workflows/lsi-packvalue-mcp-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-and-accept:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      MCP_URL: https://lsi-packvalue-mcp-r1.umagestaointeligente.workers.dev/mcp
+      HEALTH_URL: https://lsi-packvalue-mcp-r1.umagestaointeligente.workers.dev/health
+    defaults:
+      run:
+        working-directory: cloudflare/packvalue-mcp-r1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned MCP stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Supply-chain audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm audit --omit=dev --audit-level=high
+          npm audit --audit-level=high
+
+      - name: Static greenfield and financial safety gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '@modelcontextprotocol/server' package.json
+          grep -q 'normalize_pack_value' index.mjs
+          grep -q 'compare_pack_values' index.mjs
+          grep -q 'payment_required: false' index.mjs
+          grep -q 'pii_storage: false' index.mjs
+          ! grep -qiE 'Kit UGI|Priorização Inteligente|Uma Gestão Inteligente|PAY_TO|private.?key|seed.?phrase' index.mjs
+          echo 'MCP_STATIC_GATES=PASS'
+
+      - name: Require Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy isolated MCP Worker
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config wrangler.toml | tee /tmp/mcp-deploy.log
+
+      - name: Wait for MCP health
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$HEALTH_URL?ts=$RANDOM" > /tmp/mcp-health.json 2>/dev/null && jq -e '.ok==true and .service=="packvalue-mcp" and .transport=="streamable-http" and .endpoint=="/mcp" and .auth_required==false and .payment_required==false and .deterministic_core==true and .pii_storage==false' /tmp/mcp-health.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+          echo 'MCP_HEALTH=PASS'
+
+      - name: Official MCP client end-to-end
+        shell: bash
+        run: |
+          set -euo pipefail
+          MCP_URL="$MCP_URL" node --input-type=module <<'NODE'
+          import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
+
+          const client = new Client(
+            { name: 'packvalue-acceptance', version: '1.0.0' },
+            { versionNegotiation: { mode: 'auto' } }
+          );
+          const transport = new StreamableHTTPClientTransport(new URL(process.env.MCP_URL));
+          await client.connect(transport);
+
+          const tools = await client.listTools();
+          const names = new Set((tools.tools || []).map(t => t.name));
+          if (!names.has('normalize_pack_value') || !names.has('compare_pack_values')) {
+            throw new Error(`missing_tools:${[...names].join(',')}`);
+          }
+
+          const normalized = await client.callTool({
+            name: 'normalize_pack_value',
+            arguments: { text: '6x330 ml', price: 5.94, currency: 'USD' }
+          });
+          const nText = normalized.content?.find(x => x.type === 'text')?.text;
+          const n = JSON.parse(nText || '{}');
+          if (!n.ok || n.result?.dimension !== 'volume' || n.result?.display_basis !== 'L' || Math.abs(n.result?.display_price - 3) > 0.000001) {
+            throw new Error(`normalize_result_invalid:${nText}`);
+          }
+
+          const compared = await client.callTool({
+            name: 'compare_pack_values',
+            arguments: {
+              offers: [
+                { label: '6-pack', text: '6x330 ml', price: 5.94, currency: 'USD' },
+                { label: '2-liter', text: '2 L', price: 5.60, currency: 'USD' }
+              ]
+            }
+          });
+          const cText = compared.content?.find(x => x.type === 'text')?.text;
+          const c = JSON.parse(cText || '{}');
+          if (!c.ok || c.result?.winner !== '2-liter' || c.result?.dimension !== 'volume') {
+            throw new Error(`compare_result_invalid:${cText}`);
+          }
+
+          const era = client.getProtocolEra?.() || 'legacy-compatible';
+          console.log(`MCP_PROTOCOL_ERA=${era}`);
+          console.log('MCP_TOOLS_LIST=PASS');
+          console.log('MCP_NORMALIZE_CALL=PASS');
+          console.log('MCP_COMPARE_CALL=PASS');
+          await client.close();
+          NODE
+
+      - name: Write MCP acceptance receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ../../generated/evidence
+          VERSION_ID="$(awk '/Current Version ID:/{print $4}' /tmp/mcp-deploy.log | tail -1)"
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg mcp "$MCP_URL" --arg version_id "$VERSION_ID" '{schema_version:"1.0",project:"PACKVALUE_MCP_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,mcp_url:$mcp,cloudflare_version_id:$version_id,official_client_e2e:true,tools:["normalize_pack_value","compare_pack_values"],deterministic_core:true,payment_enabled:false,pii_storage:false,incremental_cost_usd:0,registry_published:false}' > ../../generated/evidence/packvalue-mcp-r1.json
+          cat ../../generated/evidence/packvalue-mcp-r1.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packvalue-mcp-${{ github.run_id }}
+          path: generated/evidence/packvalue-mcp-r1.json
+          retention-days: 30
+          if-no-files-found: error
