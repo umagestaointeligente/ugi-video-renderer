@@ -1,0 +1,132 @@
+name: LSI Fiat Rail Deploy R1
+run-name: LSI Fiat Rail Deploy R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - 'lsi-fiat-rail-deploy-*'
+    paths:
+      - 'scripts/lsi_fiat_rail_r1.py'
+      - '.github/workflows/lsi-fiat-rail-deploy-r1.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONPATH: .
+      ORIGIN: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static fixed-offer and isolation gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=scripts/lsi_fiat_rail_r1.py
+          python -m py_compile "$F"
+          grep -q 'LSI_FIAT_OFFER_PRICE = 497' "$F"
+          grep -q 'checkout_branch_required' "$F"
+          grep -q 'ugiMaterialFulfillmentAllowed: false' "$F"
+          grep -q 'bufferMutationAllowed: false' "$F"
+          ! grep -q 'body.amount' "$F"
+          ! grep -q 'body.price' "$F"
+          ! grep -q 'body.value' "$F"
+
+      - name: Deploy from exact live source with rollback on health failure
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          LSI_FIAT_MODE: deploy
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"
+          test -n "$CF_ACCOUNT_ID"
+          python -m pip install --disable-pip-version-check requests
+          python scripts/lsi_fiat_rail_r1.py
+          jq -e '.mode=="deploy" and .deployed==true and .rollback_performed==false and .payment_created==false and .arbitrary_amount_allowed==false and .oidc_required==true and .ugi_fulfillment_allowed==false and .buffer_mutation_allowed==false' cloudflare/status/lsi-fiat-rail-r1.json >/dev/null
+
+      - name: Prove public health and UGI regression safety
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$ORIGIN/api/health" > /tmp/health.json
+          jq -e '.ok==true
+            and .capabilities.lsiFiatRail==true
+            and .capabilities.lsiFiatRailOidc==true
+            and .capabilities.lsiFiatRailFixedOfferOnly==true
+            and .capabilities.lsiFiatRailUgiFulfillmentBlocked==true
+            and .capabilities.publicationExactlyOnceGuard==true
+            and .capabilities.permanentCommercePublicationLinkPolicy==true
+            and .capabilities.directAsaasCheckoutInPublicTextBlocked==true
+            and .bindings.MEDIA_R2==true
+            and .bindings.BUFFER_API_KEY==true
+            and .bindings.ASAAS_API_KEY==true
+            and .bindings.ASAAS_WEBHOOK_TOKEN==true' /tmp/health.json >/dev/null
+          curl -fsS "$ORIGIN/api/lsi/fiat-health" > /tmp/fiat-health.json
+          jq -e '.ok==true and .provider=="asaas" and .oidcRequiredForMutation==true and .arbitraryAmountAllowed==false and .ugiMaterialFulfillmentAllowed==false and .bufferMutationAllowed==false and .publicationAllowed==false' /tmp/fiat-health.json >/dev/null
+          echo 'LIVE_HEALTH_AND_UGI_REGRESSION=PASS'
+
+      - name: Prove unauthenticated financial mutation fails closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl -sS -o /tmp/unauth.json -w '%{http_code}' -X POST -H 'content-type: application/json' --data '{"offerCode":"pipeline-sprint-24h"}' "$ORIGIN/api/lsi/checkout")"
+          test "$code" = '401'
+          jq -e '.ok==false and .errorClass=="lsi_oidc_denied"' /tmp/unauth.json >/dev/null
+          webhook_code="$(curl -sS -o /tmp/webhook-deny.json -w '%{http_code}' -X POST -H 'content-type: application/json' --data '{"event":"CHECKOUT_PAID"}' "$ORIGIN/api/commerce/webhook/asaas")"
+          test "$webhook_code" = '401'
+          echo 'UNAUTH_FINANCIAL_MUTATION=BLOCKED'
+
+      - name: Acquire short-lived GitHub OIDC
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl --fail --silent --show-error -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=lsi-fiat-rail")"
+          token="$(printf '%s' "$response" | jq -r '.value // empty')"
+          test -n "$token"
+          echo "::add-mask::$token"
+          echo "LSI_FIAT_OIDC_TOKEN=$token" >> "$GITHUB_ENV"
+
+      - name: Prove OIDC dry-run and deploy-branch no-payment gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $LSI_FIAT_OIDC_TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"offerCode":"pipeline-sprint-24h","dryRun":true}' \
+            "$ORIGIN/api/lsi/checkout" > /tmp/dry.json
+          jq -e '.ok==true and .dryRun==true and .offer.code=="pipeline-sprint-24h" and .offer.amount==497 and .offer.currency=="BRL" and .mutationPerformed==false' /tmp/dry.json >/dev/null
+          code="$(curl -sS -o /tmp/live-block.json -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer $LSI_FIAT_OIDC_TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"offerCode":"pipeline-sprint-24h"}' \
+            "$ORIGIN/api/lsi/checkout")"
+          test "$code" = '403'
+          jq -e '.ok==false and .errorClass=="checkout_branch_required" and .mutationPerformed==false' /tmp/live-block.json >/dev/null
+          echo 'OIDC_DRY_RUN=PASS'
+          echo 'DEPLOY_BRANCH_PAYMENT_MUTATION=BLOCKED'
+
+      - name: Write deployment receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg run "$GITHUB_RUN_ID" \
+            --arg sha "$GITHUB_SHA" \
+            --arg version "$(jq -r '.version' /tmp/health.json)" \
+            '{schema_version:"1.0",project:"LSI_FIAT_RAIL_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,live_version:$version,provider:"asaas",offer_code:"pipeline-sprint-24h",amount_brl:497,pix:true,credit_card:true,oidc_required:true,arbitrary_amount_allowed:false,ugi_fulfillment_allowed:false,buffer_mutation_allowed:false,actual_checkout_created:false,real_payment_moved:false,secrets_exposed:false}' > /tmp/receipt.json
+          cat /tmp/receipt.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-fiat-rail-deploy-${{ github.run_id }}
+          path: /tmp/receipt.json
+          retention-days: 30
+          if-no-files-found: error
