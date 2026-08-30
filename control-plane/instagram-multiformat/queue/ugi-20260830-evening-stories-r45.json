@@ -1,0 +1,33 @@
+{
+  "project": "UGI",
+  "batchId": "UGI-R45-20260830-EVENING-STORIES",
+  "timezone": "America/Sao_Paulo",
+  "posts": [
+    {
+      "contentId": "UGI-20260830-IG-STORY-03-AUTOMATION-CHECK",
+      "type": "story_image",
+      "publish": true,
+      "dueAt": "2026-08-30T21:15:00-03:00",
+      "variant": "A",
+      "topic": "Checklist antes de automatizar",
+      "objective": "Transformar o carrossel do dia em uma aplicação curta e memorável",
+      "hook": "Automatizar não começa pela ferramenta.",
+      "key_message": "Começa por três perguntas: o erro é reversível? os dados são confiáveis? alguém precisa aprovar antes da ação?",
+      "instructions": "Story muito visual e direto. Três perguntas em destaque. Não parecer anúncio, comunicado ou post institucional.",
+      "cta": "Use estas 3 perguntas antes da próxima automação."
+    },
+    {
+      "contentId": "UGI-20260830-IG-STORY-04-MONDAY-DECISION",
+      "type": "story_image",
+      "publish": true,
+      "dueAt": "2026-08-30T22:15:00-03:00",
+      "variant": "A",
+      "topic": "Preparação da segunda-feira",
+      "objective": "Entregar uma microferramenta útil para a manhã seguinte e criar recorrência",
+      "hook": "Antes da primeira reunião de amanhã, faça isto.",
+      "key_message": "Escolha uma decisão que sempre volta para você. Escreva o critério que permitiria ao time resolvê-la sem pedir autorização novamente.",
+      "instructions": "Tom humano, útil e simples. O Story deve parecer uma dica que alguém envia para outro gestor, não publicidade de empresa.",
+      "cta": "Amanhã, teste o critério antes de responder por impulso."
+    }
+  ]
+}
