@@ -1,0 +1,189 @@
+{
+  "ok": true,
+  "project": "UGI",
+  "component": "R45-INSTAGRAM-MULTIFORMAT-PILOT",
+  "batchId": "UGI-R45-20260830-EVENING-STORIES",
+  "results": [
+    {
+      "contentId": "UGI-20260830-IG-STORY-03-AUTOMATION-CHECK",
+      "type": "story_image",
+      "publish": true,
+      "generateHttp": 200,
+      "generationOk": true,
+      "workerVersion": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+      "draftId": "6bebd89d-2d00-45d8-97fe-311ab846ceb9",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788108515501-6bebd89d-2d00-45d8-97fe-311ab846ceb9.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 1928249
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 200,
+      "publishResponse": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/r45/static-publish",
+        "platform": "instagram",
+        "type": "story_image",
+        "mode": "customScheduled",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a945ee9d58664eabd78d017",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-31T00:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-30T16:48:41.087Z",
+          "updatedAt": "2026-08-30T16:48:41.681Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a33548d0d88bed3e-SJC",
+            "rateLimitRemaining": "2133",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a945ee9d58664eabd78d017",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-31T00:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "assetValidation": {
+          "ok": true,
+          "kind": "story_image",
+          "count": 1
+        },
+        "publicationTriggered": true
+      },
+      "readbackHttp": 200,
+      "bufferPostId": "6a945ee9d58664eabd78d017",
+      "bufferStatus": "scheduled",
+      "publicationStatus": "scheduled",
+      "dueAtRequested": "2026-08-30T21:15:00-03:00",
+      "dueAtReadback": "2026-08-31T00:15:00.000Z",
+      "dueAtMatch": true,
+      "externalLink": null,
+      "readbackPass": true,
+      "state": "PROVEN_SCHEDULED",
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-STORY-04-MONDAY-DECISION",
+      "type": "story_image",
+      "publish": true,
+      "generateHttp": 200,
+      "generationOk": true,
+      "workerVersion": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+      "draftId": "d2f7b0bd-fd6c-47f8-8ca4-fb0c497fe836",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788108529146-d2f7b0bd-fd6c-47f8-8ca4-fb0c497fe836.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 1951461
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 200,
+      "publishResponse": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/r45/static-publish",
+        "platform": "instagram",
+        "type": "story_image",
+        "mode": "customScheduled",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a945ef66bbc8c9a02f2ac62",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-31T01:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-30T16:48:54.451Z",
+          "updatedAt": "2026-08-30T16:48:54.948Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a33549246e544fd0-SJC",
+            "rateLimitRemaining": "2131",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a945ef66bbc8c9a02f2ac62",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-31T01:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "assetValidation": {
+          "ok": true,
+          "kind": "story_image",
+          "count": 1
+        },
+        "publicationTriggered": true
+      },
+      "readbackHttp": 200,
+      "bufferPostId": "6a945ef66bbc8c9a02f2ac62",
+      "bufferStatus": "scheduled",
+      "publicationStatus": "scheduled",
+      "dueAtRequested": "2026-08-30T22:15:00-03:00",
+      "dueAtReadback": "2026-08-31T01:15:00.000Z",
+      "dueAtMatch": true,
+      "externalLink": null,
+      "readbackPass": true,
+      "state": "PROVEN_SCHEDULED",
+      "ok": true
+    }
+  ],
+  "timestamp": "2026-08-30T16:48:58.799889+00:00"
+}
