@@ -23,8 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate explicit activation contract
-        id: activation
+      - name: Validate explicit activation contract shape
         shell: bash
         run: |
           set -euo pipefail
@@ -32,27 +31,15 @@ jobs:
           test -f "$F"
           jq -e '.schema_version=="1.0" and .product=="PackValue402" and .approved==true and .approved_by=="Paulo" and .network=="eip155:8453" and .target_price_usd==0.001 and .currency=="USDC" and .purpose=="receive_only" and .server_can_spend==false' "$F" >/dev/null
           PAY_TO="$(jq -r '.receive_address' "$F")"
-          test -n "$PAY_TO"
-          node --input-type=module - "$PAY_TO" <<'NODE'
-          import { getAddress } from 'viem';
-          const raw = process.argv[2];
-          const canonical = getAddress(raw);
-          const denied = new Set([
-            '0x0000000000000000000000000000000000000000',
-            '0x000000000000000000000000000000000000dEaD',
-            '0x1111111111111111111111111111111111111111',
-            '0x2222222222222222222222222222222222222222',
-          ].map(x => x.toLowerCase()));
-          if (denied.has(canonical.toLowerCase())) throw new Error('denied_receive_address');
-          console.log(`canonical=${canonical}`);
-          NODE
-          CANONICAL="$(node --input-type=module - "$PAY_TO" <<'NODE'
-          import { getAddress } from 'viem';
-          console.log(getAddress(process.argv[2]));
-          NODE
-          )"
-          echo "pay_to=$CANONICAL" >> "$GITHUB_OUTPUT"
-          echo "ACTIVATION_CONTRACT=PASS"
+          [[ "$PAY_TO" =~ ^0x[0-9a-fA-F]{40}$ ]]
+          LOW="$(printf '%s' "$PAY_TO" | tr '[:upper:]' '[:lower:]')"
+          case "$LOW" in
+            0x0000000000000000000000000000000000000000|0x000000000000000000000000000000000000dead|0x1111111111111111111111111111111111111111|0x2222222222222222222222222222222222222222)
+              echo 'denied_receive_address' >&2
+              exit 2
+              ;;
+          esac
+          echo 'ACTIVATION_CONTRACT_SHAPE=PASS'
 
       - name: Audit native x402 stack
         working-directory: cloudflare/packvalue402-paid-r1
@@ -64,6 +51,29 @@ jobs:
           npm audit --audit-level=high
           npm run check
           npm run test:e2e-mock
+
+      - name: Canonicalize approved receive address
+        id: activation
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        run: |
+          set -euo pipefail
+          RAW="$(jq -r '.receive_address' "$GITHUB_WORKSPACE/activation/packvalue402-production.json")"
+          CANONICAL="$(node --input-type=module - "$RAW" <<'NODE'
+          import { getAddress } from 'viem';
+          const canonical = getAddress(process.argv[2]);
+          const denied = new Set([
+            '0x0000000000000000000000000000000000000000',
+            '0x000000000000000000000000000000000000dEaD',
+            '0x1111111111111111111111111111111111111111',
+            '0x2222222222222222222222222222222222222222',
+          ].map(x => x.toLowerCase()));
+          if (denied.has(canonical.toLowerCase())) throw new Error('denied_receive_address');
+          process.stdout.write(canonical);
+          NODE
+          )"
+          echo "pay_to=$CANONICAL" >> "$GITHUB_OUTPUT"
+          echo 'RECEIVE_ADDRESS_CANONICALIZATION=PASS'
 
       - name: Verify mainnet facilitator before activation
         shell: bash
@@ -115,9 +125,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/wrangler.packvalue402.active.toml <<EOF
+          cat > .wrangler.production.active.toml <<EOF
           name = "lsi-packvalue402-r1"
-          main = "${GITHUB_WORKSPACE}/cloudflare/packvalue402-paid-r1/src/index.mjs"
+          main = "src/index.mjs"
           compatibility_date = "2026-08-30"
           workers_dev = true
 
@@ -130,8 +140,8 @@ jobs:
           [observability]
           enabled = true
           EOF
-          grep -q 'PAYMENTS_ENABLED = "true"' /tmp/wrangler.packvalue402.active.toml
-          grep -q "PAY_TO = \"$PAY_TO\"" /tmp/wrangler.packvalue402.active.toml
+          grep -q 'PAYMENTS_ENABLED = "true"' .wrangler.production.active.toml
+          grep -q "PAY_TO = \"$PAY_TO\"" .wrangler.production.active.toml
 
       - name: Activate receive-only production Worker
         working-directory: cloudflare/packvalue402-paid-r1
@@ -141,17 +151,15 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          npx wrangler deploy --config /tmp/wrangler.packvalue402.active.toml
+          npx wrangler deploy --config .wrangler.production.active.toml
 
       - name: Prove active health cannot spend
-        env:
-          PAY_TO: ${{ steps.activation.outputs.pay_to }}
         shell: bash
         run: |
           set -euo pipefail
           ok=false
           for i in $(seq 1 30); do
-            if curl -fsS "$PROD_URL/health?ts=$RANDOM" > /tmp/health.json 2>/dev/null && jq -e --arg pay "$PAY_TO" '.ok==true and .mode=="PAYMENT_READY" and .payment.enabled==true and .payment.pay_to_configured==true and .payment.ready==true and .payment.network=="eip155:8453" and .payment.target_price_usd==0.001 and .payment.server_private_key_required==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/health.json >/dev/null; then
+            if curl -fsS "$PROD_URL/health?ts=$RANDOM" > /tmp/health.json 2>/dev/null && jq -e '.ok==true and .mode=="PAYMENT_READY" and .payment.enabled==true and .payment.pay_to_configured==true and .payment.ready==true and .payment.network=="eip155:8453" and .payment.target_price_usd==0.001 and .payment.server_private_key_required==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/health.json >/dev/null; then
               ok=true
               break
             fi
@@ -195,6 +203,12 @@ jobs:
           path: generated/evidence/packvalue402-production-activation-r1.json
           retention-days: 30
           if-no-files-found: error
+
+      - name: Remove ephemeral active config
+        if: always()
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        run: rm -f .wrangler.production.active.toml
 
       - name: Roll back to payment-disabled shell on activation failure
         if: failure()
