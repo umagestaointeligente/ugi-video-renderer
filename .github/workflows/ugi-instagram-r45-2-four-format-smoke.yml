@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ugi-r45-2-four-format-smoke
+  group: ugi-cloudflare-worker-production
   cancel-in-progress: false
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 35
     env:
       CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
       UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
     steps:
       - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
           python-version: '3.11'
       - name: Install runtime
         run: python -m pip install requests
-      - name: Verify secrets are present
+      - name: Verify credentials are present
         run: |
           set -euo pipefail
           test -n "${CF_API_TOKEN:-}"
@@ -43,7 +43,7 @@ jobs:
       - name: Deploy R45.2 smoke-only media adapter
         run: |
           set -euo pipefail
-          python scripts/r45_2_story_media_deploy.py
+          PYTHONPATH=scripts python scripts/r45_2_story_media_deploy.py
       - name: Run four real Instagram shareNow smokes
         run: |
           set -euo pipefail
