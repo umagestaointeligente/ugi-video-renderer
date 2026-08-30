@@ -1,0 +1,57 @@
+name: LSI Greenfield Fiat Rail Probe
+run-name: LSI Greenfield Fiat Rail Probe ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-greenfield-fiat-rail-probe-20260830]
+    paths:
+      - '.github/workflows/lsi-greenfield-fiat-rail-probe-20260830.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_BASE_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+    steps:
+      - name: Require base URL only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UGI_BASE_URL"
+
+      - name: Probe public worker health only
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${UGI_BASE_URL%/}"
+          ok=false
+          for p in /api/health /health; do
+            code="$(curl -sS --max-time 20 -o /tmp/health.json -w '%{http_code}' "$base$p" || true)"
+            if [ "$code" = "200" ]; then
+              ok=true
+              break
+            fi
+          done
+          test "$ok" = true
+          # Keep only non-secret booleans and route metadata.
+          asaas_key="$(jq -r '(.bindings.ASAAS_API_KEY // .secrets.ASAAS_API_KEY // .ASAAS_API_KEY // false) | tostring' /tmp/health.json 2>/dev/null || echo false)"
+          asaas_webhook="$(jq -r '(.bindings.ASAAS_WEBHOOK_TOKEN // .secrets.ASAAS_WEBHOOK_TOKEN // .ASAAS_WEBHOOK_TOKEN // false) | tostring' /tmp/health.json 2>/dev/null || echo false)"
+          commerce="$(jq -r '((.endpoints.commerceCheckout // .commerceCheckout // empty) != "") | tostring' /tmp/health.json 2>/dev/null || echo false)"
+          jq -n --argjson key "$asaas_key" --argjson webhook "$asaas_webhook" --argjson commerce "$commerce" '{worker_health:true,asaas_api_key_configured:$key,asaas_webhook_token_configured:$webhook,commerce_checkout_route_advertised:$commerce,secrets_exposed:false,financial_data_read:false,financial_mutation:false}' | tee /tmp/fiat-rail-probe.json
+
+      - name: Require no financial mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '.worker_health==true and .secrets_exposed==false and .financial_data_read==false and .financial_mutation==false' /tmp/fiat-rail-probe.json >/dev/null
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-greenfield-fiat-rail-probe-${{ github.run_id }}
+          path: /tmp/fiat-rail-probe.json
+          retention-days: 7
+          if-no-files-found: error
