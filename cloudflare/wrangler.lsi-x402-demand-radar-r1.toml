@@ -1,0 +1,15 @@
+name = "lsi-x402-demand-radar-r1"
+main = "lsi-x402-demand-radar-r1.mjs"
+compatibility_date = "2026-08-30"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "DEMAND"
+class_name = "X402DemandState"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["X402DemandState"]
+
+[observability]
+enabled = true
