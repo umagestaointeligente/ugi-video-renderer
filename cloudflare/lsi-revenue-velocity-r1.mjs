@@ -1,5 +1,5 @@
 const VERSION = "lsi-revenue-velocity-r1-2026-08-30";
-const LEARNING_EVENTS = "https://lsi-continual-learning-r1.umagestaointeligente.workers.dev/events";
+const ENGINE_ID = "lsi-continual-learning-global-r1";
 const TARGET_USD_PER_MINUTE = 0.10;
 
 function json(data, status = 200) {
@@ -18,10 +18,11 @@ function round(n, d = 8) {
   return Math.round(Number(n || 0) * p) / p;
 }
 
-async function fetchEvents() {
-  const response = await fetch(LEARNING_EVENTS, {
-    headers: { "user-agent": "LSI-Revenue-Velocity-R1/1.0" },
-  });
+async function fetchEvents(env) {
+  if (!env.LEARNING) throw new Error("learning_binding_missing");
+  const id = env.LEARNING.idFromName(ENGINE_ID);
+  const stub = env.LEARNING.get(id);
+  const response = await stub.fetch(new Request(`https://learning.internal/internal/${ENGINE_ID}/events`, { method: "GET" }));
   if (!response.ok) throw new Error(`learning_events_${response.status}`);
   const body = await response.json();
   if (!body?.ok || !Array.isArray(body.events)) throw new Error("learning_events_invalid");
@@ -81,13 +82,14 @@ function aggregate(events) {
 }
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname === "/health") {
       return json({
         ok: true,
         service: "lsi-revenue-velocity-r1",
         version: VERSION,
+        learning_binding: Boolean(env.LEARNING),
         target_usd_per_minute: TARGET_USD_PER_MINUTE,
         revenue_source: "VERIFIED_EVENTS_ONLY",
         projections_count_as_revenue: false,
@@ -97,7 +99,7 @@ export default {
     }
     if (request.method === "GET" && url.pathname === "/velocity") {
       try {
-        const events = await fetchEvents();
+        const events = await fetchEvents(env);
         const routes = aggregate(events);
         const best = routes[0] || null;
         return json({
