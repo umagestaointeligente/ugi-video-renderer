@@ -90,7 +90,7 @@ async function collectSample(all,cycle){
     }));
     out.push(...rows.filter(Boolean));
   }
-  return {rows, requested:picked.items.length, succeeded:out.length, failed, offset:picked.offset, benchmarks:picked.benchmarks, discovery:picked.discovery};
+  return {rows:out, requested:picked.items.length, succeeded:out.length, failed, offset:picked.offset, benchmarks:picked.benchmarks, discovery:picked.discovery};
 }
 
 async function market(cycle){
