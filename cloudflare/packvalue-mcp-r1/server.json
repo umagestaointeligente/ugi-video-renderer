@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.umagestaointeligente/packvalue-tools",
+  "title": "PackValue Tools",
+  "description": "Deterministic multipack and unit-economics tools for shopping and procurement agents. Normalize pack sizes and compare effective unit prices including shipping, tax, discounts, yield and dilution.",
+  "version": "1.0.0",
+  "websiteUrl": "https://lsi-packvalue-tools-r1.umagestaointeligente.workers.dev/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://lsi-packvalue-mcp-r1.umagestaointeligente.workers.dev/mcp"
+    }
+  ]
+}
