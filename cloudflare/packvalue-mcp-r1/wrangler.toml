@@ -1,0 +1,7 @@
+name = "lsi-packvalue-mcp-r1"
+main = "index.mjs"
+compatibility_date = "2026-08-30"
+workers_dev = true
+
+[observability]
+enabled = true
