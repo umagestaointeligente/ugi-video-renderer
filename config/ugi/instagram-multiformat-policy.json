@@ -1,0 +1,101 @@
+{
+  "project": "UGI",
+  "policyId": "UGI-INSTAGRAM-MULTIFORMAT-R45",
+  "schemaVersion": "1.0",
+  "phase": "UGI 2.0 - Human Utility First",
+  "timezone": "America/Sao_Paulo",
+  "testWindowDays": 14,
+  "principles": {
+    "utilityFirst": true,
+    "humanLanguage": true,
+    "avoidCorporateAdvertisingLook": true,
+    "bufferExclusivePublisher": true,
+    "receiptRequiredForScheduledClaim": true,
+    "doNotModifyExistingScheduledContent": true
+  },
+  "instagram": {
+    "stories": {
+      "enabled": true,
+      "dailyTarget": 4,
+      "dailyMinimum": 2,
+      "dailyMaximumDuringTest": 6,
+      "waves": [
+        {
+          "name": "morning",
+          "baseTime": "09:00",
+          "framesTarget": 2,
+          "spacingMinutes": 7
+        },
+        {
+          "name": "evening",
+          "baseTime": "18:00",
+          "framesTarget": 2,
+          "spacingMinutes": 12
+        }
+      ],
+      "allowedTypes": ["story_image"],
+      "plannedTypes": ["story_video"],
+      "nativeInstagramMusicAutopublish": false,
+      "nativeLinkStickerAutopublish": false,
+      "futureStoryVideoMusic": "prebaked_into_mp4_only",
+      "ctaRule": "Never say link na bio without naming the concrete value available there."
+    },
+    "feed": {
+      "weeklyBaseline": {
+        "carousel": 3,
+        "visual_post": 2,
+        "reel": 2
+      },
+      "maxFeedPostsPerDayDuringTest": 2,
+      "minimumSpacingHours": 3,
+      "carouselSlidesMin": 5,
+      "carouselSlidesMax": 10,
+      "formats": ["carousel", "visual_post", "reel"]
+    }
+  },
+  "creativeRules": {
+    "carousel": [
+      "framework",
+      "checklist",
+      "decision_tree",
+      "step_by_step",
+      "comparison",
+      "case_to_action"
+    ],
+    "visualPost": [
+      "decision_tree",
+      "matrix",
+      "process_map",
+      "checklist",
+      "before_after"
+    ],
+    "story": [
+      "question",
+      "micro_checklist",
+      "insight",
+      "case_extension",
+      "practical_cta"
+    ],
+    "forbiddenDefaultLook": [
+      "generic_executive_stock_plus_dark_overlay",
+      "corporate_advertising_copy",
+      "logo_first",
+      "motivational_quote_without_tool",
+      "same_template_every_day"
+    ]
+  },
+  "measurement": {
+    "primary": [
+      "nonFollowerReach",
+      "saves",
+      "shares",
+      "profileVisits",
+      "follows",
+      "bioClicks",
+      "storyCompletion"
+    ],
+    "secondary": ["likes", "comments", "views"],
+    "compareBy": ["format", "hookFamily", "topicFamily", "publishWindow"],
+    "reviewAfterDays": [3, 7, 14]
+  }
+}
