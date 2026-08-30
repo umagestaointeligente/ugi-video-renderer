@@ -3,6 +3,7 @@ main = "lsi-capital-paper-r1.mjs"
 compatibility_date = "2026-08-30"
 workers_dev = true
 
+# isolated CAPITAL paper-only deployment; real orders remain disabled
 [[durable_objects.bindings]]
 name = "PORTFOLIO"
 class_name = "PaperPortfolioState"
