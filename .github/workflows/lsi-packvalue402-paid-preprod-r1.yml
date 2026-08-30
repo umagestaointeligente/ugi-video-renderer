@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 10
     env:
       GATEWAY_URL: https://lsi-packvalue402-paid-r1-preprod.umagestaointeligente.workers.dev
+      FACILITATOR_URL: https://facilitator.payai.network
     steps:
       - uses: actions/checkout@v4
 
@@ -26,19 +27,29 @@ jobs:
           set -euo pipefail
           grep -q 'PAYMENTS_ENABLED = "false"' cloudflare/packvalue402-paid-r1/wrangler.toml
           ! grep -q '^PAY_TO' cloudflare/packvalue402-paid-r1/wrangler.toml
+          grep -q 'NETWORK = "base"' cloudflare/packvalue402-paid-r1/wrangler.toml
+          grep -q 'FACILITATOR_URL = "https://facilitator.payai.network"' cloudflare/packvalue402-paid-r1/wrangler.toml
           grep -q 'server_can_spend: false' cloudflare/packvalue402-paid-r1/src/index.mjs
           grep -q 'money_movement_from_server: false' cloudflare/packvalue402-paid-r1/src/index.mjs
           grep -q 'payments_not_activated' cloudflare/packvalue402-paid-r1/src/index.mjs
           grep -q '"x402-hono": "1.0.0"' cloudflare/packvalue402-paid-r1/package.json
 
-      - name: Install isolated payment dependencies
+      - name: Install and audit isolated payment dependencies
         working-directory: cloudflare/packvalue402-paid-r1
         shell: bash
         run: |
           set -euo pipefail
           npm install --ignore-scripts --no-audit --no-fund
+          npm audit --omit=dev --audit-level=high
           npm run check
           node --input-type=module -e "import('x402-hono').then(m=>{if(typeof m.paymentMiddleware!=='function') process.exit(2); console.log('X402_HONO_IMPORT=PASS')})"
+
+      - name: Verify live facilitator supports x402 v2 Base mainnet
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS --retry 3 --retry-all-errors --max-time 20 "$FACILITATOR_URL/supported" > /tmp/facilitator.json
+          jq -e '((.kinds | any(.x402Version==2 and .scheme=="exact" and .network=="eip155:8453"))) and (((.extensions // []) | index("bazaar")) != null)' /tmp/facilitator.json >/dev/null
 
       - name: Require autonomous Cloudflare credentials
         shell: bash
@@ -66,7 +77,7 @@ jobs:
           set -euo pipefail
           ok=false
           for i in $(seq 1 30); do
-            if curl -fsS "$GATEWAY_URL/health?ts=$RANDOM" > /tmp/health.json 2>/dev/null && jq -e '.ok==true and .mode=="PREPROD_DISABLED" and .payment.enabled==false and .payment.pay_to_configured==false and .payment.ready==false and .payment.network=="base" and .payment.target_price_usd==0.001 and .payment.server_private_key_required==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/health.json >/dev/null; then
+            if curl -fsS "$GATEWAY_URL/health?ts=$RANDOM" > /tmp/health.json 2>/dev/null && jq -e '.ok==true and .mode=="PREPROD_DISABLED" and .payment.enabled==false and .payment.pay_to_configured==false and .payment.ready==false and .payment.network=="base" and .payment.target_price_usd==0.001 and .payment.facilitator=="https://facilitator.payai.network" and .payment.server_private_key_required==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/health.json >/dev/null; then
               ok=true
               break
             fi
@@ -97,14 +108,14 @@ jobs:
         run: |
           set -euo pipefail
           curl -fsS "$GATEWAY_URL/.well-known/agent.json" > /tmp/agent.json
-          jq -e '.name=="PackValue402" and .mode=="PREPROD_DISABLED" and .payment.protocol=="x402-v2" and .payment.enabled==false and .payment.ready==false and .payment.price_usd==0.001 and .payment.pay_to_configured==false and .payment.server_can_spend==false and ((.tools|length)==2)' /tmp/agent.json >/dev/null
+          jq -e '.name=="PackValue402" and .mode=="PREPROD_DISABLED" and .payment.protocol=="x402-v2" and .payment.enabled==false and .payment.ready==false and .payment.price_usd==0.001 and .payment.pay_to_configured==false and .payment.facilitator=="https://facilitator.payai.network" and .payment.server_can_spend==false and ((.tools|length)==2)' /tmp/agent.json >/dev/null
 
       - name: Write preprod acceptance receipt
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p generated/evidence
-          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"PACKVALUE402_PAID_PREPROD_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,protocol:"x402-v2",target_price_usd:0.001,network:"base",payments_enabled:false,pay_to_configured:false,server_private_key_required:false,server_can_spend:false,money_movement:false,origin_shadow_proven:true,activation_gate:"EXPLICIT_APPROVAL_PLUS_RECEIVE_ADDRESS"}' > generated/evidence/packvalue402-paid-preprod-r1.json
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.1",project:"PACKVALUE402_PAID_PREPROD_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,protocol:"x402-v2",target_price_usd:0.001,network:"base",facilitator:"https://facilitator.payai.network",facilitator_live_support_verified:true,dependency_high_critical_gate:"PASS",payments_enabled:false,pay_to_configured:false,server_private_key_required:false,server_can_spend:false,money_movement:false,origin_shadow_proven:true,activation_gate:"EXPLICIT_APPROVAL_PLUS_RECEIVE_ADDRESS"}' > generated/evidence/packvalue402-paid-preprod-r1.json
 
       - name: Upload preprod acceptance receipt
         uses: actions/upload-artifact@v4
