@@ -1,0 +1,145 @@
+name: LSI Continual Learning R1
+run-name: LSI Continual Learning R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/lsi-continual-learning-r1.mjs'
+      - 'cloudflare/wrangler.lsi-continual-learning-r1.toml'
+      - 'docs/LSI-CONTINUAL-LEARNING-R1.md'
+      - '.github/workflows/lsi-continual-learning-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      LEARNING_URL: https://lsi-continual-learning-r1.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static safety and syntax gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-continual-learning-r1.mjs
+          grep -q 'money_movement: false' cloudflare/lsi-continual-learning-r1.mjs
+          grep -q 'production_actions: false' cloudflare/lsi-continual-learning-r1.mjs
+          grep -q 'autonomous_payment_activation: false' cloudflare/lsi-continual-learning-r1.mjs
+          grep -q 'unverified_revenue_promotes_route: false' cloudflare/lsi-continual-learning-r1.mjs
+          grep -q 'new_sqlite_classes' cloudflare/wrangler.lsi-continual-learning-r1.toml
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy isolated learning worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-continual-learning-r1.toml
+
+      - name: Bind ephemeral admin token
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          admin_token="$(openssl rand -hex 32)"
+          echo "::add-mask::$admin_token"
+          printf '%s' "$admin_token" | npx --yes wrangler@4.32.0 secret put ADMIN_TOKEN --config cloudflare/wrangler.lsi-continual-learning-r1.toml >/dev/null
+          echo "ADMIN_TOKEN=$admin_token" >> "$GITHUB_ENV"
+
+      - name: Verify public fail-closed health
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 20); do
+            curl -fsS "$LEARNING_URL/health" > /tmp/health.json && break || true
+            sleep 2
+          done
+          jq -e '.ok==true and .durable_objects_bound==true and .online_learning==true and .persistent_lessons==true and .zero_cost_policy==true and .revenue_requires_verified_evidence==true and .unverified_revenue_promotes_route==false and .money_movement==false and .production_actions==false and .autonomous_spend==false and .autonomous_payment_activation==false' /tmp/health.json >/dev/null
+
+      - name: Prove online scoring without persistence pollution
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST \
+            -H "authorization: Bearer $ADMIN_TOKEN" \
+            "$LEARNING_URL/admin/selftest" > /tmp/selftest.json
+          jq -e '.ok==true and .good.recommendation=="ACCELERATE" and .bad.recommendation=="KILL_CANDIDATE" and .persisted==false' /tmp/selftest.json >/dev/null
+
+      - name: Start self-waking continual learning loop
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST \
+            -H "authorization: Bearer $ADMIN_TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"cadence_ms":600000}' \
+            "$LEARNING_URL/admin/start" > /tmp/start.json
+          jq -e '.ok==true and .state.status=="ACTIVE" and .state.policy.zero_cost_default==true and .state.policy.autonomous_spend==false and .state.policy.autonomous_payment_activation==false' /tmp/start.json >/dev/null
+
+      - name: Prove first autonomous observation cycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          ready=false
+          for i in $(seq 1 25); do
+            curl -fsS "$LEARNING_URL/state" > /tmp/state.json || true
+            if jq -e '.ok==true and .state.cycle_count>=1 and .state.event_count>=1 and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.money_movement==false and .state.last_cycle.production_actions==false' /tmp/state.json >/dev/null 2>&1; then
+              ready=true
+              break
+            fi
+            sleep 3
+          done
+          test "$ready" = true
+          curl -fsS "$LEARNING_URL/routes" > /tmp/routes.json
+          jq -e '.ok==true and (.routes|length)>=6 and ([.routes[].recommendation] | all(.=="ACCELERATE" or .=="KEEP_AND_OPTIMIZE" or .=="EXPLORE" or .=="HOLD" or .=="KILL_CANDIDATE" or .=="BLOCKED"))' /tmp/routes.json >/dev/null
+
+      - name: Verify unverified money cannot become verified revenue
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST \
+            -H "authorization: Bearer $ADMIN_TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"route_id":"learning_guard_test","outcome":"SUCCESS","evidence_level":"E1","revenue_usd":999,"revenue_verified":false,"cost_usd":0,"quality_score":0.5,"risk_score":0.1,"reason_code":"UNVERIFIED_MONEY_GUARD","verified":false}' \
+            "$LEARNING_URL/admin/event" > /tmp/guard.json
+          jq -e '.ok==true and .event.revenue_usd_claimed==999 and .event.revenue_usd_verified==0 and .model.verified_revenue_usd==0' /tmp/guard.json >/dev/null
+
+      - name: Write sanitized acceptance receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          cycles="$(jq -r '.state.cycle_count // 0' /tmp/state.json 2>/dev/null || echo 0)"
+          events="$(jq -r '.state.event_count // 0' /tmp/state.json 2>/dev/null || echo 0)"
+          generation="$(jq -r '.state.generation // 0' /tmp/state.json 2>/dev/null || echo 0)"
+          guard="$(jq -r '.event.revenue_usd_verified // -1' /tmp/guard.json 2>/dev/null || echo -1)"
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --argjson cycles "$cycles" --argjson events "$events" --argjson generation "$generation" --argjson guard "$guard" \
+            '{schema_version:"1.0",project:"LSI_CONTINUAL_LEARNING_R1",run_id:$run,commit:$sha,status:"PASS_IF_WORKFLOW_GREEN",learning:{cycles:$cycles,event_count:$events,generation:$generation,cadence_minutes:10,persistent:true,online:true},unverified_money_guard_verified_revenue:$guard,zero_cost_route:true,money_movement:false,production_actions:false,autonomous_spend:false,autonomous_payment_activation:false}' \
+            > generated/evidence/lsi-continual-learning-r1.json
+
+      - name: Upload sanitized receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-continual-learning-${{ github.run_id }}
+          path: generated/evidence/lsi-continual-learning-r1.json
+          retention-days: 30
+          if-no-files-found: error
