@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T22:14:27.286485+00:00",
+  "checkedAt": "2026-08-30T22:24:29.931044+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 7,
+  "delivered": 8,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -162,6 +162,28 @@
         "ok": true,
         "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975388857629652386&is_from_rle"
+      }
+    },
+    {
+      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
+      "contentId": "UGI-20260830-IG-STORY-GROWTH-03-TRANSFORM",
+      "platform": "instagram",
+      "kind": "r453",
+      "bufferPostId": "6a948851d58664eabd7be3fc",
+      "draftId": "53cb2e62-ee20-4aca-a2ce-785af9bc4fb8",
+      "dueAt": "2026-08-30T22:20:00+00:00",
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-30T22:20:55.986Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975431646962448949",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975431646962448949&is_from_rle"
       }
     }
   ]
