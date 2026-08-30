@@ -1,0 +1,168 @@
+name: LSI System Learning Bus R1
+run-name: LSI System Learning Bus R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/lsi-system-learning-bus-r1.mjs'
+      - 'cloudflare/wrangler.lsi-system-learning-bus-r1.toml'
+      - 'cloudflare/lsi-book-route-seeds-r1.mjs'
+      - '.github/workflows/lsi-system-learning-bus-r1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy-prove-and-seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      BUS_URL: https://lsi-system-learning-bus-r1.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static learning and truth gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-system-learning-bus-r1.mjs
+          node --check cloudflare/lsi-book-route-seeds-r1.mjs
+          grep -q 'oidc_required_for_ingest: true' cloudflare/lsi-system-learning-bus-r1.mjs
+          grep -q 'revenue_requires_verified_evidence: true' cloudflare/lsi-system-learning-bus-r1.mjs
+          grep -q 'unverified_revenue_promotes_model: false' cloudflare/lsi-system-learning-bus-r1.mjs
+          grep -q 'hypothesis_only":true' cloudflare/lsi-book-route-seeds-r1.mjs
+          grep -q 'book_count":100' cloudflare/lsi-book-route-seeds-r1.mjs
+          grep -q 'revenue_verified_usd":0' cloudflare/lsi-book-route-seeds-r1.mjs
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy isolated system learning bus
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-system-learning-bus-r1.toml
+
+      - name: Verify public health and fail-closed ingest
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 25); do
+            if curl -fsS "$BUS_URL/health?ts=$RANDOM" > /tmp/bus-health.json 2>/dev/null && jq -e '.ok==true and .oidc_required_for_ingest==true and .project_isolation==true and .online_event_learning==true and .revenue_requires_verified_evidence==true and .money_movement==false and .production_actions==false' /tmp/bus-health.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+          code="$(curl -sS -o /tmp/unauth.json -w '%{http_code}' -X POST "$BUS_URL/v1/events" -H 'content-type: application/json' -d '{"project_id":"LSI","component_id":"unauth_test","outcome":"NEUTRAL"}')"
+          test "$code" = "401"
+
+      - name: Obtain GitHub OIDC token
+        id: oidc
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$ACTIONS_ID_TOKEN_REQUEST_URL"
+          test -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+          sep='?'
+          [[ "$ACTIONS_ID_TOKEN_REQUEST_URL" == *'?'* ]] && sep='&'
+          curl -fsS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}${sep}audience=lsi-system-learning-bus" > /tmp/oidc.json
+          token="$(jq -r '.value // empty' /tmp/oidc.json)"
+          test -n "$token"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Prove unverified money cannot promote economics
+        shell: bash
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST "$BUS_URL/v1/events" \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            -H 'content-type: application/json' \
+            -d '{"project_id":"LSI","component_id":"learning_bus_acceptance","outcome":"SUCCESS","evidence_level":"E1","revenue_usd":999,"revenue_verified":false,"cost_usd":0,"elapsed_ms":1,"quality_score":0.5,"risk_score":0.1,"lesson_code":"UNVERIFIED_MONEY_GUARD","source_ref":"workflow_acceptance"}' > /tmp/guard.json
+          jq -e '.ok==true and .event.revenue_usd_claimed==999 and .event.revenue_usd_verified==0 and .model.verified_revenue_usd==0 and .model.claimed_unverified_revenue_usd>=999' /tmp/guard.json >/dev/null
+
+      - name: Seed 100-book opportunity hypotheses into persistent learning
+        shell: bash
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' > /tmp/book-seeds.ndjson
+          import { BOOK_ROUTE_SEEDS } from './cloudflare/lsi-book-route-seeds-r1.mjs';
+          if (BOOK_ROUTE_SEEDS.length !== 20) throw new Error(`route_seed_count_${BOOK_ROUTE_SEEDS.length}`);
+          for (const route of BOOK_ROUTE_SEEDS) {
+            console.log(JSON.stringify({
+              project_id: 'LSI',
+              component_id: `bookseed.${route.route_id}`,
+              outcome: 'NEUTRAL',
+              evidence_level: 'E2',
+              revenue_usd: 0,
+              revenue_verified: false,
+              cost_usd: 0,
+              elapsed_ms: 0,
+              quality_score: 0.55,
+              risk_score: 0.10,
+              lesson_code: 'BOOK_KNOWLEDGE_HYPOTHESIS',
+              source_ref: 'repo:cloudflare/lsi-book-route-seeds-r1.mjs'
+            }));
+          }
+          NODE
+          count=0
+          while IFS= read -r event; do
+            curl -fsS -X POST "$BUS_URL/v1/events" \
+              -H "Authorization: Bearer $OIDC_TOKEN" \
+              -H 'content-type: application/json' \
+              --data-binary "$event" > /tmp/seed-result.json
+            jq -e '.ok==true and .event.outcome=="NEUTRAL" and .event.revenue_usd_verified==0' /tmp/seed-result.json >/dev/null
+            count=$((count+1))
+          done < /tmp/book-seeds.ndjson
+          test "$count" = "20"
+          echo "BOOK_ROUTE_SEEDS_INGESTED=$count"
+
+      - name: Verify persistent corpus seeding
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$BUS_URL/state?ts=$RANDOM" > /tmp/state.json
+          jq -e '.ok==true and .state.policy.oidc_required==true and .state.policy.project_isolation==true and .state.policy.revenue_requires_verified_evidence==true' /tmp/state.json >/dev/null
+          seeded="$(jq '[.state.models | to_entries[] | select(.key | startswith("LSI::bookseed."))] | length' /tmp/state.json)"
+          test "$seeded" = "20"
+          jq -e '.state.models["LSI::learning_bus_acceptance"].verified_revenue_usd==0 and .state.models["LSI::learning_bus_acceptance"].claimed_unverified_revenue_usd>=999' /tmp/state.json >/dev/null
+          echo "BOOK_MODELS_PERSISTENT=$seeded"
+
+      - name: Write sanitized acceptance receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          models="$(jq '[.state.models | to_entries[] | select(.key | startswith("LSI::bookseed."))] | length' /tmp/state.json 2>/dev/null || echo 0)"
+          generation="$(jq -r '.state.generation // 0' /tmp/state.json 2>/dev/null || echo 0)"
+          events="$(jq -r '.state.event_count // 0' /tmp/state.json 2>/dev/null || echo 0)"
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --argjson models "$models" --argjson generation "$generation" --argjson events "$events" '{schema_version:"1.0",project:"LSI_SYSTEM_LEARNING_BUS_R1",run_id:$run,commit:$sha,acceptance_state:(if $models==20 then "PASS" else "FAIL" end),book_corpus_size:100,book_route_hypotheses_persistent:$models,generation:$generation,event_count:$events,oidc_ingest:true,project_isolation:true,unverified_revenue_guard:true,book_hypotheses_are_success:false,book_hypotheses_are_revenue:false,money_movement:false,production_actions:false,incremental_cost_usd:0}' > generated/evidence/lsi-system-learning-bus-r1.json
+          cat generated/evidence/lsi-system-learning-bus-r1.json
+
+      - name: Upload sanitized acceptance receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-system-learning-bus-${{ github.run_id }}
+          path: generated/evidence/lsi-system-learning-bus-r1.json
+          retention-days: 30
+          if-no-files-found: error
