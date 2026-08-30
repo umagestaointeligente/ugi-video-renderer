@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coinbase/x402": "2.0.0",
-    "hono": "4.11.1",
-    "x402-hono": "1.0.0"
+    "@x402/core": "2.24.0",
+    "@x402/evm": "2.24.0",
+    "@x402/hono": "2.24.0",
+    "hono": "4.13.5"
   },
   "devDependencies": {
     "wrangler": "4.123.0"
