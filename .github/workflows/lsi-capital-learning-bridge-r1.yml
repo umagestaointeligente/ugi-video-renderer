@@ -1,0 +1,36 @@
+name: LSI Capital Learning Bridge R1
+on:
+  push:
+    branches: [lsi-capital-intelligence-r1-20260830]
+    paths:
+      - '.github/workflows/lsi-capital-learning-bridge-r1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  learn:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtain GitHub OIDC token for LSI Learning Bus
+        id: oidc
+        env:
+          AUDIENCE: lsi-system-learning-bus
+        run: |
+          set -euo pipefail
+          url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${AUDIENCE}"
+          token="$(curl -fsS -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$url" | jq -r .value)"
+          test -n "$token" && test "$token" != null
+          echo "::add-mask::$token"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+      - name: Teach global LSI the capital milestone
+        env:
+          TOKEN: ${{ steps.oidc.outputs.token }}
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST \
+            -H "authorization: Bearer $TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"project_id":"CAPITAL","component_id":"paper_portfolio_engine","outcome":"SUCCESS","evidence_level":"E3","revenue_usd":0,"revenue_verified":false,"cost_usd":0,"elapsed_ms":0,"quality_score":0.95,"risk_score":0.05,"lesson_code":"PAPER_ENGINE_PASS_LIVE","source_ref":"github-actions:33339531171"}' \
+            'https://lsi-system-learning-bus-r1.umagestaointeligente.workers.dev/v1/events' > /tmp/result.json
+          jq -e '.ok==true and .event.project_id=="CAPITAL" and .event.component_id=="paper_portfolio_engine" and .event.revenue_usd_verified==0' /tmp/result.json >/dev/null
