@@ -1,0 +1,12 @@
+name = "lsi-packvalue402-r1"
+main = "src/index.mjs"
+compatibility_date = "2026-08-30"
+workers_dev = true
+
+[vars]
+PAYMENTS_ENABLED = "false"
+NETWORK = "eip155:8453"
+FACILITATOR_URL = "https://facilitator.payai.network"
+
+[observability]
+enabled = true
