@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T18:14:28.388165+00:00",
+  "checkedAt": "2026-08-30T18:24:17.304775+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 1,
+  "delivered": 2,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -30,6 +30,28 @@
         "ok": true,
         "httpStatus": 200,
         "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679855168443157781"
+      }
+    },
+    {
+      "receipt": "control-plane/r45/receipts/pilot-latest.json",
+      "contentId": "UGI-20260830-IG-STORY-01-AI-GATES",
+      "platform": "instagram",
+      "kind": "static",
+      "draftId": "dcbda494-166c-413f-81a7-548e3d5cfde9",
+      "dueAt": "2026-08-30T18:15:00+00:00",
+      "readbackHttp": 200,
+      "bufferPostId": "6a945cbb94904b3a23ec7254",
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T18:15:12.952Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975308333553371867",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975308333553371867&is_from_rle"
       }
     }
   ]
