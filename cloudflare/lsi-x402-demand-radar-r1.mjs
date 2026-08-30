@@ -1,12 +1,24 @@
-const VERSION = "lsi-x402-demand-radar-r1.1-2026-08-30";
+const VERSION = "lsi-x402-demand-radar-r1.2-2026-08-30";
 const RADAR_ID = "lsi-x402-demand-global-r1";
 const API_BASE = "https://x402-list.com/api/v1/services";
 const DEFAULT_CADENCE_MS = 60 * 60 * 1000;
 const MIN_CADENCE_MS = 30 * 60 * 1000;
 const MAX_CADENCE_MS = 24 * 60 * 60 * 1000;
 const MAX_CYCLES = 168;
-const DETAIL_SAMPLE_LIMIT = 60;
+const DETAIL_SAMPLE_LIMIT = 40;
 const DETAIL_CONCURRENCY = 8;
+const BENCHMARK_SLUGS = [
+  "nansen",
+  "anyspend",
+  "x402engine",
+  "coinmarketcap",
+  "openinterest",
+  "gridpulse",
+  "cyclepulse",
+  "agent-web-reader-x402",
+  "10x402",
+  "sovereign-execution-engine",
+];
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -19,23 +31,10 @@ function json(data, status = 200) {
   });
 }
 
-function safeString(v, max = 4000) {
-  return String(v ?? "").slice(0, max);
-}
-
-function num(v, fallback = 0) {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : fallback;
-}
-
-function clamp(n, min, max) {
-  return Math.max(min, Math.min(max, n));
-}
-
-function logScore(value, scale, cap) {
-  if (!(value > 0)) return 0;
-  return Math.min(cap, Math.log1p(value) * scale);
-}
+function safeString(v, max = 4000) { return String(v ?? "").slice(0, max); }
+function num(v, fallback = 0) { const n = Number(v); return Number.isFinite(n) ? n : fallback; }
+function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+function logScore(value, scale, cap) { if (!(value > 0)) return 0; return Math.min(cap, Math.log1p(value) * scale); }
 
 function adminOk(request, env) {
   const expected = safeString(env.ADMIN_TOKEN, 512);
@@ -53,12 +52,10 @@ function normalizeShare(value) {
 function broadDemandScore(service) {
   const t = service?.assessment?.traction || {};
   if (t.status !== "measured") return 0;
-
   const buyers = num(t.unique_buyers_30d);
   const tx = num(t.tx_count_30d);
   const volume = num(t.volume_usd_30d);
   if (buyers <= 0 || tx <= 0) return 0;
-
   const repeatRate = tx / buyers;
   const topShare = normalizeShare(t.top_buyer_share_30d);
   const trend = num(t.trend_7d_vs_30d, 0);
@@ -66,7 +63,6 @@ function broadDemandScore(service) {
   const upstreamRisk = /search|scrap|crawl|video|image|llm|openai|anthropic|exa|serp|maps|geocod|weather/i.test(
     `${safeString(service?.name)} ${safeString(service?.description)} ${safeString(service?.category)}`
   );
-
   const buyersScore = logScore(buyers, 7.2, 34);
   const repeatScore = logScore(repeatRate, 5.5, 22);
   const concentrationScore = topShare === null ? 5 : (1 - topShare) * 20;
@@ -74,11 +70,9 @@ function broadDemandScore(service) {
   const volumeScore = logScore(volume, 2.4, 9);
   const priceFitScore = price > 0 && price <= 0.05 ? 5 : price <= 0.25 ? 3 : 1;
   const upstreamPenalty = upstreamRisk ? 5 : 0;
-
   return Math.round(clamp(
     buyersScore + repeatScore + concentrationScore + trendScore + volumeScore + priceFitScore - upstreamPenalty,
-    0,
-    100,
+    0, 100
   ) * 10) / 10;
 }
 
@@ -120,7 +114,6 @@ function categorizeOpportunity(agg) {
   const activeRatio = serviceCount > 0 ? paidServices / serviceCount : 0;
   const txPerPaidService = paidServices > 0 ? settlements / paidServices : 0;
   const buyerInstancesPerService = serviceCount > 0 ? buyerInstances / serviceCount : 0;
-
   let score = 0;
   score += logScore(buyerInstances, 5.5, 30);
   score += logScore(settlements, 2.7, 25);
@@ -134,10 +127,7 @@ function categorizeOpportunity(agg) {
 
 async function fetchJson(url, label) {
   const response = await fetch(url, {
-    headers: {
-      accept: "application/json",
-      "user-agent": "LSI-x402-Demand-Radar/1.1 (+public-market-research)",
-    },
+    headers: { accept: "application/json", "user-agent": "LSI-x402-Demand-Radar/1.2 (+public-market-research)" },
   });
   if (!response.ok) {
     const text = await response.text();
@@ -155,39 +145,41 @@ async function fetchPage(page, perPage = 100) {
 }
 
 async function fetchServiceDetail(slug) {
-  const safeSlug = encodeURIComponent(safeString(slug, 160));
-  const payload = await fetchJson(`${API_BASE}/${safeSlug}`, "x402_detail");
+  const payload = await fetchJson(`${API_BASE}/${encodeURIComponent(safeString(slug, 160))}`, "x402_detail");
   return payload?.data || null;
 }
 
-function detailCandidateScore(service) {
-  const t = service?.assessment?.traction || {};
-  const tractionBoost = t.status === "measured" ? 1000 : 0;
+function discoveryCandidateScore(service) {
   const readyBoost = service?.payment_ready ? 120 : 0;
   const uptimeBoost = clamp(num(service?.uptime_24h, 0), 0, 100);
   const price = num(service?.min_price_usd, 999);
   const priceBoost = price > 0 && price <= 0.05 ? 50 : price <= 0.25 ? 25 : 0;
   const endpointBoost = Math.min(30, num(service?.endpoint_count, 0));
-  return tractionBoost + readyBoost + uptimeBoost + priceBoost + endpointBoost;
+  return readyBoost + uptimeBoost + priceBoost + endpointBoost;
 }
 
-async function enrichWithMeasuredDetails(services) {
-  const candidates = [...services]
-    .filter((s) => safeString(s?.slug, 160))
-    .sort((a, b) => detailCandidateScore(b) - detailCandidateScore(a))
-    .slice(0, DETAIL_SAMPLE_LIMIT);
+async function enrichWithMeasuredDetails(services, cycleCount = 0) {
+  const bySlug = new Map(services.map((s) => [safeString(s?.slug, 160), s]));
+  const benchmarkCandidates = BENCHMARK_SLUGS.map((slug) => bySlug.get(slug) || { slug }).filter(Boolean);
+  const benchmarkSet = new Set(BENCHMARK_SLUGS);
+  const discoveryPool = [...services]
+    .filter((s) => safeString(s?.slug, 160) && !benchmarkSet.has(safeString(s?.slug, 160)))
+    .sort((a, b) => discoveryCandidateScore(b) - discoveryCandidateScore(a));
+
+  const discoverySlots = Math.max(0, DETAIL_SAMPLE_LIMIT - benchmarkCandidates.length);
+  const offset = discoveryPool.length ? (cycleCount * Math.max(1, discoverySlots)) % discoveryPool.length : 0;
+  const rotated = discoveryPool.length
+    ? [...discoveryPool.slice(offset), ...discoveryPool.slice(0, offset)].slice(0, discoverySlots)
+    : [];
+  const candidates = [...benchmarkCandidates, ...rotated].slice(0, DETAIL_SAMPLE_LIMIT);
 
   const detailMap = new Map();
   let detailFailures = 0;
   for (let i = 0; i < candidates.length; i += DETAIL_CONCURRENCY) {
     const batch = candidates.slice(i, i + DETAIL_CONCURRENCY);
     const results = await Promise.all(batch.map(async (s) => {
-      try {
-        const detail = await fetchServiceDetail(s.slug);
-        return { slug: s.slug, detail };
-      } catch {
-        return { slug: s.slug, detail: null };
-      }
+      try { return { slug: s.slug, detail: await fetchServiceDetail(s.slug) }; }
+      catch { return { slug: s.slug, detail: null }; }
     }));
     for (const item of results) {
       if (item.detail) detailMap.set(item.slug, item.detail);
@@ -195,16 +187,21 @@ async function enrichWithMeasuredDetails(services) {
     }
   }
 
-  const enriched = services.map((s) => detailMap.get(s.slug) || s);
   return {
-    services: enriched,
+    services: services.map((s) => detailMap.get(s.slug) || s),
+    extra_benchmarks: [...detailMap.entries()]
+      .filter(([slug]) => !bySlug.has(slug))
+      .map(([, detail]) => detail),
     detail_requested: candidates.length,
     detail_succeeded: detailMap.size,
     detail_failed: detailFailures,
+    benchmark_requested: benchmarkCandidates.length,
+    discovery_requested: rotated.length,
+    rotation_offset: offset,
   };
 }
 
-async function fetchAllServices() {
+async function fetchAllServices(cycleCount = 0) {
   const first = await fetchPage(1, 100);
   const totalPages = clamp(num(first?.meta?.total_pages, 1), 1, 20);
   const all = [...(Array.isArray(first?.data) ? first.data : [])];
@@ -212,19 +209,21 @@ async function fetchAllServices() {
     const p = await fetchPage(page, 100);
     if (Array.isArray(p?.data)) all.push(...p.data);
   }
-
-  const enrichment = await enrichWithMeasuredDetails(all);
+  const enrichment = await enrichWithMeasuredDetails(all, cycleCount);
   return {
-    services: enrichment.services,
+    services: [...enrichment.services, ...enrichment.extra_benchmarks],
     meta: first?.meta || {},
     provenance: first?.provenance || {},
     enrichment: {
-      strategy: "detail_top_candidates",
+      strategy: "measured_benchmarks_plus_rotating_discovery",
       limit_per_cycle: DETAIL_SAMPLE_LIMIT,
       requested: enrichment.detail_requested,
       succeeded: enrichment.detail_succeeded,
       failed: enrichment.detail_failed,
-      daily_request_budget_note: "60 detail calls + catalog pages per hourly cycle remains below the public 2,000 reads/day threshold",
+      benchmark_requested: enrichment.benchmark_requested,
+      discovery_requested: enrichment.discovery_requested,
+      rotation_offset: enrichment.rotation_offset,
+      daily_request_budget_note: "40 detail calls + catalog pages per hourly cycle remains below the public 2,000 reads/day threshold and Cloudflare Free subrequest ceiling",
     },
   };
 }
@@ -240,18 +239,10 @@ function analyzeMarket(raw) {
   const categoryMap = new Map();
   for (const s of serviceViews) {
     const key = s.category || "Other";
-    if (!categoryMap.has(key)) {
-      categoryMap.set(key, {
-        category: key,
-        services: 0,
-        measured_services: 0,
-        services_with_buyers: 0,
-        service_buyer_instances: 0,
-        settlements_30d: 0,
-        volume_usd_30d: 0,
-        score_sum: 0,
-      });
-    }
+    if (!categoryMap.has(key)) categoryMap.set(key, {
+      category: key, services: 0, measured_services: 0, services_with_buyers: 0,
+      service_buyer_instances: 0, settlements_30d: 0, volume_usd_30d: 0, score_sum: 0,
+    });
     const a = categoryMap.get(key);
     a.services += 1;
     if (s.traction_status === "measured") a.measured_services += 1;
@@ -270,9 +261,6 @@ function analyzeMarket(raw) {
     buyer_metric_note: "service_buyer_instances sums per-service buyer counts; it is NOT deduplicated unique ecosystem users",
   })).sort((a, b) => b.opportunity_score - a.opportunity_score);
 
-  const concentrationWarnings = topBroad.filter((s) => s.top_buyer_share_30d !== null && s.top_buyer_share_30d >= 0.8).slice(0, 15);
-  const broadBenchmarks = topBroad.filter((s) => s.top_buyer_share_30d === null || s.top_buyer_share_30d < 0.5).slice(0, 15);
-
   return {
     generated_at: new Date().toISOString(),
     market: {
@@ -287,11 +275,11 @@ function analyzeMarket(raw) {
     scoring: {
       goal: "favor distributed repeat demand over headline volume",
       signals: ["unique_buyers_30d", "tx_per_buyer", "top_buyer_share_30d", "trend_7d_vs_30d", "volume_usd_30d", "price_fit"],
-      caveat: "x402-list traction is a conservative measured floor; this radar does not infer unmeasured revenue",
+      caveat: "benchmark services anchor measurement but do not determine product choice; rotating discovery is used to find white space",
     },
     top_broad_demand: topBroad,
-    broad_benchmarks: broadBenchmarks,
-    concentration_warnings: concentrationWarnings,
+    broad_benchmarks: topBroad.filter((s) => s.top_buyer_share_30d === null || s.top_buyer_share_30d < 0.5).slice(0, 15),
+    concentration_warnings: topBroad.filter((s) => s.top_buyer_share_30d !== null && s.top_buyer_share_30d >= 0.8).slice(0, 15),
     category_opportunity: categories,
     monetization_state: {
       paid_routes_active: false,
@@ -309,29 +297,15 @@ function newState(body = {}) {
   const maxCycles = clamp(num(body.max_cycles, MAX_CYCLES), 1, MAX_CYCLES);
   const now = new Date().toISOString();
   return {
-    radar_id: RADAR_ID,
-    version: VERSION,
-    status: "ACTIVE",
-    cadence_ms: cadenceMs,
-    max_cycles: maxCycles,
-    cycle_count: 0,
-    monetary_budget: 0,
-    production_actions: false,
-    paid_routes_active: false,
-    money_movement: false,
-    external_data_trust: "UNTRUSTED_DATA",
-    started_at: now,
-    updated_at: now,
-    next_alarm_at: null,
-    last_cycle: null,
+    radar_id: RADAR_ID, version: VERSION, status: "ACTIVE", cadence_ms: cadenceMs, max_cycles: maxCycles,
+    cycle_count: 0, monetary_budget: 0, production_actions: false, paid_routes_active: false,
+    money_movement: false, external_data_trust: "UNTRUSTED_DATA", started_at: now, updated_at: now,
+    next_alarm_at: null, last_cycle: null,
   };
 }
 
 export class X402DemandState {
-  constructor(ctx, env) {
-    this.ctx = ctx;
-    this.env = env;
-  }
+  constructor(ctx, env) { this.ctx = ctx; this.env = env; }
 
   async fetch(request) {
     const url = new URL(request.url);
@@ -340,10 +314,8 @@ export class X402DemandState {
       return json({ ok: Boolean(state), state: state || null });
     }
     if (request.method === "POST" && url.pathname.endsWith("/start")) {
-      let body = {};
-      try { body = await request.json(); } catch {}
-      let state;
-      try { state = newState(body); } catch (error) { return json({ ok: false, error: safeString(error?.message) }, 400); }
+      let body = {}; try { body = await request.json(); } catch {}
+      let state; try { state = newState(body); } catch (error) { return json({ ok: false, error: safeString(error?.message) }, 400); }
       const existing = await this.ctx.storage.get("state");
       if (existing?.status === "ACTIVE") return json({ ok: true, reused: true, state: existing });
       const next = Date.now() + 1000;
@@ -352,19 +324,12 @@ export class X402DemandState {
       await this.ctx.storage.setAlarm(next);
       return json({ ok: true, reused: false, state });
     }
-    if (request.method === "POST" && url.pathname.endsWith("/tick")) {
-      const state = await this.runCycle("admin_tick");
-      return json({ ok: Boolean(state), state: state || null });
-    }
+    if (request.method === "POST" && url.pathname.endsWith("/tick")) return json({ ok: true, state: await this.runCycle("admin_tick") });
     if (request.method === "POST" && url.pathname.endsWith("/stop")) {
       const state = await this.ctx.storage.get("state");
       if (!state) return json({ ok: false, error: "not_started" }, 404);
-      state.status = "PAUSED";
-      state.updated_at = new Date().toISOString();
-      state.next_alarm_at = null;
-      await this.ctx.storage.put("state", state);
-      await this.ctx.storage.deleteAlarm();
-      return json({ ok: true, state });
+      state.status = "PAUSED"; state.updated_at = new Date().toISOString(); state.next_alarm_at = null;
+      await this.ctx.storage.put("state", state); await this.ctx.storage.deleteAlarm(); return json({ ok: true, state });
     }
     return json({ ok: false, error: "not_found" }, 404);
   }
@@ -374,64 +339,41 @@ export class X402DemandState {
     if (!state || state.status !== "ACTIVE") return state || null;
     const started = Date.now();
     try {
-      const raw = await fetchAllServices();
+      const raw = await fetchAllServices(state.cycle_count || 0);
       const analysis = analyzeMarket(raw);
       state.cycle_count += 1;
       state.updated_at = new Date().toISOString();
+      state.version = VERSION;
       state.last_cycle = {
-        reason,
-        state: "PASS",
-        elapsed_ms: Date.now() - started,
-        cost_state: "ZERO_COST",
-        production_actions: false,
-        paid_routes_active: false,
-        money_movement: false,
-        instruction_authority_from_external_content: false,
-        analysis,
+        reason, state: "PASS", elapsed_ms: Date.now() - started, cost_state: "ZERO_COST",
+        production_actions: false, paid_routes_active: false, money_movement: false,
+        instruction_authority_from_external_content: false, analysis,
       };
     } catch (error) {
       state.cycle_count += 1;
       state.updated_at = new Date().toISOString();
+      state.version = VERSION;
       state.last_cycle = {
-        reason,
-        state: "RETRYABLE_ERROR",
-        elapsed_ms: Date.now() - started,
-        cost_state: "ZERO_COST",
-        production_actions: false,
-        paid_routes_active: false,
-        money_movement: false,
-        instruction_authority_from_external_content: false,
-        error: safeString(error?.message, 1000),
+        reason, state: "RETRYABLE_ERROR", elapsed_ms: Date.now() - started, cost_state: "ZERO_COST",
+        production_actions: false, paid_routes_active: false, money_movement: false,
+        instruction_authority_from_external_content: false, error: safeString(error?.message, 1000),
       };
     }
-
     if (state.cycle_count >= state.max_cycles) {
-      state.status = "SUCCESS";
-      state.next_alarm_at = null;
-      await this.ctx.storage.put("state", state);
-      return state;
+      state.status = "SUCCESS"; state.next_alarm_at = null; await this.ctx.storage.put("state", state); return state;
     }
-
     const delay = state.last_cycle?.state === "PASS" ? state.cadence_ms : Math.max(state.cadence_ms, 2 * 60 * 60 * 1000);
     const next = Date.now() + delay;
     state.next_alarm_at = new Date(next).toISOString();
-    await this.ctx.storage.put("state", state);
-    await this.ctx.storage.setAlarm(next);
-    return state;
+    await this.ctx.storage.put("state", state); await this.ctx.storage.setAlarm(next); return state;
   }
 
-  async alarm() {
-    await this.runCycle("durable_object_alarm");
-  }
+  async alarm() { await this.runCycle("durable_object_alarm"); }
 }
 
-function stub(env) {
-  return env.DEMAND.get(env.DEMAND.idFromName(RADAR_ID));
-}
-
+function stub(env) { return env.DEMAND.get(env.DEMAND.idFromName(RADAR_ID)); }
 async function forward(request, env, suffix) {
-  const u = new URL(request.url);
-  u.pathname = `/internal/${RADAR_ID}/${suffix}`;
+  const u = new URL(request.url); u.pathname = `/internal/${RADAR_ID}/${suffix}`;
   const body = request.method === "GET" ? undefined : await request.text();
   return stub(env).fetch(new Request(u.toString(), { method: request.method, headers: request.headers, body: body || undefined }));
 }
@@ -439,23 +381,12 @@ async function forward(request, env, suffix) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (request.method === "GET" && url.pathname === "/health") {
-      return json({
-        ok: true,
-        service: "lsi-x402-demand-radar-r1",
-        version: VERSION,
-        durable_objects_bound: Boolean(env.DEMAND),
-        source: "x402-list.com public API",
-        source_attribution: "Data: x402-list.com (CC BY 4.0)",
-        monetary_budget: 0,
-        production_actions: false,
-        paid_routes_active: false,
-        wallet_bound: false,
-        money_movement: false,
-      });
-    }
+    if (request.method === "GET" && url.pathname === "/health") return json({
+      ok: true, service: "lsi-x402-demand-radar-r1", version: VERSION, durable_objects_bound: Boolean(env.DEMAND),
+      source: "x402-list.com public API", source_attribution: "Data: x402-list.com (CC BY 4.0)",
+      monetary_budget: 0, production_actions: false, paid_routes_active: false, wallet_bound: false, money_movement: false,
+    });
     if (request.method === "GET" && url.pathname === "/demand") return forward(request, env, "state");
-
     if (url.pathname.startsWith("/admin/")) {
       if (!adminOk(request, env)) return json({ ok: false, error: "unauthorized" }, 401);
       if (request.method === "POST" && url.pathname === "/admin/start") return forward(request, env, "start");
