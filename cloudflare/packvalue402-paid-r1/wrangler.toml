@@ -6,7 +6,7 @@ workers_dev = true
 [vars]
 PAYMENTS_ENABLED = "false"
 NETWORK = "base"
-FACILITATOR_URL = "https://x402.org/facilitator"
+FACILITATOR_URL = "https://facilitator.payai.network"
 
 [observability]
 enabled = true
