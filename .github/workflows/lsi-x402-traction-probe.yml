@@ -11,7 +11,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
       - name: Deploy temporary probe
@@ -25,20 +25,35 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sleep 2
-          curl -fsS 'https://lsi-x402-traction-probe.umagestaointeligente.workers.dev/' > /tmp/probe.json
+          ok=false
+          for i in $(seq 1 30); do
+            code="$(curl -sS -o /tmp/probe.json -w '%{http_code}' 'https://lsi-x402-traction-probe.umagestaointeligente.workers.dev/' || true)"
+            if [ "$code" = "200" ] && jq -e '.ok==true' /tmp/probe.json >/dev/null 2>&1; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
           cat /tmp/probe.json
           jq -e '.ok==true and ([.samples[] | select((.buyers30d // 0)>0)] | length)>0' /tmp/probe.json >/dev/null
       - name: Upload sanitized probe
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lsi-x402-traction-probe-${{ github.run_id }}
           path: /tmp/probe.json
           retention-days: 3
-      - name: Delete temporary probe
+          if-no-files-found: ignore
+      - name: Delete temporary probe by API
         if: always()
         shell: bash
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
-        run: npx --yes wrangler@4.32.0 delete --name lsi-x402-traction-probe --force
+        run: |
+          set -euo pipefail
+          code="$(curl -sS -o /tmp/delete.json -w '%{http_code}' -X DELETE \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/lsi-x402-traction-probe" || true)"
+          test "$code" = "200" || test "$code" = "404"
