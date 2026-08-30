@@ -1,0 +1,115 @@
+name: LSI PackValue402 Paid Preprod R1
+run-name: LSI PackValue402 Paid Preprod R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/packvalue402-paid-r1/**'
+      - '.github/workflows/lsi-packvalue402-paid-preprod-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove-payment-ready-fail-closed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GATEWAY_URL: https://lsi-packvalue402-paid-r1-preprod.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static financial safety gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'PAYMENTS_ENABLED = "false"' cloudflare/packvalue402-paid-r1/wrangler.toml
+          ! grep -q '^PAY_TO' cloudflare/packvalue402-paid-r1/wrangler.toml
+          grep -q 'server_can_spend: false' cloudflare/packvalue402-paid-r1/src/index.mjs
+          grep -q 'money_movement_from_server: false' cloudflare/packvalue402-paid-r1/src/index.mjs
+          grep -q 'payments_not_activated' cloudflare/packvalue402-paid-r1/src/index.mjs
+          grep -q '"x402-hono": "1.0.0"' cloudflare/packvalue402-paid-r1/package.json
+
+      - name: Install isolated payment dependencies
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --ignore-scripts --no-audit --no-fund
+          npm run check
+          node --input-type=module -e "import('x402-hono').then(m=>{if(typeof m.paymentMiddleware!=='function') process.exit(2); console.log('X402_HONO_IMPORT=PASS')})"
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy isolated payment gateway preprod
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy
+
+      - name: Prove preprod health is payment-disabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$GATEWAY_URL/health?ts=$RANDOM" > /tmp/health.json 2>/dev/null && jq -e '.ok==true and .mode=="PREPROD_DISABLED" and .payment.enabled==false and .payment.pay_to_configured==false and .payment.ready==false and .payment.network=="base" and .payment.target_price_usd==0.001 and .payment.server_private_key_required==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/health.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+
+      - name: Prove free normalize still works through gateway
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSG "$GATEWAY_URL/v1/normalize" \
+            --data-urlencode 'text=6x330 ml' \
+            --data-urlencode 'price=5.94' \
+            --data-urlencode 'currency=USD' > /tmp/normalize.json
+          jq -e '.ok==true and .result.count==6 and .result.base_quantity==1980 and .result.display_basis=="L" and .result.display_price==3' /tmp/normalize.json >/dev/null
+
+      - name: Prove paid compare cannot run before approval
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl -sS -o /tmp/blocked.json -w '%{http_code}' -X POST "$GATEWAY_URL/v1/compare" -H 'content-type: application/json' --data '{"offers":[{"label":"a","text":"1 L","price":3},{"label":"b","text":"2 L","price":5}]}' )"
+          test "$code" = "503"
+          jq -e '.ok==false and .error=="payments_not_activated" and .mode=="PREPROD_DISABLED" and .wallet_bound==false and .money_movement==false' /tmp/blocked.json >/dev/null
+
+      - name: Prove discovery is explicit about payment state
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$GATEWAY_URL/.well-known/agent.json" > /tmp/agent.json
+          jq -e '.name=="PackValue402" and .mode=="PREPROD_DISABLED" and .payment.protocol=="x402-v2" and .payment.enabled==false and .payment.ready==false and .payment.price_usd==0.001 and .payment.pay_to_configured==false and .payment.server_can_spend==false and ((.tools|length)==2)' /tmp/agent.json >/dev/null
+
+      - name: Write preprod acceptance receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"PACKVALUE402_PAID_PREPROD_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,protocol:"x402-v2",target_price_usd:0.001,network:"base",payments_enabled:false,pay_to_configured:false,server_private_key_required:false,server_can_spend:false,money_movement:false,origin_shadow_proven:true,activation_gate:"EXPLICIT_APPROVAL_PLUS_RECEIVE_ADDRESS"}' > generated/evidence/packvalue402-paid-preprod-r1.json
+
+      - name: Upload preprod acceptance receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: packvalue402-paid-preprod-${{ github.run_id }}
+          path: generated/evidence/packvalue402-paid-preprod-r1.json
+          retention-days: 14
+          if-no-files-found: error
