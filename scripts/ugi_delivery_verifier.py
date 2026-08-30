@@ -3,7 +3,6 @@ from __future__ import annotations
 import datetime as dt
 import json
 import os
-import time
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +11,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[1]
 VIDEO_RECEIPTS = ROOT / "control-plane" / "publisher-hub" / "receipts"
 STATIC_RECEIPTS = ROOT / "control-plane" / "r45" / "receipts"
+R453_RECEIPTS = ROOT / "control-plane" / "instagram-r45-3" / "receipts"
 OUT = ROOT / "control-plane" / "delivery-proof" / "latest.json"
 WORKER = "https://lola-operacional-ugi.umagestaointeligente.workers.dev"
 GRACE_MINUTES = 12
@@ -81,34 +81,52 @@ def main() -> int:
     lower = now - dt.timedelta(hours=LOOKBACK_HOURS)
     results: list[dict[str, Any]] = []
 
-    for kind, path, receipt, row in list(iter_receipts(VIDEO_RECEIPTS, "video") or []) + list(iter_receipts(STATIC_RECEIPTS, "static") or []):
+    sources = (
+        list(iter_receipts(VIDEO_RECEIPTS, "video") or [])
+        + list(iter_receipts(STATIC_RECEIPTS, "static") or [])
+        + list(iter_receipts(R453_RECEIPTS, "r453") or [])
+    )
+
+    for kind, path, receipt, row in sources:
         due_raw = row.get("dueAt") or row.get("dueAtReadback") or row.get("dueAtRequested")
         due = parse_time(due_raw)
         if not due or due > now or due < lower:
             continue
-        draft_id = str(row.get("draftId") or "").strip()
-        if not draft_id:
+
+        platform = str(row.get("platform") or ("instagram" if kind in {"static", "r453"} else "")).lower()
+        if platform not in {"instagram", "tiktok", "youtube"}:
             continue
-        platform = str(row.get("platform") or ("instagram" if kind == "static" else "")).lower()
-        if kind == "static":
-            endpoint = "/api/r45/static-publication-status?id=" + requests.utils.quote(draft_id, safe="")
-        else:
-            if platform not in {"instagram", "tiktok", "youtube"}:
+
+        if kind == "r453":
+            buffer_id = str(row.get("bufferPostId") or "").strip()
+            if not buffer_id:
                 continue
-            endpoint = "/api/platform-publication-status?id=" + requests.utils.quote(draft_id, safe="") + "&platform=" + requests.utils.quote(platform, safe="")
-        code, rb = client.get(endpoint)
-        pub = rb.get("publication") or {}
+            endpoint = "/api/r45-2/buffer-status?id=" + requests.utils.quote(buffer_id, safe="")
+            code, rb = client.get(endpoint)
+            pub = rb.get("post") or {}
+            identity = {"bufferPostId": buffer_id, "draftId": row.get("draftId")}
+        else:
+            draft_id = str(row.get("draftId") or "").strip()
+            if not draft_id:
+                continue
+            if kind == "static":
+                endpoint = "/api/r45/static-publication-status?id=" + requests.utils.quote(draft_id, safe="")
+            else:
+                endpoint = "/api/platform-publication-status?id=" + requests.utils.quote(draft_id, safe="") + "&platform=" + requests.utils.quote(platform, safe="")
+            code, rb = client.get(endpoint)
+            pub = rb.get("publication") or {}
+            identity = {"draftId": draft_id, "bufferPostId": pub.get("bufferPostId")}
+
         state = classify(pub, due, now) if code == 200 and rb.get("ok") is True else ("LATE" if now > due + dt.timedelta(minutes=GRACE_MINUTES) else "PENDING_WITHIN_GRACE")
         results.append({
             "receipt": str(path.relative_to(ROOT)),
             "contentId": row.get("contentId"),
             "platform": platform,
             "kind": kind,
-            "draftId": draft_id,
+            **identity,
             "dueAt": due.isoformat(),
             "readbackHttp": code,
-            "bufferPostId": pub.get("bufferPostId"),
-            "bufferStatus": pub.get("bufferStatus"),
+            "bufferStatus": pub.get("bufferStatus") or pub.get("status"),
             "status": pub.get("status"),
             "sentAt": pub.get("sentAt"),
             "externalLink": pub.get("externalLink"),
@@ -138,6 +156,7 @@ def main() -> int:
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0 if late == 0 and failed == 0 else 2
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
