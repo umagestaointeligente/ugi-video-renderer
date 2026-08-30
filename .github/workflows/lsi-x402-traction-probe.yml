@@ -1,0 +1,44 @@
+name: LSI x402 Traction Probe
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/lsi-x402-traction-probe.mjs'
+      - 'cloudflare/wrangler.lsi-x402-traction-probe.toml'
+      - '.github/workflows/lsi-x402-traction-probe.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy temporary probe
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-x402-traction-probe.toml
+      - name: Read Cloudflare-side traction
+        shell: bash
+        run: |
+          set -euo pipefail
+          sleep 2
+          curl -fsS 'https://lsi-x402-traction-probe.umagestaointeligente.workers.dev/' > /tmp/probe.json
+          cat /tmp/probe.json
+          jq -e '.ok==true and ([.samples[] | select((.buyers30d // 0)>0)] | length)>0' /tmp/probe.json >/dev/null
+      - name: Upload sanitized probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-x402-traction-probe-${{ github.run_id }}
+          path: /tmp/probe.json
+          retention-days: 3
+      - name: Delete temporary probe
+        if: always()
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --yes wrangler@4.32.0 delete --name lsi-x402-traction-probe --force
