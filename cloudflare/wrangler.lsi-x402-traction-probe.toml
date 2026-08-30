@@ -1,0 +1,4 @@
+name = "lsi-x402-traction-probe"
+main = "lsi-x402-traction-probe.mjs"
+compatibility_date = "2026-08-01"
+workers_dev = true
