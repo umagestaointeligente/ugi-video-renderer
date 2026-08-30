@@ -1,0 +1,117 @@
+name: LSI PackValue Tools Traffic R1
+run-name: LSI PackValue Tools Traffic R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/packvalue-tools-r1/telemetry.mjs'
+      - 'cloudflare/packvalue-tools-r1/wrangler.toml'
+      - '.github/workflows/lsi-packvalue-tools-traffic-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-and-prove-aggregate-telemetry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SITE_URL: https://lsi-packvalue-tools-r1.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Privacy and isolation static gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=cloudflare/packvalue-tools-r1/telemetry.mjs
+          grep -q 'pii_stored: false' "$F"
+          grep -q 'ip_stored: false' "$F"
+          grep -q 'cookie_stored: false' "$F"
+          grep -q 'user_agent_stored: false' "$F"
+          grep -q 'referrer_stored: false' "$F"
+          grep -q 'form_values_stored: false' "$F"
+          ! grep -qE 'request\.headers\.get\(["'"'](cf-connecting-ip|user-agent|referer|cookie)' "$F"
+          grep -q 'class TrafficCounter' "$F"
+          grep -q 'new_sqlite_classes = \["TrafficCounter"\]' cloudflare/packvalue-tools-r1/wrangler.toml
+          echo 'TRAFFIC_PRIVACY_STATIC=PASS'
+
+      - name: Require Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy telemetry wrapper
+        working-directory: cloudflare/packvalue-tools-r1
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config wrangler.toml
+
+      - name: Wait for metrics endpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$SITE_URL/metrics?ts=$RANDOM" > /tmp/before.json 2>/dev/null && jq -e '.ok==true and .pii_stored==false and .unique_users_measured==false' /tmp/before.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+          echo 'METRICS_ENDPOINT=PASS'
+
+      - name: Generate isolated acceptance telemetry event
+        shell: bash
+        run: |
+          set -euo pipefail
+          before_prod="$(jq -r '.production_requests' /tmp/before.json)"
+          before_probe="$(jq -r '.acceptance_probe_requests' /tmp/before.json)"
+          curl -fsS "$SITE_URL/preco-por-kg?telemetry_probe=acceptance" >/tmp/page.html
+          grep -q 'Calculadora de preço por kg' /tmp/page.html
+          ok=false
+          for i in $(seq 1 20); do
+            curl -fsS "$SITE_URL/metrics?ts=$RANDOM" > /tmp/after.json
+            after_probe="$(jq -r '.acceptance_probe_requests' /tmp/after.json)"
+            if [ "$after_probe" -ge $((before_probe+1)) ]; then ok=true; break; fi
+            sleep 1
+          done
+          test "$ok" = true
+          after_prod="$(jq -r '.production_requests' /tmp/after.json)"
+          test "$after_prod" = "$before_prod"
+          jq -e '.pii_stored==false and .ip_stored==false and .cookie_stored==false and .user_agent_stored==false and .referrer_stored==false and .form_values_stored==false' /tmp/after.json >/dev/null
+          echo 'ACCEPTANCE_BUCKET_ISOLATION=PASS'
+
+      - name: Prove calculator functionality remains live
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$SITE_URL/preco-por-litro?ts=$RANDOM" | grep -q 'Calculadora de preço por litro'
+          curl -fsS "$SITE_URL/health?ts=$RANDOM" | jq -e '.ok==true and .greenfield==true and .payment==false' >/dev/null
+          echo 'CALCULATOR_REGRESSION=PASS'
+
+      - name: Write telemetry receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg site "$SITE_URL" --argjson metrics "$(cat /tmp/after.json)" '{schema_version:"1.0",project:"PACKVALUE_TOOLS_TRAFFIC_R1",acceptance_state:"PASS",run_id:$run,commit:$sha,site:$site,telemetry:"aggregate-route-counts-only",unique_users:false,pii:false,acceptance_probe_isolated:true,production_requests_at_acceptance:$metrics.production_requests,incremental_cost_usd:0}' > generated/evidence/packvalue-tools-traffic-r1.json
+          cat generated/evidence/packvalue-tools-traffic-r1.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packvalue-tools-traffic-${{ github.run_id }}
+          path: generated/evidence/packvalue-tools-traffic-r1.json
+          retention-days: 30
+          if-no-files-found: error
