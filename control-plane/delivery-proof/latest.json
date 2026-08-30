@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T21:24:18.808933+00:00",
+  "checkedAt": "2026-08-30T21:34:20.843058+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 6,
+  "delivered": 7,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -52,6 +52,28 @@
         "ok": true,
         "httpStatus": 200,
         "finalUrl": "https://www.youtube.com/watch?v=bHzolmPsGss"
+      }
+    },
+    {
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
+      "contentId": "UGI-20260830-IG-01-CISCO-AGENTS",
+      "platform": "instagram",
+      "kind": "video",
+      "draftId": "ugi-20260830144941-8d917de020f5",
+      "bufferPostId": "6a944edbd076c0e5835e88a2",
+      "dueAt": "2026-08-30T21:30:00+00:00",
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T21:31:10.186Z",
+      "externalLink": "https://www.instagram.com/reel/Dcre00XD77u/",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.instagram.com/reel/Dcre00XD77u/"
       }
     },
     {
