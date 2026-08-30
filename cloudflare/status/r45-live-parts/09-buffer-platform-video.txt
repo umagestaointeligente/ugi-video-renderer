@@ -1,0 +1,391 @@
+urrency,
+    provider: "asaas",
+    providerCheckoutId: providerId,
+    checkoutUrl,
+    referenceId,
+    orderStatus: "awaiting_payment",
+    paymentStatus: "pending",
+    paidAt: null,
+    fulfillmentTriggered: false,
+    ugiMaterialFulfillmentAllowed: false,
+    createdAt: now,
+    updatedAt: now
+  };
+  await putJsonR2(env, `${LSI_ORDER_PREFIX}${referenceId}.json`, order);
+  return order;
+}
+__name(createLsiFiatCheckout, "createLsiFiatCheckout");
+
+function lsiFiatPaid(body, normalized) {
+  const event = String(body?.event || "").trim().toUpperCase();
+  const checkoutStatus = String(body?.checkout?.status || "").trim().toUpperCase();
+  return normalized?.paid === true || event === "CHECKOUT_PAID" || checkoutStatus === "PAID";
+}
+__name(lsiFiatPaid, "lsiFiatPaid");
+// END_LSI_FIAT_RAIL_R1
+
+async function createBufferPlatformVideoPost(draft, platform, mode, dueAt, env) {
+  const asset = draft?.assets?.[platform];
+  if (!asset?.videoUrl) {
+    throw new Error(
+      `Asset ${platform} sem videoUrl.`
+    );
+  }
+  const assetValidation = await verifyPublicVideoAsset(asset, env);
+  const channel = await resolveBufferChannel(platform, env);
+  const dueAtGraphQL = mode === "customScheduled" ? `dueAt: ${JSON.stringify(dueAt)}` : "";
+  const metadata = platformMetadataGraphQL(
+    platform,
+    draft
+  );
+  const videoMetadata = platform === "youtube" ? `metadata: { title: ${JSON.stringify(cleanYoutubeTitle(draft))} }` : `metadata: { thumbnailOffset: 1000 }`;
+  const query = `
+    mutation {
+      createPost(
+        input: {
+          text: ${JSON.stringify(permanentCommercePublicationText(draft))}
+          channelId: ${JSON.stringify(channel.id)}
+          schedulingType: automatic
+          mode: ${mode}
+          ${dueAtGraphQL}
+          aiAssisted: true
+          assets: [
+            {
+              video: {
+                url: ${JSON.stringify(asset.videoUrl)}
+                ${videoMetadata}
+              }
+            }
+          ]
+          ${metadata}
+        }
+      ) {
+        __typename
+        ... on PostActionSuccess {
+          post {
+            id
+            text
+            status
+            dueAt
+            sentAt
+            externalLink
+            sharedNow
+            shareMode
+            channelService
+            error {
+              message
+              rawError
+              supportUrl
+            }
+          }
+        }
+        ... on MutationError {
+          message
+        }
+      }
+    }
+  `;
+  const result = await bufferGraphQL(query, env);
+  const created = result?.data?.createPost;
+  if (!created?.post) {
+    const error = new Error(
+      created?.message || "Buffer n\xE3o criou a publica\xE7\xE3o."
+    );
+    error.bufferDiagnostics = {
+      ...result?.__bufferDiagnostics || {},
+      responseType: created?.__typename || null,
+      mutationMessage: created?.message || null
+    };
+    error.bufferPayload = result;
+    throw error;
+  }
+  return {
+    post: created.post,
+    channel,
+    assetValidation,
+    bufferDiagnostics: {
+      ...result?.__bufferDiagnostics || {},
+      responseType: created?.__typename || null,
+      postError: created?.post?.error || null
+    }
+  };
+}
+__name(createBufferPlatformVideoPost, "createBufferPlatformVideoPost");
+async function getBufferPostStatus(postId, env) {
+  const query = `
+    query {
+      post(
+        input: {
+          id: ${JSON.stringify(postId)}
+        }
+      ) {
+        id
+        text
+        status
+        dueAt
+        sentAt
+        externalLink
+        sharedNow
+        shareMode
+        channelService
+        error {
+          message
+          rawError
+          supportUrl
+        }
+      }
+    }
+  `;
+  const result = await bufferGraphQL(query, env);
+  const post = result?.data?.post;
+  if (!post?.id) {
+    const error = new Error(
+      "Buffer n\xE3o retornou o post solicitado."
+    );
+    error.bufferDiagnostics = result?.__bufferDiagnostics || null;
+    error.bufferPayload = result;
+    throw error;
+  }
+  return {
+    post,
+    bufferDiagnostics: {
+      ...result?.__bufferDiagnostics || {},
+      postError: post?.error || null
+    }
+  };
+}
+__name(getBufferPostStatus, "getBufferPostStatus");
+function normalizeApprovalPlatform(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (raw === "youtube_shorts" || raw === "youtube-shorts")
+    return "youtube";
+  return VIDEO_PLATFORMS.includes(raw) ? raw : null;
+}
+__name(normalizeApprovalPlatform, "normalizeApprovalPlatform");
+function normalizeAssetApprovalStatus(value) {
+  const status = String(value || "").trim().toLowerCase();
+  return ["pending_approval", "approved", "rejected"].includes(status) ? status : "pending_approval";
+}
+__name(normalizeAssetApprovalStatus, "normalizeAssetApprovalStatus");
+function approvalSummaryFromAssets(assets = {}) {
+  const platformStates = {};
+  for (const platform of VIDEO_PLATFORMS) {
+    const asset = assets?.[platform] || null;
+    platformStates[platform] = asset ? normalizeAssetApprovalStatus(asset.approvalStatus) : "pending_approval";
+  }
+  const values = Object.values(platformStates);
+  const approvedCount = values.filter((v) => v === "approved").length;
+  const rejectedCount = values.filter((v) => v === "rejected").length;
+  const pendingCount = values.filter((v) => v === "pending_approval").length;
+  let workflowStatus = "pending_approval";
+  if (approvedCount === VIDEO_PLATFORMS.length) {
+    workflowStatus = "approved";
+  } else if (rejectedCount === VIDEO_PLATFORMS.length) {
+    workflowStatus = "rejected";
+  } else if (approvedCount > 0) {
+    workflowStatus = "partially_approved";
+  }
+  return {
+    workflowStatus,
+    approvedCount,
+    rejectedCount,
+    pendingCount,
+    platformStates,
+    allReviewed: pendingCount === 0
+  };
+}
+__name(approvalSummaryFromAssets, "approvalSummaryFromAssets");
+function hasMultiPlatformAssets(draft = {}) {
+  const assets = draft?.assets;
+  if (!assets || typeof assets !== "object")
+    return false;
+  return VIDEO_PLATFORMS.some((platform) => Boolean(assets?.[platform]));
+}
+__name(hasMultiPlatformAssets, "hasMultiPlatformAssets");
+async function syncPlatformApprovalToVideoResult(env, renderId, assets) {
+  if (!env.MEDIA || !renderId)
+    return null;
+  const previous = await loadVideoResult(env, renderId);
+  if (!previous)
+    return null;
+  const summary = approvalSummaryFromAssets(assets);
+  const next = {
+    ...previous,
+    assets,
+    approvalSummary: summary,
+    approvalWorkflowStatus: summary.workflowStatus,
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  await saveVideoResult(env, next);
+  return next;
+}
+__name(syncPlatformApprovalToVideoResult, "syncPlatformApprovalToVideoResult");
+function normalizeContentMetadata(draft = {}) {
+  const now = (/* @__PURE__ */ new Date()).toISOString();
+  const id = String(draft.id || draft.renderId || "").trim();
+  return {
+    ...draft,
+    id,
+    contentId: String(draft.contentId || id || "").trim(),
+    experimentId: String(
+      draft.experimentId || draft.experiment_id || draft.experiment || ""
+    ).trim() || null,
+    variant: String(draft.variant || "").trim() || null,
+    objective: String(draft.objective || "").trim() || null,
+    angle: String(draft.angle || draft.hookAngle || "").trim() || null,
+    hook: String(draft.hook || "").trim() || null,
+    cta: String(draft.cta || "").trim() || null,
+    audience: String(draft.audience || "").trim() || null,
+    commercialIntent: String(
+      draft.commercialIntent || draft.commercial_intent || draft.intent || ""
+    ).trim() || null,
+    commercialOffer: draft.commercialOffer === true || draft.commercial_offer === true,
+    editorialMode: String(draft.editorialMode || draft.editorial_mode || "standard").trim() || "standard",
+    copyLock: normalizeUGICopyLock(draft, draft.type || null, draft.copyLock || null),
+    exactCopy: normalizeUGICopyLock(draft, draft.type || null, draft.copyLock || draft.exactCopy || null),
+    commerce: normalizeUGICommerce(draft, draft.commerce || null),
+    semanticValidationRequired: draft.semanticValidationRequired === true || draft.copyLock?.enabled === true,
+    semanticValidationAvailable: draft.semanticValidationAvailable === true,
+    semanticValidation: draft.semanticValidation || null,
+    copyLockValidation: draft.copyLockValidation || null,
+    legacyContentLeakDetected: draft.legacyContentLeakDetected === true,
+    workflowStatus: String(
+      draft.workflowStatus || (draft.status === "draft" ? draft.renderStatus === "ready" ? "pending_approval" : "generating" : draft.status || "draft")
+    ),
+    createdAt: draft.createdAt || now,
+    updatedAt: draft.updatedAt || draft.createdAt || now
+  };
+}
+__name(normalizeContentMetadata, "normalizeContentMetadata");
+async function saveContentEvent(env, draft, event, extra = {}) {
+  if (!env.MEDIA || !draft?.id)
+    return;
+  const at = (/* @__PURE__ */ new Date()).toISOString();
+  const key = `${CONTENT_EVENT_PREFIX}${draft.id}/${at.replace(/[:.]/g, "-")}-${event}.json`;
+  await env.MEDIA.put(
+    key,
+    JSON.stringify(
+      {
+        contentId: draft.contentId || draft.id,
+        draftId: draft.id,
+        experimentId: draft.experimentId || null,
+        variant: draft.variant || null,
+        type: draft.type || null,
+        event,
+        at,
+        ...extra
+      },
+      null,
+      2
+    ),
+    { httpMetadata: { contentType: "application/json" } }
+  );
+}
+__name(saveContentEvent, "saveContentEvent");
+async function archiveApprovalRecord(env, draft, finalState, extra = {}) {
+  if (!env.MEDIA || !draft?.id)
+    return;
+  const record = normalizeContentMetadata({
+    ...draft,
+    workflowStatus: finalState,
+    archivedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    ...extra
+  });
+  await env.MEDIA.put(
+    `${APPROVAL_ARCHIVE_PREFIX}${draft.id}.json`,
+    JSON.stringify(record, null, 2),
+    { httpMetadata: { contentType: "application/json" } }
+  );
+}
+__name(archiveApprovalRecord, "archiveApprovalRecord");
+async function saveLocalDraft(env, draft) {
+  const normalized = normalizeContentMetadata({
+    ...draft,
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+  });
+  await env.MEDIA.put(
+    `${DRAFT_PREFIX}${normalized.id}.json`,
+    JSON.stringify(normalized),
+    {
+      httpMetadata: {
+        contentType: "application/json"
+      }
+    }
+  );
+  const contentId = String(
+    normalized?.contentId || normalized?.content_id || normalized?.metadata?.contentId || normalized?.metadata?.content_id || ""
+  ).trim();
+  const experimentId = String(
+    normalized?.experimentId || normalized?.experiment_id || normalized?.metadata?.experimentId || normalized?.metadata?.experiment_id || ""
+  ).trim();
+  const variant = String(
+    normalized?.variant || normalized?.metadata?.variant || ""
+  ).trim().toUpperCase();
+  const compactIndex = {
+    draftId: normalized.id || null,
+    contentId: contentId || null,
+    experimentId: experimentId || null,
+    variant: variant || null,
+    status: normalized.status || null,
+    workflowStatus: normalized.workflowStatus || null,
+    bufferPostId: normalized.bufferPostId || null,
+    createdAt: normalized.createdAt || null,
+    updatedAt: normalized.updatedAt || null
+  };
+  if (contentId) {
+    await putJsonR2(
+      env,
+      `${CONTENT_INDEX_PREFIX}${sanitizeCommerceId(contentId)}.json`,
+      compactIndex
+    );
+  }
+  if (experimentId && variant) {
+    await putJsonR2(
+      env,
+      `${EXPERIMENT_VARIANT_INDEX_PREFIX}${sanitizeCommerceId(experimentId)}-${sanitizeCommerceId(variant)}.json`,
+      compactIndex
+    );
+  }
+  return normalized;
+}
+__name(saveLocalDraft, "saveLocalDraft");
+async function getLocalDraft(env, id) {
+  const object = await env.MEDIA.get(
+    `${DRAFT_PREFIX}${id}.json`
+  );
+  if (!object)
+    return null;
+  return normalizeContentMetadata(await object.json());
+}
+__name(getLocalDraft, "getLocalDraft");
+async function findLocalDraftByContentId(env, contentId) {
+  const target = String(contentId || "").trim();
+  if (!target || !env.MEDIA)
+    return null;
+  let cursor = void 0;
+  let scanned = 0;
+  const maxScanned = 1e3;
+  do {
+    const page = await env.MEDIA.list({
+      prefix: DRAFT_PREFIX,
+      limit: DRAFT_LIMIT,
+      ...cursor ? { cursor } : {}
+    });
+    for (const object of page.objects || []) {
+      if (!object.key.endsWith(".json"))
+        continue;
+      if (scanned >= maxScanned)
+        break;
+      scanned += 1;
+      try {
+        const stored = await env.MEDIA.get(object.key);
+        if (!stored)
+          continue;
+        const draft = normalizeContentMetadata(
+          await stored.json()
+        );
+        const candidate = String(
+          draft?.contentId || draft?.content_id || draft?.metadata?.contentId || draft?.metadata?.content_id || ""
+        ).trim();
+        if (candidate === target) {
+        

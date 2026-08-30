@@ -1,0 +1,347 @@
+{
+  "ok": true,
+  "project": "UGI",
+  "component": "R45-INSTAGRAM-MULTIFORMAT-PILOT",
+  "batchId": "UGI-R45-PILOT-20260830-01",
+  "results": [
+    {
+      "contentId": "UGI-20260830-IG-STORY-01-AI-GATES",
+      "type": "story_image",
+      "publish": true,
+      "generateHttp": 200,
+      "generationOk": true,
+      "workerVersion": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+      "draftId": "dcbda494-166c-413f-81a7-548e3d5cfde9",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788107957557-dcbda494-166c-413f-81a7-548e3d5cfde9.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 2091869
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 200,
+      "publishResponse": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/r45/static-publish",
+        "platform": "instagram",
+        "type": "story_image",
+        "mode": "customScheduled",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a945cbb94904b3a23ec7254",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-30T18:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-30T16:39:23.168Z",
+          "updatedAt": "2026-08-30T16:39:23.792Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a3353b31d93d3493-SJC",
+            "rateLimitRemaining": "2139",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a945cbb94904b3a23ec7254",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T18:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "assetValidation": {
+          "ok": true,
+          "kind": "story_image",
+          "count": 1
+        },
+        "publicationTriggered": true
+      },
+      "readbackHttp": 200,
+      "bufferPostId": "6a945cbb94904b3a23ec7254",
+      "bufferStatus": "scheduled",
+      "publicationStatus": "scheduled",
+      "dueAtRequested": "2026-08-30T15:15:00-03:00",
+      "dueAtReadback": "2026-08-30T18:15:00.000Z",
+      "dueAtMatch": true,
+      "externalLink": null,
+      "readbackPass": true,
+      "state": "PROVEN_SCHEDULED",
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-VISUAL-01-HUMAN-AI-AUTOMATION",
+      "type": "visual_post",
+      "publish": false,
+      "generateHttp": 200,
+      "generationOk": true,
+      "workerVersion": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+      "draftId": "328388a9-7ceb-4b51-ab99-0b1cb724385d",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/posts-visuais/1788107971141-328388a9-7ceb-4b51-ab99-0b1cb724385d.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1464199
+          }
+        ]
+      },
+      "state": "ASSET_READY_NOT_PUBLISHED",
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-STORY-02-CISCO-QUESTION",
+      "type": "story_image",
+      "publish": true,
+      "generateHttp": 200,
+      "generationOk": true,
+      "workerVersion": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+      "draftId": "1bc5078b-0adc-405d-9522-ea5f19696144",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788107985598-1bc5078b-0adc-405d-9522-ea5f19696144.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 2031853
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 200,
+      "publishResponse": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/r45/static-publish",
+        "platform": "instagram",
+        "type": "story_image",
+        "mode": "customScheduled",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a945cd7e7e04684c6004125",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-30T20:45:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-30T16:39:50.921Z",
+          "updatedAt": "2026-08-30T16:39:51.566Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a3353bdf4d993493-SJC",
+            "rateLimitRemaining": "2137",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a945cd7e7e04684c6004125",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T20:45:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "assetValidation": {
+          "ok": true,
+          "kind": "story_image",
+          "count": 1
+        },
+        "publicationTriggered": true
+      },
+      "readbackHttp": 200,
+      "bufferPostId": "6a945cd7e7e04684c6004125",
+      "bufferStatus": "scheduled",
+      "publicationStatus": "scheduled",
+      "dueAtRequested": "2026-08-30T17:45:00-03:00",
+      "dueAtReadback": "2026-08-30T20:45:00.000Z",
+      "dueAtMatch": true,
+      "externalLink": null,
+      "readbackPass": true,
+      "state": "PROVEN_SCHEDULED",
+      "ok": true
+    },
+    {
+      "contentId": "UGI-20260830-IG-CAROUSEL-01-AUTOMATE-DECISION",
+      "type": "carousel",
+      "publish": true,
+      "generateHttp": 200,
+      "generationOk": true,
+      "workerVersion": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+      "draftId": "6598b813-33d7-41a3-be15-01d5813fd9e4",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/6598b813-33d7-41a3-be15-01d5813fd9e4-slide-1.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/6598b813-33d7-41a3-be15-01d5813fd9e4-slide-2.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/6598b813-33d7-41a3-be15-01d5813fd9e4-slide-3.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/6598b813-33d7-41a3-be15-01d5813fd9e4-slide-4.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/6598b813-33d7-41a3-be15-01d5813fd9e4-slide-5.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/6598b813-33d7-41a3-be15-01d5813fd9e4-slide-6.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/6598b813-33d7-41a3-be15-01d5813fd9e4-slide-7.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1119376
+          },
+          {
+            "index": 2,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 808745
+          },
+          {
+            "index": 3,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1132717
+          },
+          {
+            "index": 4,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 751712
+          },
+          {
+            "index": 5,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1044471
+          },
+          {
+            "index": 6,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 817882
+          },
+          {
+            "index": 7,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1168060
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 200,
+      "publishResponse": {
+        "ok": true,
+        "version": "lola-v8-r45-0-instagram-multiformat-2026-08-30",
+        "route": "/api/r45/static-publish",
+        "platform": "instagram",
+        "type": "carousel",
+        "mode": "customScheduled",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a945d6dd58664eabd78b99a",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-08-30T23:00:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-08-30T16:42:20.511Z",
+          "updatedAt": "2026-08-30T16:42:21.299Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a3353f863b710c97-SJC",
+            "rateLimitRemaining": "2135",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a945d6dd58664eabd78b99a",
+          "text": "🤖 Imagine você trabalhando em um projeto importante, mas sabendo que precisa tomar centenas de decisões diárias. Isso pode levar a erros humanos, demora no processo e até mesmo impactar negativamente os resultados finais. Para evitar isso, é preciso planejar cuidadosamente antes de automatizar uma decisão.\n\nPara começar, é fundamental definir claramente o resultado esperado e identificar os dados necessários para alcançá-lo. Além disso, é crucial considerar o risco do erro e verificar se as alterações podem ser revertidas caso necessário.\n\nÉ também importante determinar quando intervir na automação, em quais momentos a aprovação humana é necessária e como medir o sucesso da estratégia. Com essas informações claras, você pode garantir que seu objetivo seja alcançado e minimizar os riscos associados à tecnologia avançada.\n\nPortanto, antes de automatizar sua próxima decisão, salve este checklist para garantir que suas escolhas sejam informadas e seguras.\n\n#TomadaDeDecisao #DecisaoGerencial #UmaGestaoInteligente",
+          "status": "scheduled",
+          "dueAt": "2026-08-30T23:00:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "assetValidation": {
+          "ok": true,
+          "kind": "carousel",
+          "count": 7
+        },
+        "publicationTriggered": true
+      },
+      "readbackHttp": 200,
+      "bufferPostId": "6a945d6dd58664eabd78b99a",
+      "bufferStatus": "scheduled",
+      "publicationStatus": "scheduled",
+      "dueAtRequested": "2026-08-30T20:00:00-03:00",
+      "dueAtReadback": "2026-08-30T23:00:00.000Z",
+      "dueAtMatch": true,
+      "externalLink": null,
+      "readbackPass": true,
+      "state": "PROVEN_SCHEDULED",
+      "ok": true
+    }
+  ],
+  "timestamp": "2026-08-30T16:42:25.423416+00:00"
+}

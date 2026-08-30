@@ -1,0 +1,82 @@
+name: UGI Instagram MultiFormat Hub R45
+
+on:
+  push:
+    branches: [main, ugi-r45-multiformat-20260830]
+    paths:
+      - 'control-plane/instagram-multiformat/queue/*.json'
+  workflow_dispatch:
+  schedule:
+    - cron: '11,26,41,56 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-instagram-multiformat-hub
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Runtime setup
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UGI_WORKER_COMMAND_KEY"
+          python -m pip install --disable-pip-version-check --quiet requests pillow
+          python -m py_compile scripts/r45_instagram_multiformat_pilot.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          policy=json.loads(Path('config/ugi/instagram-multiformat-policy.json').read_text(encoding='utf-8'))
+          assert policy['project']=='UGI'
+          assert policy['principles']['bufferExclusivePublisher'] is True
+          assert policy['principles']['receiptRequiredForScheduledClaim'] is True
+          PY
+      - name: Reconcile queued Instagram multiformat manifests
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p control-plane/instagram-multiformat/queue control-plane/instagram-multiformat/receipts
+          shopt -s nullglob
+          failed=0
+          files=(control-plane/instagram-multiformat/queue/*.json)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo 'No multiformat manifests queued.'
+            exit 0
+          fi
+          for manifest in "${files[@]}"; do
+            stem=$(basename "$manifest" .json)
+            receipt="control-plane/instagram-multiformat/receipts/${stem}.json"
+            if [ -f "$receipt" ] && jq -e '.ok == true' "$receipt" >/dev/null 2>&1; then
+              echo "SKIP_PROVEN $manifest"
+              continue
+            fi
+            python scripts/r45_instagram_multiformat_pilot.py "$manifest" --receipt "$receipt" || failed=1
+          done
+          exit "$failed"
+      - name: Persist receipts
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/instagram-multiformat/receipts
+          git config user.name 'ugi-instagram-multiformat-bot'
+          git config user.email 'ugi-instagram-multiformat@users.noreply.github.com'
+          git add control-plane/instagram-multiformat/receipts/*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No receipt changes.'
+            exit 0
+          fi
+          git commit -m 'chore: persist Instagram multiformat receipts'
+          BRANCH="${GITHUB_REF_NAME:-main}"
+          git pull --rebase origin "$BRANCH"
+          git push origin HEAD:"$BRANCH"

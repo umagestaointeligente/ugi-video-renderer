@@ -1,0 +1,15 @@
+UGI_R45_LIVE_SOURCE_CONTEXT
+BYTES=465310
+01-validate-command.txt PATTERN=function validateCommand( COUNT=1
+02-create-command.txt PATTERN=function createCommand( COUNT=1
+03-generate-from-command.txt PATTERN=async function generateFromCommand( COUNT=1
+04-generate-standard-post.txt PATTERN=async function generateStandardProposal( COUNT=1
+05-generate-carousel.txt PATTERN=async function generateCarousel( COUNT=1
+06-platform-approval.txt PATTERN=if (path === "/api/platform-approval" COUNT=1
+07-platform-eligibility.txt PATTERN=if (path === "/api/platform-publication-eligibility/" COUNT=0
+08-platform-publish.txt PATTERN=if (path === "/api/platform-publish" COUNT=1
+09-buffer-platform-video.txt PATTERN=async function createBufferPlatformVideoPost( COUNT=1
+10-buffer-create-with-assets.txt PATTERN=async function bufferCreateWithAssets( COUNT=1
+11-drafts-route.txt PATTERN=if (path === "/api/drafts" COUNT=1
+12-save-local-draft.txt PATTERN=async function saveLocalDraft( COUNT=1
+13-health-capabilities.txt PATTERN=capabilities: { COUNT=1

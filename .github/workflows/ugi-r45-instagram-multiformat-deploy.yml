@@ -1,0 +1,68 @@
+name: UGI R45 Instagram MultiFormat Deploy
+
+on:
+  push:
+    branches: [ugi-r45-multiformat-20260830]
+    paths:
+      - 'control-plane/r45/deploy-trigger.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-cloudflare-worker-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Python preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"
+          test -n "$CF_ACCOUNT_ID"
+          python -m pip install --disable-pip-version-check --quiet requests
+          python -m py_compile scripts/r45_instagram_multiformat_deploy.py scripts/r45_instagram_multiformat_deploy_v2.py
+      - name: Deploy live-safe R45 patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=scripts python scripts/r45_instagram_multiformat_deploy_v2.py
+      - name: Health and route smoke
+        shell: bash
+        env:
+          UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$UGI_WORKER_COMMAND_KEY"
+          BASE='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
+          curl --fail --silent --show-error "$BASE/api/health" | tee /tmp/health.json
+          jq -e '.ok == true and (.version | contains("r45-0-instagram-multiformat"))' /tmp/health.json >/dev/null
+          # Probe auth and route existence with an intentionally invalid body: expected HTTP 400, never 404/500.
+          code=$(curl --silent --output /tmp/probe.json --write-out '%{http_code}' -X POST "$BASE/api/r45/generate" \
+            -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H 'content-type: application/json' --data '{}')
+          test "$code" = '400'
+          jq -e '.ok == false' /tmp/probe.json >/dev/null
+      - name: Persist deployment evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p cloudflare/status
+          test -f cloudflare/status/r45-instagram-multiformat.txt || echo -e 'R45_STAGE=STATUS_MISSING\nOK=false' > cloudflare/status/r45-instagram-multiformat.txt
+          git config user.name 'ugi-r45-deploy-bot'
+          git config user.email 'ugi-r45-deploy@users.noreply.github.com'
+          git add cloudflare/status/r45-instagram-multiformat.txt
+          git commit -m 'chore: persist R45 multiformat deployment evidence' || true
+          git pull --rebase origin ugi-r45-multiformat-20260830
+          git push origin HEAD:ugi-r45-multiformat-20260830

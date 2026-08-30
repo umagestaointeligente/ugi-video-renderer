@@ -1,0 +1,350 @@
+raftId || null,
+            status: match?.status || null,
+            workflowStatus: match?.workflowStatus || null,
+            bufferPostId: match?.bufferPostId || null
+          };
+        });
+        const duplicateFound = duplicates.some((item) => item.duplicate);
+        const safeToCreate = scanComplete && !duplicateFound;
+        return json({
+          ok: true,
+          version: VERSION,
+          route: "/api/content-anti-dup-check",
+          experimentId,
+          requestedCount: planned.length,
+          scanned,
+          scanComplete,
+          duplicateFound,
+          safeToCreate,
+          duplicates,
+          responseMode: "compact",
+          mutationPerformed: false,
+          publicationTriggered: false,
+          bufferMutation: false
+        });
+      }
+      if (path === "/api/drafts" && request.method === "GET") {
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+          return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+        }
+        return json({
+          ok: true,
+          version: VERSION,
+          drafts: await listLocalDrafts(env)
+        });
+      }
+      if (path === "/api/buffer/channels" && request.method === "GET") {
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+          return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+        }
+        try {
+          const discovered = await discoverBufferChannels(env);
+          return json({
+            ok: true,
+            version: VERSION,
+            organization: discovered.organization,
+            channels: discovered.channels,
+            note: "Use os IDs retornados em BUFFER_CHANNEL_INSTAGRAM, BUFFER_CHANNEL_TIKTOK e BUFFER_CHANNEL_YOUTUBE se houver m\xFAltiplos canais da mesma rede."
+          });
+        } catch (error) {
+          return json({
+            ok: false,
+            version: VERSION,
+            errorClass: "buffer_channel_discovery_failed",
+            error: error?.message || String(error)
+          }, 400);
+        }
+      }
+      if (path === "/api/carousel-slide-recovery" && request.method === "POST") {
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+          return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+        }
+        if (!env.MEDIA || !env.BROWSER) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/carousel-slide-recovery",
+            errorClass: "required_binding_missing",
+            error: "Bindings MEDIA e BROWSER s\xE3o obrigat\xF3rios para recovery."
+          }, 500);
+        }
+        const body = await readBody(request);
+        const id = String(body?.id || body?.draftId || "").trim();
+        const slideNumber = Number(body?.slideNumber || body?.slide || 0);
+        const maxAttempts = clamp(
+          Number(body?.maxAttempts || 3),
+          1,
+          3
+        );
+        if (!id) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/carousel-slide-recovery",
+            error: "id/draftId ausente"
+          }, 400);
+        }
+        if (!Number.isInteger(slideNumber) || slideNumber < 1) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/carousel-slide-recovery",
+            error: "slideNumber inv\xE1lido"
+          }, 400);
+        }
+        const draft = await getLocalDraft(env, id);
+        if (!draft) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/carousel-slide-recovery",
+            draftId: id,
+            error: "Rascunho n\xE3o encontrado"
+          }, 404);
+        }
+        if (String(draft.type || "").toLowerCase() !== "carousel") {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/carousel-slide-recovery",
+            draftId: id,
+            error: "Recovery dispon\xEDvel somente para drafts de carrossel."
+          }, 409);
+        }
+        const slides = Array.isArray(draft.slides) ? draft.slides : [];
+        const slide = slides.find(
+          (item) => Number(item?.number) === slideNumber
+        );
+        if (!slide) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/carousel-slide-recovery",
+            draftId: id,
+            slideNumber,
+            error: `Slide ${slideNumber} n\xE3o existe no draft.`
+          }, 404);
+        }
+        let command = null;
+        if (draft.commandId) {
+          try {
+            command = await getLocalCommand(env, draft.commandId);
+          } catch {
+          }
+        }
+        if (!command) {
+          command = {
+            id: draft.commandId || `recovery-${draft.id}`,
+            type: "carousel",
+            topic: draft.area || draft.topic || "",
+            objective: draft.angle || "",
+            keyMessage: draft.topic || "",
+            cta: "",
+            slides: slides.length,
+            experiment: draft.experiment || "",
+            requestedBy: "Lola Recovery"
+          };
+        }
+        const origin = url.origin;
+        const expectedKey = `${CAROUSEL_PREFIX}${draft.id}-slide-${slideNumber}.png`;
+        const alreadyStored = await env.MEDIA.head(expectedKey);
+        const attempts = [];
+        let rendered = null;
+        if (alreadyStored) {
+          rendered = {
+            key: expectedKey,
+            url: `${origin}/media/${expectedKey}`,
+            renderer: "r19-browser-photo-editorial-png",
+            reused: true
+          };
+          attempts.push({
+            attempt: 0,
+            ok: true,
+            reusedExistingAsset: true,
+            error: null
+          });
+        } else {
+          for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+              rendered = await renderCarouselSlideExact(
+                env,
+                command,
+                slide,
+                draft.id,
+                origin
+              );
+              attempts.push({
+                attempt,
+                ok: true,
+                reusedExistingAsset: false,
+                error: null
+              });
+              break;
+            } catch (error) {
+              const message = error?.message || String(error);
+              attempts.push({
+                attempt,
+                ok: false,
+                reusedExistingAsset: false,
+                error: message
+              });
+              if (attempt < maxAttempts) {
+                const delayMs = attempt === 1 ? 15e3 : 3e4;
+                await sleep(delayMs);
+              }
+            }
+          }
+        }
+        const imageUrls = [];
+        const imageKeys = [];
+        const existingSlides = [];
+        const missingSlides = [];
+        for (const item of slides) {
+          const number = Number(item?.number);
+          const key = `${CAROUSEL_PREFIX}${draft.id}-slide-${number}.png`;
+          const stored = await env.MEDIA.head(key);
+          if (stored) {
+            existingSlides.push(number);
+            imageKeys.push(key);
+            imageUrls.push(`${origin}/media/${key}`);
+          } else {
+            missingSlides.push(number);
+          }
+        }
+        const ready = slides.length > 0 && missingSlides.length === 0 && imageUrls.length === slides.length;
+        const previousErrors = Array.isArray(draft.renderErrors) ? draft.renderErrors : [];
+        const filteredErrors = previousErrors.filter(
+          (value) => !String(value || "").startsWith(`Slide ${slideNumber}:`)
+        );
+        const lastFailure = attempts.length && attempts[attempts.length - 1]?.ok !== true ? attempts[attempts.length - 1]?.error : null;
+        const renderErrors = lastFailure ? [
+          ...filteredErrors,
+          `Slide ${slideNumber}: ${lastFailure}`
+        ] : filteredErrors;
+        const semanticPass = draft.carouselAudit?.semanticPass !== false;
+        const nextDraft = {
+          ...draft,
+          imageUrls,
+          imageKeys,
+          imageUrl: imageUrls[0] || null,
+          imageKey: imageKeys[0] || null,
+          renderErrors,
+          renderStatus: ready ? "ready" : "partial",
+          generationStatus: ready ? "generated" : "generated_needs_review",
+          qualityStatus: ready && semanticPass ? "ready_for_review" : "needs_review",
+          workflowStatus: ready ? "pending_approval" : "partial",
+          approvalStatus: draft.approvalStatus || "pending_approval",
+          publicationTriggered: false,
+          recovery: {
+            ...draft.recovery || {},
+            lastSlideNumber: slideNumber,
+            lastRecoveryAt: (/* @__PURE__ */ new Date()).toISOString(),
+            attempts,
+            existingSlides,
+            missingSlides
+          }
+        };
+        const saved = await saveLocalDraft(env, nextDraft);
+        await saveContentEvent(
+          env,
+          saved,
+          rendered ? "carousel_slide_recovered" : "carousel_slide_recovery_failed",
+          {
+            slideNumber,
+            attempts,
+            existingSlides,
+            missingSlides,
+            renderStatus: saved.renderStatus,
+            qualityStatus: saved.qualityStatus
+          }
+        );
+        return json({
+          ok: Boolean(rendered),
+          version: VERSION,
+          route: "/api/carousel-slide-recovery",
+          draftId: saved.id,
+          commandId: saved.commandId || null,
+          contentId: saved.contentId || null,
+          slideNumber,
+          rendered: Boolean(rendered),
+          reusedExistingAsset: Boolean(rendered?.reused),
+          slideUrl: rendered?.url || null,
+          slideKey: rendered?.key || null,
+          attempts,
+          existingSlides,
+          missingSlides,
+          totalExpectedSlides: slides.length,
+          totalExistingSlides: existingSlides.length,
+          renderStatus: saved.renderStatus,
+          generationStatus: saved.generationStatus,
+          qualityStatus: saved.qualityStatus,
+          workflowStatus: saved.workflowStatus,
+          approvalStatus: saved.approvalStatus || "pending_approval",
+          publicationTriggered: false,
+          imageUrls: saved.imageUrls || [],
+          imageKeys: saved.imageKeys || [],
+          renderErrors: saved.renderErrors || [],
+          note: rendered ? "Recovery aplicado no draft existente. Nenhum novo draft foi criado." : "Recovery n\xE3o concluiu o slide. O draft existente foi preservado."
+        }, rendered ? 200 : 502);
+      }
+      if (path === "/api/platform-publish" && request.method === "POST") {
+        if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+          return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+        }
+        const body = await readBody(request);
+        if (!body?.id) {
+          return json({ ok: false, error: "id ausente" }, 400);
+        }
+        const platform = normalizeApprovalPlatform(body.platform);
+        if (!platform) {
+          return json({
+            ok: false,
+            error: "platform inv\xE1lida",
+            allowedPlatforms: VIDEO_PLATFORMS
+          }, 400);
+        }
+        const mode = normalizePublishMode(body.mode);
+        if (!mode) {
+          return json({
+            ok: false,
+            error: "mode inv\xE1lido",
+            allowedModes: [
+              "shareNow",
+              "customScheduled",
+              "addToQueue"
+            ]
+          }, 400);
+        }
+        let dueAt = null;
+        if (mode === "customScheduled") {
+          const parsed = new Date(body.dueAt || "");
+          if (!body.dueAt || Number.isNaN(parsed.getTime())) {
+            return json({
+              ok: false,
+              error: "dueAt ISO 8601 v\xE1lido \xE9 obrigat\xF3rio para customScheduled."
+            }, 400);
+          }
+          if (parsed.getTime() <= Date.now() + 6e4) {
+            return json({
+              ok: false,
+              error: "O agendamento precisa estar pelo menos 1 minuto no futuro."
+            }, 400);
+          }
+          dueAt = parsed.toISOString();
+        }
+        const draft = await getLocalDraft(env, body.id);
+        if (!draft) {
+          return json({
+            ok: false,
+            error: "Rascunho n\xE3o encontrado"
+          }, 404);
+        }
+        const commerceReasons = commerceGateReasons(draft);
+        const semanticReasons = semanticGateReasons(draft);
+        const publicationGateReasons = [...commerceReasons, ...semanticReasons];
+        if (publicationGateReasons.length) {
+          return json({
+            ok: false,
+            version: VERSION,
+            route: "/api/platform-publish",
+            errorClass: "commerce_or_semantic
