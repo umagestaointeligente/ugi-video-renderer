@@ -8,9 +8,5 @@ PAYMENTS_ENABLED = "false"
 NETWORK = "base"
 FACILITATOR_URL = "https://x402.org/facilitator"
 
-[[services]]
-binding = "ORIGIN_SERVICE"
-service = "lsi-packvalue402-shadow-r1"
-
 [observability]
 enabled = true
