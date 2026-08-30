@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "product": "PackValue402",
+  "approved": true,
+  "approved_by": "Paulo",
+  "network": "eip155:8453",
+  "target_price_usd": 0.001,
+  "currency": "USDC",
+  "purpose": "receive_only",
+  "server_can_spend": false,
+  "receive_address": "0x1111111111111111111111111111111111111111",
+  "test_intent": "NEGATIVE_ACCEPTANCE_EXPECT_BLOCK_BEFORE_DEPLOY"
+}
