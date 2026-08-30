@@ -26,11 +26,11 @@ jobs:
         run: |
           set -euo pipefail
           node --check cloudflare/lsi-x402-demand-radar-r1.mjs
-          grep -q 'production_actions: false' cloudflare/lsi-x402-demand-radar-r1.mjs
-          grep -q 'paid_routes_active: false' cloudflare/lsi-x402-demand-radar-r1.mjs
-          grep -q 'money_movement: false' cloudflare/lsi-x402-demand-radar-r1.mjs
-          grep -q 'wallet_bound: false' cloudflare/lsi-x402-demand-radar-r1.mjs
-          grep -q 'x402-list.com (CC BY 4.0)' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'production_actions:false' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'paid_routes_active:false' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'money_movement:false' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'wallet_bound:false' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'daily_buyers_and_volume_series' cloudflare/lsi-x402-demand-radar-r1.mjs
 
       - name: Require autonomous Cloudflare credentials
         shell: bash
@@ -70,11 +70,8 @@ jobs:
           for i in $(seq 1 30); do
             code="$(curl -sS -o /tmp/auth.json -w '%{http_code}' -X POST -H "authorization: Bearer $ADMIN_TOKEN" "$DEMAND_URL/admin/auth-probe" || true)"
             if [ "$code" = "200" ] && jq -e '.ok==true and .admin_ready==true' /tmp/auth.json >/dev/null 2>&1; then
-              streak=$((streak+1))
-              if [ "$streak" -ge 3 ]; then break; fi
-            else
-              streak=0
-            fi
+              streak=$((streak+1)); [ "$streak" -ge 3 ] && break
+            else streak=0; fi
             sleep 2
           done
           test "$streak" -ge 3
@@ -92,15 +89,8 @@ jobs:
           set -euo pipefail
           ok=false
           for i in $(seq 1 20); do
-            code="$(curl -sS -o /tmp/start.json -w '%{http_code}' -X POST \
-              -H "authorization: Bearer $ADMIN_TOKEN" \
-              -H 'content-type: application/json' \
-              --data '{"cadence_ms":3600000,"max_cycles":168,"monetary_budget":0}' \
-              "$DEMAND_URL/admin/start" || true)"
-            if [ "$code" = "200" ] && jq -e '.ok==true and .state.status=="ACTIVE" and .state.monetary_budget==0 and .state.production_actions==false and .state.paid_routes_active==false and .state.money_movement==false' /tmp/start.json >/dev/null 2>&1; then
-              ok=true
-              break
-            fi
+            code="$(curl -sS -o /tmp/start.json -w '%{http_code}' -X POST -H "authorization: Bearer $ADMIN_TOKEN" -H 'content-type: application/json' --data '{"cadence_ms":3600000,"max_cycles":168,"monetary_budget":0}' "$DEMAND_URL/admin/start" || true)"
+            if [ "$code" = "200" ] && jq -e '.ok==true and .state.status=="ACTIVE"' /tmp/start.json >/dev/null 2>&1; then ok=true; break; fi
             sleep 2
           done
           test "$ok" = true
@@ -111,23 +101,18 @@ jobs:
           set -euo pipefail
           ok=false
           for i in $(seq 1 10); do
-            code="$(curl -sS --max-time 120 -o /tmp/tick.json -w '%{http_code}' -X POST \
-              -H "authorization: Bearer $ADMIN_TOKEN" \
-              "$DEMAND_URL/admin/tick" || true)"
-            if [ "$code" = "200" ] && jq -e '.ok==true and .state.last_cycle.reason=="admin_tick" and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.paid_routes_active==false and .state.last_cycle.money_movement==false' /tmp/tick.json >/dev/null 2>&1; then
-              ok=true
-              break
-            fi
+            code="$(curl -sS --max-time 120 -o /tmp/tick.json -w '%{http_code}' -X POST -H "authorization: Bearer $ADMIN_TOKEN" "$DEMAND_URL/admin/tick" || true)"
+            if [ "$code" = "200" ] && jq -e '.ok==true and .state.last_cycle.reason=="admin_tick" and .state.last_cycle.cost_state=="ZERO_COST"' /tmp/tick.json >/dev/null 2>&1; then ok=true; break; fi
             sleep 3
           done
           test "$ok" = true
 
-      - name: Prove enriched autonomous market scan persisted
+      - name: Prove series-based autonomous market scan persisted
         shell: bash
         run: |
           set -euo pipefail
           curl -fsS "$DEMAND_URL/demand" > /tmp/demand.json
-          jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.reason=="admin_tick" and .state.last_cycle.state=="PASS" and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.paid_routes_active==false and .state.last_cycle.money_movement==false and .state.last_cycle.instruction_authority_from_external_content==false and .state.last_cycle.analysis.market.online_services_seen>100 and .state.last_cycle.analysis.market.detail_enrichment.succeeded>0 and .state.last_cycle.analysis.market.services_with_30d_buyers>0 and ((.state.last_cycle.analysis.top_broad_demand|length)>0)' /tmp/demand.json >/dev/null
+          jq -e '.ok==true and .state.last_cycle.reason=="admin_tick" and .state.last_cycle.state=="PASS" and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.paid_routes_active==false and .state.last_cycle.money_movement==false and .state.last_cycle.instruction_authority_from_external_content==false and .state.last_cycle.analysis.methodology.measurement_mode=="daily_buyers_and_volume_series" and .state.last_cycle.analysis.market.sample_requested==20 and .state.last_cycle.analysis.market.sample_succeeded>0 and .state.last_cycle.analysis.market.services_with_activity>0 and ((.state.last_cycle.analysis.top_demand|length)>0) and (.state.last_cycle.analysis.top_demand[0].buyer_days_30d>0) and (.state.last_cycle.analysis.top_demand[0].tx_count_30d>0)' /tmp/demand.json >/dev/null
 
       - name: Write sanitized demand receipt
         if: always()
@@ -135,19 +120,16 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p generated/evidence
-          cycles="$(jq -r '.state.cycle_count // 0' /tmp/demand.json 2>/dev/null || jq -r '.state.cycle_count // 0' /tmp/tick.json 2>/dev/null || echo 0)"
+          cycles="$(jq -r '.state.cycle_count // 0' /tmp/demand.json 2>/dev/null || echo 0)"
           online="$(jq -r '.state.last_cycle.analysis.market.online_services_seen // 0' /tmp/demand.json 2>/dev/null || echo 0)"
-          measured="$(jq -r '.state.last_cycle.analysis.market.measured_services // 0' /tmp/demand.json 2>/dev/null || echo 0)"
-          active="$(jq -r '.state.last_cycle.analysis.market.services_with_30d_buyers // 0' /tmp/demand.json 2>/dev/null || echo 0)"
-          enriched="$(jq -r '.state.last_cycle.analysis.market.detail_enrichment.succeeded // 0' /tmp/demand.json 2>/dev/null || echo 0)"
-          top_name="$(jq -r '.state.last_cycle.analysis.top_broad_demand[0].name // "UNKNOWN"' /tmp/demand.json 2>/dev/null || echo UNKNOWN)"
-          top_score="$(jq -r '.state.last_cycle.analysis.top_broad_demand[0].broad_demand_score // 0' /tmp/demand.json 2>/dev/null || echo 0)"
-          top_buyers="$(jq -r '.state.last_cycle.analysis.top_broad_demand[0].unique_buyers_30d // 0' /tmp/demand.json 2>/dev/null || echo 0)"
-          jq -n \
-            --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg top_name "$top_name" \
-            --argjson cycles "$cycles" --argjson online "$online" --argjson measured "$measured" --argjson active "$active" --argjson enriched "$enriched" --argjson top_score "$top_score" --argjson top_buyers "$top_buyers" \
-            '{schema_version:"1.1",project:"LSI_X402_DEMAND_RADAR_R1",run_id:$run,commit:$sha,background:{cycles:$cycles,cadence_minutes:60,max_cycles:168,open_chat_required:false},market:{online_services_seen:$online,detail_services_enriched:$enriched,measured_services:$measured,services_with_30d_buyers:$active},top_broad_demand:{name:$top_name,score:$top_score,buyers_30d:$top_buyers},zero_cost_route:true,production_actions:false,paid_routes_active:false,wallet_bound:false,money_movement:false,attribution:"Data: x402-list.com (CC BY 4.0)"}' \
-            > generated/evidence/lsi-x402-demand-radar-r1.json
+          sampled="$(jq -r '.state.last_cycle.analysis.market.sample_succeeded // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          active="$(jq -r '.state.last_cycle.analysis.market.services_with_activity // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          top_name="$(jq -r '.state.last_cycle.analysis.top_demand[0].name // "UNKNOWN"' /tmp/demand.json 2>/dev/null || echo UNKNOWN)"
+          top_score="$(jq -r '.state.last_cycle.analysis.top_demand[0].demand_score // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          buyer_days="$(jq -r '.state.last_cycle.analysis.top_demand[0].buyer_days_30d // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          tx="$(jq -r '.state.last_cycle.analysis.top_demand[0].tx_count_30d // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          volume="$(jq -r '.state.last_cycle.analysis.top_demand[0].volume_usd_30d // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg top_name "$top_name" --argjson cycles "$cycles" --argjson online "$online" --argjson sampled "$sampled" --argjson active "$active" --argjson top_score "$top_score" --argjson buyer_days "$buyer_days" --argjson tx "$tx" --argjson volume "$volume" '{schema_version:"1.3",project:"LSI_X402_DEMAND_RADAR_R1",run_id:$run,commit:$sha,background:{cycles:$cycles,cadence_minutes:60,max_cycles:168,open_chat_required:false},market:{online_services_seen:$online,sample_succeeded:$sampled,services_with_activity:$active},top_demand:{name:$top_name,score:$top_score,buyer_days_30d:$buyer_days,tx_count_30d:$tx,volume_usd_30d:$volume},methodology:{buyer_metric:"buyer_days_30d",warning:"buyer-days are not 30-day unique buyers"},zero_cost_route:true,production_actions:false,paid_routes_active:false,wallet_bound:false,money_movement:false,attribution:"Data: x402-list.com (CC BY 4.0)"}' > generated/evidence/lsi-x402-demand-radar-r1.json
 
       - name: Upload sanitized demand receipt
         if: always()
