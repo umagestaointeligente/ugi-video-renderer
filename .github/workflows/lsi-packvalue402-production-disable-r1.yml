@@ -1,0 +1,83 @@
+name: LSI PackValue402 Production Disable R1
+run-name: LSI PackValue402 Production Disable R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - 'lsi-packvalue402-disable-*'
+    paths:
+      - 'activation/packvalue402-disable.json'
+      - 'cloudflare/packvalue402-paid-r1/wrangler.production-shell.toml'
+      - '.github/workflows/lsi-packvalue402-production-disable-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  disable-payments:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      PROD_URL: https://lsi-packvalue402-r1.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate disable command
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=activation/packvalue402-disable.json
+          test -f "$F"
+          jq -e '.schema_version=="1.0" and .product=="PackValue402" and .disable_payments==true and .requested_by=="Lola" and (.reason|type=="string") and (.reason|length>2)' "$F" >/dev/null
+          grep -q 'PAYMENTS_ENABLED = "false"' cloudflare/packvalue402-paid-r1/wrangler.production-shell.toml
+          ! grep -q '^PAY_TO' cloudflare/packvalue402-paid-r1/wrangler.production-shell.toml
+
+      - name: Require Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy payment-disabled shell
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npm install --ignore-scripts --no-audit --no-fund
+          npx wrangler deploy --config wrangler.production-shell.toml
+
+      - name: Prove payments are disabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$PROD_URL/health?ts=$RANDOM" > /tmp/h.json 2>/dev/null && jq -e '.ok==true and .payment.enabled==false and .payment.pay_to_configured==false and .payment.ready==false and .payment.server_can_spend==false' /tmp/h.json >/dev/null; then ok=true; break; fi
+            sleep 2
+          done
+          test "$ok" = true
+          code="$(curl -sS -o /tmp/b.json -w '%{http_code}' -X POST "$PROD_URL/v1/compare" -H 'content-type: application/json' --data '{"offers":[{"label":"a","text":"1 L","price":3},{"label":"b","text":"2 L","price":5}]}' )"
+          test "$code" = "503"
+          jq -e '.error=="payments_not_activated" and .money_movement==false' /tmp/b.json >/dev/null
+
+      - name: Write kill-switch receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"PACKVALUE402_KILL_SWITCH_R1",state:"PAYMENTS_DISABLED",run_id:$run,commit:$sha,payments_enabled:false,pay_to_configured:false,server_can_spend:false,money_movement:false}' > generated/evidence/packvalue402-kill-switch-r1.json
+
+      - name: Upload kill-switch receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: packvalue402-kill-switch-${{ github.run_id }}
+          path: generated/evidence/packvalue402-kill-switch-r1.json
+          retention-days: 30
+          if-no-files-found: error
