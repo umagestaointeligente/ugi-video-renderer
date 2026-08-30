@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PackValue PRO — Comparador em lote de SKUs</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{font-family:Inter,system-ui,sans-serif;color:#172033;background:#f4f6fb}*{box-sizing:border-box}body{margin:0}header{background:#111936;color:#fff;padding:28px 22px}header>div,main,footer{max-width:1120px;margin:auto}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:#8ea1ff}h1{font-size:clamp(32px,5vw,56px);margin:7px 0 12px;line-height:1.03}.sub{max-width:760px;color:#cbd3f6;line-height:1.55}.badge{display:inline-block;padding:6px 9px;border:1px solid #44539a;border-radius:999px;margin:5px 6px 0 0;font-size:12px}main{padding:28px 20px 70px}.panel{background:#fff;border:1px solid #dfe4ef;border-radius:17px;padding:20px;margin:18px 0;box-shadow:0 10px 28px rgba(25,35,70,.05)}h2{margin-top:0}textarea{width:100%;min-height:220px;padding:12px;border:1px solid #cfd6e5;border-radius:10px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}input[type=file]{display:block;margin:12px 0}.actions{display:flex;gap:10px;flex-wrap:wrap}button{border:0;border-radius:10px;padding:12px 17px;font-weight:800;cursor:pointer;background:#3048d8;color:#fff}button.secondary{background:#e8ecf8;color:#273454}.note{font-size:13px;color:#61708c;line-height:1.5}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{background:#f5f7fd;border-radius:12px;padding:14px}.metric strong{display:block;font-size:24px;margin-top:4px}.table-wrap{overflow:auto;border:1px solid #e0e4ed;border-radius:12px}table{width:100%;border-collapse:collapse;min-width:900px}th,td{text-align:left;padding:10px;border-bottom:1px solid #edf0f5;font-size:13px}th{background:#f7f8fb;position:sticky;top:0}.best{background:#edf9f1}.error{background:#fff3f0}.status{font-weight:800}.empty{padding:28px;text-align:center;color:#76829a}footer{padding:24px 20px 48px;color:#68758c;font-size:12px}.privacy{border-left:4px solid #4f63da;padding:10px 14px;background:#eef1ff;border-radius:8px}.hidden{display:none}@media(max-width:760px){.summary{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div><div class="eyebrow">PackValue PRO</div><h1>Compare muitos SKUs de uma vez.</h1><p class="sub">Normalize preço por kg, litro ou unidade, incorpore frete e desconto, ranqueie o melhor valor e exporte o resultado. O arquivo funciona localmente: os dados ficam no seu dispositivo.</p><span class="badge">Sem cadastro</span><span class="badge">Sem upload</span><span class="badge">CSV/TSV</span><span class="badge">Funciona offline</span></div></header>
+<main>
+<section class="panel"><h2>1. Cole ou importe sua tabela</h2><p class="note">Cabeçalhos aceitos: <code>sku;descricao;qtd_pack;tamanho;unidade;preco;frete;desconto_pct</code>. Unidades: g, kg, ml, L ou un.</p><input id="file" type="file" accept=".csv,.txt,text/csv,text/plain"><textarea id="input">sku;descricao;qtd_pack;tamanho;unidade;preco;frete;desconto_pct
+A001;Café pacote 500g;1;500;g;19,90;0;0
+A002;Café pacote 1kg;1;1;kg;36,90;0;5
+B001;Detergente 500ml pack 3;3;500;ml;11,70;4,90;0
+B002;Detergente 2L;1;2;L;12,99;0;0</textarea><div class="actions"><button id="analyze">Analisar preços</button><button id="example" class="secondary">Restaurar exemplo</button><button id="clear" class="secondary">Limpar</button></div><p class="privacy"><strong>Privacidade:</strong> este arquivo não contém <code>fetch</code>, analytics, pixel ou envio de formulário. O processamento acontece no navegador.</p></section>
+<section id="resultsPanel" class="panel hidden"><h2>2. Resultado</h2><div id="summary" class="summary"></div><div class="actions" style="margin:18px 0"><button id="export">Exportar resultado CSV</button></div><div class="table-wrap"><table><thead><tr><th>SKU</th><th>Descrição</th><th>Dimensão</th><th>Ranking</th><th>Custo final</th><th>Preço normalizado</th><th>Vs. melhor</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div><p class="note">Compare apenas itens equivalentes em qualidade, composição, prazo e condições comerciais. O ranking é matemático; não substitui julgamento comercial.</p></section>
+</main>
+<footer>PackValue PRO · ferramenta determinística de apoio à precificação e comparação. Nenhuma economia ou margem é garantida.</footer>
+<script>
+/*__PACKVALUE_CORE__*/
+const EXAMPLE=document.querySelector('#input').value;
+let latest=[];
+const money=value=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(value);
+const number=value=>new Intl.NumberFormat('pt-BR',{maximumFractionDigits:3}).format(value);
+function render(results){
+ latest=results;
+ const valid=results.filter(x=>x.ok), errors=results.length-valid.length, best=valid.filter(x=>x.melhor_valor).length;
+ document.querySelector('#summary').innerHTML=`<div class="metric">Linhas<strong>${results.length}</strong></div><div class="metric">Válidas<strong>${valid.length}</strong></div><div class="metric">Melhores valores<strong>${best}</strong></div><div class="metric">Erros<strong>${errors}</strong></div>`;
+ document.querySelector('#tbody').innerHTML=results.map(item=>item.ok?`<tr class="${item.melhor_valor?'best':''}"><td>${escapeHtml(item.sku)}</td><td>${escapeHtml(item.descricao)}</td><td>${item.unidade_normalizada}</td><td>${item.rank||''}</td><td>${money(item.custo_final)}</td><td>${money(item.preco_normalizado)}/${item.unidade_normalizada}</td><td>${number(item.premium_vs_melhor_pct)}%</td><td class="status">OK</td></tr>`:`<tr class="error"><td>${escapeHtml(item.sku)}</td><td>${escapeHtml(item.descricao)}</td><td colspan="5">${escapeHtml((item.issues||[]).join(' · '))}</td><td class="status">ERRO</td></tr>`).join('');
+ document.querySelector('#resultsPanel').classList.remove('hidden');
+}
+function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.querySelector('#analyze').addEventListener('click',()=>render(rankRows(parseDelimited(document.querySelector('#input').value))));
+document.querySelector('#example').addEventListener('click',()=>{document.querySelector('#input').value=EXAMPLE;render(rankRows(parseDelimited(EXAMPLE)));});
+document.querySelector('#clear').addEventListener('click',()=>{document.querySelector('#input').value='';latest=[];document.querySelector('#resultsPanel').classList.add('hidden');});
+document.querySelector('#file').addEventListener('change',event=>{const f=event.target.files&&event.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.querySelector('#input').value=String(r.result||'');};r.readAsText(f,'utf-8');});
+document.querySelector('#export').addEventListener('click',()=>{if(!latest.length)return;const blob=new Blob(['\uFEFF'+resultsToCsv(latest)],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='packvalue-pro-resultado.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
+render(rankRows(parseDelimited(EXAMPLE)));
+</script>
+</body>
+</html>
