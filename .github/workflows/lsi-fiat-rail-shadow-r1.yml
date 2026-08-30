@@ -1,0 +1,78 @@
+name: LSI Fiat Rail Shadow R1
+run-name: LSI Fiat Rail Shadow R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-fiat-rail-r1-20260830]
+    paths:
+      - 'scripts/lsi_fiat_rail_r1.py'
+      - '.github/workflows/lsi-fiat-rail-shadow-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static financial isolation gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=scripts/lsi_fiat_rail_r1.py
+          python -m py_compile "$F"
+          grep -q 'LSI_FIAT_OIDC_AUDIENCE = "lsi-fiat-rail"' "$F"
+          grep -q 'LSI_FIAT_OFFER_PRICE = 497' "$F"
+          grep -q 'arbitrary_amount_allowed' "$F"
+          grep -q 'ugiMaterialFulfillmentAllowed: false' "$F"
+          grep -q 'fulfillmentTriggered: false' "$F"
+          grep -q 'bufferMutationAllowed: false' "$F"
+          ! grep -q 'body.amount' "$F"
+          ! grep -q 'body.price' "$F"
+          ! grep -q 'body.value' "$F"
+          echo 'FIAT_STATIC_ISOLATION=PASS'
+
+      - name: Require Cloudflare admin credentials
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"
+          test -n "$CF_ACCOUNT_ID"
+
+      - name: Build candidate version without deployment
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          LSI_FIAT_MODE: shadow
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check requests
+          python scripts/lsi_fiat_rail_r1.py
+          jq -e '.mode=="shadow" and .deployed==false and .payment_created==false and .arbitrary_amount_allowed==false and .oidc_required==true and .ugi_fulfillment_allowed==false and .buffer_mutation_allowed==false' cloudflare/status/lsi-fiat-rail-r1.json >/dev/null
+          echo 'UNDEPLOYED_CANDIDATE=PASS'
+
+      - name: Verify production remained on previous version
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS 'https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health' > /tmp/live.json
+          before="$(jq -r '.active_version_before' cloudflare/status/lsi-fiat-rail-r1.json)"
+          candidate="$(jq -r '.candidate_version' cloudflare/status/lsi-fiat-rail-r1.json)"
+          test "$before" != "$candidate"
+          jq -e '.ok==true and .bindings.ASAAS_API_KEY==true and .bindings.ASAAS_WEBHOOK_TOKEN==true and .capabilities.publicationExactlyOnceGuard==true and .capabilities.permanentCommercePublicationLinkPolicy==true' /tmp/live.json >/dev/null
+          test "$(jq -r '.version' /tmp/live.json)" != 'lola-v8-r44-5-23-lsi-fiat-rail-r1-2026-08-30'
+          echo 'PRODUCTION_UNTOUCHED=PASS'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-fiat-rail-shadow-${{ github.run_id }}
+          path: cloudflare/status/lsi-fiat-rail-r1.json
+          retention-days: 30
+          if-no-files-found: error
