@@ -1,0 +1,137 @@
+name: LSI x402 Demand Radar R1
+run-name: LSI x402 Demand Radar R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - 'cloudflare/lsi-x402-demand-radar-r1.mjs'
+      - 'cloudflare/wrangler.lsi-x402-demand-radar-r1.toml'
+      - '.github/workflows/lsi-x402-demand-radar-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DEMAND_URL: https://lsi-x402-demand-radar-r1.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static fail-closed checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'production_actions: false' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'paid_routes_active: false' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'money_movement: false' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'wallet_bound: false' cloudflare/lsi-x402-demand-radar-r1.mjs
+          grep -q 'x402-list.com (CC BY 4.0)' cloudflare/lsi-x402-demand-radar-r1.mjs
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Deploy isolated x402 Demand Radar
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config cloudflare/wrangler.lsi-x402-demand-radar-r1.toml
+
+      - name: Bind ephemeral admin token
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          admin_token="$(openssl rand -hex 32)"
+          echo "::add-mask::$admin_token"
+          printf '%s' "$admin_token" | npx --yes wrangler@4.32.0 secret put ADMIN_TOKEN --config cloudflare/wrangler.lsi-x402-demand-radar-r1.toml >/dev/null
+          echo "ADMIN_TOKEN=$admin_token" >> "$GITHUB_ENV"
+
+      - name: Wait for admin readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          ready=false
+          for i in $(seq 1 15); do
+            code="$(curl -sS -o /tmp/auth.json -w '%{http_code}' -X POST -H "authorization: Bearer $ADMIN_TOKEN" "$DEMAND_URL/admin/auth-probe" || true)"
+            if [ "$code" = "200" ] && jq -e '.ok==true and .admin_ready==true' /tmp/auth.json >/dev/null 2>&1; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ready" = true
+
+      - name: Verify public fail-closed health
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$DEMAND_URL/health" > /tmp/health.json
+          jq -e '.ok==true and .durable_objects_bound==true and .monetary_budget==0 and .production_actions==false and .paid_routes_active==false and .wallet_bound==false and .money_movement==false' /tmp/health.json >/dev/null
+
+      - name: Start seven-day autonomous demand scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST \
+            -H "authorization: Bearer $ADMIN_TOKEN" \
+            -H 'content-type: application/json' \
+            --data '{"cadence_ms":3600000,"max_cycles":168,"monetary_budget":0}' \
+            "$DEMAND_URL/admin/start" > /tmp/start.json
+          jq -e '.ok==true and .state.status=="ACTIVE" and .state.monetary_budget==0 and .state.production_actions==false and .state.paid_routes_active==false and .state.money_movement==false' /tmp/start.json >/dev/null
+
+      - name: Prove autonomous market scan persisted
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 30); do
+            curl -fsS "$DEMAND_URL/demand" > /tmp/demand.json || true
+            if jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.state=="PASS" and .state.last_cycle.analysis.market.online_services_seen>100' /tmp/demand.json >/dev/null 2>&1; then
+              break
+            fi
+            sleep 3
+          done
+          jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.state=="PASS" and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.paid_routes_active==false and .state.last_cycle.money_movement==false and .state.last_cycle.instruction_authority_from_external_content==false and .state.last_cycle.analysis.top_broad_demand|length>0' /tmp/demand.json >/dev/null
+
+      - name: Write sanitized demand receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          cycles="$(jq -r '.state.cycle_count // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          online="$(jq -r '.state.last_cycle.analysis.market.online_services_seen // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          measured="$(jq -r '.state.last_cycle.analysis.market.measured_services // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          active="$(jq -r '.state.last_cycle.analysis.market.services_with_30d_buyers // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          top_name="$(jq -r '.state.last_cycle.analysis.top_broad_demand[0].name // "UNKNOWN"' /tmp/demand.json 2>/dev/null || echo UNKNOWN)"
+          top_score="$(jq -r '.state.last_cycle.analysis.top_broad_demand[0].broad_demand_score // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          top_buyers="$(jq -r '.state.last_cycle.analysis.top_broad_demand[0].unique_buyers_30d // 0' /tmp/demand.json 2>/dev/null || echo 0)"
+          jq -n \
+            --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg top_name "$top_name" \
+            --argjson cycles "$cycles" --argjson online "$online" --argjson measured "$measured" --argjson active "$active" --argjson top_score "$top_score" --argjson top_buyers "$top_buyers" \
+            '{schema_version:"1.0",project:"LSI_X402_DEMAND_RADAR_R1",run_id:$run,commit:$sha,background:{cycles:$cycles,cadence_minutes:60,max_cycles:168,open_chat_required:false},market:{online_services_seen:$online,measured_services:$measured,services_with_30d_buyers:$active},top_broad_demand:{name:$top_name,score:$top_score,buyers_30d:$top_buyers},zero_cost_route:true,production_actions:false,paid_routes_active:false,wallet_bound:false,money_movement:false,attribution:"Data: x402-list.com (CC BY 4.0)"}' \
+            > generated/evidence/lsi-x402-demand-radar-r1.json
+
+      - name: Upload sanitized demand receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-x402-demand-radar-${{ github.run_id }}
+          path: generated/evidence/lsi-x402-demand-radar-r1.json
+          retention-days: 14
+          if-no-files-found: error
