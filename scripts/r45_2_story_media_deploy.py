@@ -41,8 +41,21 @@ def main():
     live.raise_for_status()
     source=base.extract_worker_source(live)
     current=re.search(r'var VERSION = "([^"]+)";', source)
-    lines=[f"BASE_VERSION={current.group(1) if current else 'unknown'}", "OK=false"]
+    current_version=current.group(1) if current else "unknown"
+    lines=[f"BASE_VERSION={current_version}", "OK=false"]
     write(lines)
+
+    # Idempotent recovery: once R45.2 is already live, do not patch the live Worker again.
+    # This keeps repeated smoke runs safe and prevents duplicate route/helper insertion.
+    if current_version == NEW_VERSION:
+        health=wait_health(NEW_VERSION, seconds=60)
+        ok=health.get("ok") is True and health.get("version")==NEW_VERSION
+        lines += ["ALREADY_LIVE=true", f"LIVE_VERSION={health.get('version')}", f"HEALTH_VERSION_MATCH={str(ok).lower()}", f"OK={str(ok).lower()}"]
+        write(lines)
+        if not ok:
+            raise RuntimeError("R45.2 version marker is live but health verification failed")
+        return
+
     bindings,binding_version=base.resolve_bindings(api_base,headers)
     lines += [f"BINDING_SOURCE_VERSION_ID={binding_version}",f"BINDING_COUNT={len(bindings)}"]
 
@@ -63,8 +76,7 @@ __name(r452DecodeBase64, "r452DecodeBase64");
 async function r452StoreMp4(env, origin, contentId, videoBase64) {
   const bytes=r452DecodeBase64(videoBase64);
   if (bytes.length < 20000) throw new Error("R45.2 MP4 too small");
-  const head=new TextDecoder("latin1").decode(bytes.slice(0,64));
-  if (!head.includes("ftyp")) throw new Error("R45.2 invalid MP4 signature");
+  if (!(bytes[4]===0x66 && bytes[5]===0x74 && bytes[6]===0x79 && bytes[7]===0x70)) throw new Error("R45.2 invalid MP4 signature");
   const safe=sanitizeCommerceId(String(contentId || crypto.randomUUID()));
   const key=`geradas/r45-2/${Date.now()}-${safe}.mp4`;
   await env.MEDIA.put(key,bytes,{httpMetadata:{contentType:"video/mp4",cacheControl:"public,max-age=31536000,immutable"}});
