@@ -1,0 +1,15 @@
+name = "lsi-capital-paper-r1"
+main = "lsi-capital-paper-r1.mjs"
+compatibility_date = "2026-08-30"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "PORTFOLIO"
+class_name = "PaperPortfolioState"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["PaperPortfolioState"]
+
+[observability]
+enabled = true
