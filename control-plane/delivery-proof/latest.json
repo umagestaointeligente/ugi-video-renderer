@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T19:54:34.820625+00:00",
+  "checkedAt": "2026-08-30T20:04:33.822603+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 2,
+  "delivered": 3,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -30,6 +30,28 @@
         "ok": true,
         "httpStatus": 200,
         "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679855168443157781"
+      }
+    },
+    {
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
+      "contentId": "UGI-20260830-YT-01-RESULT-HOURS",
+      "platform": "youtube",
+      "kind": "video",
+      "draftId": "ugi-20260830145151-f8332cb6e6fd",
+      "bufferPostId": "6a944ec5f7f5d8f78d1c4730",
+      "dueAt": "2026-08-30T20:00:00+00:00",
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T20:00:24.599Z",
+      "externalLink": "https://www.youtube.com/watch?v=bHzolmPsGss",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.youtube.com/watch?v=bHzolmPsGss"
       }
     },
     {
