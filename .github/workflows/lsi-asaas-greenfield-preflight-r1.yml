@@ -1,0 +1,104 @@
+name: LSI Asaas Greenfield Preflight R1
+run-name: LSI Asaas Greenfield Preflight R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-asaas-greenfield-r1-20260830]
+    paths:
+      - '.github/workflows/lsi-asaas-greenfield-preflight-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CF_WORKER_NAME: lola-operacional-ugi
+      HEALTH_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Require Cloudflare control-plane credentials
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"
+          test -n "$CF_ACCOUNT_ID"
+          echo "CF_ACCOUNT_ID=$CF_ACCOUNT_ID" >> "$GITHUB_ENV"
+          echo "CF_API_TOKEN=$CF_API_TOKEN" >> "$GITHUB_ENV"
+          echo "::add-mask::$CF_API_TOKEN"
+
+      - name: Probe live public health
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --max-time 30 "$HEALTH_URL" > /tmp/health.json
+          jq -e '.ok == true' /tmp/health.json >/dev/null
+          version="$(jq -r '.version // empty' /tmp/health.json)"
+          test -n "$version"
+          asaas_key="$(jq -r '(.bindings.ASAAS_API_KEY // .secrets.ASAAS_API_KEY // .commerce.providers.asaas.apiKey // .providers.asaas.apiKey // .ASAAS_API_KEY // false) | tostring' /tmp/health.json)"
+          asaas_webhook="$(jq -r '(.bindings.ASAAS_WEBHOOK_TOKEN // .secrets.ASAAS_WEBHOOK_TOKEN // .commerce.providers.asaas.webhookToken // .providers.asaas.webhookToken // .ASAAS_WEBHOOK_TOKEN // false) | tostring' /tmp/health.json)"
+          checkout_route="$(jq -r '((.endpoints.commerceCheckout // .commerceCheckout // .routes.commerceCheckout // empty) != "") | tostring' /tmp/health.json)"
+          test "$asaas_key" = true
+          test "$asaas_webhook" = true
+          test "$checkout_route" = true
+          printf '%s' "$version" > /tmp/live-version.txt
+          jq -n --arg version "$version" --argjson key "$asaas_key" --argjson webhook "$asaas_webhook" --argjson checkout "$checkout_route" '{health_ok:true,live_version:$version,asaas_api_key_configured:$key,asaas_webhook_configured:$webhook,commerce_checkout_advertised:$checkout,secrets_exposed:false,financial_mutation:false}' > /tmp/live-health-safe.json
+
+      - name: Capture current deployed Worker source without bindings values
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/${CF_WORKER_NAME}"
+          curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer ${CF_API_TOKEN}" \
+            "$base" > /tmp/current-worker.multipart
+          test -s /tmp/current-worker.multipart
+          version="$(cat /tmp/live-version.txt)"
+          grep -Fq "$version" /tmp/current-worker.multipart
+          grep -Fq 'ASAAS_API_KEY' /tmp/current-worker.multipart
+          grep -Fq 'createProviderCheckout' /tmp/current-worker.multipart
+          grep -Fq '/api/commerce/webhook/asaas' /tmp/current-worker.multipart
+          sha256sum /tmp/current-worker.multipart | awk '{print $1}' > /tmp/current-worker.sha256
+          echo 'CURRENT_DEPLOYED_SOURCE_CAPTURE=PASS'
+
+      - name: Capture rollback version
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/${CF_WORKER_NAME}"
+          curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer ${CF_API_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            "${base}/deployments" > /tmp/deployments.json
+          jq -e '.success == true' /tmp/deployments.json >/dev/null
+          previous="$(jq -r '[.result.deployments[] | . as $d | ($d.versions // [])[] | {created_on:$d.created_on,version_id:.version_id,percentage:(.percentage|tonumber)}] | sort_by(.created_on) | last | .version_id // empty' /tmp/deployments.json)"
+          test -n "$previous"
+          printf '%s' "$previous" > /tmp/rollback-version.txt
+          echo 'ROLLBACK_VERSION_CAPTURE=PASS'
+
+      - name: Write safe preflight receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n \
+            --arg run "$GITHUB_RUN_ID" \
+            --arg commit "$GITHUB_SHA" \
+            --arg version "$(cat /tmp/live-version.txt)" \
+            --arg source_sha256 "$(cat /tmp/current-worker.sha256)" \
+            --arg rollback_version "$(cat /tmp/rollback-version.txt)" \
+            '{schema_version:"1.0",project:"LSI_ASAAS_GREENFIELD_R1",stage:"PREFLIGHT",acceptance_state:"PASS",run_id:$run,commit:$commit,live_worker_version:$version,current_source_sha256:$source_sha256,rollback_version:$rollback_version,asaas_api_key_configured:true,asaas_webhook_configured:true,commerce_checkout_advertised:true,secrets_exposed:false,financial_data_read:false,financial_mutation:false}' \
+            | tee generated/evidence/lsi-asaas-greenfield-preflight-r1.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-asaas-greenfield-preflight-${{ github.run_id }}
+          path: generated/evidence/lsi-asaas-greenfield-preflight-r1.json
+          retention-days: 14
+          if-no-files-found: error
