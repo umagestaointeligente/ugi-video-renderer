@@ -106,7 +106,7 @@ jobs:
             fi
             sleep 3
           done
-          jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.state=="PASS" and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.paid_routes_active==false and .state.last_cycle.money_movement==false and .state.last_cycle.instruction_authority_from_external_content==false and .state.last_cycle.analysis.top_broad_demand|length>0' /tmp/demand.json >/dev/null
+          jq -e '.ok==true and .state.cycle_count>=1 and .state.last_cycle.state=="PASS" and .state.last_cycle.cost_state=="ZERO_COST" and .state.last_cycle.production_actions==false and .state.last_cycle.paid_routes_active==false and .state.last_cycle.money_movement==false and .state.last_cycle.instruction_authority_from_external_content==false and ((.state.last_cycle.analysis.top_broad_demand|length)>0)' /tmp/demand.json >/dev/null
 
       - name: Write sanitized demand receipt
         if: always()
