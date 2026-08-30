@@ -26,6 +26,7 @@ COMMANDS = ROOT / "control-plane" / "commands"
 STATE_DIR = ROOT / "control-plane" / "publisher-hub" / "render-state"
 DEFAULT_WORKER_URL = "https://lola-operacional-ugi.umagestaointeligente.workers.dev"
 MAX_RENDER_ATTEMPTS = 3
+STALE_QUEUE_HOURS = int(os.getenv("UGI_QUEUE_STALE_HOURS", "6"))
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -83,6 +84,15 @@ class WorkerClient:
         ])
 
 
+def _queue_row_is_stale(row: dict[str, Any]) -> bool:
+    try:
+        due = dt.datetime.fromisoformat(str(row.get("dueAt") or "").replace("Z", "+00:00")).astimezone(dt.timezone.utc)
+    except Exception:
+        return False
+    cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=max(1, STALE_QUEUE_HOURS))
+    return due < cutoff
+
+
 def queued_content_ids() -> list[str]:
     ids: list[str] = []
     seen: set[str] = set()
@@ -93,6 +103,8 @@ def queued_content_ids() -> list[str]:
         if data.get("project") != "UGI":
             raise SystemExit(f"PROJECT_ISOLATION_FAIL:{path}")
         for row in data.get("posts") or []:
+            if _queue_row_is_stale(row):
+                continue
             cid = str(row.get("contentId") or "").strip()
             if not cid:
                 raise SystemExit(f"CONTENT_ID_MISSING:{path}")

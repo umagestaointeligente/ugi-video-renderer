@@ -37,6 +37,7 @@ GROWTH_POLICY = ROOT / "config" / "ugi" / "growth-policy.json"
 ROUTING_POLICY = ROOT / "config" / "ugi" / "integration-routing.json"
 
 DEFAULT_WORKER_URL = "https://lola-operacional-ugi.umagestaointeligente.workers.dev"
+STALE_QUEUE_HOURS = int(os.getenv("UGI_QUEUE_STALE_HOURS", "6"))
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -141,6 +142,26 @@ def validate_manifest(data: dict[str, Any], manifest: Path) -> list[dict[str, An
     return rows
 
 
+def _due_at(value: Any) -> dt.datetime | None:
+    try:
+        return dt.datetime.fromisoformat(str(value).replace("Z", "+00:00")).astimezone(dt.timezone.utc)
+    except Exception:
+        return None
+
+
+def manifest_is_stale(path: Path) -> bool:
+    try:
+        rows = (load_json(path).get("posts") or [])
+    except Exception:
+        return False
+    dues = [_due_at(row.get("dueAt")) for row in rows]
+    dues = [x for x in dues if x is not None]
+    if not dues:
+        return False
+    cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=max(1, STALE_QUEUE_HOURS))
+    return max(dues) < cutoff
+
+
 def discover_manifests(explicit: str | None) -> list[Path]:
     if explicit:
         p = (ROOT / explicit).resolve() if not Path(explicit).is_absolute() else Path(explicit)
@@ -150,11 +171,12 @@ def discover_manifests(explicit: str | None) -> list[Path]:
             raise SystemExit(f"MANIFEST_NOT_FOUND:{p}")
         return [p]
 
-    # Canonical queue is authoritative. Legacy chat manifests are read only
-    # when no canonical queue exists, preventing duplicate reconciliation.
-    canonical = sorted(CANONICAL_QUEUE.glob("*.json")) if CANONICAL_QUEUE.exists() else []
-    if canonical:
-        return canonical
+    # Canonical queue is authoritative. Once it exists, never fall back to the
+    # legacy chat queue. Expired manifests remain durable history but are not
+    # allowed to block or trigger unattended late publication.
+    if CANONICAL_QUEUE.exists():
+        canonical = sorted(CANONICAL_QUEUE.glob("*.json"))
+        return [p for p in canonical if not manifest_is_stale(p)]
     return sorted(LEGACY_QUEUE.glob("*.json")) if LEGACY_QUEUE.exists() else []
 
 
