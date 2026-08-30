@@ -1,0 +1,56 @@
+name: UGI Instagram R45.3 Evening Recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-instagram-r45-3-evening-recovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-instagram-r45-3-evening-recovery-20260830
+  cancel-in-progress: false
+
+jobs:
+  recover-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --quiet requests pillow numpy
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffmpeg -version | head -n 1
+      - name: Verify worker credential
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+      - name: Recover missing carousel and static post, preserving proven items
+        run: |
+          set -euo pipefail
+          PYTHONPATH=scripts python scripts/ugi_instagram_evening_recovery_20260830.py
+      - name: Persist authoritative evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-r45-3-recovery-bot'
+          git config user.email 'ugi-r45-3-recovery@users.noreply.github.com'
+          git add control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json 2>/dev/null || true
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'chore: persist authoritative Instagram evening recovery evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
