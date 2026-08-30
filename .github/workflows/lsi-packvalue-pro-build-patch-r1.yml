@@ -1,0 +1,148 @@
+name: LSI PackValue PRO Build + Live Patch R1
+run-name: LSI PackValue PRO Build + Live Patch R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-asaas-greenfield-r1-20260830]
+    paths:
+      - 'greenfield/packvalue-pro/**'
+      - '.github/workflows/lsi-packvalue-pro-build-patch-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_WORKER_NAME: lola-operacional-ugi
+      EXPECTED_LIVE_VERSION: lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25
+      NEW_VERSION: lola-v8-r44-5-24-lsi-packvalue-pro-greenfield-2026-08-30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and test PackValue PRO locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          node greenfield/packvalue-pro/test.mjs
+          node greenfield/packvalue-pro/build.mjs
+          jq -e '.network_capability==false and .pii_collection==false and .server_required_after_delivery==false' greenfield/packvalue-pro/dist/manifest.json >/dev/null
+          grep -q 'PackValue PRO' greenfield/packvalue-pro/dist/packvalue-pro.html
+          ! grep -Eqi 'Uma Gestão Inteligente|Bom de Clique|Orbit' greenfield/packvalue-pro/dist/packvalue-pro.html
+          echo 'PACKVALUE_PRODUCT_ACCEPTANCE=PASS'
+
+      - name: Require Cloudflare read control-plane credentials
+        shell: bash
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"
+          test -n "$CF_ACCOUNT_ID"
+          echo "CF_API_TOKEN=$CF_API_TOKEN" >> "$GITHUB_ENV"
+          echo "CF_ACCOUNT_ID=$CF_ACCOUNT_ID" >> "$GITHUB_ENV"
+          echo "::add-mask::$CF_API_TOKEN"
+
+      - name: Download and extract actual deployed module
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/${CF_WORKER_NAME}"
+          curl --fail-with-body --silent --show-error -D /tmp/current.headers \
+            -H "Authorization: Bearer ${CF_API_TOKEN}" \
+            "$base" > /tmp/current.body
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          headers=open('/tmp/current.headers','rb').read().decode('latin1')
+          body=open('/tmp/current.body','rb').read()
+          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers)
+          if not m: raise SystemExit('CURRENT_CONTENT_TYPE_MISSING')
+          ctype=m.group(1).strip()
+          candidates=[]
+          if 'multipart/' in ctype:
+              prefix=(f'Content-Type: {ctype}\r\nMIME-Version: 1.0\r\n\r\n').encode('latin1')
+              msg=BytesParser(policy=policy.default).parsebytes(prefix+body)
+              for part in msg.iter_parts():
+                  payload=part.get_payload(decode=True) or b''
+                  name=part.get_param('name',header='content-disposition') or ''
+                  filename=part.get_filename() or ''
+                  typ=part.get_content_type()
+                  if b'createProviderCheckout' in payload and b'/api/commerce/webhook/asaas' in payload:
+                      candidates.append((name,filename,typ,payload))
+          else:
+              candidates=[('single','lola-operacional-worker.mjs',ctype,body)]
+          if len(candidates)!=1:
+              raise SystemExit(f'CURRENT_MODULE_CANDIDATE_COUNT_{len(candidates)}')
+          name,filename,typ,payload=candidates[0]
+          text=payload.decode('utf-8')
+          if 'lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25' not in text:
+              raise SystemExit('CURRENT_VERSION_GATE_FAILED')
+          open('/tmp/current-worker.mjs','w',encoding='utf-8').write(text)
+          open('/tmp/current-module-meta.txt','w').write(f'name={name}\nfilename={filename}\ntype={typ}\nbytes={len(payload)}\n')
+          print('CURRENT_DEPLOYED_MODULE_EXTRACT=PASS')
+          PY
+
+      - name: Patch current deployed source fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python greenfield/packvalue-pro/patch_worker.py \
+            --source /tmp/current-worker.mjs \
+            --asset greenfield/packvalue-pro/dist/packvalue-pro.html \
+            --output /tmp/patched-worker.mjs
+          node --check /tmp/patched-worker.mjs
+          grep -Fq "$NEW_VERSION" /tmp/patched-worker.mjs
+          grep -Fq 'fixed_offer_accepts_no_client_parameters' /tmp/patched-worker.mjs
+          grep -Fq 'deliveryRequiresPaidWebhook: true' /tmp/patched-worker.mjs
+          grep -Fq 'spendCapability: false' /tmp/patched-worker.mjs
+          grep -Fq 'if (!isCommerceAdminAuthorized(request, env)) return json({ ok: false, errorClass: "commerce_authorization"' /tmp/patched-worker.mjs
+          echo 'LIVE_SOURCE_PATCH_STATIC=PASS'
+
+      - name: Verify patch scope is additive around commerce only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re
+          old=open('/tmp/current-worker.mjs',encoding='utf-8').read()
+          new=open('/tmp/patched-worker.mjs',encoding='utf-8').read()
+          for invariant in [
+              '/api/video-render','/api/video-upload','/api/platform-approval','/api/commerce/webhook/asaas','/api/material-delivery/',
+              'isCommerceAdminAuthorized(request, env)','ASAAS_WEBHOOK_TOKEN','BUFFER_ACCESS_TOKEN'
+          ]:
+              if old.count(invariant)!=new.count(invariant):
+                  raise SystemExit('INVARIANT_COUNT_CHANGED:'+invariant)
+          if 'PackValue PRO' in old: raise SystemExit('GREENFIELD_NOT_NEW')
+          if 'PackValue PRO' not in new: raise SystemExit('GREENFIELD_MISSING')
+          print('ADDITIVE_INVARIANT_GATE=PASS')
+          PY
+
+      - name: Write sanitized build receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n \
+            --arg run "$GITHUB_RUN_ID" \
+            --arg commit "$GITHUB_SHA" \
+            --arg old "$EXPECTED_LIVE_VERSION" \
+            --arg new "$NEW_VERSION" \
+            --arg source_sha "$(sha256sum /tmp/current-worker.mjs | awk '{print $1}')" \
+            --arg patched_sha "$(sha256sum /tmp/patched-worker.mjs | awk '{print $1}')" \
+            --argjson product "$(cat greenfield/packvalue-pro/dist/manifest.json)" \
+            '{schema_version:"1.0",project:"PACKVALUE_PRO_GREENFIELD_R1",stage:"OFFLINE_LIVE_SOURCE_PATCH",acceptance_state:"PASS",run_id:$run,commit:$commit,live_baseline_version:$old,proposed_version:$new,current_source_sha256:$source_sha,patched_source_sha256:$patched_sha,product:$product,production_deployed:false,provider_checkout_created:false,real_value_moved:false,incremental_cost_usd:0}' \
+            | tee generated/evidence/packvalue-pro-build-patch-r1.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packvalue-pro-build-patch-${{ github.run_id }}
+          path: |
+            generated/evidence/packvalue-pro-build-patch-r1.json
+            greenfield/packvalue-pro/dist/manifest.json
+          retention-days: 14
+          if-no-files-found: error
