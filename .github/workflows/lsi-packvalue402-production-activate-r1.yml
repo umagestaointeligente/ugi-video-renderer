@@ -1,0 +1,210 @@
+name: LSI PackValue402 Production Activate R1
+run-name: LSI PackValue402 Production Activate R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches:
+      - 'lsi-packvalue402-activate-*'
+    paths:
+      - 'cloudflare/packvalue402-paid-r1/**'
+      - 'activation/packvalue402-production.json'
+      - '.github/workflows/lsi-packvalue402-production-activate-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  activate-with-rollback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      PROD_URL: https://lsi-packvalue402-r1.umagestaointeligente.workers.dev
+      FACILITATOR_URL: https://facilitator.payai.network
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate explicit activation contract
+        id: activation
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=activation/packvalue402-production.json
+          test -f "$F"
+          jq -e '.schema_version=="1.0" and .product=="PackValue402" and .approved==true and .approved_by=="Paulo" and .network=="eip155:8453" and .target_price_usd==0.001 and .currency=="USDC" and .purpose=="receive_only" and .server_can_spend==false' "$F" >/dev/null
+          PAY_TO="$(jq -r '.receive_address' "$F")"
+          test -n "$PAY_TO"
+          node --input-type=module - "$PAY_TO" <<'NODE'
+          import { getAddress } from 'viem';
+          const raw = process.argv[2];
+          const canonical = getAddress(raw);
+          const denied = new Set([
+            '0x0000000000000000000000000000000000000000',
+            '0x000000000000000000000000000000000000dEaD',
+            '0x1111111111111111111111111111111111111111',
+            '0x2222222222222222222222222222222222222222',
+          ].map(x => x.toLowerCase()));
+          if (denied.has(canonical.toLowerCase())) throw new Error('denied_receive_address');
+          console.log(`canonical=${canonical}`);
+          NODE
+          CANONICAL="$(node --input-type=module - "$PAY_TO" <<'NODE'
+          import { getAddress } from 'viem';
+          console.log(getAddress(process.argv[2]));
+          NODE
+          )"
+          echo "pay_to=$CANONICAL" >> "$GITHUB_OUTPUT"
+          echo "ACTIVATION_CONTRACT=PASS"
+
+      - name: Audit native x402 stack
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --ignore-scripts --no-audit --no-fund
+          npm audit --omit=dev --audit-level=high
+          npm audit --audit-level=high
+          npm run check
+          npm run test:e2e-mock
+
+      - name: Verify mainnet facilitator before activation
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS --retry 3 --retry-all-errors --max-time 20 "$FACILITATOR_URL/supported" > /tmp/facilitator.json
+          jq -e '(.kinds | any(.x402Version==2 and .scheme=="exact" and .network=="eip155:8453")) and (((.extensions // []) | index("bazaar")) != null)' /tmp/facilitator.json >/dev/null
+
+      - name: Prove approved address produces correct unpaid challenge before deploy
+        working-directory: cloudflare/packvalue402-paid-r1
+        env:
+          PAY_TO: ${{ steps.activation.outputs.pay_to }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          const { default: app } = await import('./src/index.mjs');
+          const payTo = process.env.PAY_TO;
+          const req = new Request('https://packvalue402.invalid/v1/compare', {
+            method: 'POST', headers: {'content-type':'application/json'},
+            body: JSON.stringify({offers:[{label:'a',text:'1 L',price:3},{label:'b',text:'2 L',price:5}]})
+          });
+          const env = {PAYMENTS_ENABLED:'true', PAY_TO:payTo, NETWORK:'eip155:8453', FACILITATOR_URL:'https://facilitator.payai.network'};
+          const res = await app.fetch(req, env, {waitUntil(){},passThroughOnException(){}});
+          if (res.status !== 402) throw new Error(`expected_402_got_${res.status}`);
+          const raw = res.headers.get('payment-required');
+          if (!raw) throw new Error('missing_payment_required');
+          const p = JSON.parse(Buffer.from(raw.replace(/-/g,'+').replace(/_/g,'/'),'base64').toString('utf8'));
+          const a = p.accepts?.[0];
+          if (p.x402Version!==2 || a?.scheme!=='exact' || a?.network!=='eip155:8453' || a?.amount!=='1000' || a?.payTo?.toLowerCase()!==payTo.toLowerCase()) throw new Error('activation_challenge_invalid');
+          if (!p.extensions?.bazaar) throw new Error('bazaar_missing');
+          console.log('APPROVED_ADDRESS_UNPAID_CHALLENGE=PASS');
+          NODE
+
+      - name: Require autonomous Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Build ephemeral production config
+        working-directory: cloudflare/packvalue402-paid-r1
+        env:
+          PAY_TO: ${{ steps.activation.outputs.pay_to }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/wrangler.packvalue402.active.toml <<EOF
+          name = "lsi-packvalue402-r1"
+          main = "${GITHUB_WORKSPACE}/cloudflare/packvalue402-paid-r1/src/index.mjs"
+          compatibility_date = "2026-08-30"
+          workers_dev = true
+
+          [vars]
+          PAYMENTS_ENABLED = "true"
+          PAY_TO = "$PAY_TO"
+          NETWORK = "eip155:8453"
+          FACILITATOR_URL = "https://facilitator.payai.network"
+
+          [observability]
+          enabled = true
+          EOF
+          grep -q 'PAYMENTS_ENABLED = "true"' /tmp/wrangler.packvalue402.active.toml
+          grep -q "PAY_TO = \"$PAY_TO\"" /tmp/wrangler.packvalue402.active.toml
+
+      - name: Activate receive-only production Worker
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config /tmp/wrangler.packvalue402.active.toml
+
+      - name: Prove active health cannot spend
+        env:
+          PAY_TO: ${{ steps.activation.outputs.pay_to }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=false
+          for i in $(seq 1 30); do
+            if curl -fsS "$PROD_URL/health?ts=$RANDOM" > /tmp/health.json 2>/dev/null && jq -e --arg pay "$PAY_TO" '.ok==true and .mode=="PAYMENT_READY" and .payment.enabled==true and .payment.pay_to_configured==true and .payment.ready==true and .payment.network=="eip155:8453" and .payment.target_price_usd==0.001 and .payment.server_private_key_required==false and .payment.server_can_spend==false and .money_movement_from_server==false' /tmp/health.json >/dev/null; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = true
+
+      - name: Prove live production unpaid 402 uses approved destination
+        env:
+          PAY_TO: ${{ steps.activation.outputs.pay_to }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl -sS -D /tmp/h -o /tmp/b -w '%{http_code}' -X POST "$PROD_URL/v1/compare" -H 'content-type: application/json' --data '{"offers":[{"label":"a","text":"1 L","price":3},{"label":"b","text":"2 L","price":5}]}' )"
+          test "$code" = "402"
+          HDR="$(awk 'BEGIN{IGNORECASE=1} /^payment-required:/{sub(/^[^:]+:[[:space:]]*/,""); gsub(/\r/,""); print; exit}' /tmp/h)"
+          test -n "$HDR"
+          PAY_TO="$PAY_TO" HDR="$HDR" node --input-type=module <<'NODE'
+          const raw=process.env.HDR; const pay=process.env.PAY_TO;
+          const p=JSON.parse(Buffer.from(raw.replace(/-/g,'+').replace(/_/g,'/'),'base64').toString('utf8'));
+          const a=p.accepts?.[0];
+          if(p.x402Version!==2||a?.scheme!=='exact'||a?.network!=='eip155:8453'||a?.amount!=='1000'||a?.payTo?.toLowerCase()!==pay.toLowerCase()) throw new Error('live_402_mismatch');
+          if(!p.extensions?.bazaar) throw new Error('live_bazaar_missing');
+          console.log('LIVE_PRODUCTION_UNPAID_402=PASS');
+          NODE
+
+      - name: Write activation receipt
+        env:
+          PAY_TO: ${{ steps.activation.outputs.pay_to }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          PAY_HASH="$(printf '%s' "$PAY_TO" | sha256sum | awk '{print $1}')"
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg pay_hash "$PAY_HASH" '{schema_version:"1.0",project:"PACKVALUE402_PRODUCTION_ACTIVATION_R1",acceptance_state:"PASS_PAYMENT_READY_NO_SETTLEMENT",run_id:$run,commit:$sha,receive_address_sha256:$pay_hash,protocol:"x402-v2",scheme:"exact",network:"eip155:8453",target_price_usd:0.001,facilitator:"https://facilitator.payai.network",payments_enabled:true,server_private_key_required:false,server_can_spend:false,unpaid_live_402_verified:true,real_settlement:false,real_value_moved:false,bazaar_indexed:false,next_gate:"FIRST_REAL_BUYER_SETTLEMENT"}' > generated/evidence/packvalue402-production-activation-r1.json
+
+      - name: Upload activation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: packvalue402-production-activation-${{ github.run_id }}
+          path: generated/evidence/packvalue402-production-activation-r1.json
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Roll back to payment-disabled shell on activation failure
+        if: failure()
+        working-directory: cloudflare/packvalue402-paid-r1
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -u
+          if [ -n "${CLOUDFLARE_API_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+            npx wrangler deploy --config wrangler.production-shell.toml || true
+          fi
