@@ -28,7 +28,7 @@ jobs:
           node --check cloudflare/lsi-revenue-velocity-r1.mjs
           grep -q 'TARGET_USD_PER_MINUTE = 0.10' cloudflare/lsi-revenue-velocity-r1.mjs
           grep -q 'projection_is_revenue: false' cloudflare/lsi-revenue-velocity-r1.mjs
-          grep -q 'revenue_usd_verified' cloudflare/lsi-revenue-velocity-r1.mjs
+          grep -q 'verified_revenue_usd' cloudflare/lsi-revenue-velocity-r1.mjs
           grep -q 'money_movement: false' cloudflare/lsi-revenue-velocity-r1.mjs
 
       - name: Require autonomous Cloudflare credentials
@@ -57,9 +57,9 @@ jobs:
             curl -fsS "$VELOCITY_URL/health" > /tmp/health.json && break || true
             sleep 2
           done
-          jq -e '.ok==true and .target_usd_per_minute==0.1 and .revenue_source=="VERIFIED_EVENTS_ONLY" and .projections_count_as_revenue==false and .money_movement==false and .production_actions==false' /tmp/health.json >/dev/null
+          jq -e '.ok==true and .target_usd_per_minute==0.1 and .revenue_source=="VERIFIED_PERSISTENT_ROUTE_STATE_ONLY" and .projections_count_as_revenue==false and .money_movement==false and .production_actions==false' /tmp/health.json >/dev/null
           curl -fsS "$VELOCITY_URL/velocity" > /tmp/velocity.json
-          jq -e '.ok==true and .target_usd_per_minute==0.1 and .accounting_rule=="Only revenue_usd_verified contributes to velocity. Projections are not revenue."' /tmp/velocity.json >/dev/null
+          jq -e '.ok==true and .target_usd_per_minute==0.1 and .accounting_rule=="Only verified_revenue_usd from persistent learning state contributes to velocity. Projections are not revenue."' /tmp/velocity.json >/dev/null
           jq -e '[.routes[]? | select(.daily_projection_from_verified_velocity_usd > 0 and .projection_is_revenue != false)] | length == 0' /tmp/velocity.json >/dev/null
 
       - name: Write sanitized velocity receipt
@@ -68,10 +68,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p generated/evidence
-          events="$(jq -r '.event_window // 0' /tmp/velocity.json 2>/dev/null || echo 0)"
+          events="$(jq -r '.event_count // 0' /tmp/velocity.json 2>/dev/null || echo 0)"
           best_route="$(jq -r '.best_route.route_id // "NONE"' /tmp/velocity.json 2>/dev/null || echo NONE)"
           best_velocity="$(jq -r '.best_route.verified_revenue_usd_per_minute // 0' /tmp/velocity.json 2>/dev/null || echo 0)"
-          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg route "$best_route" --argjson events "$events" --argjson velocity "$best_velocity" '{schema_version:"1.0",project:"LSI_REVENUE_VELOCITY_R1",run_id:$run,commit:$sha,target_usd_per_minute:0.10,event_window:$events,best_route:$route,best_verified_revenue_usd_per_minute:$velocity,projection_is_revenue:false,zero_cost_route:true,money_movement:false,production_actions:false}' > generated/evidence/lsi-revenue-velocity-r1.json
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg route "$best_route" --argjson events "$events" --argjson velocity "$best_velocity" '{schema_version:"1.0",project:"LSI_REVENUE_VELOCITY_R1",run_id:$run,commit:$sha,target_usd_per_minute:0.10,event_count:$events,best_route:$route,best_verified_revenue_usd_per_minute:$velocity,projection_is_revenue:false,zero_cost_route:true,money_movement:false,production_actions:false}' > generated/evidence/lsi-revenue-velocity-r1.json
 
       - name: Upload sanitized receipt
         if: always()
