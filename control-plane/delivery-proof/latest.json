@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T20:34:25.008490+00:00",
+  "checkedAt": "2026-08-30T20:44:12.453118+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 4,
@@ -72,7 +72,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 429,
+        "httpStatus": 200,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975308333553371867&is_from_rle"
       }
     },
@@ -94,7 +94,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 429,
+        "httpStatus": 200,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975368739474580414&is_from_rle"
       }
     }
