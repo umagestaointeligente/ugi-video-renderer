@@ -39,7 +39,7 @@ jobs:
           grep -q '"@x402/evm": "2.24.0"' cloudflare/packvalue402-paid-r1/package.json
           grep -q '"@x402/extensions": "2.24.0"' cloudflare/packvalue402-paid-r1/package.json
           grep -q '"@x402/fetch": "2.24.0"' cloudflare/packvalue402-paid-r1/package.json
-          grep -q '"viem": "2.48.11"' cloudflare/packvalue402-paid-r1/package.json
+          grep -q '"viem": "2.56.0"' cloudflare/packvalue402-paid-r1/package.json
           grep -q '"hono": "4.13.5"' cloudflare/packvalue402-paid-r1/package.json
           ! grep -q '"x402-hono"' cloudflare/packvalue402-paid-r1/package.json
           ! grep -q '"x402"' cloudflare/packvalue402-paid-r1/package.json
