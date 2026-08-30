@@ -10,10 +10,13 @@
     "hono": "4.13.5"
   },
   "devDependencies": {
+    "@x402/fetch": "2.24.0",
+    "viem": "2.48.11",
     "wrangler": "4.123.0"
   },
   "scripts": {
-    "check": "node --check src/index.mjs",
+    "check": "node --check src/index.mjs && node --check test/e2e-mock-settlement.mjs",
+    "test:e2e-mock": "node test/e2e-mock-settlement.mjs",
     "deploy": "wrangler deploy"
   }
 }
