@@ -15,6 +15,7 @@ Human direction / ChatGPT orchestration
 → UGI Worker
 → format renderer
 → QA gates
+→ novelty / anti-repeat hard gate
 → Buffer
 → Buffer readback
 → post-delivery verifier
@@ -29,7 +30,7 @@ Lola 5.3 is optional. It is not an infrastructure dependency.
 - Carousel: R45 multiformat
 - Visual single image: R45 multiformat
 - Story image: R45 multiformat
-- Story video/music: next R45.x extension; do not claim automatic support before terminal smoke proof
+- Story video/music: R45.3 scheduled media path is production-proven; embedded audio is not the same as native Instagram library music
 
 ### TikTok
 - Video: R43.8.6 multi-platform video pipeline → Buffer
@@ -47,6 +48,9 @@ Never use `published` as a synonym for `scheduled`.
 - RENDER_IN_PROGRESS: renderer accepted job and has no terminal conclusion.
 - ASSET_READY: media exists and passed technical checks.
 - QA_PASS: semantic/audiovisual or static QA passed.
+- ANTI_REPEAT_PASS: candidate passed the recent-history novelty gate.
+- ANTI_REPEAT_BLOCK_EXACT: exact repeated content/media detected.
+- ANTI_REPEAT_BLOCK_NEAR: near-duplicate content/media detected.
 - BUFFER_SCHEDULED: Buffer returned post id and exact requested slot by readback.
 - DELIVERY_PENDING: due time reached but terminal send proof is not available yet, within grace window.
 - DELIVERY_CONFIRMED: Buffer terminal readback contains sentAt or terminal sent/published state with no error.
@@ -65,6 +69,7 @@ Require all:
 3. correct channel/platform.
 4. exact dueAt readback.
 5. readback status scheduled.
+6. `ANTI_REPEAT_PASS` for video/Reel/Short publication.
 
 ### To claim PUBLISHED / DELIVERED
 Require all:
@@ -110,6 +115,9 @@ Canonical verifier:
 - Never classify `in_progress` as `FAIL`.
 - Never publish an asset that has not passed the format-specific gate.
 - Never bypass semantic or copy-lock validation.
+- Never bypass novelty / anti-repeat validation.
+- A new CONTENT_ID does not make repeated content new.
+- Re-export, crop, resize, caption, music, subtitle or CTA changes do not make an otherwise repeated video novel.
 - Never claim scheduled/published without evidence from the toolchain.
 
 ## 9. Recovery bootstrap for any new chat
@@ -117,13 +125,14 @@ Canonical verifier:
 When the user says `Recovery UGI` or asks a new chat to assume UGI operation:
 
 1. Open this document from `main`.
-2. Read `control-plane/delivery-proof/latest.json`.
-3. Read current Publisher Hub status and current R45 status/receipts.
-4. Check Worker health/version.
-5. Check recent GitHub workflow runs.
-6. Read current queue/manifests and receipts before creating any new post.
-7. Reconcile overdue publications first.
-8. Continue execution from durable state; do not ask the user to paste Lola 5.3 prompts unless a specific external model is explicitly desired.
+2. Read `control-plane/policies/UGI_ANTI_REPEAT_V1.md`.
+3. Read `control-plane/delivery-proof/latest.json`.
+4. Read current Publisher Hub status and current R45 status/receipts.
+5. Check Worker health/version.
+6. Check recent GitHub workflow runs.
+7. Read current queue/manifests and receipts before creating any new post.
+8. Reconcile overdue publications first.
+9. Continue execution from durable state; do not ask the user to paste Lola 5.3 prompts unless a specific external model is explicitly desired.
 
 ## 10. Production smoke standard
 
@@ -131,6 +140,7 @@ A route is considered production-proven only after a real smoke test achieves:
 
 GENERATE/RENDER
 → QA
+→ ANTI_REPEAT_PASS when applicable
 → APPROVAL
 → Buffer mutation
 → Buffer readback
@@ -144,3 +154,20 @@ A `SCHEDULED` smoke alone is insufficient to declare the route proven for unatte
 UGI 2.0 = HUMAN UTILITY FIRST.
 
 Do not regress to a Reel-only corporate-advertising look. Use format diversity and platform-native language. Editorial strategy can evolve, but publication evidence and fail-closed rules in this document are infrastructure invariants.
+
+## 12. Canonical novelty / anti-repeat gate
+
+Canonical policy: `control-plane/policies/UGI_ANTI_REPEAT_V1.md`.
+
+Default same-platform no-repeat window: **15 calendar days**.
+
+Before any Reel/Short/video is allowed to reach Buffer, recent history must be checked for exact and near duplicates. The comparison must use content/media evidence rather than CONTENT_ID alone. When technically available, retain and compare media SHA-256, source/master asset key, renderId, normalized script hash, normalized hook, scene/footage package and recent topic/entity history.
+
+Hard-block a candidate when a viewer would reasonably perceive it as the same video, including cases where only the caption, soundtrack, crop, subtitles, CTA, date or CONTENT_ID changed.
+
+### Regression incident — 2026-08-30
+`UGI-20260830-IG-01-CISCO-AGENTS` (Cisco / 90 mil funcionários / MyAgent) reached Instagram using a video visually identical to a recent UGI video already present in the grid. User identified the duplicate and elected to remove it manually.
+
+Classification: `REJECTED_DUPLICATE`.
+
+This incident proves that Buffer exactly-once and CONTENT_ID uniqueness are not sufficient novelty controls. It is now a permanent anti-repeat regression case: any future pipeline that would reproduce this condition must fail closed before Buffer mutation.
