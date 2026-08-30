@@ -1,10 +1,12 @@
-const VERSION = "lsi-x402-demand-radar-r1-2026-08-30";
+const VERSION = "lsi-x402-demand-radar-r1.1-2026-08-30";
 const RADAR_ID = "lsi-x402-demand-global-r1";
 const API_BASE = "https://x402-list.com/api/v1/services";
 const DEFAULT_CADENCE_MS = 60 * 60 * 1000;
 const MIN_CADENCE_MS = 30 * 60 * 1000;
 const MAX_CADENCE_MS = 24 * 60 * 60 * 1000;
 const MAX_CYCLES = 168;
+const DETAIL_SAMPLE_LIMIT = 60;
+const DETAIL_CONCURRENCY = 8;
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -60,7 +62,7 @@ function broadDemandScore(service) {
   const repeatRate = tx / buyers;
   const topShare = normalizeShare(t.top_buyer_share_30d);
   const trend = num(t.trend_7d_vs_30d, 0);
-  const price = num(service?.min_price_usd, num(service?.assessment?.price_usd, 0));
+  const price = num(service?.min_price_usd, num(service?.assessment?.economics?.price_usd, 0));
   const upstreamRisk = /search|scrap|crawl|video|image|llm|openai|anthropic|exa|serp|maps|geocod|weather/i.test(
     `${safeString(service?.name)} ${safeString(service?.description)} ${safeString(service?.category)}`
   );
@@ -130,23 +132,76 @@ function categorizeOpportunity(agg) {
   return Math.round(clamp(score, 0, 100) * 10) / 10;
 }
 
+async function fetchJson(url, label) {
+  const response = await fetch(url, {
+    headers: {
+      accept: "application/json",
+      "user-agent": "LSI-x402-Demand-Radar/1.1 (+public-market-research)",
+    },
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`${label}_${response.status}:${text.slice(0, 240)}`);
+  }
+  return response.json();
+}
+
 async function fetchPage(page, perPage = 100) {
   const u = new URL(API_BASE);
   u.searchParams.set("status", "online");
   u.searchParams.set("per_page", String(perPage));
   u.searchParams.set("page", String(page));
-  const response = await fetch(u.toString(), {
-    headers: {
-      accept: "application/json",
-      "user-agent": "LSI-x402-Demand-Radar/1.0 (+public-market-research)",
-    },
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`x402_list_${response.status}:${text.slice(0, 240)}`);
+  return fetchJson(u.toString(), "x402_list");
+}
+
+async function fetchServiceDetail(slug) {
+  const safeSlug = encodeURIComponent(safeString(slug, 160));
+  const payload = await fetchJson(`${API_BASE}/${safeSlug}`, "x402_detail");
+  return payload?.data || null;
+}
+
+function detailCandidateScore(service) {
+  const t = service?.assessment?.traction || {};
+  const tractionBoost = t.status === "measured" ? 1000 : 0;
+  const readyBoost = service?.payment_ready ? 120 : 0;
+  const uptimeBoost = clamp(num(service?.uptime_24h, 0), 0, 100);
+  const price = num(service?.min_price_usd, 999);
+  const priceBoost = price > 0 && price <= 0.05 ? 50 : price <= 0.25 ? 25 : 0;
+  const endpointBoost = Math.min(30, num(service?.endpoint_count, 0));
+  return tractionBoost + readyBoost + uptimeBoost + priceBoost + endpointBoost;
+}
+
+async function enrichWithMeasuredDetails(services) {
+  const candidates = [...services]
+    .filter((s) => safeString(s?.slug, 160))
+    .sort((a, b) => detailCandidateScore(b) - detailCandidateScore(a))
+    .slice(0, DETAIL_SAMPLE_LIMIT);
+
+  const detailMap = new Map();
+  let detailFailures = 0;
+  for (let i = 0; i < candidates.length; i += DETAIL_CONCURRENCY) {
+    const batch = candidates.slice(i, i + DETAIL_CONCURRENCY);
+    const results = await Promise.all(batch.map(async (s) => {
+      try {
+        const detail = await fetchServiceDetail(s.slug);
+        return { slug: s.slug, detail };
+      } catch {
+        return { slug: s.slug, detail: null };
+      }
+    }));
+    for (const item of results) {
+      if (item.detail) detailMap.set(item.slug, item.detail);
+      else detailFailures += 1;
+    }
   }
-  const payload = await response.json();
-  return payload;
+
+  const enriched = services.map((s) => detailMap.get(s.slug) || s);
+  return {
+    services: enriched,
+    detail_requested: candidates.length,
+    detail_succeeded: detailMap.size,
+    detail_failed: detailFailures,
+  };
 }
 
 async function fetchAllServices() {
@@ -157,10 +212,20 @@ async function fetchAllServices() {
     const p = await fetchPage(page, 100);
     if (Array.isArray(p?.data)) all.push(...p.data);
   }
+
+  const enrichment = await enrichWithMeasuredDetails(all);
   return {
-    services: all,
+    services: enrichment.services,
     meta: first?.meta || {},
     provenance: first?.provenance || {},
+    enrichment: {
+      strategy: "detail_top_candidates",
+      limit_per_cycle: DETAIL_SAMPLE_LIMIT,
+      requested: enrichment.detail_requested,
+      succeeded: enrichment.detail_succeeded,
+      failed: enrichment.detail_failed,
+      daily_request_budget_note: "60 detail calls + catalog pages per hourly cycle remains below the public 2,000 reads/day threshold",
+    },
   };
 }
 
@@ -212,6 +277,7 @@ function analyzeMarket(raw) {
     generated_at: new Date().toISOString(),
     market: {
       online_services_seen: serviceViews.length,
+      detail_enrichment: raw.enrichment,
       measured_services: measured.length,
       services_with_30d_buyers: activePaid.length,
       source_meta: raw.meta,
