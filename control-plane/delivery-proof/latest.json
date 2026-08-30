@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T20:44:12.453118+00:00",
+  "checkedAt": "2026-08-30T20:54:08.113967+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 4,
+  "delivered": 5,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -74,6 +74,28 @@
         "ok": true,
         "httpStatus": 200,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975308333553371867&is_from_rle"
+      }
+    },
+    {
+      "receipt": "control-plane/r45/receipts/pilot-latest.json",
+      "contentId": "UGI-20260830-IG-STORY-02-CISCO-QUESTION",
+      "platform": "instagram",
+      "kind": "static",
+      "draftId": "1bc5078b-0adc-405d-9522-ea5f19696144",
+      "bufferPostId": "6a945cd7e7e04684c6004125",
+      "dueAt": "2026-08-30T20:45:00+00:00",
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T20:45:13.904Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975383834690139409",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975383834690139409&is_from_rle"
       }
     },
     {
