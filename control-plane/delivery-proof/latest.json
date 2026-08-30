@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T22:44:04.714744+00:00",
+  "checkedAt": "2026-08-30T22:54:05.023779+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 8,
+  "delivered": 9,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -94,7 +94,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975308333553371867&is_from_rle"
       }
     },
@@ -116,7 +116,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975383834690139409&is_from_rle"
       }
     },
@@ -138,7 +138,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975368739474580414&is_from_rle"
       }
     },
@@ -160,7 +160,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975388857629652386&is_from_rle"
       }
     },
@@ -182,8 +182,30 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975431646962448949&is_from_rle"
+      }
+    },
+    {
+      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
+      "contentId": "UGI-20260830-IG-CAROUSEL-TRUST-HDFC",
+      "platform": "instagram",
+      "kind": "r453",
+      "bufferPostId": "6a948b466bbc8c9a02f5b914",
+      "draftId": "cf51ce9a-6353-40f5-b9c2-47bc03829816",
+      "dueAt": "2026-08-30T22:50:00+00:00",
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-30T22:50:53.163Z",
+      "externalLink": "https://www.instagram.com/p/Dcrn_c2iOo2/",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.instagram.com/p/Dcrn_c2iOo2/"
       }
     }
   ]
