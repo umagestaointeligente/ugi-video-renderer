@@ -1,0 +1,17 @@
+{
+  "name": "packvalue402-paid-r1",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@coinbase/x402": "2.0.0",
+    "hono": "4.11.1",
+    "x402-hono": "1.0.0"
+  },
+  "devDependencies": {
+    "wrangler": "4.123.0"
+  },
+  "scripts": {
+    "check": "node --check src/index.mjs",
+    "deploy": "wrangler deploy"
+  }
+}
