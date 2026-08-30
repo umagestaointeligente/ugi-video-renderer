@@ -1,0 +1,33 @@
+name: LSI x402 GitHub Market Probe
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - '.github/workflows/lsi-x402-github-market-probe.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read measured traction from public x402 API
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '{"source":"github_runner","samples":[' > /tmp/market.json
+          first=true
+          for slug in nansen anyspend x402engine coinmarketcap; do
+            curl -fsS -H 'accept: application/json' "https://x402-list.com/api/v1/services/$slug" > /tmp/$slug.json
+            sample="$(jq -c --arg slug "$slug" '{slug:$slug,status:(.data.assessment.traction.status // null),buyers30d:(.data.assessment.traction.unique_buyers_30d // null),tx30d:(.data.assessment.traction.tx_count_30d // null),volume30d:(.data.assessment.traction.volume_usd_30d // null),topBuyerShare30d:(.data.assessment.traction.top_buyer_share_30d // null),trend7dVs30d:(.data.assessment.traction.trend_7d_vs_30d // null)}' /tmp/$slug.json)"
+            if [ "$first" = true ]; then first=false; else printf ',' >> /tmp/market.json; fi
+            printf '%s' "$sample" >> /tmp/market.json
+          done
+          printf ']}' >> /tmp/market.json
+          cat /tmp/market.json
+          jq -e '([.samples[] | select((.buyers30d // 0)>0 and (.tx30d // 0)>0)] | length)>0' /tmp/market.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-x402-github-market-probe-${{ github.run_id }}
+          path: /tmp/market.json
+          retention-days: 3
