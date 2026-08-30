@@ -104,12 +104,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -sS -X POST \
+          http_code="$(curl -sS -o /tmp/start.json -w '%{http_code}' -X POST \
             -H "authorization: Bearer $ADMIN_TOKEN" \
             -H 'content-type: application/json' \
             --data '{"cadence_ms":1800000,"max_cycles":336,"monetary_budget":0}' \
-            "$RADAR_URL/admin/start" > /tmp/start.json
-          jq -e '.ok==true and .state.status=="ACTIVE" and .state.monetary_budget==0 and .state.production_actions==false and .state.money_movement==false' /tmp/start.json >/dev/null
+            "$RADAR_URL/admin/start")"
+          if [ "$http_code" != "200" ] || ! jq -e '.ok==true and .state.status=="ACTIVE" and .state.monetary_budget==0 and .state.production_actions==false and .state.money_movement==false' /tmp/start.json >/dev/null 2>&1; then
+            echo "RADAR_START_HTTP=$http_code"
+            jq -c '{ok,error,reused,state:{status:(.state.status // null),cycle_count:(.state.cycle_count // null),monetary_budget:(.state.monetary_budget // null),production_actions:(.state.production_actions // null),money_movement:(.state.money_movement // null)}}' /tmp/start.json 2>/dev/null || cat /tmp/start.json
+            exit 1
+          fi
 
       - name: Prove first autonomous market scan persisted
         shell: bash
