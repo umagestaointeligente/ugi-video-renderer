@@ -33,9 +33,10 @@ jobs:
           grep -q 'checkout_branch_required' "$F"
           grep -q 'ugiMaterialFulfillmentAllowed: false' "$F"
           grep -q 'bufferMutationAllowed: false' "$F"
-          ! grep -q 'body.amount' "$F"
-          ! grep -q 'body.price' "$F"
-          ! grep -q 'body.value' "$F"
+          grep -q 'arbitrary_amount_input_detected' "$F"
+          grep -q 'ugi_fulfillment_leak' "$F"
+          grep -q 'buffer_mutation_leak' "$F"
+          echo 'STATIC_SELF_GUARDS=PASS'
 
       - name: Deploy from exact live source with rollback on health failure
         shell: bash
