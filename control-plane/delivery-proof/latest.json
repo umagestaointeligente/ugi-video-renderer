@@ -1,13 +1,36 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-30T17:09:47.344588+00:00",
+  "checkedAt": "2026-08-30T17:14:07.994843+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 0,
+  "delivered": 1,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
   "state": "HEALTHY",
-  "results": []
+  "results": [
+    {
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
+      "contentId": "UGI-20260830-TT-01-MEETINGS",
+      "platform": "tiktok",
+      "kind": "video",
+      "draftId": "ugi-20260830145024-2afd13cbf76d",
+      "dueAt": "2026-08-30T16:00:00+00:00",
+      "readbackHttp": 200,
+      "bufferPostId": "6a944eb0e7e04684c6fef14e",
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T16:02:57.108Z",
+      "externalLink": "https://tiktok.com/@umagestaointelige/video/7679855168443157781",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679855168443157781"
+      }
+    }
+  ]
 }
