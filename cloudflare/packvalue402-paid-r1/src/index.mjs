@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { paymentMiddleware } from "x402-hono";
+import { normalizeOffer, compareOffers } from "../../lsi-packvalue402-shadow-r1.mjs";
 
-const VERSION = "packvalue402-paid-r1-preprod-2026-08-30.1";
+const VERSION = "packvalue402-paid-r1-preprod-2026-08-30.2";
 const TARGET_PRICE = "$0.001";
-const ORIGIN = "https://lsi-packvalue402-shadow-r1.umagestaointeligente.workers.dev";
 const DEFAULT_FACILITATOR = "https://x402.org/facilitator";
 
 const app = new Hono();
@@ -28,21 +28,8 @@ function paymentState(env) {
     server_can_spend: false,
   };
 }
-async function proxy(c) {
-  const src = new URL(c.req.url);
-  const dst = new URL(src.pathname + src.search, ORIGIN);
-  const headers = new Headers(c.req.raw.headers);
-  headers.delete("host");
-  const init = { method: c.req.method, headers, redirect: "manual" };
-  if (!["GET", "HEAD"].includes(c.req.method)) init.body = await c.req.raw.clone().arrayBuffer();
-  const request = new Request(dst, init);
-  const r = c.env.ORIGIN_SERVICE
-    ? await c.env.ORIGIN_SERVICE.fetch(request)
-    : await fetch(request);
-  const outHeaders = new Headers(r.headers);
-  outHeaders.set("x-packvalue-gateway", VERSION);
-  outHeaders.set("x-packvalue-origin-mode", c.env.ORIGIN_SERVICE ? "service-binding" : "public-fallback");
-  return new Response(r.body, { status: r.status, statusText: r.statusText, headers: outHeaders });
+function err(c, e) {
+  return c.json({ ok: false, error: String(e?.message || e).slice(0, 200) }, 400);
 }
 
 app.get("/health", (c) => {
@@ -52,7 +39,7 @@ app.get("/health", (c) => {
     service: "PackValue402 x402 Gateway",
     version: VERSION,
     mode: p.ready ? "PAYMENT_READY" : "PREPROD_DISABLED",
-    origin_mode: c.env.ORIGIN_SERVICE ? "service-binding" : "public-fallback",
+    core_mode: "shared-proven-deterministic-core",
     payment: p,
     production_actions: false,
     money_movement_from_server: false,
@@ -66,7 +53,7 @@ app.get("/.well-known/agent.json", (c) => {
     description: "Agent-native multipack and unit-economics normalization and comparison.",
     version: VERSION,
     mode: p.ready ? "PAYMENT_READY" : "PREPROD_DISABLED",
-    origin_mode: c.env.ORIGIN_SERVICE ? "service-binding" : "public-fallback",
+    core_mode: "shared-proven-deterministic-core",
     payment: {
       protocol: "x402-v2",
       enabled: p.enabled,
@@ -83,7 +70,24 @@ app.get("/.well-known/agent.json", (c) => {
   });
 });
 
-app.get("/v1/normalize", proxy);
+app.get("/v1/normalize", (c) => {
+  try {
+    const q = c.req.query();
+    const result = normalizeOffer({
+      text: q.text,
+      price: q.price,
+      shipping: q.shipping,
+      tax: q.tax,
+      discount: q.discount,
+      yield_pct: q.yield_pct || 100,
+      dilution: q.dilution || 1,
+      currency: q.currency || "USD",
+    });
+    return c.json({ ok: true, mode: paymentState(c.env).ready ? "PAYMENT_READY" : "PREPROD_DISABLED", result });
+  } catch (e) {
+    return err(c, e);
+  }
+});
 
 app.use("/v1/compare", async (c, next) => {
   const p = paymentState(c.env);
@@ -118,7 +122,16 @@ app.use("/v1/compare", async (c, next) => {
   return mw(c, next);
 });
 
-app.post("/v1/compare", proxy);
+app.post("/v1/compare", async (c) => {
+  try {
+    const body = await c.req.json();
+    const result = compareOffers(body.offers);
+    return c.json({ ok: true, mode: "PAYMENT_READY", target_price_usd: 0.001, result });
+  } catch (e) {
+    return err(c, e);
+  }
+});
+
 app.all("*", (c) => c.json({ ok: false, error: "not_found" }, 404));
 
 export default app;
