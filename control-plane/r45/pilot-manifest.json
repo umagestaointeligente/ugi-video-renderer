@@ -1,0 +1,59 @@
+{
+  "project": "UGI",
+  "batchId": "UGI-R45-PILOT-20260830-01",
+  "timezone": "America/Sao_Paulo",
+  "posts": [
+    {
+      "contentId": "UGI-20260830-IG-STORY-01-AI-GATES",
+      "type": "story_image",
+      "publish": true,
+      "dueAt": "2026-08-30T15:15:00-03:00",
+      "variant": "A",
+      "topic": "Limites para agentes de IA",
+      "objective": "Fazer o gestor reconhecer que autonomia de IA exige regras antes da execução",
+      "hook": "Se sua IA puder agir sozinha, quem responde pelo erro?",
+      "key_message": "Antes de liberar um agente, defina três coisas: o que ele pode acessar, o que pode fazer e quando precisa pedir aprovação.",
+      "instructions": "Story visual simples, humano e direto. Nada de linguagem institucional ou anúncio.",
+      "cta": "Guarde estas 3 travas antes de liberar autonomia."
+    },
+    {
+      "contentId": "UGI-20260830-IG-VISUAL-01-HUMAN-AI-AUTOMATION",
+      "type": "visual_post",
+      "publish": false,
+      "variant": "A",
+      "topic": "Pessoa IA ou automação",
+      "objective": "Criar uma árvore de decisão visual simples para escolher quem deve executar uma tarefa",
+      "hook": "Pessoa, IA ou automação?",
+      "key_message": "Regra repetível e estável: automação. Exige contexto e julgamento: IA com supervisão. Alto risco e baixa reversibilidade: pessoa decide.",
+      "instructions": "Imagem única com lógica visual de decisão. Deve parecer ferramenta para salvar, não peça publicitária.",
+      "cta": "Salve para decidir mais rápido na próxima tarefa."
+    },
+    {
+      "contentId": "UGI-20260830-IG-STORY-02-CISCO-QUESTION",
+      "type": "story_image",
+      "publish": true,
+      "dueAt": "2026-08-30T17:45:00-03:00",
+      "variant": "A",
+      "topic": "Cisco e gestão de agentes",
+      "objective": "Preparar a audiência para o caso Cisco sem transformar o Story em propaganda",
+      "hook": "90 mil agentes. Uma pergunta de gestão.",
+      "key_message": "O ponto não é dar IA para todo mundo. É definir acesso, autonomia, supervisão e responsabilidade antes da escala.",
+      "instructions": "Conectar o caso Cisco a uma pergunta real de liderança. Visual limpo e contemporâneo.",
+      "cta": "Às 18:30: o que isso muda para quem lidera."
+    },
+    {
+      "contentId": "UGI-20260830-IG-CAROUSEL-01-AUTOMATE-DECISION",
+      "type": "carousel",
+      "publish": true,
+      "dueAt": "2026-08-30T20:00:00-03:00",
+      "variant": "A",
+      "slides": 7,
+      "topic": "Automatizar decisões com IA",
+      "objective": "Entregar um checklist prático e salvável antes de automatizar uma decisão",
+      "hook": "Antes de automatizar uma decisão, responda estas 6 perguntas",
+      "key_message": "O carrossel deve conduzir por: resultado esperado; dados necessários; risco do erro; reversibilidade; momento de aprovação humana; métrica para saber se a automação funciona.",
+      "instructions": "Sete telas: capa + seis perguntas. Cada tela deve acrescentar uma ferramenta concreta. Linguagem humana, visual, curta e aplicável. Evitar cara de apresentação corporativa, notícia ou propaganda.",
+      "cta": "Salve este checklist antes de automatizar sua próxima decisão."
+    }
+  ]
+}
