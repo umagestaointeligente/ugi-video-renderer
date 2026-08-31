@@ -1,0 +1,54 @@
+name: UGI Emergency Media Map 2026-08-31
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-emergency-media-map-20260831.yml'
+      - 'scripts/ugi_emergency_media_map_20260831.py'
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install AV runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          python3 -m pip install --quiet requests pillow
+      - name: Regenerate canonical Instagram AV
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/ugi_instagram_production_20260831.py --generate-only
+      - name: Upload emergency media and resolve platform masters
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python3 scripts/ugi_emergency_media_map_20260831.py
+      - name: Persist emergency media map
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-emergency-routing-bot'
+          git config user.email 'ugi-emergency-routing@users.noreply.github.com'
+          git add control-plane/emergency-routing/ugi-20260831-media-map.json
+          git commit -m 'chore: persist UGI 2026-08-31 emergency media map'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+# trigger: 2026-08-31T09:50-03:00
