@@ -1,8 +1,8 @@
-name: LSI PackValue PRO Build + Live Patch V4
-run-name: LSI PackValue PRO Build + Live Patch V4 ${{ github.run_id }}
+name: LSI PackValue PRO Build + Live Patch V5
+run-name: LSI PackValue PRO Build + Live Patch V5 ${{ github.run_id }}
 on:
   push:
-    branches: [lsi-revenue-asaas-greenfield-r1-20260830]
+    branches: [lsi-payment-hub-r1-20260830]
     paths:
       - 'greenfield/packvalue-pro/patch_worker_v4.py'
       - '.github/workflows/lsi-packvalue-pro-build-patch-v4.yml'
@@ -26,9 +26,13 @@ jobs:
           CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
         shell: bash
         run: |
-          set -euo pipefail; test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"
-          echo "CF_API_TOKEN=$CF_API_TOKEN" >> "$GITHUB_ENV"; echo "CF_ACCOUNT_ID=$CF_ACCOUNT_ID" >> "$GITHUB_ENV"; echo "::add-mask::$CF_API_TOKEN"
-      - name: Extract actual live R44.5.23 module
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"
+          test -n "$CF_ACCOUNT_ID"
+          echo "CF_API_TOKEN=$CF_API_TOKEN" >> "$GITHUB_ENV"
+          echo "CF_ACCOUNT_ID=$CF_ACCOUNT_ID" >> "$GITHUB_ENV"
+          echo "::add-mask::$CF_API_TOKEN"
+      - name: Extract actual live R44.5.23 module robustly
         shell: bash
         run: |
           set -euo pipefail
@@ -40,12 +44,36 @@ jobs:
           import re
           from email import policy
           from email.parser import BytesParser
-          h=open('/tmp/h','rb').read().decode('latin1');b=open('/tmp/b','rb').read();ct=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h).group(1).strip()
-          if 'multipart/' in ct:
-            msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+b);parts=[p.get_payload(decode=True) or b'' for p in msg.iter_parts()];c=[x for x in parts if b'createProviderCheckout' in x and b'/api/commerce/webhook/asaas' in x]
-            if len(c)!=1:raise SystemExit(f'MODULE_COUNT_{len(c)}')
-            b=c[0]
-          open('/tmp/current.mjs','wb').write(b)
+          headers=open('/tmp/h','rb').read().decode('latin1','replace')
+          body=open('/tmp/b','rb').read()
+          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',headers)
+          ct=m.group(1).strip() if m else ''
+          candidates=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+body)
+              for part in msg.walk():
+                  if part.is_multipart():
+                      continue
+                  payload=part.get_payload(decode=True) or b''
+                  if payload:
+                      candidates.append(payload)
+          else:
+              candidates=[body]
+          exact=[p for p in candidates if b'createProviderCheckout' in p and b'/api/commerce/webhook/asaas' in p and b'/api/material-delivery/' in p]
+          if len(exact)==1:
+              chosen=exact[0]
+          elif len(exact)>1:
+              chosen=max(exact,key=len)
+          else:
+              jsish=[p for p in candidates if b'createProviderCheckout' in p or b'/api/commerce/webhook/asaas' in p]
+              if not jsish:
+                  raise SystemExit(f'WORKER_MODULE_NOT_FOUND content_type={ct!r} candidate_count={len(candidates)} sizes={[len(x) for x in candidates[:20]]}')
+              chosen=max(jsish,key=len)
+              if b'createProviderCheckout' not in chosen or b'/api/commerce/webhook/asaas' not in chosen:
+                  raise SystemExit('WORKER_MODULE_ANCHORS_SPLIT')
+          chosen.decode('utf-8')
+          open('/tmp/current.mjs','wb').write(chosen)
+          print(f'LIVE_MODULE_EXTRACT=PASS bytes={len(chosen)} content_type={ct!r} candidates={len(candidates)}')
           PY
       - name: Patch exact live source and validate JS
         shell: bash
@@ -59,7 +87,7 @@ jobs:
           grep -Fq 'grant.productId === "packvalue-pro-r1" ? `attachment; filename="packvalue-pro.html"`' /tmp/patched.mjs
           grep -Fq 'if (!isCommerceAdminAuthorized(request, env))' /tmp/patched.mjs
           grep -Fq 'if (!env.ASAAS_WEBHOOK_TOKEN)' /tmp/patched.mjs
-          echo 'PATCH_V4_STATIC_ACCEPTANCE=PASS'
+          echo 'PATCH_V5_STATIC_ACCEPTANCE=PASS'
       - name: Legacy invariant gate
         shell: bash
         run: |
@@ -67,7 +95,7 @@ jobs:
           python - <<'PY'
           old=open('/tmp/current.mjs',encoding='utf-8').read();new=open('/tmp/patched.mjs',encoding='utf-8').read()
           for a in ['/api/video-render','/api/video-upload','/api/platform-approval','/api/commerce/webhook/asaas','BUFFER_ACCESS_TOKEN','ASAAS_WEBHOOK_TOKEN']:
-            if old.count(a)!=new.count(a): raise SystemExit('INVARIANT_CHANGED:'+a)
+              if old.count(a)!=new.count(a): raise SystemExit('INVARIANT_CHANGED:'+a)
           if new.count('if (request.method === "POST" && path === "/api/commerce/checkout") {')!=1: raise SystemExit('ADMIN_CHECKOUT_COUNT_CHANGED')
           if new.count('isCommerceAdminAuthorized(request, env)')<old.count('isCommerceAdminAuthorized(request, env)'): raise SystemExit('ADMIN_AUTH_REDUCED')
           print('LEGACY_INVARIANTS=PASS')
@@ -75,10 +103,11 @@ jobs:
       - name: Receipt
         shell: bash
         run: |
-          set -euo pipefail;mkdir -p generated/evidence
-          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg source "$(sha256sum /tmp/current.mjs|awk '{print $1}')" --arg patched "$(sha256sum /tmp/patched.mjs|awk '{print $1}')" --argjson product "$(cat greenfield/packvalue-pro/dist/manifest.json)" '{schema_version:"1.0",project:"PACKVALUE_PRO_GREENFIELD_R1",stage:"PATCH_V4",acceptance_state:"PASS",run_id:$run,commit:$sha,core_version_preserved:"R44.5.23",extension_version:"packvalue-pro-commerce-r1-2026-08-30",fixed_price_brl:49.90,current_source_sha256:$source,patched_source_sha256:$patched,product:$product,production_deployed:false,provider_checkout_created:false,real_value_moved:false}'|tee generated/evidence/packvalue-pro-patch-v4.json
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg source "$(sha256sum /tmp/current.mjs|awk '{print $1}')" --arg patched "$(sha256sum /tmp/patched.mjs|awk '{print $1}')" --argjson product "$(cat greenfield/packvalue-pro/dist/manifest.json)" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",component:"PACKVALUE_PRO_ASAAS",stage:"PATCH_V5",acceptance_state:"PASS",run_id:$run,commit:$sha,core_version_preserved:"R44.5.23",extension_version:"packvalue-pro-commerce-r1-2026-08-30",fixed_price_brl:49.90,current_source_sha256:$source,patched_source_sha256:$patched,product:$product,production_deployed:false,provider_checkout_created:false,real_value_moved:false}'|tee generated/evidence/packvalue-pro-patch-v5.json
       - uses: actions/upload-artifact@v4
         with:
-          name: packvalue-pro-patch-v4-${{ github.run_id }}
-          path: generated/evidence/packvalue-pro-patch-v4.json
+          name: packvalue-pro-patch-v5-${{ github.run_id }}
+          path: generated/evidence/packvalue-pro-patch-v5.json
           retention-days: 14
