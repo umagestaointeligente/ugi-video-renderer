@@ -1,0 +1,36 @@
+name: Orbit VSA Reusable Runner Probe
+
+on:
+  workflow_call:
+    secrets:
+      ORBIT_YOUTUBE_CLIENT_ID:
+        required: false
+      ORBIT_YOUTUBE_CLIENT_SECRET:
+        required: false
+      VSA_YOUTUBE_REFRESH_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      ORBIT_YOUTUBE_CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      ORBIT_YOUTUBE_CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
+      VSA_YOUTUBE_REFRESH_TOKEN: ${{ secrets.VSA_YOUTUBE_REFRESH_TOKEN }}
+    steps:
+      - name: Prove public runner and secret bridge without exposing values
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PUBLIC_REUSABLE_RUNNER=PASS"
+          for name in ORBIT_YOUTUBE_CLIENT_ID ORBIT_YOUTUBE_CLIENT_SECRET VSA_YOUTUBE_REFRESH_TOKEN; do
+            if [ -n "${!name:-}" ]; then
+              echo "${name}_PRESENT=true"
+            else
+              echo "${name}_PRESENT=false"
+            fi
+          done
