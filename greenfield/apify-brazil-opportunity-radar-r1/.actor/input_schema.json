@@ -1,0 +1,11 @@
+{
+  "title":"Brazil Opportunity Radar input",
+  "description":"Search official Brazilian public procurement opportunities. No personal data is required.",
+  "type":"object",
+  "schemaVersion":1,
+  "properties":{
+    "query":{"title":"Keywords","type":"string","description":"Words that must appear in the opportunity text.","editor":"textfield","default":""},
+    "uf":{"title":"State (UF)","type":"string","description":"Optional two-letter Brazilian state code, e.g. SP or RJ.","editor":"textfield","default":""},
+    "limit":{"title":"Maximum results","type":"integer","description":"Number of prioritized opportunities to return.","minimum":1,"maximum":100,"default":25}
+  }
+}
