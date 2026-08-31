@@ -102,13 +102,16 @@ jobs:
           }
           trap 'rollback' ERR
           base='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
-          for i in 1 2 3 4 5; do
-            if curl -fsS "$base/api/health" >/tmp/post-health.json && jq -e '.ok==true' /tmp/post-health.json >/dev/null; then break; fi
-            sleep 2
+          ready=false
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            ugi=$(curl -sS -o /tmp/post-health.json -w '%{http_code}' "$base/api/health" || true)
+            lsi=$(curl -sS -o /tmp/lsi-health.json -w '%{http_code}' "$base/greenfield/packvalue-pro/health" || true)
+            if [ "$ugi" = '200' ] && [ "$lsi" = '200' ] && jq -e '.ok==true' /tmp/post-health.json >/dev/null 2>&1 && jq -e '.ok==true and .productId=="packvalue-pro-r1" and .price==49.90 and .provider=="asaas" and .fixedServerPrice==true and .deliveryRequiresPaidWebhook==true and .spendCapability==false and .greenfield==true' /tmp/lsi-health.json >/dev/null 2>&1; then
+              ready=true; echo "PROPAGATION_READY_ATTEMPT=$i"; break
+            fi
+            sleep 1
           done
-          jq -e '.ok==true' /tmp/post-health.json >/dev/null
-          curl -fsS "$base/greenfield/packvalue-pro/health" >/tmp/lsi-health.json
-          jq -e '.ok==true and .productId=="packvalue-pro-r1" and .price==49.90 and .provider=="asaas" and .fixedServerPrice==true and .deliveryRequiresPaidWebhook==true and .spendCapability==false and .greenfield==true' /tmp/lsi-health.json >/dev/null
+          test "$ready" = 'true'
           status=$(curl -sS -o /tmp/negative.json -w '%{http_code}' -X POST "$base/greenfield/packvalue-pro/checkout" -H 'content-type: application/json' --data '{"price":0.01}')
           test "$status" = '400'
           jq -e '.error=="fixed_offer_accepts_no_client_parameters"' /tmp/negative.json >/dev/null
