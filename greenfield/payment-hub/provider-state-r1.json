@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-31T03:17:00Z",
+  "policy": {
+    "zero_incremental_cost_preferred": true,
+    "no_private_key_generation": true,
+    "no_master_financial_credentials_in_repo": true,
+    "no_revenue_claim_without_settlement_evidence": true,
+    "human_kyc_is_external_blocker_not_system_failure": true
+  },
+  "providers": [
+    {
+      "id": "asaas_direct",
+      "rail": "BRL_CHECKOUT",
+      "connected": true,
+      "live_receive_verified": true,
+      "programmatic_checkout": true,
+      "zero_incremental_cost_path": true,
+      "human_financial_onboarding_blocker": false,
+      "custody_or_private_key_blocker": false,
+      "blocker": null,
+      "evidence": "LSI Payment Hub Asaas deploy run 33352296194"
+    },
+    {
+      "id": "x402_direct_base_usdc",
+      "rail": "AGENTIC_USDC",
+      "connected": false,
+      "live_receive_verified": false,
+      "programmatic_checkout": true,
+      "zero_incremental_cost_path": true,
+      "human_financial_onboarding_blocker": true,
+      "custody_or_private_key_blocker": true,
+      "blocker": "approved_payTo_address_missing",
+      "evidence": "x402 requires recipient payTo/payment address"
+    },
+    {
+      "id": "apify_agentic_x402",
+      "rail": "MARKETPLACE_AGENTIC_X402",
+      "connected": false,
+      "live_receive_verified": false,
+      "programmatic_checkout": true,
+      "zero_incremental_cost_path": false,
+      "human_financial_onboarding_blocker": true,
+      "custody_or_private_key_blocker": false,
+      "blocker": "developer_account_and_kyc_required_before_payout",
+      "evidence": "Apify paid Actors can receive agentic x402 traffic after developer KYC"
+    },
+    {
+      "id": "stripe_checkout",
+      "rail": "CARD_GLOBAL",
+      "connected": true,
+      "live_receive_verified": false,
+      "programmatic_checkout": true,
+      "zero_incremental_cost_path": true,
+      "human_financial_onboarding_blocker": true,
+      "custody_or_private_key_blocker": false,
+      "blocker": "connected_context_is_testmode_only",
+      "evidence": "Stripe connector probe 2026-08-31 returned livemode=false"
+    },
+    {
+      "id": "rapidapi_marketplace",
+      "rail": "API_MARKETPLACE",
+      "connected": false,
+      "live_receive_verified": false,
+      "programmatic_checkout": false,
+      "zero_incremental_cost_path": true,
+      "human_financial_onboarding_blocker": true,
+      "custody_or_private_key_blocker": false,
+      "blocker": "provider_account_and_payout_setup_required",
+      "evidence": "RapidAPI provider monetization uses platform payout; current docs list PayPal payout settings"
+    },
+    {
+      "id": "kiwify_marketplace",
+      "rail": "DIGITAL_PRODUCT_MARKETPLACE",
+      "connected": false,
+      "live_receive_verified": false,
+      "programmatic_checkout": false,
+      "zero_incremental_cost_path": true,
+      "human_financial_onboarding_blocker": false,
+      "custody_or_private_key_blocker": false,
+      "blocker": "publication_automation_not_verified",
+      "evidence": "prior LSI payout destination evidence; publication bridge still unverified"
+    },
+    {
+      "id": "shopee_affiliate",
+      "rail": "AFFILIATE_PAYOUT",
+      "connected": false,
+      "live_receive_verified": false,
+      "programmatic_checkout": false,
+      "zero_incremental_cost_path": true,
+      "human_financial_onboarding_blocker": true,
+      "custody_or_private_key_blocker": false,
+      "blocker": "tax_and_bank_payout_approval_not_verified",
+      "evidence": "prior LSI affiliate account evidence"
+    }
+  ]
+}
