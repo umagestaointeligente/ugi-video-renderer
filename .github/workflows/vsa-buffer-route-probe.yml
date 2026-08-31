@@ -15,29 +15,41 @@ env:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     env:
       UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
     steps:
-      - name: Discover Buffer channels safely
+      - name: Discover Buffer channels with bounded backoff
         shell: bash
         run: |
           set -euo pipefail
           test -n "${UGI_WORKER_COMMAND_KEY:-}"
           echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
-          code="$(curl --silent --show-error --location --max-time 60 -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H "accept: application/json" -o /tmp/channels.json -w '%{http_code}' "$WORKER_URL/api/buffer/channels")"
-          echo "BUFFER_CHANNELS_HTTP=$code"
-          python3 - <<'PY'
+          for attempt in 1 2 3; do
+            code="$(curl --silent --show-error --location --max-time 60 -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H "accept: application/json" -o /tmp/channels.json -w '%{http_code}' "$WORKER_URL/api/buffer/channels")"
+            echo "ATTEMPT=$attempt HTTP=$code"
+            python3 - <<'PY'
           import json, re
           d=json.load(open('/tmp/channels.json'))
-          print('BUFFER_OK='+str(bool(d.get('ok'))).lower())
-          print('BUFFER_ERROR_CLASS='+str(d.get('errorClass') or 'NONE'))
           err=str(d.get('error') or 'NONE')
           err=re.sub(r'(?i)(bearer|token|secret|api[_ -]?key)\s*[:=]?\s*[A-Za-z0-9._\-]+', r'\1=[REDACTED]', err)
-          print('BUFFER_ERROR='+err[:1500])
+          print('BUFFER_OK='+str(bool(d.get('ok'))).lower())
+          print('BUFFER_ERROR_CLASS='+str(d.get('errorClass') or 'NONE'))
+          print('BUFFER_ERROR='+err[:1000])
           channels=d.get('channels') or []
           print('BUFFER_CHANNEL_COUNT='+str(len(channels)))
           for c in channels:
-            vals=[str(c.get(k) or '') for k in ('id','service','name','username','displayName','profileName','channelId')]
+            vals=[str(c.get(k) or '') for k in ('id','service','name','displayName')]
             print('CHANNEL='+' | '.join(vals))
           PY
+            if python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/channels.json'))
+          raise SystemExit(0 if d.get('ok') is True else 1)
+          PY
+            then
+              exit 0
+            fi
+            if [ "$attempt" = 1 ]; then sleep 60; elif [ "$attempt" = 2 ]; then sleep 120; fi
+          done
+          exit 2
