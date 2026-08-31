@@ -2,14 +2,19 @@
 from __future__ import annotations
 
 import datetime as dt
+import importlib.util
 import json
 import os
 import sys
 from pathlib import Path
 
-import scripts.ugi_publisher_hub as hub
-
 ROOT = Path(__file__).resolve().parents[1]
+HUB_PATH = ROOT / "scripts" / "ugi_publisher_hub.py"
+spec = importlib.util.spec_from_file_location("ugi_publisher_hub", HUB_PATH)
+hub = importlib.util.module_from_spec(spec)
+assert spec and spec.loader
+spec.loader.exec_module(hub)
+
 MANIFEST = ROOT / "control-plane" / "publisher-hub" / "queue" / "ugi-20260831-platform-video-agenda.json"
 RECOVERY = ROOT / "control-plane" / "publisher-hub" / "receipts" / "ugi-20260831-platform-video-recovery.json"
 
@@ -32,9 +37,9 @@ def main() -> int:
     client = hub.WorkerClient(os.getenv("WORKER_URL", hub.DEFAULT_WORKER_URL), key)
     real_get = client.get
 
-    # Recovery scope is deliberately narrow: the global Buffer channel-discovery
-    # preflight is the failing component. Actual approval, Buffer creation,
-    # exact dueAt verification and scheduled-state readback still use the live Worker.
+    # Recovery scope is deliberately narrow: only the broken global channel
+    # discovery preflight is bypassed. Live approval, Buffer create, dueAt and
+    # scheduled-state readback remain mandatory inside process_manifest().
     def recovery_get(path: str):
         if path == "/api/buffer/channels":
             return {
