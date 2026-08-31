@@ -1,0 +1,24 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "type": "object",
+    "properties": {
+      "inputIndex": {"type":"integer"},
+      "name": {"type":"string"},
+      "baseUnit": {"type":"string"},
+      "effectivePrice": {"type":"number"},
+      "normalizedQuantity": {"type":"number"},
+      "normalizedPrice": {"type":"number"},
+      "normalizedLabel": {"type":"string"},
+      "rankWithinUnit": {"type":"integer"},
+      "bestWithinUnit": {"type":"boolean"}
+    }
+  },
+  "views": {
+    "overview": {
+      "title": "Normalized offers",
+      "transformation": {"fields":["name","baseUnit","effectivePrice","normalizedPrice","rankWithinUnit","bestWithinUnit"]},
+      "display": {"component":"table"}
+    }
+  }
+}
