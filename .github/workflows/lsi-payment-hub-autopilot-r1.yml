@@ -1,0 +1,56 @@
+name: LSI Payment Hub Autopilot R1
+run-name: LSI Payment Hub Autopilot R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - '.github/workflows/lsi-payment-hub-autopilot-r1.yml'
+      - 'greenfield/payment-hub/provider-state-r1.json'
+      - 'greenfield/payment-hub/lsi-payment-route-council-r1.mjs'
+permissions: {contents: read}
+jobs:
+  autopilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prove live Asaas checkout without paying
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
+          mkdir -p generated/evidence
+          curl -fsS "$base/greenfield/packvalue-pro/health" > /tmp/health.json
+          jq -e '.ok==true and .provider=="asaas" and .price==49.90 and .spendCapability==false and .deliveryRequiresPaidWebhook==true' /tmp/health.json >/dev/null
+          code=$(curl -sS -o /tmp/checkout.json -w '%{http_code}' -X POST "$base/greenfield/packvalue-pro/checkout" -H 'content-type: application/json' --data '{}')
+          test "$code" = '201'
+          jq -e '.ok==true and .provider=="asaas" and .productId=="packvalue-pro-r1" and .amount==49.90 and .currency=="BRL" and .deliveryRequiresPaidWebhook==true and (.checkoutUrl|startswith("https://"))' /tmp/checkout.json >/dev/null
+          ref=$(jq -r '.referenceId' /tmp/checkout.json)
+          test -n "$ref"
+          sleep 1
+          order_code=$(curl -sS -o /tmp/order.json -w '%{http_code}' "$base/greenfield/packvalue-pro/order/$ref")
+          test "$order_code" = '200'
+          jq -e '.ok==true and .fulfillmentReady==false and (.deliveryUrl==null)' /tmp/order.json >/dev/null
+          host=$(jq -r '.checkoutUrl' /tmp/checkout.json | sed -E 's#https://([^/]+)/?.*#\1#')
+          jq -n --arg host "$host" --arg ref "$ref" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",component:"ASAAS_E2E_CHECKOUT",asaas_checkout_e2e:true,checkout_http_status:201,checkout_host:$host,reference_id:$ref,payment_performed:false,real_value_moved:false,fulfillment_released:false,verified_revenue_brl:0,authoritative_payment_event:"CHECKOUT_PAID"}' > generated/evidence/asaas-e2e-probe-r1.json
+          cat generated/evidence/asaas-e2e-probe-r1.json
+      - name: Run LSI Payment Route Council
+        shell: bash
+        run: |
+          set -euo pipefail
+          node greenfield/payment-hub/lsi-payment-route-council-r1.mjs greenfield/payment-hub/provider-state-r1.json generated/evidence/asaas-e2e-probe-r1.json generated/evidence/lsi-payment-route-council-r1.json
+          jq -e '.asaas_checkout_e2e==true and .hard_rules.never_generate_or_store_private_keys==true and .hard_rules.never_claim_revenue_from_unpaid_checkout==true' generated/evidence/lsi-payment-route-council-r1.json >/dev/null
+      - name: Build receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -n --slurpfile e2e generated/evidence/asaas-e2e-probe-r1.json --slurpfile council generated/evidence/lsi-payment-route-council-r1.json --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",state:"AUTOPILOT_E2E_AND_ROUTE_COUNCIL_PASS",run_id:$run,commit:$sha,asaas_e2e:$e2e[0],route_council:$council[0],real_value_moved:false,verified_revenue_brl:0}' > generated/evidence/lsi-payment-hub-autopilot-r1.json
+          jq '.state,.asaas_e2e.asaas_checkout_e2e,.route_council.selected_autonomous_next_action' generated/evidence/lsi-payment-hub-autopilot-r1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-payment-hub-autopilot-r1-${{ github.run_id }}
+          path: |
+            generated/evidence/asaas-e2e-probe-r1.json
+            generated/evidence/lsi-payment-route-council-r1.json
+            generated/evidence/lsi-payment-hub-autopilot-r1.json
+          retention-days: 30
