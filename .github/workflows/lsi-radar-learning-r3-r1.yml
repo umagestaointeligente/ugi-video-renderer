@@ -1,0 +1,28 @@
+name: LSI Radar Learning R3 R1
+run-name: LSI Radar Learning R3 R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-radar-learning-r3-r1.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  learn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obtain OIDC and teach R3 selection
+        shell: bash
+        env:
+          AUDIENCE: lsi-system-learning-bus
+        run: |
+          set -euo pipefail
+          url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${AUDIENCE}"
+          token="$(curl -fsS -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$url" | jq -r .value)"
+          test -n "$token" && test "$token" != null; echo "::add-mask::$token"
+          payload='{"project_id":"REVENUE","component_id":"radar_adaptive_source_r3","outcome":"SUCCESS","evidence_level":"E3","revenue_usd":0,"revenue_verified":false,"cost_usd":0,"elapsed_ms":5000,"quality_score":0.98,"risk_score":0.03,"lesson_code":"USE_OBSERVED_SOURCE_RANKING_FOR_LIVE_FEED","source_ref":"github-actions:33386739037"}'
+          curl -fsS -X POST -H "authorization: Bearer $token" -H 'content-type: application/json' --data "$payload" 'https://lsi-system-learning-bus-r1.umagestaointeligente.workers.dev/v1/events' >/tmp/result.json
+          jq -e '.ok==true and .event.component_id=="radar_adaptive_source_r3" and .event.revenue_usd_verified==0' /tmp/result.json >/dev/null
+          echo 'R3_LEARNING_EVENT=PASS'
