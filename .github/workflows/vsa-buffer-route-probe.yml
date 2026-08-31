@@ -19,28 +19,22 @@ jobs:
     env:
       UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
     steps:
-      - name: Discover Buffer channels without exposing credentials
+      - name: Discover Buffer channels safely
         shell: bash
         run: |
           set -euo pipefail
           test -n "${UGI_WORKER_COMMAND_KEY:-}"
           echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
-          curl --fail --silent --show-error --location --max-time 60 \
-            -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" \
-            -H "accept: application/json" \
-            "$WORKER_URL/api/buffer/channels" > /tmp/channels.json
+          code="$(curl --silent --show-error --location --max-time 60 -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H "accept: application/json" -o /tmp/channels.json -w '%{http_code}' "$WORKER_URL/api/buffer/channels")"
+          echo "BUFFER_CHANNELS_HTTP=$code"
           python3 - <<'PY'
           import json
           d=json.load(open('/tmp/channels.json'))
-          out={
-            'ok': d.get('ok'),
-            'organization': d.get('organization'),
-            'channels': [
-              {k:c.get(k) for k in ('id','service','name','username','displayName','profileName','channelId') if c.get(k) is not None}
-              for c in (d.get('channels') or [])
-            ]
-          }
-          print('VSA_BUFFER_ROUTE_PROBE='+json.dumps(out, ensure_ascii=False))
-          if d.get('ok') is not True:
-            raise SystemExit(2)
+          print('BUFFER_OK='+str(bool(d.get('ok'))).lower())
+          print('BUFFER_ERROR_CLASS='+str(d.get('errorClass') or 'NONE'))
+          channels=d.get('channels') or []
+          print('BUFFER_CHANNEL_COUNT='+str(len(channels)))
+          for c in channels:
+            vals=[str(c.get(k) or '') for k in ('id','service','name','username','displayName','profileName','channelId')]
+            print('CHANNEL='+' | '.join(vals))
           PY
