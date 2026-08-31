@@ -2,31 +2,11 @@
   "project": "UGI",
   "component": "ANTI-REPEAT-GATE",
   "windowDays": 15,
-  "checkedAt": "2026-08-31T01:22:44.226845+00:00",
-  "queuedCount": 5,
+  "checkedAt": "2026-08-31T22:08:12.994615+00:00",
+  "queuedCount": 4,
   "blocked": 0,
   "state": "PASS",
   "results": [
-    {
-      "contentId": "UGI-20260831-TT-CURSOR-OPENAI",
-      "command": "control-plane/commands/ugi-20260831-tiktok-cursor-openai.json",
-      "windowDays": 15,
-      "decision": "ANTI_REPEAT_PASS",
-      "reasons": [],
-      "closest": {
-        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1450",
-        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1450.json",
-        "textSimilarity": 0.0219,
-        "hookSimilarity": 0.2975,
-        "visualSimilarity": 0.0,
-        "combinedSimilarity": 0.0864
-      },
-      "signature": {
-        "exactHash": "6c94bff5d68680f3467725ee984429c072cabe73d2c04337d416b128288906ed",
-        "renderId": "ugi-20260831-tt-cursor-openai",
-        "draftId": ""
-      }
-    },
     {
       "contentId": "UGI-20260831-YT-GOOGLE-AI-OVERVIEWS",
       "command": "control-plane/commands/ugi-20260831-youtube-google-ai-overviews.json",
