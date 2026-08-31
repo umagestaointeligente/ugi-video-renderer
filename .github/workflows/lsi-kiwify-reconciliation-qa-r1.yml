@@ -1,0 +1,37 @@
+name: LSI Kiwify Reconciliation QA R1
+run-name: LSI Kiwify Reconciliation QA R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - '.github/workflows/lsi-kiwify-reconciliation-qa-r1.yml'
+      - 'greenfield/kiwify-reconciliation-r1/**'
+permissions: {contents: read}
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mock protocol and privacy QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd greenfield/kiwify-reconciliation-r1
+          node test.mjs
+          grep -Fq 'https://public-api.kiwify.com/v1' client.mjs
+          grep -Fq "'compra_aprovada','compra_reembolsada','chargeback'" client.mjs
+          grep -Fq 'KIWIFY_CLIENT_SECRET' client.mjs
+          ! grep -R -E 'client_secret[" ]*:[" ][A-Za-z0-9]|access_token[" ]*:[" ][A-Za-z0-9]|Bearer eyJ' .
+          echo 'KIWIFY_SECRET_AND_SCOPE_GATES=PASS'
+      - name: Receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",component:"KIWIFY_RECONCILIATION_R1",state:"ADAPTER_QA_PASS_EXTERNAL_API_KEY_REQUIRED",run_id:$run,commit:$sha,oauth_supported:true,products_read_adapter:true,sales_read_adapter:true,sales_pii_sanitization:true,webhook_adapter:true,webhook_triggers:["compra_aprovada","compra_reembolsada","chargeback"],financial_mutation_capability:false,product_creation_capability_verified:false,credentials_present_in_repo:false,kiwify_connected:false,revenue_verified_brl:0,real_value_moved:false}' | tee generated/evidence/lsi-kiwify-reconciliation-r1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-kiwify-reconciliation-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-kiwify-reconciliation-r1.json
+          retention-days: 30
