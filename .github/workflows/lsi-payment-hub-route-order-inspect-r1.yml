@@ -1,0 +1,59 @@
+name: LSI Payment Hub Route Order Inspect R1
+run-name: LSI Payment Hub Route Order Inspect R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-payment-hub-route-order-inspect-r1.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Snapshot, patch, compare route ordering
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"; echo "::add-mask::$CF_API_TOKEN"
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$base" >/tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1','replace'); b=open('/tmp/b','rb').read(); m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
+          parts=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+b)
+              for p in msg.walk():
+                  if not p.is_multipart():
+                      q=p.get_payload(decode=True) or b''
+                      if q and b'createProviderCheckout' in q and b'/api/commerce/webhook/asaas' in q: parts.append(q)
+          else: parts=[b]
+          if not parts: raise SystemExit('MODULE_NOT_FOUND')
+          open('/tmp/current.mjs','wb').write(max(parts,key=len))
+          PY
+          node greenfield/packvalue-pro/build.mjs
+          python greenfield/packvalue-pro/patch_worker_v4.py --source /tmp/current.mjs --asset greenfield/packvalue-pro/dist/packvalue-pro.html --output /tmp/patched.mjs
+          node --check /tmp/patched.mjs
+          python - <<'PY'
+          old=open('/tmp/current.mjs',encoding='utf-8').read(); new=open('/tmp/patched.mjs',encoding='utf-8').read()
+          needles=['path === "/api/health"','/api/health','isWorkerApiAuthorized','isInternalWorkerAuthorized','isCommerceAdminAuthorized','Authorization','WORKER_ADMIN_BEARER','/api/greenfield/packvalue-pro/health','/packvalue-pro']
+          def positions(s,n):
+              out=[]; start=0
+              while True:
+                  i=s.find(n,start)
+                  if i<0:return out
+                  out.append(i);start=i+1
+          for n in needles:
+              print('OLD',repr(n),'count',old.count(n),'pos',positions(old,n)[:12])
+              print('NEW',repr(n),'count',new.count(n),'pos',positions(new,n)[:12])
+          print('HEALTH_COUNT_EQUAL='+str(old.count('/api/health')==new.count('/api/health')).lower())
+          print('AUTH_COUNTS_EQUAL='+str(all(old.count(x)==new.count(x) for x in ['isWorkerApiAuthorized','isInternalWorkerAuthorized','isCommerceAdminAuthorized','WORKER_ADMIN_BEARER'])).lower())
+          print('SOURCE_PREFIX_EQUAL='+str(old[:30000]==new[:30000]).lower())
+          print('INSPECT_ONLY=true')
+          PY
