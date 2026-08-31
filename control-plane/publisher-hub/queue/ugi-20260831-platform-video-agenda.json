@@ -1,0 +1,13 @@
+{
+  "project": "UGI",
+  "batchId": "ugi-20260831-platform-video-agenda",
+  "createdAt": "2026-08-30T22:20:00-03:00",
+  "editorialRule": "platform_native_unique_assets_anti_repeat_15d",
+  "posts": [
+    {"contentId":"UGI-20260831-TT-CURSOR-OPENAI","platform":"tiktok","dueAt":"2026-08-31T16:00:00.000Z"},
+    {"contentId":"UGI-20260831-YT-GOOGLE-AI-OVERVIEWS","platform":"youtube","dueAt":"2026-08-31T20:30:00.000Z"},
+    {"contentId":"UGI-20260831-IG-REEL-VW-CHANGE","platform":"instagram","dueAt":"2026-08-31T22:00:00.000Z"},
+    {"contentId":"UGI-20260831-YT-NVIDIA-INFRA","platform":"youtube","dueAt":"2026-08-31T23:00:00.000Z"},
+    {"contentId":"UGI-20260831-TT-AI-CYBER","platform":"tiktok","dueAt":"2026-08-31T23:30:00.000Z"}
+  ]
+}
