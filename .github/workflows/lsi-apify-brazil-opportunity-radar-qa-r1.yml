@@ -1,0 +1,39 @@
+name: LSI Apify Brazil Opportunity Radar QA R1
+run-name: LSI Apify Brazil Opportunity Radar QA R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - 'greenfield/apify-brazil-opportunity-radar-r1/**'
+      - '.github/workflows/lsi-apify-brazil-opportunity-radar-qa-r1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Actor package and live official-data dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='greenfield/apify-brazil-opportunity-radar-r1'
+          node --check "$base/src/main.mjs"
+          node -e "for(const p of ['$base/package.json','$base/.actor/actor.json','$base/.actor/input_schema.json','$base/.actor/dataset_schema.json'])JSON.parse(require('fs').readFileSync(p,'utf8'));console.log('APIFY_JSON_PARSE=PASS')"
+          grep -Fq "Actor.charge({eventName:'radar-run-completed'})" "$base/src/main.mjs"
+          grep -Fq "networkUsed:true" "$base/src/main.mjs"
+          grep -Fq "piiCollected:false" "$base/src/main.mjs"
+          grep -Fq "ranked-source-set-2026-08-31" "$base/src/main.mjs"
+          ! grep -R -E '(private[_ -]?key|seed phrase|master_password|access_token[=:][^$ ])' "$base"
+          code=$(curl --max-time 12 -sS -o /tmp/source.json -w '%{http_code}' 'https://lola-operacional-ugi.umagestaointeligente.workers.dev/greenfield/brazil-opportunity-radar/source-health' || true)
+          test "$code" = 200
+          jq -e '.ok==true and .densityVersion=="ranked-source-set-2026-08-31" and .count>0' /tmp/source.json >/dev/null
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --argjson source "$(cat /tmp/source.json)" '{schema_version:"1.0",project:"LSI_REVENUE_DEMAND_FIRST",component:"APIFY_BRAZIL_OPPORTUNITY_RADAR_R1",state:"PACKAGE_READY_PENDING_APIFY_ACCOUNT_PUBLISH",run_id:$run,commit:$sha,actor_charge_event:"radar-run-completed",official_data_live:true,source_health:$source,pii_collected:false,money_movement:false,verified_revenue_usd:0}' | tee generated/evidence/lsi-apify-brazil-opportunity-radar-r1.json
+          echo 'APIFY_RADAR_PACKAGE_QA=PASS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-apify-brazil-opportunity-radar-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-apify-brazil-opportunity-radar-r1.json
+          retention-days: 30
