@@ -1,5 +1,16 @@
 {
   "source": "https://mixkit.co/free-stock-music/corporate-music/",
+  "license": "Mixkit License",
+  "selected": {
+    "Close Up": "https://assets.mixkit.co/music/1167/1167.mp3",
+    "Motivating Mornings": "https://assets.mixkit.co/music/33/33.mp3",
+    "Your Breath": "https://assets.mixkit.co/music/634/634.mp3",
+    "Running Out of Time": "https://assets.mixkit.co/music/77/77.mp3",
+    "Crying Sea": "https://assets.mixkit.co/music/1023/1023.mp3",
+    "Stay With Me": "https://assets.mixkit.co/music/838/838.mp3",
+    "The Boss": "https://assets.mixkit.co/music/479/479.mp3",
+    "Curiosity": "https://assets.mixkit.co/music/480/480.mp3"
+  },
   "mp3_urls": [
     "https://assets.mixkit.co/music/1002/1002.mp3",
     "https://assets.mixkit.co/music/102/102.mp3",
@@ -48,7 +59,7 @@
     "https://assets.mixkit.co/build/favicons/favicon-96x96-b47a57aea9303a5f92e644e78aa343575b21f12b38d469be00fdc5acd983684d.png",
     "https://assets.mixkit.co/build/mixkit-banner-6-cards-baceeb75accc188be90f16e1afde5d4b52f4072d0fec2b3da513a980ce981f3a.png",
     "https://assets.mixkit.co/build/mixkit-logo--black-a90b84b6ac6ad0fbd410b16466b4cb252d399b5caaf03603f36c52ffc648455c.svg",
-    "https://assets.mixkit.co/build/musics/music-generic-background3-56f67e645bbfa86328c222e34de5218d4d80e8ba95d8c2365e1aadba183c4840.png",
+    "https://assets.mixkit.co/build/musics/music-generic-background1-3ebdfdbcbbb7754606d56a5804269387b334b7c0f65028d9c978b4fbd0a3d826.png",
     "https://assets.mixkit.co/mixkit-social-meta.png",
     "https://assets.mixkit.co/music/1002/1002-waveform.json",
     "https://assets.mixkit.co/music/1002/1002.mp3",
