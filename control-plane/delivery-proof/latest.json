@@ -1,11 +1,11 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-31T00:06:04.043908+00:00",
+  "checkedAt": "2026-08-31T00:15:13.850632+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
-  "pendingWithinGrace": 0,
+  "pendingWithinGrace": 1,
   "late": 13,
   "failed": 0,
   "state": "ALERT",
@@ -253,6 +253,25 @@
       "externalLink": null,
       "error": null,
       "state": "LATE",
+      "externalProof": {
+        "attempted": false
+      }
+    },
+    {
+      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
+      "contentId": "UGI-20260830-IG-STATIC-PIVOT-145B",
+      "platform": "instagram",
+      "kind": "r453",
+      "bufferPostId": "6a948b4efd31f7e50b777ed8",
+      "draftId": "01278c54-9f37-490f-90b4-c5d5f400c192",
+      "dueAt": "2026-08-31T00:15:00+00:00",
+      "readbackHttp": 500,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
+      "error": null,
+      "state": "PENDING_WITHIN_GRACE",
       "externalProof": {
         "attempted": false
       }
