@@ -6,6 +6,7 @@ import importlib.util
 import json
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,9 @@ ROOT=Path(__file__).resolve().parents[1]
 BASE=ROOT/'scripts/ugi_instagram_production_20260831.py'
 spec=importlib.util.spec_from_file_location('prod31',BASE)
 prod=importlib.util.module_from_spec(spec); assert spec and spec.loader; spec.loader.exec_module(prod)
+
+RETRY_DELAYS=[20,45,90,150]
+INTER_POST_DELAY=25
 
 
 def load_receipt()->dict[str,Any]:
@@ -29,10 +33,38 @@ def save(payload:dict[str,Any]):
 
 def by_id(payload,cid): return next((x for x in payload.get('items',[]) if x.get('contentId')==cid),None)
 
+def is_rate_limit(value:Any)->bool:
+    s=str(value)
+    return 'RATE_LIMIT_EXCEEDED' in s or 'Too many requests' in s or 'too many requests' in s or 'httpStatus\': 429' in s or '"httpStatus": 429' in s or ':429:' in s
+
+def get_with_backoff(c,path):
+    last=None
+    for attempt in range(len(RETRY_DELAYS)+1):
+        code,body=c.get(path)
+        last=(code,body)
+        if code==200 and body.get('ok'): return code,body
+        if not is_rate_limit((code,body)) or attempt>=len(RETRY_DELAYS): return code,body
+        delay=RETRY_DELAYS[attempt]
+        print(f'Buffer readback rate-limited; retry in {delay}s',flush=True); time.sleep(delay)
+    return last
+
+def schedule_with_backoff(c,**kwargs):
+    last=None
+    for attempt in range(len(RETRY_DELAYS)+1):
+        try:
+            return prod.schedule(c,**kwargs)
+        except RuntimeError as exc:
+            last=exc
+            if not is_rate_limit(exc) or attempt>=len(RETRY_DELAYS): raise
+            delay=RETRY_DELAYS[attempt]
+            print(f'Buffer publish rate-limited for {kwargs.get("cid")}; retry in {delay}s',flush=True)
+            time.sleep(delay)
+    raise last or RuntimeError('schedule retry exhausted')
+
 def verify_existing(c,payload,cid,due):
     item=by_id(payload,cid)
     if not item or not item.get('bufferPostId'): return None
-    code,rb=c.get('/api/r45-2/buffer-status?id='+prod.quote(str(item['bufferPostId'])))
+    code,rb=get_with_backoff(c,'/api/r45-2/buffer-status?id='+prod.quote(str(item['bufferPostId'])))
     post=rb.get('post') or rb.get('publication') or {}
     expected=prod.to_utc_iso(due)
     if code==200 and rb.get('ok') and post.get('status')=='scheduled' and prod.same_due(post.get('dueAt'),expected) and not post.get('error'):
@@ -75,20 +107,20 @@ def main():
         v=prod.ASSET_DIR/f'story-{i:02d}.mp4'; pr=prod.probe(v)
         if not pr.get('audio') or not pr.get('video'): raise RuntimeError(f'AUDIO_QA_FAIL:{s["id"]}:{pr}')
         up=prod.upload_video(c,s['id'],v)
-        res=prod.schedule(c,kind='story_video',cid=s['id'],due=s['due'],video_url=up.get('videoUrl'))
+        res=schedule_with_backoff(c,kind='story_video',cid=s['id'],due=s['due'],video_url=up.get('videoUrl'))
         item={"contentId":s['id'],"type":"story_video","dueAtRequested":s['due'],"music":{"title":s['music'],"url":prod.MUSIC[s['music']],**prod.LICENSE},"visualQA":{"language":"pt-BR","generatedTextInBackground":False,"controlledTypography":True,"lowerThirdClean":True},"avQA":pr,"upload":up,**res}
         put(payload,item)
+        time.sleep(INTER_POST_DELAY)
 
     cid=prod.CAROUSEL['id']
     if not verify_existing(c,payload,cid,prod.CAROUSEL['due']):
         check_feed_collision(prod.CAROUSEL['due'])
         up=prod.upload_video(c,cid,prod.ASSET_DIR/'carousel-01.mp4')
         imgs=[f'{prod.RAW_BASE}/carousel-{i:02d}.png' for i in range(2,8)]
-        # Verify all public slide assets exist before Buffer mutation.
         for u in imgs:
             rr=prod.requests.get(u,timeout=60)
             if rr.status_code!=200 or len(rr.content)<5000: raise RuntimeError(f'VISUAL_QA_FAIL:public_slide_unavailable:{u}:{rr.status_code}:{len(rr.content)}')
-        res=prod.schedule(c,kind='mixed_carousel',cid=cid,due=prod.CAROUSEL['due'],text=prod.CAROUSEL['caption'],video_url=up.get('videoUrl'),image_urls=imgs)
+        res=schedule_with_backoff(c,kind='mixed_carousel',cid=cid,due=prod.CAROUSEL['due'],text=prod.CAROUSEL['caption'],video_url=up.get('videoUrl'),image_urls=imgs)
         item={"contentId":cid,"type":"mixed_carousel","dueAtRequested":prod.CAROUSEL['due'],"slideCount":7,"music":{"title":prod.CAROUSEL['music'],"url":prod.MUSIC[prod.CAROUSEL['music']],**prod.LICENSE},"visualQA":{"language":"pt-BR","generatedTextInBackground":False,"controlledTypography":True,"individualSlides":True,"feedCollisionPass":True},"avQA":prod.probe(prod.ASSET_DIR/'carousel-01.mp4'),"upload":up,**res}
         put(payload,item)
 
