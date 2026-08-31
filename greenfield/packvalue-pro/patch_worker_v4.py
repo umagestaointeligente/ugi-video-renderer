@@ -8,6 +8,8 @@ ADMIN_ANCHOR = 'if (request.method === "POST" && path === "/api/commerce/checkou
 PUBLIC_HEALTH_TOKEN = 'path === "/api/health"'
 OLD_PUBLIC_NS = '/api/greenfield/packvalue-pro'
 NEW_PUBLIC_NS = '/greenfield/packvalue-pro'
+V2_IMAGE_EXPR = 'imageBase64: String(product.checkoutImageBase64 || UGI_CHECKOUT_IMAGE_BASE64)'
+GREENFIELD_SAFE_IMAGE_EXPR = 'imageBase64: product?.greenfield === true ? undefined : UGI_CHECKOUT_IMAGE_BASE64'
 
 
 def move_greenfield_routes_to_public_scope(text: str) -> str:
@@ -51,6 +53,9 @@ def main():
         subprocess.run(cmd,check=True)
     out_path=pathlib.Path(a.output)
     out=out_path.read_text(encoding='utf-8')
+    if out.count(V2_IMAGE_EXPR) != 1:
+        raise SystemExit(f'PACKVALUE_V2_IMAGE_EXPR_COUNT_{out.count(V2_IMAGE_EXPR)}')
+    out=out.replace(V2_IMAGE_EXPR,GREENFIELD_SAFE_IMAGE_EXPR,1)
     out=move_greenfield_routes_to_public_scope(out)
     out=migrate_public_namespace(out)
     out_path.write_text(out,encoding='utf-8')
@@ -59,8 +64,11 @@ def main():
     if out.count(PUBLIC_HEALTH_TOKEN)!=1: raise SystemExit('PACKVALUE_PUBLIC_HEALTH_TOKEN_CHANGED')
     if out.index(ROUTE_MARKER) > out.index(PUBLIC_HEALTH_TOKEN): raise SystemExit('PACKVALUE_ROUTE_NOT_PUBLIC_SCOPE')
     if out.count(NEW_PUBLIC_NS) < 5: raise SystemExit('PACKVALUE_NEW_PUBLIC_NAMESPACE_MISSING')
+    if out.count(GREENFIELD_SAFE_IMAGE_EXPR)!=1: raise SystemExit('PACKVALUE_GREENFIELD_IMAGE_OMISSION_MISSING')
+    if out.count('imageBase64: UGI_CHECKOUT_IMAGE_BASE64')!=0: raise SystemExit('PACKVALUE_LEGACY_IMAGE_ANCHOR_UNEXPECTED')
     print('PATCH_V4_DELIVERY_ADAPTER=PASS')
     print('PATCH_V4_PUBLIC_ROUTE_SCOPE=PASS')
     print('PATCH_V4_PUBLIC_NAMESPACE=PASS')
+    print('PATCH_V4_GREENFIELD_OPTIONAL_IMAGE_OMITTED=PASS')
 
 if __name__=='__main__': main()
