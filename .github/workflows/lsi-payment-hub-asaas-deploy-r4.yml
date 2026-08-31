@@ -1,0 +1,132 @@
+name: LSI Payment Hub Asaas Deploy R4
+run-name: LSI Payment Hub Asaas Deploy R4 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-payment-hub-asaas-deploy-r4.yml']
+permissions: {contents: read}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test PackValue PRO
+        shell: bash
+        run: |
+          set -euo pipefail
+          node greenfield/packvalue-pro/test.mjs
+          node greenfield/packvalue-pro/build.mjs
+          jq -e '.network_capability==false and .pii_collection==false and .server_required_after_delivery==false' greenfield/packvalue-pro/dist/manifest.json >/dev/null
+      - name: Configure Cloudflare access
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"
+          echo "CF_API_TOKEN=$CF_API_TOKEN" >> "$GITHUB_ENV"
+          echo "CF_ACCOUNT_ID=$CF_ACCOUNT_ID" >> "$GITHUB_ENV"
+          echo "::add-mask::$CF_API_TOKEN"
+      - name: Snapshot live module and create candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health >/tmp/pre-health.json
+          jq -e '.ok==true and (.version|type=="string")' /tmp/pre-health.json >/dev/null
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$base" >/tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1','replace')
+          body=open('/tmp/b','rb').read()
+          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
+          candidates=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+body)
+              for p in msg.walk():
+                  if p.is_multipart(): continue
+                  q=p.get_payload(decode=True) or b''
+                  if q and b'createProviderCheckout' in q and b'/api/commerce/webhook/asaas' in q:
+                      cd=p.get('Content-Disposition','')
+                      nm=re.search(r'(?:name|filename)="([^"]+)"',cd)
+                      candidates.append((q,nm.group(1) if nm else 'worker.mjs'))
+          else:
+              candidates=[(body,'worker.mjs')]
+          if not candidates: raise SystemExit('LIVE_COMMERCE_MODULE_NOT_FOUND')
+          src,name=max(candidates,key=lambda x:len(x[0])); text=src.decode('utf-8')
+          gates=['CHECKOUT_PAID','asaas-access-token','ASAAS_WEBHOOK_TOKEN','isCommerceAdminAuthorized(request, env)','/api/commerce/webhook/asaas','/api/material-delivery/','path === "/api/health"']
+          miss=[g for g in gates if g not in text]
+          if miss: raise SystemExit('LIVE_GATE_MISSING:'+','.join(miss))
+          safe=re.sub(r'[^A-Za-z0-9._-]','-',name) or 'worker.mjs'
+          if not safe.endswith(('.js','.mjs')): safe='worker.mjs'
+          open('/tmp/current.mjs','wb').write(src); open('/tmp/module-name','w').write(safe)
+          print(f'LIVE_SNAPSHOT=PASS bytes={len(src)} module={safe}')
+          PY
+          python greenfield/packvalue-pro/patch_worker_v4.py --source /tmp/current.mjs --asset greenfield/packvalue-pro/dist/packvalue-pro.html --output /tmp/patched.mjs
+          node --check /tmp/patched.mjs
+          python - <<'PY'
+          old=open('/tmp/current.mjs',encoding='utf-8').read(); new=open('/tmp/patched.mjs',encoding='utf-8').read()
+          for a in ['/api/video-render','/api/video-upload','/api/platform-approval','/api/commerce/webhook/asaas','BUFFER_ACCESS_TOKEN','ASAAS_WEBHOOK_TOKEN','CHECKOUT_PAID']:
+              if old.count(a)!=new.count(a): raise SystemExit('INVARIANT_CHANGED:'+a)
+          if new.count('/greenfield/packvalue-pro/checkout') < 1: raise SystemExit('LSI_NEW_ROUTE_MISSING')
+          if '/api/greenfield/packvalue-pro' in new: raise SystemExit('LSI_OLD_ROUTE_REMAINS')
+          if 'fixed_offer_accepts_no_client_parameters' not in new: raise SystemExit('FIXED_OFFER_GATE_MISSING')
+          if new.index('// LSI PackValue PRO — fixed public SKU only; no admin capability.') > new.index('path === "/api/health"'): raise SystemExit('LSI_PUBLIC_SCOPE_ORDER_INVALID')
+          print('PRE_DEPLOY_INVARIANTS=PASS')
+          PY
+      - name: Deploy content only
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="$(cat /tmp/module-name)"
+          endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
+          code=$(curl --silent --show-error -o /tmp/deploy.json -w '%{http_code}' -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/patched.mjs;filename=${name};type=application/javascript+module")
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then cat /tmp/deploy.json; exit 1; fi
+          jq -e '.success==true' /tmp/deploy.json >/dev/null
+          echo 'CONTENT_DEPLOY=PASS'
+      - name: Production probes with rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          rollback(){
+            echo 'PROBE_FAILED_ROLLBACK=START'
+            name="$(cat /tmp/module-name)"
+            endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
+            curl --fail --silent --show-error -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/current.mjs;filename=${name};type=application/javascript+module" >/tmp/rollback.json
+            jq -e '.success==true' /tmp/rollback.json >/dev/null
+            echo 'ROLLBACK=PASS'
+          }
+          trap 'rollback' ERR
+          base='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
+          for i in 1 2 3 4 5; do
+            if curl -fsS "$base/api/health" >/tmp/post-health.json && jq -e '.ok==true' /tmp/post-health.json >/dev/null; then break; fi
+            sleep 2
+          done
+          jq -e '.ok==true' /tmp/post-health.json >/dev/null
+          curl -fsS "$base/greenfield/packvalue-pro/health" >/tmp/lsi-health.json
+          jq -e '.ok==true and .productId=="packvalue-pro-r1" and .price==49.90 and .provider=="asaas" and .fixedServerPrice==true and .deliveryRequiresPaidWebhook==true and .spendCapability==false and .greenfield==true' /tmp/lsi-health.json >/dev/null
+          status=$(curl -sS -o /tmp/negative.json -w '%{http_code}' -X POST "$base/greenfield/packvalue-pro/checkout" -H 'content-type: application/json' --data '{"price":0.01}')
+          test "$status" = '400'
+          jq -e '.error=="fixed_offer_accepts_no_client_parameters"' /tmp/negative.json >/dev/null
+          admin_status=$(curl -sS -o /tmp/admin.json -w '%{http_code}' -X POST "$base/api/commerce/checkout" -H 'content-type: application/json' --data '{}')
+          test "$admin_status" = '401' -o "$admin_status" = '403'
+          landing_status=$(curl -sS -o /tmp/landing.html -w '%{http_code}' "$base/packvalue-pro")
+          test "$landing_status" = '200'
+          grep -Fq 'PackValue PRO' /tmp/landing.html
+          trap - ERR
+          echo 'PRODUCTION_PROBES=PASS'
+      - name: Receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg pre_version "$(jq -r '.version' /tmp/pre-health.json)" --arg post_version "$(jq -r '.version' /tmp/post-health.json)" --arg current "$(sha256sum /tmp/current.mjs|awk '{print $1}')" --arg patched "$(sha256sum /tmp/patched.mjs|awk '{print $1}')" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",component:"ASAAS_PACKVALUE_PRO",state:"LIVE_RECEIVABLE_READY",run_id:$run,commit:$sha,pre_worker_version:$pre_version,post_worker_version:$post_version,price_brl:49.90,payment_provider:"asaas",checkout_route:"/greenfield/packvalue-pro/checkout",health_route:"/greenfield/packvalue-pro/health",landing_route:"/packvalue-pro",authoritative_payment_event:"CHECKOUT_PAID",webhook_auth_header:"asaas-access-token",fixed_price_server_side:true,client_price_override_rejected:true,legacy_admin_checkout_still_protected:true,cloudflare_bindings_changed:false,source_sha256_before:$current,source_sha256_after:$patched,provider_checkout_created_during_acceptance:false,verified_revenue_brl:0,real_value_moved:false,rollback_ready:true}' | tee generated/evidence/lsi-payment-hub-asaas-live-r1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-payment-hub-asaas-live-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-payment-hub-asaas-live-r1.json
+          retention-days: 30
