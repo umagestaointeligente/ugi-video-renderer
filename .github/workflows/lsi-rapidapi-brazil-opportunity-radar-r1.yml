@@ -1,0 +1,66 @@
+name: LSI RapidAPI Brazil Opportunity Radar R1
+run-name: LSI RapidAPI Brazil Opportunity Radar R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - 'greenfield/rapidapi-brazil-opportunity-radar-r1/**'
+      - '.github/workflows/lsi-rapidapi-brazil-opportunity-radar-r1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"; test -n "$CLOUDFLARE_ACCOUNT_ID"
+          node --check greenfield/rapidapi-brazil-opportunity-radar-r1/worker.mjs
+          node -e "JSON.parse(require('fs').readFileSync('greenfield/rapidapi-brazil-opportunity-radar-r1/openapi.json','utf8'));console.log('OPENAPI_PARSE=PASS')"
+          grep -Fq 'rapidapi_proxy_secret_not_configured' greenfield/rapidapi-brazil-opportunity-radar-r1/worker.mjs
+          grep -Fq 'x-rapidapi-proxy-secret' greenfield/rapidapi-brazil-opportunity-radar-r1/worker.mjs
+          grep -Fq 'ranked-source-set-2026-08-31' greenfield/rapidapi-brazil-opportunity-radar-r1/worker.mjs
+          ! grep -R -E 'RAPIDAPI_PROXY_SECRET[=:][^$ ]|private[_ -]?key|seed phrase' greenfield/rapidapi-brazil-opportunity-radar-r1
+          echo 'RAPIDAPI_RADAR_STATIC_QA=PASS'
+      - name: Deploy fail-closed backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 deploy greenfield/rapidapi-brazil-opportunity-radar-r1/worker.mjs --name lsi-brazil-opportunity-radar-rapidapi-r1 --compatibility-date 2026-08-31
+      - name: Prove production fail-closed state
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://lsi-brazil-opportunity-radar-rapidapi-r1.umagestaointeligente.workers.dev'
+          ready=false
+          for i in $(seq 1 20); do
+            hc=$(curl -sS -o /tmp/h.json -w '%{http_code}' "$base/health" || true)
+            if [ "$hc" = 200 ] && jq -e '.ok==true and .version=="brazil-opportunity-radar-rapidapi-r1" and .proxySecretConfigured==false and .piiCollected==false and .moneyMovement==false' /tmp/h.json >/dev/null 2>&1; then ready=true;break;fi
+            sleep 1
+          done
+          test "$ready" = true
+          pc=$(curl -sS -o /tmp/p.json -w '%{http_code}' "$base/v1/opportunities?limit=3" || true)
+          test "$pc" = 503
+          jq -e '.error=="rapidapi_proxy_secret_not_configured"' /tmp/p.json >/dev/null
+          echo 'RAPIDAPI_RADAR_BACKEND=LIVE_FAIL_CLOSED'
+          echo 'PROXY_SECRET_REQUIRED=true'
+          echo 'VERIFIED_REVENUE_USD=0'
+          echo 'REAL_VALUE_MOVED=false'
+      - name: Receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"LSI_REVENUE_DEMAND_FIRST",component:"RAPIDAPI_BRAZIL_OPPORTUNITY_RADAR_R1",state:"LIVE_FAIL_CLOSED_PENDING_RAPIDAPI_PROXY_SECRET",run_id:$run,commit:$sha,backend:"https://lsi-brazil-opportunity-radar-rapidapi-r1.umagestaointeligente.workers.dev",openapi:"greenfield/rapidapi-brazil-opportunity-radar-r1/openapi.json",proxy_secret_required:true,pii_collected:false,money_movement:false,verified_revenue_usd:0}' | tee generated/evidence/lsi-rapidapi-brazil-opportunity-radar-r1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-rapidapi-brazil-opportunity-radar-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-rapidapi-brazil-opportunity-radar-r1.json
+          retention-days: 30
