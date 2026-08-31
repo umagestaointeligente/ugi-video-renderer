@@ -1,5 +1,5 @@
-name: LSI PackValue PRO Build + Live Patch V5
-run-name: LSI PackValue PRO Build + Live Patch V5 ${{ github.run_id }}
+name: LSI PackValue PRO Build + Live Patch V6
+run-name: LSI PackValue PRO Build + Live Patch V6 ${{ github.run_id }}
 on:
   push:
     branches: [lsi-payment-hub-r1-20260830]
@@ -32,12 +32,13 @@ jobs:
           echo "CF_API_TOKEN=$CF_API_TOKEN" >> "$GITHUB_ENV"
           echo "CF_ACCOUNT_ID=$CF_ACCOUNT_ID" >> "$GITHUB_ENV"
           echo "::add-mask::$CF_API_TOKEN"
-      - name: Extract actual live R44.5.23 module robustly
+      - name: Extract live commerce module with structural gates
         shell: bash
         run: |
           set -euo pipefail
           curl -fsS https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health >/tmp/health.json
-          jq -e '.ok==true and .version=="lola-v8-r44-5-23-store-multi-product-premium-v6-2026-08-25"' /tmp/health.json >/dev/null
+          jq -e '.ok==true and (.version|type=="string")' /tmp/health.json >/dev/null
+          printf 'LIVE_HEALTH_VERSION=%s\n' "$(jq -r '.version' /tmp/health.json)"
           base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
           curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$base" >/tmp/b
           python - <<'PY'
@@ -52,17 +53,13 @@ jobs:
           if 'multipart/' in ct.lower():
               msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+body)
               for part in msg.walk():
-                  if part.is_multipart():
-                      continue
+                  if part.is_multipart(): continue
                   payload=part.get_payload(decode=True) or b''
-                  if payload:
-                      candidates.append(payload)
+                  if payload: candidates.append(payload)
           else:
               candidates=[body]
           exact=[p for p in candidates if b'createProviderCheckout' in p and b'/api/commerce/webhook/asaas' in p and b'/api/material-delivery/' in p]
-          if len(exact)==1:
-              chosen=exact[0]
-          elif len(exact)>1:
+          if exact:
               chosen=max(exact,key=len)
           else:
               jsish=[p for p in candidates if b'createProviderCheckout' in p or b'/api/commerce/webhook/asaas' in p]
@@ -71,7 +68,10 @@ jobs:
               chosen=max(jsish,key=len)
               if b'createProviderCheckout' not in chosen or b'/api/commerce/webhook/asaas' not in chosen:
                   raise SystemExit('WORKER_MODULE_ANCHORS_SPLIT')
-          chosen.decode('utf-8')
+          text=chosen.decode('utf-8')
+          required=['if (request.method === "POST" && path === "/api/commerce/checkout") {','if (request.method === "POST" && path === "/api/commerce/webhook/asaas") {','async function createProviderCheckout(env, provider, product, material, body, origin) {','isCommerceAdminAuthorized(request, env)','ASAAS_WEBHOOK_TOKEN']
+          missing=[x for x in required if x not in text]
+          if missing: raise SystemExit('STRUCTURAL_GATE_MISSING:'+','.join(missing))
           open('/tmp/current.mjs','wb').write(chosen)
           print(f'LIVE_MODULE_EXTRACT=PASS bytes={len(chosen)} content_type={ct!r} candidates={len(candidates)}')
           PY
@@ -87,7 +87,7 @@ jobs:
           grep -Fq 'grant.productId === "packvalue-pro-r1" ? `attachment; filename="packvalue-pro.html"`' /tmp/patched.mjs
           grep -Fq 'if (!isCommerceAdminAuthorized(request, env))' /tmp/patched.mjs
           grep -Fq 'if (!env.ASAAS_WEBHOOK_TOKEN)' /tmp/patched.mjs
-          echo 'PATCH_V5_STATIC_ACCEPTANCE=PASS'
+          echo 'PATCH_V6_STATIC_ACCEPTANCE=PASS'
       - name: Legacy invariant gate
         shell: bash
         run: |
@@ -105,9 +105,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p generated/evidence
-          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg source "$(sha256sum /tmp/current.mjs|awk '{print $1}')" --arg patched "$(sha256sum /tmp/patched.mjs|awk '{print $1}')" --argjson product "$(cat greenfield/packvalue-pro/dist/manifest.json)" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",component:"PACKVALUE_PRO_ASAAS",stage:"PATCH_V5",acceptance_state:"PASS",run_id:$run,commit:$sha,core_version_preserved:"R44.5.23",extension_version:"packvalue-pro-commerce-r1-2026-08-30",fixed_price_brl:49.90,current_source_sha256:$source,patched_source_sha256:$patched,product:$product,production_deployed:false,provider_checkout_created:false,real_value_moved:false}'|tee generated/evidence/packvalue-pro-patch-v5.json
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg health_version "$(jq -r '.version' /tmp/health.json)" --arg source "$(sha256sum /tmp/current.mjs|awk '{print $1}')" --arg patched "$(sha256sum /tmp/patched.mjs|awk '{print $1}')" --argjson product "$(cat greenfield/packvalue-pro/dist/manifest.json)" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",component:"PACKVALUE_PRO_ASAAS",stage:"PATCH_V6",acceptance_state:"PASS",run_id:$run,commit:$sha,live_health_version:$health_version,extension_version:"packvalue-pro-commerce-r1-2026-08-30",fixed_price_brl:49.90,current_source_sha256:$source,patched_source_sha256:$patched,product:$product,production_deployed:false,provider_checkout_created:false,real_value_moved:false}'|tee generated/evidence/packvalue-pro-patch-v6.json
       - uses: actions/upload-artifact@v4
         with:
-          name: packvalue-pro-patch-v5-${{ github.run_id }}
-          path: generated/evidence/packvalue-pro-patch-v5.json
+          name: packvalue-pro-patch-v6-${{ github.run_id }}
+          path: generated/evidence/packvalue-pro-patch-v6.json
           retention-days: 14
