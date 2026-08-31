@@ -106,20 +106,18 @@ jobs:
           for i in 1 2 3 4 5 6 7 8 9 10; do
             ugi=$(curl -sS -o /tmp/post-health.json -w '%{http_code}' "$base/api/health" || true)
             lsi=$(curl -sS -o /tmp/lsi-health.json -w '%{http_code}' "$base/greenfield/packvalue-pro/health" || true)
-            if [ "$ugi" = '200' ] && [ "$lsi" = '200' ] && jq -e '.ok==true' /tmp/post-health.json >/dev/null 2>&1 && jq -e '.ok==true and .productId=="packvalue-pro-r1" and .price==49.90 and .provider=="asaas" and .fixedServerPrice==true and .deliveryRequiresPaidWebhook==true and .spendCapability==false and .greenfield==true' /tmp/lsi-health.json >/dev/null 2>&1; then
-              ready=true; echo "PROPAGATION_READY_ATTEMPT=$i"; break
+            neg=$(curl -sS -o /tmp/negative.json -w '%{http_code}' -X POST "$base/greenfield/packvalue-pro/checkout" -H 'content-type: application/json' --data '{"price":0.01}' || true)
+            admin=$(curl -sS -o /tmp/admin.json -w '%{http_code}' -X POST "$base/api/commerce/checkout" -H 'content-type: application/json' --data '{}' || true)
+            landing=$(curl -sS -o /tmp/landing.html -w '%{http_code}' "$base/packvalue-pro" || true)
+            if [ "$ugi" = '200' ] && [ "$lsi" = '200' ] && [ "$neg" = '400' ] && { [ "$admin" = '401' ] || [ "$admin" = '403' ]; } && [ "$landing" = '200' ] && jq -e '.ok==true' /tmp/post-health.json >/dev/null 2>&1 && jq -e '.ok==true and .productId=="packvalue-pro-r1" and .price==49.90 and .provider=="asaas" and .fixedServerPrice==true and .deliveryRequiresPaidWebhook==true and .spendCapability==false and .greenfield==true' /tmp/lsi-health.json >/dev/null 2>&1 && jq -e '.error=="fixed_offer_accepts_no_client_parameters"' /tmp/negative.json >/dev/null 2>&1 && grep -Fq 'PackValue PRO' /tmp/landing.html; then
+              ready=true
+              echo "PROPAGATION_READY_ATTEMPT=$i UGI=$ugi LSI=$lsi NEG=$neg ADMIN=$admin LANDING=$landing"
+              break
             fi
+            echo "PROPAGATION_WAIT_ATTEMPT=$i UGI=$ugi LSI=$lsi NEG=$neg ADMIN=$admin LANDING=$landing"
             sleep 1
           done
           test "$ready" = 'true'
-          status=$(curl -sS -o /tmp/negative.json -w '%{http_code}' -X POST "$base/greenfield/packvalue-pro/checkout" -H 'content-type: application/json' --data '{"price":0.01}')
-          test "$status" = '400'
-          jq -e '.error=="fixed_offer_accepts_no_client_parameters"' /tmp/negative.json >/dev/null
-          admin_status=$(curl -sS -o /tmp/admin.json -w '%{http_code}' -X POST "$base/api/commerce/checkout" -H 'content-type: application/json' --data '{}')
-          test "$admin_status" = '401' -o "$admin_status" = '403'
-          landing_status=$(curl -sS -o /tmp/landing.html -w '%{http_code}' "$base/packvalue-pro")
-          test "$landing_status" = '200'
-          grep -Fq 'PackValue PRO' /tmp/landing.html
           trap - ERR
           echo 'PRODUCTION_PROBES=PASS'
       - name: Receipt
