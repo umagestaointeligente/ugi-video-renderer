@@ -1,0 +1,38 @@
+name: LSI RapidAPI PackValue QA R1
+run-name: LSI RapidAPI PackValue QA R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - '.github/workflows/lsi-rapidapi-packvalue-qa-r1.yml'
+      - 'greenfield/rapidapi-packvalue-r1/**'
+permissions: {contents: read}
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Backend and OpenAPI QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd greenfield/rapidapi-packvalue-r1
+          node test.mjs
+          node -e "const x=JSON.parse(require('fs').readFileSync('openapi.json','utf8')); if(x.openapi!=='3.0.2'||!x.paths['/v1/normalize']||x.components.schemas.NormalizeRequest.properties.items.maxItems!==200) process.exit(1); console.log('OPENAPI_IMPORT_CONTRACT=PASS')"
+          grep -Fq 'RAPIDAPI_PROXY_SECRET' worker.mjs
+          grep -Fq 'x-rapidapi-proxy-secret' worker.mjs
+          grep -Fq 'REPLACE_WITH_PRIVATE_BACKEND_HOST' openapi.json
+          ! grep -R -E 'sk_live_|client_secret[" ]*:|private[_ -]?key|seed phrase' .
+          echo 'RAPIDAPI_SECURITY_GATES=PASS'
+      - name: Receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",component:"RAPIDAPI_PACKVALUE_R1",state:"PROVIDER_PACKAGE_QA_PASS_EXTERNAL_PAYOUT_AND_PROXY_SETUP_REQUIRED",run_id:$run,commit:$sha,openapi_version:"3.0.2",backend_ready:true,proxy_secret_required:true,proxy_secret_present_in_repo:false,backend_deployed:false,rapidapi_project_created:false,payout_connected:false,revenue_verified_usd:0,real_value_moved:false}' | tee generated/evidence/lsi-rapidapi-packvalue-r1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-rapidapi-packvalue-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-rapidapi-packvalue-r1.json
+          retention-days: 30
