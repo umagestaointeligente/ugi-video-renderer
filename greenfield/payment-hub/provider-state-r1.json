@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.3",
-  "updated_at": "2026-08-31T04:01:00Z",
+  "schema_version": "1.4",
+  "updated_at": "2026-08-31T04:10:00Z",
   "policy": {
     "zero_incremental_cost_preferred": true,
     "no_private_key_generation": true,
@@ -8,7 +8,11 @@
     "no_revenue_claim_without_settlement_evidence": true,
     "human_kyc_is_external_blocker_not_system_failure": true,
     "package_ready_is_not_live_receive": true,
-    "account_live_is_not_product_live": true
+    "account_live_is_not_product_live": true,
+    "make_internal_only": true,
+    "make_user_facing_links_prohibited": true,
+    "make_must_never_be_required_for_user_authorization": true,
+    "preferred_user_auth_surface": "direct_provider_dashboard_or_chatgpt_work_cloud_browser"
   },
   "providers": [
     {
@@ -56,9 +60,9 @@
       "zero_incremental_cost_path": false,
       "human_financial_onboarding_blocker": true,
       "custody_or_private_key_blocker": false,
-      "authorization_bridge": "make_apify_connection_request_pending",
-      "blocker": "user_authorization_then_developer_kyc_required_before_payout",
-      "evidence": "PackValue Agentic package QA run 33354324207; artifact 9744630873; Make Apify connector discovered with no existing connection; secure authorization request created; Actor not published"
+      "make_authorization_route": "DISCARDED_USER_FACING_ROUTE",
+      "blocker": "direct_apify_account_authorization_and_developer_kyc_required_before_payout",
+      "evidence": "PackValue Agentic package QA run 33354324207; artifact 9744630873; Make connector exists but user-facing Make authorization is permanently prohibited; Actor not published"
     },
     {
       "id": "stripe_checkout",
@@ -80,18 +84,18 @@
       "id": "rapidapi_marketplace",
       "rail": "API_MARKETPLACE",
       "connected": false,
-      "account_live_verified": false,
+      "account_live_verified": true,
       "package_qa_verified": true,
       "backend_live_verified": true,
       "live_receive_verified": false,
       "checkout_e2e_verified": false,
       "programmatic_checkout": false,
       "zero_incremental_cost_path": true,
-      "human_financial_onboarding_blocker": true,
+      "human_financial_onboarding_blocker": false,
       "custody_or_private_key_blocker": false,
       "backend_url": "https://lsi-packvalue-rapidapi-r1.umagestaointeligente.workers.dev",
-      "blocker": "rapidapi_personal_provider_project_proxy_secret_and_paypal_payout_setup_required",
-      "evidence": "provider package QA run 33354442620; artifact 9744662990; live fail-closed backend deploy run 33355506203; OpenAPI 3.0.2 points to isolated Worker; no RapidAPI account evidence found"
+      "blocker": "api_project_creation_in_authenticated_rapidapi_studio_proxy_secret_and_paypal_payout_setup_required",
+      "evidence": "provider package QA run 33354442620; artifact 9744662990; live fail-closed backend deploy run 33355506203; OpenAPI 3.0.2 points to isolated Worker; authenticated Personal Account/Rapid Studio dashboard screenshot on 2026-08-31 shows no API Projects yet"
     },
     {
       "id": "kiwify_marketplace",
@@ -108,7 +112,7 @@
       "human_financial_onboarding_blocker": false,
       "custody_or_private_key_blocker": false,
       "blocker": "product_creation_and_least_privilege_api_key_require_authenticated_dashboard",
-      "evidence": "account onboarding and payout-configuration evidence confirmed from connected account communications; reconciliation adapter QA run 33354569646; artifact 9744702290; official public API exposes product read/sales/webhooks but not product creation"
+      "evidence": "account onboarding and payout configuration previously confirmed; authenticated Kiwify dashboard screenshot on 2026-08-31 shows live dashboard with R$0 revenue and 0 sales; reconciliation adapter QA run 33354569646; artifact 9744702290; official public API exposes product read/sales/webhooks but not product creation"
     },
     {
       "id": "shopee_affiliate",
