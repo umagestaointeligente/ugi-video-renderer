@@ -1,0 +1,8 @@
+{
+  "name":"brazil-opportunity-radar-apify-r1",
+  "version":"1.0.0",
+  "private":true,
+  "type":"module",
+  "scripts":{"start":"node src/main.mjs","test":"node test.mjs"},
+  "dependencies":{"apify":"^3.4.0"}
+}
