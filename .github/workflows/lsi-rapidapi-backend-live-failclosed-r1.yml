@@ -1,0 +1,48 @@
+name: LSI RapidAPI Backend Live Failclosed R1
+run-name: LSI RapidAPI Backend Live Failclosed R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-rapidapi-backend-live-failclosed-r1.yml']
+permissions: {contents: read}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"; test -n "$CLOUDFLARE_ACCOUNT_ID"
+          node --check greenfield/rapidapi-packvalue-r1/worker.mjs
+          grep -Fq "rapidapi_proxy_secret_not_configured" greenfield/rapidapi-packvalue-r1/worker.mjs
+          grep -Fq "x-rapidapi-proxy-secret" greenfield/rapidapi-packvalue-r1/worker.mjs
+          ! grep -R -E 'RAPIDAPI_PROXY_SECRET[=:][^$ ]|private[_ -]?key|seed phrase' greenfield/rapidapi-packvalue-r1
+          echo 'FAIL_CLOSED_STATIC_GATES=PASS'
+      - name: Deploy isolated Worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 deploy greenfield/rapidapi-packvalue-r1/worker.mjs --name lsi-packvalue-rapidapi-r1 --compatibility-date 2026-08-30
+      - name: Prove live fail-closed behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://lsi-packvalue-rapidapi-r1.umagestaointeligente.workers.dev'
+          ready=false
+          for i in $(seq 1 20); do
+            hc=$(curl -sS -o /tmp/h.json -w '%{http_code}' "$base/health" || true)
+            if [ "$hc" = 200 ] && jq -e '.ok==true and .version=="packvalue-rapidapi-r1" and .proxySecretConfigured==false and .piiCollected==false' /tmp/h.json >/dev/null 2>&1; then ready=true; break; fi
+            sleep 1
+          done
+          test "$ready" = true
+          pc=$(curl -sS -o /tmp/p.json -w '%{http_code}' -X POST "$base/v1/normalize" -H 'content-type: application/json' --data '{"items":[{"name":"Teste","price":10,"packageSize":1,"unit":"kg"}]}' || true)
+          test "$pc" = 503
+          jq -e '.error=="rapidapi_proxy_secret_not_configured"' /tmp/p.json >/dev/null
+          echo 'RAPIDAPI_BACKEND_PUBLIC_ENDPOINT=LIVE_FAIL_CLOSED'
+          echo 'REAL_VALUE_MOVED=false'
