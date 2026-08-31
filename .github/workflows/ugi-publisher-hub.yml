@@ -34,8 +34,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      # Neutral runtime name. The repository secret keeps its legacy name only
-      # for backward compatibility; no ChatGPT/Lola 5.3 session is required.
       UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
       UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
     steps:
@@ -47,13 +45,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile scripts/ugi_publisher_hub.py scripts/ugi_render_reconciler.py
+          python3 -m py_compile scripts/ugi_publisher_hub.py scripts/ugi_render_reconciler.py scripts/ugi_anti_repeat_gate.py
           MANIFEST="${{ github.event.inputs.manifest || '' }}"
           if [ -n "$MANIFEST" ]; then
             python3 scripts/ugi_publisher_hub.py --validate-only --manifest "$MANIFEST"
           else
             python3 scripts/ugi_publisher_hub.py --validate-only
           fi
+
+      - name: Hard anti-repeat gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/ugi_anti_repeat_gate.py
 
       - name: Ensure missing renders through authoritative Worker bridge
         shell: bash
@@ -77,34 +81,33 @@ jobs:
             python3 scripts/ugi_publisher_hub.py --wait-seconds "$WAIT"
           fi
 
-      - name: Persist Publisher Hub render state, receipts and status
+      - name: Persist Publisher Hub render state, receipts, anti-repeat and status
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
-
-          # Do not create commits when only volatile timestamps changed.
           files=(
             control-plane/publisher-hub/render-state/*.json
             control-plane/publisher-hub/receipts/*.json
             control-plane/publisher-hub/status/latest.json
+            control-plane/anti-repeat/latest.json
           )
           for f in "${files[@]}"; do
             if git cat-file -e "HEAD:$f" 2>/dev/null; then
               if diff -q \
-                <(git show "HEAD:$f" | jq -S 'del(.timestamp,.updatedAt)') \
-                <(jq -S 'del(.timestamp,.updatedAt)' "$f") >/dev/null; then
+                <(git show "HEAD:$f" | jq -S 'del(.timestamp,.updatedAt,.checkedAt)') \
+                <(jq -S 'del(.timestamp,.updatedAt,.checkedAt)' "$f") >/dev/null; then
                 git checkout HEAD -- "$f"
               fi
             fi
           done
-
           git config user.name 'ugi-publisher-hub-bot'
           git config user.email 'ugi-publisher-hub@users.noreply.github.com'
           git add control-plane/publisher-hub/render-state/*.json 2>/dev/null || true
           git add control-plane/publisher-hub/receipts/*.json 2>/dev/null || true
           git add control-plane/publisher-hub/status/latest.json 2>/dev/null || true
+          git add control-plane/anti-repeat/latest.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No Publisher Hub state changes"
             exit 0
