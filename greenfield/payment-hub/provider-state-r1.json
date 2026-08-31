@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.0",
-  "updated_at": "2026-08-31T03:17:00Z",
+  "schema_version": "1.1",
+  "updated_at": "2026-08-31T03:30:00Z",
   "policy": {
     "zero_incremental_cost_preferred": true,
     "no_private_key_generation": true,
@@ -14,18 +14,20 @@
       "rail": "BRL_CHECKOUT",
       "connected": true,
       "live_receive_verified": true,
+      "checkout_e2e_verified": true,
       "programmatic_checkout": true,
       "zero_incremental_cost_path": true,
       "human_financial_onboarding_blocker": false,
       "custody_or_private_key_blocker": false,
       "blocker": null,
-      "evidence": "LSI Payment Hub Asaas deploy run 33352296194"
+      "evidence": "deploy run 33352296194; real checkout E2E run 33353970938; checkout HTTP 201; no payment performed"
     },
     {
       "id": "x402_direct_base_usdc",
       "rail": "AGENTIC_USDC",
       "connected": false,
       "live_receive_verified": false,
+      "checkout_e2e_verified": false,
       "programmatic_checkout": true,
       "zero_incremental_cost_path": true,
       "human_financial_onboarding_blocker": true,
@@ -38,18 +40,20 @@
       "rail": "MARKETPLACE_AGENTIC_X402",
       "connected": false,
       "live_receive_verified": false,
+      "checkout_e2e_verified": false,
       "programmatic_checkout": true,
       "zero_incremental_cost_path": false,
       "human_financial_onboarding_blocker": true,
       "custody_or_private_key_blocker": false,
       "blocker": "developer_account_and_kyc_required_before_payout",
-      "evidence": "Apify paid Actors can receive agentic x402 traffic after developer KYC"
+      "evidence": "Apify can expose eligible paid Actors to agentic x402 traffic after developer KYC"
     },
     {
       "id": "stripe_checkout",
       "rail": "CARD_GLOBAL",
       "connected": true,
       "live_receive_verified": false,
+      "checkout_e2e_verified": false,
       "programmatic_checkout": true,
       "zero_incremental_cost_path": true,
       "human_financial_onboarding_blocker": true,
@@ -62,30 +66,33 @@
       "rail": "API_MARKETPLACE",
       "connected": false,
       "live_receive_verified": false,
+      "checkout_e2e_verified": false,
       "programmatic_checkout": false,
       "zero_incremental_cost_path": true,
       "human_financial_onboarding_blocker": true,
       "custody_or_private_key_blocker": false,
       "blocker": "provider_account_and_payout_setup_required",
-      "evidence": "RapidAPI provider monetization uses platform payout; current docs list PayPal payout settings"
+      "evidence": "RapidAPI provider monetization uses platform payout; payout setup required"
     },
     {
       "id": "kiwify_marketplace",
       "rail": "DIGITAL_PRODUCT_MARKETPLACE",
       "connected": false,
       "live_receive_verified": false,
+      "checkout_e2e_verified": false,
       "programmatic_checkout": false,
       "zero_incremental_cost_path": true,
-      "human_financial_onboarding_blocker": false,
+      "human_financial_onboarding_blocker": true,
       "custody_or_private_key_blocker": false,
-      "blocker": "publication_automation_not_verified",
-      "evidence": "prior LSI payout destination evidence; publication bridge still unverified"
+      "blocker": "public_api_has_product_read_sales_and_webhooks_but_no_verified_product_creation_endpoint",
+      "evidence": "Kiwify public API documents GET products, sales and webhook management; current product creation help flow uses dashboard"
     },
     {
       "id": "shopee_affiliate",
       "rail": "AFFILIATE_PAYOUT",
       "connected": false,
       "live_receive_verified": false,
+      "checkout_e2e_verified": false,
       "programmatic_checkout": false,
       "zero_incremental_cost_path": true,
       "human_financial_onboarding_blocker": true,
