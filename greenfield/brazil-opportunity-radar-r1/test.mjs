@@ -27,11 +27,30 @@ const sampleProcurement = {
   ]
 };
 
+const sampleOpenPncp = {
+  data: [
+    {
+      numeroControlePNCP: '003/2026',
+      objetoCompra: 'Aquisição de mobiliário corporativo',
+      valorTotalEstimado: 480000,
+      dataPublicacaoPncp: '2026-08-29',
+      dataEncerramentoProposta: '2026-09-10',
+      orgaoEntidade: { razaoSocial: 'Órgão PNCP' },
+      unidadeOrgao: { ufSigla: 'MG', nomeUnidade: 'Unidade PNCP' },
+      modalidadeNome: 'Concorrência',
+      linkSistemaOrigem: 'https://example.gov.br/licitacao/3'
+    }
+  ]
+};
+
 const realFetch = globalThis.fetch;
 globalThis.fetch = async (input, init = {}) => {
   const url = String(input);
   if (url.startsWith('https://dadosabertos.compras.gov.br/')) {
     return new Response(JSON.stringify(sampleProcurement), { status: 200, headers: { 'content-type': 'application/json' } });
+  }
+  if (url.startsWith('https://pncp.gov.br/api/consulta/v1/contratacoes/proposta')) {
+    return new Response(JSON.stringify(sampleOpenPncp), { status: 200, headers: { 'content-type': 'application/json' } });
   }
   if (url.startsWith('https://api.mercadolibre.com/trends/')) {
     return new Response(JSON.stringify(Array.from({ length: 50 }, (_, i) => ({ keyword: `trend-${i + 1}`, url: `https://example.com/${i + 1}` }))), { status: 200, headers: { 'content-type': 'application/json' } });
@@ -60,6 +79,7 @@ try {
   assert.match(p.opportunities[0].object, /informática/i);
   assert.equal(p.opportunities[0].estimatedValueBRL, 250000);
   assert.ok(p.opportunities[0].opportunityScore > 0);
+  assert.ok(p.upstream.some(x => x.provider === 'PNCP consulta direta' && x.status === 200));
 
   const blocked = await call('/v1/procurement');
   assert.equal(blocked.status, 503);
@@ -69,7 +89,8 @@ try {
   assert.equal(authorized.status, 200);
   const a = await authorized.json();
   assert.equal(a.ok, true);
-  assert.equal(a.count, 2);
+  assert.ok(a.count >= 3);
+  assert.ok(a.opportunities.some(x => x.source === 'PNCP — propostas abertas'));
 
   const unauthorized = await call('/v1/procurement', { LSI_ACCESS_KEY: 'test-access-key' }, { 'x-lsi-access-key': 'wrong' });
   assert.equal(unauthorized.status, 401);
@@ -92,6 +113,7 @@ try {
   assert.match(pr.note, /not verified revenue/i);
 
   console.log('BRAZIL_OPPORTUNITY_RADAR_UNIT_QA=PASS');
+  console.log('PNCP_OPEN_PROPOSAL_FALLBACK=PASS');
   console.log('FAIL_CLOSED_PAID_ACCESS=PASS');
   console.log('MELI_OAUTH_GATE=PASS');
   console.log('PII_COLLECTED=false');
