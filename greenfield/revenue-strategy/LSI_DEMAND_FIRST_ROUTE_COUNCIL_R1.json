@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-31T04:50:00Z",
+  "policy": {
+    "observable_paid_demand_required_before_major_build": true,
+    "customer_behavior_outranks_buildability": true,
+    "package_ready_is_not_market_demand": true,
+    "projected_revenue_is_not_revenue": true,
+    "zero_incremental_cost_preferred": true
+  },
+  "commercial_deprioritizations": [
+    {
+      "route": "packvalue_price_pack_calculator",
+      "state": "INFRASTRUCTURE_TEST_ONLY",
+      "reason": "commodity calculation is easily reproduced by search engines and general-purpose AI; no verified willingness-to-pay evidence",
+      "keep_assets": ["Asaas checkout proof", "webhook settlement gating", "RapidAPI proxy architecture", "x402 fail-closed shell"],
+      "new_build_allocation_pct": 0
+    }
+  ],
+  "priority_routes": [
+    {
+      "rank": 1,
+      "route": "x402_latam_commerce_intelligence",
+      "state": "RESEARCH_AND_MVP_PRIORITY",
+      "wedge": "Brazil/LatAm commerce data where Agentic Market currently shows no obvious Shopee/Mercado Livre specialist result",
+      "candidate_endpoints": ["mercadolivre_trends", "mercadolivre_product_search", "mercadolivre_bestsellers", "seller_intelligence", "commerce_opportunity_feed"],
+      "pricing_target_usd_per_call": [0.005, 0.03],
+      "demand_evidence": "paid x402 ecommerce endpoints show ~85-101 calls and ~20-21 payers/30d for Amazon search, reviews and bestsellers"
+    },
+    {
+      "rank": 2,
+      "route": "shopee_affiliate_autonomous_deal_engine",
+      "state": "ACTIVATE_AND_DISTRIBUTE",
+      "wedge": "commission on actual product sales instead of charging users for a generic calculation",
+      "revenue_model": "affiliate_commission",
+      "requirements": ["payout readiness", "product feed/search route", "greenfield distribution", "conversion ledger"]
+    },
+    {
+      "rank": 3,
+      "route": "x402_fresh_data_for_agents",
+      "state": "SELECT_NICHE_NOT_GENERIC_SEARCH",
+      "candidate_niches": ["Brazil market filings and company events", "LatAm commerce trends", "public procurement opportunity feed", "Brazil company/public-data enrichment"],
+      "pricing_target_usd_per_call": [0.005, 0.05],
+      "demand_evidence": "Agentic Market shows paid demand for search, news, social retrieval, gas/oracle and fresh market data"
+    },
+    {
+      "rank": 4,
+      "route": "apify_latam_commerce_actor",
+      "state": "AFTER_ACCOUNT_KYC",
+      "wedge": "structured commerce/competitive intelligence, not a calculator",
+      "revenue_model": "pay_per_event",
+      "demand_evidence": "Apify Store top categories include e-commerce and lead generation; established actors have large user counts"
+    },
+    {
+      "rank": 5,
+      "route": "verified_bounty_bridge",
+      "state": "FIRST_CASH_BRIDGE",
+      "wedge": "accepted engineering work with explicit payout",
+      "revenue_model": "bounty_payout",
+      "rule": "only pursue live original issue with verified bounty, competition and acceptance path"
+    }
+  ],
+  "kill_rules": [
+    "No major build for a commodity feature without paid-demand evidence",
+    "No route promoted on traffic alone",
+    "No route promoted on projected revenue",
+    "If a marketplace has paid-call data, use that data before ideation",
+    "Prefer recurring machine-paid usage or commission on completed commerce"
+  ]
+}
