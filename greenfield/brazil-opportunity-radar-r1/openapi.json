@@ -1,0 +1,122 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "LSI Brazil Opportunity Radar",
+    "version": "1.0.0",
+    "description": "Fresh Brazil public-procurement opportunity data with keyword and geography filters, plus a gated LatAm commerce trends surface. Data sources remain authoritative upstreams; no commercial outcome is guaranteed."
+  },
+  "servers": [
+    {"url": "https://lsi-brazil-opportunity-radar-r1.umagestaointeligente.workers.dev"}
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Service health and activation state",
+        "responses": {"200": {"description": "Health response"}}
+      }
+    },
+    "/v1/preview": {
+      "get": {
+        "summary": "Public preview of current procurement opportunities",
+        "description": "Returns up to three opportunities from official Compras.gov.br / PNCP data to demonstrate freshness before purchase.",
+        "parameters": [
+          {"$ref": "#/components/parameters/Days"},
+          {"$ref": "#/components/parameters/Query"},
+          {"$ref": "#/components/parameters/UF"},
+          {"$ref": "#/components/parameters/Modalities"}
+        ],
+        "responses": {
+          "200": {"description": "Current opportunity preview", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/OpportunityResponse"}}}},
+          "502": {"description": "Authoritative upstream temporarily unavailable"}
+        }
+      }
+    },
+    "/v1/procurement": {
+      "get": {
+        "summary": "Full Brazil procurement opportunity feed",
+        "description": "Paid-access surface over current official procurement data. Authorization may be supplied by LSI direct access or by the RapidAPI proxy secret.",
+        "security": [{"LsiAccessKey": []}, {"RapidApiProxySecret": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/Days"},
+          {"name": "limit", "in": "query", "schema": {"type": "integer", "minimum": 1, "maximum": 50, "default": 25}},
+          {"$ref": "#/components/parameters/Query"},
+          {"$ref": "#/components/parameters/UF"},
+          {"$ref": "#/components/parameters/Modalities"}
+        ],
+        "responses": {
+          "200": {"description": "Ranked current opportunities", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/OpportunityResponse"}}}},
+          "401": {"description": "Access credential invalid"},
+          "503": {"description": "Paid access not configured yet"},
+          "502": {"description": "Authoritative upstream temporarily unavailable"}
+        }
+      }
+    },
+    "/v1/latam/trends": {
+      "get": {
+        "summary": "Mercado Livre trends for a LatAm site/category",
+        "description": "Gated commerce trends surface. It remains fail-closed until an official Mercado Livre OAuth token is configured.",
+        "security": [{"LsiAccessKey": []}, {"RapidApiProxySecret": []}],
+        "parameters": [
+          {"name": "site", "in": "query", "schema": {"type": "string", "default": "MLB", "pattern": "^ML[A-Z]$"}},
+          {"name": "category", "in": "query", "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "Provider trend groups"},
+          "400": {"description": "Invalid site/category"},
+          "401": {"description": "Access credential invalid"},
+          "503": {"description": "Paid access or Mercado Livre OAuth not configured"},
+          "502": {"description": "Mercado Livre upstream error"}
+        }
+      }
+    },
+    "/pricing": {
+      "get": {
+        "summary": "Pricing experiment metadata",
+        "description": "Returns experiment price targets only; these are not verified revenue.",
+        "responses": {"200": {"description": "Pricing metadata"}}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "LsiAccessKey": {"type": "apiKey", "in": "header", "name": "X-LSI-Access-Key"},
+      "RapidApiProxySecret": {"type": "apiKey", "in": "header", "name": "X-RapidAPI-Proxy-Secret"}
+    },
+    "parameters": {
+      "Days": {"name": "days", "in": "query", "schema": {"type": "integer", "minimum": 1, "maximum": 7, "default": 2}},
+      "Query": {"name": "q", "in": "query", "schema": {"type": "string", "maxLength": 120}},
+      "UF": {"name": "uf", "in": "query", "schema": {"type": "string", "minLength": 2, "maxLength": 2}},
+      "Modalities": {"name": "modalities", "in": "query", "description": "Comma-separated official modality codes; defaults to pregão code 5.", "schema": {"type": "string", "default": "5"}}
+    },
+    "schemas": {
+      "Opportunity": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string", "nullable": true},
+          "object": {"type": "string", "nullable": true},
+          "estimatedValueBRL": {"type": "number", "nullable": true},
+          "publishedAt": {"type": "string", "nullable": true},
+          "deadlineAt": {"type": "string", "nullable": true},
+          "uf": {"type": "string", "nullable": true},
+          "organization": {"type": "string", "nullable": true},
+          "unit": {"type": "string", "nullable": true},
+          "modality": {"type": "string", "nullable": true},
+          "sourceUrl": {"type": "string", "nullable": true},
+          "source": {"type": "string"},
+          "opportunityScore": {"type": "integer", "minimum": 0, "maximum": 100}
+        }
+      },
+      "OpportunityResponse": {
+        "type": "object",
+        "properties": {
+          "ok": {"type": "boolean"},
+          "version": {"type": "string"},
+          "provider": {"type": "string"},
+          "count": {"type": "integer"},
+          "opportunities": {"type": "array", "items": {"$ref": "#/components/schemas/Opportunity"}},
+          "financialOutcomeGuaranteed": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}
