@@ -1,14 +1,14 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-31T14:34:21.161538+00:00",
+  "checkedAt": "2026-08-31T14:44:42.982868+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 0,
+  "delivered": 15,
   "pendingWithinGrace": 0,
-  "late": 15,
+  "late": 0,
   "failed": 0,
-  "state": "ALERT",
+  "state": "HEALTHY",
   "results": [
     {
       "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
@@ -16,17 +16,20 @@
       "platform": "tiktok",
       "kind": "video",
       "draftId": "ugi-20260830145024-2afd13cbf76d",
-      "bufferPostId": null,
+      "bufferPostId": "6a944eb0e7e04684c6fef14e",
       "dueAt": "2026-08-30T16:00:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T16:02:57.108Z",
+      "externalLink": "https://tiktok.com/@umagestaointelige/video/7679855168443157781",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679855168443157781"
       }
     },
     {
@@ -35,17 +38,20 @@
       "platform": "youtube",
       "kind": "video",
       "draftId": "ugi-20260830145151-f8332cb6e6fd",
-      "bufferPostId": null,
+      "bufferPostId": "6a944ec5f7f5d8f78d1c4730",
       "dueAt": "2026-08-30T20:00:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T20:00:24.599Z",
+      "externalLink": "https://www.youtube.com/watch?v=bHzolmPsGss",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.youtube.com/watch?v=bHzolmPsGss"
       }
     },
     {
@@ -54,17 +60,20 @@
       "platform": "instagram",
       "kind": "video",
       "draftId": "ugi-20260830144941-8d917de020f5",
-      "bufferPostId": null,
+      "bufferPostId": "6a944edbd076c0e5835e88a2",
       "dueAt": "2026-08-30T21:30:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T21:31:10.186Z",
+      "externalLink": "https://www.instagram.com/reel/Dcre00XD77u/",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.instagram.com/reel/Dcre00XD77u/"
       }
     },
     {
@@ -73,17 +82,20 @@
       "platform": "tiktok",
       "kind": "video",
       "draftId": "ugi-20260830145108-ea64dcf6660e",
-      "bufferPostId": null,
+      "bufferPostId": "6a944ef1e7e04684c6fef55a",
       "dueAt": "2026-08-30T23:00:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T23:01:41.868Z",
+      "externalLink": "https://tiktok.com/@umagestaointelige/video/7679963315765906708",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679963315765906708"
       }
     },
     {
@@ -92,17 +104,20 @@
       "platform": "youtube",
       "kind": "video",
       "draftId": "ugi-20260830145233-1317dac9995f",
-      "bufferPostId": null,
+      "bufferPostId": "6a944f08fd31f7e50b73140c",
       "dueAt": "2026-08-30T23:30:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T23:30:22.691Z",
+      "externalLink": "https://www.youtube.com/watch?v=GmO53GCLOOU",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.youtube.com/watch?v=GmO53GCLOOU"
       }
     },
     {
@@ -111,17 +126,20 @@
       "platform": "instagram",
       "kind": "static",
       "draftId": "dcbda494-166c-413f-81a7-548e3d5cfde9",
-      "bufferPostId": null,
+      "bufferPostId": "6a945cbb94904b3a23ec7254",
       "dueAt": "2026-08-30T18:15:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T18:15:12.952Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975308333553371867",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975308333553371867&is_from_rle"
       }
     },
     {
@@ -130,17 +148,20 @@
       "platform": "instagram",
       "kind": "static",
       "draftId": "1bc5078b-0adc-405d-9522-ea5f19696144",
-      "bufferPostId": null,
+      "bufferPostId": "6a945cd7e7e04684c6004125",
       "dueAt": "2026-08-30T20:45:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T20:45:13.904Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975383834690139409",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975383834690139409&is_from_rle"
       }
     },
     {
@@ -149,17 +170,20 @@
       "platform": "instagram",
       "kind": "static",
       "draftId": "6598b813-33d7-41a3-be15-01d5813fd9e4",
-      "bufferPostId": null,
+      "bufferPostId": "6a945d6dd58664eabd78b99a",
       "dueAt": "2026-08-30T23:00:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-08-30T23:01:05.819Z",
+      "externalLink": "https://www.instagram.com/p/DcrpJhCiV8B/",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.instagram.com/p/DcrpJhCiV8B/"
       }
     },
     {
@@ -170,15 +194,18 @@
       "bufferPostId": "6a948831d58664eabd7be158",
       "draftId": "09c6fb18-340e-4eac-9587-5371568b2674",
       "dueAt": "2026-08-30T20:15:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-30T20:15:56.297Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975368739474580414",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975368739474580414&is_from_rle"
       }
     },
     {
@@ -189,15 +216,18 @@
       "bufferPostId": "6a948844d58664eabd7be258",
       "draftId": "438a23fb-2c01-494b-a373-80e6b185297f",
       "dueAt": "2026-08-30T20:55:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-30T20:55:55.725Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975388857629652386",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975388857629652386&is_from_rle"
       }
     },
     {
@@ -208,15 +238,18 @@
       "bufferPostId": "6a948851d58664eabd7be3fc",
       "draftId": "53cb2e62-ee20-4aca-a2ce-785af9bc4fb8",
       "dueAt": "2026-08-30T22:20:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-30T22:20:55.986Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975431646962448949",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975431646962448949&is_from_rle"
       }
     },
     {
@@ -227,15 +260,18 @@
       "bufferPostId": "6a94885ffd31f7e50b775fbe",
       "draftId": "c9bb3eb6-2cdb-4fe7-bfaf-253f30665a8f",
       "dueAt": "2026-08-30T23:35:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-30T23:35:55.535Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975469388517157602",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975469388517157602&is_from_rle"
       }
     },
     {
@@ -246,15 +282,18 @@
       "bufferPostId": "6a94886bfd31f7e50b776037",
       "draftId": "69d9a7e6-c8ab-45ea-a03c-2a0fd16bb32d",
       "dueAt": "2026-08-31T00:50:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-31T00:50:56.697Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3975507148385981194",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975507148385981194&is_from_rle"
       }
     },
     {
@@ -265,15 +304,18 @@
       "bufferPostId": "6a948b466bbc8c9a02f5b914",
       "draftId": "cf51ce9a-6353-40f5-b9c2-47bc03829816",
       "dueAt": "2026-08-30T22:50:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-30T22:50:53.163Z",
+      "externalLink": "https://www.instagram.com/p/Dcrn_c2iOo2/",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.instagram.com/p/Dcrn_c2iOo2/"
       }
     },
     {
@@ -284,15 +326,18 @@
       "bufferPostId": "6a948b4efd31f7e50b777ed8",
       "draftId": "01278c54-9f37-490f-90b4-c5d5f400c192",
       "dueAt": "2026-08-31T00:15:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "sent",
+      "sentAt": "2026-08-31T00:15:10.618Z",
+      "externalLink": "https://www.instagram.com/p/DcrxqeCFL2N/",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.instagram.com/p/DcrxqeCFL2N/"
       }
     }
   ]
