@@ -41,7 +41,8 @@ jobs:
           fi
           provider_status=$(jq -r '.providerStatus // empty' /tmp/checkout.json 2>/dev/null || true)
           provider_errors=$(jq -c '.providerErrors // []' /tmp/checkout.json 2>/dev/null || echo '[]')
-          jq -n --argjson e2e "$e2e" --arg health "$health_code" --arg checkout "$checkout_code" --arg order "$order_code" --arg host "$host" --arg ref "$ref" --arg reason "$reason" --arg provider_status "$provider_status" --argjson provider_errors "$provider_errors" '{schema_version:"1.1",project:"LSI_PAYMENT_HUB_R1",component:"ASAAS_E2E_CHECKOUT",asaas_checkout_e2e:$e2e,health_http_status:$health,checkout_http_status:$checkout,order_http_status:$order,checkout_host:$host,reference_id:$ref,failure_reason:$reason,provider_status:($provider_status|select(length>0)),provider_errors:$provider_errors,payment_performed:false,real_value_moved:false,fulfillment_released:false,verified_revenue_brl:0,authoritative_payment_event:"CHECKOUT_PAID"}' > generated/evidence/asaas-e2e-probe-r1.json
+          jq -n --argjson e2e "$e2e" --arg health "$health_code" --arg checkout "$checkout_code" --arg order "$order_code" --arg host "$host" --arg ref "$ref" --arg reason "$reason" --arg provider_status "$provider_status" --argjson provider_errors "$provider_errors" '{schema_version:"1.2",project:"LSI_PAYMENT_HUB_R1",component:"ASAAS_E2E_CHECKOUT",asaas_checkout_e2e:$e2e,health_http_status:$health,checkout_http_status:$checkout,order_http_status:$order,checkout_host:$host,reference_id:$ref,failure_reason:$reason,provider_status:(if $provider_status=="" then null else $provider_status end),provider_errors:$provider_errors,payment_performed:false,real_value_moved:false,fulfillment_released:false,verified_revenue_brl:0,authoritative_payment_event:"CHECKOUT_PAID"}' > generated/evidence/asaas-e2e-probe-r1.json
+          jq -e '.schema_version=="1.2" and (.asaas_checkout_e2e|type)=="boolean"' generated/evidence/asaas-e2e-probe-r1.json >/dev/null
           cat generated/evidence/asaas-e2e-probe-r1.json
       - name: Run LSI Payment Route Council
         shell: bash
@@ -53,7 +54,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          jq -n --slurpfile e2e generated/evidence/asaas-e2e-probe-r1.json --slurpfile council generated/evidence/lsi-payment-route-council-r1.json --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.1",project:"LSI_PAYMENT_HUB_R1",state:(if $e2e[0].asaas_checkout_e2e then "AUTOPILOT_E2E_AND_ROUTE_COUNCIL_PASS" else "AUTOPILOT_DIAGNOSTIC_AND_ROUTE_COUNCIL_PASS" end),run_id:$run,commit:$sha,asaas_e2e:$e2e[0],route_council:$council[0],real_value_moved:false,verified_revenue_brl:0}' > generated/evidence/lsi-payment-hub-autopilot-r1.json
+          jq -n --slurpfile e2e generated/evidence/asaas-e2e-probe-r1.json --slurpfile council generated/evidence/lsi-payment-route-council-r1.json --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.2",project:"LSI_PAYMENT_HUB_R1",state:(if $e2e[0].asaas_checkout_e2e then "AUTOPILOT_E2E_AND_ROUTE_COUNCIL_PASS" else "AUTOPILOT_DIAGNOSTIC_AND_ROUTE_COUNCIL_PASS" end),run_id:$run,commit:$sha,asaas_e2e:$e2e[0],route_council:$council[0],real_value_moved:false,verified_revenue_brl:0}' > generated/evidence/lsi-payment-hub-autopilot-r1.json
           jq '.state,.asaas_e2e,.route_council.selected_autonomous_next_action' generated/evidence/lsi-payment-hub-autopilot-r1.json
       - uses: actions/upload-artifact@v4
         with:
