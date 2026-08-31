@@ -6,6 +6,8 @@ NEW_LINE = 'headers.set("Content-Disposition", grant.productId === "packvalue-pr
 ROUTE_MARKER = '// LSI PackValue PRO — fixed public SKU only; no admin capability.'
 ADMIN_ANCHOR = 'if (request.method === "POST" && path === "/api/commerce/checkout") {'
 PUBLIC_HEALTH_TOKEN = 'path === "/api/health"'
+OLD_PUBLIC_NS = '/api/greenfield/packvalue-pro'
+NEW_PUBLIC_NS = '/greenfield/packvalue-pro'
 
 
 def move_greenfield_routes_to_public_scope(text: str) -> str:
@@ -27,6 +29,16 @@ def move_greenfield_routes_to_public_scope(text: str) -> str:
     return moved
 
 
+def migrate_public_namespace(text: str) -> str:
+    n = text.count(OLD_PUBLIC_NS)
+    if n < 5:
+        raise SystemExit(f'PACKVALUE_OLD_PUBLIC_NAMESPACE_COUNT_{n}')
+    migrated = text.replace(OLD_PUBLIC_NS, NEW_PUBLIC_NS)
+    if OLD_PUBLIC_NS in migrated:
+        raise SystemExit('PACKVALUE_OLD_PUBLIC_NAMESPACE_REMAINS')
+    return migrated
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--asset',required=True);p.add_argument('--output',required=True);a=p.parse_args()
     source=pathlib.Path(a.source).read_text(encoding='utf-8')
@@ -40,12 +52,15 @@ def main():
     out_path=pathlib.Path(a.output)
     out=out_path.read_text(encoding='utf-8')
     out=move_greenfield_routes_to_public_scope(out)
+    out=migrate_public_namespace(out)
     out_path.write_text(out,encoding='utf-8')
     if out.count('grant.productId === "packvalue-pro-r1" ? `attachment; filename="packvalue-pro.html"`')!=1: raise SystemExit('PACKVALUE_DELIVERY_OVERRIDE_MISSING')
     if out.count(ADMIN_ANCHOR)!=1: raise SystemExit('PACKVALUE_ADMIN_ANCHOR_CHANGED')
     if out.count(PUBLIC_HEALTH_TOKEN)!=1: raise SystemExit('PACKVALUE_PUBLIC_HEALTH_TOKEN_CHANGED')
     if out.index(ROUTE_MARKER) > out.index(PUBLIC_HEALTH_TOKEN): raise SystemExit('PACKVALUE_ROUTE_NOT_PUBLIC_SCOPE')
+    if out.count(NEW_PUBLIC_NS) < 5: raise SystemExit('PACKVALUE_NEW_PUBLIC_NAMESPACE_MISSING')
     print('PATCH_V4_DELIVERY_ADAPTER=PASS')
     print('PATCH_V4_PUBLIC_ROUTE_SCOPE=PASS')
+    print('PATCH_V4_PUBLIC_NAMESPACE=PASS')
 
 if __name__=='__main__': main()
