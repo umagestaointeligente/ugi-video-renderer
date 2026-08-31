@@ -1,0 +1,27 @@
+import { Actor } from 'apify';
+
+const COMPRAS='https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133';
+const PNCP='https://pncp.gov.br/api/consulta/v1/contratacoes/proposta';
+const TIMEOUT_MS=5000;
+const text=v=>String(v??'').trim();
+const rows=p=>Array.isArray(p)?p:['resultado','resultados','results','data','content'].map(k=>p?.[k]).find(Array.isArray)||[];
+const first=(r,keys)=>{for(const k of keys){const v=r?.[k];if(v!==undefined&&v!==null&&text(v))return v}return null};
+const num=(r,keys)=>{for(const k of keys){const n=Number(r?.[k]);if(Number.isFinite(n))return n}return null};
+const normalize=(r,source)=>({id:first(r,['idCompra','numeroControlePNCP','numeroCompra']),object:first(r,['objetoCompra','objeto','descricao','descricaoCompra','informacaoComplementar']),estimatedValueBRL:num(r,['valorTotalEstimado','valorEstimado','valorTotal','valorGlobal']),publishedAt:first(r,['dataPublicacaoPncp','dataPublicacao','dataAtualizacaoPncp']),deadlineAt:first(r,['dataEncerramentoProposta','dataFimProposta','dataAberturaProposta']),uf:first(r,['unidadeOrgaoUfSigla','uf','ufSigla'])||r?.unidadeOrgao?.ufSigla||null,organization:first(r,['orgaoEntidadeRazaoSocial','orgaoRazaoSocial','nomeOrgao'])||r?.orgaoEntidade?.razaoSocial||null,unit:first(r,['unidadeOrgaoNomeUnidade','nomeUnidade'])||r?.unidadeOrgao?.nomeUnidade||null,modality:first(r,['modalidadeNome','nomeModalidade','codigoModalidade'])||r?.modalidadeNome||null,sourceUrl:first(r,['linkSistemaOrigem','linkProcessoEletronico','urlCompra']),source});
+function match(x,q,uf){if(uf&&text(x.uf).toUpperCase()!==uf)return false;if(!q)return true;const hay=`${x.object||''} ${x.organization||''} ${x.unit||''} ${x.modality||''}`.toLowerCase();return q.toLowerCase().split(/\s+/).filter(Boolean).every(t=>hay.includes(t))}
+function score(x,q){let s=25;if(x.estimatedValueBRL>0)s+=Math.min(25,Math.log10(x.estimatedValueBRL+1)*5);if(x.deadlineAt)s+=10;if(x.sourceUrl)s+=5;if(x.source.includes('propostas'))s+=8;if(q){const hay=`${x.object||''} ${x.organization||''} ${x.unit||''}`.toLowerCase(),terms=q.toLowerCase().split(/\s+/).filter(Boolean);if(terms.length)s+=(terms.filter(t=>hay.includes(t)).length/terms.length)*35}return Math.round(Math.max(0,Math.min(100,s)))}
+async function timedFetch(url){const c=new AbortController(),timer=setTimeout(()=>c.abort(),TIMEOUT_MS);try{return await fetch(url,{headers:{accept:'application/json'},signal:c.signal})}finally{clearTimeout(timer)}}
+async function getFeed(input){const started=Date.now(),limit=Math.max(1,Math.min(100,Number.parseInt(input.limit??25,10)||25)),q=text(input.query).slice(0,120),uf=text(input.uf).toUpperCase().slice(0,2),today=new Date(),from=new Date(),end=new Date();from.setUTCDate(from.getUTCDate()-90);end.setUTCDate(end.getUTCDate()+45);const iso=d=>d.toISOString().slice(0,10),compact=d=>iso(d).replaceAll('-',''),tasks=[];
+ for(const m of ['5','6']){const p=new URLSearchParams({pagina:'1',tamanhoPagina:'100',dataPublicacaoPncpInicial:iso(from),dataPublicacaoPncpFinal:iso(today),codigoModalidade:m});if(uf)p.set('unidadeOrgaoUfSigla',uf);tasks.push((async()=>{try{const r=await timedFetch(`${COMPRAS}?${p}`);let a=[];if(r.ok)try{a=rows(await r.json())}catch{}return {provider:'Compras.gov.br',modality:m,status:r.status,timeout:false,rows:a}}catch(e){return {provider:'Compras.gov.br',modality:m,status:0,timeout:e?.name==='AbortError',rows:[]}}})())}
+ for(const m of ['5','4']){const p=new URLSearchParams({dataFinal:compact(end),codigoModalidadeContratacao:m,pagina:'1'});if(uf)p.set('uf',uf);tasks.push((async()=>{try{const r=await timedFetch(`${PNCP}?${p}`);let a=[];if(r.ok)try{a=rows(await r.json())}catch{}return {provider:'PNCP propostas abertas',modality:m,status:r.status,timeout:false,rows:a}}catch(e){return {provider:'PNCP propostas abertas',modality:m,status:0,timeout:e?.name==='AbortError',rows:[]}}})())}
+ const results=await Promise.all(tasks),all=[],upstream=[],now=Date.now();for(const r of results){upstream.push({provider:r.provider,modality:r.modality,status:r.status,timeout:Boolean(r.timeout)});for(const raw of r.rows.slice(0,100)){const x=normalize(raw,r.provider==='Compras.gov.br'?'Compras.gov.br / PNCP':'PNCP — propostas abertas');if(x.deadlineAt){const d=Date.parse(x.deadlineAt);if(Number.isFinite(d)&&d+86400000<now)continue}all.push(x)}}const unique=new Map();for(const x of all){const k=text(x.id)||`${x.object}|${x.organization}|${x.publishedAt}`;if(!unique.has(k))unique.set(k,x)}const opportunities=[...unique.values()].filter(x=>match(x,q,uf)).map(x=>({...x,opportunityScore:score(x,q)})).sort((a,b)=>b.opportunityScore-a.opportunityScore||(b.estimatedValueBRL||0)-(a.estimatedValueBRL||0)).slice(0,limit);return {opportunities,upstream,elapsedMs:Date.now()-started,q:q||null,uf:uf||null}}
+
+await Actor.init();
+try{
+ const input=await Actor.getInput()||{};
+ const result=await getFeed(input);
+ let charge={};
+ try{charge=await Actor.charge({eventName:'radar-run-completed'})||{}}catch{}
+ await Actor.pushData(result.opportunities);
+ await Actor.setValue('OUTPUT',{ok:true,schemaVersion:'1.0',product:'Brazil Opportunity Radar',densityVersion:'ranked-source-set-2026-08-31',itemCount:result.opportunities.length,query:result.q,uf:result.uf,upstream:result.upstream,elapsedMs:result.elapsedMs,networkUsed:true,officialSources:['PNCP','Compras.gov.br'],piiCollected:false,financialOutcomeGuaranteed:false,chargeRequested:true,chargeResult:charge});
+}finally{await Actor.exit()}
