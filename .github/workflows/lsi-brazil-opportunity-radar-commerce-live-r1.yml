@@ -1,0 +1,144 @@
+name: LSI Brazil Opportunity Radar Commerce Live R1
+run-name: LSI Brazil Opportunity Radar Commerce Live R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - 'greenfield/brazil-opportunity-radar-r1/patch_commerce_worker.py'
+      - '.github/workflows/lsi-brazil-opportunity-radar-commerce-live-r1.yml'
+permissions: {contents: read}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preflight demand-data surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"; echo "::add-mask::$CF_API_TOKEN"
+          radar='https://lsi-brazil-opportunity-radar-r1.umagestaointeligente.workers.dev'
+          code=$(curl -sS -o /tmp/radar-preview.json -w '%{http_code}' "$radar/v1/preview?days=7&limit=3" || true)
+          test "$code" = 200
+          jq -e '.ok==true and .count>0 and (.opportunities|length)>0 and (.upstream|any(.status==200))' /tmp/radar-preview.json >/dev/null
+          echo "PREVIEW_REAL_OPPORTUNITIES=$(jq -r '.count' /tmp/radar-preview.json)"
+          echo 'DEMAND_DATA_PREFLIGHT=PASS'
+
+      - name: Snapshot live commerce Worker and build candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health >/tmp/pre-health.json
+          jq -e '.ok==true and (.version|type=="string")' /tmp/pre-health.json >/dev/null
+          basecf="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$basecf" >/tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1','replace'); body=open('/tmp/b','rb').read()
+          m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
+          candidates=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+body)
+              for p in msg.walk():
+                  if p.is_multipart(): continue
+                  q=p.get_payload(decode=True) or b''
+                  if q and b'createProviderCheckout' in q and b'PACKVALUE_PRO_PRODUCT_ID' in q and b'/api/commerce/webhook/asaas' in q:
+                      cd=p.get('Content-Disposition',''); nm=re.search(r'(?:name|filename)="([^"]+)"',cd)
+                      candidates.append((q,nm.group(1) if nm else 'worker.js'))
+          else:
+              candidates=[(body,'worker.js')]
+          if not candidates: raise SystemExit('LIVE_COMMERCE_MODULE_NOT_FOUND')
+          src,name=max(candidates,key=lambda x:len(x[0])); text=src.decode('utf-8')
+          gates=['CHECKOUT_PAID','asaas-access-token','ASAAS_WEBHOOK_TOKEN','/greenfield/packvalue-pro/checkout','fixed_offer_accepts_no_client_parameters','isCommerceAdminAuthorized(request, env)','/api/commerce/webhook/asaas','async function fulfillPaidOrder(env, order, origin) {']
+          miss=[g for g in gates if g not in text]
+          if miss: raise SystemExit('LIVE_GATE_MISSING:'+','.join(miss))
+          if 'RADAR_COMMERCE_EXTENSION_VERSION' in text: raise SystemExit('RADAR_EXTENSION_ALREADY_LIVE')
+          safe=re.sub(r'[^A-Za-z0-9._-]','-',name) or 'worker.js'
+          if not safe.endswith(('.js','.mjs')): safe='worker.js'
+          open('/tmp/current.mjs','wb').write(src); open('/tmp/module-name','w').write(safe)
+          print(f'LIVE_SNAPSHOT=PASS bytes={len(src)} module={safe}')
+          PY
+          python greenfield/brazil-opportunity-radar-r1/patch_commerce_worker.py --source /tmp/current.mjs --output /tmp/patched.mjs
+          node --check /tmp/patched.mjs
+          python - <<'PY'
+          old=open('/tmp/current.mjs',encoding='utf-8').read(); new=open('/tmp/patched.mjs',encoding='utf-8').read()
+          invariants=['/api/video-render','/api/video-upload','/api/platform-approval','/api/commerce/webhook/asaas','BUFFER_ACCESS_TOKEN','ASAAS_WEBHOOK_TOKEN','CHECKOUT_PAID','/greenfield/packvalue-pro/checkout','PACKVALUE_PRO_PRODUCT_ID']
+          for a in invariants:
+              if old.count(a)!=new.count(a): raise SystemExit('INVARIANT_CHANGED:'+a)
+          required=['/greenfield/brazil-opportunity-radar/checkout','/greenfield/brazil-opportunity-radar/access/','/greenfield/brazil-opportunity-radar/feed/','RADAR_PRICE_BRL = 19.90','RADAR_ACCESS_TTL_MS = 30 * 24 * 60 * 60 * 1000','deliveryRequiresPaidWebhook:true','renewalAutomatic:false']
+          for a in required:
+              if a not in new: raise SystemExit('RADAR_REQUIRED_MISSING:'+a)
+          print('PRE_DEPLOY_INVARIANTS=PASS')
+          PY
+
+      - name: Deploy candidate content only
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="$(cat /tmp/module-name)"
+          endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
+          code=$(curl --silent --show-error -o /tmp/deploy.json -w '%{http_code}' -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/patched.mjs;filename=${name};type=application/javascript+module")
+          test "$code" -ge 200; test "$code" -lt 300; jq -e '.success==true' /tmp/deploy.json >/dev/null
+          echo 'CONTENT_DEPLOY=PASS'
+
+      - name: Production probes and real checkout E2E with rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          rollback(){
+            echo 'RADAR_ROLLBACK=START'
+            name="$(cat /tmp/module-name)"; endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
+            curl --fail --silent --show-error -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/current.mjs;filename=${name};type=application/javascript+module" >/tmp/rollback.json
+            jq -e '.success==true' /tmp/rollback.json >/dev/null
+            echo 'RADAR_ROLLBACK=PASS'
+          }
+          trap rollback ERR
+          base='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
+          ready=false
+          for i in $(seq 1 25); do
+            ugi=$(curl -sS -o /tmp/ugi.json -w '%{http_code}' "$base/api/health" || true)
+            radar=$(curl -sS -o /tmp/radar-health.json -w '%{http_code}' "$base/greenfield/brazil-opportunity-radar/health" || true)
+            pack=$(curl -sS -o /tmp/pack.json -w '%{http_code}' "$base/greenfield/packvalue-pro/health" || true)
+            landing=$(curl -sS -o /tmp/landing.html -w '%{http_code}' "$base/brazil-opportunity-radar" || true)
+            fake=$(curl -sS -o /tmp/fake.txt -w '%{http_code}' "$base/greenfield/brazil-opportunity-radar/access/not-a-real-token" || true)
+            neg=$(curl -sS -o /tmp/neg.json -w '%{http_code}' -X POST "$base/greenfield/brazil-opportunity-radar/checkout" -H 'content-type: application/json' --data '{"price":0.01}' || true)
+            admin=$(curl -sS -o /tmp/admin.json -w '%{http_code}' -X POST "$base/api/commerce/checkout" -H 'content-type: application/json' --data '{}' || true)
+            if [ "$ugi" = 200 ] && [ "$radar" = 200 ] && [ "$pack" = 200 ] && [ "$landing" = 200 ] && [ "$fake" = 410 ] && [ "$neg" = 400 ] && { [ "$admin" = 401 ] || [ "$admin" = 403 ]; } && jq -e '.ok==true and .productId=="brazil-opportunity-radar-founder-r1" and .price==19.90 and .accessDays==30 and .provider=="asaas" and .fixedServerPrice==true and .deliveryRequiresPaidWebhook==true and .liveData==true and .renewalAutomatic==false and .spendCapability==false' /tmp/radar-health.json >/dev/null 2>&1 && jq -e '.ok==true' /tmp/pack.json >/dev/null 2>&1 && jq -e '.error=="fixed_offer_accepts_no_client_parameters"' /tmp/neg.json >/dev/null 2>&1 && grep -Fq 'Founder Pass' /tmp/landing.html; then
+              ready=true; echo "EXACT_EDGE_READY_ATTEMPT=$i"; break
+            fi
+            echo "PROPAGATION_WAIT=$i UGI=$ugi RADAR=$radar PACK=$pack LANDING=$landing FAKE=$fake NEG=$neg ADMIN=$admin"
+            sleep 1
+          done
+          test "$ready" = true
+
+          checkout=$(curl -sS -o /tmp/checkout.json -w '%{http_code}' -X POST "$base/greenfield/brazil-opportunity-radar/checkout" -H 'content-type: application/json' --data '{}' || true)
+          if [ "$checkout" != 200 ] && [ "$checkout" != 201 ]; then cat /tmp/checkout.json; false; fi
+          jq -e '.ok==true and .provider=="asaas" and .productId=="brazil-opportunity-radar-founder-r1" and .amount==19.90 and .currency=="BRL" and .accessDays==30 and .renewalAutomatic==false and (.checkoutUrl|startswith("https://")) and .deliveryRequiresPaidWebhook==true' /tmp/checkout.json >/dev/null
+          ref=$(jq -r '.referenceId' /tmp/checkout.json)
+          host=$(jq -r '.checkoutUrl' /tmp/checkout.json | sed -E 's#https://([^/]+)/?.*#\1#')
+          order_ok=false
+          for i in $(seq 1 10); do
+            oc=$(curl -sS -o /tmp/order.json -w '%{http_code}' "$base/greenfield/brazil-opportunity-radar/order/$ref" || true)
+            if [ "$oc" = 200 ] && jq -e '.ok==true and .fulfillmentReady==false and (.deliveryUrl==null)' /tmp/order.json >/dev/null 2>&1; then order_ok=true; break; fi
+            sleep 1
+          done
+          test "$order_ok" = true
+          trap - ERR
+
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg ref "$ref" --arg host "$host" --arg checkout_http "$checkout" '{schema_version:"1.0",project:"LSI_REVENUE_DEMAND_FIRST",product:"BRAZIL_OPPORTUNITY_RADAR_FOUNDER_R1",state:"LIVE_RECEIVABLE_READY",run_id:$run,commit:$sha,checkout_http_status:$checkout_http,checkout_host:$host,reference_id:$ref,price_brl:19.90,access_days:30,automatic_renewal:false,payment_provider:"asaas",payment_performed:false,real_value_moved:false,fulfillment_released:false,verified_revenue_brl:0,authoritative_payment_event:"CHECKOUT_PAID",live_data:true,public_landing:true,public_preview:true,legacy_packvalue_preserved:true,legacy_admin_protected:true,rollback_ready:true}' | tee generated/evidence/lsi-brazil-opportunity-radar-commerce-live-r1.json
+          echo 'BRAZIL_OPPORTUNITY_RADAR_COMMERCE=LIVE_RECEIVABLE_READY'
+          echo 'VERIFIED_REVENUE_BRL=0'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-brazil-opportunity-radar-commerce-live-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-brazil-opportunity-radar-commerce-live-r1.json
+          retention-days: 30
