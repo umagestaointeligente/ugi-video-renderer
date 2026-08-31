@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "packvalue-agentic",
+  "title": "PackValue Agentic — Unit Price Normalizer",
+  "description": "Normalize product offers by kg, liter or unit, including discount and shipping, then rank comparable offers.",
+  "version": "1.0",
+  "buildTag": "latest",
+  "usesStandbyMode": false,
+  "defaultMemoryMbytes": 256,
+  "minMemoryMbytes": 128,
+  "maxMemoryMbytes": 256,
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "input": "./input_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}
