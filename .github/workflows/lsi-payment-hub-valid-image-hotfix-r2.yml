@@ -1,0 +1,115 @@
+name: LSI Payment Hub Valid Image Hotfix R2
+run-name: LSI Payment Hub Valid Image Hotfix R2 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-payment-hub-valid-image-hotfix-r2.yml']
+permissions: {contents: read}
+jobs:
+  hotfix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Snapshot live Worker and build evidence-based candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"; echo "::add-mask::$CF_API_TOKEN"
+          basecf="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$basecf" >/tmp/b
+          python - <<'PY'
+          import re,base64,io
+          from email import policy
+          from email.parser import BytesParser
+          from PIL import Image
+          BAD='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z1l0AAAAASUVORK5CYII='
+          GOOD='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII='
+          # Prove replacement image actually decodes before touching live code.
+          im=Image.open(io.BytesIO(base64.b64decode(GOOD))); im.load()
+          if im.size!=(1,1): raise SystemExit('GOOD_IMAGE_DIMENSIONS_UNEXPECTED')
+          h=open('/tmp/h','rb').read().decode('latin1','replace'); b=open('/tmp/b','rb').read(); m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
+          parts=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+b)
+              for p in msg.walk():
+                  if p.is_multipart(): continue
+                  q=p.get_payload(decode=True) or b''
+                  if q and b'createProviderCheckout' in q and b'PACKVALUE_PRO_PRODUCT_ID' in q:
+                      cd=p.get('Content-Disposition',''); nm=re.search(r'(?:name|filename)="([^"]+)"',cd)
+                      parts.append((q,nm.group(1) if nm else 'worker.js'))
+          else: parts=[(b,'worker.js')]
+          if not parts: raise SystemExit('LIVE_PACKVALUE_MODULE_NOT_FOUND')
+          src,name=max(parts,key=lambda x:len(x[0])); text=src.decode('utf-8')
+          gates=['CHECKOUT_PAID','asaas-access-token','ASAAS_WEBHOOK_TOKEN','/greenfield/packvalue-pro/checkout','fixed_offer_accepts_no_client_parameters','isCommerceAdminAuthorized(request, env)','/api/commerce/webhook/asaas']
+          miss=[g for g in gates if g not in text]
+          if miss: raise SystemExit('LIVE_GATE_MISSING:'+','.join(miss))
+          if text.count(BAD)!=1: raise SystemExit(f'BAD_IMAGE_COUNT_{text.count(BAD)}')
+          if GOOD in text: raise SystemExit('GOOD_IMAGE_ALREADY_PRESENT')
+          patched=text.replace(BAD,GOOD,1)
+          health_token='spendCapability:false,greenfield:true'
+          if patched.count(health_token)!=1: raise SystemExit(f'HEALTH_TOKEN_COUNT_{patched.count(health_token)}')
+          patched=patched.replace(health_token,'spendCapability:false,greenfield:true,checkoutImageQa:"ASAAS_SAMPLE_PNG_R2"',1)
+          for g in gates:
+              if text.count(g)!=patched.count(g): raise SystemExit('INVARIANT_CHANGED:'+g)
+          safe=re.sub(r'[^A-Za-z0-9._-]','-',name) or 'worker.js'
+          if not safe.endswith(('.js','.mjs')): safe='worker.js'
+          open('/tmp/current.mjs','wb').write(src); open('/tmp/patched.mjs','w',encoding='utf-8').write(patched); open('/tmp/module-name','w').write(safe)
+          print('VALID_IMAGE_DECODE=PASS')
+          print('SURGICAL_IMAGE_REPLACEMENT=PASS')
+          print('EDGE_MARKER=ASAAS_SAMPLE_PNG_R2')
+          PY
+          node --check /tmp/patched.mjs
+      - name: Deploy candidate content only
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="$(cat /tmp/module-name)"; endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
+          code=$(curl --silent --show-error -o /tmp/deploy.json -w '%{http_code}' -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/patched.mjs;filename=${name};type=application/javascript+module")
+          test "$code" -ge 200; test "$code" -lt 300; jq -e '.success==true' /tmp/deploy.json >/dev/null
+          echo 'CONTENT_DEPLOY=PASS'
+      - name: Wait for exact edge marker then prove real checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          rollback(){
+            echo 'R2_ROLLBACK=START'
+            name="$(cat /tmp/module-name)"; endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
+            curl --fail --silent --show-error -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/current.mjs;filename=${name};type=application/javascript+module" >/tmp/rollback.json
+            jq -e '.success==true' /tmp/rollback.json >/dev/null
+            echo 'R2_ROLLBACK=PASS'
+          }
+          trap rollback ERR
+          base='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
+          marker=false
+          for i in $(seq 1 20); do
+            code=$(curl -sS -o /tmp/health.json -w '%{http_code}' "$base/greenfield/packvalue-pro/health" || true)
+            if [ "$code" = 200 ] && jq -e '.checkoutImageQa=="ASAAS_SAMPLE_PNG_R2" and .ok==true and .price==49.90 and .provider=="asaas"' /tmp/health.json >/dev/null 2>&1; then marker=true; echo "EXACT_EDGE_READY_ATTEMPT=$i"; break; fi
+            sleep 1
+          done
+          test "$marker" = true
+          neg=$(curl -sS -o /tmp/neg.json -w '%{http_code}' -X POST "$base/greenfield/packvalue-pro/checkout" -H 'content-type: application/json' --data '{"price":0.01}')
+          test "$neg" = 400; jq -e '.error=="fixed_offer_accepts_no_client_parameters"' /tmp/neg.json >/dev/null
+          admin=$(curl -sS -o /tmp/admin.json -w '%{http_code}' -X POST "$base/api/commerce/checkout" -H 'content-type: application/json' --data '{}')
+          test "$admin" = 401 -o "$admin" = 403
+          checkout=$(curl -sS -o /tmp/checkout.json -w '%{http_code}' -X POST "$base/greenfield/packvalue-pro/checkout" -H 'content-type: application/json' --data '{}')
+          if [ "$checkout" != 200 ] && [ "$checkout" != 201 ]; then cat /tmp/checkout.json; false; fi
+          jq -e '.ok==true and .provider=="asaas" and .amount==49.90 and .currency=="BRL" and (.checkoutUrl|startswith("https://")) and .deliveryRequiresPaidWebhook==true' /tmp/checkout.json >/dev/null
+          ref=$(jq -r '.referenceId' /tmp/checkout.json); host=$(jq -r '.checkoutUrl' /tmp/checkout.json | sed -E 's#https://([^/]+)/?.*#\1#')
+          order_ok=false
+          for i in $(seq 1 8); do
+            oc=$(curl -sS -o /tmp/order.json -w '%{http_code}' "$base/greenfield/packvalue-pro/order/$ref" || true)
+            if [ "$oc" = 200 ] && jq -e '.ok==true and .fulfillmentReady==false and (.deliveryUrl==null)' /tmp/order.json >/dev/null 2>&1; then order_ok=true; break; fi
+            sleep 1
+          done
+          test "$order_ok" = true
+          trap - ERR
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --arg ref "$ref" --arg host "$host" --arg checkout_http "$checkout" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",state:"ASAAS_REAL_CHECKOUT_E2E_READY",run_id:$run,commit:$sha,checkout_http_status:$checkout_http,checkout_host:$host,reference_id:$ref,price_brl:49.90,payment_performed:false,real_value_moved:false,fulfillment_released:false,verified_revenue_brl:0,authoritative_payment_event:"CHECKOUT_PAID",checkout_image_qa:"ASAAS_SAMPLE_PNG_R2",exact_edge_marker_verified:true,legacy_admin_protected:true,rollback_ready:true}' | tee generated/evidence/lsi-payment-hub-asaas-e2e-ready-r2.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-payment-hub-asaas-e2e-ready-r2-${{ github.run_id }}
+          path: generated/evidence/lsi-payment-hub-asaas-e2e-ready-r2.json
+          retention-days: 30
