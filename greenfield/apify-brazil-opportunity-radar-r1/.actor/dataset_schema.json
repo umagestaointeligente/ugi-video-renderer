@@ -1,0 +1,18 @@
+{
+  "actorSpecification":1,
+  "fields":{
+    "id":{"type":"string"},
+    "object":{"type":"string"},
+    "estimatedValueBRL":{"type":"number"},
+    "publishedAt":{"type":"string"},
+    "deadlineAt":{"type":"string"},
+    "uf":{"type":"string"},
+    "organization":{"type":"string"},
+    "unit":{"type":"string"},
+    "modality":{"type":"string"},
+    "sourceUrl":{"type":"string"},
+    "source":{"type":"string"},
+    "opportunityScore":{"type":"integer"}
+  },
+  "views":{"overview":{"title":"Opportunities","transformation":{"fields":["opportunityScore","object","estimatedValueBRL","deadlineAt","uf","organization","modality","source","sourceUrl"]},"display":{"component":"table","properties":{}}}}
+}
