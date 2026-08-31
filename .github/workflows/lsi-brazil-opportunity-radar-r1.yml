@@ -1,0 +1,100 @@
+name: LSI Brazil Opportunity Radar R1
+run-name: LSI Brazil Opportunity Radar R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - 'greenfield/brazil-opportunity-radar-r1/**'
+      - '.github/workflows/lsi-brazil-opportunity-radar-r1.yml'
+permissions: {contents: read}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static and unit gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          node --check greenfield/brazil-opportunity-radar-r1/worker.mjs
+          node greenfield/brazil-opportunity-radar-r1/test.mjs
+          node -e "JSON.parse(require('fs').readFileSync('greenfield/brazil-opportunity-radar-r1/openapi.json','utf8')); console.log('OPENAPI_JSON_PARSE=PASS')"
+          grep -Fq 'paid_access_not_configured' greenfield/brazil-opportunity-radar-r1/worker.mjs
+          grep -Fq 'Compras.gov.br / PNCP' greenfield/brazil-opportunity-radar-r1/worker.mjs
+          grep -Fq 'MELI_ACCESS_TOKEN' greenfield/brazil-opportunity-radar-r1/worker.mjs
+          ! grep -R -E '(private[_ -]?key|seed phrase|master_password|MELI_ACCESS_TOKEN[=:][^$ ]|LSI_ACCESS_KEY[=:][^$ ]|RAPIDAPI_PROXY_SECRET[=:][^$ ])' greenfield/brazil-opportunity-radar-r1
+          echo 'BRAZIL_OPPORTUNITY_RADAR_STATIC_QA=PASS'
+
+      - name: Deploy isolated Worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 deploy greenfield/brazil-opportunity-radar-r1/worker.mjs \
+            --name lsi-brazil-opportunity-radar-r1 \
+            --compatibility-date 2026-08-31
+
+      - name: Prove live official-data route and fail-closed paid route
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          base='https://lsi-brazil-opportunity-radar-r1.umagestaointeligente.workers.dev'
+
+          ready=false
+          for i in $(seq 1 25); do
+            hc=$(curl -sS -o /tmp/health.json -w '%{http_code}' "$base/health" || true)
+            if [ "$hc" = 200 ] && jq -e '.ok==true and .version=="lsi-brazil-opportunity-radar-r1" and .piiCollected==false and .moneyMovement==false' /tmp/health.json >/dev/null 2>&1; then
+              ready=true; break
+            fi
+            sleep 1
+          done
+          test "$ready" = true
+
+          preview_ok=false
+          for days in 2 4 7; do
+            pc=$(curl -sS -o /tmp/preview.json -w '%{http_code}' "$base/v1/preview?days=${days}&limit=3" || true)
+            if [ "$pc" = 200 ] && jq -e '.ok==true and .provider=="Compras.gov.br / PNCP" and (.upstream | any(.status==200))' /tmp/preview.json >/dev/null 2>&1; then
+              preview_ok=true; break
+            fi
+            sleep 2
+          done
+          test "$preview_ok" = true
+
+          paid=$(curl -sS -o /tmp/paid.json -w '%{http_code}' "$base/v1/procurement?days=2&limit=5" || true)
+          test "$paid" = 503
+          jq -e '.error=="paid_access_not_configured"' /tmp/paid.json >/dev/null
+
+          meli=$(curl -sS -o /tmp/meli.json -w '%{http_code}' "$base/v1/latam/trends?site=MLB" || true)
+          test "$meli" = 503
+          jq -e '.error=="paid_access_not_configured"' /tmp/meli.json >/dev/null
+
+          count=$(jq -r '.count // 0' /tmp/preview.json)
+          upstream=$(jq -c '.upstream' /tmp/preview.json)
+          jq -n \
+            --arg service 'LSI Brazil Opportunity Radar R1' \
+            --arg url "$base" \
+            --arg run "${GITHUB_RUN_ID}" \
+            --arg sha "${GITHUB_SHA}" \
+            --argjson preview_count "$count" \
+            --argjson upstream "$upstream" \
+            '{service:$service,acceptance:"PASS_LIVE_OFFICIAL_DATA",worker_url:$url,github_run_id:$run,commit:$sha,official_data_upstream:$upstream,preview_count:$preview_count,public_preview:true,paid_route:"FAIL_CLOSED_PENDING_RECEIVE_CHANNEL",mercado_livre_route:"FAIL_CLOSED_PENDING_OAUTH_AND_RECEIVE_CHANNEL",pii_collected:false,money_movement:false,verified_revenue_brl:0,verified_revenue_usd:0}' \
+            > generated/evidence/lsi-brazil-opportunity-radar-r1.json
+
+          cat generated/evidence/lsi-brazil-opportunity-radar-r1.json
+          echo 'BRAZIL_OPPORTUNITY_RADAR=PASS_LIVE_OFFICIAL_DATA'
+          echo 'PAID_ACCESS=FAIL_CLOSED_PENDING_RECEIVE_CHANNEL'
+          echo 'REAL_VALUE_MOVED=false'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-brazil-opportunity-radar-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-brazil-opportunity-radar-r1.json
+          if-no-files-found: error
+          retention-days: 14
