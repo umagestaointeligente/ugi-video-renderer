@@ -1,0 +1,53 @@
+name: LSI Radar Learning Bridge R1
+run-name: LSI Radar Learning Bridge R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-radar-learning-bridge-r1.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  learn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obtain GitHub OIDC token for LSI Learning Bus
+        id: oidc
+        env:
+          AUDIENCE: lsi-system-learning-bus
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${AUDIENCE}"
+          token="$(curl -fsS -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$url" | jq -r .value)"
+          test -n "$token" && test "$token" != null
+          echo "::add-mask::$token"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+      - name: Teach demand-first commercial lessons
+        env:
+          TOKEN: ${{ steps.oidc.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          endpoint='https://lsi-system-learning-bus-r1.umagestaointeligente.workers.dev/v1/events'
+          emit(){
+            name="$1"; payload="$2"
+            curl -fsS -X POST -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' --data "$payload" "$endpoint" > "/tmp/${name}.json"
+            jq -e '.ok==true and .event.revenue_usd_verified==0' "/tmp/${name}.json" >/dev/null
+            echo "LEARNING_EVENT_${name}=PASS"
+          }
+          emit checkout_live '{"project_id":"REVENUE","component_id":"brazil_opportunity_radar_founder_checkout","outcome":"SUCCESS","evidence_level":"E3","revenue_usd":0,"revenue_verified":false,"cost_usd":0,"elapsed_ms":0,"quality_score":0.96,"risk_score":0.04,"lesson_code":"LIVE_CHECKOUT_SETTLEMENT_GATE_PASS","source_ref":"github-actions:33360504061"}'
+          emit rollback '{"project_id":"REVENUE","component_id":"radar_performance_hotfix_attempt_1","outcome":"FAILURE","evidence_level":"E3","revenue_usd":0,"revenue_verified":false,"cost_usd":0,"elapsed_ms":0,"quality_score":0.72,"risk_score":0.12,"lesson_code":"ROLLBACK_ON_SOURCE_HEALTH_REGRESSION","source_ref":"github-actions:33360814233"}'
+          emit perf_fix '{"project_id":"REVENUE","component_id":"radar_performance_hotfix_r2","outcome":"SUCCESS","evidence_level":"E3","revenue_usd":0,"revenue_verified":false,"cost_usd":0,"elapsed_ms":5583,"quality_score":0.93,"risk_score":0.06,"lesson_code":"PARALLEL_SOURCE_TIMEOUT_REQUIRED","source_ref":"github-actions:33386312916"}'
+          emit source_rank '{"project_id":"REVENUE","component_id":"radar_source_density_diagnostic","outcome":"SUCCESS","evidence_level":"E3","revenue_usd":0,"revenue_verified":false,"cost_usd":0,"elapsed_ms":6825,"quality_score":0.97,"risk_score":0.03,"lesson_code":"RANK_SOURCES_BY_DENSITY_AND_LATENCY","source_ref":"github-actions:33386596746"}'
+          jq -n --arg run "$GITHUB_RUN_ID" --slurpfile a /tmp/checkout_live.json --slurpfile b /tmp/rollback.json --slurpfile c /tmp/perf_fix.json --slurpfile d /tmp/source_rank.json '{schema_version:"1.0",project:"LSI_REVENUE_DEMAND_FIRST",component:"RADAR_LEARNING_BRIDGE_R1",run_id:$run,events_accepted:4,verified_revenue_brl:0,verified_revenue_usd:0,lessons:["LIVE_CHECKOUT_SETTLEMENT_GATE_PASS","ROLLBACK_ON_SOURCE_HEALTH_REGRESSION","PARALLEL_SOURCE_TIMEOUT_REQUIRED","RANK_SOURCES_BY_DENSITY_AND_LATENCY"],bus_receipts:[$a[0],$b[0],$c[0],$d[0]]}' > generated/evidence/lsi-radar-learning-bridge-r1.json
+          jq -e '.events_accepted==4 and .verified_revenue_usd==0' generated/evidence/lsi-radar-learning-bridge-r1.json >/dev/null
+          echo 'RADAR_LEARNING_BRIDGE=PASS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-radar-learning-bridge-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-radar-learning-bridge-r1.json
+          retention-days: 30
