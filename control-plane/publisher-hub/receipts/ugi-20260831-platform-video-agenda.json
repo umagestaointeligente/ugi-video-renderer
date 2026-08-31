@@ -24,32 +24,7 @@
       "gate": "BUFFER_CREATE",
       "detail": {
         "ok": false,
-        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-        "route": "/api/platform-publish",
-        "errorClass": "publication_idempotency_lock_exists",
-        "error": "Publicação tiktok bloqueada por exactly-once lock (asset).",
-        "lockType": "asset",
-        "existingLock": {
-          "schemaVersion": "1.1",
-          "token": "5060cf17-a9b1-42cf-b6db-c84ee13e162f",
-          "state": "uncertain",
-          "project": "UGI",
-          "draftId": "ugi-20260831012249-d594b9336f16",
-          "renderId": "ugi-20260831012416-be24955c10c8",
-          "contentId": "UGI-20260831-TT-CURSOR-OPENAI",
-          "platform": "tiktok",
-          "mode": "customScheduled",
-          "dueAt": "2026-08-31T16:00:00.000Z",
-          "requestedAt": "2026-08-31T12:46:54.983Z",
-          "bufferPostId": null,
-          "lockType": "asset",
-          "key": "lola/publication-locks/asset/tiktok/UGI-20260831-TT-CURSOR-OPENAI.json",
-          "failureAt": "2026-08-31T12:46:55.526Z",
-          "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
-          "updatedAt": "2026-08-31T12:46:55.620Z"
-        },
-        "publicationTriggered": false,
-        "bufferMutationPerformed": false
+        "error": "O agendamento precisa estar pelo menos 1 minuto no futuro."
       }
     },
     {
@@ -197,5 +172,5 @@
       }
     }
   ],
-  "timestamp": "2026-08-31T14:54:35.866590+00:00"
+  "timestamp": "2026-08-31T16:11:41.654481+00:00"
 }
