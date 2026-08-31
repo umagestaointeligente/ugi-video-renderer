@@ -1,12 +1,12 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-31T17:14:31.742934+00:00",
+  "checkedAt": "2026-08-31T17:24:31.017079+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 5,
+  "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 10,
+  "late": 15,
   "failed": 0,
   "state": "ALERT",
   "results": [
@@ -16,20 +16,17 @@
       "platform": "tiktok",
       "kind": "video",
       "draftId": "ugi-20260830145024-2afd13cbf76d",
-      "bufferPostId": "6a944eb0e7e04684c6fef14e",
+      "bufferPostId": null,
       "dueAt": "2026-08-30T16:00:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-08-30T16:02:57.108Z",
-      "externalLink": "https://tiktok.com/@umagestaointelige/video/7679855168443157781",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
       "error": null,
-      "state": "DELIVERED",
+      "state": "LATE",
       "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679855168443157781"
+        "attempted": false
       }
     },
     {
@@ -38,20 +35,17 @@
       "platform": "youtube",
       "kind": "video",
       "draftId": "ugi-20260830145151-f8332cb6e6fd",
-      "bufferPostId": "6a944ec5f7f5d8f78d1c4730",
+      "bufferPostId": null,
       "dueAt": "2026-08-30T20:00:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-08-30T20:00:24.599Z",
-      "externalLink": "https://www.youtube.com/watch?v=bHzolmPsGss",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
       "error": null,
-      "state": "DELIVERED",
+      "state": "LATE",
       "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.youtube.com/watch?v=bHzolmPsGss"
+        "attempted": false
       }
     },
     {
@@ -60,20 +54,17 @@
       "platform": "instagram",
       "kind": "video",
       "draftId": "ugi-20260830144941-8d917de020f5",
-      "bufferPostId": "6a944edbd076c0e5835e88a2",
+      "bufferPostId": null,
       "dueAt": "2026-08-30T21:30:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-08-30T21:31:10.186Z",
-      "externalLink": "https://www.instagram.com/reel/Dcre00XD77u/",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
       "error": null,
-      "state": "DELIVERED",
+      "state": "LATE",
       "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.instagram.com/reel/Dcre00XD77u/"
+        "attempted": false
       }
     },
     {
@@ -82,20 +73,17 @@
       "platform": "tiktok",
       "kind": "video",
       "draftId": "ugi-20260830145108-ea64dcf6660e",
-      "bufferPostId": "6a944ef1e7e04684c6fef55a",
+      "bufferPostId": null,
       "dueAt": "2026-08-30T23:00:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-08-30T23:01:41.868Z",
-      "externalLink": "https://tiktok.com/@umagestaointelige/video/7679963315765906708",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
       "error": null,
-      "state": "DELIVERED",
+      "state": "LATE",
       "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7679963315765906708"
+        "attempted": false
       }
     },
     {
@@ -104,20 +92,17 @@
       "platform": "youtube",
       "kind": "video",
       "draftId": "ugi-20260830145233-1317dac9995f",
-      "bufferPostId": "6a944f08fd31f7e50b73140c",
+      "bufferPostId": null,
       "dueAt": "2026-08-30T23:30:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-08-30T23:30:22.691Z",
-      "externalLink": "https://www.youtube.com/watch?v=GmO53GCLOOU",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
       "error": null,
-      "state": "DELIVERED",
+      "state": "LATE",
       "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.youtube.com/watch?v=GmO53GCLOOU"
+        "attempted": false
       }
     },
     {
