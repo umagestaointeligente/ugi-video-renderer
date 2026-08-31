@@ -21,15 +21,27 @@ jobs:
           basecf="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
           curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$basecf" >/tmp/b
           python - <<'PY'
-          import re,base64,io
+          import re,base64,struct,zlib
           from email import policy
           from email.parser import BytesParser
-          from PIL import Image
           BAD='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z1l0AAAAASUVORK5CYII='
           GOOD='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII='
-          # Prove replacement image actually decodes before touching live code.
-          im=Image.open(io.BytesIO(base64.b64decode(GOOD))); im.load()
-          if im.size!=(1,1): raise SystemExit('GOOD_IMAGE_DIMENSIONS_UNEXPECTED')
+          def png_idat(raw_b64):
+              d=base64.b64decode(raw_b64, validate=True)
+              if d[:8] != b'\x89PNG\r\n\x1a\n': raise ValueError('png_signature')
+              pos=8; idat=b''; wh=None
+              while pos+12 <= len(d):
+                  n=struct.unpack('>I',d[pos:pos+4])[0]; typ=d[pos+4:pos+8]; dat=d[pos+8:pos+8+n]
+                  if typ==b'IHDR': wh=struct.unpack('>II',dat[:8])
+                  if typ==b'IDAT': idat+=dat
+                  pos += 12+n
+              return wh,zlib.decompress(idat)
+          old_failed=False
+          try: png_idat(BAD)
+          except Exception: old_failed=True
+          if not old_failed: raise SystemExit('OLD_IMAGE_UNEXPECTEDLY_VALID')
+          wh,pixels=png_idat(GOOD)
+          if wh!=(1,1) or not pixels: raise SystemExit('GOOD_IMAGE_VALIDATION_FAILED')
           h=open('/tmp/h','rb').read().decode('latin1','replace'); b=open('/tmp/b','rb').read(); m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
           parts=[]
           if 'multipart/' in ct.lower():
@@ -57,7 +69,8 @@ jobs:
           safe=re.sub(r'[^A-Za-z0-9._-]','-',name) or 'worker.js'
           if not safe.endswith(('.js','.mjs')): safe='worker.js'
           open('/tmp/current.mjs','wb').write(src); open('/tmp/patched.mjs','w',encoding='utf-8').write(patched); open('/tmp/module-name','w').write(safe)
-          print('VALID_IMAGE_DECODE=PASS')
+          print('OLD_IMAGE_STREAM_INVALID=CONFIRMED')
+          print('VALID_IMAGE_ZLIB_DECODE=PASS')
           print('SURGICAL_IMAGE_REPLACEMENT=PASS')
           print('EDGE_MARKER=ASAAS_SAMPLE_PNG_R2')
           PY
