@@ -1,11 +1,12 @@
 const VERSION = 'lsi-brazil-opportunity-radar-r1';
 const COMPRAS_BASE = 'https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133';
+const PNCP_OPEN_BASE = 'https://pncp.gov.br/api/consulta/v1/contratacoes/proposta';
 const MELI_BASE = 'https://api.mercadolibre.com';
 
 const PRICE_HINTS = {
   procurement_opportunity_feed_usd: 0.02,
   procurement_keyword_match_usd: 0.03,
-  mercadolibre_trends_usd: 0.01
+  mercadolivre_trends_usd: 0.01
 };
 
 function json(body, status = 200, headers = {}) {
@@ -29,10 +30,18 @@ function isoDate(date) {
   return date.toISOString().slice(0, 10);
 }
 
-function startDate(days) {
+function compactDate(date) {
+  return isoDate(date).replaceAll('-', '');
+}
+
+function shiftedDate(days) {
   const d = new Date();
-  d.setUTCDate(d.getUTCDate() - Math.max(0, days - 1));
+  d.setUTCDate(d.getUTCDate() + days);
   return d;
+}
+
+function startDate(days) {
+  return shiftedDate(-Math.max(0, days - 1));
 }
 
 function text(value) {
@@ -63,15 +72,15 @@ function extractRows(payload) {
   return [];
 }
 
-function normalizedProcurement(row) {
+function normalizedProcurement(row, source = 'Compras.gov.br / PNCP') {
   const object = first(row, ['objetoCompra', 'objeto', 'descricao', 'descricaoCompra', 'informacaoComplementar']);
   const estimated = numberFrom(row, ['valorTotalEstimado', 'valorEstimado', 'valorTotal', 'valorGlobal']);
   const published = first(row, ['dataPublicacaoPncp', 'dataPublicacao', 'dataAtualizacaoPncp']);
   const deadline = first(row, ['dataEncerramentoProposta', 'dataFimProposta', 'dataAberturaProposta']);
-  const uf = first(row, ['unidadeOrgaoUfSigla', 'uf', 'ufSigla']);
-  const org = first(row, ['orgaoEntidadeRazaoSocial', 'orgaoRazaoSocial', 'nomeOrgao']);
-  const unit = first(row, ['unidadeOrgaoNomeUnidade', 'nomeUnidade']);
-  const modality = first(row, ['modalidadeNome', 'nomeModalidade', 'codigoModalidade']);
+  const uf = first(row, ['unidadeOrgaoUfSigla', 'uf', 'ufSigla']) || row?.unidadeOrgao?.ufSigla || null;
+  const org = first(row, ['orgaoEntidadeRazaoSocial', 'orgaoRazaoSocial', 'nomeOrgao']) || row?.orgaoEntidade?.razaoSocial || null;
+  const unit = first(row, ['unidadeOrgaoNomeUnidade', 'nomeUnidade']) || row?.unidadeOrgao?.nomeUnidade || null;
+  const modality = first(row, ['modalidadeNome', 'nomeModalidade', 'codigoModalidade']) || row?.modalidadeNome || null;
   const id = first(row, ['idCompra', 'numeroControlePNCP', 'numeroCompra']);
   const sourceUrl = first(row, ['linkSistemaOrigem', 'linkProcessoEletronico', 'urlCompra']);
 
@@ -86,7 +95,7 @@ function normalizedProcurement(row) {
     unit,
     modality,
     sourceUrl,
-    source: 'Compras.gov.br / PNCP'
+    source
   };
 }
 
@@ -95,6 +104,7 @@ function scoreOpportunity(item, query = '') {
   if (item.estimatedValueBRL && item.estimatedValueBRL > 0) score += Math.min(25, Math.log10(item.estimatedValueBRL + 1) * 5);
   if (item.deadlineAt) score += 10;
   if (item.sourceUrl) score += 5;
+  if (item.source === 'PNCP — propostas abertas') score += 8;
   const q = text(query).toLowerCase();
   if (q) {
     const hay = `${item.object || ''} ${item.organization || ''} ${item.unit || ''}`.toLowerCase();
@@ -112,6 +122,60 @@ function matchesQuery(item, query) {
   return q.split(/\s+/).filter(Boolean).every(term => hay.includes(term));
 }
 
+async function fetchComprasGov({ from, to, limit, uf, modalities, all, upstream }) {
+  for (const modality of modalities.length ? modalities : ['5']) {
+    const p = new URLSearchParams({
+      pagina: '1',
+      tamanhoPagina: String(Math.min(100, Math.max(limit * 3, 30))),
+      dataPublicacaoPncpInicial: from,
+      dataPublicacaoPncpFinal: to,
+      codigoModalidade: modality
+    });
+    if (uf) p.set('unidadeOrgaoUfSigla', uf);
+    const endpoint = `${COMPRAS_BASE}?${p.toString()}`;
+    let response;
+    try {
+      response = await fetch(endpoint, { headers: { accept: 'application/json' }, cf: { cacheTtl: 300, cacheEverything: true } });
+    } catch {
+      upstream.push({ provider: 'Compras.gov.br', modality, status: 0 });
+      continue;
+    }
+    upstream.push({ provider: 'Compras.gov.br', modality, status: response.status });
+    if (!response.ok) continue;
+    let payload;
+    try { payload = await response.json(); } catch { continue; }
+    for (const row of extractRows(payload)) all.push(normalizedProcurement(row, 'Compras.gov.br / PNCP'));
+  }
+}
+
+async function fetchPncpOpen({ limit, uf, all, upstream }) {
+  const dataFinal = compactDate(shiftedDate(45));
+  const pncpModalities = ['8', '6', '4'];
+  for (const modality of pncpModalities) {
+    const p = new URLSearchParams({
+      dataFinal,
+      codigoModalidadeContratacao: modality,
+      pagina: '1'
+    });
+    if (uf) p.set('uf', uf);
+    const endpoint = `${PNCP_OPEN_BASE}?${p.toString()}`;
+    let response;
+    try {
+      response = await fetch(endpoint, { headers: { accept: 'application/json' }, cf: { cacheTtl: 300, cacheEverything: true } });
+    } catch {
+      upstream.push({ provider: 'PNCP consulta direta', modality, status: 0 });
+      continue;
+    }
+    upstream.push({ provider: 'PNCP consulta direta', modality, status: response.status });
+    if (!response.ok) continue;
+    let payload;
+    try { payload = await response.json(); } catch { continue; }
+    const rows = extractRows(payload);
+    for (const row of rows.slice(0, Math.max(30, limit * 4))) all.push(normalizedProcurement(row, 'PNCP — propostas abertas'));
+    if (all.length >= Math.max(30, limit * 4)) break;
+  }
+}
+
 async function fetchProcurement(url, preview = false) {
   const days = clampInt(url.searchParams.get('days'), 1, 7, 2);
   const limit = clampInt(url.searchParams.get('limit'), 1, preview ? 3 : 50, preview ? 3 : 25);
@@ -125,23 +189,8 @@ async function fetchProcurement(url, preview = false) {
   const all = [];
   const upstream = [];
 
-  for (const modality of modalities.length ? modalities : ['5']) {
-    const p = new URLSearchParams({
-      pagina: '1',
-      tamanhoPagina: String(Math.min(100, Math.max(limit * 3, 30))),
-      dataPublicacaoPncpInicial: from,
-      dataPublicacaoPncpFinal: to,
-      codigoModalidade: modality
-    });
-    if (uf) p.set('unidadeOrgaoUfSigla', uf);
-    const endpoint = `${COMPRAS_BASE}?${p.toString()}`;
-    const response = await fetch(endpoint, { headers: { accept: 'application/json' }, cf: { cacheTtl: 300, cacheEverything: true } });
-    upstream.push({ modality, status: response.status });
-    if (!response.ok) continue;
-    let payload;
-    try { payload = await response.json(); } catch { continue; }
-    for (const row of extractRows(payload)) all.push(normalizedProcurement(row));
-  }
+  await fetchComprasGov({ from, to, limit, uf, modalities, all, upstream });
+  if (all.length < limit) await fetchPncpOpen({ limit, uf, all, upstream });
 
   const unique = new Map();
   for (const item of all) {
@@ -160,7 +209,7 @@ async function fetchProcurement(url, preview = false) {
     version: VERSION,
     source: 'official_open_data',
     provider: 'Compras.gov.br / PNCP',
-    window: { from, to, days },
+    window: { from, to, days, openProposalHorizonDays: 45 },
     filters: { q: q || null, uf: uf || null, modalities: modalities.length ? modalities : ['5'] },
     count: opportunities.length,
     opportunities,
@@ -210,7 +259,7 @@ async function fetchMeliTrends(url, env) {
     growth: rows.slice(0, 10),
     mostWanted: rows.slice(10, 30),
     popular: rows.slice(30, 50),
-    pricingHintUsdPerCall: PRICE_HINTS.mercadolibre_trends_usd
+    pricingHintUsdPerCall: PRICE_HINTS.mercadolivre_trends_usd
   });
 }
 
