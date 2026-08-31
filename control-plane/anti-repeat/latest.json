@@ -2,9 +2,110 @@
   "project": "UGI",
   "component": "ANTI-REPEAT-GATE",
   "windowDays": 15,
-  "checkedAt": "2026-08-31T01:21:05.143244+00:00",
-  "queuedCount": 0,
+  "checkedAt": "2026-08-31T01:22:44.226845+00:00",
+  "queuedCount": 5,
   "blocked": 0,
   "state": "PASS",
-  "results": []
+  "results": [
+    {
+      "contentId": "UGI-20260831-TT-CURSOR-OPENAI",
+      "command": "control-plane/commands/ugi-20260831-tiktok-cursor-openai.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1450",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1450.json",
+        "textSimilarity": 0.0219,
+        "hookSimilarity": 0.2975,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0864
+      },
+      "signature": {
+        "exactHash": "6c94bff5d68680f3467725ee984429c072cabe73d2c04337d416b128288906ed",
+        "renderId": "ugi-20260831-tt-cursor-openai",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260831-YT-GOOGLE-AI-OVERVIEWS",
+      "command": "control-plane/commands/ugi-20260831-youtube-google-ai-overviews.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0043,
+        "hookSimilarity": 0.2353,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0612
+      },
+      "signature": {
+        "exactHash": "32fe30ec5d0e9d1d7caa4ac320affaf479fdd290ab8e1f8c77778c666c2cd521",
+        "renderId": "ugi-20260831-yt-google-ai-overviews",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260831-IG-REEL-VW-CHANGE",
+      "command": "control-plane/commands/ugi-20260831-instagram-volkswagen-change.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0328,
+        "hookSimilarity": 0.2342,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0766
+      },
+      "signature": {
+        "exactHash": "a8bff96ad77a673b6545f58d2603984beb9716ed281e4fa84dd3fbb1bb6e9b14",
+        "renderId": "ugi-20260831-ig-volkswagen-change",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260831-YT-NVIDIA-INFRA",
+      "command": "control-plane/commands/ugi-20260831-youtube-nvidia-ai-infrastructure.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1510",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1510.json",
+        "textSimilarity": 0.0124,
+        "hookSimilarity": 0.2218,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0623
+      },
+      "signature": {
+        "exactHash": "8220332097d8324c8b35b27cf0d8ee858bf5e845438c8f4bef50f623f4dfdfe7",
+        "renderId": "ugi-20260831-yt-nvidia-infra",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260831-TT-AI-CYBER",
+      "command": "control-plane/commands/ugi-20260831-tiktok-ai-cyber.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1450",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1450.json",
+        "textSimilarity": 0.0226,
+        "hookSimilarity": 0.1621,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0529
+      },
+      "signature": {
+        "exactHash": "35bd6f260d5ca941575705996d8c69020a40c389e0e3782dbdeb944fb6b0620a",
+        "renderId": "ugi-20260831-tt-ai-cyber",
+        "draftId": ""
+      }
+    }
+  ]
 }
