@@ -1,0 +1,19 @@
+{
+  "title": "PackValue Agentic input",
+  "description": "Compare 1 to 200 offers. No personal data is required or collected.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "items": {
+      "title": "Offers",
+      "description": "Offers to normalize and rank.",
+      "type": "array",
+      "editor": "json",
+      "default": [
+        {"name":"Offer A","price":12.90,"packageSize":500,"unit":"g","packageCount":1,"shipping":0,"discountPercent":0},
+        {"name":"Offer B","price":21.50,"packageSize":1,"unit":"kg","packageCount":1,"shipping":0,"discountPercent":0}
+      ]
+    }
+  },
+  "required": ["items"]
+}
