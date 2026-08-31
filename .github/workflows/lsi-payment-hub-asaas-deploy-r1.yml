@@ -1,5 +1,5 @@
-name: LSI Payment Hub Asaas Deploy R1
-run-name: LSI Payment Hub Asaas Deploy R1 ${{ github.run_id }}
+name: LSI Payment Hub Asaas Deploy R2
+run-name: LSI Payment Hub Asaas Deploy R2 ${{ github.run_id }}
 on:
   push:
     branches: [lsi-payment-hub-r1-20260830]
@@ -79,7 +79,7 @@ jobs:
           set -euo pipefail
           name="$(cat /tmp/module-name)"
           endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
-          code=$(curl --silent --show-error -o /tmp/deploy.json -w '%{http_code}' -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/patched.mjs;type=application/javascript+module")
+          code=$(curl --silent --show-error -o /tmp/deploy.json -w '%{http_code}' -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/patched.mjs;filename=${name};type=application/javascript+module")
           if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then cat /tmp/deploy.json; exit 1; fi
           jq -e '.success==true' /tmp/deploy.json >/dev/null
           echo 'CONTENT_DEPLOY=PASS'
@@ -90,7 +90,7 @@ jobs:
           rollback(){
             echo 'PROBE_FAILED_ROLLBACK=START'
             name="$(cat /tmp/module-name)"; endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
-            curl --fail --silent --show-error -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/current.mjs;type=application/javascript+module" >/tmp/rollback.json
+            curl --fail --silent --show-error -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/current.mjs;filename=${name};type=application/javascript+module" >/tmp/rollback.json
             jq -e '.success==true' /tmp/rollback.json >/dev/null
             echo 'ROLLBACK=PASS'
           }
