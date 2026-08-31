@@ -1,0 +1,7 @@
+{
+  "batch-completed": {
+    "eventTitle": "Completed PackValue normalization batch",
+    "eventDescription": "Charged once after a valid batch is normalized and ranked successfully.",
+    "eventPriceUsd": 0.05
+  }
+}
