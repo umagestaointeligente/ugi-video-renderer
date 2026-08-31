@@ -1,0 +1,66 @@
+name: LSI Payment Hub Live Status Diagnostic R1
+run-name: LSI Payment Hub Live Status Diagnostic R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-payment-hub-live-status-diagnostic-r1.yml']
+permissions: {contents: read}
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build candidate and diagnose statuses then always rollback
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"; echo "::add-mask::$CF_API_TOKEN"
+          node greenfield/packvalue-pro/build.mjs
+          basecf="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$basecf" >/tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1','replace'); b=open('/tmp/b','rb').read(); m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
+          parts=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+b)
+              for p in msg.walk():
+                  if p.is_multipart(): continue
+                  q=p.get_payload(decode=True) or b''
+                  if q and b'createProviderCheckout' in q and b'/api/commerce/webhook/asaas' in q:
+                      cd=p.get('Content-Disposition',''); nm=re.search(r'(?:name|filename)="([^"]+)"',cd)
+                      parts.append((q,nm.group(1) if nm else 'worker.js'))
+          else: parts=[(b,'worker.js')]
+          if not parts: raise SystemExit('MODULE_NOT_FOUND')
+          src,name=max(parts,key=lambda x:len(x[0])); safe=re.sub(r'[^A-Za-z0-9._-]','-',name) or 'worker.js'
+          if not safe.endswith(('.js','.mjs')): safe='worker.js'
+          open('/tmp/current.mjs','wb').write(src); open('/tmp/module-name','w').write(safe)
+          PY
+          python greenfield/packvalue-pro/patch_worker_v4.py --source /tmp/current.mjs --asset greenfield/packvalue-pro/dist/packvalue-pro.html --output /tmp/patched.mjs
+          node --check /tmp/patched.mjs
+          name="$(cat /tmp/module-name)"; endpoint="${basecf}/content"
+          rollback(){
+            code=$(curl --silent --show-error -o /tmp/rb.json -w '%{http_code}' -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/current.mjs;filename=${name};type=application/javascript+module")
+            echo "ROLLBACK_HTTP=$code"
+            jq -e '.success==true' /tmp/rb.json >/dev/null
+            echo 'ROLLBACK=PASS'
+          }
+          trap rollback EXIT
+          code=$(curl --silent --show-error -o /tmp/d.json -w '%{http_code}' -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/patched.mjs;filename=${name};type=application/javascript+module")
+          echo "DEPLOY_HTTP=$code"; jq -e '.success==true' /tmp/d.json >/dev/null
+          base='https://lola-operacional-ugi.umagestaointeligente.workers.dev'
+          sleep 1
+          probe_get(){ label="$1"; url="$2"; status=$(curl -sS -o "/tmp/${label}.body" -w '%{http_code}' "$url"); echo "STATUS_${label}=$status"; head -c 240 "/tmp/${label}.body" | tr '\n' ' '; echo; }
+          probe_post(){ label="$1"; url="$2"; status=$(curl -sS -o "/tmp/${label}.body" -w '%{http_code}' -X POST "$url" -H 'content-type: application/json' --data '{"price":0.01}'); echo "STATUS_${label}=$status"; head -c 240 "/tmp/${label}.body" | tr '\n' ' '; echo; }
+          probe_get UGI_HEALTH "$base/api/health"
+          probe_get LSI_HEALTH "$base/greenfield/packvalue-pro/health"
+          probe_get LSI_LANDING "$base/packvalue-pro"
+          probe_post LSI_NEGATIVE "$base/greenfield/packvalue-pro/checkout"
+          admin=$(curl -sS -o /tmp/ADMIN.body -w '%{http_code}' -X POST "$base/api/commerce/checkout" -H 'content-type: application/json' --data '{}'); echo "STATUS_ADMIN=$admin"; head -c 240 /tmp/ADMIN.body | tr '\n' ' '; echo
+          echo 'DIAGNOSTIC_COMPLETE=true'
