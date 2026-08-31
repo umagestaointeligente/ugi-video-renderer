@@ -1,0 +1,140 @@
+name: LSI Brazil Opportunity Radar Hotfix R2
+run-name: LSI Brazil Opportunity Radar Hotfix R2 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - 'greenfield/brazil-opportunity-radar-r1/hotfix_live_commerce_r2.py'
+      - '.github/workflows/lsi-brazil-opportunity-radar-hotfix-r2.yml'
+permissions: {contents: read}
+jobs:
+  hotfix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      INDEXNOW_KEY: b71c8a3f6e2d4c1590af7381d9e64b2c
+      PUBLIC_HOST: lola-operacional-ugi.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Snapshot live Worker and build surgical hotfix
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"; echo "::add-mask::$CF_API_TOKEN"
+          basecf="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$basecf" >/tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1','replace'); body=open('/tmp/b','rb').read(); m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
+          parts=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+body)
+              for p in msg.walk():
+                  if p.is_multipart(): continue
+                  q=p.get_payload(decode=True) or b''
+                  if q and b'RADAR_COMMERCE_EXTENSION_VERSION' in q and b'/greenfield/brazil-opportunity-radar/checkout' in q and b'/api/commerce/webhook/asaas' in q:
+                      cd=p.get('Content-Disposition',''); nm=re.search(r'(?:name|filename)="([^"]+)"',cd)
+                      parts.append((q,nm.group(1) if nm else 'worker.js'))
+          else: parts=[(body,'worker.js')]
+          if not parts: raise SystemExit('LIVE_RADAR_COMMERCE_MODULE_NOT_FOUND')
+          src,name=max(parts,key=lambda x:len(x[0])); text=src.decode('utf-8')
+          gates=['CHECKOUT_PAID','ASAAS_WEBHOOK_TOKEN','/greenfield/brazil-opportunity-radar/checkout','RADAR_PRICE_BRL = 19.90','RADAR_ACCESS_TTL_MS = 30 * 24 * 60 * 60 * 1000','/greenfield/packvalue-pro/checkout']
+          miss=[g for g in gates if g not in text]
+          if miss: raise SystemExit('LIVE_GATE_MISSING:'+','.join(miss))
+          if 'RADAR_COMMERCE_PERF_R2' in text: raise SystemExit('R2_ALREADY_LIVE')
+          safe=re.sub(r'[^A-Za-z0-9._-]','-',name) or 'worker.js'
+          if not safe.endswith(('.js','.mjs')): safe='worker.js'
+          open('/tmp/current.mjs','wb').write(src);open('/tmp/module-name','w').write(safe)
+          print(f'LIVE_RADAR_SNAPSHOT=PASS bytes={len(src)} module={safe}')
+          PY
+          python greenfield/brazil-opportunity-radar-r1/hotfix_live_commerce_r2.py --source /tmp/current.mjs --output /tmp/patched.mjs
+          node --check /tmp/patched.mjs
+          python - <<'PY'
+          old=open('/tmp/current.mjs',encoding='utf-8').read(); new=open('/tmp/patched.mjs',encoding='utf-8').read()
+          invariants=['/api/video-render','/api/video-upload','/api/platform-approval','/api/commerce/webhook/asaas','BUFFER_ACCESS_TOKEN','ASAAS_WEBHOOK_TOKEN','CHECKOUT_PAID','/greenfield/packvalue-pro/checkout','RADAR_PRICE_BRL = 19.90','RADAR_ACCESS_TTL_MS = 30 * 24 * 60 * 60 * 1000']
+          for a in invariants:
+              if old.count(a)!=new.count(a): raise SystemExit('INVARIANT_CHANGED:'+a)
+          required=['RADAR_COMMERCE_PERF_R2','/greenfield/brazil-opportunity-radar/source-health','b71c8a3f6e2d4c1590af7381d9e64b2c.txt','application/ld+json','parallel-official-data-2026-08-31']
+          for a in required:
+              if a not in new: raise SystemExit('R2_REQUIRED_MISSING:'+a)
+          print('R2_PRE_DEPLOY_INVARIANTS=PASS')
+          PY
+
+      - name: Deploy hotfix content only
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="$(cat /tmp/module-name)"; endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
+          code=$(curl --silent --show-error -o /tmp/deploy.json -w '%{http_code}' -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/patched.mjs;filename=${name};type=application/javascript+module")
+          test "$code" -ge 200; test "$code" -lt 300; jq -e '.success==true' /tmp/deploy.json >/dev/null
+          echo 'R2_CONTENT_DEPLOY=PASS'
+
+      - name: Production probes with rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          rollback(){
+            echo 'R2_ROLLBACK=START'
+            name="$(cat /tmp/module-name)"; endpoint="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi/content"
+            curl --fail --silent --show-error -X PUT "$endpoint" -H "Authorization: Bearer ${CF_API_TOKEN}" -F "metadata={\"main_module\":\"${name}\"};type=application/json" -F "${name}=@/tmp/current.mjs;filename=${name};type=application/javascript+module" >/tmp/rollback.json
+            jq -e '.success==true' /tmp/rollback.json >/dev/null
+            echo 'R2_ROLLBACK=PASS'
+          }
+          trap rollback ERR
+          base="https://${PUBLIC_HOST}"
+          ready=false
+          for i in $(seq 1 25); do
+            ugi=$(curl -sS -o /tmp/ugi.json -w '%{http_code}' "$base/api/health" || true)
+            rh=$(curl -sS -o /tmp/rh.json -w '%{http_code}' "$base/greenfield/brazil-opportunity-radar/health" || true)
+            landing=$(curl -sS -o /tmp/landing.html -w '%{http_code}' "$base/brazil-opportunity-radar" || true)
+            keyc=$(curl -sS -o /tmp/key.txt -w '%{http_code}' "$base/${INDEXNOW_KEY}.txt" || true)
+            sitec=$(curl -sS -o /tmp/site.xml -w '%{http_code}' "$base/brazil-opportunity-radar-sitemap.xml" || true)
+            pack=$(curl -sS -o /tmp/pack.json -w '%{http_code}' "$base/greenfield/packvalue-pro/health" || true)
+            if [ "$ugi" = 200 ] && [ "$rh" = 200 ] && [ "$landing" = 200 ] && [ "$keyc" = 200 ] && [ "$sitec" = 200 ] && [ "$pack" = 200 ] && grep -Fq 'application/ld+json' /tmp/landing.html && grep -Fq 'Radar de Licitações' /tmp/landing.html && grep -Fxq "$INDEXNOW_KEY" /tmp/key.txt; then ready=true; echo "R2_EXACT_EDGE_READY=$i"; break; fi
+            sleep 1
+          done
+          test "$ready" = true
+
+          start=$(date +%s%3N)
+          sc=$(curl --max-time 15 -sS -o /tmp/source.json -w '%{http_code}' "$base/greenfield/brazil-opportunity-radar/source-health" || true)
+          end=$(date +%s%3N); wall=$((end-start))
+          test "$sc" = 200
+          jq -e '.ok==true and .performanceVersion=="parallel-official-data-2026-08-31" and (.elapsedMs|type=="number") and .elapsedMs<12000 and (.upstream|length)>=3' /tmp/source.json >/dev/null
+          test "$wall" -lt 15000
+
+          neg=$(curl -sS -o /tmp/neg.json -w '%{http_code}' -X POST "$base/greenfield/brazil-opportunity-radar/checkout" -H 'content-type: application/json' --data '{"price":1}' || true)
+          test "$neg" = 400; jq -e '.error=="fixed_offer_accepts_no_client_parameters"' /tmp/neg.json >/dev/null
+          fake=$(curl -sS -o /tmp/fake.txt -w '%{http_code}' "$base/greenfield/brazil-opportunity-radar/access/not-a-real-token" || true)
+          test "$fake" = 410
+          trap - ERR
+          echo "SOURCE_HEALTH_WALL_MS=$wall"
+          echo "SOURCE_HEALTH_COUNT=$(jq -r '.count' /tmp/source.json)"
+          echo 'R2_PRODUCTION_QA=PASS'
+
+      - name: Submit landing to IndexNow best effort
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          payload=$(jq -n --arg host "$PUBLIC_HOST" --arg key "$INDEXNOW_KEY" --arg keyLocation "https://${PUBLIC_HOST}/${INDEXNOW_KEY}.txt" --arg url "https://${PUBLIC_HOST}/brazil-opportunity-radar" '{host:$host,key:$key,keyLocation:$keyLocation,urlList:[$url]}')
+          code=$(curl --max-time 20 -sS -o /tmp/indexnow.txt -w '%{http_code}' -X POST 'https://api.indexnow.org/indexnow' -H 'content-type: application/json' --data "$payload" || true)
+          echo "INDEXNOW_HTTP=$code"
+          test "$code" = 200 -o "$code" = 202 -o "$code" = 422
+
+      - name: Receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --argjson source "$(cat /tmp/source.json)" '{schema_version:"1.0",project:"LSI_REVENUE_DEMAND_FIRST",component:"BRAZIL_OPPORTUNITY_RADAR_COMMERCE_R2",state:"LIVE_RECEIVABLE_DISCOVERABLE",run_id:$run,commit:$sha,price_brl:19.90,access_days:30,automatic_renewal:false,payment_provider:"asaas",authoritative_payment_event:"CHECKOUT_PAID",performance_version:"parallel-official-data-2026-08-31",source_health:$source,seo_structured_data:true,indexnow_key_route:true,indexnow_submission_attempted:true,public_landing:"/brazil-opportunity-radar",paid_access_requires_settlement:true,verified_revenue_brl:0,real_value_moved:false}' | tee generated/evidence/lsi-brazil-opportunity-radar-hotfix-r2.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-brazil-opportunity-radar-hotfix-r2-${{ github.run_id }}
+          path: generated/evidence/lsi-brazil-opportunity-radar-hotfix-r2.json
+          retention-days: 30
