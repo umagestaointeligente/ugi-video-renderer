@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-31T15:04:40.790835+00:00",
+  "checkedAt": "2026-08-31T15:14:40.613836+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 15,
@@ -50,8 +50,8 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 429,
-        "finalUrl": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DbHzolmPsGss&q=EgQUfN5TGI6w1tQGIjDtHku63RlE1d4UGiw574VQBVaeir9gncYdBvVk_1O2EdNyNAIVRwvXOBasHdrDlRUyAnJSWgFD"
+        "httpStatus": 200,
+        "finalUrl": "https://www.youtube.com/watch?v=bHzolmPsGss"
       }
     },
     {
@@ -116,8 +116,8 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 429,
-        "finalUrl": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DGmO53GCLOOU&q=EgQUfN5TGJWw1tQGIjCuo5k6HcS2zJJoL2xLPAwkUJJZChVn1-_hPj4UPhddagnfH3acq_89x7ROGlaFvsEyAnJSWgFD"
+        "httpStatus": 200,
+        "finalUrl": "https://www.youtube.com/watch?v=GmO53GCLOOU"
       }
     },
     {
@@ -138,7 +138,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975308333553371867&is_from_rle"
       }
     },
@@ -160,7 +160,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975383834690139409&is_from_rle"
       }
     },
@@ -204,7 +204,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975368739474580414&is_from_rle"
       }
     },
@@ -226,7 +226,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975388857629652386&is_from_rle"
       }
     },
@@ -248,7 +248,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975431646962448949&is_from_rle"
       }
     },
@@ -270,7 +270,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975469388517157602&is_from_rle"
       }
     },
@@ -292,7 +292,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
+        "httpStatus": 429,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3975507148385981194&is_from_rle"
       }
     },
