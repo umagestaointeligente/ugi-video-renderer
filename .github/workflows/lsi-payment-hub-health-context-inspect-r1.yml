@@ -1,0 +1,42 @@
+name: LSI Payment Hub Health Context Inspect R1
+run-name: LSI Payment Hub Health Context Inspect R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-payment-hub-health-context-inspect-r1.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect live health context
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"; echo "::add-mask::$CF_API_TOKEN"
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$base" >/tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1','replace'); b=open('/tmp/b','rb').read(); m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
+          parts=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+b)
+              for p in msg.walk():
+                  if not p.is_multipart():
+                      q=p.get_payload(decode=True) or b''
+                      if q and b'createProviderCheckout' in q: parts.append(q)
+          else: parts=[b]
+          s=max(parts,key=len).decode('utf-8')
+          token='path === "/api/health"'; i=s.index(token)
+          a=max(0,i-1800); z=min(len(s),i+1800)
+          print('---HEALTH_CONTEXT_BEGIN---')
+          print(s[a:z])
+          print('---HEALTH_CONTEXT_END---')
+          PY
