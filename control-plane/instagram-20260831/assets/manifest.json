@@ -1,0 +1,121 @@
+{
+  "generatedAt": "2026-08-31T01:33:27.632861+00:00",
+  "visualMode": "deterministic_clean_no_generated_text",
+  "language": "pt-BR",
+  "musicLicense": {
+    "source": "Mixkit",
+    "license": "Mixkit License",
+    "catalog": "https://mixkit.co/free-stock-music/corporate-music/"
+  },
+  "stories": [
+    {
+      "contentId": "UGI-20260831-IG-STORY-01-GOVERNANCE",
+      "music": "Close Up",
+      "musicUrl": "https://assets.mixkit.co/music/1167/1167.mp3",
+      "probe": {
+        "duration": 8.0,
+        "video": {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920
+        },
+        "audio": {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      }
+    },
+    {
+      "contentId": "UGI-20260831-IG-STORY-02-KPMG",
+      "music": "Running Out of Time",
+      "musicUrl": "https://assets.mixkit.co/music/77/77.mp3",
+      "probe": {
+        "duration": 8.0,
+        "video": {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920
+        },
+        "audio": {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      }
+    },
+    {
+      "contentId": "UGI-20260831-IG-STORY-03-VW",
+      "music": "Motivating Mornings",
+      "musicUrl": "https://assets.mixkit.co/music/33/33.mp3",
+      "probe": {
+        "duration": 8.0,
+        "video": {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920
+        },
+        "audio": {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      }
+    },
+    {
+      "contentId": "UGI-20260831-IG-STORY-04-PHYSICAL-AI",
+      "music": "Your Breath",
+      "musicUrl": "https://assets.mixkit.co/music/634/634.mp3",
+      "probe": {
+        "duration": 8.0,
+        "video": {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920
+        },
+        "audio": {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      }
+    },
+    {
+      "contentId": "UGI-20260831-IG-STORY-05-COMMERCE",
+      "music": "Stay With Me",
+      "musicUrl": "https://assets.mixkit.co/music/838/838.mp3",
+      "probe": {
+        "duration": 8.0,
+        "video": {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920
+        },
+        "audio": {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      }
+    }
+  ],
+  "carousel": {
+    "contentId": "UGI-20260831-IG-CAROUSEL-KPMG-TRUST",
+    "music": "The Boss",
+    "musicUrl": "https://assets.mixkit.co/music/479/479.mp3",
+    "videoProbe": {
+      "duration": 7.0,
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1350
+      },
+      "audio": {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    },
+    "slideCount": 7
+  }
+}
