@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "PackValue Normalizer",
+    "version": "1.0.0",
+    "description": "Normalize and rank comparable product offers by kg, liter or unit, including shipping and percentage discount. No financial result is guaranteed."
+  },
+  "servers": [
+    {"url": "https://REPLACE_WITH_PRIVATE_BACKEND_HOST"}
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Backend health",
+        "responses": {
+          "200": {"description": "Health response", "content":{"application/json":{"schema":{"type":"object"}}}}
+        }
+      }
+    },
+    "/v1/normalize": {
+      "post": {
+        "summary": "Normalize product offers",
+        "description": "Compares 1 to 200 offers. Ranking is performed only within compatible base units.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/NormalizeRequest"}
+            }
+          }
+        },
+        "responses": {
+          "200": {"description":"Normalized offers","content":{"application/json":{"schema":{"$ref":"#/components/schemas/NormalizeResponse"}}}},
+          "400": {"description":"Invalid input"},
+          "401": {"description":"RapidAPI proxy authorization failed"},
+          "413": {"description":"Request too large"},
+          "503": {"description":"Provider proxy secret not configured"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Offer": {
+        "type":"object",
+        "required":["price"],
+        "properties": {
+          "name":{"type":"string","maxLength":120},
+          "price":{"type":"number","exclusiveMinimum":0},
+          "packageSize":{"type":"number","exclusiveMinimum":0,"default":1},
+          "packageCount":{"type":"number","exclusiveMinimum":0,"default":1},
+          "unit":{"type":"string","enum":["kg","g","l","ml","unit","un"],"default":"unit"},
+          "shipping":{"type":"number","minimum":0,"default":0},
+          "discountPercent":{"type":"number","minimum":0,"maximum":100,"default":0}
+        }
+      },
+      "NormalizeRequest": {
+        "type":"object",
+        "required":["items"],
+        "properties":{"items":{"type":"array","minItems":1,"maxItems":200,"items":{"$ref":"#/components/schemas/Offer"}}}
+      },
+      "NormalizedOffer": {
+        "type":"object",
+        "properties": {
+          "inputIndex":{"type":"integer"},"name":{"type":"string"},"baseUnit":{"type":"string"},
+          "effectivePrice":{"type":"number"},"normalizedQuantity":{"type":"number"},"normalizedPrice":{"type":"number"},
+          "normalizedLabel":{"type":"string"},"rankWithinUnit":{"type":"integer"},"bestWithinUnit":{"type":"boolean"}
+        }
+      },
+      "NormalizeResponse": {
+        "type":"object",
+        "properties": {
+          "ok":{"type":"boolean"},"schemaVersion":{"type":"string"},"itemCount":{"type":"integer"},
+          "results":{"type":"array","items":{"$ref":"#/components/schemas/NormalizedOffer"}},
+          "financialOutcomeGuaranteed":{"type":"boolean"}
+        }
+      }
+    }
+  }
+}
