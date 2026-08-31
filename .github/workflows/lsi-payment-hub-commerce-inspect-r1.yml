@@ -1,0 +1,44 @@
+name: LSI Payment Hub Commerce Inspect R1
+run-name: LSI Payment Hub Commerce Inspect R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths: ['.github/workflows/lsi-payment-hub-commerce-inspect-r1.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect structural commerce compatibility only
+        env:
+          CF_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_API_TOKEN"; test -n "$CF_ACCOUNT_ID"; echo "::add-mask::$CF_API_TOKEN"
+          base="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/lola-operacional-ugi"
+          curl --fail --silent --show-error -D /tmp/h -H "Authorization: Bearer ${CF_API_TOKEN}" "$base" >/tmp/b
+          python - <<'PY'
+          import re
+          from email import policy
+          from email.parser import BytesParser
+          h=open('/tmp/h','rb').read().decode('latin1','replace'); b=open('/tmp/b','rb').read(); m=re.search(r'(?im)^content-type:\s*([^\r\n]+)',h); ct=m.group(1).strip() if m else ''
+          parts=[]
+          if 'multipart/' in ct.lower():
+              msg=BytesParser(policy=policy.default).parsebytes((f'Content-Type: {ct}\r\nMIME-Version: 1.0\r\n\r\n').encode()+b)
+              for p in msg.walk():
+                  if not p.is_multipart():
+                      q=p.get_payload(decode=True) or b''
+                      if q: parts.append(q)
+          else: parts=[b]
+          c=[x for x in parts if b'createProviderCheckout' in x and b'/api/commerce/webhook/asaas' in x]
+          if not c: raise SystemExit('COMMERCE_MODULE_NOT_FOUND')
+          s=max(c,key=len).decode('utf-8')
+          needles=['CHECKOUT_PAID','CHECKOUT_CREATED','CHECKOUT_CANCELED','CHECKOUT_EXPIRED','PAYMENT_RECEIVED','PAYMENT_CONFIRMED','PAYMENT_RECEIVED_IN_CASH','externalReference','checkoutId','checkout.id','paymentLink','asaas-access-token','/v3/checkouts','/v3/payments']
+          for n in needles: print(f'COUNT {n}={s.count(n)}')
+          print('HAS_ASAAS_WEBHOOK_TOKEN='+str('ASAAS_WEBHOOK_TOKEN' in s).lower())
+          print('HAS_DELIVERY_GRANT='+str('deliveryUrl' in s and 'fulfilledAt' in s).lower())
+          print('INSPECT_ONLY=true')
+          PY
