@@ -16,5 +16,5 @@ let p=await listProducts(env,{fetchImpl:fakeFetch});assert.equal(p.data[0].id,'p
 let s=await listSalesSanitized(env,{fetchImpl:fakeFetch});assert.equal(s.data[0].id,'s1');assert.equal('customer' in s.data[0],false);assert.equal(JSON.stringify(s).includes('x@y.test'),false);assert.equal(JSON.stringify(s).includes('123'),false);
 let w=await createReconciliationWebhook(env,{url:'https://example.test/webhook',token:'1234567890abcdef',fetchImpl:fakeFetch});assert.equal(w.id,'w1');
 const webhookCall=calls.find(c=>c.url.endsWith('/webhooks'));const body=JSON.parse(webhookCall.opts.body);assert.deepEqual(body.triggers,['compra_aprovada','compra_reembolsada','chargeback']);
-assert.throws(()=>createReconciliationWebhook(env,{url:'http://bad.test',token:'1234567890abcdef',fetchImpl:fakeFetch}),/invalid_webhook_url/);
+await assert.rejects(()=>createReconciliationWebhook(env,{url:'http://bad.test',token:'1234567890abcdef',fetchImpl:fakeFetch}),/invalid_webhook_url/);
 console.log('KIWIFY_RECONCILIATION_MOCK_QA=PASS');
