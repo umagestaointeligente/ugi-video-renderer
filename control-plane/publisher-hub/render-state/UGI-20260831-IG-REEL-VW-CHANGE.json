@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260831-IG-REEL-VW-CHANGE",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260831012317-54d4593ece0b",
   "approvalDraftId": "ugi-20260831012317-54d4593ece0b",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-31T01:23:31.490004+00:00"
+  "updatedAt": "2026-08-31T01:38:04.823740+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260831012317-54d4593ece0b",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33347429511",
+    "githubRunNumber": 180,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-31T01:23:27Z",
+    "githubRunUpdatedAt": "2026-08-31T01:23:27Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33347429511",
+    "githubRunDisplayTitle": "UGI ugi-20260831012317-54d4593ece0b",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "64cafd2367a681361dec196cd81d22f79161f9e0",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Transformação sem informação cria uma segunda crise",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012317-54d4593ece0b/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012317-54d4593ece0b%2Finstagram.mp4",
+        "videoBytes": 13436291,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33347429511",
+        "r2Etag": "6dfc255528dc85ad9745106483f446b1",
+        "uploadedAt": "2026-08-31T01:30:44.797Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012317-54d4593ece0b/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012317-54d4593ece0b%2Ftiktok.mp4",
+        "videoBytes": 10098418,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33347429511",
+        "r2Etag": "b756d5b0e1fd9ca5fa6f4e9192c55d4d",
+        "uploadedAt": "2026-08-31T01:30:51.827Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012317-54d4593ece0b/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012317-54d4593ece0b%2Fyoutube.mp4",
+        "videoBytes": 14930866,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33347429511",
+        "r2Etag": "8318ccd24d7ee3a3502e47be88297b6c",
+        "uploadedAt": "2026-08-31T01:30:56.242Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012317-54d4593ece0b%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260831012317-54d4593ece0b/instagram.mp4",
+    "approvalDraftId": "ugi-20260831012317-54d4593ece0b",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260831-IG-REEL-VW-CHANGE",
+    "experimentId": "UGI-20260831-EDITORIAL",
+    "variant": "IG-A",
+    "commercialIntent": "organic_growth",
+    "commercialOffer": false,
+    "editorialMode": "human_utility_first",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-31T01:31:00.574Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "d960a1298412da1e9e74acced93850a7d3d1ae22bce4a2635d6bcb62deacb67c",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-31T01:23:28.141Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260831012317-54d4593ece0b",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 13436291,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-31T01:30:56.242Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260831012317-54d4593ece0b",
+      "githubRunId": "33347429511",
+      "contentId": "UGI-20260831-IG-REEL-VW-CHANGE",
+      "experimentId": "UGI-20260831-EDITORIAL",
+      "variant": "IG-A",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "equipe corporativa em transformação olhando mudanças em uma sala moderna",
+          "pexels_query": "corporate team change management modern office",
+          "overlay": {
+            "instagram": "Quer aumentar a resistência à mudança?",
+            "tiktok": "Quer aumentar a resistência à mudança?",
+            "youtube": "Quer aumentar a resistência à mudança?"
+          },
+          "support": {
+            "instagram": "Pare de explicar o que está acontecendo.",
+            "tiktok": "Pare de explicar o que está acontecendo.",
+            "youtube": "Pare de explicar o que está acontecendo."
+          },
+          "narration": {
+            "instagram": "Quer aumentar a resistência a uma mudança? Pare de explicar o que está acontecendo.",
+            "tiktok": "Quer aumentar a resistência a uma mudança? Pare de explicar o que está acontecendo.",
+            "youtube": "Quer aumentar a resistência a uma mudança? Pare de explicar o que está acontecendo."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "funcionários preocupados em corredor corporativo durante reestruturação",
+          "pexels_query": "worried employees office restructuring communication",
+          "overlay": {
+            "instagram": "Silêncio vira interpretação.",
+            "tiktok": "Silêncio vira interpretação.",
+            "youtube": "Silêncio vira interpretação."
+          },
+          "support": {
+            "instagram": "E interpretação vira medo.",
+            "tiktok": "E interpretação vira medo.",
+            "youtube": "E interpretação vira medo."
+          },
+          "narration": {
+            "instagram": "Quando a liderança deixa um vazio, as pessoas preenchem esse espaço com rumores e medo.",
+            "tiktok": "Quando a liderança deixa um vazio, as pessoas preenchem esse espaço com rumores e medo.",
+            "youtube": "Quando a liderança deixa um vazio, as pessoas preenchem esse espaço com rumores e medo."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "reunião tensa entre liderança e equipe em empresa industrial",
+          "pexels_query": "tense management employee meeting industrial company",
+          "overlay": {
+            "instagram": "Estratégia sem narrativa produz resistência.",
+            "tiktok": "Estratégia sem narrativa produz resistência.",
+            "youtube": "Estratégia sem narrativa produz resistência."
+          },
+          "support": {
+            "instagram": "O caso Volkswagen reacendeu esse alerta.",
+            "tiktok": "O caso Volkswagen reacendeu esse alerta.",
+            "youtube": "O caso Volkswagen reacendeu esse alerta."
+          },
+          "narration": {
+            "instagram": "A transformação da Volkswagen reacendeu um alerta clássico: estratégia sem narrativa produz resistência.",
+            "tiktok": "A transformação da Volkswagen reacendeu um alerta clássico: estratégia sem narrativa produz resistência.",
+            "youtube": "A transformação da Volkswagen reacendeu um alerta clássico: estratégia sem narrativa produz resistência."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "líder apresentando plano claro com três pontos em reunião",
+          "pexels_query": "leader explaining transformation plan team three steps",
+          "overlay": {
+            "instagram": "Comunique 3 coisas.",
+            "tiktok": "Comunique 3 coisas.",
+            "youtube": "Comunique 3 coisas."
+          },
+          "support": {
+            "instagram": "Por quê. O que muda. O que ainda não sabemos.",
+            "tiktok": "Por quê. O que muda. O que ainda não sabemos.",
+            "youtube": "Por quê. O que muda. O que ainda não sabemos."
+          },
+          "narration": {
+            "instagram": "Em uma mudança, diga por que ela existe, o que muda agora e o que ainda não está decidido.",
+            "tiktok": "Em uma mudança, diga por que ela existe, o que muda agora e o que ainda não está decidido.",
+            "youtube": "Em uma mudança, diga por que ela existe, o que muda agora e o que ainda não está decidido."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "equipe alinhada acompanhando quadro de transformação",
+          "pexels_query": "aligned team transformation roadmap office",
+          "overlay": {
+            "instagram": "Clareza não elimina desconforto.",
+            "tiktok": "Clareza não elimina desconforto.",
+            "youtube": "Clareza não elimina desconforto."
+          },
+          "support": {
+            "instagram": "Mas reduz o ruído desnecessário.",
+            "tiktok": "Mas reduz o ruído desnecessário.",
+            "youtube": "Mas reduz o ruído desnecessário."
+          },
+          "narration": {
+            "instagram": "Clareza não elimina o desconforto da mudança, mas reduz o ruído que a liderança poderia evitar.",
+            "tiktok": "Clareza não elimina o desconforto da mudança, mas reduz o ruído que a liderança poderia evitar.",
+            "youtube": "Clareza não elimina o desconforto da mudança, mas reduz o ruído que a liderança poderia evitar."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "gestor escrevendo mensagem de mudança para equipe",
+          "pexels_query": "manager writing clear employee communication laptop",
+          "overlay": {
+            "instagram": "Sua equipe sabe o que muda amanhã?",
+            "tiktok": "Sua equipe sabe o que muda amanhã?",
+            "youtube": "Sua equipe sabe o que muda amanhã?"
+          },
+          "support": {
+            "instagram": "Se não sabe, existe um vazio de liderança.",
+            "tiktok": "Se não sabe, existe um vazio de liderança.",
+            "youtube": "Se não sabe, existe um vazio de liderança."
+          },
+          "narration": {
+            "instagram": "Sua equipe sabe o que muda amanhã? Se não sabe, existe um vazio de liderança para preencher.",
+            "tiktok": "Sua equipe sabe o que muda amanhã? Se não sabe, existe um vazio de liderança para preencher.",
+            "youtube": "Sua equipe sabe o que muda amanhã? Se não sabe, existe um vazio de liderança para preencher."
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "Quer aumentar a resistência à mudança?",
+            "tiktok": "Quer aumentar a resistência à mudança?",
+            "youtube": "Quer aumentar a resistência à mudança?"
+          },
+          "support": {
+            "instagram": "Pare de explicar o que está acontecendo.",
+            "tiktok": "Pare de explicar o que está acontecendo.",
+            "youtube": "Pare de explicar o que está acontecendo."
+          },
+          "narration": {
+            "instagram": "Quer aumentar a resistência a uma mudança? Pare de explicar o que está acontecendo.",
+            "tiktok": "Quer aumentar a resistência a uma mudança? Pare de explicar o que está acontecendo.",
+            "youtube": "Quer aumentar a resistência a uma mudança? Pare de explicar o que está acontecendo."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "Silêncio vira interpretação.",
+            "tiktok": "Silêncio vira interpretação.",
+            "youtube": "Silêncio vira interpretação."
+          },
+          "support": {
+            "instagram": "E interpretação vira medo.",
+            "tiktok": "E interpretação vira medo.",
+            "youtube": "E interpretação vira medo."
+          },
+          "narration": {
+            "instagram": "Quando a liderança deixa um vazio, as pessoas preenchem esse espaço com rumores e medo.",
+            "tiktok": "Quando a liderança deixa um vazio, as pessoas preenchem esse espaço com rumores e medo.",
+            "youtube": "Quando a liderança deixa um vazio, as pessoas preenchem esse espaço com rumores e medo."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "Estratégia sem narrativa produz resistência.",
+            "tiktok": "Estratégia sem narrativa produz resistência.",
+            "youtube": "Estratégia sem narrativa produz resistência."
+          },
+          "support": {
+            "instagram": "O caso Volkswagen reacendeu esse alerta.",
+            "tiktok": "O caso Volkswagen reacendeu esse alerta.",
+            "youtube": "O caso Volkswagen reacendeu esse alerta."
+          },
+          "narration": {
+            "instagram": "A transformação da Volkswagen reacendeu um alerta clássico: estratégia sem narrativa produz resistência.",
+            "tiktok": "A transformação da Volkswagen reacendeu um alerta clássico: estratégia sem narrativa produz resistência.",
+            "youtube": "A transformação da Volkswagen reacendeu um alerta clássico: estratégia sem narrativa produz resistência."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "Comunique 3 coisas.",
+            "tiktok": "Comunique 3 coisas.",
+            "youtube": "Comunique 3 coisas."
+          },
+          "support": {
+            "instagram": "Por quê. O que muda. O que ainda não sabemos.",
+            "tiktok": "Por quê. O que muda. O que ainda não sabemos.",
+            "youtube": "Por quê. O que muda. O que ainda não sabemos."
+          },
+          "narration": {
+            "instagram": "Em uma mudança, diga por que ela existe, o que muda agora e o que ainda não está decidido.",
+            "tiktok": "Em uma mudança, diga por que ela existe, o que muda agora e o que ainda não está decidido.",
+            "youtube": "Em uma mudança, diga por que ela existe, o que muda agora e o que ainda não está decidido."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "Clareza não elimina desconforto.",
+            "tiktok": "Clareza não elimina desconforto.",
+            "youtube": "Clareza não elimina desconforto."
+          },
+          "support": {
+            "instagram": "Mas reduz o ruído desnecessário.",
+            "tiktok": "Mas reduz o ruído desnecessário.",
+            "youtube": "Mas reduz o ruído desnecessário."
+          },
+          "narration": {
+            "instagram": "Clareza não elimina o desconforto da mudança, mas reduz o ruído que a liderança poderia evitar.",
+            "tiktok": "Clareza não elimina o desconforto da mudança, mas reduz o ruído que a liderança poderia evitar.",
+            "youtube": "Clareza não elimina o desconforto da mudança, mas reduz o ruído que a liderança poderia evitar."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Sua equipe sabe o que muda amanhã?",
+            "tiktok": "Sua equipe sabe o que muda amanhã?",
+            "youtube": "Sua equipe sabe o que muda amanhã?"
+          },
+          "support": {
+            "instagram": "Se não sabe, existe um vazio de liderança.",
+            "tiktok": "Se não sabe, existe um vazio de liderança.",
+            "youtube": "Se não sabe, existe um vazio de liderança."
+          },
+          "narration": {
+            "instagram": "Sua equipe sabe o que muda amanhã? Se não sabe, existe um vazio de liderança para preencher.",
+            "tiktok": "Sua equipe sabe o que muda amanhã? Se não sabe, existe um vazio de liderança para preencher.",
+            "youtube": "Sua equipe sabe o que muda amanhã? Se não sabe, existe um vazio de liderança para preencher."
+          }
+        }
+      ],
+      "canonicalCopySha256": "d960a1298412da1e9e74acced93850a7d3d1ae22bce4a2635d6bcb62deacb67c",
+      "canonicalPayloadSha256": "d03fe550901dd3999450edbe9c1fb10cbc02d35c5dd2f9aa94f3282a455677de",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Siga a UGI para transformar mudança em execução.",
+      "finalCtaByPlatform": {
+        "instagram": "Siga a UGI para transformar mudança em execução.",
+        "tiktok": "Siga a UGI para transformar mudança em execução.",
+        "youtube": "Siga a UGI para transformar mudança em execução."
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "corporate team change management modern office",
+        "provider_video_id": 7643617,
+        "provider_page_url": "https://www.pexels.com/video/people-brainstorming-at-work-7643617/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "worried employees office restructuring communication",
+        "provider_video_id": 13801258,
+        "provider_page_url": "https://www.pexels.com/video/a-man-standing-by-a-wall-while-talking-on-the-phone-13801258/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "tense management employee meeting industrial company",
+        "provider_video_id": 7643318,
+        "provider_page_url": "https://www.pexels.com/video/a-boss-getting-angry-with-his-staff-7643318/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "leader explaining transformation plan team three steps",
+        "provider_video_id": 8170547,
+        "provider_page_url": "https://www.pexels.com/video/a-woman-explaining-while-standing-8170547/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "aligned team transformation roadmap office",
+        "provider_video_id": 38901947,
+        "provider_page_url": "https://www.pexels.com/video/tech-project-management-on-tablet-38901947/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "manager writing clear employee communication laptop",
+        "provider_video_id": 7428833,
+        "provider_page_url": "https://www.pexels.com/video/a-woman-writing-7428833/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Siga a UGI para transformar mudança em execução.",
+    "updatedAt": "2026-08-31T01:31:00.574Z"
+  }
 }

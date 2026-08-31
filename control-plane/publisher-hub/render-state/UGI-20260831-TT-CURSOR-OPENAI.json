@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260831-TT-CURSOR-OPENAI",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260831012249-d594b9336f16",
   "approvalDraftId": "ugi-20260831012249-d594b9336f16",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-31T01:23:03.779188+00:00"
+  "updatedAt": "2026-08-31T01:38:04.361277+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260831012249-d594b9336f16",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33347405720",
+    "githubRunNumber": 178,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-31T01:22:58Z",
+    "githubRunUpdatedAt": "2026-08-31T01:22:58Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33347405720",
+    "githubRunDisplayTitle": "UGI ugi-20260831012249-d594b9336f16",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "64cafd2367a681361dec196cd81d22f79161f9e0",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Cursor pode perder os modelos da OpenAI",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012249-d594b9336f16/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012249-d594b9336f16%2Finstagram.mp4",
+        "videoBytes": 20265351,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33347405720",
+        "r2Etag": "ed04a6ecc9104bca0506bf6f9f1c21c6",
+        "uploadedAt": "2026-08-31T01:29:56.244Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012249-d594b9336f16/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012249-d594b9336f16%2Ftiktok.mp4",
+        "videoBytes": 15153577,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33347405720",
+        "r2Etag": "12a4ec8f3da8fe8d5940e3b72869a150",
+        "uploadedAt": "2026-08-31T01:29:59.019Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012249-d594b9336f16/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012249-d594b9336f16%2Fyoutube.mp4",
+        "videoBytes": 23087454,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33347405720",
+        "r2Etag": "0e48725e67e9ea07f1a44c510a7f6685",
+        "uploadedAt": "2026-08-31T01:30:01.864Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012249-d594b9336f16%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260831012249-d594b9336f16/instagram.mp4",
+    "approvalDraftId": "ugi-20260831012249-d594b9336f16",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260831-TT-CURSOR-OPENAI",
+    "experimentId": "UGI-20260831-EDITORIAL",
+    "variant": "TT-A",
+    "commercialIntent": "organic_growth",
+    "commercialOffer": false,
+    "editorialMode": "platform_native_curiosity",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-31T01:30:04.683Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "49c3d32ed74418b81a44b871e03249f4b770974768b1222cec0c35584bb36b48",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-31T01:22:58.913Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260831012249-d594b9336f16",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 20265351,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-31T01:30:01.864Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260831012249-d594b9336f16",
+      "githubRunId": "33347405720",
+      "contentId": "UGI-20260831-TT-CURSOR-OPENAI",
+      "experimentId": "UGI-20260831-EDITORIAL",
+      "variant": "TT-A",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "programador usando editor de código com IA em tela moderna",
+          "pexels_query": "software developer AI code editor dark modern",
+          "overlay": {
+            "instagram": "CURSOR PODE PERDER A OPENAI.",
+            "tiktok": "CURSOR PODE PERDER A OPENAI.",
+            "youtube": "CURSOR PODE PERDER A OPENAI."
+          },
+          "support": {
+            "instagram": "E Elon Musk está no meio da história.",
+            "tiktok": "E Elon Musk está no meio da história.",
+            "youtube": "E Elon Musk está no meio da história."
+          },
+          "narration": {
+            "instagram": "O Cursor pode perder acesso aos modelos da OpenAI, e Elon Musk está no meio da história.",
+            "tiktok": "O Cursor pode perder acesso aos modelos da OpenAI, e Elon Musk está no meio da história.",
+            "youtube": "O Cursor pode perder acesso aos modelos da OpenAI, e Elon Musk está no meio da história."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "logos abstratos de empresas de inteligência artificial em ecossistema conectado",
+          "pexels_query": "artificial intelligence companies ecosystem technology network",
+          "overlay": {
+            "instagram": "A parceria mudou de risco.",
+            "tiktok": "A parceria mudou de risco.",
+            "youtube": "A parceria mudou de risco."
+          },
+          "support": {
+            "instagram": "Depois da aquisição pela SpaceX.",
+            "tiktok": "Depois da aquisição pela SpaceX.",
+            "youtube": "Depois da aquisição pela SpaceX."
+          },
+          "narration": {
+            "instagram": "Depois da aquisição do Cursor pela SpaceX, a relação com fornecedores de IA ficou mais delicada.",
+            "tiktok": "Depois da aquisição do Cursor pela SpaceX, a relação com fornecedores de IA ficou mais delicada.",
+            "youtube": "Depois da aquisição do Cursor pela SpaceX, a relação com fornecedores de IA ficou mais delicada."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "desenvolvedor alternando entre diferentes modelos de IA em notebook",
+          "pexels_query": "developer switching AI models coding laptop",
+          "overlay": {
+            "instagram": "Dependência de um modelo virou risco.",
+            "tiktok": "Dependência de um modelo virou risco.",
+            "youtube": "Dependência de um modelo virou risco."
+          },
+          "support": {
+            "instagram": "Não é só uma disputa de marcas.",
+            "tiktok": "Não é só uma disputa de marcas.",
+            "youtube": "Não é só uma disputa de marcas."
+          },
+          "narration": {
+            "instagram": "A história mostra que depender de um único provedor de IA virou um risco de produto e de estratégia.",
+            "tiktok": "A história mostra que depender de um único provedor de IA virou um risco de produto e de estratégia.",
+            "youtube": "A história mostra que depender de um único provedor de IA virou um risco de produto e de estratégia."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "arquitetura tecnológica com múltiplos fornecedores conectados",
+          "pexels_query": "multi vendor AI architecture cloud technology",
+          "overlay": {
+            "instagram": "Quem vence? Quem consegue trocar.",
+            "tiktok": "Quem vence? Quem consegue trocar.",
+            "youtube": "Quem vence? Quem consegue trocar."
+          },
+          "support": {
+            "instagram": "Sem quebrar o produto.",
+            "tiktok": "Sem quebrar o produto.",
+            "youtube": "Sem quebrar o produto."
+          },
+          "narration": {
+            "instagram": "A vantagem pode estar em construir produtos capazes de trocar de modelo sem quebrar a experiência.",
+            "tiktok": "A vantagem pode estar em construir produtos capazes de trocar de modelo sem quebrar a experiência.",
+            "youtube": "A vantagem pode estar em construir produtos capazes de trocar de modelo sem quebrar a experiência."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "equipe de tecnologia revisando arquitetura modular em monitores",
+          "pexels_query": "technology team modular architecture screens",
+          "overlay": {
+            "instagram": "IA também precisa de plano B.",
+            "tiktok": "IA também precisa de plano B.",
+            "youtube": "IA também precisa de plano B."
+          },
+          "support": {
+            "instagram": "Especialmente quando fornecedores competem.",
+            "tiktok": "Especialmente quando fornecedores competem.",
+            "youtube": "Especialmente quando fornecedores competem."
+          },
+          "narration": {
+            "instagram": "Em IA, o plano B deixa de ser detalhe técnico quando os seus fornecedores também competem entre si.",
+            "tiktok": "Em IA, o plano B deixa de ser detalhe técnico quando os seus fornecedores também competem entre si.",
+            "youtube": "Em IA, o plano B deixa de ser detalhe técnico quando os seus fornecedores também competem entre si."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "close em código e várias opções de modelos de inteligência artificial",
+          "pexels_query": "AI model selector code screen close up",
+          "overlay": {
+            "instagram": "Você construiria tudo em um único modelo?",
+            "tiktok": "Você construiria tudo em um único modelo?",
+            "youtube": "Você construiria tudo em um único modelo?"
+          },
+          "support": {
+            "instagram": "Eu não faria isso sem rota de saída.",
+            "tiktok": "Eu não faria isso sem rota de saída.",
+            "youtube": "Eu não faria isso sem rota de saída."
+          },
+          "narration": {
+            "instagram": "Você construiria seu produto inteiro em um único modelo? Eu não faria isso sem uma rota de saída.",
+            "tiktok": "Você construiria seu produto inteiro em um único modelo? Eu não faria isso sem uma rota de saída.",
+            "youtube": "Você construiria seu produto inteiro em um único modelo? Eu não faria isso sem uma rota de saída."
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "CURSOR PODE PERDER A OPENAI.",
+            "tiktok": "CURSOR PODE PERDER A OPENAI.",
+            "youtube": "CURSOR PODE PERDER A OPENAI."
+          },
+          "support": {
+            "instagram": "E Elon Musk está no meio da história.",
+            "tiktok": "E Elon Musk está no meio da história.",
+            "youtube": "E Elon Musk está no meio da história."
+          },
+          "narration": {
+            "instagram": "O Cursor pode perder acesso aos modelos da OpenAI, e Elon Musk está no meio da história.",
+            "tiktok": "O Cursor pode perder acesso aos modelos da OpenAI, e Elon Musk está no meio da história.",
+            "youtube": "O Cursor pode perder acesso aos modelos da OpenAI, e Elon Musk está no meio da história."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "A parceria mudou de risco.",
+            "tiktok": "A parceria mudou de risco.",
+            "youtube": "A parceria mudou de risco."
+          },
+          "support": {
+            "instagram": "Depois da aquisição pela SpaceX.",
+            "tiktok": "Depois da aquisição pela SpaceX.",
+            "youtube": "Depois da aquisição pela SpaceX."
+          },
+          "narration": {
+            "instagram": "Depois da aquisição do Cursor pela SpaceX, a relação com fornecedores de IA ficou mais delicada.",
+            "tiktok": "Depois da aquisição do Cursor pela SpaceX, a relação com fornecedores de IA ficou mais delicada.",
+            "youtube": "Depois da aquisição do Cursor pela SpaceX, a relação com fornecedores de IA ficou mais delicada."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "Dependência de um modelo virou risco.",
+            "tiktok": "Dependência de um modelo virou risco.",
+            "youtube": "Dependência de um modelo virou risco."
+          },
+          "support": {
+            "instagram": "Não é só uma disputa de marcas.",
+            "tiktok": "Não é só uma disputa de marcas.",
+            "youtube": "Não é só uma disputa de marcas."
+          },
+          "narration": {
+            "instagram": "A história mostra que depender de um único provedor de IA virou um risco de produto e de estratégia.",
+            "tiktok": "A história mostra que depender de um único provedor de IA virou um risco de produto e de estratégia.",
+            "youtube": "A história mostra que depender de um único provedor de IA virou um risco de produto e de estratégia."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "Quem vence? Quem consegue trocar.",
+            "tiktok": "Quem vence? Quem consegue trocar.",
+            "youtube": "Quem vence? Quem consegue trocar."
+          },
+          "support": {
+            "instagram": "Sem quebrar o produto.",
+            "tiktok": "Sem quebrar o produto.",
+            "youtube": "Sem quebrar o produto."
+          },
+          "narration": {
+            "instagram": "A vantagem pode estar em construir produtos capazes de trocar de modelo sem quebrar a experiência.",
+            "tiktok": "A vantagem pode estar em construir produtos capazes de trocar de modelo sem quebrar a experiência.",
+            "youtube": "A vantagem pode estar em construir produtos capazes de trocar de modelo sem quebrar a experiência."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "IA também precisa de plano B.",
+            "tiktok": "IA também precisa de plano B.",
+            "youtube": "IA também precisa de plano B."
+          },
+          "support": {
+            "instagram": "Especialmente quando fornecedores competem.",
+            "tiktok": "Especialmente quando fornecedores competem.",
+            "youtube": "Especialmente quando fornecedores competem."
+          },
+          "narration": {
+            "instagram": "Em IA, o plano B deixa de ser detalhe técnico quando os seus fornecedores também competem entre si.",
+            "tiktok": "Em IA, o plano B deixa de ser detalhe técnico quando os seus fornecedores também competem entre si.",
+            "youtube": "Em IA, o plano B deixa de ser detalhe técnico quando os seus fornecedores também competem entre si."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Você construiria tudo em um único modelo?",
+            "tiktok": "Você construiria tudo em um único modelo?",
+            "youtube": "Você construiria tudo em um único modelo?"
+          },
+          "support": {
+            "instagram": "Eu não faria isso sem rota de saída.",
+            "tiktok": "Eu não faria isso sem rota de saída.",
+            "youtube": "Eu não faria isso sem rota de saída."
+          },
+          "narration": {
+            "instagram": "Você construiria seu produto inteiro em um único modelo? Eu não faria isso sem uma rota de saída.",
+            "tiktok": "Você construiria seu produto inteiro em um único modelo? Eu não faria isso sem uma rota de saída.",
+            "youtube": "Você construiria seu produto inteiro em um único modelo? Eu não faria isso sem uma rota de saída."
+          }
+        }
+      ],
+      "canonicalCopySha256": "49c3d32ed74418b81a44b871e03249f4b770974768b1222cec0c35584bb36b48",
+      "canonicalPayloadSha256": "24ca509c0a92199a9654e60a27f1ca94da6abdb8c275fbd05595f80d477f3500",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Siga a UGI para entender tecnologia sem hype.",
+      "finalCtaByPlatform": {
+        "instagram": "Siga a UGI para entender tecnologia sem hype.",
+        "tiktok": "Siga a UGI para entender tecnologia sem hype.",
+        "youtube": "Siga a UGI para entender tecnologia sem hype."
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "software developer AI code editor dark modern",
+        "provider_video_id": 34459460,
+        "provider_page_url": "https://www.pexels.com/video/colorful-html-code-on-computer-monitor-34459460/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "artificial intelligence companies ecosystem technology network",
+        "provider_video_id": 34995393,
+        "provider_page_url": "https://www.pexels.com/video/abstract-neon-glowing-network-animation-34995393/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "developer switching AI models coding laptop",
+        "provider_video_id": 12893579,
+        "provider_page_url": "https://www.pexels.com/video/hands-typing-on-laptop-keyboard-12893579/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "multi vendor AI architecture cloud technology",
+        "provider_video_id": 36392049,
+        "provider_page_url": "https://www.pexels.com/video/futuristic-circuit-board-with-glowing-neon-lights-36392049/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "technology team modular architecture screens",
+        "provider_video_id": 8170419,
+        "provider_page_url": "https://www.pexels.com/video/women-discussing-information-from-a-tablet-8170419/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "AI model selector code screen close up",
+        "provider_video_id": 18069700,
+        "provider_page_url": "https://www.pexels.com/video/an-artist-s-animation-of-artificial-intelligence-ai-this-video-depicts-language-models-which-generate-text-it-was-created-by-wes-cockx-as-part-of-the-visualising-ai-project-launched-by-18069700/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Siga a UGI para entender tecnologia sem hype.",
+    "updatedAt": "2026-08-31T01:30:04.683Z"
+  }
 }

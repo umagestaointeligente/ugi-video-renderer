@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260831-YT-NVIDIA-INFRA",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260831012331-b3e6767a35ba",
   "approvalDraftId": "ugi-20260831012331-b3e6767a35ba",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-31T01:23:43.015362+00:00"
+  "updatedAt": "2026-08-31T01:38:05.030672+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260831012331-b3e6767a35ba",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33347440212",
+    "githubRunNumber": 180,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "in_progress",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-31T01:23:27Z",
+    "githubRunUpdatedAt": "2026-08-31T01:23:33Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33347429511",
+    "githubRunDisplayTitle": "UGI ugi-20260831012317-54d4593ece0b",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "64cafd2367a681361dec196cd81d22f79161f9e0",
+    "githubCorrelationMethod": "legacy_unique_temporal_window",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Se a bolha da IA está acabando, por que a Nvidia ainda projeta tanto crescimento?",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012331-b3e6767a35ba/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012331-b3e6767a35ba%2Finstagram.mp4",
+        "videoBytes": 22246771,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33347440212",
+        "r2Etag": "eb76463a07041bf349c19afae23aac08",
+        "uploadedAt": "2026-08-31T01:30:36.494Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012331-b3e6767a35ba/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012331-b3e6767a35ba%2Ftiktok.mp4",
+        "videoBytes": 16412981,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33347440212",
+        "r2Etag": "223ece7541fe81629b122e0599779347",
+        "uploadedAt": "2026-08-31T01:30:38.814Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012331-b3e6767a35ba/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012331-b3e6767a35ba%2Fyoutube.mp4",
+        "videoBytes": 24961507,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33347440212",
+        "r2Etag": "83ec937b4ddd8d0e2fe4c8b5a077e800",
+        "uploadedAt": "2026-08-31T01:30:41.419Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012331-b3e6767a35ba%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260831012331-b3e6767a35ba/instagram.mp4",
+    "approvalDraftId": "ugi-20260831012331-b3e6767a35ba",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260831-YT-NVIDIA-INFRA",
+    "experimentId": "UGI-20260831-EDITORIAL",
+    "variant": "YT-B",
+    "commercialIntent": "organic_growth",
+    "commercialOffer": false,
+    "editorialMode": "platform_native_curiosity",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-31T01:30:45.700Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "57d1456c55d02935dfd8805ccd67e49b44c780dbb57c94a70dd7052f6bf51abb",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-31T01:23:40.985Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260831012331-b3e6767a35ba",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 22246771,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-31T01:30:41.419Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260831012331-b3e6767a35ba",
+      "githubRunId": "33347440212",
+      "contentId": "UGI-20260831-YT-NVIDIA-INFRA",
+      "experimentId": "UGI-20260831-EDITORIAL",
+      "variant": "YT-B",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "data center moderno com fileiras de servidores e luzes",
+          "pexels_query": "modern AI data center servers cinematic",
+          "overlay": {
+            "instagram": "A BOLHA DA IA ESTÁ ACABANDO?",
+            "tiktok": "A BOLHA DA IA ESTÁ ACABANDO?",
+            "youtube": "A BOLHA DA IA ESTÁ ACABANDO?"
+          },
+          "support": {
+            "instagram": "Então por que os chips continuam acelerando?",
+            "tiktok": "Então por que os chips continuam acelerando?",
+            "youtube": "Então por que os chips continuam acelerando?"
+          },
+          "narration": {
+            "instagram": "Se a bolha da inteligência artificial está acabando, por que a Nvidia ainda espera tanto crescimento?",
+            "tiktok": "Se a bolha da inteligência artificial está acabando, por que a Nvidia ainda espera tanto crescimento?",
+            "youtube": "Se a bolha da inteligência artificial está acabando, por que a Nvidia ainda espera tanto crescimento?"
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "placas de processamento e chips em rack de servidor",
+          "pexels_query": "GPU chips server rack artificial intelligence",
+          "overlay": {
+            "instagram": "Porque app e infraestrutura são coisas diferentes.",
+            "tiktok": "Porque app e infraestrutura são coisas diferentes.",
+            "youtube": "Porque app e infraestrutura são coisas diferentes."
+          },
+          "support": {
+            "instagram": "O hype muda mais rápido que o data center.",
+            "tiktok": "O hype muda mais rápido que o data center.",
+            "youtube": "O hype muda mais rápido que o data center."
+          },
+          "narration": {
+            "instagram": "Uma coisa é o hype de cada aplicativo. Outra é a infraestrutura necessária para treinar e rodar modelos.",
+            "tiktok": "Uma coisa é o hype de cada aplicativo. Outra é a infraestrutura necessária para treinar e rodar modelos.",
+            "youtube": "Uma coisa é o hype de cada aplicativo. Outra é a infraestrutura necessária para treinar e rodar modelos."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "construção e expansão de grande data center tecnológico",
+          "pexels_query": "large data center construction expansion technology",
+          "overlay": {
+            "instagram": "Bilhões continuam indo para data centers.",
+            "tiktok": "Bilhões continuam indo para data centers.",
+            "youtube": "Bilhões continuam indo para data centers."
+          },
+          "support": {
+            "instagram": "A corrida agora é por capacidade.",
+            "tiktok": "A corrida agora é por capacidade.",
+            "youtube": "A corrida agora é por capacidade."
+          },
+          "narration": {
+            "instagram": "As grandes empresas continuam ampliando data centers porque a demanda por capacidade de computação segue crescendo.",
+            "tiktok": "As grandes empresas continuam ampliando data centers porque a demanda por capacidade de computação segue crescendo.",
+            "youtube": "As grandes empresas continuam ampliando data centers porque a demanda por capacidade de computação segue crescendo."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "engenheiros inspecionando nova geração de hardware em laboratório",
+          "pexels_query": "engineers next generation AI hardware laboratory",
+          "overlay": {
+            "instagram": "A próxima disputa é eficiência.",
+            "tiktok": "A próxima disputa é eficiência.",
+            "youtube": "A próxima disputa é eficiência."
+          },
+          "support": {
+            "instagram": "Mais IA por watt e por dólar.",
+            "tiktok": "Mais IA por watt e por dólar.",
+            "youtube": "Mais IA por watt e por dólar."
+          },
+          "narration": {
+            "instagram": "A próxima disputa não é só quem tem mais chips, mas quem entrega mais inteligência por watt e por dólar.",
+            "tiktok": "A próxima disputa não é só quem tem mais chips, mas quem entrega mais inteligência por watt e por dólar.",
+            "youtube": "A próxima disputa não é só quem tem mais chips, mas quem entrega mais inteligência por watt e por dólar."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "visão ampla de infraestrutura tecnológica e nuvem conectada",
+          "pexels_query": "AI cloud infrastructure network data center wide",
+          "overlay": {
+            "instagram": "O hype pode oscilar.",
+            "tiktok": "O hype pode oscilar.",
+            "youtube": "O hype pode oscilar."
+          },
+          "support": {
+            "instagram": "A infraestrutura demora mais para virar.",
+            "tiktok": "A infraestrutura demora mais para virar.",
+            "youtube": "A infraestrutura demora mais para virar."
+          },
+          "narration": {
+            "instagram": "O hype pode oscilar de uma semana para outra. A infraestrutura é uma aposta de anos.",
+            "tiktok": "O hype pode oscilar de uma semana para outra. A infraestrutura é uma aposta de anos.",
+            "youtube": "O hype pode oscilar de uma semana para outra. A infraestrutura é uma aposta de anos."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "chip de inteligência artificial em close com data center desfocado",
+          "pexels_query": "AI chip close up data center background",
+          "overlay": {
+            "instagram": "Bolha ou nova infraestrutura básica?",
+            "tiktok": "Bolha ou nova infraestrutura básica?",
+            "youtube": "Bolha ou nova infraestrutura básica?"
+          },
+          "support": {
+            "instagram": "Essa é a pergunta mais interessante.",
+            "tiktok": "Essa é a pergunta mais interessante.",
+            "youtube": "Essa é a pergunta mais interessante."
+          },
+          "narration": {
+            "instagram": "Bolha ou nova infraestrutura básica da economia digital? Essa é a pergunta mais interessante agora.",
+            "tiktok": "Bolha ou nova infraestrutura básica da economia digital? Essa é a pergunta mais interessante agora.",
+            "youtube": "Bolha ou nova infraestrutura básica da economia digital? Essa é a pergunta mais interessante agora."
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "A BOLHA DA IA ESTÁ ACABANDO?",
+            "tiktok": "A BOLHA DA IA ESTÁ ACABANDO?",
+            "youtube": "A BOLHA DA IA ESTÁ ACABANDO?"
+          },
+          "support": {
+            "instagram": "Então por que os chips continuam acelerando?",
+            "tiktok": "Então por que os chips continuam acelerando?",
+            "youtube": "Então por que os chips continuam acelerando?"
+          },
+          "narration": {
+            "instagram": "Se a bolha da inteligência artificial está acabando, por que a Nvidia ainda espera tanto crescimento?",
+            "tiktok": "Se a bolha da inteligência artificial está acabando, por que a Nvidia ainda espera tanto crescimento?",
+            "youtube": "Se a bolha da inteligência artificial está acabando, por que a Nvidia ainda espera tanto crescimento?"
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "Porque app e infraestrutura são coisas diferentes.",
+            "tiktok": "Porque app e infraestrutura são coisas diferentes.",
+            "youtube": "Porque app e infraestrutura são coisas diferentes."
+          },
+          "support": {
+            "instagram": "O hype muda mais rápido que o data center.",
+            "tiktok": "O hype muda mais rápido que o data center.",
+            "youtube": "O hype muda mais rápido que o data center."
+          },
+          "narration": {
+            "instagram": "Uma coisa é o hype de cada aplicativo. Outra é a infraestrutura necessária para treinar e rodar modelos.",
+            "tiktok": "Uma coisa é o hype de cada aplicativo. Outra é a infraestrutura necessária para treinar e rodar modelos.",
+            "youtube": "Uma coisa é o hype de cada aplicativo. Outra é a infraestrutura necessária para treinar e rodar modelos."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "Bilhões continuam indo para data centers.",
+            "tiktok": "Bilhões continuam indo para data centers.",
+            "youtube": "Bilhões continuam indo para data centers."
+          },
+          "support": {
+            "instagram": "A corrida agora é por capacidade.",
+            "tiktok": "A corrida agora é por capacidade.",
+            "youtube": "A corrida agora é por capacidade."
+          },
+          "narration": {
+            "instagram": "As grandes empresas continuam ampliando data centers porque a demanda por capacidade de computação segue crescendo.",
+            "tiktok": "As grandes empresas continuam ampliando data centers porque a demanda por capacidade de computação segue crescendo.",
+            "youtube": "As grandes empresas continuam ampliando data centers porque a demanda por capacidade de computação segue crescendo."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A próxima disputa é eficiência.",
+            "tiktok": "A próxima disputa é eficiência.",
+            "youtube": "A próxima disputa é eficiência."
+          },
+          "support": {
+            "instagram": "Mais IA por watt e por dólar.",
+            "tiktok": "Mais IA por watt e por dólar.",
+            "youtube": "Mais IA por watt e por dólar."
+          },
+          "narration": {
+            "instagram": "A próxima disputa não é só quem tem mais chips, mas quem entrega mais inteligência por watt e por dólar.",
+            "tiktok": "A próxima disputa não é só quem tem mais chips, mas quem entrega mais inteligência por watt e por dólar.",
+            "youtube": "A próxima disputa não é só quem tem mais chips, mas quem entrega mais inteligência por watt e por dólar."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O hype pode oscilar.",
+            "tiktok": "O hype pode oscilar.",
+            "youtube": "O hype pode oscilar."
+          },
+          "support": {
+            "instagram": "A infraestrutura demora mais para virar.",
+            "tiktok": "A infraestrutura demora mais para virar.",
+            "youtube": "A infraestrutura demora mais para virar."
+          },
+          "narration": {
+            "instagram": "O hype pode oscilar de uma semana para outra. A infraestrutura é uma aposta de anos.",
+            "tiktok": "O hype pode oscilar de uma semana para outra. A infraestrutura é uma aposta de anos.",
+            "youtube": "O hype pode oscilar de uma semana para outra. A infraestrutura é uma aposta de anos."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Bolha ou nova infraestrutura básica?",
+            "tiktok": "Bolha ou nova infraestrutura básica?",
+            "youtube": "Bolha ou nova infraestrutura básica?"
+          },
+          "support": {
+            "instagram": "Essa é a pergunta mais interessante.",
+            "tiktok": "Essa é a pergunta mais interessante.",
+            "youtube": "Essa é a pergunta mais interessante."
+          },
+          "narration": {
+            "instagram": "Bolha ou nova infraestrutura básica da economia digital? Essa é a pergunta mais interessante agora.",
+            "tiktok": "Bolha ou nova infraestrutura básica da economia digital? Essa é a pergunta mais interessante agora.",
+            "youtube": "Bolha ou nova infraestrutura básica da economia digital? Essa é a pergunta mais interessante agora."
+          }
+        }
+      ],
+      "canonicalCopySha256": "57d1456c55d02935dfd8805ccd67e49b44c780dbb57c94a70dd7052f6bf51abb",
+      "canonicalPayloadSha256": "eadd624416ad403f60c200168a64881b00c434d30c26b15b39936d55549a5c06",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Inscreva-se para entender a infraestrutura por trás da IA.",
+      "finalCtaByPlatform": {
+        "instagram": "Inscreva-se para entender a infraestrutura por trás da IA.",
+        "tiktok": "Inscreva-se para entender a infraestrutura por trás da IA.",
+        "youtube": "Inscreva-se para entender a infraestrutura por trás da IA."
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "modern AI data center servers cinematic",
+        "provider_video_id": 28709421,
+        "provider_page_url": "https://www.pexels.com/video/digital-data-display-on-screen-28709421/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "GPU chips server rack artificial intelligence",
+        "provider_video_id": 18069803,
+        "provider_page_url": "https://www.pexels.com/video/an-artist-s-animation-of-artificial-intelligence-ai-this-piece-explores-the-prediction-method-used-in-large-language-models-it-was-created-by-wes-cockx-as-part-of-the-visualising-ai-pr-18069803/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "large data center construction expansion technology",
+        "provider_video_id": 36332122,
+        "provider_page_url": "https://www.pexels.com/video/aerial-view-of-industrial-warehouse-complex-36332122/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "engineers next generation AI hardware laboratory",
+        "provider_video_id": 8328143,
+        "provider_page_url": "https://www.pexels.com/video/a-man-and-woman-having-a-conversation-8328143/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "AI cloud infrastructure network data center wide",
+        "provider_video_id": 35163081,
+        "provider_page_url": "https://www.pexels.com/video/futuristic-neural-network-visualization-35163081/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "AI chip close up data center background",
+        "provider_video_id": 36392049,
+        "provider_page_url": "https://www.pexels.com/video/futuristic-circuit-board-with-glowing-neon-lights-36392049/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Inscreva-se para entender a infraestrutura por trás da IA.",
+    "updatedAt": "2026-08-31T01:30:45.700Z"
+  }
 }

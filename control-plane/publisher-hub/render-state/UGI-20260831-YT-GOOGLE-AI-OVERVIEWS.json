@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260831-YT-GOOGLE-AI-OVERVIEWS",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260831012303-51c72402e248",
   "approvalDraftId": "ugi-20260831012303-51c72402e248",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-08-31T01:23:16.983479+00:00"
+  "updatedAt": "2026-08-31T01:38:04.594889+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260831012303-51c72402e248",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33347417570",
+    "githubRunNumber": 179,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-08-31T01:23:13Z",
+    "githubRunUpdatedAt": "2026-08-31T01:23:13Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33347417570",
+    "githubRunDisplayTitle": "UGI ugi-20260831012303-51c72402e248",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "64cafd2367a681361dec196cd81d22f79161f9e0",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "O Google está escondendo os links?",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012303-51c72402e248/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012303-51c72402e248%2Finstagram.mp4",
+        "videoBytes": 14844480,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33347417570",
+        "r2Etag": "49a2e4f34d31fa8cb8f819bb4d82b92b",
+        "uploadedAt": "2026-08-31T01:30:12.427Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012303-51c72402e248/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012303-51c72402e248%2Ftiktok.mp4",
+        "videoBytes": 11410789,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33347417570",
+        "r2Etag": "8be1d05d25f9719baefb4dfaf9d0d92c",
+        "uploadedAt": "2026-08-31T01:30:14.115Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260831012303-51c72402e248/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012303-51c72402e248%2Fyoutube.mp4",
+        "videoBytes": 16645750,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33347417570",
+        "r2Etag": "53f1be16a717e79d6409469e6d87c0cf",
+        "uploadedAt": "2026-08-31T01:30:16.631Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260831012303-51c72402e248%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260831012303-51c72402e248/instagram.mp4",
+    "approvalDraftId": "ugi-20260831012303-51c72402e248",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260831-YT-GOOGLE-AI-OVERVIEWS",
+    "experimentId": "UGI-20260831-EDITORIAL",
+    "variant": "YT-A",
+    "commercialIntent": "organic_growth",
+    "commercialOffer": false,
+    "editorialMode": "platform_native_curiosity",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-08-31T01:30:18.881Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "5c54d6377bce9f3a634a119d9206710b1ad92e43b91b2189bb7b44ecb74cda40",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-08-31T01:23:13.855Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260831012303-51c72402e248",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 14844480,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-08-31T01:30:16.631Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260831012303-51c72402e248",
+      "githubRunId": "33347417570",
+      "contentId": "UGI-20260831-YT-GOOGLE-AI-OVERVIEWS",
+      "experimentId": "UGI-20260831-EDITORIAL",
+      "variant": "YT-A",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "pessoa pesquisando no Google em smartphone com resposta de inteligência artificial grande na tela",
+          "pexels_query": "person google search smartphone AI results",
+          "overlay": {
+            "instagram": "O GOOGLE ESTÁ ESCONDENDO OS LINKS?",
+            "tiktok": "O GOOGLE ESTÁ ESCONDENDO OS LINKS?",
+            "youtube": "O GOOGLE ESTÁ ESCONDENDO OS LINKS?"
+          },
+          "support": {
+            "instagram": "A busca está mudando de formato.",
+            "tiktok": "A busca está mudando de formato.",
+            "youtube": "A busca está mudando de formato."
+          },
+          "narration": {
+            "instagram": "O Google está escondendo os links? A resposta curta é: eles estão ficando mais para baixo.",
+            "tiktok": "O Google está escondendo os links? A resposta curta é: eles estão ficando mais para baixo.",
+            "youtube": "O Google está escondendo os links? A resposta curta é: eles estão ficando mais para baixo."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "tela de busca com grande bloco de resposta automática de IA antes dos resultados",
+          "pexels_query": "AI search answer interface results screen",
+          "overlay": {
+            "instagram": "A resposta de IA ocupa mais espaço.",
+            "tiktok": "A resposta de IA ocupa mais espaço.",
+            "youtube": "A resposta de IA ocupa mais espaço."
+          },
+          "support": {
+            "instagram": "E os sites descem na tela.",
+            "tiktok": "E os sites descem na tela.",
+            "youtube": "E os sites descem na tela."
+          },
+          "narration": {
+            "instagram": "Alguns AI Overviews agora podem abrir maiores automaticamente, ocupando mais espaço antes dos resultados tradicionais.",
+            "tiktok": "Alguns AI Overviews agora podem abrir maiores automaticamente, ocupando mais espaço antes dos resultados tradicionais.",
+            "youtube": "Alguns AI Overviews agora podem abrir maiores automaticamente, ocupando mais espaço antes dos resultados tradicionais."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "criador de conteúdo analisando queda de cliques em dashboard de site",
+          "pexels_query": "website creator analytics lower clicks dashboard",
+          "overlay": {
+            "instagram": "Isso muda quem recebe o clique.",
+            "tiktok": "Isso muda quem recebe o clique.",
+            "youtube": "Isso muda quem recebe o clique."
+          },
+          "support": {
+            "instagram": "A resposta vem antes da visita.",
+            "tiktok": "A resposta vem antes da visita.",
+            "youtube": "A resposta vem antes da visita."
+          },
+          "narration": {
+            "instagram": "Para sites e criadores, isso muda uma coisa importante: o usuário pode receber a resposta antes de visitar a fonte.",
+            "tiktok": "Para sites e criadores, isso muda uma coisa importante: o usuário pode receber a resposta antes de visitar a fonte.",
+            "youtube": "Para sites e criadores, isso muda uma coisa importante: o usuário pode receber a resposta antes de visitar a fonte."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "usuário comparando resposta de IA com links e fontes em notebook",
+          "pexels_query": "user compare AI answer sources links laptop",
+          "overlay": {
+            "instagram": "Busca virou resposta + fonte.",
+            "tiktok": "Busca virou resposta + fonte.",
+            "youtube": "Busca virou resposta + fonte."
+          },
+          "support": {
+            "instagram": "Não só uma lista de links.",
+            "tiktok": "Não só uma lista de links.",
+            "youtube": "Não só uma lista de links."
+          },
+          "narration": {
+            "instagram": "O Google está deixando de ser apenas uma lista de links e ficando cada vez mais parecido com uma resposta acompanhada de fontes.",
+            "tiktok": "O Google está deixando de ser apenas uma lista de links e ficando cada vez mais parecido com uma resposta acompanhada de fontes.",
+            "youtube": "O Google está deixando de ser apenas uma lista de links e ficando cada vez mais parecido com uma resposta acompanhada de fontes."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "nova interface de busca moderna com inteligência artificial e fontes destacadas",
+          "pexels_query": "future AI search interface sources modern",
+          "overlay": {
+            "instagram": "A internet continua lá.",
+            "tiktok": "A internet continua lá.",
+            "youtube": "A internet continua lá."
+          },
+          "support": {
+            "instagram": "Mas o caminho até ela está mudando.",
+            "tiktok": "Mas o caminho até ela está mudando.",
+            "youtube": "Mas o caminho até ela está mudando."
+          },
+          "narration": {
+            "instagram": "A internet continua lá. O que está mudando é o caminho entre a pergunta e o clique.",
+            "tiktok": "A internet continua lá. O que está mudando é o caminho entre a pergunta e o clique.",
+            "youtube": "A internet continua lá. O que está mudando é o caminho entre a pergunta e o clique."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "close em barra de busca e cursor pronto para nova pergunta",
+          "pexels_query": "search bar cursor close up technology",
+          "overlay": {
+            "instagram": "Você ainda abre os links?",
+            "tiktok": "Você ainda abre os links?",
+            "youtube": "Você ainda abre os links?"
+          },
+          "support": {
+            "instagram": "Ou já fica com a resposta da IA?",
+            "tiktok": "Ou já fica com a resposta da IA?",
+            "youtube": "Ou já fica com a resposta da IA?"
+          },
+          "narration": {
+            "instagram": "E você: ainda abre os links ou já fica com a resposta da IA?",
+            "tiktok": "E você: ainda abre os links ou já fica com a resposta da IA?",
+            "youtube": "E você: ainda abre os links ou já fica com a resposta da IA?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O GOOGLE ESTÁ ESCONDENDO OS LINKS?",
+            "tiktok": "O GOOGLE ESTÁ ESCONDENDO OS LINKS?",
+            "youtube": "O GOOGLE ESTÁ ESCONDENDO OS LINKS?"
+          },
+          "support": {
+            "instagram": "A busca está mudando de formato.",
+            "tiktok": "A busca está mudando de formato.",
+            "youtube": "A busca está mudando de formato."
+          },
+          "narration": {
+            "instagram": "O Google está escondendo os links? A resposta curta é: eles estão ficando mais para baixo.",
+            "tiktok": "O Google está escondendo os links? A resposta curta é: eles estão ficando mais para baixo.",
+            "youtube": "O Google está escondendo os links? A resposta curta é: eles estão ficando mais para baixo."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "A resposta de IA ocupa mais espaço.",
+            "tiktok": "A resposta de IA ocupa mais espaço.",
+            "youtube": "A resposta de IA ocupa mais espaço."
+          },
+          "support": {
+            "instagram": "E os sites descem na tela.",
+            "tiktok": "E os sites descem na tela.",
+            "youtube": "E os sites descem na tela."
+          },
+          "narration": {
+            "instagram": "Alguns AI Overviews agora podem abrir maiores automaticamente, ocupando mais espaço antes dos resultados tradicionais.",
+            "tiktok": "Alguns AI Overviews agora podem abrir maiores automaticamente, ocupando mais espaço antes dos resultados tradicionais.",
+            "youtube": "Alguns AI Overviews agora podem abrir maiores automaticamente, ocupando mais espaço antes dos resultados tradicionais."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "Isso muda quem recebe o clique.",
+            "tiktok": "Isso muda quem recebe o clique.",
+            "youtube": "Isso muda quem recebe o clique."
+          },
+          "support": {
+            "instagram": "A resposta vem antes da visita.",
+            "tiktok": "A resposta vem antes da visita.",
+            "youtube": "A resposta vem antes da visita."
+          },
+          "narration": {
+            "instagram": "Para sites e criadores, isso muda uma coisa importante: o usuário pode receber a resposta antes de visitar a fonte.",
+            "tiktok": "Para sites e criadores, isso muda uma coisa importante: o usuário pode receber a resposta antes de visitar a fonte.",
+            "youtube": "Para sites e criadores, isso muda uma coisa importante: o usuário pode receber a resposta antes de visitar a fonte."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "Busca virou resposta + fonte.",
+            "tiktok": "Busca virou resposta + fonte.",
+            "youtube": "Busca virou resposta + fonte."
+          },
+          "support": {
+            "instagram": "Não só uma lista de links.",
+            "tiktok": "Não só uma lista de links.",
+            "youtube": "Não só uma lista de links."
+          },
+          "narration": {
+            "instagram": "O Google está deixando de ser apenas uma lista de links e ficando cada vez mais parecido com uma resposta acompanhada de fontes.",
+            "tiktok": "O Google está deixando de ser apenas uma lista de links e ficando cada vez mais parecido com uma resposta acompanhada de fontes.",
+            "youtube": "O Google está deixando de ser apenas uma lista de links e ficando cada vez mais parecido com uma resposta acompanhada de fontes."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "A internet continua lá.",
+            "tiktok": "A internet continua lá.",
+            "youtube": "A internet continua lá."
+          },
+          "support": {
+            "instagram": "Mas o caminho até ela está mudando.",
+            "tiktok": "Mas o caminho até ela está mudando.",
+            "youtube": "Mas o caminho até ela está mudando."
+          },
+          "narration": {
+            "instagram": "A internet continua lá. O que está mudando é o caminho entre a pergunta e o clique.",
+            "tiktok": "A internet continua lá. O que está mudando é o caminho entre a pergunta e o clique.",
+            "youtube": "A internet continua lá. O que está mudando é o caminho entre a pergunta e o clique."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "Você ainda abre os links?",
+            "tiktok": "Você ainda abre os links?",
+            "youtube": "Você ainda abre os links?"
+          },
+          "support": {
+            "instagram": "Ou já fica com a resposta da IA?",
+            "tiktok": "Ou já fica com a resposta da IA?",
+            "youtube": "Ou já fica com a resposta da IA?"
+          },
+          "narration": {
+            "instagram": "E você: ainda abre os links ou já fica com a resposta da IA?",
+            "tiktok": "E você: ainda abre os links ou já fica com a resposta da IA?",
+            "youtube": "E você: ainda abre os links ou já fica com a resposta da IA?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "5c54d6377bce9f3a634a119d9206710b1ad92e43b91b2189bb7b44ecb74cda40",
+      "canonicalPayloadSha256": "b1c12a4b82960e09613b761e8c29c98cc45dbb3dc9de2430d5d0d4bb717ceff0",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Inscreva-se para entender tecnologia sem complicação.",
+      "finalCtaByPlatform": {
+        "instagram": "Inscreva-se para entender tecnologia sem complicação.",
+        "tiktok": "Inscreva-se para entender tecnologia sem complicação.",
+        "youtube": "Inscreva-se para entender tecnologia sem complicação."
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "person google search smartphone AI results",
+        "provider_video_id": 4546853,
+        "provider_page_url": "https://www.pexels.com/video/a-person-holding-a-cell-phone-with-a-map-on-it-4546853/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "AI search answer interface results screen",
+        "provider_video_id": 7350953,
+        "provider_page_url": "https://www.pexels.com/video/woman-browsing-through-an-online-dating-website-7350953/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "website creator analytics lower clicks dashboard",
+        "provider_video_id": 38992894,
+        "provider_page_url": "https://www.pexels.com/video/analyzing-business-growth-on-digital-tablet-38992894/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "user compare AI answer sources links laptop",
+        "provider_video_id": 7448471,
+        "provider_page_url": "https://www.pexels.com/video/video-of-a-laptop-screen-7448471/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "future AI search interface sources modern",
+        "provider_video_id": 7547770,
+        "provider_page_url": "https://www.pexels.com/video/a-woman-touching-the-carved-wall-7547770/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "search bar cursor close up technology",
+        "provider_video_id": 38860085,
+        "provider_page_url": "https://www.pexels.com/video/tablet-displaying-financial-bar-chart-analysis-38860085/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Inscreva-se para entender tecnologia sem complicação.",
+    "updatedAt": "2026-08-31T01:30:18.881Z"
+  }
 }
