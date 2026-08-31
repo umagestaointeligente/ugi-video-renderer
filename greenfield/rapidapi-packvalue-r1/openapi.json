@@ -2,11 +2,11 @@
   "openapi": "3.0.2",
   "info": {
     "title": "PackValue Normalizer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Normalize and rank comparable product offers by kg, liter or unit, including shipping and percentage discount. No financial result is guaranteed."
   },
   "servers": [
-    {"url": "https://REPLACE_WITH_PRIVATE_BACKEND_HOST"}
+    {"url": "https://lsi-packvalue-rapidapi-r1.umagestaointeligente.workers.dev"}
   ],
   "paths": {
     "/health": {
