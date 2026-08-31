@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/ugi-instagram-20260831-production.yml'
+      - 'scripts/ugi_instagram_production_20260831.py'
+      - 'scripts/ugi_instagram_schedule_20260831_idempotent.py'
   workflow_dispatch:
 
 permissions:
