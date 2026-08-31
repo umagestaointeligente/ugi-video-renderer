@@ -1,0 +1,58 @@
+name: UGI Instagram 2026-08-31 Recovery 1045
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-instagram-20260831-recovery-1045.yml'
+      - 'scripts/ugi_instagram_recovery_20260831_1045.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-instagram-20260831-recovery-1045
+  cancel-in-progress: false
+
+jobs:
+  recover-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install audiovisual runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          python3 -m pip install --quiet requests pillow
+      - name: Regenerate deterministic AV assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/ugi_instagram_production_20260831.py --generate-only
+      - name: Recover six Instagram pieces and prove Buffer schedule
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python3 scripts/ugi_instagram_recovery_20260831_1045.py
+      - name: Persist recovery receipts
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-instagram-recovery-bot'
+          git config user.email 'ugi-instagram-recovery@users.noreply.github.com'
+          git add control-plane/instagram-20260831/receipts/*.json 2>/dev/null || true
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'chore: persist UGI Instagram 2026-08-31 recovery receipts'
+          git pull --rebase origin main
+          git push origin HEAD:main
