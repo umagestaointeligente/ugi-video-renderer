@@ -2,6 +2,7 @@ const VERSION = 'lsi-brazil-opportunity-radar-r1';
 const COMPRAS_BASE = 'https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133';
 const PNCP_OPEN_BASE = 'https://pncp.gov.br/api/consulta/v1/contratacoes/proposta';
 const MELI_BASE = 'https://api.mercadolibre.com';
+const UPSTREAM_TIMEOUT_MS = 6500;
 
 const PRICE_HINTS = {
   procurement_opportunity_feed_usd: 0.02,
@@ -46,6 +47,16 @@ function startDate(days) {
 
 function text(value) {
   return String(value ?? '').trim();
+}
+
+async function fetchWithTimeout(endpoint, options = {}, timeoutMs = UPSTREAM_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort('upstream_timeout'), timeoutMs);
+  try {
+    return await fetch(endpoint, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function numberFrom(row, keys) {
@@ -123,7 +134,7 @@ function matchesQuery(item, query) {
 }
 
 async function fetchComprasGov({ from, to, limit, uf, modalities, all, upstream }) {
-  for (const modality of modalities.length ? modalities : ['5']) {
+  const tasks = (modalities.length ? modalities : ['5']).map(async modality => {
     const p = new URLSearchParams({
       pagina: '1',
       tamanhoPagina: String(Math.min(100, Math.max(limit * 3, 30))),
@@ -133,46 +144,42 @@ async function fetchComprasGov({ from, to, limit, uf, modalities, all, upstream 
     });
     if (uf) p.set('unidadeOrgaoUfSigla', uf);
     const endpoint = `${COMPRAS_BASE}?${p.toString()}`;
-    let response;
     try {
-      response = await fetch(endpoint, { headers: { accept: 'application/json' }, cf: { cacheTtl: 300, cacheEverything: true } });
-    } catch {
-      upstream.push({ provider: 'Compras.gov.br', modality, status: 0 });
-      continue;
+      const response = await fetchWithTimeout(endpoint, { headers: { accept: 'application/json' }, cf: { cacheTtl: 900, cacheEverything: true } });
+      if (!response.ok) return { modality, status: response.status, rows: [] };
+      try { return { modality, status: response.status, rows: extractRows(await response.json()) }; }
+      catch { return { modality, status: response.status, rows: [] }; }
+    } catch (error) {
+      return { modality, status: 0, timeout: error?.name === 'AbortError', rows: [] };
     }
-    upstream.push({ provider: 'Compras.gov.br', modality, status: response.status });
-    if (!response.ok) continue;
-    let payload;
-    try { payload = await response.json(); } catch { continue; }
-    for (const row of extractRows(payload)) all.push(normalizedProcurement(row, 'Compras.gov.br / PNCP'));
+  });
+  const results = await Promise.all(tasks);
+  for (const result of results) {
+    upstream.push({ provider: 'Compras.gov.br', modality: result.modality, status: result.status, timeout: Boolean(result.timeout) });
+    for (const row of result.rows) all.push(normalizedProcurement(row, 'Compras.gov.br / PNCP'));
   }
 }
 
 async function fetchPncpOpen({ limit, uf, all, upstream }) {
   const dataFinal = compactDate(shiftedDate(45));
   const pncpModalities = ['8', '6', '4'];
-  for (const modality of pncpModalities) {
-    const p = new URLSearchParams({
-      dataFinal,
-      codigoModalidadeContratacao: modality,
-      pagina: '1'
-    });
+  const tasks = pncpModalities.map(async modality => {
+    const p = new URLSearchParams({ dataFinal, codigoModalidadeContratacao: modality, pagina: '1' });
     if (uf) p.set('uf', uf);
     const endpoint = `${PNCP_OPEN_BASE}?${p.toString()}`;
-    let response;
     try {
-      response = await fetch(endpoint, { headers: { accept: 'application/json' }, cf: { cacheTtl: 300, cacheEverything: true } });
-    } catch {
-      upstream.push({ provider: 'PNCP consulta direta', modality, status: 0 });
-      continue;
+      const response = await fetchWithTimeout(endpoint, { headers: { accept: 'application/json' }, cf: { cacheTtl: 900, cacheEverything: true } });
+      if (!response.ok) return { modality, status: response.status, rows: [] };
+      try { return { modality, status: response.status, rows: extractRows(await response.json()) }; }
+      catch { return { modality, status: response.status, rows: [] }; }
+    } catch (error) {
+      return { modality, status: 0, timeout: error?.name === 'AbortError', rows: [] };
     }
-    upstream.push({ provider: 'PNCP consulta direta', modality, status: response.status });
-    if (!response.ok) continue;
-    let payload;
-    try { payload = await response.json(); } catch { continue; }
-    const rows = extractRows(payload);
-    for (const row of rows.slice(0, Math.max(30, limit * 4))) all.push(normalizedProcurement(row, 'PNCP — propostas abertas'));
-    if (all.length >= Math.max(30, limit * 4)) break;
+  });
+  const results = await Promise.all(tasks);
+  for (const result of results) {
+    upstream.push({ provider: 'PNCP consulta direta', modality: result.modality, status: result.status, timeout: Boolean(result.timeout) });
+    for (const row of result.rows.slice(0, Math.max(30, limit * 4))) all.push(normalizedProcurement(row, 'PNCP — propostas abertas'));
   }
 }
 
@@ -188,6 +195,7 @@ async function fetchProcurement(url, preview = false) {
   const to = isoDate(new Date());
   const all = [];
   const upstream = [];
+  const started = Date.now();
 
   await fetchComprasGov({ from, to, limit, uf, modalities, all, upstream });
   if (all.length < limit) await fetchPncpOpen({ limit, uf, all, upstream });
@@ -214,6 +222,8 @@ async function fetchProcurement(url, preview = false) {
     count: opportunities.length,
     opportunities,
     upstream,
+    elapsedMs: Date.now() - started,
+    upstreamTimeoutMs: UPSTREAM_TIMEOUT_MS,
     pricingHintUsdPerCall: PRICE_HINTS.procurement_opportunity_feed_usd,
     financialOutcomeGuaranteed: false
   };
@@ -243,7 +253,7 @@ async function fetchMeliTrends(url, env) {
   const category = text(url.searchParams.get('category'));
   if (category && !/^ML[A-Z]\d+$/.test(category)) return json({ ok: false, error: 'invalid_category' }, 400);
   const endpoint = `${MELI_BASE}/trends/${site}${category ? `/${category}` : ''}`;
-  const response = await fetch(endpoint, { headers: { Authorization: `Bearer ${token}`, accept: 'application/json' }, cf: { cacheTtl: 900, cacheEverything: true } });
+  const response = await fetchWithTimeout(endpoint, { headers: { Authorization: `Bearer ${token}`, accept: 'application/json' }, cf: { cacheTtl: 900, cacheEverything: true } });
   let payload = null;
   try { payload = await response.json(); } catch {}
   if (!response.ok) return json({ ok: false, error: 'meli_upstream_error', providerStatus: response.status }, 502);
@@ -278,6 +288,8 @@ export default {
         mercadoLivreConfigured: Boolean(env.MELI_ACCESS_TOKEN),
         x402PayToConfigured: Boolean(env.X402_PAYTO),
         priceHints: PRICE_HINTS,
+        upstreamTimeoutMs: UPSTREAM_TIMEOUT_MS,
+        parallelPncpQueries: true,
         piiCollected: false,
         moneyMovement: false
       });
