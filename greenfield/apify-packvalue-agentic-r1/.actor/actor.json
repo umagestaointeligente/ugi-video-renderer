@@ -9,7 +9,6 @@
   "defaultMemoryMbytes": 256,
   "minMemoryMbytes": 128,
   "maxMemoryMbytes": 256,
-  "dockerfile": "../Dockerfile",
   "readme": "../README.md",
   "input": "./input_schema.json",
   "storages": {
