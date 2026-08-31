@@ -1,0 +1,38 @@
+name: LSI Apify PackValue Agentic QA R1
+run-name: LSI Apify PackValue Agentic QA R1 ${{ github.run_id }}
+on:
+  push:
+    branches: [lsi-payment-hub-r1-20260830]
+    paths:
+      - '.github/workflows/lsi-apify-packvalue-agentic-qa-r1.yml'
+      - 'greenfield/apify-packvalue-agentic-r1/**'
+permissions: {contents: read}
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deterministic core and schema QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd greenfield/apify-packvalue-agentic-r1
+          node test.mjs
+          node -e "for (const p of ['package.json','.actor/actor.json','.actor/input_schema.json','.actor/dataset_schema.json','.actor/pay_per_event.json']) JSON.parse(require('fs').readFileSync(p,'utf8')); console.log('JSON_SCHEMAS_PARSE=PASS')"
+          grep -Fq 'usesStandbyMode": false' .actor/actor.json
+          grep -Fq 'batch-completed' .actor/pay_per_event.json
+          grep -Fq "Actor.charge({ eventName: 'batch-completed' })" src/main.mjs
+          ! grep -R -E 'private[_ -]?key|seed phrase|API_TOKEN=|client_secret=' . --exclude='README.md'
+          echo 'AGENTIC_ELIGIBILITY_STATIC_GATES=PASS'
+      - name: Receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/evidence
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" '{schema_version:"1.0",project:"LSI_PAYMENT_HUB_R1",component:"APIFY_PACKVALUE_AGENTIC_R1",state:"PACKAGE_QA_PASS_EXTERNAL_ACTIVATION_REQUIRED",run_id:$run,commit:$sha,ppe_event:"batch-completed",standby:false,network_required_by_business_logic:false,pii_required:false,private_key_required:false,developer_kyc_required_for_agentic_payments:true,apify_account_connected:false,actor_published:false,revenue_verified_usd:0,real_value_moved:false}' | tee generated/evidence/lsi-apify-packvalue-agentic-r1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lsi-apify-packvalue-agentic-r1-${{ github.run_id }}
+          path: generated/evidence/lsi-apify-packvalue-agentic-r1.json
+          retention-days: 30
