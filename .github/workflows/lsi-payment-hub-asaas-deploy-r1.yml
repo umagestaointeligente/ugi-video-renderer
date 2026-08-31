@@ -1,9 +1,11 @@
-name: LSI Payment Hub Asaas Deploy R2
-run-name: LSI Payment Hub Asaas Deploy R2 ${{ github.run_id }}
+name: LSI Payment Hub Asaas Deploy R3
+run-name: LSI Payment Hub Asaas Deploy R3 ${{ github.run_id }}
 on:
   push:
     branches: [lsi-payment-hub-r1-20260830]
-    paths: ['.github/workflows/lsi-payment-hub-asaas-deploy-r1.yml']
+    paths:
+      - '.github/workflows/lsi-payment-hub-asaas-deploy-r1.yml'
+      - 'greenfield/packvalue-pro/patch_worker_v4.py'
 permissions: {contents: read}
 jobs:
   deploy:
@@ -71,6 +73,7 @@ jobs:
               if old.count(a)!=new.count(a): raise SystemExit('INVARIANT_CHANGED:'+a)
           if new.count('/api/greenfield/packvalue-pro/checkout') < 1: raise SystemExit('LSI_ROUTE_MISSING')
           if 'fixed_offer_accepts_no_client_parameters' not in new: raise SystemExit('FIXED_OFFER_GATE_MISSING')
+          if new.index('// LSI PackValue PRO — fixed public SKU only; no admin capability.') > new.index('path === "/api/health"'): raise SystemExit('LSI_PUBLIC_SCOPE_ORDER_INVALID')
           print('PRE_DEPLOY_INVARIANTS=PASS')
           PY
       - name: Deploy content only
