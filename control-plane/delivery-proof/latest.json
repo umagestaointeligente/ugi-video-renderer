@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-08-31T14:54:25.738241+00:00",
+  "checkedAt": "2026-08-31T15:04:40.790835+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 15,
@@ -50,8 +50,8 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.youtube.com/watch?v=bHzolmPsGss"
+        "httpStatus": 429,
+        "finalUrl": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DbHzolmPsGss&q=EgQUfN5TGI6w1tQGIjDtHku63RlE1d4UGiw574VQBVaeir9gncYdBvVk_1O2EdNyNAIVRwvXOBasHdrDlRUyAnJSWgFD"
       }
     },
     {
@@ -116,8 +116,8 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.youtube.com/watch?v=GmO53GCLOOU"
+        "httpStatus": 429,
+        "finalUrl": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DGmO53GCLOOU&q=EgQUfN5TGJWw1tQGIjCuo5k6HcS2zJJoL2xLPAwkUJJZChVn1-_hPj4UPhddagnfH3acq_89x7ROGlaFvsEyAnJSWgFD"
       }
     },
     {
