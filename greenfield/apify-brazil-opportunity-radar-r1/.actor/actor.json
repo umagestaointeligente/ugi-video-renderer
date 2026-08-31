@@ -1,0 +1,15 @@
+{
+  "actorSpecification":1,
+  "name":"brazil-opportunity-radar",
+  "title":"Brazil Opportunity Radar — Public Procurement Intelligence",
+  "description":"Find and prioritize Brazilian public procurement opportunities from official PNCP and Compras.gov.br data.",
+  "version":"1.0",
+  "buildTag":"latest",
+  "usesStandbyMode":false,
+  "defaultMemoryMbytes":256,
+  "minMemoryMbytes":128,
+  "maxMemoryMbytes":256,
+  "readme":"../README.md",
+  "input":"./input_schema.json",
+  "storages":{"dataset":"./dataset_schema.json"}
+}
