@@ -1,34 +1,15 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T03:51:25.876918+00:00",
+  "checkedAt": "2026-09-01T04:07:45.279906+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 15,
+  "late": 14,
   "failed": 0,
   "state": "ALERT",
   "results": [
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
-      "contentId": "UGI-20260830-TT-01-MEETINGS",
-      "platform": "tiktok",
-      "kind": "video",
-      "draftId": "ugi-20260830145024-2afd13cbf76d",
-      "bufferPostId": null,
-      "dueAt": "2026-08-30T16:00:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
     {
       "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
       "contentId": "UGI-20260830-YT-01-RESULT-HOURS",
