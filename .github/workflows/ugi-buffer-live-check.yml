@@ -1,0 +1,40 @@
+name: UGI Buffer Live Check
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/ugi-buffer-live-check.yml'
+
+jobs:
+  check-buffer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check Buffer channels through UGI Worker
+        env:
+          LOLA_COMMAND_KEY: ${{ secrets.LOLA_COMMAND_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${LOLA_COMMAND_KEY:-}" ]; then
+            echo 'RESULT=FAIL_NO_LOLA_COMMAND_KEY'
+            exit 1
+          fi
+          http=$(curl -sS -o /tmp/body.json -w '%{http_code}' \
+            -H "x-lola-command-key: ${LOLA_COMMAND_KEY}" \
+            'https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/buffer/channels')
+          echo "HTTP_STATUS=${http}"
+          cat /tmp/body.json
+          echo
+          if [ "$http" != "200" ]; then
+            echo 'RESULT=BUFFER_NOT_READY'
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          p='/tmp/body.json'
+          data=json.load(open(p, encoding='utf-8'))
+          if not data.get('ok'):
+              raise SystemExit('RESULT=BUFFER_NOT_READY')
+          print('RESULT=BUFFER_READY')
+          PY
