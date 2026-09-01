@@ -1,12 +1,12 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T05:57:49.899434+00:00",
+  "checkedAt": "2026-09-01T06:17:35.558370+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 14,
+  "late": 13,
   "failed": 0,
   "state": "ALERT",
   "results": [
@@ -76,25 +76,6 @@
       "bufferPostId": null,
       "dueAt": "2026-08-30T23:30:00+00:00",
       "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
-    {
-      "receipt": "control-plane/r45/receipts/pilot-latest.json",
-      "contentId": "UGI-20260830-IG-STORY-01-AI-GATES",
-      "platform": "instagram",
-      "kind": "static",
-      "draftId": "dcbda494-166c-413f-81a7-548e3d5cfde9",
-      "bufferPostId": null,
-      "dueAt": "2026-08-30T18:15:00+00:00",
-      "readbackHttp": 500,
       "bufferStatus": null,
       "status": null,
       "sentAt": null,
