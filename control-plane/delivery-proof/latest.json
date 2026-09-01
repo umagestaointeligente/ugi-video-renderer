@@ -1,12 +1,12 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T08:41:56.549804+00:00",
+  "checkedAt": "2026-09-01T08:56:24.811496+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 11,
+  "late": 9,
   "failed": 0,
   "state": "ALERT",
   "results": [
@@ -69,50 +69,12 @@
     },
     {
       "receipt": "control-plane/r45/receipts/pilot-latest.json",
-      "contentId": "UGI-20260830-IG-STORY-02-CISCO-QUESTION",
-      "platform": "instagram",
-      "kind": "static",
-      "draftId": "1bc5078b-0adc-405d-9522-ea5f19696144",
-      "bufferPostId": null,
-      "dueAt": "2026-08-30T20:45:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
-    {
-      "receipt": "control-plane/r45/receipts/pilot-latest.json",
       "contentId": "UGI-20260830-IG-CAROUSEL-01-AUTOMATE-DECISION",
       "platform": "instagram",
       "kind": "static",
       "draftId": "6598b813-33d7-41a3-be15-01d5813fd9e4",
       "bufferPostId": null,
       "dueAt": "2026-08-30T23:00:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
-    {
-      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
-      "contentId": "UGI-20260830-IG-STORY-GROWTH-02-PIVOT",
-      "platform": "instagram",
-      "kind": "r453",
-      "bufferPostId": "6a948844d58664eabd7be258",
-      "draftId": "438a23fb-2c01-494b-a373-80e6b185297f",
-      "dueAt": "2026-08-30T20:55:00+00:00",
       "readbackHttp": 500,
       "bufferStatus": null,
       "status": null,
