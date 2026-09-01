@@ -1,0 +1,39 @@
+name: Orbit Sanitized Runner Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/orbit-sanitized-smoke.yml"
+      - "sanitized-runner/examples/render.sh"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install FFmpeg
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Render synthetic vertical video
+        run: |
+          set -euo pipefail
+          mkdir -p output
+          chmod +x sanitized-runner/examples/render.sh
+          sanitized-runner/examples/render.sh output/orbit-smoke.mp4
+          test -s output/orbit-smoke.mp4
+          ffprobe -v error -show_entries format=duration,size \
+            -of default=noprint_wrappers=1 output/orbit-smoke.mp4
+      - name: Upload smoke artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: orbit-sanitized-smoke
+          path: output/orbit-smoke.mp4
+          retention-days: 1
+          compression-level: 0
