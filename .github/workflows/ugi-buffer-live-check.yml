@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Check Buffer channels through UGI Worker
         env:
-          LOLA_COMMAND_KEY: ${{ secrets.LOLA_COMMAND_KEY }}
+          LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
         run: |
           set -euo pipefail
           if [ -z "${LOLA_COMMAND_KEY:-}" ]; then
@@ -32,8 +32,7 @@ jobs:
           fi
           python - <<'PY'
           import json
-          p='/tmp/body.json'
-          data=json.load(open(p, encoding='utf-8'))
+          data=json.load(open('/tmp/body.json', encoding='utf-8'))
           if not data.get('ok'):
               raise SystemExit('RESULT=BUFFER_NOT_READY')
           print('RESULT=BUFFER_READY')
