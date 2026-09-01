@@ -1,0 +1,130 @@
+{
+  "date": "2026-09-01",
+  "timezone": "America/Sao_Paulo",
+  "stories": [
+    {
+      "id": "UGI-20260901-IG-STORY-01-NEPAL",
+      "due": "2026-09-01T09:00:00-03:00",
+      "kicker": "GESTÃO DE CRISE",
+      "metric": "14 MIN",
+      "title": "UM ALERTA.\n900+ ALUNOS EVACUADOS.",
+      "body": "No Nepal, uma escola teve minutos para agir antes da enchente. Processo, sinal e decisão rápida mudaram o desfecho.",
+      "cta": "Sua empresa saberia o que fazer em 14 minutos?",
+      "music": "Running Out of Time",
+      "accent": "#EF8A62"
+    },
+    {
+      "id": "UGI-20260901-IG-STORY-02-AI-VALUE",
+      "due": "2026-09-01T11:00:00-03:00",
+      "kicker": "IA + GESTÃO",
+      "metric": "94%",
+      "title": "IA NÃO CRIA VALOR\nSOZINHA.",
+      "body": "A McKinsey aponta que 94% das empresas ainda não geraram valor relevante com IA. O gargalo é gestão, fluxo e execução.",
+      "cta": "Ferramenta sem redesenho vira custo sofisticado.",
+      "music": "Your Breath",
+      "accent": "#4EC6FF"
+    },
+    {
+      "id": "UGI-20260901-IG-STORY-03-NVIDIA",
+      "due": "2026-09-01T14:30:00-03:00",
+      "kicker": "ESTRATÉGIA",
+      "metric": "US$ 3,5 BI",
+      "title": "ÀS VEZES, CRESCER É\nFORTALECER O ECOSSISTEMA.",
+      "body": "A Nvidia investiu na MediaTek enquanto clientes buscam chips próprios. Estratégia também é escolher onde continuar indispensável.",
+      "cta": "Integração pode ser mais valiosa que controle total.",
+      "music": "The Boss",
+      "accent": "#7BD56B"
+    },
+    {
+      "id": "UGI-20260901-IG-STORY-04-APPLE",
+      "due": "2026-09-01T17:00:00-03:00",
+      "kicker": "SUCESSÃO",
+      "metric": "15 ANOS",
+      "title": "O LÍDER MUDA.\nO SISTEMA PRECISA FICAR.",
+      "body": "Tim Cook encerra 15 anos como CEO e John Ternus assume. Uma sucessão bem preparada começa antes do anúncio.",
+      "cta": "Às 18h: o que essa transição ensina no carrossel.",
+      "music": "Motivating Mornings",
+      "accent": "#D6A85F"
+    },
+    {
+      "id": "UGI-20260901-IG-STORY-05-COMMERCE",
+      "due": "2026-09-01T20:30:00-03:00",
+      "kicker": "UGI NA PRÁTICA",
+      "metric": "AÇÃO",
+      "title": "GESTÃO BOA PRECISA\nVIRAR SISTEMA.",
+      "body": "Frameworks, checklists e materiais UGI para liderança, delegação, decisões e IA aplicada ao trabalho.",
+      "cta": "Materiais no link da bio. Acesse e compre o seu hoje.",
+      "music": "Stay With Me",
+      "accent": "#43B9F5"
+    }
+  ],
+  "carousel": {
+    "id": "UGI-20260901-IG-CAROUSEL-APPLE-SUCCESSION",
+    "due": "2026-09-01T18:00:00-03:00",
+    "audioMode": "NONE_AUTOMATED_NATIVE_CAROUSEL_UNSUPPORTED",
+    "caption": "15 anos no comando. Uma sucessão preparada muito antes do anúncio. Em 1º de setembro, John Ternus assume como CEO da Apple e Tim Cook passa a Executive Chairman. O ponto UGI não é idolatrar um líder: é observar como continuidade, sucessão e autonomia são construídas antes da troca de cadeira. O legado que escala é sistema, não dependência. Salve este carrossel para a próxima conversa sobre sucessão e liderança. #UmaGestaoInteligente #Lideranca #Gestao #Sucessao #Apple",
+    "slides": [
+      [
+        "SUCESSÃO",
+        "15 ANOS NO COMANDO.\nO QUE FICA QUANDO\nO LÍDER SAI?",
+        "A Apple troca de CEO em 1º de setembro. A pergunta de gestão é maior que o cargo."
+      ],
+      [
+        "CONTEXTO",
+        "A SUCESSÃO COMEÇOU\nANTES DE HOJE.",
+        "A Apple anunciou a transição em abril. Sucessão robusta não começa quando a cadeira fica vazia."
+      ],
+      [
+        "TRANSIÇÃO",
+        "TIM COOK NÃO\nDESAPARECE.",
+        "Ele passa a Executive Chairman. Transição pode preservar contexto sem impedir o novo líder de liderar."
+      ],
+      [
+        "CONTINUIDADE",
+        "JOHN TERNUS ASSUME\nDE DENTRO.",
+        "Depois de 25 anos na Apple, o sucessor conhece produto, cultura e operação. Pipeline de liderança também é estratégia."
+      ],
+      [
+        "LEGADO",
+        "O QUE ESCALA É\nSISTEMA, NÃO PRESENÇA.",
+        "Processos, critérios e pessoas preparadas valem mais que uma empresa dependente de uma única figura."
+      ],
+      [
+        "PERGUNTA",
+        "SUA EMPRESA FUNCIONARIA\nBEM SEM VOCÊ?",
+        "Se decisões, clientes e prioridades param quando o líder sai, o problema não é ausência. É desenho de gestão."
+      ],
+      [
+        "UGI",
+        "LIDERANÇA MELHOR\nSE CONSTRÓI EM PRÁTICA.",
+        "Frameworks, checklists e materiais UGI estão no link da bio. Acesse e compre o seu."
+      ]
+    ]
+  },
+  "musicLicense": {
+    "source": "Mixkit",
+    "license": "Mixkit License",
+    "catalog": "https://mixkit.co/free-stock-music/corporate-music/"
+  },
+  "sources": {
+    "nepal": "https://www.reuters.com/business/environment/last-minute-flood-warning-saved-over-900-nepal-students-school-head-says-2026-08-31/",
+    "ai": "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-new-management-playbook-for-ai-how-to-move-faster-and-create-more-value",
+    "nvidia": "https://www.reuters.com/world/asia-pacific/nvidia-invests-35-billion-mediatek-convertible-bonds-2026-08-31/",
+    "apple": "https://www.apple.com/newsroom/2026/04/tim-cook-to-become-apple-executive-chairman-john-ternus-to-become-apple-ceo/"
+  },
+  "hardGates": {
+    "antiRepeatDays": 15,
+    "ghostTextForbidden": true,
+    "foreignBackgroundTextForbidden": true,
+    "storyMusicUnique": true,
+    "chiptuneForbidden": true,
+    "carouselFirstSlideOnlyAudioForbidden": true,
+    "publicFigureContinuityRequired": true,
+    "ctaSlidePublicFigureForbidden": true
+  },
+  "qa": {
+    "storiesAV": "PASS",
+    "carouselTextLayer": "DETERMINISTIC_PIL",
+    "carouselAudio": "INTENTIONALLY_NONE"
+  }
+}
