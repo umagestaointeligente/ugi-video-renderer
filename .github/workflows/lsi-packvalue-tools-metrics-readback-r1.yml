@@ -1,0 +1,40 @@
+name: LSI PackValue Tools Metrics Readback R1
+run-name: LSI PackValue Tools Metrics Readback R1 ${{ github.run_id }}
+
+on:
+  push:
+    branches: [lsi-revenue-mass-market-r1-20260829]
+    paths:
+      - '.github/workflows/lsi-packvalue-tools-metrics-readback-r1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      METRICS_URL: https://lsi-packvalue-tools-r1.umagestaointeligente.workers.dev/metrics
+    steps:
+      - name: Fetch privacy-safe aggregate metrics
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$METRICS_URL" > metrics.json
+          jq -e '.ok==true and .metric=="aggregate_http_requests" and .unique_users_measured==false and .pii_stored==false' metrics.json >/dev/null
+          cat metrics.json
+
+      - name: Write readback receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -n --arg run "$GITHUB_RUN_ID" --arg sha "$GITHUB_SHA" --argjson metrics "$(cat metrics.json)" '{schema_version:"1.0",project:"PACKVALUE_TOOLS_METRICS_READBACK_R1",run_id:$run,commit:$sha,read_only:true,incremental_cost_usd:0,metrics:$metrics}' > receipt.json
+          cat receipt.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packvalue-tools-metrics-readback-${{ github.run_id }}
+          path: receipt.json
+          retention-days: 30
+          if-no-files-found: error
