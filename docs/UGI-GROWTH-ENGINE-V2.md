@@ -97,3 +97,197 @@ Payoff: **"IA RÁPIDA SEM REGRA = RISCO MAIS RÁPIDO."**
 CTA: **"Salve antes de liberar IA no time."**
 
 This pilot is designed to be understood without audio and to use PT-BR neutral narration when audio is enabled.
+
+---
+
+# Canonical Editorial Engine — UGI Management Intelligence
+
+Effective: **2026-09-01**  
+Benchmark inspiration: premium business/editorial storytelling such as G4, translated into an original UGI system. Benchmark means learning structure and attention mechanics, never copying branding, wording, layout or endorsements.
+
+## Core positioning
+
+UGI should not behave like a page of generic management quotes. Its editorial territory is:
+
+**Interpret what is happening in the world through management, leadership and AI — and transform that interpretation into something a manager can apply.**
+
+Every strong editorial candidate should follow the chain:
+
+`TREND / FACT / PERSON / COMPANY → TENSION → MANAGEMENT READING → PRACTICAL LESSON → UGI NEXT STEP`
+
+## Four permanent editorial motors
+
+### 1. REAL STORY → MANAGEMENT
+Use a real CEO, founder, CFO, company, crisis, strategic decision or relevant public event as the entry point.
+
+The person/company provides context and attention; UGI provides the interpretation.
+
+Examples of eligible angles:
+- succession;
+- crisis response;
+- strategic pivot;
+- governance failure;
+- acquisition or partnership;
+- cultural change;
+- AI adoption;
+- margin/productivity decision;
+- reputation or trust crisis.
+
+### 2. EXECUTIVE DILEMMA
+Turn management tension into a decision the audience can mentally answer.
+
+Examples:
+- centralize or delegate?
+- promote from within or hire outside?
+- grow or protect margin?
+- speed or governance?
+- automate or redesign the process first?
+
+Priority signals: comments, saves and shares.
+
+### 3. FACT / NUMBER → CONSEQUENCE
+Prefer concrete numbers, time windows or consequences when they are verified and meaningful.
+
+Pattern:
+`large factual signal → human/operational consequence → management question`
+
+Example pattern: `14 minutes → 900+ students evacuated → what would your organization do with 14 minutes?`
+
+### 4. UGI TOOL / FRAMEWORK
+Once the audience understands the problem, connect it to a real practical next step:
+- framework;
+- checklist;
+- playbook;
+- decision matrix;
+- leadership material;
+- AI/governance material.
+
+Commercial CTA must follow value delivery, not interrupt it.
+
+## Selection score for daily trend radar
+
+For each candidate trend, score 0–5 on:
+1. **recognizable real-world anchor** — known person, company, event or verifiable fact;
+2. **visual strength** — can the fact be understood visually without generic stock art?;
+3. **management tension** — is there a real decision/problem?;
+4. **practical takeaway** — can UGI teach something actionable?;
+5. **share/save potential** — would a manager send or save this?;
+6. **UGI bridge** — is there a natural route to a relevant UGI material or framework?;
+7. **freshness** — does timing improve relevance?;
+8. **platform fit** — is there a clear best format/channel?
+
+Prefer candidates with strong total score rather than forcing daily repetition of one topic family.
+
+## Visual truth and contextual relevance
+
+Hard rule: **real subject = visually related asset**.
+
+- Real person: use the correct person consistently.
+- Real company: use recognizable, relevant company context, logo, product, facility, executive or official setting when legally/editorially appropriate.
+- Real event: show the location, aftermath, object, building, operation, map, rescue infrastructure or another directly related visual.
+- If minors are involved in a sensitive event, avoid depicting identifiable/distressed children; show the environment, aftermath, adult responders, staff, infrastructure or non-identifiable contextual evidence instead.
+- Abstract editorial art is reserved for abstract concepts such as "AI does not create value alone", not for a factual case that has a concrete visual anchor.
+
+Generic corporate executive + dark overlay is not an acceptable substitute for a real case when contextual visuals are available.
+
+## Public-figure continuity and endorsement safety
+
+When a carousel/story centers on a real public figure:
+- keep the same person throughout the editorial part;
+- different angles/crops are allowed, identity swaps are not;
+- do not fabricate quotes;
+- distinguish verified quotes from UGI interpretation;
+- final commercial CTA must not use the public figure as if endorsing UGI;
+- penultimate slide may transition to a neutral/environmental visual;
+- final CTA is UGI-only.
+
+## Hook rules
+
+Prefer conflict, contrast, consequence or curiosity over topic labels.
+
+Weak:
+- "Como melhorar sua liderança"
+
+Strong:
+- "Controle demais não escala."
+- "O líder muda. O sistema precisa ficar."
+- "14 minutos mudaram o desfecho."
+- "Ter IA não significa gerar resultado."
+
+The first screen/frame should create a reason to continue before explaining everything.
+
+## Storytelling structure for carousels
+
+Default 7-slide architecture when using a real person/company/case:
+1. **real visual + hook**;
+2. **what happened / context**;
+3. **why it matters**;
+4. **management mechanism / decision**;
+5. **practical lesson**;
+6. **synthesis / question / transition**, reducing dependence on the public figure image;
+7. **UGI-only CTA**, with no implied endorsement.
+
+Do not force all carousels into the same graphic template; preserve narrative logic while varying visual composition.
+
+## Story standard
+
+Stories are not miniature corporate slides. They are attention and navigation levers.
+
+Preferred pattern:
+`visual fact → strong number/hook → one management insight → one question/action`
+
+Requirements:
+- strong contextual visual;
+- one main message per Story;
+- high contrast and premium modern design;
+- minimal copy;
+- human or operational context whenever appropriate;
+- music modern and coherent with the topic when audio is used;
+- different music across Stories unless there is a deliberate narrative sequence;
+- no chiptune/game/ringtone feeling;
+- CTA can drive to profile, feed piece or paid material when contextually earned.
+
+## Static post standard
+
+A static post must earn its place with one of:
+- a striking verified fact;
+- a powerful dilemma;
+- a visual quote with verified attribution;
+- a memorable management framework.
+
+One dominant message. Avoid "motivational wallpaper" and generic AI imagery.
+
+## Commercial bridge
+
+Commercial sequence:
+`interest → understanding → need → practical next step → UGI material`
+
+Never make a public figure, company or tragedy appear to endorse UGI products.
+
+The final UGI CTA should explain the value of the material, not only say "link in bio".
+
+## Content diversification
+
+Daily editorial should rotate across:
+- world/business news;
+- management curiosities;
+- leadership;
+- AI + management;
+- crisis/governance;
+- strategy/business models;
+- people/culture;
+- practical frameworks;
+- UGI materials.
+
+Avoid becoming an "AI-only" page or a "CEO quote" page.
+
+## Non-copy benchmark rule
+
+Benchmark references are used to extract:
+- attention mechanics;
+- narrative sequencing;
+- visual hierarchy;
+- authority usage;
+- conversion architecture.
+
+UGI must preserve original copy, original design language and independent editorial judgment.
