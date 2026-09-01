@@ -2,31 +2,11 @@
   "project": "UGI",
   "component": "ANTI-REPEAT-GATE",
   "windowDays": 15,
-  "checkedAt": "2026-09-01T04:14:58.108166+00:00",
-  "queuedCount": 2,
+  "checkedAt": "2026-09-01T05:14:32.074315+00:00",
+  "queuedCount": 1,
   "blocked": 0,
   "state": "PASS",
   "results": [
-    {
-      "contentId": "UGI-20260831-YT-NVIDIA-INFRA",
-      "command": "control-plane/commands/ugi-20260831-youtube-nvidia-ai-infrastructure.json",
-      "windowDays": 15,
-      "decision": "ANTI_REPEAT_PASS",
-      "reasons": [],
-      "closest": {
-        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1510",
-        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1510.json",
-        "textSimilarity": 0.0124,
-        "hookSimilarity": 0.2218,
-        "visualSimilarity": 0.0,
-        "combinedSimilarity": 0.0623
-      },
-      "signature": {
-        "exactHash": "8220332097d8324c8b35b27cf0d8ee858bf5e845438c8f4bef50f623f4dfdfe7",
-        "renderId": "ugi-20260831-yt-nvidia-infra",
-        "draftId": ""
-      }
-    },
     {
       "contentId": "UGI-20260831-TT-AI-CYBER",
       "command": "control-plane/commands/ugi-20260831-tiktok-ai-cyber.json",
