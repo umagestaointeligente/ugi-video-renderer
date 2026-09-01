@@ -2,30 +2,9 @@
   "project": "UGI",
   "component": "ANTI-REPEAT-GATE",
   "windowDays": 15,
-  "checkedAt": "2026-09-01T05:14:32.074315+00:00",
-  "queuedCount": 1,
+  "checkedAt": "2026-09-01T05:42:18.335289+00:00",
+  "queuedCount": 0,
   "blocked": 0,
   "state": "PASS",
-  "results": [
-    {
-      "contentId": "UGI-20260831-TT-AI-CYBER",
-      "command": "control-plane/commands/ugi-20260831-tiktok-ai-cyber.json",
-      "windowDays": 15,
-      "decision": "ANTI_REPEAT_PASS",
-      "reasons": [],
-      "closest": {
-        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1450",
-        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1450.json",
-        "textSimilarity": 0.0226,
-        "hookSimilarity": 0.1621,
-        "visualSimilarity": 0.0,
-        "combinedSimilarity": 0.0529
-      },
-      "signature": {
-        "exactHash": "35bd6f260d5ca941575705996d8c69020a40c389e0e3782dbdeb944fb6b0620a",
-        "renderId": "ugi-20260831-tt-ai-cyber",
-        "draftId": ""
-      }
-    }
-  ]
+  "results": []
 }
