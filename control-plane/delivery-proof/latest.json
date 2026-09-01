@@ -1,34 +1,15 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T10:58:04.827433+00:00",
+  "checkedAt": "2026-09-01T11:13:28.460730+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 6,
+  "late": 4,
   "failed": 0,
   "state": "ALERT",
   "results": [
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
-      "contentId": "UGI-20260830-TT-02-AI-JOBS",
-      "platform": "tiktok",
-      "kind": "video",
-      "draftId": "ugi-20260830145108-ea64dcf6660e",
-      "bufferPostId": null,
-      "dueAt": "2026-08-30T23:00:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
     {
       "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
       "contentId": "UGI-20260830-YT-02-MODEL-HARNESS",
@@ -38,25 +19,6 @@
       "bufferPostId": null,
       "dueAt": "2026-08-30T23:30:00+00:00",
       "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
-    {
-      "receipt": "control-plane/r45/receipts/pilot-latest.json",
-      "contentId": "UGI-20260830-IG-CAROUSEL-01-AUTOMATE-DECISION",
-      "platform": "instagram",
-      "kind": "static",
-      "draftId": "6598b813-33d7-41a3-be15-01d5813fd9e4",
-      "bufferPostId": null,
-      "dueAt": "2026-08-30T23:00:00+00:00",
-      "readbackHttp": 500,
       "bufferStatus": null,
       "status": null,
       "sentAt": null,
