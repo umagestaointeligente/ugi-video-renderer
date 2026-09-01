@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.4",
-  "updated_at": "2026-08-31T04:10:00Z",
+  "schema_version": "1.5",
+  "updated_at": "2026-09-01T12:00:00Z",
   "policy": {
     "zero_incremental_cost_preferred": true,
     "no_private_key_generation": true,
@@ -13,6 +13,18 @@
     "make_user_facing_links_prohibited": true,
     "make_must_never_be_required_for_user_authorization": true,
     "preferred_user_auth_surface": "direct_provider_dashboard_or_chatgpt_work_cloud_browser"
+  },
+  "routing": {
+    "primary_human_brl_receive_rail": "asaas_direct",
+    "new_greenfield_human_products_use_verified_primary_rail": true,
+    "marketplace_native_rails_do_not_block_direct_sales": true,
+    "direct_sales_fallback_when_marketplace_rail_is_blocked": "asaas_direct",
+    "fallback_scope": "direct_human_sales_only",
+    "authoritative_payment_event": "CHECKOUT_PAID",
+    "unpaid_checkout_is_revenue": false,
+    "unpaid_checkout_releases_fulfillment": false,
+    "real_payment_acceptance_test_required": false,
+    "reason": "Asaas is the only currently verified live BRL receive rail with real checkout E2E. External marketplace KYC/auth/payout setup may continue in parallel but must not block direct controlled-product sales."
   },
   "providers": [
     {
@@ -29,7 +41,7 @@
       "human_financial_onboarding_blocker": false,
       "custody_or_private_key_blocker": false,
       "blocker": null,
-      "evidence": "deploy run 33352296194; real checkout E2E run 33353970938; artifact 9744522371; checkout HTTP 201; no payment performed"
+      "evidence": "deploy run 33352296194; real checkout E2E run 33353970938; artifact 9744522371; checkout HTTP 201; checkout host www.asaas.com; no payment performed"
     },
     {
       "id": "x402_direct_base_usdc",
