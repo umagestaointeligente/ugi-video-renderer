@@ -1,0 +1,94 @@
+name: Orbit Sanitized Public Render
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_name:
+        description: Non-sensitive job identifier
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orbit-sanitized-${{ inputs.job_name }}
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Validate private inputs
+        shell: bash
+        env:
+          BUNDLE_URL: ${{ secrets.ORBIT_BUNDLE_ENDPOINT }}
+          BUNDLE_TOKEN: ${{ secrets.ORBIT_BUNDLE_TOKEN }}
+          BUNDLE_SHA256: ${{ secrets.ORBIT_BUNDLE_SHA256 }}
+          AGE_RECIPIENT: ${{ secrets.ORBIT_OUTPUT_AGE_RECIPIENT }}
+        run: |
+          set -euo pipefail
+          [[ "$BUNDLE_URL" == https://* ]]
+          test -n "$BUNDLE_TOKEN"
+          [[ "$BUNDLE_SHA256" =~ ^[a-fA-F0-9]{64}$ ]]
+          [[ "$AGE_RECIPIENT" == age1* ]]
+
+      - name: Install media tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg age
+
+      - name: Download and verify private bundle
+        shell: bash
+        env:
+          BUNDLE_URL: ${{ secrets.ORBIT_BUNDLE_ENDPOINT }}
+          BUNDLE_TOKEN: ${{ secrets.ORBIT_BUNDLE_TOKEN }}
+          BUNDLE_SHA256: ${{ secrets.ORBIT_BUNDLE_SHA256 }}
+        run: |
+          set -euo pipefail
+          mkdir -p input output work
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 3 --retry-all-errors \
+            --header "Authorization: Bearer $BUNDLE_TOKEN" \
+            --output work/input.tar.gz "$BUNDLE_URL"
+          printf '%s  %s\n' "$BUNDLE_SHA256" work/input.tar.gz | sha256sum --check --strict
+          tar --extract --gzip --file work/input.tar.gz --directory input \
+            --no-same-owner --no-same-permissions
+
+      - name: Render and inspect
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f input/render.sh
+          chmod +x input/render.sh
+          (cd input && ./render.sh ../output/final.mp4)
+          test -s output/final.mp4
+          ffprobe -v error -show_entries format=duration,size \
+            -of default=noprint_wrappers=1 output/final.mp4
+
+      - name: Encrypt result
+        shell: bash
+        env:
+          AGE_RECIPIENT: ${{ secrets.ORBIT_OUTPUT_AGE_RECIPIENT }}
+        run: |
+          set -euo pipefail
+          age --recipient "$AGE_RECIPIENT" \
+            --output output/final.mp4.age output/final.mp4
+          rm -f output/final.mp4
+
+      - name: Upload encrypted artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.job_name }}
+          path: output/final.mp4.age
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
+      - name: Remove temporary material
+        if: always()
+        shell: bash
+        run: rm -rf input output work
