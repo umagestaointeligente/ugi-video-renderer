@@ -1,34 +1,15 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T09:10:59.142936+00:00",
+  "checkedAt": "2026-09-01T09:30:35.565430+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 9,
+  "late": 8,
   "failed": 0,
   "state": "ALERT",
   "results": [
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
-      "contentId": "UGI-20260830-IG-01-CISCO-AGENTS",
-      "platform": "instagram",
-      "kind": "video",
-      "draftId": "ugi-20260830144941-8d917de020f5",
-      "bufferPostId": null,
-      "dueAt": "2026-08-30T21:30:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
     {
       "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
       "contentId": "UGI-20260830-TT-02-AI-JOBS",
