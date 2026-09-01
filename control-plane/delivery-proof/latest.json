@@ -1,12 +1,12 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T08:09:10.336886+00:00",
+  "checkedAt": "2026-09-01T08:26:56.180670+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 12,
+  "late": 11,
   "failed": 0,
   "state": "ALERT",
   "results": [
@@ -94,25 +94,6 @@
       "draftId": "6598b813-33d7-41a3-be15-01d5813fd9e4",
       "bufferPostId": null,
       "dueAt": "2026-08-30T23:00:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
-    {
-      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
-      "contentId": "UGI-20260830-IG-STORY-GROWTH-01-TRUST",
-      "platform": "instagram",
-      "kind": "r453",
-      "bufferPostId": "6a948831d58664eabd7be158",
-      "draftId": "09c6fb18-340e-4eac-9587-5371568b2674",
-      "dueAt": "2026-08-30T20:15:00+00:00",
       "readbackHttp": 500,
       "bufferStatus": null,
       "status": null,
