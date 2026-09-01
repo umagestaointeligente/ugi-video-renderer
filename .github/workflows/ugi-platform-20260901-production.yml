@@ -1,0 +1,59 @@
+name: UGI Platform Videos 2026-09-01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-platform-20260901-production.yml'
+      - 'scripts/ugi_platform_videos_20260901.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-platform-20260901-production
+  cancel-in-progress: false
+
+jobs:
+  render-and-persist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install AV and Kokoro runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng fonts-dejavu-core
+          python -m pip install --quiet 'kokoro>=0.9.4' soundfile numpy requests
+      - name: Lock PT-BR male voice for this production
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's/voice="pf_dora"/voice="pm_alex"/' render-reel.py
+          grep -n 'voice="pm_alex"' render-reel.py
+      - name: Render four platform-specific videos
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/ugi_platform_videos_20260901.py
+      - name: Persist masters and manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-platform-production-bot'
+          git config user.email 'ugi-platform-production@users.noreply.github.com'
+          git add control-plane/platform-20260901/assets
+          git commit -m 'media: persist UGI platform masters for 2026-09-01'
+          git pull --rebase origin main
+          git push origin HEAD:main
