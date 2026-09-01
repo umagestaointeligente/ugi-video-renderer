@@ -49,6 +49,66 @@ Evitar por padrão:
 - mesmo template todos os dias;
 - CTA genérico de seguir/link na bio sem explicar o valor.
 
+## Story Standard V2 — effective 2026-09-01
+
+Stories passam a operar como **gatilhos de atenção e navegação**, não como slides corporativos estáticos.
+
+Estrutura preferencial:
+
+`FATO/IMAGEM REAL → GANCHO/NÚMERO → LEITURA DE GESTÃO → PERGUNTA/CTA`
+
+Regras obrigatórias:
+- fato real exige visual relacionado ao fato;
+- pessoa real exige a pessoa correta;
+- empresa real exige contexto visual reconhecível da empresa;
+- evento real deve mostrar local, consequência, infraestrutura, operação, objeto ou evidência contextual relacionada;
+- quando houver menores em evento sensível, evitar mostrar crianças identificáveis ou em sofrimento; usar escola/local, danos, equipe adulta, resgate, infraestrutura ou aftermath;
+- conceito abstrato pode usar arte editorial gerada, preferencialmente com elemento humano;
+- um único insight principal por Story;
+- hook curto e visualmente dominante;
+- design premium, moderno, com forte hierarquia e contraste;
+- sem ghost text, lorem, idiomas aleatórios ou ruído decorativo;
+- música moderna e coerente; evitar chiptune, ringtone, game-like e trilha morta;
+- músicas diferentes entre Stories, salvo sequência deliberada;
+- CTA deve levar a perfil, feed, carrossel ou material UGI quando a ponte tiver sido conquistada.
+
+Referência visual de direção aprovada: cena/contexto real ocupando parte relevante do frame + painel editorial UGI + número/fato de forte impacto + pergunta de gestão.
+
+## Carousel Standard V2 — real story / leader / company
+
+Quando o carrossel for ancorado em pessoa, empresa ou caso real:
+
+1. **Slide 1** — foto/contexto real + hook forte.
+2. **Slide 2** — contexto: o que aconteceu.
+3. **Slide 3** — por que importa.
+4. **Slide 4** — mecanismo/decisão de gestão.
+5. **Slide 5** — ensinamento prático.
+6. **Slide 6** — síntese/pergunta/transição; evitar depender novamente de retrato frontal da figura pública.
+7. **Slide 7** — CTA 100% UGI, sem figura pública e sem aparência de endosso.
+
+Hard gates de figura pública:
+- mesma pessoa ao longo da parte editorial;
+- variar enquadramento é permitido; trocar identidade não;
+- não fabricar citação;
+- separar claramente citação verificada de interpretação UGI;
+- CTA comercial nunca pode sugerir que a pessoa recomenda ou endossa a UGI.
+
+## Carousel audio rule
+
+Não usar a técnica "primeiro card em vídeo com música + demais cards estáticos" como substituto de áudio contínuo: quando o usuário avança, a música deixa de acompanhar o carrossel e a experiência fica quebrada.
+
+Enquanto a rota automática não suportar música nativa contínua em carrossel, preferir carrossel estático silencioso e editorialmente forte.
+
+## Static Post Standard V2
+
+Post estático deve ter uma única razão forte para parar o feed:
+- fato/número verificado;
+- dilema executivo;
+- citação com atribuição confirmada;
+- framework visual memorável.
+
+Evitar arte motivacional genérica e imagem de IA sem relação concreta com o tema.
+
 ## Frequência do sprint de 14 dias
 
 Stories: alvo inicial de 4/dia; mínimo 2; máximo 6 durante o teste.
@@ -111,6 +171,14 @@ Fluxo obrigatório:
 `manifest → geração → asset real → QA de dimensões/integridade → aprovação → Buffer → readback → receipt`.
 
 Sem receipt real, não declarar agendamento concluído.
+
+Além do QA técnico, antes da publicação o asset deve passar por:
+- `VISUAL_CONTEXT_PASS`: visual realmente relacionado ao assunto;
+- `HOOK_PASS`: primeira tela/frame cria motivo para continuar;
+- `IDENTITY_CONTINUITY_PASS`: figura pública/empresa mantida corretamente;
+- `ENDORSEMENT_SAFETY_PASS`: CTA UGI sem falso endosso;
+- `TEXT_CLEAN_PASS`: sem gibberish, ghost text ou idioma aleatório;
+- `MUSIC_FIT_PASS` quando houver áudio.
 
 ## Métricas do sprint
 
