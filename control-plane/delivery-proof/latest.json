@@ -1,12 +1,12 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T10:48:24.610710+00:00",
+  "checkedAt": "2026-09-01T10:58:04.827433+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 7,
+  "late": 6,
   "failed": 0,
   "state": "ALERT",
   "results": [
@@ -94,25 +94,6 @@
       "bufferPostId": "6a94886bfd31f7e50b776037",
       "draftId": "69d9a7e6-c8ab-45ea-a03c-2a0fd16bb32d",
       "dueAt": "2026-08-31T00:50:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
-    {
-      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
-      "contentId": "UGI-20260830-IG-CAROUSEL-TRUST-HDFC",
-      "platform": "instagram",
-      "kind": "r453",
-      "bufferPostId": "6a948b466bbc8c9a02f5b914",
-      "draftId": "cf51ce9a-6353-40f5-b9c2-47bc03829816",
-      "dueAt": "2026-08-30T22:50:00+00:00",
       "readbackHttp": 500,
       "bufferStatus": null,
       "status": null,
