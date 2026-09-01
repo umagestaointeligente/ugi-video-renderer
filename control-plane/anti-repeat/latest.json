@@ -2,31 +2,11 @@
   "project": "UGI",
   "component": "ANTI-REPEAT-GATE",
   "windowDays": 15,
-  "checkedAt": "2026-09-01T02:42:28.807207+00:00",
-  "queuedCount": 3,
+  "checkedAt": "2026-09-01T04:14:58.108166+00:00",
+  "queuedCount": 2,
   "blocked": 0,
   "state": "PASS",
   "results": [
-    {
-      "contentId": "UGI-20260831-IG-REEL-VW-CHANGE",
-      "command": "control-plane/commands/ugi-20260831-instagram-volkswagen-change.json",
-      "windowDays": 15,
-      "decision": "ANTI_REPEAT_PASS",
-      "reasons": [],
-      "closest": {
-        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
-        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
-        "textSimilarity": 0.0328,
-        "hookSimilarity": 0.2342,
-        "visualSimilarity": 0.0,
-        "combinedSimilarity": 0.0766
-      },
-      "signature": {
-        "exactHash": "a8bff96ad77a673b6545f58d2603984beb9716ed281e4fa84dd3fbb1bb6e9b14",
-        "renderId": "ugi-20260831-ig-volkswagen-change",
-        "draftId": ""
-      }
-    },
     {
       "contentId": "UGI-20260831-YT-NVIDIA-INFRA",
       "command": "control-plane/commands/ugi-20260831-youtube-nvidia-ai-infrastructure.json",
