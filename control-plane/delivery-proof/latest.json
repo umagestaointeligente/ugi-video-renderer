@@ -1,34 +1,15 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T07:51:05.332454+00:00",
+  "checkedAt": "2026-09-01T08:09:10.336886+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 13,
+  "late": 12,
   "failed": 0,
   "state": "ALERT",
   "results": [
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
-      "contentId": "UGI-20260830-YT-01-RESULT-HOURS",
-      "platform": "youtube",
-      "kind": "video",
-      "draftId": "ugi-20260830145151-f8332cb6e6fd",
-      "bufferPostId": null,
-      "dueAt": "2026-08-30T20:00:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
     {
       "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
       "contentId": "UGI-20260830-IG-01-CISCO-AGENTS",
