@@ -1,53 +1,15 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-01T11:29:01.570082+00:00",
+  "checkedAt": "2026-09-01T11:42:12.432995+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
   "pendingWithinGrace": 0,
-  "late": 4,
+  "late": 2,
   "failed": 0,
   "state": "ALERT",
   "results": [
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
-      "contentId": "UGI-20260830-YT-02-MODEL-HARNESS",
-      "platform": "youtube",
-      "kind": "video",
-      "draftId": "ugi-20260830145233-1317dac9995f",
-      "bufferPostId": null,
-      "dueAt": "2026-08-30T23:30:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
-    {
-      "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
-      "contentId": "UGI-20260830-IG-STORY-GROWTH-04-EBIT",
-      "platform": "instagram",
-      "kind": "r453",
-      "bufferPostId": "6a94885ffd31f7e50b775fbe",
-      "draftId": "c9bb3eb6-2cdb-4fe7-bfaf-253f30665a8f",
-      "dueAt": "2026-08-30T23:35:00+00:00",
-      "readbackHttp": 500,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
-      "error": null,
-      "state": "LATE",
-      "externalProof": {
-        "attempted": false
-      }
-    },
     {
       "receipt": "control-plane/instagram-r45-3/receipts/ugi-20260830-evening-growth.json",
       "contentId": "UGI-20260830-IG-STORY-GROWTH-05-COMMERCE",
