@@ -38,48 +38,40 @@
         "visual_intent": "Brazilian creator or analyst looking at a fast-moving gaming trend dashboard, generic interface, no GTA copyrighted imagery",
         "pexels_query": "gaming content creator analytics computer",
         "overlay": {"instagram":"GTA VI DOMINA A CONVERSA","tiktok":"GTA VI DOMINA A CONVERSA","youtube":"GTA VI DOMINA A CONVERSA"},
-        "support": {"instagram":"3 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI","tiktok":"3 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI","youtube":"3 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI"},
-        "narration": {"instagram":"Nesta manhã, três dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.","tiktok":"Nesta manhã, três dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.","youtube":"Nesta manhã, três dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo."}
+        "support": {"instagram":"2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI","tiktok":"2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI","youtube":"2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI"},
+        "narration": {"instagram":"Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.","tiktok":"Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.","youtube":"Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo."}
       },
       {
         "role": "pain",
         "visual_intent": "generic modern game console and controller with cinematic screen glow, no identifiable copyrighted game",
         "pexels_query": "modern game console controller television",
         "overlay": {"instagram":"1 CONTEÚDO FORTE. MUITAS CONVERSAS.","tiktok":"1 CONTEÚDO FORTE. MUITAS CONVERSAS.","youtube":"1 CONTEÚDO FORTE. MUITAS CONVERSAS."},
-        "support": {"instagram":"Rockstar publicou um Extended Look em 27/08","tiktok":"Rockstar publicou um Extended Look em 27/08","youtube":"Rockstar publicou um Extended Look em 27/08"},
-        "narration": {"instagram":"No dia vinte e sete de agosto, a Rockstar publicou um Extended Look de cerca de vinte e sete minutos, capturado no PlayStation 5.","tiktok":"No dia vinte e sete de agosto, a Rockstar publicou um Extended Look de cerca de vinte e sete minutos, capturado no PlayStation 5.","youtube":"No dia vinte e sete de agosto, a Rockstar publicou um Extended Look de cerca de vinte e sete minutos, capturado no PlayStation 5."}
+        "support": {"instagram":"Um reveal concentrado vira objeto de análise","tiktok":"Um reveal concentrado vira objeto de análise","youtube":"Um reveal concentrado vira objeto de análise"},
+        "narration": {"instagram":"A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas.","tiktok":"A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas.","youtube":"A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas."}
       },
       {
         "role": "consequence",
         "visual_intent": "multiple generic creators recording reactions and analysis in separate setups, no copyrighted gameplay visible",
         "pexels_query": "content creators reaction video studio gaming",
-        "overlay": {"instagram":"O ANÚNCIO NÃO ENCERROU O ASSUNTO","tiktok":"O ANÚNCIO NÃO ENCERROU O ASSUNTO","youtube":"O ANÚNCIO NÃO ENCERROU O ASSUNTO"},
-        "support": {"instagram":"Análises, reações e cortes ampliaram a conversa","tiktok":"Análises, reações e cortes ampliaram a conversa","youtube":"Análises, reações e cortes ampliaram a conversa"},
-        "narration": {"instagram":"O ponto não é só o tamanho do vídeo. Ele virou matéria-prima para análises, reações e novas conversas.","tiktok":"O ponto não é só o tamanho do vídeo. Ele virou matéria-prima para análises, reações e novas conversas.","youtube":"O ponto não é só o tamanho do vídeo. Ele virou matéria-prima para análises, reações e novas conversas."}
+        "overlay": {"instagram":"O ANÚNCIO VIROU MATÉRIA-PRIMA","tiktok":"O ANÚNCIO VIROU MATÉRIA-PRIMA","youtube":"O ANÚNCIO VIROU MATÉRIA-PRIMA"},
+        "support": {"instagram":"Análises • reações • redistribuição","tiktok":"Análises • reações • redistribuição","youtube":"Análises • reações • redistribuição"},
+        "narration": {"instagram":"Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento.","tiktok":"Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento.","youtube":"Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento."}
       },
       {
         "role": "turn",
         "visual_intent": "launch planning wall, editorial calendar and audience touchpoints, business strategy context",
         "pexels_query": "marketing launch planning team calendar strategy",
-        "overlay": {"instagram":"LANÇAMENTO FORTE CRIA MATÉRIA-PRIMA","tiktok":"LANÇAMENTO FORTE CRIA MATÉRIA-PRIMA","youtube":"LANÇAMENTO FORTE CRIA MATÉRIA-PRIMA"},
-        "support": {"instagram":"Fato forte → interpretação → redistribuição","tiktok":"Fato forte → interpretação → redistribuição","youtube":"Fato forte → interpretação → redistribuição"},
-        "narration": {"instagram":"Isso é arquitetura de lançamento: você concentra atenção em um fato forte e deixa espaço para o mercado continuar distribuindo a história.","tiktok":"Isso é arquitetura de lançamento: você concentra atenção em um fato forte e deixa espaço para o mercado continuar distribuindo a história.","youtube":"Isso é arquitetura de lançamento: você concentra atenção em um fato forte e deixa espaço para o mercado continuar distribuindo a história."}
+        "overlay": {"instagram":"DESENHE A ARQUITETURA DA CONVERSA","tiktok":"DESENHE A ARQUITETURA DA CONVERSA","youtube":"DESENHE A ARQUITETURA DA CONVERSA"},
+        "support": {"instagram":"Fato forte → interpretação → amplificação","tiktok":"Fato forte → interpretação → amplificação","youtube":"Fato forte → interpretação → amplificação"},
+        "narration": {"instagram":"A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa.","tiktok":"A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa.","youtube":"A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa."}
       },
       {
         "role": "result",
         "visual_intent": "management team mapping a launch funnel and communication moments on a board",
         "pexels_query": "business team campaign planning whiteboard",
-        "overlay": {"instagram":"O QUE SUA EQUIPE DEVE DESENHAR?","tiktok":"O QUE SUA EQUIPE DEVE DESENHAR?","youtube":"O QUE SUA EQUIPE DEVE DESENHAR?"},
-        "support": {"instagram":"Fato forte • material analisável • janelas de amplificação","tiktok":"Fato forte • material analisável • janelas de amplificação","youtube":"Fato forte • material analisável • janelas de amplificação"},
-        "narration": {"instagram":"Na gestão, planeje três coisas: um fato forte, material que dê assunto e janelas para amplificar a reação.","tiktok":"Na gestão, planeje três coisas: um fato forte, material que dê assunto e janelas para amplificar a reação.","youtube":"Na gestão, planeje três coisas: um fato forte, material que dê assunto e janelas para amplificar a reação."}
-      },
-      {
-        "role": "result",
-        "visual_intent": "generic countdown and product launch calendar with audience anticipation, no game branding",
-        "pexels_query": "product launch countdown calendar anticipation",
-        "overlay": {"instagram":"A ATENÇÃO JÁ COMEÇOU","tiktok":"A ATENÇÃO JÁ COMEÇOU","youtube":"A ATENÇÃO JÁ COMEÇOU"},
-        "support": {"instagram":"GTA VI: lançamento previsto para 19/11/2026","tiktok":"GTA VI: lançamento previsto para 19/11/2026","youtube":"GTA VI: lançamento previsto para 19/11/2026"},
-        "narration": {"instagram":"A Rockstar mantém GTA VI para dezenove de novembro de dois mil e vinte e seis. A disputa por atenção, porém, já começou.","tiktok":"A Rockstar mantém GTA VI para dezenove de novembro de dois mil e vinte e seis. A disputa por atenção, porém, já começou.","youtube":"A Rockstar mantém GTA VI para dezenove de novembro de dois mil e vinte e seis. A disputa por atenção, porém, já começou."}
+        "overlay": {"instagram":"3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO","tiktok":"3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO","youtube":"3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO"},
+        "support": {"instagram":"Fato forte • material analisável • amplificação","tiktok":"Fato forte • material analisável • amplificação","youtube":"Fato forte • material analisável • amplificação"},
+        "narration": {"instagram":"Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar.","tiktok":"Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar.","youtube":"Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar."}
       },
       {
         "role": "cta",
