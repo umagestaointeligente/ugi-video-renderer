@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T12:37:37.116225+00:00",
+  "updatedAt": "2026-09-02T13:16:17.265187+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -174,7 +174,33 @@
         "githubRunId": "33629792243",
         "r2Etag": "2c1b3145c6fd68207c35a87693c61d61",
         "uploadedAt": "2026-09-02T12:33:38.850Z",
-        "approvalStatus": "pending_approval"
+        "approvalStatus": "approved",
+        "approvalDecisionAt": "2026-09-02T12:58:51.500Z",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a981d8e73b9d0bf992b233d",
+          "channelId": "6a789721b2d9d5774345839d",
+          "channelService": "tiktok",
+          "channelSource": "BUFFER_CHANNEL_TIKTOK",
+          "mode": "customScheduled",
+          "dueAt": "2026-09-02T13:30:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-09-02T12:58:53.025Z",
+          "updatedAt": "2026-09-02T12:58:55.791Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a34cb0620ede56cd-IAD",
+            "rateLimitRemaining": "1616",
+            "graphqlErrors": [],
+            "postError": null
+          }
+        }
       },
       "youtube": {
         "platform": "youtube",
@@ -713,6 +739,19 @@
       }
     ],
     "finalCta": "Quando uma inovação deve deixar de ser premium e virar escala?",
-    "updatedAt": "2026-09-02T12:33:46.484Z"
+    "updatedAt": "2026-09-02T12:58:56.460Z",
+    "approvalSummary": {
+      "workflowStatus": "partially_approved",
+      "approvedCount": 1,
+      "rejectedCount": 0,
+      "pendingCount": 2,
+      "platformStates": {
+        "instagram": "pending_approval",
+        "tiktok": "approved",
+        "youtube": "pending_approval"
+      },
+      "allReviewed": false
+    },
+    "approvalWorkflowStatus": "partially_approved"
   }
 }

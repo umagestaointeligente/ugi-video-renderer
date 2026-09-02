@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260902125736-7e4f49ba5688",
   "approvalDraftId": "ugi-20260902124135-f68ed802eb40",
   "existingDraftReused": true,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T12:57:52.632701+00:00"
+  "updatedAt": "2026-09-02T13:16:16.996762+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260902125736-7e4f49ba5688",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33632900581",
+    "githubRunNumber": 198,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-02T12:57:48Z",
+    "githubRunUpdatedAt": "2026-09-02T12:57:48Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33632900581",
+    "githubRunDisplayTitle": "UGI ugi-20260902125736-7e4f49ba5688",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "b800e0c34e722f577ab3fd27ebabc1b497d0e470",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "IA já está mudando fábricas e cadeias de suprimentos",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902125736-7e4f49ba5688/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902125736-7e4f49ba5688%2Finstagram.mp4",
+        "videoBytes": 21462743,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33632900581",
+        "r2Etag": "5e8b9d8372051283c5dc96ca9f4ba05e",
+        "uploadedAt": "2026-09-02T13:04:40.933Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902125736-7e4f49ba5688/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902125736-7e4f49ba5688%2Ftiktok.mp4",
+        "videoBytes": 16740739,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33632900581",
+        "r2Etag": "9a96551b8003ef15cf4cc3145586ebed",
+        "uploadedAt": "2026-09-02T13:04:45.129Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902125736-7e4f49ba5688/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902125736-7e4f49ba5688%2Fyoutube.mp4",
+        "videoBytes": 24041498,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33632900581",
+        "r2Etag": "64cdc004c991fd17ec93f56423037a2f",
+        "uploadedAt": "2026-09-02T13:04:48.158Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902125736-7e4f49ba5688%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260902125736-7e4f49ba5688/instagram.mp4",
+    "approvalDraftId": "ugi-20260902124135-f68ed802eb40",
+    "existingDraftReused": true,
+    "contentId": "UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO",
+    "experimentId": "UGI-20260902-IG-HARDWARE-FALLBACK",
+    "variant": "GENERAL_VIDEO_FALLBACK",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": 0
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-02T13:04:51.123Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "8fb28cbaa3fc6d0ea824babe4e87a630cf34fa7acd66bff32683d65bb7a231d8",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-02T12:57:48.788Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260902125736-7e4f49ba5688",
+    "note": "O GitHub aceitou o job e o render foi associado ao draft editorial existente, sem criar duplicidade.",
+    "videoBytes": 21462743,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-02T13:04:48.158Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260902125736-7e4f49ba5688",
+      "githubRunId": "33632900581",
+      "contentId": "UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO",
+      "experimentId": "UGI-20260902-IG-HARDWARE-FALLBACK",
+      "variant": "GENERAL_VIDEO_FALLBACK",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "modern semiconductor or electronics manufacturing line with real machinery",
+          "pexels_query": "semiconductor electronics manufacturing factory",
+          "overlay": {
+            "instagram": "A IA JÁ ESTÁ MEXENDO EM FÁBRICAS",
+            "tiktok": "A IA JÁ ESTÁ MEXENDO EM FÁBRICAS",
+            "youtube": "A IA JÁ ESTÁ MEXENDO EM FÁBRICAS"
+          },
+          "support": {
+            "instagram": "Não só em escritórios",
+            "tiktok": "Não só em escritórios",
+            "youtube": "Não só em escritórios"
+          },
+          "narration": {
+            "instagram": "A IA já está mexendo em fábricas, fornecedores e capacidade produtiva — não só em escritórios.",
+            "tiktok": "A IA já está mexendo em fábricas, fornecedores e capacidade produtiva — não só em escritórios.",
+            "youtube": "A IA já está mexendo em fábricas, fornecedores e capacidade produtiva — não só em escritórios."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "high-demand electronics components and production capacity pressure",
+          "pexels_query": "electronics components factory production capacity",
+          "overlay": {
+            "instagram": "DEMANDA DIGITAL. GARGALO FÍSICO.",
+            "tiktok": "DEMANDA DIGITAL. GARGALO FÍSICO.",
+            "youtube": "DEMANDA DIGITAL. GARGALO FÍSICO."
+          },
+          "support": {
+            "instagram": "Hardware precisa ser produzido e entregue",
+            "tiktok": "Hardware precisa ser produzido e entregue",
+            "youtube": "Hardware precisa ser produzido e entregue"
+          },
+          "narration": {
+            "instagram": "Quando cresce a demanda por chips, servidores e hardware, o efeito aparece no mundo físico: capacidade, componentes, energia, logística e prazo.",
+            "tiktok": "Quando cresce a demanda por chips, servidores e hardware, o efeito aparece no mundo físico: capacidade, componentes, energia, logística e prazo.",
+            "youtube": "Quando cresce a demanda por chips, servidores e hardware, o efeito aparece no mundo físico: capacidade, componentes, energia, logística e prazo."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "supply chain warehouse components and procurement planning",
+          "pexels_query": "electronics supply chain warehouse procurement",
+          "overlay": {
+            "instagram": "FORNECEDOR VIRA DECISÃO ESTRATÉGICA",
+            "tiktok": "FORNECEDOR VIRA DECISÃO ESTRATÉGICA",
+            "youtube": "FORNECEDOR VIRA DECISÃO ESTRATÉGICA"
+          },
+          "support": {
+            "instagram": "Capacidade • prazo • risco • custo",
+            "tiktok": "Capacidade • prazo • risco • custo",
+            "youtube": "Capacidade • prazo • risco • custo"
+          },
+          "narration": {
+            "instagram": "Isso muda a gestão de fornecedores. Não basta preço: entram capacidade disponível, lead time, concentração de risco e continuidade de abastecimento.",
+            "tiktok": "Isso muda a gestão de fornecedores. Não basta preço: entram capacidade disponível, lead time, concentração de risco e continuidade de abastecimento.",
+            "youtube": "Isso muda a gestão de fornecedores. Não basta preço: entram capacidade disponível, lead time, concentração de risco e continuidade de abastecimento."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "industrial managers reviewing capex and capacity plan",
+          "pexels_query": "industrial managers capacity planning investment factory",
+          "overlay": {
+            "instagram": "IA TAMBÉM É CAPEX E SKILLS",
+            "tiktok": "IA TAMBÉM É CAPEX E SKILLS",
+            "youtube": "IA TAMBÉM É CAPEX E SKILLS"
+          },
+          "support": {
+            "instagram": "Planeje além do software",
+            "tiktok": "Planeje além do software",
+            "youtube": "Planeje além do software"
+          },
+          "narration": {
+            "instagram": "Por isso, estratégia de IA precisa conversar com capex, competências, contratos, capacidade e planejamento da cadeia — não ficar isolada no orçamento de software.",
+            "tiktok": "Por isso, estratégia de IA precisa conversar com capex, competências, contratos, capacidade e planejamento da cadeia — não ficar isolada no orçamento de software.",
+            "youtube": "Por isso, estratégia de IA precisa conversar com capex, competências, contratos, capacidade e planejamento da cadeia — não ficar isolada no orçamento de software."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "clean management flow showing demand capacity supplier capex skills",
+          "pexels_query": "operations management supply chain planning dashboard",
+          "overlay": {
+            "instagram": "DEMANDA → CAPACIDADE → FORNECEDOR → CAPEX → SKILLS",
+            "tiktok": "DEMANDA → CAPACIDADE → FORNECEDOR → CAPEX → SKILLS",
+            "youtube": "DEMANDA → CAPACIDADE → FORNECEDOR → CAPEX → SKILLS"
+          },
+          "support": {
+            "instagram": "Leia a cadeia inteira",
+            "tiktok": "Leia a cadeia inteira",
+            "youtube": "Leia a cadeia inteira"
+          },
+          "narration": {
+            "instagram": "Use uma sequência simples: demanda, capacidade, fornecedor, investimento e competências. Se uma etapa não escala, a estratégia inteira pode travar.",
+            "tiktok": "Use uma sequência simples: demanda, capacidade, fornecedor, investimento e competências. Se uma etapa não escala, a estratégia inteira pode travar.",
+            "youtube": "Use uma sequência simples: demanda, capacidade, fornecedor, investimento e competências. Se uma etapa não escala, a estratégia inteira pode travar."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "clean UGI close over modern industrial technology footage",
+          "pexels_query": "modern smart factory industrial technology",
+          "overlay": {
+            "instagram": "IA TAMBÉM É OPERAÇÃO FÍSICA",
+            "tiktok": "IA TAMBÉM É OPERAÇÃO FÍSICA",
+            "youtube": "IA TAMBÉM É OPERAÇÃO FÍSICA"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "IA também é operação física. Onde ela já está mudando sua cadeia real de decisão?",
+            "tiktok": "IA também é operação física. Onde ela já está mudando sua cadeia real de decisão?",
+            "youtube": "IA também é operação física. Onde ela já está mudando sua cadeia real de decisão?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "A IA JÁ ESTÁ MEXENDO EM FÁBRICAS",
+            "tiktok": "A IA JÁ ESTÁ MEXENDO EM FÁBRICAS",
+            "youtube": "A IA JÁ ESTÁ MEXENDO EM FÁBRICAS"
+          },
+          "support": {
+            "instagram": "Não só em escritórios",
+            "tiktok": "Não só em escritórios",
+            "youtube": "Não só em escritórios"
+          },
+          "narration": {
+            "instagram": "A IA já está mexendo em fábricas, fornecedores e capacidade produtiva — não só em escritórios.",
+            "tiktok": "A IA já está mexendo em fábricas, fornecedores e capacidade produtiva — não só em escritórios.",
+            "youtube": "A IA já está mexendo em fábricas, fornecedores e capacidade produtiva — não só em escritórios."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "DEMANDA DIGITAL. GARGALO FÍSICO.",
+            "tiktok": "DEMANDA DIGITAL. GARGALO FÍSICO.",
+            "youtube": "DEMANDA DIGITAL. GARGALO FÍSICO."
+          },
+          "support": {
+            "instagram": "Hardware precisa ser produzido e entregue",
+            "tiktok": "Hardware precisa ser produzido e entregue",
+            "youtube": "Hardware precisa ser produzido e entregue"
+          },
+          "narration": {
+            "instagram": "Quando cresce a demanda por chips, servidores e hardware, o efeito aparece no mundo físico: capacidade, componentes, energia, logística e prazo.",
+            "tiktok": "Quando cresce a demanda por chips, servidores e hardware, o efeito aparece no mundo físico: capacidade, componentes, energia, logística e prazo.",
+            "youtube": "Quando cresce a demanda por chips, servidores e hardware, o efeito aparece no mundo físico: capacidade, componentes, energia, logística e prazo."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "FORNECEDOR VIRA DECISÃO ESTRATÉGICA",
+            "tiktok": "FORNECEDOR VIRA DECISÃO ESTRATÉGICA",
+            "youtube": "FORNECEDOR VIRA DECISÃO ESTRATÉGICA"
+          },
+          "support": {
+            "instagram": "Capacidade • prazo • risco • custo",
+            "tiktok": "Capacidade • prazo • risco • custo",
+            "youtube": "Capacidade • prazo • risco • custo"
+          },
+          "narration": {
+            "instagram": "Isso muda a gestão de fornecedores. Não basta preço: entram capacidade disponível, lead time, concentração de risco e continuidade de abastecimento.",
+            "tiktok": "Isso muda a gestão de fornecedores. Não basta preço: entram capacidade disponível, lead time, concentração de risco e continuidade de abastecimento.",
+            "youtube": "Isso muda a gestão de fornecedores. Não basta preço: entram capacidade disponível, lead time, concentração de risco e continuidade de abastecimento."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "IA TAMBÉM É CAPEX E SKILLS",
+            "tiktok": "IA TAMBÉM É CAPEX E SKILLS",
+            "youtube": "IA TAMBÉM É CAPEX E SKILLS"
+          },
+          "support": {
+            "instagram": "Planeje além do software",
+            "tiktok": "Planeje além do software",
+            "youtube": "Planeje além do software"
+          },
+          "narration": {
+            "instagram": "Por isso, estratégia de IA precisa conversar com capex, competências, contratos, capacidade e planejamento da cadeia — não ficar isolada no orçamento de software.",
+            "tiktok": "Por isso, estratégia de IA precisa conversar com capex, competências, contratos, capacidade e planejamento da cadeia — não ficar isolada no orçamento de software.",
+            "youtube": "Por isso, estratégia de IA precisa conversar com capex, competências, contratos, capacidade e planejamento da cadeia — não ficar isolada no orçamento de software."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "DEMANDA → CAPACIDADE → FORNECEDOR → CAPEX → SKILLS",
+            "tiktok": "DEMANDA → CAPACIDADE → FORNECEDOR → CAPEX → SKILLS",
+            "youtube": "DEMANDA → CAPACIDADE → FORNECEDOR → CAPEX → SKILLS"
+          },
+          "support": {
+            "instagram": "Leia a cadeia inteira",
+            "tiktok": "Leia a cadeia inteira",
+            "youtube": "Leia a cadeia inteira"
+          },
+          "narration": {
+            "instagram": "Use uma sequência simples: demanda, capacidade, fornecedor, investimento e competências. Se uma etapa não escala, a estratégia inteira pode travar.",
+            "tiktok": "Use uma sequência simples: demanda, capacidade, fornecedor, investimento e competências. Se uma etapa não escala, a estratégia inteira pode travar.",
+            "youtube": "Use uma sequência simples: demanda, capacidade, fornecedor, investimento e competências. Se uma etapa não escala, a estratégia inteira pode travar."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "IA TAMBÉM É OPERAÇÃO FÍSICA",
+            "tiktok": "IA TAMBÉM É OPERAÇÃO FÍSICA",
+            "youtube": "IA TAMBÉM É OPERAÇÃO FÍSICA"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "IA também é operação física. Onde ela já está mudando sua cadeia real de decisão?",
+            "tiktok": "IA também é operação física. Onde ela já está mudando sua cadeia real de decisão?",
+            "youtube": "IA também é operação física. Onde ela já está mudando sua cadeia real de decisão?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "8fb28cbaa3fc6d0ea824babe4e87a630cf34fa7acd66bff32683d65bb7a231d8",
+      "canonicalPayloadSha256": "c665c5ab0aa80352227bd7803a9a9202d0c5931410548a671f0a4ad6c725d0d9",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Onde a IA já está mudando sua cadeia física de decisão?",
+      "finalCtaByPlatform": {
+        "instagram": "Onde a IA já está mudando sua cadeia física de decisão?",
+        "tiktok": "Onde a IA já está mudando sua cadeia física de decisão?",
+        "youtube": "Onde a IA já está mudando sua cadeia física de decisão?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": 0
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "semiconductor electronics manufacturing factory",
+        "provider_video_id": 6755168,
+        "provider_page_url": "https://www.pexels.com/video/close-up-shot-of-a-electronic-motherboard-6755168/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "electronics components factory production capacity",
+        "provider_video_id": 34948763,
+        "provider_page_url": "https://www.pexels.com/video/efficient-motorcycle-production-in-factory-34948763/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "electronics supply chain warehouse procurement",
+        "provider_video_id": 6170316,
+        "provider_page_url": "https://www.pexels.com/video/boxes-and-packages-on-warehouse-shelves-6170316/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "industrial managers capacity planning investment factory",
+        "provider_video_id": 29283037,
+        "provider_page_url": "https://www.pexels.com/video/aerial-view-of-industrial-plant-with-shadows-29283037/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "operations management supply chain planning dashboard",
+        "provider_video_id": 37656182,
+        "provider_page_url": "https://www.pexels.com/video/efficient-container-yard-crane-operation-37656182/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "modern smart factory industrial technology",
+        "provider_video_id": 34948758,
+        "provider_page_url": "https://www.pexels.com/video/efficient-motorcycle-assembly-in-modern-factory-34948758/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Onde a IA já está mudando sua cadeia física de decisão?",
+    "updatedAt": "2026-09-02T13:04:51.123Z"
+  }
 }

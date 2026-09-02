@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE-R1-VIDEO",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260902125713-4230ee7bd274",
   "approvalDraftId": "ugi-20260902124118-9f3cac54dda6",
   "existingDraftReused": true,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T12:57:36.637685+00:00"
+  "updatedAt": "2026-09-02T13:16:16.788491+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260902125713-4230ee7bd274",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33632873322",
+    "githubRunNumber": 197,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-02T12:57:31Z",
+    "githubRunUpdatedAt": "2026-09-02T12:57:31Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33632873322",
+    "githubRunDisplayTitle": "UGI ugi-20260902125713-4230ee7bd274",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "b800e0c34e722f577ab3fd27ebabc1b497d0e470",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "US Open: quando patrocínio vira experiência",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902125713-4230ee7bd274/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902125713-4230ee7bd274%2Finstagram.mp4",
+        "videoBytes": 31444667,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33632873322",
+        "r2Etag": "31ee36a87fed4cf4364158038defe2fd",
+        "uploadedAt": "2026-09-02T13:06:17.995Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902125713-4230ee7bd274/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902125713-4230ee7bd274%2Ftiktok.mp4",
+        "videoBytes": 24195043,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33632873322",
+        "r2Etag": "4fb2e2675706b97bf8042e775fae0e80",
+        "uploadedAt": "2026-09-02T13:06:22.804Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902125713-4230ee7bd274/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902125713-4230ee7bd274%2Fyoutube.mp4",
+        "videoBytes": 35304586,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33632873322",
+        "r2Etag": "f9d41bb5780333a6a82b7154681e53e6",
+        "uploadedAt": "2026-09-02T13:06:26.659Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902125713-4230ee7bd274%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260902125713-4230ee7bd274/instagram.mp4",
+    "approvalDraftId": "ugi-20260902124118-9f3cac54dda6",
+    "existingDraftReused": true,
+    "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE-R1-VIDEO",
+    "experimentId": "UGI-TREND-GATE-V2.3-20260902-IG-USOPEN-FALLBACK",
+    "variant": "INSTAGRAM_NATIVE_VIDEO_FALLBACK",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "platform_native_management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": 0
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-02T13:06:30.319Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "1b84df7444498802ac7b207131f91029a2a8a630ae63d1d838c1cc9b702c9114",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-02T12:57:31.695Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260902125713-4230ee7bd274",
+    "note": "O GitHub aceitou o job e o render foi associado ao draft editorial existente, sem criar duplicidade.",
+    "videoBytes": 31444667,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-02T13:06:26.659Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260902125713-4230ee7bd274",
+      "githubRunId": "33632873322",
+      "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE-R1-VIDEO",
+      "experimentId": "UGI-TREND-GATE-V2.3-20260902-IG-USOPEN-FALLBACK",
+      "variant": "INSTAGRAM_NATIVE_VIDEO_FALLBACK",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "premium tennis event crowd and hospitality atmosphere, no identifiable athlete endorsement",
+          "pexels_query": "tennis tournament crowd premium event",
+          "overlay": {
+            "instagram": "PATROCÍNIO NÃO É SÓ LOGO",
+            "tiktok": "PATROCÍNIO NÃO É SÓ LOGO",
+            "youtube": "PATROCÍNIO NÃO É SÓ LOGO"
+          },
+          "support": {
+            "instagram": "É entrar na experiência",
+            "tiktok": "É entrar na experiência",
+            "youtube": "É entrar na experiência"
+          },
+          "narration": {
+            "instagram": "O US Open virou mais do que um torneio. Para as marcas, a disputa deixou de ser só por exposição e passou a ser por participação.",
+            "tiktok": "O US Open virou mais do que um torneio. Para as marcas, a disputa deixou de ser só por exposição e passou a ser por participação.",
+            "youtube": "O US Open virou mais do que um torneio. Para as marcas, a disputa deixou de ser só por exposição e passou a ser por participação."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "event signage seen briefly then audience walking past",
+          "pexels_query": "event sponsorship signage audience walking",
+          "overlay": {
+            "instagram": "EXPOSIÇÃO TERMINA RÁPIDO",
+            "tiktok": "EXPOSIÇÃO TERMINA RÁPIDO",
+            "youtube": "EXPOSIÇÃO TERMINA RÁPIDO"
+          },
+          "support": {
+            "instagram": "Ver não é o mesmo que viver",
+            "tiktok": "Ver não é o mesmo que viver",
+            "youtube": "Ver não é o mesmo que viver"
+          },
+          "narration": {
+            "instagram": "Logo e mídia compram atenção. Mas quando a pessoa só vê e segue andando, a relação pode terminar junto com a impressão.",
+            "tiktok": "Logo e mídia compram atenção. Mas quando a pessoa só vê e segue andando, a relação pode terminar junto com a impressão.",
+            "youtube": "Logo e mídia compram atenção. Mas quando a pessoa só vê e segue andando, a relação pode terminar junto com a impressão."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "fans participating in interactive sports hospitality activation and taking photos",
+          "pexels_query": "sports event fan experience interactive activation",
+          "overlay": {
+            "instagram": "PARTICIPAÇÃO ESTENDE A RELAÇÃO",
+            "tiktok": "PARTICIPAÇÃO ESTENDE A RELAÇÃO",
+            "youtube": "PARTICIPAÇÃO ESTENDE A RELAÇÃO"
+          },
+          "support": {
+            "instagram": "Usar • sentir • fotografar • compartilhar",
+            "tiktok": "Usar • sentir • fotografar • compartilhar",
+            "youtube": "Usar • sentir • fotografar • compartilhar"
+          },
+          "narration": {
+            "instagram": "Experiências bem desenhadas fazem a pessoa usar, sentir, fotografar e compartilhar. A marca passa a fazer parte da jornada, não apenas do cenário.",
+            "tiktok": "Experiências bem desenhadas fazem a pessoa usar, sentir, fotografar e compartilhar. A marca passa a fazer parte da jornada, não apenas do cenário.",
+            "youtube": "Experiências bem desenhadas fazem a pessoa usar, sentir, fotografar e compartilhar. A marca passa a fazer parte da jornada, não apenas do cenário."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "marketing team designing customer journey and event touchpoints",
+          "pexels_query": "marketing team customer journey event strategy",
+          "overlay": {
+            "instagram": "4 PERGUNTAS DE GESTÃO",
+            "tiktok": "4 PERGUNTAS DE GESTÃO",
+            "youtube": "4 PERGUNTAS DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Faz? sente? compartilha? o que fica?",
+            "tiktok": "Faz? sente? compartilha? o que fica?",
+            "youtube": "Faz? sente? compartilha? o que fica?"
+          },
+          "narration": {
+            "instagram": "Antes de aprovar uma ativação, responda quatro perguntas: o cliente faz o quê, sente o quê, compartilha o quê e qual relação ou sinal permanece depois.",
+            "tiktok": "Antes de aprovar uma ativação, responda quatro perguntas: o cliente faz o quê, sente o quê, compartilha o quê e qual relação ou sinal permanece depois.",
+            "youtube": "Antes de aprovar uma ativação, responda quatro perguntas: o cliente faz o quê, sente o quê, compartilha o quê e qual relação ou sinal permanece depois."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "memorable event experience with people engaging and sharing",
+          "pexels_query": "memorable brand event experience people sharing",
+          "overlay": {
+            "instagram": "A MARCA VIRA PARTE DO EVENTO",
+            "tiktok": "A MARCA VIRA PARTE DO EVENTO",
+            "youtube": "A MARCA VIRA PARTE DO EVENTO"
+          },
+          "support": {
+            "instagram": "Atenção → participação → lembrança",
+            "tiktok": "Atenção → participação → lembrança",
+            "youtube": "Atenção → participação → lembrança"
+          },
+          "narration": {
+            "instagram": "O objetivo é simples: transformar atenção alugada em participação e, quando fizer sentido, em lembrança e relacionamento que continuam depois do evento.",
+            "tiktok": "O objetivo é simples: transformar atenção alugada em participação e, quando fizer sentido, em lembrança e relacionamento que continuam depois do evento.",
+            "youtube": "O objetivo é simples: transformar atenção alugada em participação e, quando fizer sentido, em lembrança e relacionamento que continuam depois do evento."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "clean UGI close over moving premium event background",
+          "pexels_query": "premium business event audience lights",
+          "overlay": {
+            "instagram": "EXPERIÊNCIA TAMBÉM É PROCESSO",
+            "tiktok": "EXPERIÊNCIA TAMBÉM É PROCESSO",
+            "youtube": "EXPERIÊNCIA TAMBÉM É PROCESSO"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Experiência também é processo. Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
+            "tiktok": "Experiência também é processo. Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
+            "youtube": "Experiência também é processo. Na sua marca, o cliente só vê o patrocínio — ou participa dele?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "PATROCÍNIO NÃO É SÓ LOGO",
+            "tiktok": "PATROCÍNIO NÃO É SÓ LOGO",
+            "youtube": "PATROCÍNIO NÃO É SÓ LOGO"
+          },
+          "support": {
+            "instagram": "É entrar na experiência",
+            "tiktok": "É entrar na experiência",
+            "youtube": "É entrar na experiência"
+          },
+          "narration": {
+            "instagram": "O US Open virou mais do que um torneio. Para as marcas, a disputa deixou de ser só por exposição e passou a ser por participação.",
+            "tiktok": "O US Open virou mais do que um torneio. Para as marcas, a disputa deixou de ser só por exposição e passou a ser por participação.",
+            "youtube": "O US Open virou mais do que um torneio. Para as marcas, a disputa deixou de ser só por exposição e passou a ser por participação."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "EXPOSIÇÃO TERMINA RÁPIDO",
+            "tiktok": "EXPOSIÇÃO TERMINA RÁPIDO",
+            "youtube": "EXPOSIÇÃO TERMINA RÁPIDO"
+          },
+          "support": {
+            "instagram": "Ver não é o mesmo que viver",
+            "tiktok": "Ver não é o mesmo que viver",
+            "youtube": "Ver não é o mesmo que viver"
+          },
+          "narration": {
+            "instagram": "Logo e mídia compram atenção. Mas quando a pessoa só vê e segue andando, a relação pode terminar junto com a impressão.",
+            "tiktok": "Logo e mídia compram atenção. Mas quando a pessoa só vê e segue andando, a relação pode terminar junto com a impressão.",
+            "youtube": "Logo e mídia compram atenção. Mas quando a pessoa só vê e segue andando, a relação pode terminar junto com a impressão."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "PARTICIPAÇÃO ESTENDE A RELAÇÃO",
+            "tiktok": "PARTICIPAÇÃO ESTENDE A RELAÇÃO",
+            "youtube": "PARTICIPAÇÃO ESTENDE A RELAÇÃO"
+          },
+          "support": {
+            "instagram": "Usar • sentir • fotografar • compartilhar",
+            "tiktok": "Usar • sentir • fotografar • compartilhar",
+            "youtube": "Usar • sentir • fotografar • compartilhar"
+          },
+          "narration": {
+            "instagram": "Experiências bem desenhadas fazem a pessoa usar, sentir, fotografar e compartilhar. A marca passa a fazer parte da jornada, não apenas do cenário.",
+            "tiktok": "Experiências bem desenhadas fazem a pessoa usar, sentir, fotografar e compartilhar. A marca passa a fazer parte da jornada, não apenas do cenário.",
+            "youtube": "Experiências bem desenhadas fazem a pessoa usar, sentir, fotografar e compartilhar. A marca passa a fazer parte da jornada, não apenas do cenário."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "4 PERGUNTAS DE GESTÃO",
+            "tiktok": "4 PERGUNTAS DE GESTÃO",
+            "youtube": "4 PERGUNTAS DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Faz? sente? compartilha? o que fica?",
+            "tiktok": "Faz? sente? compartilha? o que fica?",
+            "youtube": "Faz? sente? compartilha? o que fica?"
+          },
+          "narration": {
+            "instagram": "Antes de aprovar uma ativação, responda quatro perguntas: o cliente faz o quê, sente o quê, compartilha o quê e qual relação ou sinal permanece depois.",
+            "tiktok": "Antes de aprovar uma ativação, responda quatro perguntas: o cliente faz o quê, sente o quê, compartilha o quê e qual relação ou sinal permanece depois.",
+            "youtube": "Antes de aprovar uma ativação, responda quatro perguntas: o cliente faz o quê, sente o quê, compartilha o quê e qual relação ou sinal permanece depois."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "A MARCA VIRA PARTE DO EVENTO",
+            "tiktok": "A MARCA VIRA PARTE DO EVENTO",
+            "youtube": "A MARCA VIRA PARTE DO EVENTO"
+          },
+          "support": {
+            "instagram": "Atenção → participação → lembrança",
+            "tiktok": "Atenção → participação → lembrança",
+            "youtube": "Atenção → participação → lembrança"
+          },
+          "narration": {
+            "instagram": "O objetivo é simples: transformar atenção alugada em participação e, quando fizer sentido, em lembrança e relacionamento que continuam depois do evento.",
+            "tiktok": "O objetivo é simples: transformar atenção alugada em participação e, quando fizer sentido, em lembrança e relacionamento que continuam depois do evento.",
+            "youtube": "O objetivo é simples: transformar atenção alugada em participação e, quando fizer sentido, em lembrança e relacionamento que continuam depois do evento."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "EXPERIÊNCIA TAMBÉM É PROCESSO",
+            "tiktok": "EXPERIÊNCIA TAMBÉM É PROCESSO",
+            "youtube": "EXPERIÊNCIA TAMBÉM É PROCESSO"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Experiência também é processo. Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
+            "tiktok": "Experiência também é processo. Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
+            "youtube": "Experiência também é processo. Na sua marca, o cliente só vê o patrocínio — ou participa dele?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "1b84df7444498802ac7b207131f91029a2a8a630ae63d1d838c1cc9b702c9114",
+      "canonicalPayloadSha256": "d181f4e4741ccb63f9c3b431e878ddbcddd1a72a953f3e400f847fb4ddc11181",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
+      "finalCtaByPlatform": {
+        "instagram": "Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
+        "tiktok": "Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
+        "youtube": "Na sua marca, o cliente só vê o patrocínio — ou participa dele?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": 0
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "tennis tournament crowd premium event",
+        "provider_video_id": 35538976,
+        "provider_page_url": "https://www.pexels.com/video/live-tennis-match-at-outdoor-stadium-35538976/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "event sponsorship signage audience walking",
+        "provider_video_id": 35701017,
+        "provider_page_url": "https://www.pexels.com/video/capturing-memories-at-indoor-balcony-event-35701017/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "sports event fan experience interactive activation",
+        "provider_video_id": 36840153,
+        "provider_page_url": "https://www.pexels.com/video/excited-crowd-at-night-soccer-match-36840153/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "marketing team customer journey event strategy",
+        "provider_video_id": 6557707,
+        "provider_page_url": "https://www.pexels.com/video/office-working-men-women-6557707/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "memorable brand event experience people sharing",
+        "provider_video_id": 38381873,
+        "provider_page_url": "https://www.pexels.com/video/cultural-gathering-with-families-celebrating-38381873/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "premium business event audience lights",
+        "provider_video_id": 38672314,
+        "provider_page_url": "https://www.pexels.com/video/professional-interview-in-theater-setting-38672314/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
+    "updatedAt": "2026-09-02T13:06:30.319Z"
+  }
 }

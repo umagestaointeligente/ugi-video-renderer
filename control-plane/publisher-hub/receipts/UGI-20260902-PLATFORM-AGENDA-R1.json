@@ -13,7 +13,7 @@
   "policySha256": "ddb581512329447065bff0b2833c769e6a6abfc1465595cc6b5883582308e095",
   "routingSchema": "1.2",
   "routingSha256": "f648be966155fb460634dd9cd0652f15bb86cae4cbb1f2f9a4bd170c5abd5d8a",
-  "publicationTriggered": true,
+  "publicationTriggered": false,
   "paymentTriggered": false,
   "results": [
     {
@@ -26,7 +26,7 @@
       "status": "scheduled",
       "bufferStatus": "scheduled",
       "externalLink": null,
-      "alreadyActive": false,
+      "alreadyActive": true,
       "readbackPass": false,
       "ok": false
     },
@@ -40,7 +40,7 @@
       "status": "scheduled",
       "bufferStatus": "scheduled",
       "externalLink": null,
-      "alreadyActive": false,
+      "alreadyActive": true,
       "readbackPass": false,
       "ok": false
     },
@@ -54,7 +54,7 @@
       "status": "scheduled",
       "bufferStatus": "scheduled",
       "externalLink": null,
-      "alreadyActive": false,
+      "alreadyActive": true,
       "readbackPass": false,
       "ok": false
     },
@@ -68,10 +68,10 @@
       "status": "scheduled",
       "bufferStatus": "scheduled",
       "externalLink": null,
-      "alreadyActive": false,
+      "alreadyActive": true,
       "readbackPass": false,
       "ok": false
     }
   ],
-  "timestamp": "2026-09-02T12:59:13.833472+00:00"
+  "timestamp": "2026-09-02T13:18:22.839697+00:00"
 }
