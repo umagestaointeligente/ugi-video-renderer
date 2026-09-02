@@ -1,0 +1,21 @@
+{
+  "project": "UGI",
+  "batchId": "UGI-20260902-IG-EMERGENCY-1000-DELL",
+  "timezone": "America/Sao_Paulo",
+  "posts": [
+    {
+      "contentId": "UGI-20260902-IG-1000-DELL-AI-INFRA",
+      "type": "story_image",
+      "publish": true,
+      "dueAt": "2026-09-02T10:00:00-03:00",
+      "variant": "RECOVERY_FROM_MISSED_0900",
+      "topic": "Dell e a corrida por infraestrutura de IA",
+      "objective": "Transformar um dado atual de demanda por servidores de IA em uma leitura prática de gestão sobre capacidade, energia, rede, refrigeração, dados e capital.",
+      "audience": "gestores, líderes e profissionais de negócios interessados em IA, estratégia e execução",
+      "hook": "US$ 130 BI em pedidos. A corrida da IA já virou corrida por infraestrutura.",
+      "key_message": "A estratégia de IA não é apenas software. Quando a demanda escala, capacidade de servidores, energia, rede, refrigeração, dados e capital passam a ser restrições estratégicas que precisam entrar no planejamento executivo.",
+      "instructions": "STORY IMAGE 1080x1920, premium, moderno e editorial. Usar contexto visual real ou editorialmente seguro de data center, racks/servidores, infraestrutura e operação tecnológica; nada de stock art genérico de cérebro/robô/IA. Um único insight principal, número US$ 130 BI dominante e perfeitamente legível. Estrutura visual: contexto real de infraestrutura + hook/número + leitura de gestão curta + pergunta final. Não fabricar logo, executivo, citação ou endosso da Dell à UGI. Sem ghost text, lorem, caracteres aleatórios ou excesso de texto. CTA/pergunta: 'Sua estratégia de IA já considera os gargalos físicos para escalar?'.",
+      "cta": "Sua estratégia de IA já considera os gargalos físicos para escalar?"
+    }
+  ]
+}
