@@ -1,0 +1,117 @@
+name: UGI Native Trend Preflight 2026-09-02
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-native-trend-preflight-20260902.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-native-trend-preflight-20260902
+  cancel-in-progress: false
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  youtube-render-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Render through canonical Worker without publisher mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python3 - <<'PY'
+          import datetime as dt, json, os, time, urllib.parse, urllib.request
+          from pathlib import Path
+
+          root=Path('.')
+          command_path=root/'control-plane/commands/ugi-20260902-youtube-gtavi-launch.json'
+          command=json.loads(command_path.read_text(encoding='utf-8'))
+          package=command['scenes_json']
+          payload={
+            'title':command['title'],
+            'duration':command['duration'],
+            'content_id':command['content_id'],
+            'experiment_id':command.get('experiment_id'),
+            'variant':command.get('variant'),
+            'commercial_intent':command.get('commercial_intent','none'),
+            'scenes':package['scenes'],
+            'cta':package.get('cta'),
+            'copy_lock':command.get('copy_lock',True),
+            'exact_copy':command.get('exact_copy',True),
+            'editorial_mode':command.get('editorial_mode'),
+            'music_profile':command.get('music_profile'),
+            'smoke_test':False
+          }
+          base=os.environ['WORKER_URL'].rstrip('/')
+          key=os.environ['UGI_WORKER_COMMAND_KEY']
+          headers={'x-lola-command-key':key,'content-type':'application/json','accept':'application/json','user-agent':'UGI-Native-Trend-Preflight/1.0'}
+          def call(method,path,body=None,timeout=180):
+            data=None if body is None else json.dumps(body,ensure_ascii=False).encode('utf-8')
+            req=urllib.request.Request(base+path,data=data,headers=headers,method=method)
+            with urllib.request.urlopen(req,timeout=timeout) as r:
+              return r.status,json.loads(r.read().decode('utf-8'))
+          receipt={
+            'project':'UGI','component':'NATIVE_TREND_PREFLIGHT','date':'2026-09-02',
+            'platform':'youtube','contentId':command['content_id'],'publisherMutation':False,
+            'commandPath':str(command_path),'startedAt':dt.datetime.now(dt.timezone.utc).isoformat()
+          }
+          try:
+            status,dispatch=call('POST','/api/video-render',payload,240)
+            receipt['dispatchHttp']=status; receipt['dispatch']=dispatch
+            rid=dispatch.get('renderId')
+            if not (status in (200,202) and dispatch.get('ok') and rid):
+              receipt['state']='RENDER_DISPATCH_FAILED'
+            else:
+              receipt['renderId']=rid; receipt['state']='RENDER_IN_PROGRESS'
+              last=None
+              for _ in range(90):
+                time.sleep(10)
+                try:
+                  s,last=call('GET','/api/video-result/'+urllib.parse.quote(str(rid)),None,90)
+                  receipt['lastResultHttp']=s; receipt['lastResult']=last
+                except Exception as e:
+                  receipt['lastPollError']=repr(e); continue
+                state=str(last.get('status') or '').lower()
+                ready=last.get('allPlatformsReady') is True or last.get('ready') is True or state=='ready'
+                if last.get('ok') is True and ready:
+                  receipt['state']='ASSET_READY'; break
+                if state in {'failed','error','cancelled'} or (last.get('ok') is False and last.get('errorClass')):
+                  receipt['state']='RENDER_FAILED'; break
+              else:
+                receipt['state']='RENDER_IN_PROGRESS'
+          except Exception as e:
+            receipt['state']='RENDER_DISPATCH_FAILED'; receipt['exception']=repr(e)
+          receipt['finishedAt']=dt.datetime.now(dt.timezone.utc).isoformat()
+          out=root/'control-plane/receipts/native-trend/2026-09-02-youtube-gtavi-preflight.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps({k:receipt.get(k) for k in ('contentId','state','renderId','dispatchHttp','lastResultHttp')},ensure_ascii=False))
+          if receipt['state'] in {'RENDER_DISPATCH_FAILED','RENDER_FAILED'}:
+            raise SystemExit(2)
+          PY
+      - name: Persist preflight receipt only
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-native-trend-preflight-bot'
+          git config user.email 'ugi-native-trend-preflight@users.noreply.github.com'
+          git add control-plane/receipts/native-trend/2026-09-02-youtube-gtavi-preflight.json 2>/dev/null || true
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'chore: persist Sep 2 YouTube native-trend preflight'
+          git pull --rebase origin main
+          git push origin HEAD:main
