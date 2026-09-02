@@ -11,7 +11,7 @@
       "generateHttp": 200,
       "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": "7170f2e2-4227-4b2c-b7bf-bcc5a0c8950c",
+      "draftId": "bc800c09-c9e9-4e7d-aa4d-47fc52db6e7f",
       "assetUrls": [],
       "qa": {
         "pass": false,
@@ -26,5 +26,5 @@
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-02T18:50:50.578341+00:00"
+  "timestamp": "2026-09-02T19:02:32.963962+00:00"
 }
