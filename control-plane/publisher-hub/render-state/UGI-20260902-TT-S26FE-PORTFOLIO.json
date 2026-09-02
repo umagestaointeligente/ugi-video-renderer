@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260902-TT-S26FE-PORTFOLIO",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260902122450-29d063af8915",
   "approvalDraftId": "ugi-20260902122450-29d063af8915",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T12:25:08.659785+00:00"
+  "updatedAt": "2026-09-02T12:37:37.116225+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260902122450-29d063af8915",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33629792243",
+    "githubRunNumber": 189,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-02T12:25:02Z",
+    "githubRunUpdatedAt": "2026-09-02T12:25:02Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33629792243",
+    "githubRunDisplayTitle": "UGI ugi-20260902122450-29d063af8915",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "d309773ffaa81a3fd2ef6833d3db428fe26cfb64",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Samsung S26 FE: quando inovação premium vira escala",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122450-29d063af8915/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122450-29d063af8915%2Finstagram.mp4",
+        "videoBytes": 12544748,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33629792243",
+        "r2Etag": "0f9086dc98a134995f17d0f4e26a499b",
+        "uploadedAt": "2026-09-02T12:33:35.234Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122450-29d063af8915/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122450-29d063af8915%2Ftiktok.mp4",
+        "videoBytes": 9342493,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33629792243",
+        "r2Etag": "2c1b3145c6fd68207c35a87693c61d61",
+        "uploadedAt": "2026-09-02T12:33:38.850Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122450-29d063af8915/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122450-29d063af8915%2Fyoutube.mp4",
+        "videoBytes": 14137469,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33629792243",
+        "r2Etag": "7b05ba60d1d9b269add2b4fa312b2684",
+        "uploadedAt": "2026-09-02T12:33:42.284Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122450-29d063af8915%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260902122450-29d063af8915/instagram.mp4",
+    "approvalDraftId": "ugi-20260902122450-29d063af8915",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260902-TT-S26FE-PORTFOLIO",
+    "experimentId": "UGI-TREND-GATE-V2.3-20260902-TT-S26FE",
+    "variant": "TIKTOK_NATIVE_DEMAND",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "platform_native_management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-02T12:33:46.484Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "f91e160414801ccabcf9c0eb4bb88b201fef3fcc0c9510fefd7eb7deedadf3e5",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-02T12:25:02.684Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260902122450-29d063af8915",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 12544748,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-02T12:33:42.284Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260902122450-29d063af8915",
+      "githubRunId": "33629792243",
+      "contentId": "UGI-20260902-TT-S26FE-PORTFOLIO",
+      "experimentId": "UGI-TREND-GATE-V2.3-20260902-TT-S26FE",
+      "variant": "TIKTOK_NATIVE_DEMAND",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "premium smartphone close-up and AI interface context",
+          "pexels_query": "premium smartphone artificial intelligence interface",
+          "overlay": {
+            "instagram": "IA DE FLAGSHIP NO FE",
+            "tiktok": "IA DE FLAGSHIP NO FE",
+            "youtube": "IA DE FLAGSHIP NO FE"
+          },
+          "support": {
+            "instagram": "A jogada não é só tecnologia",
+            "tiktok": "A jogada não é só tecnologia",
+            "youtube": "A jogada não é só tecnologia"
+          },
+          "narration": {
+            "instagram": "A Samsung colocou recursos de IA de flagship no S26 FE. A jogada de gestão não é só tecnologia.",
+            "tiktok": "A Samsung colocou recursos de IA de flagship no S26 FE. A jogada de gestão não é só tecnologia.",
+            "youtube": "A Samsung colocou recursos de IA de flagship no S26 FE. A jogada de gestão não é só tecnologia."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "smartphone product lineup showing premium and accessible tiers",
+          "pexels_query": "smartphone product lineup retail display",
+          "overlay": {
+            "instagram": "PREMIUM OU ESCALA?",
+            "tiktok": "PREMIUM OU ESCALA?",
+            "youtube": "PREMIUM OU ESCALA?"
+          },
+          "support": {
+            "instagram": "Portfólio é uma decisão de valor",
+            "tiktok": "Portfólio é uma decisão de valor",
+            "youtube": "Portfólio é uma decisão de valor"
+          },
+          "narration": {
+            "instagram": "Todo portfólio vive uma tensão: manter o diferencial no topo ou levar a inovação para mais gente.",
+            "tiktok": "Todo portfólio vive uma tensão: manter o diferencial no topo ou levar a inovação para mais gente.",
+            "youtube": "Todo portfólio vive uma tensão: manter o diferencial no topo ou levar a inovação para mais gente."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "mobile AI assistant features in everyday use",
+          "pexels_query": "person using smartphone AI assistant daily life",
+          "overlay": {
+            "instagram": "ONE UI 9 + GALAXY AI",
+            "tiktok": "ONE UI 9 + GALAXY AI",
+            "youtube": "ONE UI 9 + GALAXY AI"
+          },
+          "support": {
+            "instagram": "Recursos contextuais chegam ao FE",
+            "tiktok": "Recursos contextuais chegam ao FE",
+            "youtube": "Recursos contextuais chegam ao FE"
+          },
+          "narration": {
+            "instagram": "O S26 FE chega com One UI 9 e recursos contextuais do Galaxy AI, ampliando o acesso a funções antes associadas aos modelos mais premium.",
+            "tiktok": "O S26 FE chega com One UI 9 e recursos contextuais do Galaxy AI, ampliando o acesso a funções antes associadas aos modelos mais premium.",
+            "youtube": "O S26 FE chega com One UI 9 e recursos contextuais do Galaxy AI, ampliando o acesso a funções antes associadas aos modelos mais premium."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "strategy team mapping product tiers and feature migration",
+          "pexels_query": "product strategy team portfolio planning board",
+          "overlay": {
+            "instagram": "MOVER O DIFERENCIAL NA HORA CERTA",
+            "tiktok": "MOVER O DIFERENCIAL NA HORA CERTA",
+            "youtube": "MOVER O DIFERENCIAL NA HORA CERTA"
+          },
+          "support": {
+            "instagram": "Adoção sem destruir diferenciação",
+            "tiktok": "Adoção sem destruir diferenciação",
+            "youtube": "Adoção sem destruir diferenciação"
+          },
+          "narration": {
+            "instagram": "A decisão inteligente é migrar o diferencial quando ele já pode acelerar adoção sem destruir a razão de pagar mais pelo topo.",
+            "tiktok": "A decisão inteligente é migrar o diferencial quando ele já pode acelerar adoção sem destruir a razão de pagar mais pelo topo.",
+            "youtube": "A decisão inteligente é migrar o diferencial quando ele já pode acelerar adoção sem destruir a razão de pagar mais pelo topo."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "portfolio matrix with adoption value and differentiation axes",
+          "pexels_query": "business product portfolio matrix strategy",
+          "overlay": {
+            "instagram": "3 PERGUNTAS DE PORTFÓLIO",
+            "tiktok": "3 PERGUNTAS DE PORTFÓLIO",
+            "youtube": "3 PERGUNTAS DE PORTFÓLIO"
+          },
+          "support": {
+            "instagram": "Adoção • margem • diferenciação",
+            "tiktok": "Adoção • margem • diferenciação",
+            "youtube": "Adoção • margem • diferenciação"
+          },
+          "narration": {
+            "instagram": "Para decidir, teste três coisas: quanto aumenta adoção, quanto pressiona margem e qual diferencial ainda fica reservado ao premium.",
+            "tiktok": "Para decidir, teste três coisas: quanto aumenta adoção, quanto pressiona margem e qual diferencial ainda fica reservado ao premium.",
+            "youtube": "Para decidir, teste três coisas: quanto aumenta adoção, quanto pressiona margem e qual diferencial ainda fica reservado ao premium."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "clean UGI closing frame over moving product strategy context",
+          "pexels_query": "business strategy product planning modern office",
+          "overlay": {
+            "instagram": "QUANDO O PREMIUM DEVE VIRAR ESCALA?",
+            "tiktok": "QUANDO O PREMIUM DEVE VIRAR ESCALA?",
+            "youtube": "QUANDO O PREMIUM DEVE VIRAR ESCALA?"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Portfólio também é timing. Quando uma inovação deve deixar de ser premium e virar escala?",
+            "tiktok": "Portfólio também é timing. Quando uma inovação deve deixar de ser premium e virar escala?",
+            "youtube": "Portfólio também é timing. Quando uma inovação deve deixar de ser premium e virar escala?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "IA DE FLAGSHIP NO FE",
+            "tiktok": "IA DE FLAGSHIP NO FE",
+            "youtube": "IA DE FLAGSHIP NO FE"
+          },
+          "support": {
+            "instagram": "A jogada não é só tecnologia",
+            "tiktok": "A jogada não é só tecnologia",
+            "youtube": "A jogada não é só tecnologia"
+          },
+          "narration": {
+            "instagram": "A Samsung colocou recursos de IA de flagship no S26 FE. A jogada de gestão não é só tecnologia.",
+            "tiktok": "A Samsung colocou recursos de IA de flagship no S26 FE. A jogada de gestão não é só tecnologia.",
+            "youtube": "A Samsung colocou recursos de IA de flagship no S26 FE. A jogada de gestão não é só tecnologia."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "PREMIUM OU ESCALA?",
+            "tiktok": "PREMIUM OU ESCALA?",
+            "youtube": "PREMIUM OU ESCALA?"
+          },
+          "support": {
+            "instagram": "Portfólio é uma decisão de valor",
+            "tiktok": "Portfólio é uma decisão de valor",
+            "youtube": "Portfólio é uma decisão de valor"
+          },
+          "narration": {
+            "instagram": "Todo portfólio vive uma tensão: manter o diferencial no topo ou levar a inovação para mais gente.",
+            "tiktok": "Todo portfólio vive uma tensão: manter o diferencial no topo ou levar a inovação para mais gente.",
+            "youtube": "Todo portfólio vive uma tensão: manter o diferencial no topo ou levar a inovação para mais gente."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "ONE UI 9 + GALAXY AI",
+            "tiktok": "ONE UI 9 + GALAXY AI",
+            "youtube": "ONE UI 9 + GALAXY AI"
+          },
+          "support": {
+            "instagram": "Recursos contextuais chegam ao FE",
+            "tiktok": "Recursos contextuais chegam ao FE",
+            "youtube": "Recursos contextuais chegam ao FE"
+          },
+          "narration": {
+            "instagram": "O S26 FE chega com One UI 9 e recursos contextuais do Galaxy AI, ampliando o acesso a funções antes associadas aos modelos mais premium.",
+            "tiktok": "O S26 FE chega com One UI 9 e recursos contextuais do Galaxy AI, ampliando o acesso a funções antes associadas aos modelos mais premium.",
+            "youtube": "O S26 FE chega com One UI 9 e recursos contextuais do Galaxy AI, ampliando o acesso a funções antes associadas aos modelos mais premium."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "MOVER O DIFERENCIAL NA HORA CERTA",
+            "tiktok": "MOVER O DIFERENCIAL NA HORA CERTA",
+            "youtube": "MOVER O DIFERENCIAL NA HORA CERTA"
+          },
+          "support": {
+            "instagram": "Adoção sem destruir diferenciação",
+            "tiktok": "Adoção sem destruir diferenciação",
+            "youtube": "Adoção sem destruir diferenciação"
+          },
+          "narration": {
+            "instagram": "A decisão inteligente é migrar o diferencial quando ele já pode acelerar adoção sem destruir a razão de pagar mais pelo topo.",
+            "tiktok": "A decisão inteligente é migrar o diferencial quando ele já pode acelerar adoção sem destruir a razão de pagar mais pelo topo.",
+            "youtube": "A decisão inteligente é migrar o diferencial quando ele já pode acelerar adoção sem destruir a razão de pagar mais pelo topo."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "3 PERGUNTAS DE PORTFÓLIO",
+            "tiktok": "3 PERGUNTAS DE PORTFÓLIO",
+            "youtube": "3 PERGUNTAS DE PORTFÓLIO"
+          },
+          "support": {
+            "instagram": "Adoção • margem • diferenciação",
+            "tiktok": "Adoção • margem • diferenciação",
+            "youtube": "Adoção • margem • diferenciação"
+          },
+          "narration": {
+            "instagram": "Para decidir, teste três coisas: quanto aumenta adoção, quanto pressiona margem e qual diferencial ainda fica reservado ao premium.",
+            "tiktok": "Para decidir, teste três coisas: quanto aumenta adoção, quanto pressiona margem e qual diferencial ainda fica reservado ao premium.",
+            "youtube": "Para decidir, teste três coisas: quanto aumenta adoção, quanto pressiona margem e qual diferencial ainda fica reservado ao premium."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "QUANDO O PREMIUM DEVE VIRAR ESCALA?",
+            "tiktok": "QUANDO O PREMIUM DEVE VIRAR ESCALA?",
+            "youtube": "QUANDO O PREMIUM DEVE VIRAR ESCALA?"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Portfólio também é timing. Quando uma inovação deve deixar de ser premium e virar escala?",
+            "tiktok": "Portfólio também é timing. Quando uma inovação deve deixar de ser premium e virar escala?",
+            "youtube": "Portfólio também é timing. Quando uma inovação deve deixar de ser premium e virar escala?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "f91e160414801ccabcf9c0eb4bb88b201fef3fcc0c9510fefd7eb7deedadf3e5",
+      "canonicalPayloadSha256": "fa8f5b94e8b48b568cfe4c64e68016293a259866f500ee8928f7fc9e01f28a02",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Quando uma inovação deve deixar de ser premium e virar escala?",
+      "finalCtaByPlatform": {
+        "instagram": "Quando uma inovação deve deixar de ser premium e virar escala?",
+        "tiktok": "Quando uma inovação deve deixar de ser premium e virar escala?",
+        "youtube": "Quando uma inovação deve deixar de ser premium e virar escala?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "premium smartphone artificial intelligence interface",
+        "provider_video_id": 4631131,
+        "provider_page_url": "https://www.pexels.com/video/a-person-holding-a-phone-in-their-hand-4631131/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "smartphone product lineup retail display",
+        "provider_video_id": 7669201,
+        "provider_page_url": "https://www.pexels.com/video/a-person-taking-picture-of-clothes-in-a-rack-7669201/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "person using smartphone AI assistant daily life",
+        "provider_video_id": 6337010,
+        "provider_page_url": "https://www.pexels.com/video/man-using-phone-while-drinking-coffee-6337010/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "product strategy team portfolio planning board",
+        "provider_video_id": 7252935,
+        "provider_page_url": "https://www.pexels.com/video/close-up-footage-of-sticky-notes-posted-on-a-board-7252935/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "business product portfolio matrix strategy",
+        "provider_video_id": 38901929,
+        "provider_page_url": "https://www.pexels.com/video/interactive-digital-finance-dashboard-analysis-38901929/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "business strategy product planning modern office",
+        "provider_video_id": 7279594,
+        "provider_page_url": "https://www.pexels.com/video/laptop-is-on-the-wooden-table-7279594/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Quando uma inovação deve deixar de ser premium e virar escala?",
+    "updatedAt": "2026-09-02T12:33:46.484Z"
+  }
 }

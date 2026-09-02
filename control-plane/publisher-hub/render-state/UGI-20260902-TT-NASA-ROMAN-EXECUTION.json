@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260902-TT-NASA-ROMAN-EXECUTION",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260902122528-579678435982",
   "approvalDraftId": "ugi-20260902122528-579678435982",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T12:25:42.310932+00:00"
+  "updatedAt": "2026-09-02T12:37:55.118757+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260902122528-579678435982",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33629849050",
+    "githubRunNumber": 191,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-02T12:25:38Z",
+    "githubRunUpdatedAt": "2026-09-02T12:25:38Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33629849050",
+    "githubRunDisplayTitle": "UGI ugi-20260902122528-579678435982",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "bf2c5fd7f090b12ac978bdb3d87409c0fa5de86e",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "NASA Roman: velocidade é consequência da preparação",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122528-579678435982/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122528-579678435982%2Finstagram.mp4",
+        "videoBytes": 22615186,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33629849050",
+        "r2Etag": "5ae46f5d6991a19970b03565f890fe07",
+        "uploadedAt": "2026-09-02T12:33:45.769Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122528-579678435982/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122528-579678435982%2Ftiktok.mp4",
+        "videoBytes": 17769781,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33629849050",
+        "r2Etag": "6623e28ad8c868f1cfd88fab82ce481d",
+        "uploadedAt": "2026-09-02T12:33:48.314Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122528-579678435982/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122528-579678435982%2Fyoutube.mp4",
+        "videoBytes": 25042235,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33629849050",
+        "r2Etag": "a7327b4b7b71b439807e375324ba8f30",
+        "uploadedAt": "2026-09-02T12:33:51.435Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122528-579678435982%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260902122528-579678435982/instagram.mp4",
+    "approvalDraftId": "ugi-20260902122528-579678435982",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260902-TT-NASA-ROMAN-EXECUTION",
+    "experimentId": "UGI-TREND-GATE-V2.3-20260902-TT-ROMAN",
+    "variant": "TIKTOK_NATIVE_DEMAND",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "platform_native_management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-02T12:33:54.201Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "7236500fdc22b16c4f7f80b9e277d678fd942355183bb41102d2c3ea9ada47e1",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-02T12:25:38.817Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260902122528-579678435982",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 22615186,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-02T12:33:51.435Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260902122528-579678435982",
+      "githubRunId": "33629849050",
+      "contentId": "UGI-20260902-TT-NASA-ROMAN-EXECUTION",
+      "experimentId": "UGI-TREND-GATE-V2.3-20260902-TT-ROMAN",
+      "variant": "TIKTOK_NATIVE_DEMAND",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "space telescope launch and mission control context",
+          "pexels_query": "space rocket launch mission control",
+          "overlay": {
+            "instagram": "9 MESES ANTES DO CRONOGRAMA",
+            "tiktok": "9 MESES ANTES DO CRONOGRAMA",
+            "youtube": "9 MESES ANTES DO CRONOGRAMA"
+          },
+          "support": {
+            "instagram": "Velocidade ou preparação?",
+            "tiktok": "Velocidade ou preparação?",
+            "youtube": "Velocidade ou preparação?"
+          },
+          "narration": {
+            "instagram": "Mais de uma década de projeto. A NASA lançou o telescópio Roman cerca de nove meses antes do cronograma. O que a gestão acertou?",
+            "tiktok": "Mais de uma década de projeto. A NASA lançou o telescópio Roman cerca de nove meses antes do cronograma. O que a gestão acertou?",
+            "youtube": "Mais de uma década de projeto. A NASA lançou o telescópio Roman cerca de nove meses antes do cronograma. O que a gestão acertou?"
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "complex engineering integration with many teams and checklists",
+          "pexels_query": "aerospace engineers complex project integration",
+          "overlay": {
+            "instagram": "PROJETO COMPLEXO NÃO ACEITA IMPROVISO",
+            "tiktok": "PROJETO COMPLEXO NÃO ACEITA IMPROVISO",
+            "youtube": "PROJETO COMPLEXO NÃO ACEITA IMPROVISO"
+          },
+          "support": {
+            "instagram": "Muitos sistemas • parceiros • riscos",
+            "tiktok": "Muitos sistemas • parceiros • riscos",
+            "youtube": "Muitos sistemas • parceiros • riscos"
+          },
+          "narration": {
+            "instagram": "Em projetos complexos, acelerar sem controle só antecipa erro. São sistemas, parceiros, riscos e dependências que precisam convergir.",
+            "tiktok": "Em projetos complexos, acelerar sem controle só antecipa erro. São sistemas, parceiros, riscos e dependências que precisam convergir.",
+            "youtube": "Em projetos complexos, acelerar sem controle só antecipa erro. São sistemas, parceiros, riscos e dependências que precisam convergir."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "mission readiness review and engineering checklist",
+          "pexels_query": "engineering readiness review checklist team",
+          "overlay": {
+            "instagram": "MARCO + DONO + CRITÉRIO",
+            "tiktok": "MARCO + DONO + CRITÉRIO",
+            "youtube": "MARCO + DONO + CRITÉRIO"
+          },
+          "support": {
+            "instagram": "Readiness antes do go",
+            "tiktok": "Readiness antes do go",
+            "youtube": "Readiness antes do go"
+          },
+          "narration": {
+            "instagram": "A execução ganha velocidade quando cada marco tem dono, revisão de prontidão e critério claro para avançar ou parar.",
+            "tiktok": "A execução ganha velocidade quando cada marco tem dono, revisão de prontidão e critério claro para avançar ou parar.",
+            "youtube": "A execução ganha velocidade quando cada marco tem dono, revisão de prontidão e critério claro para avançar ou parar."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "partners coordinating a technical program plan",
+          "pexels_query": "engineering partners project coordination planning",
+          "overlay": {
+            "instagram": "COORDENAÇÃO REDUZ ATRITO",
+            "tiktok": "COORDENAÇÃO REDUZ ATRITO",
+            "youtube": "COORDENAÇÃO REDUZ ATRITO"
+          },
+          "support": {
+            "instagram": "Preparar interfaces antes da execução",
+            "tiktok": "Preparar interfaces antes da execução",
+            "youtube": "Preparar interfaces antes da execução"
+          },
+          "narration": {
+            "instagram": "Parceiros bem coordenados e interfaces definidas reduzem retrabalho. A velocidade aparece depois, como resultado da preparação.",
+            "tiktok": "Parceiros bem coordenados e interfaces definidas reduzem retrabalho. A velocidade aparece depois, como resultado da preparação.",
+            "youtube": "Parceiros bem coordenados e interfaces definidas reduzem retrabalho. A velocidade aparece depois, como resultado da preparação."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "project board with green readiness gates",
+          "pexels_query": "project milestones green status board management",
+          "overlay": {
+            "instagram": "ANTES DO PRÓXIMO GO",
+            "tiktok": "ANTES DO PRÓXIMO GO",
+            "youtube": "ANTES DO PRÓXIMO GO"
+          },
+          "support": {
+            "instagram": "Escopo • responsável • dependência • evidência",
+            "tiktok": "Escopo • responsável • dependência • evidência",
+            "youtube": "Escopo • responsável • dependência • evidência"
+          },
+          "narration": {
+            "instagram": "No seu projeto, deixe explícitos quatro itens antes do próximo go: escopo, responsável, dependências e evidência de prontidão.",
+            "tiktok": "No seu projeto, deixe explícitos quatro itens antes do próximo go: escopo, responsável, dependências e evidência de prontidão.",
+            "youtube": "No seu projeto, deixe explícitos quatro itens antes do próximo go: escopo, responsável, dependências e evidência de prontidão."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "clean UGI close with project execution motion background",
+          "pexels_query": "project management team execution modern office",
+          "overlay": {
+            "instagram": "O QUE PRECISA ESTAR VERDE?",
+            "tiktok": "O QUE PRECISA ESTAR VERDE?",
+            "youtube": "O QUE PRECISA ESTAR VERDE?"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Velocidade sustentável é preparação comprovada. No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
+            "tiktok": "Velocidade sustentável é preparação comprovada. No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
+            "youtube": "Velocidade sustentável é preparação comprovada. No seu projeto, quais critérios precisam estar verdes antes do próximo go?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "9 MESES ANTES DO CRONOGRAMA",
+            "tiktok": "9 MESES ANTES DO CRONOGRAMA",
+            "youtube": "9 MESES ANTES DO CRONOGRAMA"
+          },
+          "support": {
+            "instagram": "Velocidade ou preparação?",
+            "tiktok": "Velocidade ou preparação?",
+            "youtube": "Velocidade ou preparação?"
+          },
+          "narration": {
+            "instagram": "Mais de uma década de projeto. A NASA lançou o telescópio Roman cerca de nove meses antes do cronograma. O que a gestão acertou?",
+            "tiktok": "Mais de uma década de projeto. A NASA lançou o telescópio Roman cerca de nove meses antes do cronograma. O que a gestão acertou?",
+            "youtube": "Mais de uma década de projeto. A NASA lançou o telescópio Roman cerca de nove meses antes do cronograma. O que a gestão acertou?"
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "PROJETO COMPLEXO NÃO ACEITA IMPROVISO",
+            "tiktok": "PROJETO COMPLEXO NÃO ACEITA IMPROVISO",
+            "youtube": "PROJETO COMPLEXO NÃO ACEITA IMPROVISO"
+          },
+          "support": {
+            "instagram": "Muitos sistemas • parceiros • riscos",
+            "tiktok": "Muitos sistemas • parceiros • riscos",
+            "youtube": "Muitos sistemas • parceiros • riscos"
+          },
+          "narration": {
+            "instagram": "Em projetos complexos, acelerar sem controle só antecipa erro. São sistemas, parceiros, riscos e dependências que precisam convergir.",
+            "tiktok": "Em projetos complexos, acelerar sem controle só antecipa erro. São sistemas, parceiros, riscos e dependências que precisam convergir.",
+            "youtube": "Em projetos complexos, acelerar sem controle só antecipa erro. São sistemas, parceiros, riscos e dependências que precisam convergir."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "MARCO + DONO + CRITÉRIO",
+            "tiktok": "MARCO + DONO + CRITÉRIO",
+            "youtube": "MARCO + DONO + CRITÉRIO"
+          },
+          "support": {
+            "instagram": "Readiness antes do go",
+            "tiktok": "Readiness antes do go",
+            "youtube": "Readiness antes do go"
+          },
+          "narration": {
+            "instagram": "A execução ganha velocidade quando cada marco tem dono, revisão de prontidão e critério claro para avançar ou parar.",
+            "tiktok": "A execução ganha velocidade quando cada marco tem dono, revisão de prontidão e critério claro para avançar ou parar.",
+            "youtube": "A execução ganha velocidade quando cada marco tem dono, revisão de prontidão e critério claro para avançar ou parar."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "COORDENAÇÃO REDUZ ATRITO",
+            "tiktok": "COORDENAÇÃO REDUZ ATRITO",
+            "youtube": "COORDENAÇÃO REDUZ ATRITO"
+          },
+          "support": {
+            "instagram": "Preparar interfaces antes da execução",
+            "tiktok": "Preparar interfaces antes da execução",
+            "youtube": "Preparar interfaces antes da execução"
+          },
+          "narration": {
+            "instagram": "Parceiros bem coordenados e interfaces definidas reduzem retrabalho. A velocidade aparece depois, como resultado da preparação.",
+            "tiktok": "Parceiros bem coordenados e interfaces definidas reduzem retrabalho. A velocidade aparece depois, como resultado da preparação.",
+            "youtube": "Parceiros bem coordenados e interfaces definidas reduzem retrabalho. A velocidade aparece depois, como resultado da preparação."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "ANTES DO PRÓXIMO GO",
+            "tiktok": "ANTES DO PRÓXIMO GO",
+            "youtube": "ANTES DO PRÓXIMO GO"
+          },
+          "support": {
+            "instagram": "Escopo • responsável • dependência • evidência",
+            "tiktok": "Escopo • responsável • dependência • evidência",
+            "youtube": "Escopo • responsável • dependência • evidência"
+          },
+          "narration": {
+            "instagram": "No seu projeto, deixe explícitos quatro itens antes do próximo go: escopo, responsável, dependências e evidência de prontidão.",
+            "tiktok": "No seu projeto, deixe explícitos quatro itens antes do próximo go: escopo, responsável, dependências e evidência de prontidão.",
+            "youtube": "No seu projeto, deixe explícitos quatro itens antes do próximo go: escopo, responsável, dependências e evidência de prontidão."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "O QUE PRECISA ESTAR VERDE?",
+            "tiktok": "O QUE PRECISA ESTAR VERDE?",
+            "youtube": "O QUE PRECISA ESTAR VERDE?"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Velocidade sustentável é preparação comprovada. No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
+            "tiktok": "Velocidade sustentável é preparação comprovada. No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
+            "youtube": "Velocidade sustentável é preparação comprovada. No seu projeto, quais critérios precisam estar verdes antes do próximo go?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "7236500fdc22b16c4f7f80b9e277d678fd942355183bb41102d2c3ea9ada47e1",
+      "canonicalPayloadSha256": "4944c458e50e8b89f4af195250de3de8167c7d865c270cf154fd2f6fa609fc0e",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
+      "finalCtaByPlatform": {
+        "instagram": "No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
+        "tiktok": "No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
+        "youtube": "No seu projeto, quais critérios precisam estar verdes antes do próximo go?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "space rocket launch mission control",
+        "provider_video_id": 7106859,
+        "provider_page_url": "https://www.pexels.com/video/sky-space-cute-stars-7106859/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "aerospace engineers complex project integration",
+        "provider_video_id": 37157735,
+        "provider_page_url": "https://www.pexels.com/video/commercial-airliner-taking-off-over-fence-37157735/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "engineering readiness review checklist team",
+        "provider_video_id": 37198879,
+        "provider_page_url": "https://www.pexels.com/video/team-of-engineers-discussing-project-blueprints-37198879/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "engineering partners project coordination planning",
+        "provider_video_id": 37198889,
+        "provider_page_url": "https://www.pexels.com/video/team-of-engineers-reviewing-construction-plans-37198889/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "project milestones green status board management",
+        "provider_video_id": 38870355,
+        "provider_page_url": "https://www.pexels.com/video/dynamic-touchscreen-interface-in-tech-setting-38870355/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "project management team execution modern office",
+        "provider_video_id": 12893614,
+        "provider_page_url": "https://www.pexels.com/video/women-business-meeting-12893614/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
+    "updatedAt": "2026-09-02T12:33:54.201Z"
+  }
 }

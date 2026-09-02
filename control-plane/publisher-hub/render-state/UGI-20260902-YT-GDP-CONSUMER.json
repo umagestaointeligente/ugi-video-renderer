@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260902-YT-GDP-CONSUMER",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260902122542-bed398150a02",
   "approvalDraftId": "ugi-20260902122542-bed398150a02",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T12:25:57.080630+00:00"
+  "updatedAt": "2026-09-02T12:37:55.242502+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260902122542-bed398150a02",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33629872506",
+    "githubRunNumber": 192,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-02T12:25:53Z",
+    "githubRunUpdatedAt": "2026-09-02T12:25:53Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33629872506",
+    "githubRunDisplayTitle": "UGI ugi-20260902122542-bed398150a02",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "bf2c5fd7f090b12ac978bdb3d87409c0fa5de86e",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "PIB cresce, consumidor recua: o que muda na gestão",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122542-bed398150a02/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122542-bed398150a02%2Finstagram.mp4",
+        "videoBytes": 21982553,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33629872506",
+        "r2Etag": "a72dce671e33f20232ce652316e1253a",
+        "uploadedAt": "2026-09-02T12:34:07.553Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122542-bed398150a02/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122542-bed398150a02%2Ftiktok.mp4",
+        "videoBytes": 16976912,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33629872506",
+        "r2Etag": "1a8292524b60772998ef214d8f59fe33",
+        "uploadedAt": "2026-09-02T12:34:10.467Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902122542-bed398150a02/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122542-bed398150a02%2Fyoutube.mp4",
+        "videoBytes": 24632986,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33629872506",
+        "r2Etag": "8e82fc872836c62d139b728cc165dd8e",
+        "uploadedAt": "2026-09-02T12:34:13.407Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902122542-bed398150a02%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260902122542-bed398150a02/instagram.mp4",
+    "approvalDraftId": "ugi-20260902122542-bed398150a02",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260902-YT-GDP-CONSUMER",
+    "experimentId": "UGI-20260902-YT-GENERAL-GDP",
+    "variant": "GENERAL",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-02T12:34:16.875Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "e444e5d923ecaaae242f0aa5edebcfd08649b7fa861d97ba628aa5744a041ab0",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-02T12:25:53.532Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260902122542-bed398150a02",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 21982553,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-02T12:34:13.407Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260902122542-bed398150a02",
+      "githubRunId": "33629872506",
+      "contentId": "UGI-20260902-YT-GDP-CONSUMER",
+      "experimentId": "UGI-20260902-YT-GENERAL-GDP",
+      "variant": "GENERAL",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "Brazil retail street and economic dashboard",
+          "pexels_query": "Brazil retail consumers city economy",
+          "overlay": {
+            "instagram": "PIB +0,5%. CONSUMO -0,4%.",
+            "tiktok": "PIB +0,5%. CONSUMO -0,4%.",
+            "youtube": "PIB +0,5%. CONSUMO -0,4%."
+          },
+          "support": {
+            "instagram": "Crescer não significa vender mais",
+            "tiktok": "Crescer não significa vender mais",
+            "youtube": "Crescer não significa vender mais"
+          },
+          "narration": {
+            "instagram": "O PIB brasileiro cresceu zero vírgula cinco por cento no segundo trimestre, mas o consumo das famílias recuou zero vírgula quatro. O que isso muda na gestão?",
+            "tiktok": "O PIB brasileiro cresceu zero vírgula cinco por cento no segundo trimestre, mas o consumo das famílias recuou zero vírgula quatro. O que isso muda na gestão?",
+            "youtube": "O PIB brasileiro cresceu zero vírgula cinco por cento no segundo trimestre, mas o consumo das famílias recuou zero vírgula quatro. O que isso muda na gestão?"
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "retail shelves inventory and cautious shoppers",
+          "pexels_query": "retail shelves inventory cautious shoppers",
+          "overlay": {
+            "instagram": "UMA LINHA NÃO CONTA A HISTÓRIA",
+            "tiktok": "UMA LINHA NÃO CONTA A HISTÓRIA",
+            "youtube": "UMA LINHA NÃO CONTA A HISTÓRIA"
+          },
+          "support": {
+            "instagram": "Q1 havia crescido +1,1%",
+            "tiktok": "Q1 havia crescido +1,1%",
+            "youtube": "Q1 havia crescido +1,1%"
+          },
+          "narration": {
+            "instagram": "No trimestre anterior, o avanço havia sido de um vírgula um por cento. Olhar apenas o PIB esconde a desaceleração e a pressão sobre a demanda.",
+            "tiktok": "No trimestre anterior, o avanço havia sido de um vírgula um por cento. Olhar apenas o PIB esconde a desaceleração e a pressão sobre a demanda.",
+            "youtube": "No trimestre anterior, o avanço havia sido de um vírgula um por cento. Olhar apenas o PIB esconde a desaceleração e a pressão sobre a demanda."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "inventory warehouse and margin pricing analysis",
+          "pexels_query": "warehouse inventory pricing analysis business",
+          "overlay": {
+            "instagram": "ESTOQUE • MARGEM • PREÇO • CAIXA",
+            "tiktok": "ESTOQUE • MARGEM • PREÇO • CAIXA",
+            "youtube": "ESTOQUE • MARGEM • PREÇO • CAIXA"
+          },
+          "support": {
+            "instagram": "Demanda mais lenta aumenta o peso da disciplina",
+            "tiktok": "Demanda mais lenta aumenta o peso da disciplina",
+            "youtube": "Demanda mais lenta aumenta o peso da disciplina"
+          },
+          "narration": {
+            "instagram": "Quando a demanda perde força, estoque errado custa mais, desconto mal desenhado corrói margem e caixa parado fica ainda mais caro.",
+            "tiktok": "Quando a demanda perde força, estoque errado custa mais, desconto mal desenhado corrói margem e caixa parado fica ainda mais caro.",
+            "youtube": "Quando a demanda perde força, estoque errado custa mais, desconto mal desenhado corrói margem e caixa parado fica ainda mais caro."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "management team reviewing scenario dashboard",
+          "pexels_query": "management team scenario planning dashboard",
+          "overlay": {
+            "instagram": "GESTÃO POR CENÁRIOS",
+            "tiktok": "GESTÃO POR CENÁRIOS",
+            "youtube": "GESTÃO POR CENÁRIOS"
+          },
+          "support": {
+            "instagram": "Volume + margem + giro + caixa",
+            "tiktok": "Volume + margem + giro + caixa",
+            "youtube": "Volume + margem + giro + caixa"
+          },
+          "narration": {
+            "instagram": "A resposta não é prever um número perfeito. É trabalhar cenários de volume, margem, giro e caixa e definir gatilhos para reagir cedo.",
+            "tiktok": "A resposta não é prever um número perfeito. É trabalhar cenários de volume, margem, giro e caixa e definir gatilhos para reagir cedo.",
+            "youtube": "A resposta não é prever um número perfeito. É trabalhar cenários de volume, margem, giro e caixa e definir gatilhos para reagir cedo."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "pricing and inventory decision matrix",
+          "pexels_query": "pricing inventory decision matrix business",
+          "overlay": {
+            "instagram": "4 PERGUNTAS PARA HOJE",
+            "tiktok": "4 PERGUNTAS PARA HOJE",
+            "youtube": "4 PERGUNTAS PARA HOJE"
+          },
+          "support": {
+            "instagram": "Giro? margem? preço? caixa?",
+            "tiktok": "Giro? margem? preço? caixa?",
+            "youtube": "Giro? margem? preço? caixa?"
+          },
+          "narration": {
+            "instagram": "Revise quatro perguntas: onde o giro caiu, onde a margem está vulnerável, onde o preço perdeu aderência e onde o caixa está preso.",
+            "tiktok": "Revise quatro perguntas: onde o giro caiu, onde a margem está vulnerável, onde o preço perdeu aderência e onde o caixa está preso.",
+            "youtube": "Revise quatro perguntas: onde o giro caiu, onde a margem está vulnerável, onde o preço perdeu aderência e onde o caixa está preso."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "clean UGI closing frame with Brazil business motion background",
+          "pexels_query": "Brazil business city office modern",
+          "overlay": {
+            "instagram": "CRESCIMENTO E CONSUMO JUNTOS",
+            "tiktok": "CRESCIMENTO E CONSUMO JUNTOS",
+            "youtube": "CRESCIMENTO E CONSUMO JUNTOS"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Crescimento macro e demanda real podem andar em ritmos diferentes. Sua gestão está olhando os dois ao mesmo tempo?",
+            "tiktok": "Crescimento macro e demanda real podem andar em ritmos diferentes. Sua gestão está olhando os dois ao mesmo tempo?",
+            "youtube": "Crescimento macro e demanda real podem andar em ritmos diferentes. Sua gestão está olhando os dois ao mesmo tempo?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "PIB +0,5%. CONSUMO -0,4%.",
+            "tiktok": "PIB +0,5%. CONSUMO -0,4%.",
+            "youtube": "PIB +0,5%. CONSUMO -0,4%."
+          },
+          "support": {
+            "instagram": "Crescer não significa vender mais",
+            "tiktok": "Crescer não significa vender mais",
+            "youtube": "Crescer não significa vender mais"
+          },
+          "narration": {
+            "instagram": "O PIB brasileiro cresceu zero vírgula cinco por cento no segundo trimestre, mas o consumo das famílias recuou zero vírgula quatro. O que isso muda na gestão?",
+            "tiktok": "O PIB brasileiro cresceu zero vírgula cinco por cento no segundo trimestre, mas o consumo das famílias recuou zero vírgula quatro. O que isso muda na gestão?",
+            "youtube": "O PIB brasileiro cresceu zero vírgula cinco por cento no segundo trimestre, mas o consumo das famílias recuou zero vírgula quatro. O que isso muda na gestão?"
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "UMA LINHA NÃO CONTA A HISTÓRIA",
+            "tiktok": "UMA LINHA NÃO CONTA A HISTÓRIA",
+            "youtube": "UMA LINHA NÃO CONTA A HISTÓRIA"
+          },
+          "support": {
+            "instagram": "Q1 havia crescido +1,1%",
+            "tiktok": "Q1 havia crescido +1,1%",
+            "youtube": "Q1 havia crescido +1,1%"
+          },
+          "narration": {
+            "instagram": "No trimestre anterior, o avanço havia sido de um vírgula um por cento. Olhar apenas o PIB esconde a desaceleração e a pressão sobre a demanda.",
+            "tiktok": "No trimestre anterior, o avanço havia sido de um vírgula um por cento. Olhar apenas o PIB esconde a desaceleração e a pressão sobre a demanda.",
+            "youtube": "No trimestre anterior, o avanço havia sido de um vírgula um por cento. Olhar apenas o PIB esconde a desaceleração e a pressão sobre a demanda."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "ESTOQUE • MARGEM • PREÇO • CAIXA",
+            "tiktok": "ESTOQUE • MARGEM • PREÇO • CAIXA",
+            "youtube": "ESTOQUE • MARGEM • PREÇO • CAIXA"
+          },
+          "support": {
+            "instagram": "Demanda mais lenta aumenta o peso da disciplina",
+            "tiktok": "Demanda mais lenta aumenta o peso da disciplina",
+            "youtube": "Demanda mais lenta aumenta o peso da disciplina"
+          },
+          "narration": {
+            "instagram": "Quando a demanda perde força, estoque errado custa mais, desconto mal desenhado corrói margem e caixa parado fica ainda mais caro.",
+            "tiktok": "Quando a demanda perde força, estoque errado custa mais, desconto mal desenhado corrói margem e caixa parado fica ainda mais caro.",
+            "youtube": "Quando a demanda perde força, estoque errado custa mais, desconto mal desenhado corrói margem e caixa parado fica ainda mais caro."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "GESTÃO POR CENÁRIOS",
+            "tiktok": "GESTÃO POR CENÁRIOS",
+            "youtube": "GESTÃO POR CENÁRIOS"
+          },
+          "support": {
+            "instagram": "Volume + margem + giro + caixa",
+            "tiktok": "Volume + margem + giro + caixa",
+            "youtube": "Volume + margem + giro + caixa"
+          },
+          "narration": {
+            "instagram": "A resposta não é prever um número perfeito. É trabalhar cenários de volume, margem, giro e caixa e definir gatilhos para reagir cedo.",
+            "tiktok": "A resposta não é prever um número perfeito. É trabalhar cenários de volume, margem, giro e caixa e definir gatilhos para reagir cedo.",
+            "youtube": "A resposta não é prever um número perfeito. É trabalhar cenários de volume, margem, giro e caixa e definir gatilhos para reagir cedo."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "4 PERGUNTAS PARA HOJE",
+            "tiktok": "4 PERGUNTAS PARA HOJE",
+            "youtube": "4 PERGUNTAS PARA HOJE"
+          },
+          "support": {
+            "instagram": "Giro? margem? preço? caixa?",
+            "tiktok": "Giro? margem? preço? caixa?",
+            "youtube": "Giro? margem? preço? caixa?"
+          },
+          "narration": {
+            "instagram": "Revise quatro perguntas: onde o giro caiu, onde a margem está vulnerável, onde o preço perdeu aderência e onde o caixa está preso.",
+            "tiktok": "Revise quatro perguntas: onde o giro caiu, onde a margem está vulnerável, onde o preço perdeu aderência e onde o caixa está preso.",
+            "youtube": "Revise quatro perguntas: onde o giro caiu, onde a margem está vulnerável, onde o preço perdeu aderência e onde o caixa está preso."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "CRESCIMENTO E CONSUMO JUNTOS",
+            "tiktok": "CRESCIMENTO E CONSUMO JUNTOS",
+            "youtube": "CRESCIMENTO E CONSUMO JUNTOS"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Crescimento macro e demanda real podem andar em ritmos diferentes. Sua gestão está olhando os dois ao mesmo tempo?",
+            "tiktok": "Crescimento macro e demanda real podem andar em ritmos diferentes. Sua gestão está olhando os dois ao mesmo tempo?",
+            "youtube": "Crescimento macro e demanda real podem andar em ritmos diferentes. Sua gestão está olhando os dois ao mesmo tempo?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "e444e5d923ecaaae242f0aa5edebcfd08649b7fa861d97ba628aa5744a041ab0",
+      "canonicalPayloadSha256": "e9bd76870498e9d9582f4bb56022189fc6b8ab90af0da790d9a8027175c970ed",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Sua gestão está olhando crescimento e consumo ao mesmo tempo?",
+      "finalCtaByPlatform": {
+        "instagram": "Sua gestão está olhando crescimento e consumo ao mesmo tempo?",
+        "tiktok": "Sua gestão está olhando crescimento e consumo ao mesmo tempo?",
+        "youtube": "Sua gestão está olhando crescimento e consumo ao mesmo tempo?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "Brazil retail consumers city economy",
+        "provider_video_id": 37706044,
+        "provider_page_url": "https://www.pexels.com/video/vibrant-indoor-market-scene-from-above-37706044/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "retail shelves inventory cautious shoppers",
+        "provider_video_id": 29604470,
+        "provider_page_url": "https://www.pexels.com/video/navigating-warehouse-aisles-with-shopping-cart-29604470/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "warehouse inventory pricing analysis business",
+        "provider_video_id": 7018664,
+        "provider_page_url": "https://www.pexels.com/video/woman-checking-the-inventories-in-the-warehouse-7018664/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "management team scenario planning dashboard",
+        "provider_video_id": 38902001,
+        "provider_page_url": "https://www.pexels.com/video/efficient-task-management-on-digital-device-38902001/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "pricing inventory decision matrix business",
+        "provider_video_id": 7854922,
+        "provider_page_url": "https://www.pexels.com/video/women-analyzing-their-business-growth-7854922/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "Brazil business city office modern",
+        "provider_video_id": 28431843,
+        "provider_page_url": "https://www.pexels.com/video/por-do-sol-28431843/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Sua gestão está olhando crescimento e consumo ao mesmo tempo?",
+    "updatedAt": "2026-09-02T12:34:16.875Z"
+  }
 }
