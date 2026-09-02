@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T15:53:07.880906+00:00",
+  "updatedAt": "2026-09-02T15:56:51.064554+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -189,14 +189,14 @@
           "externalLink": null,
           "sharedNow": false,
           "requestedAt": "2026-09-02T12:59:03.833Z",
-          "updatedAt": "2026-09-02T15:37:42.661Z",
+          "updatedAt": "2026-09-02T15:55:16.273Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a34d98f83810a1f9-YYZ",
-            "rateLimitRemaining": "1501",
+            "requestId": "a34db2b14da45136-DFW",
+            "rateLimitRemaining": "1490",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "No seu projeto, quais critérios precisam estar verdes antes do próximo go?",
-    "updatedAt": "2026-09-02T15:37:43.526Z",
+    "updatedAt": "2026-09-02T15:55:16.984Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,
