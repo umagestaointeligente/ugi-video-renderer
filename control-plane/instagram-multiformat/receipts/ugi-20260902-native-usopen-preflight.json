@@ -1,0 +1,17 @@
+{
+  "ok": false,
+  "project": "UGI",
+  "component": "R45-INSTAGRAM-MULTIFORMAT-PILOT",
+  "batchId": "UGI-20260902-IG-NATIVE-USOPEN-PREFLIGHT",
+  "results": [
+    {
+      "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE",
+      "type": "carousel",
+      "publish": false,
+      "ok": false,
+      "error": "ConnectionError:('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+      "state": "FAILED"
+    }
+  ],
+  "timestamp": "2026-09-02T11:24:12.066926+00:00"
+}
