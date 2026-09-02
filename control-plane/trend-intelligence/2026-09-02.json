@@ -1,0 +1,154 @@
+{
+  "project": "UGI",
+  "date": "2026-09-02",
+  "capturedAt": "2026-09-02T00:51:04-03:00",
+  "region": "BR",
+  "policy": "ugi-editorial-trend-gate-v2-3",
+  "generalSignals": [
+    {
+      "topic": "Dell AI infrastructure demand",
+      "class": "GENERAL",
+      "status": "KEEP_SUPPORTING_STORY_ONLY"
+    },
+    {
+      "topic": "Brazil Q2 GDP vs household consumption",
+      "class": "GENERAL",
+      "status": "KEEP_CORE_GENERAL"
+    },
+    {
+      "topic": "Pix MED fraud-protection rule",
+      "class": "GENERAL",
+      "status": "KEEP_SUPPORTING_STORY"
+    }
+  ],
+  "platformSignals": {
+    "youtube": {
+      "confidence": "EVIDENCED_NATIVE_PROXY_HIGH",
+      "directStudioAvailable": false,
+      "connectedEnrichment": {
+        "provider": "vidIQ",
+        "status": "UNAVAILABLE_ZERO_COST_GATE",
+        "reason": "connector requested credits; no top-up or paid dependency authorized"
+      },
+      "signals": [
+        {
+          "topic": "Grand Theft Auto VI / Extended Look analysis",
+          "evidence": "Brazil YouTube Trending Top 50 snapshot showed GTA VI analysis videos at #2 and #5 at capture time",
+          "source": "YT50 public ranking derived from YouTube Data API",
+          "sourceUrl": "https://yt50.app/br",
+          "observedMetrics": {
+            "rank2": "GTA 6 - MEGA ANALISE DOS +70 TAKES DO TRAILER",
+            "rank5": "O Trailer de GTA VI está INCRÍVEL! | React GTA VI an Extended Look"
+          }
+        }
+      ]
+    },
+    "instagram": {
+      "confidence": "EVIDENCED_PROXY",
+      "directNativeTrendSurfaceAvailable": false,
+      "signals": [
+        {
+          "topic": "US Open",
+          "evidence": "Instagram luxury-brand trend dataset updated 2026-08-31 measured US Open at +15,202% WoW, 46 posts and 10.9M views over 7 days",
+          "source": "Submarine.ai Instagram trend dataset",
+          "sourceUrl": "https://www.submarine.ai/trending/luxury/instagram",
+          "crossCorroboration": [
+            "2026 US Open brand activations increasingly emphasize immersive experiences rather than logo-only sponsorship",
+            "Official US Open partner pages show experiential activations from multiple sponsors"
+          ]
+        }
+      ]
+    },
+    "tiktok": {
+      "confidence": "PREVIOUSLY_LOCKED_USER_OBSERVED_NATIVE_SIGNAL",
+      "status": "NO_CHANGE_THIS_RUN"
+    }
+  },
+  "scores": {
+    "YOUTUBE_NATIVE_GTA_VI_LAUNCH_STRATEGY": {
+      "platformDemandVelocity": 25,
+      "naturalManagementUGIFit": 18,
+      "factualConfidence": 15,
+      "visualStrength": 9,
+      "freshness": 10,
+      "audienceRelevance": 8,
+      "shareSaveCommentPotential": 5,
+      "novelty30d": 5,
+      "total": 95,
+      "eligible": true
+    },
+    "INSTAGRAM_NATIVE_US_OPEN_EXPERIENTIAL_MARKETING": {
+      "platformDemandVelocity": 24,
+      "naturalManagementUGIFit": 19,
+      "factualConfidence": 15,
+      "visualStrength": 10,
+      "freshness": 9,
+      "audienceRelevance": 8,
+      "shareSaveCommentPotential": 5,
+      "novelty30d": 5,
+      "total": 95,
+      "eligible": true
+    }
+  },
+  "selectedTopics": {
+    "youtube": {
+      "slot": "16:30",
+      "replace": "Dell / AI infrastructure",
+      "selected": "GTA VI / launch orchestration and attention strategy",
+      "cohort": "YOUTUBE_NATIVE",
+      "contentId": "UGI-20260902-YT-NATIVE-GTAVI-LAUNCH"
+    },
+    "instagram": {
+      "slot": "19:15",
+      "replace": "Dell / AI infrastructure carousel",
+      "selected": "US Open / experiential marketing and participation strategy",
+      "cohort": "INSTAGRAM_NATIVE",
+      "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE"
+    }
+  },
+  "dedupDecision": {
+    "status": "PASS",
+    "rule": "platform-native topics remain exclusive to their selected platform in today's test",
+    "youtubeTopicCrossPosted": false,
+    "instagramTopicCrossPosted": false,
+    "existingDellStoryAt0900Preserved": true
+  },
+  "factStatus": {
+    "youtube": "PASS_WITH_TIME_STAMPED_PLATFORM_SIGNAL",
+    "instagram": "PASS_PROXY_SIGNAL_NOT_PRESENTED_AS_INSTAGRAM_WIDE_RANK",
+    "rightsGate": "REQUIRES_RIGHTS_CLEARED_OR_EDITORIALLY_PERMITTED_CONTEXTUAL_ASSETS_AT_PRODUCTION",
+    "publication": "NOT_SCHEDULED_BY_THIS_SNAPSHOT"
+  },
+  "sources": [
+    {
+      "name": "YT50 Brazil YouTube Trending Top 50",
+      "url": "https://yt50.app/br",
+      "role": "YouTube Brazil demand signal"
+    },
+    {
+      "name": "Rockstar Games — Grand Theft Auto VI: An Extended Look",
+      "url": "https://www.rockstargames.com/VI/an-extended-look",
+      "role": "primary factual source"
+    },
+    {
+      "name": "Axios — GTA makes advertising appointment TV",
+      "url": "https://www.axios.com/2026/09/01/grand-theft-auto-gta-advertising-tv",
+      "role": "launch/attention strategy context"
+    },
+    {
+      "name": "Submarine.ai — Luxury Trends on Instagram",
+      "url": "https://www.submarine.ai/trending/luxury/instagram",
+      "role": "Instagram demand proxy"
+    },
+    {
+      "name": "Forbes — US Open sponsors pivot to immersive experiences",
+      "url": "https://www.forbes.com/sites/merlisalawrencecorbett/2026/08/29/us-open-sponsors-pivot-from-endorsement-deals-to-immersive-experiences/",
+      "role": "business/marketing context"
+    },
+    {
+      "name": "US Open official partners",
+      "url": "https://www.usopen.org/en_US/about/partners.html",
+      "role": "primary event/sponsor corroboration"
+    }
+  ]
+}
