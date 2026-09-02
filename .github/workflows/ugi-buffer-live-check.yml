@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - name: Check Buffer channels through UGI Worker
+      - name: Check Buffer channels and live publication references through UGI Worker
         env:
           LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
         run: |
@@ -20,8 +20,8 @@ jobs:
             echo 'RESULT=FAIL_NO_LOLA_COMMAND_KEY'
             exit 1
           fi
-          http=$(curl -sS -o /tmp/body.json -w '%{http_code}' \
-            -H "x-lola-command-key: ${LOLA_COMMAND_KEY}" \
+          H=( -H "x-lola-command-key: ${LOLA_COMMAND_KEY}" )
+          http=$(curl -sS -o /tmp/body.json -w '%{http_code}' "${H[@]}" \
             'https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/buffer/channels')
           echo "HTTP_STATUS=${http}"
           cat /tmp/body.json
@@ -37,5 +37,36 @@ jobs:
               raise SystemExit('RESULT=BUFFER_NOT_READY')
           print('RESULT=BUFFER_READY')
           PY
+          drafts_http=$(curl -sS -o /tmp/drafts.json -w '%{http_code}' "${H[@]}" \
+            'https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/drafts')
+          echo "DRAFTS_HTTP_STATUS=${drafts_http}"
+          if [ "$drafts_http" != "200" ]; then
+            echo 'RESULT=DRAFT_READBACK_FAILED'
+            cat /tmp/drafts.json
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          data=json.load(open('/tmp/drafts.json', encoding='utf-8'))
+          drafts=data.get('drafts') or []
+          rows=[]
+          for d in drafts:
+              base={
+                  'draftId': d.get('id') or d.get('draftId'),
+                  'contentId': d.get('contentId') or d.get('content_id'),
+                  'type': d.get('type'),
+                  'topic': d.get('topic'),
+              }
+              direct=d.get('publication')
+              if isinstance(direct,dict) and direct.get('bufferPostId'):
+                  rows.append({**base,'platform':'instagram','bufferPostId':direct.get('bufferPostId'),'status':direct.get('status') or direct.get('bufferStatus'),'bufferStatus':direct.get('bufferStatus'),'dueAt':direct.get('dueAt'),'sentAt':direct.get('sentAt'),'externalLink':direct.get('externalLink')})
+              for platform,asset in (d.get('assets') or {}).items():
+                  if not isinstance(asset,dict): continue
+                  p=asset.get('publication') or {}
+                  if isinstance(p,dict) and p.get('bufferPostId'):
+                      rows.append({**base,'platform':platform,'bufferPostId':p.get('bufferPostId'),'status':p.get('status') or p.get('bufferStatus'),'bufferStatus':p.get('bufferStatus'),'dueAt':p.get('dueAt'),'sentAt':p.get('sentAt'),'externalLink':p.get('externalLink')})
+          print('LIVE_PUBLICATION_REFERENCES='+json.dumps(rows,ensure_ascii=False,separators=(',',':')))
+          print('LIVE_PUBLICATION_REFERENCE_COUNT='+str(len(rows)))
+          PY
 
-# recovery live probe 2026-09-02
+# recovery live publication readback 2026-09-02
