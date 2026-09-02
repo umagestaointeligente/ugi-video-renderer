@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T13:16:16.788491+00:00",
+  "updatedAt": "2026-09-02T13:29:57.502136+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -159,7 +159,33 @@
         "githubRunId": "33632873322",
         "r2Etag": "31ee36a87fed4cf4364158038defe2fd",
         "uploadedAt": "2026-09-02T13:06:17.995Z",
-        "approvalStatus": "pending_approval"
+        "approvalStatus": "approved",
+        "approvalDecisionAt": "2026-09-02T13:16:54.917Z",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a9821c9e987b8f4b4f12478",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-09-02T22:15:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-09-02T13:16:56.996Z",
+          "updatedAt": "2026-09-02T13:17:00.562Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a34ccadd885feae8-ORD",
+            "rateLimitRemaining": "1606",
+            "graphqlErrors": [],
+            "postError": null
+          }
+        }
       },
       "tiktok": {
         "platform": "tiktok",
@@ -713,6 +739,19 @@
       }
     ],
     "finalCta": "Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
-    "updatedAt": "2026-09-02T13:06:30.319Z"
+    "updatedAt": "2026-09-02T13:17:01.370Z",
+    "approvalSummary": {
+      "workflowStatus": "partially_approved",
+      "approvedCount": 1,
+      "rejectedCount": 0,
+      "pendingCount": 2,
+      "platformStates": {
+        "instagram": "approved",
+        "tiktok": "pending_approval",
+        "youtube": "pending_approval"
+      },
+      "allReviewed": false
+    },
+    "approvalWorkflowStatus": "partially_approved"
   }
 }
