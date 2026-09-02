@@ -8,10 +8,23 @@
       "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE",
       "type": "carousel",
       "publish": false,
+      "generateHttp": 200,
+      "generationOk": true,
+      "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+      "draftId": "f12864ca-33f5-4b9d-85fa-88a71430a57d",
+      "assetUrls": [],
+      "qa": {
+        "pass": false,
+        "issues": [
+          "render_not_ready:partial",
+          "carousel_asset_count:0"
+        ],
+        "dimensions": []
+      },
       "ok": false,
-      "error": "ConnectionError:('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+      "error": "RuntimeError:QA_FAIL:render_not_ready:partial|carousel_asset_count:0",
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-02T12:27:30.118443+00:00"
+  "timestamp": "2026-09-02T12:53:53.297372+00:00"
 }
