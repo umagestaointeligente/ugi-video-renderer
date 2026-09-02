@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T17:41:20.642350+00:00",
+  "updatedAt": "2026-09-02T17:53:25.341833+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -189,14 +189,14 @@
           "externalLink": "https://tiktok.com/@umagestaointelige/video/7680929878635531536",
           "sharedNow": false,
           "requestedAt": "2026-09-02T12:58:53.025Z",
-          "updatedAt": "2026-09-02T17:36:49.192Z",
+          "updatedAt": "2026-09-02T17:44:33.108Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a34e4772390869e7-ATL",
-            "rateLimitRemaining": "1412",
+            "requestId": "a34e52c58b449471-MIA",
+            "rateLimitRemaining": "1405",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Quando uma inovação deve deixar de ser premium e virar escala?",
-    "updatedAt": "2026-09-02T17:36:50.232Z",
+    "updatedAt": "2026-09-02T17:44:33.816Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,

@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T17:41:19.924928+00:00",
+  "updatedAt": "2026-09-02T17:53:24.198491+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -174,14 +174,14 @@
           "externalLink": null,
           "sharedNow": false,
           "requestedAt": "2026-09-02T13:16:56.996Z",
-          "updatedAt": "2026-09-02T17:27:23.293Z",
+          "updatedAt": "2026-09-02T17:42:16.878Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a34e39a1ee7d64fe-BOS",
-            "rateLimitRemaining": "1420",
+            "requestId": "a34e4f70b9900203-CDG",
+            "rateLimitRemaining": "1409",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
-    "updatedAt": "2026-09-02T17:27:24.004Z",
+    "updatedAt": "2026-09-02T17:42:18.397Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,
