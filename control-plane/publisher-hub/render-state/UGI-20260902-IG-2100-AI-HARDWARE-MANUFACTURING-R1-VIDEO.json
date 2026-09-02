@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T16:30:07.036245+00:00",
+  "updatedAt": "2026-09-02T16:44:03.074476+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -174,14 +174,14 @@
           "externalLink": null,
           "sharedNow": false,
           "requestedAt": "2026-09-02T13:17:03.930Z",
-          "updatedAt": "2026-09-02T16:17:52.976Z",
+          "updatedAt": "2026-09-02T16:30:41.584Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a34dd3d13b8ac8de-SJC",
-            "rateLimitRemaining": "1474",
+            "requestId": "a34de694effd24ec-LHR",
+            "rateLimitRemaining": "1463",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Onde a IA já está mudando sua cadeia física de decisão?",
-    "updatedAt": "2026-09-02T16:17:54.203Z",
+    "updatedAt": "2026-09-02T16:30:43.136Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,

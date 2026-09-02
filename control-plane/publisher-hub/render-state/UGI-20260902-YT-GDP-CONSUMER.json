@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T16:30:09.092369+00:00",
+  "updatedAt": "2026-09-02T16:44:05.670906+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -204,14 +204,14 @@
           "externalLink": null,
           "sharedNow": false,
           "requestedAt": "2026-09-02T12:59:09.659Z",
-          "updatedAt": "2026-09-02T16:19:54.689Z",
+          "updatedAt": "2026-09-02T16:33:03.129Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a34dd6c9abd60203-CDG",
-            "rateLimitRemaining": "1468",
+            "requestId": "a34dea078a7d53a4-LHR",
+            "rateLimitRemaining": "1457",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Sua gestão está olhando crescimento e consumo ao mesmo tempo?",
-    "updatedAt": "2026-09-02T16:19:56.226Z",
+    "updatedAt": "2026-09-02T16:33:04.610Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,
