@@ -9,9 +9,9 @@
       "type": "carousel",
       "publish": false,
       "ok": false,
-      "error": "ReadTimeout:HTTPSConnectionPool(host='lola-operacional-ugi.umagestaointeligente.workers.dev', port=443): Read timed out. (read timeout=900)",
+      "error": "ConnectionError:('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-02T11:58:51.844183+00:00"
+  "timestamp": "2026-09-02T12:27:30.118443+00:00"
 }

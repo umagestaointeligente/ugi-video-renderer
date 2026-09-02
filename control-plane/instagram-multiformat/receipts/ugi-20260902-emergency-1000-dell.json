@@ -1,0 +1,99 @@
+{
+  "ok": true,
+  "project": "UGI",
+  "component": "R45-INSTAGRAM-MULTIFORMAT-PILOT",
+  "batchId": "UGI-20260902-IG-EMERGENCY-1000-DELL",
+  "results": [
+    {
+      "contentId": "UGI-20260902-IG-1000-DELL-AI-INFRA",
+      "type": "story_image",
+      "publish": true,
+      "generateHttp": 200,
+      "generationOk": true,
+      "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+      "draftId": "d1875f2a-64e6-42a2-950d-d41aa58b73fd",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788351766566-d1875f2a-64e6-42a2-950d-d41aa58b73fd.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 1961184
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 200,
+      "publishResponse": {
+        "ok": true,
+        "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+        "route": "/api/r45/static-publish",
+        "platform": "instagram",
+        "type": "story_image",
+        "mode": "customScheduled",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a98151ce3ab5ffbe3013bb5",
+          "channelId": "6a7896cdb2d9d57743457e33",
+          "channelService": "instagram",
+          "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+          "mode": "customScheduled",
+          "dueAt": "2026-09-02T13:00:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-09-02T12:22:52.268Z",
+          "updatedAt": "2026-09-02T12:22:52.925Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a34c7b90bb16cba4-LAX",
+            "rateLimitRemaining": "1645",
+            "graphqlErrors": [],
+            "responseType": "PostActionSuccess",
+            "postError": null
+          }
+        },
+        "post": {
+          "id": "6a98151ce3ab5ffbe3013bb5",
+          "text": "",
+          "status": "scheduled",
+          "dueAt": "2026-09-02T13:00:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "shareMode": "customScheduled",
+          "channelService": "instagram",
+          "error": null
+        },
+        "assetValidation": {
+          "ok": true,
+          "kind": "story_image",
+          "count": 1
+        },
+        "publicationTriggered": true
+      },
+      "readbackHttp": 200,
+      "bufferPostId": "6a98151ce3ab5ffbe3013bb5",
+      "bufferStatus": "scheduled",
+      "publicationStatus": "scheduled",
+      "dueAtRequested": "2026-09-02T10:00:00-03:00",
+      "dueAtReadback": "2026-09-02T13:00:00.000Z",
+      "dueAtMatch": true,
+      "externalLink": null,
+      "readbackPass": true,
+      "state": "PROVEN_SCHEDULED",
+      "ok": true
+    }
+  ],
+  "timestamp": "2026-09-02T12:22:56.759957+00:00"
+}
