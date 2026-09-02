@@ -50,15 +50,15 @@ jobs:
             'commercial_intent':command.get('commercial_intent','none'),
             'scenes':package['scenes'],
             'cta':package.get('cta'),
-            'copy_lock':command.get('copy_lock',True),
-            'exact_copy':command.get('exact_copy',True),
-            'editorial_mode':command.get('editorial_mode'),
-            'music_profile':command.get('music_profile'),
+            'copy_lock':package.get('copy_lock', True),
+            'exact_copy':package.get('exact_copy', True),
+            'editorial_mode':package.get('editorial_mode'),
+            'music_profile':package.get('music_profile'),
             'smoke_test':False
           }
           base=os.environ['WORKER_URL'].rstrip('/')
           key=os.environ['UGI_WORKER_COMMAND_KEY']
-          headers={'x-lola-command-key':key,'content-type':'application/json','accept':'application/json','user-agent':'UGI-Native-Trend-Preflight/1.0'}
+          headers={'x-lola-command-key':key,'content-type':'application/json','accept':'application/json','user-agent':'UGI-Native-Trend-Preflight/1.1'}
           def call(method,path,body=None,timeout=180):
             data=None if body is None else json.dumps(body,ensure_ascii=False).encode('utf-8')
             req=urllib.request.Request(base+path,data=data,headers=headers,method=method)
