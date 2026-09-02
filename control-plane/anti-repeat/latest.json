@@ -2,9 +2,90 @@
   "project": "UGI",
   "component": "ANTI-REPEAT-GATE",
   "windowDays": 15,
-  "checkedAt": "2026-09-01T05:42:18.335289+00:00",
-  "queuedCount": 0,
+  "checkedAt": "2026-09-02T12:24:44.408565+00:00",
+  "queuedCount": 4,
   "blocked": 0,
   "state": "PASS",
-  "results": []
+  "results": [
+    {
+      "contentId": "UGI-20260902-TT-S26FE-PORTFOLIO",
+      "command": "control-plane/commands/ugi-20260902-tiktok-s26fe-portfolio.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0168,
+        "hookSimilarity": 0.2371,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0685
+      },
+      "signature": {
+        "exactHash": "4b902a1b23def2a3b3ed267f45002a007a66a82272f866f3cc15ebe428040908",
+        "renderId": "",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260902-YT-NATIVE-GTAVI-LAUNCH",
+      "command": "control-plane/commands/ugi-20260902-youtube-gtavi-launch.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1510",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1510.json",
+        "textSimilarity": 0.0155,
+        "hookSimilarity": 0.1874,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0554
+      },
+      "signature": {
+        "exactHash": "177b17d69d8a0eace13b9468e92bb3e3fa2ba508e6f2a282ccf15efe543ebf26",
+        "renderId": "ugi-20260902-yt-native-gtavi-launch",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260902-TT-NASA-ROMAN-EXECUTION",
+      "command": "control-plane/commands/ugi-20260902-tiktok-nasa-roman.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1450",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1450.json",
+        "textSimilarity": 0.0153,
+        "hookSimilarity": 0.1529,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0466
+      },
+      "signature": {
+        "exactHash": "c286815f6e1418984b169486c1c6aa3d58a270d9dc588cb1503112fc556e7d75",
+        "renderId": "",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260902-YT-GDP-CONSUMER",
+      "command": "control-plane/commands/ugi-20260902-youtube-gdp-consumer.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0122,
+        "hookSimilarity": 0.2304,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0643
+      },
+      "signature": {
+        "exactHash": "efa50cbcd9f4ddf8cce28432cc65d24806a5f49be877438c4fb5408341bd8e58",
+        "renderId": "",
+        "draftId": ""
+      }
+    }
+  ]
 }

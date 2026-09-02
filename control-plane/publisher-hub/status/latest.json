@@ -1,13 +1,13 @@
 {
   "project": "UGI",
   "component": "UGI-PUBLISHER-HUB",
-  "state": "READY",
-  "manifestsSeen": 0,
+  "state": "WAITING",
+  "manifestsSeen": 1,
   "proven": 0,
-  "waitingForRender": 0,
+  "waitingForRender": 1,
   "degraded": 0,
   "publisher": "BUFFER",
   "metricoolPublicationAllowed": false,
   "chatRuntimeRequired": false,
-  "timestamp": "2026-09-01T05:42:26.057456+00:00"
+  "timestamp": "2026-09-02T12:25:58.283628+00:00"
 }
