@@ -1,7 +1,7 @@
 # UGI Editorial — 2026-09-02
 
 Timezone: America/Sao_Paulo
-Status at lock: EDITORIAL_LOCKED / BUFFER_HEALTHY / SCHEDULE_RECEIPTS_PENDING
+Status at lock: EDITORIAL_LOCKED_V2 / BUFFER_HEALTHY / SCHEDULE_RECEIPTS_PENDING
 
 ## Editorial thesis
 World event/news -> verified context -> management implication -> practical takeaway -> UGI bridge.
@@ -77,16 +77,32 @@ Visual: semiconductor/factory/AI-hardware context.
 Music: modern industrial electronic with melody/progression.
 Source: Reuters 2026-09-01.
 
-## TikTok
+## TikTok — native trend test
 
-### 10:30 — Pix / MED explainer
-Length target: 30–45s.
-Structure: hook -> what changed (30 to 80 days) -> how merchant fraud works -> why proof/reconciliation matters -> management payoff.
-Rule: fast, not shallow. Basic context must be understandable without opening caption.
+Purpose: test whether topics already receiving demand signals inside TikTok improve retention and downstream action for UGI. Keep management relevance natural; no trend-chasing without fit.
+Measurement: first 1–3s retention, completion, profile visits/100 views, follows/100, comments/100, shares/100, saves when available, then total views.
 
-### 19:45 — AI cyber / energy
+### 10:30 — Samsung Galaxy S26 FE + AI / portfolio strategy
+TikTok trend signal observed by user: **23.8M**.
 Length target: 30–45s.
-Structure: AI-enhanced attack context -> why connected infrastructure expands risk -> three management controls -> payoff.
+Hook: **A Samsung colocou IA de flagship num modelo FE. A jogada não é só tecnologia.**
+Context: Galaxy S26 FE is the first S26-series model to launch with One UI 9 and brings context-aware Galaxy AI features such as My FanCam, Now Brief and Now Nudge to a broader audience.
+Management link: product strategy is also deciding when a premium differentiator should move down the portfolio to expand adoption without destroying differentiation.
+Structure: trend hook -> what Samsung launched -> what AI/features moved into FE -> why this matters in portfolio strategy -> management question.
+Visual: official/real Galaxy S26 FE, One UI 9, camera/AI feature context; no generic smartphone or AI stock art.
+CTA question: **Quando uma inovação deve deixar de ser premium e virar escala?**
+Source: Samsung Newsroom Brasil / Samsung Global Newsroom, 2026-08-27.
+
+### 19:45 — NASA Nancy Grace Roman / complex project execution
+TikTok trend signal observed by user: **3.9M**.
+Length target: 40–55s.
+Hook: **Mais de uma década de projeto. A NASA lançou o Roman cerca de nove meses antes do cronograma. O que a gestão acertou?**
+Context: NASA's Nancy Grace Roman Space Telescope launched on Aug. 30 aboard a SpaceX Falcon Heavy and began its roughly million-mile journey to L2. NASA launch updates say the mission launched about nine months ahead of schedule.
+Management link: complex execution depends on clear milestones, readiness reviews, accountable ownership, partner coordination and go/no-go criteria — speed is an outcome of preparation, not improvisation.
+Structure: launch visual -> mission scale -> ahead-of-schedule fact -> staged milestones/partners -> management payoff -> question.
+Visual: official NASA Roman telescope, Falcon Heavy launch, mission-control/deployment context; no generic space animation as factual substitute.
+CTA question: **No seu projeto, quais critérios precisam estar verdes antes do próximo “go”?**
+Source: NASA, Roman launch updates and launch release, 2026-08-30.
 
 ## YouTube Shorts
 
@@ -107,6 +123,7 @@ Translate macro data into stock, margin, pricing and cash decisions.
 - caption must add data/context beyond the visual;
 - music must have progression/melody and pass MUSIC_FIT; no chiptune/game/single-loop;
 - carousel final slide must preserve the same visual family as the preceding slides;
+- TikTok trend topics require natural management fit + verified facts + contextual visuals;
 - no item may be called SCHEDULED without publisher post ID + exact dueAt + scheduled-state readback;
 - no item may be called PUBLISHED without terminal delivery evidence.
 
@@ -118,3 +135,5 @@ Translate macro data into stock, margin, pricing and cash decisions.
 - Reuters: G20 AI regulation, 2026-09-01
 - Reuters: AI-enhanced cyberattacks in energy, 2026-09-01
 - Reuters: global factory activity / AI hardware, 2026-09-01
+- Samsung Newsroom Brasil / Global: Galaxy S26 FE, 2026-08-27
+- NASA: Nancy Grace Roman launch and launch updates, 2026-08-30
