@@ -1,0 +1,85 @@
+{
+  "project":"UGI",
+  "batchId":"UGI-20260902-INSTAGRAM-AGENDA-R1",
+  "timezone":"America/Sao_Paulo",
+  "posts":[
+    {
+      "contentId":"UGI-20260902-IG-1100-BRAZIL-GDP",
+      "type":"story_image","publish":true,"dueAt":"2026-09-02T11:00:00-03:00","variant":"GENERAL",
+      "topic":"Brasil: PIB cresce e consumo das famílias recua",
+      "objective":"Mostrar por que crescimento macro e demanda real precisam ser lidos juntos na gestão.",
+      "audience":"gestores e líderes de negócios",
+      "hook":"PIB +0,5%. Consumo das famílias -0,4%. Crescer não significa vender mais.",
+      "key_message":"No segundo trimestre, o PIB cresceu 0,5% sobre o trimestre anterior, após +1,1% no primeiro trimestre, enquanto o consumo das famílias recuou 0,4%. Demanda mais lenta aumenta o peso de estoque, margem, preço e caixa.",
+      "instructions":"STORY IMAGE 1080x1920, premium e editorial. Contexto visual real do Brasil: varejo, consumidor, indústria e visualização limpa de dados. Número dominante, texto curto, sem executivo genérico, sem ghost text. Estrutura: fato → contraste → leitura de gestão → pergunta. Não sugerir que um único indicador explica todas as empresas.",
+      "cta":"Sua gestão está olhando crescimento e consumo ao mesmo tempo?"
+    },
+    {
+      "contentId":"UGI-20260902-IG-1245-DEMAND-CONTRADICTION",
+      "type":"visual_post","publish":true,"dueAt":"2026-09-02T12:45:00-03:00","variant":"GENERAL",
+      "topic":"Brasil: o mercado cresceu e o consumo caiu",
+      "objective":"Criar um visual memorável que conecte macroeconomia a decisões de estoque, margem, preço e caixa.",
+      "audience":"gestores, líderes e profissionais de negócios",
+      "hook":"O mercado cresceu. O consumo caiu. Gestão não pode olhar uma linha só.",
+      "key_message":"PIB +0,5% no segundo trimestre, após +1,1% no primeiro; consumo das famílias -0,4%. A leitura gerencial deve cruzar crescimento, demanda, giro, margem, preço e caixa.",
+      "instructions":"VISUAL POST 1080x1350. Uma única afirmação dominante, contexto real do Brasil e design UGI premium. Não parecer slide corporativo. Texto central legível e curto. Incluir microframework visual: GIRO | MARGEM | PREÇO | CAIXA. Caption deve acrescentar contexto e comparação, não repetir a arte.",
+      "cta":"Salve este post para revisar suas quatro alavancas de demanda."
+    },
+    {
+      "contentId":"UGI-20260902-IG-1345-PIX-MED",
+      "type":"story_image","publish":true,"dueAt":"2026-09-02T13:45:00-03:00","variant":"GENERAL",
+      "topic":"Pix e MED: mudança de regra e implicação para quem vende",
+      "objective":"Traduzir mudança operacional de pagamentos em disciplina de evidência e conciliação.",
+      "audience":"gestores, varejo, serviços e operações",
+      "hook":"A regra do Pix mudou — e isso interessa diretamente a quem vende.",
+      "key_message":"O prazo para contestação relacionada ao MED passou de 30 para 80 dias em casos cobertos pela nova regra. Para empresas, tecnologia de pagamento não substitui trilha de evidência, pedido, prova de entrega e conciliação.",
+      "instructions":"STORY IMAGE 1080x1920. Contexto real de Pix/pagamento/merchant, sem arte financeira genérica. Destacar 30 → 80 dias visualmente, com leitura curta de gestão. Não fabricar tela bancária, transação, instituição ou endosso. Pergunta final operacional.",
+      "cta":"Sua operação consegue provar pedido, entrega e conciliação meses depois?"
+    },
+    {
+      "contentId":"UGI-20260902-IG-1545-G20-AI-GOVERNANCE",
+      "type":"story_image","publish":true,"dueAt":"2026-09-02T15:45:00-03:00","variant":"GENERAL",
+      "topic":"G20 e regulação de IA: governança interna continua necessária",
+      "objective":"Separar regulação externa de responsabilidade interna de governança de IA.",
+      "audience":"gestores, líderes e profissionais que adotam IA",
+      "hook":"Menos regulação externa não significa menos governança interna.",
+      "key_message":"Mesmo em ambientes que defendem regulação mais leve, empresas continuam responsáveis por acesso, aprovação, auditabilidade, propriedade das decisões e tratamento de risco no uso de IA.",
+      "instructions":"STORY IMAGE 1080x1920. Usar contexto editorial seguro de encontro internacional, tecnologia e governança; não fabricar foto de grupo, fala ou endosso de participante. Visual premium, tensão sofisticada, um único insight. Mostrar REGULAÇÃO ≠ GOVERNANÇA como eixo visual.",
+      "cta":"Quem aprova, audita e responde pelo uso de IA na sua empresa?"
+    },
+    {
+      "contentId":"UGI-20260902-IG-1745-AI-CYBER-ENERGY",
+      "type":"story_image","publish":true,"dueAt":"2026-09-02T17:45:00-03:00","variant":"GENERAL",
+      "topic":"IA, ciberataques e infraestrutura de energia",
+      "objective":"Conectar digitalização a permissões, monitoramento, patching e resposta a incidentes.",
+      "audience":"gestores, operações, tecnologia e risco",
+      "hook":"A IA também está deixando os atacantes mais rápidos.",
+      "key_message":"À medida que infraestrutura de energia fica mais conectada, a superfície de ataque cresce. Digitalização precisa escalar junto com monitoramento contínuo, atualização, permissões e resposta a incidentes.",
+      "instructions":"STORY IMAGE 1080x1920. Contexto real/editorial de rede elétrica, sala de controle, infraestrutura e segurança; proibir Matrix code, hacker de capuz e clichês visuais. Hierarquia forte: conexão maior → superfície maior → controle maior. Sem alarmismo ou alegação de incidente específico não comprovado.",
+      "cta":"Sua digitalização cresceu mais rápido que seus controles?"
+    },
+    {
+      "contentId":"UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE",
+      "type":"carousel","publish":true,"dueAt":"2026-09-02T19:15:00-03:00","variant":"INSTAGRAM_NATIVE",
+      "topic":"US Open 2026 — experiência, participação e gestão da atenção",
+      "objective":"Transformar um sinal atual de demanda no Instagram em framework prático sobre experiential marketing.",
+      "audience":"gestores, líderes, marketing e negócios",
+      "hook":"Patrocínio não é mais colocar logo. É entrar na experiência.",
+      "key_message":"O US Open ilustra a mudança de exposição para participação: experiências, acesso, hospitalidade, utilidade e conteúdo compartilhável podem estender a relação além da mídia. O sinal +15.202% WoW, 46 posts e 10,9M views deve ser tratado apenas como proxy da amostra observada, nunca como ranking geral do Instagram.",
+      "instructions":"CARROSSEL DE 8 SLIDES, 1080x1350, moderno, social e editorial. S1 hook. S2 contexto: o US Open virou mais que quadra. S3 tensão: assistir é pouco; a disputa é participação. S4 mecanismo: utilidade + acesso + memória + conteúdo compartilhável. S5 insight: mídia compra alcance; experiência pode criar lembrança, relacionamento e sinal. S6 teste de gestão: o cliente faz o quê? sente o quê? compartilha o quê? qual sinal fica? S7 síntese: marca forte vira parte da jornada. S8 100% UGI: Experiência também é processo. Transforme ideia em execução com os materiais UGI. Link na bio. Usar contexto de tênis/evento/experiência rights-cleared ou editorialmente seguro; sem fabricar atleta, patrocinador, parceria ou endosso. Carrossel silencioso.",
+      "cta":"Acesse o link da bio e conheça os materiais UGI.",
+      "slides":8
+    },
+    {
+      "contentId":"UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING",
+      "type":"story_image","publish":true,"dueAt":"2026-09-02T21:00:00-03:00","variant":"GENERAL",
+      "topic":"Demanda por hardware de IA e atividade industrial",
+      "objective":"Mostrar que IA afeta capacidade, fornecedores, capex, skills e supply chain, não apenas escritórios.",
+      "audience":"gestores, indústria, operações e estratégia",
+      "hook":"A IA já está mexendo em fábricas — não só em escritórios.",
+      "key_message":"A demanda por semicondutores e hardware de IA vem influenciando atividade industrial em partes da Ásia e da Europa. Para gestão, isso altera decisões de capacidade, fornecedores, investimento, competências e cadeia de suprimentos.",
+      "instructions":"STORY IMAGE 1080x1920. Contexto real/editorial de semicondutores, fábrica e hardware; sem robô genérico. Visual industrial moderno, com progressão conceitual DEMANDA → CAPACIDADE → FORNECEDOR → CAPEX → SKILLS. Texto curto e legível.",
+      "cta":"Onde a IA já está mudando sua cadeia física de decisão?"
+    }
+  ]
+}
