@@ -1,0 +1,112 @@
+{
+  "project": "UGI",
+  "policyId": "ugi-editorial-trend-gate-v2-3",
+  "effectiveDate": "2026-09-02",
+  "status": "canonical_for_new_content",
+  "predecessor": "config/ugi/editorial-trend-gate-v2.2.json",
+  "nonRegression": true,
+  "purpose": "Require general-market and platform-native demand research before editorial lock, while preserving factual fit, platform differentiation and existing publication safety gates.",
+  "trendWindowsHours": {
+    "platformNativePreferred": 24,
+    "generalPrimary": 72,
+    "generalSecondary": 168
+  },
+  "minimumTopicScore": 70,
+  "requiredFlow": [
+    "general_trend_scan",
+    "tiktok_native_scan",
+    "youtube_native_scan",
+    "instagram_native_scan_or_evidenced_proxy",
+    "cross_platform_corroboration",
+    "cross_platform_dedup",
+    "topic_score",
+    "editorial_allocation",
+    "fact_verification",
+    "script",
+    "approved_video_pattern",
+    "frame_by_frame_qa",
+    "publication",
+    "readback",
+    "analytics",
+    "platform_native_vs_general_learning",
+    "kill_retest_scale"
+  ],
+  "editorialLockGate": {
+    "generalRadarRequired": true,
+    "platformSignalRequired": ["tiktok", "youtube", "instagram"],
+    "allowUnavailableState": true,
+    "unavailableStateMustIncludeEvidence": true,
+    "crossPlatformDedupRequired": true,
+    "factVerificationRequired": true
+  },
+  "dailyAllocation": {
+    "principle": "GENERAL_DEMAND_PLUS_PLATFORM_NATIVE_DEMAND",
+    "perPlatformCoreTarget": {
+      "generalOrMarketSlot": 1,
+      "platformNativeTrendSlot": 1
+    },
+    "instagramStories": "supporting_layer_not_required_to_follow_two-core-post split",
+    "nativeTrendCrossPostDefault": false,
+    "nativeTrendCrossPostOverride": "allowed only when the same topic independently qualifies as a native signal on the second platform and the override is recorded"
+  },
+  "platformSources": {
+    "tiktok": {
+      "primary": ["TikTok Creative Center Trends", "TikTok native inspiration/topic signals"],
+      "signalTypes": ["hashtags", "videos", "songs", "keywords", "regional_popularity"],
+      "confidence": "DIRECT_NATIVE_WHEN_AVAILABLE"
+    },
+    "youtube": {
+      "primary": ["YouTube Studio Trends/Research"],
+      "signalTypes": ["top_searches", "breakout_videos", "watched_on_youtube", "searched_on_youtube", "shorts_content_gaps", "audience_interest"],
+      "optionalEnrichment": "connected YouTube trend/keyword intelligence only when zero incremental cost is preserved",
+      "confidence": "DIRECT_NATIVE_WHEN_AVAILABLE"
+    },
+    "instagram": {
+      "primary": ["Instagram Reels Trends when surfaced", "trending_audio", "trending_topics", "trending_hashtags"],
+      "fallback": ["Reels/Explore native observations", "public engagement-velocity proxies", "cross-source corroboration"],
+      "confidence": "DIRECT_NATIVE_OR_EVIDENCED_PROXY",
+      "rule": "never fabricate a platform-wide rank when only proxy evidence exists"
+    }
+  },
+  "scoring": {
+    "platformDemandVelocity": 25,
+    "naturalManagementUGIFit": 20,
+    "factualConfidence": 15,
+    "visualStrength": 10,
+    "freshness": 10,
+    "audienceRelevance": 10,
+    "shareSaveCommentPotential": 5,
+    "novelty30d": 5
+  },
+  "hardGates": [
+    "no_forced_management_angle",
+    "no_unverified_factual_claims",
+    "contextual_visual_required_for_real_subjects",
+    "no_native_trend_duplication_across_platforms_by_default",
+    "no_trend_selected_only_for_raw_volume",
+    "no_paid_dependency_or_incremental_cost_without_explicit_authorization",
+    "preserve_existing_scheduled_posts",
+    "scheduled_requires_publisher_id_dueAt_and_scheduled_readback",
+    "published_requires_terminal_delivery_evidence"
+  ],
+  "learning": {
+    "compareCohorts": ["GENERAL", "TIKTOK_NATIVE", "YOUTUBE_NATIVE", "INSTAGRAM_NATIVE"],
+    "metrics": [
+      "retention_1_3s",
+      "completion_rate",
+      "rewatch_when_available",
+      "profile_visits_per_100_views",
+      "follows_per_100_views",
+      "comments_per_100_views",
+      "shares_per_100_views",
+      "saves_per_100_views_when_available",
+      "total_distribution"
+    ],
+    "rule": "trend alignment is a demand hypothesis, not a reach guarantee; scale only from measured platform results"
+  },
+  "durableEvidence": {
+    "dailySnapshotPath": "control-plane/trend-intelligence/YYYY-MM-DD.json",
+    "requiredFields": ["capturedAt", "region", "generalSignals", "platformSignals", "sources", "scores", "selectedTopics", "dedupDecision", "factStatus"]
+  },
+  "preserveExistingScheduledPosts": true
+}
