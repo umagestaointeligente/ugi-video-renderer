@@ -5,7 +5,7 @@
   "project": "UGI",
   "publisher": "BUFFER",
   "manifest": "control-plane/publisher-hub/queue/ugi-20260902-platform-agenda-r1.json",
-  "manifestSha256": "9396d9820cf82d1e58ce99152a3a9f5fa15359ffae5a77e32a9460a7d7d0f78a",
+  "manifestSha256": "360853b582035f5df1f48270c1d7d9078383fbcf1e10c83d5b4d5df0a0e18456",
   "policyId": "ugi-growth-engine",
   "policySchema": "1.2",
   "policySha256": "ddb581512329447065bff0b2833c769e6a6abfc1465595cc6b5883582308e095",
@@ -14,6 +14,6 @@
   "paymentTriggered": false,
   "resolvedTargets": 3,
   "expectedTargets": 4,
-  "timestamp": "2026-09-02T12:38:33.548056+00:00",
+  "timestamp": "2026-09-02T12:40:58.630291+00:00",
   "results": []
 }
