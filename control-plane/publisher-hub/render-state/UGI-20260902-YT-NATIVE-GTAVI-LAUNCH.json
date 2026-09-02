@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260902-YT-NATIVE-GTAVI-LAUNCH",
-  "state": "RENDER_IN_PROGRESS",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260902123737-2677f3f27dff",
   "approvalDraftId": "ugi-20260902112432-1fd8ca34846e",
   "existingDraftReused": true,
@@ -112,19 +112,19 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T12:40:19.193126+00:00",
+  "updatedAt": "2026-09-02T12:57:52.971512+00:00",
   "lastKnownStatus": "queued",
   "lastResult": {
     "ok": true,
     "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-    "route": "/api/video-render",
-    "routing": "LOLA_TO_GITHUB_ACTIONS_FFMPEG",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
     "renderer": "github-actions-ffmpeg",
     "costMode": "zero_cost_initial",
     "renderId": "ugi-20260902123737-2677f3f27dff",
     "githubAccepted": true,
     "githubStatus": 204,
-    "githubRunId": 33630994072,
+    "githubRunId": "33630994072",
     "githubRunNumber": 193,
     "githubRunAttempt": 1,
     "githubWorkflowStatus": "queued",
@@ -142,19 +142,69 @@
     "workflow": "render-video.yml",
     "ref": "main",
     "title": "GTA VI: o lançamento que cria assunto antes do produto",
-    "duration": 40,
-    "status": "queued",
-    "ready": false,
-    "assets": {},
-    "readyPlatforms": [],
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902123737-2677f3f27dff/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902123737-2677f3f27dff%2Finstagram.mp4",
+        "videoBytes": 11094765,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33630994072",
+        "r2Etag": "b58d27d2a81b7a6c36975b00043493e7",
+        "uploadedAt": "2026-09-02T12:45:11.247Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902123737-2677f3f27dff/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902123737-2677f3f27dff%2Ftiktok.mp4",
+        "videoBytes": 8498381,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33630994072",
+        "r2Etag": "9fa084c4dd5ae5b27133ff4fc0fb6f1f",
+        "uploadedAt": "2026-09-02T12:45:14.597Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260902123737-2677f3f27dff/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902123737-2677f3f27dff%2Fyoutube.mp4",
+        "videoBytes": 12304454,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33630994072",
+        "r2Etag": "16e59b99a4de54133491440debf8ce6a",
+        "uploadedAt": "2026-09-02T12:45:18.238Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
     "expectedPlatforms": [
       "instagram",
       "tiktok",
       "youtube"
     ],
-    "allPlatformsReady": false,
-    "videoUrl": null,
-    "videoKey": null,
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260902123737-2677f3f27dff%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260902123737-2677f3f27dff/instagram.mp4",
     "approvalDraftId": "ugi-20260902112432-1fd8ca34846e",
     "existingDraftReused": true,
     "contentId": "UGI-20260902-YT-NATIVE-GTAVI-LAUNCH",
@@ -196,9 +246,42 @@
       "strict": true
     },
     "semanticValidationRequired": true,
-    "semanticValidationAvailable": false,
-    "semanticValidation": null,
-    "copyLockValidation": null,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-02T12:45:21.887Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "b54fc3774370507e15f2b6400b4d0859f83e6c81c43979df8845efac39f9e369",
+      "mismatches": []
+    },
     "legacyContentLeakDetected": false,
     "sceneSource": "dynamic",
     "sceneCount": 6,
@@ -213,6 +296,424 @@
     "legacyHardcodedScenesDisabled": true,
     "requestedAt": "2026-09-02T12:37:49.896Z",
     "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260902123737-2677f3f27dff",
-    "note": "O GitHub aceitou o job e o render foi associado ao draft editorial existente, sem criar duplicidade."
-  }
+    "note": "O GitHub aceitou o job e o render foi associado ao draft editorial existente, sem criar duplicidade.",
+    "videoBytes": 11094765,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-02T12:45:18.238Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260902123737-2677f3f27dff",
+      "githubRunId": "33630994072",
+      "contentId": "UGI-20260902-YT-NATIVE-GTAVI-LAUNCH",
+      "experimentId": "UGI-TREND-GATE-V2.3-20260902-YT",
+      "variant": "YOUTUBE_NATIVE_DEMAND",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "Brazilian creator or analyst looking at a fast-moving gaming trend dashboard, generic interface, no GTA copyrighted imagery",
+          "pexels_query": "gaming content creator analytics computer",
+          "overlay": {
+            "instagram": "GTA VI DOMINA A CONVERSA",
+            "tiktok": "GTA VI DOMINA A CONVERSA",
+            "youtube": "GTA VI DOMINA A CONVERSA"
+          },
+          "support": {
+            "instagram": "2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI",
+            "tiktok": "2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI",
+            "youtube": "2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI"
+          },
+          "narration": {
+            "instagram": "Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.",
+            "tiktok": "Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.",
+            "youtube": "Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "generic modern game console and controller with cinematic screen glow, no identifiable copyrighted game",
+          "pexels_query": "modern game console controller television",
+          "overlay": {
+            "instagram": "1 CONTEÚDO FORTE. MUITAS CONVERSAS.",
+            "tiktok": "1 CONTEÚDO FORTE. MUITAS CONVERSAS.",
+            "youtube": "1 CONTEÚDO FORTE. MUITAS CONVERSAS."
+          },
+          "support": {
+            "instagram": "Um reveal concentrado vira objeto de análise",
+            "tiktok": "Um reveal concentrado vira objeto de análise",
+            "youtube": "Um reveal concentrado vira objeto de análise"
+          },
+          "narration": {
+            "instagram": "A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas.",
+            "tiktok": "A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas.",
+            "youtube": "A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "multiple generic creators recording reactions and analysis in separate setups, no copyrighted gameplay visible",
+          "pexels_query": "content creators reaction video studio gaming",
+          "overlay": {
+            "instagram": "O ANÚNCIO VIROU MATÉRIA-PRIMA",
+            "tiktok": "O ANÚNCIO VIROU MATÉRIA-PRIMA",
+            "youtube": "O ANÚNCIO VIROU MATÉRIA-PRIMA"
+          },
+          "support": {
+            "instagram": "Análises • reações • redistribuição",
+            "tiktok": "Análises • reações • redistribuição",
+            "youtube": "Análises • reações • redistribuição"
+          },
+          "narration": {
+            "instagram": "Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento.",
+            "tiktok": "Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento.",
+            "youtube": "Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "launch planning wall, editorial calendar and audience touchpoints, business strategy context",
+          "pexels_query": "marketing launch planning team calendar strategy",
+          "overlay": {
+            "instagram": "DESENHE A ARQUITETURA DA CONVERSA",
+            "tiktok": "DESENHE A ARQUITETURA DA CONVERSA",
+            "youtube": "DESENHE A ARQUITETURA DA CONVERSA"
+          },
+          "support": {
+            "instagram": "Fato forte → interpretação → amplificação",
+            "tiktok": "Fato forte → interpretação → amplificação",
+            "youtube": "Fato forte → interpretação → amplificação"
+          },
+          "narration": {
+            "instagram": "A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa.",
+            "tiktok": "A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa.",
+            "youtube": "A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "management team mapping a launch funnel and communication moments on a board",
+          "pexels_query": "business team campaign planning whiteboard",
+          "overlay": {
+            "instagram": "3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO",
+            "tiktok": "3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO",
+            "youtube": "3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO"
+          },
+          "support": {
+            "instagram": "Fato forte • material analisável • amplificação",
+            "tiktok": "Fato forte • material analisável • amplificação",
+            "youtube": "Fato forte • material analisável • amplificação"
+          },
+          "narration": {
+            "instagram": "Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar.",
+            "tiktok": "Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar.",
+            "youtube": "Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "clean UGI closing frame over subtle moving business audience background, no external brand imagery",
+          "pexels_query": "business audience event lights abstract",
+          "overlay": {
+            "instagram": "SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?",
+            "tiktok": "SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?",
+            "youtube": "SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?",
+            "tiktok": "Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?",
+            "youtube": "Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "GTA VI DOMINA A CONVERSA",
+            "tiktok": "GTA VI DOMINA A CONVERSA",
+            "youtube": "GTA VI DOMINA A CONVERSA"
+          },
+          "support": {
+            "instagram": "2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI",
+            "tiktok": "2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI",
+            "youtube": "2 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI"
+          },
+          "narration": {
+            "instagram": "Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.",
+            "tiktok": "Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.",
+            "youtube": "Nesta manhã, dois dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "1 CONTEÚDO FORTE. MUITAS CONVERSAS.",
+            "tiktok": "1 CONTEÚDO FORTE. MUITAS CONVERSAS.",
+            "youtube": "1 CONTEÚDO FORTE. MUITAS CONVERSAS."
+          },
+          "support": {
+            "instagram": "Um reveal concentrado vira objeto de análise",
+            "tiktok": "Um reveal concentrado vira objeto de análise",
+            "youtube": "Um reveal concentrado vira objeto de análise"
+          },
+          "narration": {
+            "instagram": "A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas.",
+            "tiktok": "A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas.",
+            "youtube": "A Rockstar concentrou atenção em um Extended Look longo e detalhado. Em vez de encerrar o assunto, o material abriu novas perguntas."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "O ANÚNCIO VIROU MATÉRIA-PRIMA",
+            "tiktok": "O ANÚNCIO VIROU MATÉRIA-PRIMA",
+            "youtube": "O ANÚNCIO VIROU MATÉRIA-PRIMA"
+          },
+          "support": {
+            "instagram": "Análises • reações • redistribuição",
+            "tiktok": "Análises • reações • redistribuição",
+            "youtube": "Análises • reações • redistribuição"
+          },
+          "narration": {
+            "instagram": "Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento.",
+            "tiktok": "Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento.",
+            "youtube": "Quando o ativo é rico o bastante, outras pessoas analisam, reagem e redistribuem a história. A conversa passa a trabalhar junto com o lançamento."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "DESENHE A ARQUITETURA DA CONVERSA",
+            "tiktok": "DESENHE A ARQUITETURA DA CONVERSA",
+            "youtube": "DESENHE A ARQUITETURA DA CONVERSA"
+          },
+          "support": {
+            "instagram": "Fato forte → interpretação → amplificação",
+            "tiktok": "Fato forte → interpretação → amplificação",
+            "youtube": "Fato forte → interpretação → amplificação"
+          },
+          "narration": {
+            "instagram": "A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa.",
+            "tiktok": "A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa.",
+            "youtube": "A lição é planejar o lançamento em camadas: um fato forte, material analisável e janelas para amplificar a reação sem tentar controlar cada conversa."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO",
+            "tiktok": "3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO",
+            "youtube": "3 ELEMENTOS PARA O PRÓXIMO LANÇAMENTO"
+          },
+          "support": {
+            "instagram": "Fato forte • material analisável • amplificação",
+            "tiktok": "Fato forte • material analisável • amplificação",
+            "youtube": "Fato forte • material analisável • amplificação"
+          },
+          "narration": {
+            "instagram": "Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar.",
+            "tiktok": "Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar.",
+            "youtube": "Para o próximo lançamento, teste três elementos: qual é o fato que concentra atenção, o que dá assunto para terceiros e quando sua equipe deve voltar a amplificar."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?",
+            "tiktok": "SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?",
+            "youtube": "SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?"
+          },
+          "support": {
+            "instagram": "UGI • Uma Gestão Inteligente",
+            "tiktok": "UGI • Uma Gestão Inteligente",
+            "youtube": "UGI • Uma Gestão Inteligente"
+          },
+          "narration": {
+            "instagram": "Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?",
+            "tiktok": "Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?",
+            "youtube": "Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "b54fc3774370507e15f2b6400b4d0859f83e6c81c43979df8845efac39f9e369",
+      "canonicalPayloadSha256": "af1a54c0d63889cf7014b4466a99be290e3d312b726425d0075c6d5c2d985676",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Seu próximo lançamento vai só informar — ou vai criar conversa?",
+      "finalCtaByPlatform": {
+        "instagram": "Seu próximo lançamento vai só informar — ou vai criar conversa?",
+        "tiktok": "Seu próximo lançamento vai só informar — ou vai criar conversa?",
+        "youtube": "Seu próximo lançamento vai só informar — ou vai criar conversa?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": 0
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "gaming content creator analytics computer",
+        "provider_video_id": 19162269,
+        "provider_page_url": "https://www.pexels.com/video/cinematic-content-creator-working-at-desk-in-studio-19162269/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "modern game console controller television",
+        "provider_video_id": 8128024,
+        "provider_page_url": "https://www.pexels.com/video/person-playing-a-game-controller-8128024/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "content creators reaction video studio gaming",
+        "provider_video_id": 19162307,
+        "provider_page_url": "https://www.pexels.com/video/cinematic-content-creator-working-at-desk-in-studio-19162307/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "marketing launch planning team calendar strategy",
+        "provider_video_id": 7679831,
+        "provider_page_url": "https://www.pexels.com/video/close-up-shot-of-a-person-using-laptop-7679831/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "business team campaign planning whiteboard",
+        "provider_video_id": 7691600,
+        "provider_page_url": "https://www.pexels.com/video/man-and-a-woman-writing-on-a-whiteboard-7691600/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "business audience event lights abstract",
+        "provider_video_id": 15811516,
+        "provider_page_url": "https://www.pexels.com/video/ciudad-15811516/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Seu próximo lançamento vai só informar — ou vai criar conversa?",
+    "updatedAt": "2026-09-02T12:45:21.887Z"
+  },
+  "allPlatformsReady": true
 }

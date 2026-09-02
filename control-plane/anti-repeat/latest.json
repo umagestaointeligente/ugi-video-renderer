@@ -2,11 +2,51 @@
   "project": "UGI",
   "component": "ANTI-REPEAT-GATE",
   "windowDays": 15,
-  "checkedAt": "2026-09-02T12:37:31.070719+00:00",
-  "queuedCount": 4,
+  "checkedAt": "2026-09-02T12:57:07.726923+00:00",
+  "queuedCount": 6,
   "blocked": 0,
   "state": "PASS",
   "results": [
+    {
+      "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE-R1-VIDEO",
+      "command": "control-plane/commands/ugi-20260902-instagram-usopen-experience-fallback-video.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0185,
+        "hookSimilarity": 0.1514,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.048
+      },
+      "signature": {
+        "exactHash": "c428b39d9d61e51dbc70747e542f9fcbe739e67c68fe60fdb5c05339caa2afdd",
+        "renderId": "",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO",
+      "command": "control-plane/commands/ugi-20260902-instagram-ai-hardware-fallback-video.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1450",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1450.json",
+        "textSimilarity": 0.0269,
+        "hookSimilarity": 0.2007,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.065
+      },
+      "signature": {
+        "exactHash": "ccbf23be51ed2b521a55f60e96e784d4f6fbe4b579d464d9ede05e0fa428a51e",
+        "renderId": "",
+        "draftId": ""
+      }
+    },
     {
       "contentId": "UGI-20260902-TT-S26FE-PORTFOLIO",
       "command": "control-plane/commands/ugi-20260902-tiktok-s26fe-portfolio.json",
