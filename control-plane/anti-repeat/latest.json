@@ -2,8 +2,8 @@
   "project": "UGI",
   "component": "ANTI-REPEAT-GATE",
   "windowDays": 15,
-  "checkedAt": "2026-09-02T12:57:07.726923+00:00",
-  "queuedCount": 6,
+  "checkedAt": "2026-09-02T19:39:13.638497+00:00",
+  "queuedCount": 5,
   "blocked": 0,
   "state": "PASS",
   "results": [
@@ -43,26 +43,6 @@
       },
       "signature": {
         "exactHash": "ccbf23be51ed2b521a55f60e96e784d4f6fbe4b579d464d9ede05e0fa428a51e",
-        "renderId": "",
-        "draftId": ""
-      }
-    },
-    {
-      "contentId": "UGI-20260902-TT-S26FE-PORTFOLIO",
-      "command": "control-plane/commands/ugi-20260902-tiktok-s26fe-portfolio.json",
-      "windowDays": 15,
-      "decision": "ANTI_REPEAT_PASS",
-      "reasons": [],
-      "closest": {
-        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
-        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
-        "textSimilarity": 0.0168,
-        "hookSimilarity": 0.2371,
-        "visualSimilarity": 0.0,
-        "combinedSimilarity": 0.0685
-      },
-      "signature": {
-        "exactHash": "4b902a1b23def2a3b3ed267f45002a007a66a82272f866f3cc15ebe428040908",
         "renderId": "",
         "draftId": ""
       }
