@@ -1,28 +1,29 @@
 {
   "project": "UGI",
   "title": "GTA VI: o lançamento que cria assunto antes do produto",
-  "duration": 50,
+  "duration": "50",
   "render_id": "ugi-20260902-yt-native-gtavi-launch",
   "content_id": "UGI-20260902-YT-NATIVE-GTAVI-LAUNCH",
   "experiment_id": "UGI-TREND-GATE-V2.3-20260902-YT",
   "variant": "YOUTUBE_NATIVE_DEMAND",
   "commercial_intent": "none",
-  "copy_lock": true,
-  "exact_copy": true,
-  "editorial_mode": "platform_native_management_explainer",
-  "music_profile": {
-    "mood": "modern cinematic pulse, intelligent, forward-moving, restrained tension",
-    "audible": true,
-    "progressive": true,
-    "no_vocals": true,
-    "forbidden": ["chiptune", "video-game imitation", "GTA soundtrack imitation", "beep", "metallic noise", "single-note loop", "ringtone"],
-    "cta_no_silence": true
-  },
+  "smoke_test": false,
+  "smoke_test_platform": "youtube",
   "scenes_json": {
     "cta": "Seu próximo lançamento vai só informar — ou vai criar conversa?",
-    "commercial_intent": "none",
-    "copy_lock": true,
-    "exact_copy": true,
+    "commercial_offer": false,
+    "editorial_mode": "platform_native_management_explainer",
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "music_profile": {
+      "mood": "modern cinematic pulse, intelligent, forward-moving, restrained tension",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": ["8bit", "chiptune", "game soundtrack imitation", "GTA soundtrack imitation", "beeps", "metallic noise", "single-note loop", "ringtone"],
+      "cta_no_silence": true
+    },
     "visual_rules": [
       "Use rights-cleared contextual footage only.",
       "Do not use copyrighted GTA VI gameplay, trailer footage, Rockstar logos, character likenesses, or fake screenshots.",
@@ -34,66 +35,59 @@
     "scenes": [
       {
         "role": "hook",
-        "duration": 6,
         "visual_intent": "Brazilian creator or analyst looking at a fast-moving gaming trend dashboard, generic interface, no GTA copyrighted imagery",
         "pexels_query": "gaming content creator analytics computer",
-        "overlay_text": "GTA VI domina a conversa",
-        "support_text": "3 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI",
-        "narration": "Nesta manhã, três dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo."
+        "overlay": {"instagram":"GTA VI DOMINA A CONVERSA","tiktok":"GTA VI DOMINA A CONVERSA","youtube":"GTA VI DOMINA A CONVERSA"},
+        "support": {"instagram":"3 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI","tiktok":"3 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI","youtube":"3 dos 5 vídeos em alta no YouTube Brasil falavam de GTA VI"},
+        "narration": {"instagram":"Nesta manhã, três dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.","tiktok":"Nesta manhã, três dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo.","youtube":"Nesta manhã, três dos cinco vídeos em alta no YouTube Brasil giravam em torno de GTA VI. A lição de gestão começa antes do jogo."}
       },
       {
-        "role": "fact",
-        "duration": 7,
+        "role": "pain",
         "visual_intent": "generic modern game console and controller with cinematic screen glow, no identifiable copyrighted game",
         "pexels_query": "modern game console controller television",
-        "overlay_text": "1 conteúdo forte. Muitas conversas.",
-        "support_text": "Rockstar publicou um Extended Look em 27/08",
-        "narration": "No dia vinte e sete de agosto, a Rockstar publicou um Extended Look de cerca de vinte e sete minutos, capturado no PlayStation 5."
+        "overlay": {"instagram":"1 CONTEÚDO FORTE. MUITAS CONVERSAS.","tiktok":"1 CONTEÚDO FORTE. MUITAS CONVERSAS.","youtube":"1 CONTEÚDO FORTE. MUITAS CONVERSAS."},
+        "support": {"instagram":"Rockstar publicou um Extended Look em 27/08","tiktok":"Rockstar publicou um Extended Look em 27/08","youtube":"Rockstar publicou um Extended Look em 27/08"},
+        "narration": {"instagram":"No dia vinte e sete de agosto, a Rockstar publicou um Extended Look de cerca de vinte e sete minutos, capturado no PlayStation 5.","tiktok":"No dia vinte e sete de agosto, a Rockstar publicou um Extended Look de cerca de vinte e sete minutos, capturado no PlayStation 5.","youtube":"No dia vinte e sete de agosto, a Rockstar publicou um Extended Look de cerca de vinte e sete minutos, capturado no PlayStation 5."}
       },
       {
-        "role": "mechanism_1",
-        "duration": 7,
+        "role": "consequence",
         "visual_intent": "multiple generic creators recording reactions and analysis in separate setups, no copyrighted gameplay visible",
         "pexels_query": "content creators reaction video studio gaming",
-        "overlay_text": "O anúncio não encerrou o assunto",
-        "support_text": "Análises, reações e cortes ampliaram a conversa",
-        "narration": "O ponto não é só o tamanho do vídeo. Ele virou matéria-prima para análises, reações e novas conversas."
+        "overlay": {"instagram":"O ANÚNCIO NÃO ENCERROU O ASSUNTO","tiktok":"O ANÚNCIO NÃO ENCERROU O ASSUNTO","youtube":"O ANÚNCIO NÃO ENCERROU O ASSUNTO"},
+        "support": {"instagram":"Análises, reações e cortes ampliaram a conversa","tiktok":"Análises, reações e cortes ampliaram a conversa","youtube":"Análises, reações e cortes ampliaram a conversa"},
+        "narration": {"instagram":"O ponto não é só o tamanho do vídeo. Ele virou matéria-prima para análises, reações e novas conversas.","tiktok":"O ponto não é só o tamanho do vídeo. Ele virou matéria-prima para análises, reações e novas conversas.","youtube":"O ponto não é só o tamanho do vídeo. Ele virou matéria-prima para análises, reações e novas conversas."}
       },
       {
-        "role": "mechanism_2",
-        "duration": 8,
+        "role": "turn",
         "visual_intent": "launch planning wall, editorial calendar and audience touchpoints, business strategy context",
         "pexels_query": "marketing launch planning team calendar strategy",
-        "overlay_text": "Lançamento forte cria matéria-prima",
-        "support_text": "Fato forte → interpretação → redistribuição",
-        "narration": "Isso é arquitetura de lançamento: você concentra atenção em um fato forte e deixa espaço para o mercado continuar distribuindo a história."
+        "overlay": {"instagram":"LANÇAMENTO FORTE CRIA MATÉRIA-PRIMA","tiktok":"LANÇAMENTO FORTE CRIA MATÉRIA-PRIMA","youtube":"LANÇAMENTO FORTE CRIA MATÉRIA-PRIMA"},
+        "support": {"instagram":"Fato forte → interpretação → redistribuição","tiktok":"Fato forte → interpretação → redistribuição","youtube":"Fato forte → interpretação → redistribuição"},
+        "narration": {"instagram":"Isso é arquitetura de lançamento: você concentra atenção em um fato forte e deixa espaço para o mercado continuar distribuindo a história.","tiktok":"Isso é arquitetura de lançamento: você concentra atenção em um fato forte e deixa espaço para o mercado continuar distribuindo a história.","youtube":"Isso é arquitetura de lançamento: você concentra atenção em um fato forte e deixa espaço para o mercado continuar distribuindo a história."}
       },
       {
-        "role": "application",
-        "duration": 8,
+        "role": "result",
         "visual_intent": "management team mapping a launch funnel and communication moments on a board",
         "pexels_query": "business team campaign planning whiteboard",
-        "overlay_text": "O que sua equipe deve desenhar?",
-        "support_text": "Fato forte • material analisável • janelas de amplificação",
-        "narration": "Na gestão, planeje três coisas: um fato forte, material que dê assunto e janelas para amplificar a reação."
+        "overlay": {"instagram":"O QUE SUA EQUIPE DEVE DESENHAR?","tiktok":"O QUE SUA EQUIPE DEVE DESENHAR?","youtube":"O QUE SUA EQUIPE DEVE DESENHAR?"},
+        "support": {"instagram":"Fato forte • material analisável • janelas de amplificação","tiktok":"Fato forte • material analisável • janelas de amplificação","youtube":"Fato forte • material analisável • janelas de amplificação"},
+        "narration": {"instagram":"Na gestão, planeje três coisas: um fato forte, material que dê assunto e janelas para amplificar a reação.","tiktok":"Na gestão, planeje três coisas: um fato forte, material que dê assunto e janelas para amplificar a reação.","youtube":"Na gestão, planeje três coisas: um fato forte, material que dê assunto e janelas para amplificar a reação."}
       },
       {
-        "role": "freshness",
-        "duration": 6,
+        "role": "result",
         "visual_intent": "generic countdown and product launch calendar with audience anticipation, no game branding",
         "pexels_query": "product launch countdown calendar anticipation",
-        "overlay_text": "A atenção já começou",
-        "support_text": "GTA VI: lançamento previsto para 19/11/2026",
-        "narration": "A Rockstar mantém GTA VI para dezenove de novembro de dois mil e vinte e seis. A disputa por atenção, porém, já começou."
+        "overlay": {"instagram":"A ATENÇÃO JÁ COMEÇOU","tiktok":"A ATENÇÃO JÁ COMEÇOU","youtube":"A ATENÇÃO JÁ COMEÇOU"},
+        "support": {"instagram":"GTA VI: lançamento previsto para 19/11/2026","tiktok":"GTA VI: lançamento previsto para 19/11/2026","youtube":"GTA VI: lançamento previsto para 19/11/2026"},
+        "narration": {"instagram":"A Rockstar mantém GTA VI para dezenove de novembro de dois mil e vinte e seis. A disputa por atenção, porém, já começou.","tiktok":"A Rockstar mantém GTA VI para dezenove de novembro de dois mil e vinte e seis. A disputa por atenção, porém, já começou.","youtube":"A Rockstar mantém GTA VI para dezenove de novembro de dois mil e vinte e seis. A disputa por atenção, porém, já começou."}
       },
       {
         "role": "cta",
-        "duration": 8,
         "visual_intent": "clean UGI closing frame over subtle moving business audience background, no external brand imagery",
         "pexels_query": "business audience event lights abstract",
-        "overlay_text": "Seu lançamento só informa — ou cria conversa?",
-        "support_text": "UGI • Uma Gestão Inteligente",
-        "narration": "Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?"
+        "overlay": {"instagram":"SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?","tiktok":"SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?","youtube":"SEU LANÇAMENTO SÓ INFORMA — OU CRIA CONVERSA?"},
+        "support": {"instagram":"UGI • Uma Gestão Inteligente","tiktok":"UGI • Uma Gestão Inteligente","youtube":"UGI • Uma Gestão Inteligente"},
+        "narration": {"instagram":"Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?","tiktok":"Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?","youtube":"Lançamento forte não termina no anúncio. Ele cria assunto que outras pessoas querem continuar. Seu próximo lançamento vai só informar — ou vai criar conversa?"}
       }
     ]
   }
