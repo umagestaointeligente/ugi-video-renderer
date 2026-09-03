@@ -4,9 +4,46 @@
   "state": "DEGRADED",
   "project": "UGI",
   "publisher": "BUFFER",
+  "publisherHub": "UGI-PUBLISHER-HUB",
+  "metricoolPublicationAllowed": false,
   "manifest": "control-plane/publisher-hub/queue/ugi-20260902-instagram-fallback-video-agenda-r1.json",
+  "manifestSha256": "fb053bcaa2acb4a5e974f6e975926720506f09dee5d3435b6123677012b9d14c",
+  "policyId": "ugi-growth-engine",
+  "policySchema": "1.2",
+  "policySha256": "ddb581512329447065bff0b2833c769e6a6abfc1465595cc6b5883582308e095",
+  "routingSchema": "1.2",
+  "routingSha256": "f648be966155fb460634dd9cd0652f15bb86cae4cbb1f2f9a4bd170c5abd5d8a",
   "publicationTriggered": false,
   "paymentTriggered": false,
-  "error": "RuntimeError:BUFFER_CHANNELS_FAIL",
-  "timestamp": "2026-09-02T17:53:27.490950+00:00"
+  "results": [
+    {
+      "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE-R1-VIDEO",
+      "platform": "instagram",
+      "draftId": "ugi-20260902124118-9f3cac54dda6",
+      "renderId": "ugi-20260902125713-4230ee7bd274",
+      "dueAt": "2026-09-02T22:15:00.000Z",
+      "bufferPostId": "6a9821c9e987b8f4b4f12478",
+      "status": "published",
+      "bufferStatus": "sent",
+      "externalLink": "https://www.instagram.com/reel/DczSUqfj8CD/",
+      "alreadyActive": true,
+      "readbackPass": false,
+      "ok": false
+    },
+    {
+      "contentId": "UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO",
+      "platform": "instagram",
+      "draftId": "ugi-20260902124135-f68ed802eb40",
+      "renderId": "ugi-20260902125736-7e4f49ba5688",
+      "dueAt": "2026-09-03T00:00:00.000Z",
+      "bufferPostId": "6a9821d0aa3e12fdd58a7cb5",
+      "status": "published",
+      "bufferStatus": "sent",
+      "externalLink": "https://www.instagram.com/reel/DczegDkoNcC/",
+      "alreadyActive": true,
+      "readbackPass": false,
+      "ok": false
+    }
+  ],
+  "timestamp": "2026-09-03T01:55:47.853473+00:00"
 }
