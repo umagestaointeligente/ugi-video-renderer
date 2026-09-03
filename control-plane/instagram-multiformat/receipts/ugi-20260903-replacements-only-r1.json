@@ -1,0 +1,33 @@
+{
+  "ok": false,
+  "project": "UGI",
+  "component": "R45-INSTAGRAM-MULTIFORMAT-PILOT",
+  "batchId": "UGI-20260903-REPLACEMENTS-ONLY-IG-R1",
+  "topicCooldownDays": 15,
+  "topicCooldownScope": "PER_PLATFORM",
+  "topicHistoryUpdated": false,
+  "results": [
+    {
+      "contentId": "UGI-20260903-IG-1915-COFFEE-EUDR",
+      "type": "carousel",
+      "publish": true,
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": [],
+        "platform": "instagram",
+        "windowDays": 15
+      },
+      "generateHttp": 500,
+      "generationOk": false,
+      "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
+      "draftId": null,
+      "assetUrls": [],
+      "ok": false,
+      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"Carrossel bloqueado por requisito objetivo após autorreparo: capa longa demais\", \"commandId\": \"061863b8-6749-46fc-8956-1e9b72184709\", \"publicationTriggered\": false}",
+      "state": "FAILED"
+    }
+  ],
+  "timestamp": "2026-09-03T00:42:42.444226+00:00"
+}
