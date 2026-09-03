@@ -1,7 +1,8 @@
 {
   "schema_version": "1.0",
   "status": "canonical",
-  "recovery_command": "LSI::RECOVERY::CURRENT",
+  "human_recovery_anchor": "Recovery LSI",
+  "technical_recovery_alias": "LSI::RECOVERY::CURRENT",
   "expected_first_line": "LSI_RECOVERY=TRUE",
   "read_order": [
     "docs/LSI_CANONICAL_INDEX.md",
@@ -47,6 +48,7 @@
     "FILES_READ"
   ],
   "principles": [
+    "human_anchor_must_be_simple_portuguese",
     "runtime_evidence_over_chat_memory_for_current_state",
     "git_history_is_audit_trail",
     "do_not_duplicate_current_docs_per_minor_change",
