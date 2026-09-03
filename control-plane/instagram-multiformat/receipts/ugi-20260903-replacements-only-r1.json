@@ -21,8 +21,8 @@
       },
       "generateHttp": 200,
       "generationOk": true,
-      "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": "829119cf-b31d-4371-8abe-9d6b33ede50c",
+      "workerVersion": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+      "draftId": "755c1e02-2935-4b55-aa11-35608a298003",
       "assetUrls": [],
       "qa": {
         "pass": false,
@@ -37,5 +37,5 @@
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-03T13:01:52.801777+00:00"
+  "timestamp": "2026-09-03T13:38:40.288383+00:00"
 }
