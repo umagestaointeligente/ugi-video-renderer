@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-03T05:12:50.380497+00:00",
+  "updatedAt": "2026-09-03T05:46:34.875613+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -174,14 +174,14 @@
           "externalLink": "https://www.instagram.com/reel/DczegDkoNcC/",
           "sharedNow": false,
           "requestedAt": "2026-09-02T13:17:03.930Z",
-          "updatedAt": "2026-09-03T05:11:31.818Z",
+          "updatedAt": "2026-09-03T05:14:06.674Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a3524116edd4cff9-SJC",
-            "rateLimitRemaining": "1367",
+            "requestId": "a35244debde5cff9-SJC",
+            "rateLimitRemaining": "1359",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Onde a IA já está mudando sua cadeia física de decisão?",
-    "updatedAt": "2026-09-03T05:11:33.135Z",
+    "updatedAt": "2026-09-03T05:14:07.757Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,
