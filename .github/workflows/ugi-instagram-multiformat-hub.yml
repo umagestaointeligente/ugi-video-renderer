@@ -26,22 +26,27 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Runtime setup
+      - name: Runtime setup and hard policy validation
         shell: bash
         run: |
           set -euo pipefail
           test -n "$UGI_WORKER_COMMAND_KEY"
           python -m pip install --disable-pip-version-check --quiet requests pillow
-          python -m py_compile scripts/r45_instagram_multiformat_pilot.py
+          python -m py_compile scripts/r45_instagram_multiformat_pilot.py scripts/ugi_anti_repeat_gate.py
+          test -f control-plane/anti-repeat/platform-topic-history.json
           python - <<'PY'
           import json
           from pathlib import Path
           policy=json.loads(Path('config/ugi/instagram-multiformat-policy.json').read_text(encoding='utf-8'))
+          history=json.loads(Path('control-plane/anti-repeat/platform-topic-history.json').read_text(encoding='utf-8'))
           assert policy['project']=='UGI'
           assert policy['principles']['bufferExclusivePublisher'] is True
           assert policy['principles']['receiptRequiredForScheduledClaim'] is True
+          assert history['project']=='UGI'
+          assert history['scope']=='PER_PLATFORM'
+          assert int(history['cooldownDays'])==15
           PY
-      - name: Reconcile queued Instagram multiformat manifests
+      - name: Reconcile queued Instagram multiformat manifests through 15d topic gate
         shell: bash
         run: |
           set -uo pipefail
@@ -60,23 +65,27 @@ jobs:
               echo "SKIP_PROVEN $manifest"
               continue
             fi
+            # r45_instagram_multiformat_pilot.py fails closed before generation when
+            # SAME-PLATFORM topic history returns BLOCK/REVIEW_REQUIRED. Successful
+            # Buffer readback appends the topic to the durable 15-day registry.
             python scripts/r45_instagram_multiformat_pilot.py "$manifest" --receipt "$receipt" || failed=1
           done
           exit "$failed"
-      - name: Persist receipts
+      - name: Persist receipts and per-platform topic history
         if: always()
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p control-plane/instagram-multiformat/receipts
+          mkdir -p control-plane/instagram-multiformat/receipts control-plane/anti-repeat
           git config user.name 'ugi-instagram-multiformat-bot'
           git config user.email 'ugi-instagram-multiformat@users.noreply.github.com'
           git add control-plane/instagram-multiformat/receipts/*.json 2>/dev/null || true
+          git add control-plane/anti-repeat/platform-topic-history.json 2>/dev/null || true
           if git diff --cached --quiet; then
-            echo 'No receipt changes.'
+            echo 'No receipt/history changes.'
             exit 0
           fi
-          git commit -m 'chore: persist Instagram multiformat receipts'
+          git commit -m 'chore: persist Instagram multiformat receipts and topic history'
           BRANCH="${GITHUB_REF_NAME:-main}"
           git pull --rebase origin "$BRANCH"
           git push origin HEAD:"$BRANCH"
