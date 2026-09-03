@@ -16,8 +16,7 @@ Alias técnico interno: `LSI::RECOVERY::CURRENT`
 
 Repository: `umagestaointeligente/ugi-video-renderer`
 Branch: `lsi-career360-beta1-foundation-20260902`
-PR: Draft #25
-Main: Career ainda não promovido.
+PR: #25, promoção para main em fechamento final.
 Supabase dedicado: `LSI Career 360`
 Project ref: `nxjdnzdxclszqyqrkwdk`
 Região: `sa-east-1`
@@ -78,7 +77,7 @@ Cleanup pós-teste verificado:
 
 ## 4. Segurança / Privacidade
 
-`SECURITY_ADVISOR=PASS_ZERO_LINTS` no último hardening.
+`SECURITY_ADVISOR=PASS_ZERO_LINTS` após a migration final de hardening.
 `MULTIUSER_ISOLATION=PASS_CORE_AB_TEST`.
 `PRIVATE_STORAGE=PASS`.
 `DIRECT_CLIENT_STORAGE_WRITE=DENIED_BY_RLS`.
@@ -86,11 +85,19 @@ Cleanup pós-teste verificado:
 `MASTER_BOOTSTRAP=PASS_E2E`.
 `CAREER_PRIVACY_GATE=PASS_SYNTHETIC_SCENARIOS`.
 
-Painel Mestre foi endurecido depois do E2E:
-- agregação movida para `public.career_master_status_v1()`;
-- `SECURITY DEFINER` com `auth.uid()` + verificação de role master;
-- Edge `career-master-status` não precisa mais de service role;
-- função retorna apenas agregados, nunca CV/nome/e-mail/histórico de outro usuário.
+Hardening final do Painel Mestre:
+- a auditoria pós-migration detectou dois WARN de funções `SECURITY DEFINER` executáveis por `authenticated`;
+- `public.career_master_status_v1()` foi removida;
+- `public.career_score_opportunity_self(uuid, boolean)` foi removida; o motor privilegiado base permanece inacessível ao usuário final;
+- foi criado `public.career_master_metrics`, contendo apenas contagens agregadas sem PII;
+- RLS permite SELECT desse snapshot somente quando `auth.uid()` possui role `master`;
+- usuários autenticados não possuem INSERT/UPDATE/DELETE nesse snapshot;
+- `career_private.refresh_master_metrics()` é interna, sem EXECUTE para `authenticated`, e atualiza o snapshot a cada 5 minutos via cron;
+- Edge `career-master-status` usa somente JWT do usuário + publishable/anon client e lê o snapshot protegido por RLS;
+- nenhum service role é necessário na Edge;
+- Security Advisor foi executado novamente depois da mudança e retornou `lints=[]`.
+
+Performance Advisor final possui apenas avisos `INFO` de índices ainda não utilizados em um banco sem carga real; não há finding de segurança ou blocker do Master Pilot.
 
 ## 5. Currículo / arquivos
 
@@ -140,7 +147,7 @@ SAC registra incidente seguro sem currículo/senha/token em metadata geral.
 
 ## 8. CI / QA
 
-Referência final antes do release:
+Referência final:
 - `Career 360 Parser Tests` = SUCCESS;
 - `Career 360 Prototype Smoke` = SUCCESS;
 - `Career 360 Edge Typecheck` = SUCCESS.
@@ -191,6 +198,7 @@ Nunca pedir senha no chat.
 - não reconstruir Career do zero;
 - não reutilizar banco de outro produto;
 - não reintroduzir service role no frontend ou no master status;
+- não expor `SECURITY DEFINER` diretamente ao papel `authenticated`;
 - não criar acesso mestre baseado em e-mail enviado pelo cliente;
 - não transformar inferência em fato;
 - não bypassar MFA/CAPTCHA;
@@ -210,4 +218,4 @@ Próximas frentes são evolutivas, não blockers do piloto:
 
 ## 13. Última alteração verificada
 
-`LAST_VERIFIED_CHANGE=MASTER_PILOT_E2E_PASS_HOSTED_APP_HTTP200_QA_CLEAN_MASTER_STATUS_NO_SERVICE_ROLE`
+`LAST_VERIFIED_CHANGE=MASTER_PILOT_E2E_PASS_HOSTED_APP_HTTP200_QA_CLEAN_MASTER_METRICS_RLS_SECURITY_ADVISOR_ZERO_LINTS`
