@@ -1,0 +1,57 @@
+name: UGI 2026-09-03 Content Recovery R2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ugi_20260903_content_recovery_runner.py'
+      - '.github/workflows/ugi-20260903-content-recovery-r2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-20260903-content-recovery-r2
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate recovery runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UGI_WORKER_COMMAND_KEY"
+          python -m pip install --disable-pip-version-check --quiet requests
+          python -m py_compile scripts/ugi_20260903_content_recovery.py scripts/ugi_20260903_content_recovery_runner.py scripts/ugi_anti_repeat_gate.py
+      - name: Render schedule and prove fixed agenda
+        shell: bash
+        run: |
+          set -uo pipefail
+          python scripts/ugi_20260903_content_recovery_runner.py
+          rc=$?
+          echo "RECOVERY_EXIT=$rc"
+          exit $rc
+      - name: Persist exact recovery receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f control-plane/recovery/UGI_20260903_FIXED_AGENDA_RECEIPT.json || exit 0
+          git config user.name 'ugi-recovery-bot'
+          git config user.email 'ugi-recovery@users.noreply.github.com'
+          git add control-plane/recovery/UGI_20260903_FIXED_AGENDA_RECEIPT.json
+          git commit -m 'chore: persist UGI 03/09 fixed agenda receipt r2' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
