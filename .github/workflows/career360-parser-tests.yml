@@ -1,0 +1,40 @@
+name: Career 360 Parser Tests
+
+on:
+  push:
+    branches:
+      - lsi-career360-beta1-foundation-20260902
+    paths:
+      - 'career360/parser/**'
+      - '.github/workflows/career360-parser-tests.yml'
+  pull_request:
+    paths:
+      - 'career360/parser/**'
+      - '.github/workflows/career360-parser-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  parser-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: career360/parser
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: career360/parser/requirements.txt
+
+      - name: Install parser dependency
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Run deterministic security tests
+        run: python -m unittest -v test_resume_parser.py
