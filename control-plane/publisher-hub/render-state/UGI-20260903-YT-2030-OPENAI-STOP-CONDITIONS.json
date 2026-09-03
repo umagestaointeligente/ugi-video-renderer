@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260903-YT-2030-OPENAI-STOP-CONDITIONS",
-  "state": "RENDER_IN_PROGRESS",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260903004310-a3da36a066d0",
   "approvalDraftId": "ugi-20260903004215-5ed49aac0424",
   "existingDraftReused": true,
@@ -112,19 +112,19 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-03T00:47:23.736648+00:00",
+  "updatedAt": "2026-09-03T00:52:15.851528+00:00",
   "lastKnownStatus": "queued",
   "lastResult": {
     "ok": true,
     "version": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-    "route": "/api/video-render",
-    "routing": "LOLA_TO_GITHUB_ACTIONS_FFMPEG",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
     "renderer": "github-actions-ffmpeg",
     "costMode": "zero_cost_initial",
     "renderId": "ugi-20260903004310-a3da36a066d0",
     "githubAccepted": true,
     "githubStatus": 204,
-    "githubRunId": 33700740091,
+    "githubRunId": "33700740091",
     "githubRunNumber": 200,
     "githubRunAttempt": 1,
     "githubWorkflowStatus": "queued",
@@ -142,19 +142,69 @@
     "workflow": "render-video.yml",
     "ref": "main",
     "title": "OpenAI e o limite da autonomia: quando um agente precisa parar",
-    "duration": 40,
-    "status": "queued",
-    "ready": false,
-    "assets": {},
-    "readyPlatforms": [],
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260903004310-a3da36a066d0/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260903004310-a3da36a066d0%2Finstagram.mp4",
+        "videoBytes": 14869500,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33700740091",
+        "r2Etag": "64d699ec014d7041726b425c91a22eaf",
+        "uploadedAt": "2026-09-03T00:50:57.012Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260903004310-a3da36a066d0/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260903004310-a3da36a066d0%2Ftiktok.mp4",
+        "videoBytes": 11267777,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33700740091",
+        "r2Etag": "868b4c985837be7985efe4ee1261db11",
+        "uploadedAt": "2026-09-03T00:50:59.111Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260903004310-a3da36a066d0/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260903004310-a3da36a066d0%2Fyoutube.mp4",
+        "videoBytes": 16604672,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33700740091",
+        "r2Etag": "414abe04fc74d2536f5f494dcb6a2502",
+        "uploadedAt": "2026-09-03T00:51:02.137Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
     "expectedPlatforms": [
       "instagram",
       "tiktok",
       "youtube"
     ],
-    "allPlatformsReady": false,
-    "videoUrl": null,
-    "videoKey": null,
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260903004310-a3da36a066d0%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260903004310-a3da36a066d0/instagram.mp4",
     "approvalDraftId": "ugi-20260903004215-5ed49aac0424",
     "existingDraftReused": true,
     "contentId": "UGI-20260903-YT-2030-OPENAI-STOP-CONDITIONS",
@@ -196,9 +246,42 @@
       "strict": true
     },
     "semanticValidationRequired": true,
-    "semanticValidationAvailable": false,
-    "semanticValidation": null,
-    "copyLockValidation": null,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-03T00:51:04.168Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "5ff574a57a856ec269e9e370a5fd8004cad90912adcca2337c8378816c74b331",
+      "mismatches": []
+    },
     "legacyContentLeakDetected": false,
     "sceneSource": "dynamic",
     "sceneCount": 6,
@@ -213,6 +296,424 @@
     "legacyHardcodedScenesDisabled": true,
     "requestedAt": "2026-09-03T00:43:51.910Z",
     "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260903004310-a3da36a066d0",
-    "note": "O GitHub aceitou o job e o render foi associado ao draft editorial existente, sem criar duplicidade."
-  }
+    "note": "O GitHub aceitou o job e o render foi associado ao draft editorial existente, sem criar duplicidade.",
+    "videoBytes": 14869500,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-03T00:51:02.137Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260903004310-a3da36a066d0",
+      "githubRunId": "33700740091",
+      "contentId": "UGI-20260903-YT-2030-OPENAI-STOP-CONDITIONS",
+      "experimentId": "UGI-EDITORIAL-20260903-REPLACEMENT-OPENAI",
+      "variant": "GENERAL_WORLD_REPLACEMENT",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "AI operations monitoring room with autonomous task flows and a visible stop-control concept, realistic technology environment",
+          "pexels_query": "artificial intelligence monitoring control room technology",
+          "overlay": {
+            "instagram": "QUEM DECIDE QUANDO A IA PARA?",
+            "tiktok": "QUEM DECIDE QUANDO A IA PARA?",
+            "youtube": "QUEM DECIDE QUANDO A IA PARA?"
+          },
+          "support": {
+            "instagram": "OpenAI diz estar desenvolvendo desligamento automático",
+            "tiktok": "OpenAI diz estar desenvolvendo desligamento automático",
+            "youtube": "OpenAI diz estar desenvolvendo desligamento automático"
+          },
+          "narration": {
+            "instagram": "A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?",
+            "tiktok": "A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?",
+            "youtube": "A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?"
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "autonomous software agent executing multiple digital tasks with limited supervision, generic and realistic",
+          "pexels_query": "automation artificial intelligence workflow computer operations",
+          "overlay": {
+            "instagram": "AUTONOMIA MUDA O TIPO DE RISCO",
+            "tiktok": "AUTONOMIA MUDA O TIPO DE RISCO",
+            "youtube": "AUTONOMIA MUDA O TIPO DE RISCO"
+          },
+          "support": {
+            "instagram": "Agentes executam várias etapas com pouca supervisão",
+            "tiktok": "Agentes executam várias etapas com pouca supervisão",
+            "youtube": "Agentes executam várias etapas com pouca supervisão"
+          },
+          "narration": {
+            "instagram": "Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer.",
+            "tiktok": "Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer.",
+            "youtube": "Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "security team reviewing permissions, internet access and automated actions on dashboards",
+          "pexels_query": "cybersecurity team permissions monitoring dashboard",
+          "overlay": {
+            "instagram": "EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO",
+            "tiktok": "EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO",
+            "youtube": "EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO"
+          },
+          "support": {
+            "instagram": "Permissão • acesso • ação • consequência",
+            "tiktok": "Permissão • acesso • ação • consequência",
+            "youtube": "Permissão • acesso • ação • consequência"
+          },
+          "narration": {
+            "instagram": "O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança.",
+            "tiktok": "O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança.",
+            "youtube": "O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "management team defining guardrails and escalation workflow around AI deployment",
+          "pexels_query": "business team governance risk workflow planning",
+          "overlay": {
+            "instagram": "5 TRAVAS ANTES DE DAR AUTONOMIA",
+            "tiktok": "5 TRAVAS ANTES DE DAR AUTONOMIA",
+            "youtube": "5 TRAVAS ANTES DE DAR AUTONOMIA"
+          },
+          "support": {
+            "instagram": "Teto • monitoramento • escalada • dono • parada",
+            "tiktok": "Teto • monitoramento • escalada • dono • parada",
+            "youtube": "Teto • monitoramento • escalada • dono • parada"
+          },
+          "narration": {
+            "instagram": "Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada.",
+            "tiktok": "Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada.",
+            "youtube": "Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "controlled AI workflow with human approval gates and stop condition, calm professional context",
+          "pexels_query": "human approval artificial intelligence workflow business",
+          "overlay": {
+            "instagram": "AUTONOMIA BOA TEM FRONTEIRA",
+            "tiktok": "AUTONOMIA BOA TEM FRONTEIRA",
+            "youtube": "AUTONOMIA BOA TEM FRONTEIRA"
+          },
+          "support": {
+            "instagram": "Governança não elimina autonomia — torna a autonomia utilizável",
+            "tiktok": "Governança não elimina autonomia — torna a autonomia utilizável",
+            "youtube": "Governança não elimina autonomia — torna a autonomia utilizável"
+          },
+          "narration": {
+            "instagram": "Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário.",
+            "tiktok": "Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário.",
+            "youtube": "Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "clean UGI closing frame over moving technology governance context",
+          "pexels_query": "technology governance business control modern office",
+          "overlay": {
+            "instagram": "QUEM TEM O BOTÃO DE PARAR?",
+            "tiktok": "QUEM TEM O BOTÃO DE PARAR?",
+            "youtube": "QUEM TEM O BOTÃO DE PARAR?"
+          },
+          "support": {
+            "instagram": "Fonte factual: Reuters, 02 set 2026 • UGI",
+            "tiktok": "Fonte factual: Reuters, 02 set 2026 • UGI",
+            "youtube": "Fonte factual: Reuters, 02 set 2026 • UGI"
+          },
+          "narration": {
+            "instagram": "A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?",
+            "tiktok": "A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?",
+            "youtube": "A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "QUEM DECIDE QUANDO A IA PARA?",
+            "tiktok": "QUEM DECIDE QUANDO A IA PARA?",
+            "youtube": "QUEM DECIDE QUANDO A IA PARA?"
+          },
+          "support": {
+            "instagram": "OpenAI diz estar desenvolvendo desligamento automático",
+            "tiktok": "OpenAI diz estar desenvolvendo desligamento automático",
+            "youtube": "OpenAI diz estar desenvolvendo desligamento automático"
+          },
+          "narration": {
+            "instagram": "A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?",
+            "tiktok": "A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?",
+            "youtube": "A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?"
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "AUTONOMIA MUDA O TIPO DE RISCO",
+            "tiktok": "AUTONOMIA MUDA O TIPO DE RISCO",
+            "youtube": "AUTONOMIA MUDA O TIPO DE RISCO"
+          },
+          "support": {
+            "instagram": "Agentes executam várias etapas com pouca supervisão",
+            "tiktok": "Agentes executam várias etapas com pouca supervisão",
+            "youtube": "Agentes executam várias etapas com pouca supervisão"
+          },
+          "narration": {
+            "instagram": "Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer.",
+            "tiktok": "Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer.",
+            "youtube": "Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO",
+            "tiktok": "EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO",
+            "youtube": "EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO"
+          },
+          "support": {
+            "instagram": "Permissão • acesso • ação • consequência",
+            "tiktok": "Permissão • acesso • ação • consequência",
+            "youtube": "Permissão • acesso • ação • consequência"
+          },
+          "narration": {
+            "instagram": "O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança.",
+            "tiktok": "O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança.",
+            "youtube": "O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "5 TRAVAS ANTES DE DAR AUTONOMIA",
+            "tiktok": "5 TRAVAS ANTES DE DAR AUTONOMIA",
+            "youtube": "5 TRAVAS ANTES DE DAR AUTONOMIA"
+          },
+          "support": {
+            "instagram": "Teto • monitoramento • escalada • dono • parada",
+            "tiktok": "Teto • monitoramento • escalada • dono • parada",
+            "youtube": "Teto • monitoramento • escalada • dono • parada"
+          },
+          "narration": {
+            "instagram": "Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada.",
+            "tiktok": "Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada.",
+            "youtube": "Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "AUTONOMIA BOA TEM FRONTEIRA",
+            "tiktok": "AUTONOMIA BOA TEM FRONTEIRA",
+            "youtube": "AUTONOMIA BOA TEM FRONTEIRA"
+          },
+          "support": {
+            "instagram": "Governança não elimina autonomia — torna a autonomia utilizável",
+            "tiktok": "Governança não elimina autonomia — torna a autonomia utilizável",
+            "youtube": "Governança não elimina autonomia — torna a autonomia utilizável"
+          },
+          "narration": {
+            "instagram": "Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário.",
+            "tiktok": "Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário.",
+            "youtube": "Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "QUEM TEM O BOTÃO DE PARAR?",
+            "tiktok": "QUEM TEM O BOTÃO DE PARAR?",
+            "youtube": "QUEM TEM O BOTÃO DE PARAR?"
+          },
+          "support": {
+            "instagram": "Fonte factual: Reuters, 02 set 2026 • UGI",
+            "tiktok": "Fonte factual: Reuters, 02 set 2026 • UGI",
+            "youtube": "Fonte factual: Reuters, 02 set 2026 • UGI"
+          },
+          "narration": {
+            "instagram": "A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?",
+            "tiktok": "A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?",
+            "youtube": "A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "5ff574a57a856ec269e9e370a5fd8004cad90912adcca2337c8378816c74b331",
+      "canonicalPayloadSha256": "dc0d82fbf5abb8609b77ec90f4520dd41d8def3454153b77cea1cc4d5ac25830",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Na sua empresa, quem decide quando uma IA precisa parar?",
+      "finalCtaByPlatform": {
+        "instagram": "Na sua empresa, quem decide quando uma IA precisa parar?",
+        "tiktok": "Na sua empresa, quem decide quando uma IA precisa parar?",
+        "youtube": "Na sua empresa, quem decide quando uma IA precisa parar?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": 0
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "artificial intelligence monitoring control room technology",
+        "provider_video_id": 8328148,
+        "provider_page_url": "https://www.pexels.com/video/a-robot-giving-a-flower-to-a-woman-8328148/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "automation artificial intelligence workflow computer operations",
+        "provider_video_id": 8087074,
+        "provider_page_url": "https://www.pexels.com/video/a-walking-robot-8087074/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "cybersecurity team permissions monitoring dashboard",
+        "provider_video_id": 38902001,
+        "provider_page_url": "https://www.pexels.com/video/efficient-task-management-on-digital-device-38902001/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "business team governance risk workflow planning",
+        "provider_video_id": 7660181,
+        "provider_page_url": "https://www.pexels.com/video/colleagues-having-a-discussion-7660181/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "human approval artificial intelligence workflow business",
+        "provider_video_id": 35280159,
+        "provider_page_url": "https://www.pexels.com/video/advanced-humanoid-robot-in-technology-showcase-35280159/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "technology governance business control modern office",
+        "provider_video_id": 8347250,
+        "provider_page_url": "https://www.pexels.com/video/busy-man-working-at-the-office-8347250/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Na sua empresa, quem decide quando uma IA precisa parar?",
+    "updatedAt": "2026-09-03T00:51:04.168Z"
+  },
+  "allPlatformsReady": true
 }
