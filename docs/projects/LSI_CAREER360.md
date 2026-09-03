@@ -1,7 +1,7 @@
 # LSI CAREER 360 — MANIFESTO CURRENT
 
 Status: MASTER_PILOT_1_0_READY_FOR_MASTER_USE
-Versão do manifesto: 2.0
+Versão do manifesto: 2.1
 Data-base: 2026-09-03 BRT
 Owner/CEO: Paulo
 Orquestração: Lola / LSI
@@ -18,13 +18,14 @@ Posicionamento:
 ## 2. Estado atual
 
 Repository: `umagestaointeligente/ugi-video-renderer`
-Branch: `lsi-career360-beta1-foundation-20260902`
-PR: Draft #25
+Branch de construção: `lsi-career360-beta1-foundation-20260902`
+PR: #25 em fechamento de promoção para `main`.
 Supabase dedicado: `nxjdnzdxclszqyqrkwdk`
 Hosted app: `https://nxjdnzdxclszqyqrkwdk.supabase.co/functions/v1/career-app`
 
 `MASTER_PILOT_1_0=READY_FOR_MASTER_USE`
 `REAL_AUTH_E2E=PASS`
+`SECURITY_ADVISOR=PASS_ZERO_LINTS`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
 ## 3. Superfície do cliente
@@ -76,10 +77,19 @@ Nenhuma inferência vira fato sem confirmação.
 - bucket privado para currículo;
 - upload direto do cliente ao storage bloqueado;
 - service role nunca no frontend;
-- painel mestre usa RPC autenticada `career_master_status_v1()` e não service role na Edge;
 - logs gerais sem currículo, senha, token ou PII desnecessária.
 
-Security Advisor: zero lints no último hardening verificado.
+Painel Mestre final:
+- `public.career_master_metrics` contém somente contagens agregadas;
+- SELECT protegido por RLS e liberado somente para usuário cuja própria role é `master`;
+- authenticated não pode inserir/alterar/excluir o snapshot;
+- refresh interno `career_private.refresh_master_metrics()` não é executável por authenticated;
+- cron atualiza o snapshot a cada 5 minutos;
+- Edge `career-master-status` usa somente JWT do usuário + cliente público e não contém service role;
+- as superfícies públicas `SECURITY DEFINER` detectadas pela auditoria final foram removidas.
+
+Security Advisor após esse hardening: `lints=[]`.
+Performance Advisor: apenas `INFO` de índices ainda não utilizados em base sem tráfego real.
 
 ## 7. Currículo
 
@@ -121,6 +131,8 @@ Regras:
 - explicação acompanha classificação.
 
 E2E final: `100 / QUALIFIED_SALARY_CONFIRM` no cenário sintético aderente.
+
+O motor privilegiado de score permanece inacessível diretamente ao papel authenticated; a wrapper elevada pública detectada no hardening final foi removida.
 
 ## 9. Meu Agente
 
@@ -200,6 +212,7 @@ Runner temporário foi desativado depois do teste.
 - Master app static test = PASS
 - JavaScript syntax = PASS
 - Hosted app HTTP = 200
+- Security Advisor pós-DDL final = zero lints
 
 ## 14. Custo / incubação
 
@@ -251,6 +264,7 @@ Ler:
 - não reconstruir Career;
 - não usar banco de outro produto;
 - não reintroduzir service role no frontend;
+- não expor `SECURITY DEFINER` diretamente ao papel authenticated;
 - não fabricar dados;
 - não bypassar MFA/CAPTCHA;
 - não abrir Beta pública automaticamente;
