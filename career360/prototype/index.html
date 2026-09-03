@@ -20,6 +20,7 @@
     .pill { background:#e8ecf5; color:var(--muted); padding:8px 12px; border-radius:99px; font-size:13px; }
     h1 { font-size:clamp(28px, 6vw, 42px); line-height:1.08; margin:8px 0 10px; letter-spacing:-.03em; }
     h2 { margin:0 0 8px; font-size:22px; }
+    h3 { margin:0; font-size:16px; }
     p { line-height:1.55; color:var(--muted); }
     .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px; box-shadow:0 8px 30px rgba(31,43,70,.05); }
     .grid { display:grid; gap:12px; }
@@ -36,14 +37,19 @@
     .hidden { display:none !important; }
     .notice { border-left:4px solid var(--accent); background:#f0efff; padding:14px; border-radius:12px; margin:14px 0; color:#383571; }
     .safe { border-left-color:var(--ok); background:#edf8f2; color:#235d43; }
+    .warnbox { border-left-color:var(--warn); background:#fff7ed; color:#76410d; }
     .statgrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
     .stat { padding:16px; border-radius:16px; background:white; border:1px solid var(--line); }
     .stat b { display:block; font-size:26px; margin-top:8px; }
     .list { display:grid; gap:10px; margin-top:12px; }
     .item { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:13px; border:1px solid var(--line); border-radius:13px; }
-    .tag { font-size:12px; padding:6px 8px; border-radius:99px; background:#eef1f6; color:var(--muted); }
+    .tag { font-size:12px; padding:6px 8px; border-radius:99px; background:#eef1f6; color:var(--muted); white-space:nowrap; }
     .tag.ok { color:var(--ok); background:#edf8f2; }
     .tag.warn { color:var(--warn); background:#fff3e5; }
+    .confirm-section { border:1px solid var(--line); border-radius:16px; padding:14px; margin-top:12px; background:#fbfcfe; }
+    .confirm-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .confirm-line { display:grid; grid-template-columns:1fr; gap:7px; margin-top:9px; }
+    .empty-state { padding:16px; text-align:center; border:1px dashed #cbd2df; border-radius:14px; color:var(--muted); }
     .bottom { position:fixed; left:0; right:0; bottom:0; background:rgba(255,255,255,.96); backdrop-filter:blur(16px); border-top:1px solid var(--line); padding:max(8px, env(safe-area-inset-bottom)) 10px; display:flex; justify-content:center; z-index:10; }
     .nav { width:min(880px,100%); display:grid; grid-template-columns:repeat(5,1fr); gap:4px; }
     .nav button { background:transparent; color:var(--muted); font-size:12px; min-height:54px; }
@@ -54,7 +60,7 @@
     .progress { height:8px; background:#e7ebf2; border-radius:99px; overflow:hidden; margin:18px 0; }
     .progress span { display:block; height:100%; width:20%; background:var(--accent); border-radius:99px; transition:.25s; }
     .comfort { font-size:18px; }
-    @media (min-width:720px){ .grid.cols3{ grid-template-columns:repeat(3,1fr); } .statgrid{ grid-template-columns:repeat(4,1fr); } }
+    @media (min-width:720px){ .grid.cols3{ grid-template-columns:repeat(3,1fr); } .statgrid{ grid-template-columns:repeat(4,1fr); } .confirm-line{ grid-template-columns:1fr auto; align-items:center; } }
   </style>
 </head>
 <body>
@@ -94,6 +100,20 @@
         <div class="actions"><button class="primary" onclick="goPrivacy()">Continuar</button><button class="secondary" onclick="backStart()">Voltar</button></div>
       </div>
 
+      <div id="confirmStep" class="hidden card">
+        <h2>📄 Confira o que entendemos</h2>
+        <p>O Career só transforma informações em dados operacionais depois da sua confirmação.</p>
+        <div id="confirmModeNotice" class="notice warnbox"></div>
+        <div id="resumeConfirmList"></div>
+        <div id="noDraft" class="empty-state hidden">O parser real ainda não está conectado a este protótipo local. Nenhum dado do seu arquivo foi lido.</div>
+        <div class="actions">
+          <button id="confirmDraftBtn" class="primary hidden" onclick="confirmResumeDraft()">Confirmar e continuar</button>
+          <button id="continueNoDraftBtn" class="primary hidden" onclick="continueWithoutDraft()">Continuar sem extrair neste protótipo</button>
+          <button id="syntheticBtn" class="secondary" onclick="loadSyntheticDraft()">Ver exemplo sintético da tela</button>
+          <button class="secondary" onclick="showStep(2)">Voltar</button>
+        </div>
+      </div>
+
       <div id="step3" class="hidden card">
         <h2>🔒 Vamos proteger sua busca</h2>
         <p>Antes de procurar oportunidades, precisamos saber onde seu perfil nunca deve aparecer.</p>
@@ -101,7 +121,7 @@
         <div id="employerBlock" class="field hidden"><label for="employer">Empresa atual</label><input id="employer" placeholder="Nome da empresa" /><div class="notice safe">Por padrão, sua empresa atual será tratada como protegida. A arquitetura completa também deverá resolver grupo econômico antes de qualquer exposição.</div></div>
         <div class="field"><label for="blockedCompany">Outra empresa que nunca deve receber seu perfil</label><div style="display:flex;gap:8px"><input id="blockedCompany" placeholder="Opcional" /><button class="secondary" onclick="addBlocked()">Adicionar</button></div></div>
         <div id="blockedList" class="list"></div>
-        <div class="actions"><button class="primary" onclick="goGoals()">Continuar</button><button class="secondary" onclick="showStep(2)">Voltar</button></div>
+        <div class="actions"><button class="primary" onclick="goGoals()">Continuar</button><button class="secondary" onclick="showStep(state.mode==='cv'?'confirmStep':2)">Voltar</button></div>
       </div>
 
       <div id="step4" class="hidden card">
@@ -138,10 +158,17 @@
   <script>
     const state = JSON.parse(localStorage.getItem('career360-demo') || '{"blocked":[]}');
     function save(){ localStorage.setItem('career360-demo', JSON.stringify(state)); }
-    function startWith(mode){ state.mode=mode; save(); document.getElementById('step1').classList.add('hidden'); document.getElementById('step2').classList.remove('hidden'); ['cvBlock','voiceBlock','manualBlock'].forEach(id=>document.getElementById(id).classList.add('hidden')); const copy={cv:['📄 Traga seu currículo','Nós organizaremos o que for possível e você confirmará antes de qualquer uso.'],voz:['🎙️ Conte sua trajetória','Fale naturalmente. Neste protótipo, a transcrição depende do navegador.'],manual:['✍️ Vamos aos poucos','Uma pergunta agora. Outras apenas quando forem necessárias.']}; document.getElementById('step2Title').textContent=copy[mode][0]; document.getElementById('step2Help').textContent=copy[mode][1]; document.getElementById(mode==='cv'?'cvBlock':mode==='voz'?'voiceBlock':'manualBlock').classList.remove('hidden'); }
-    function backStart(){ document.getElementById('step2').classList.add('hidden'); document.getElementById('step1').classList.remove('hidden'); }
-    function showStep(n){ [1,2,3,4].forEach(i=>{ const el=document.getElementById('step'+i); if(el) el.classList.toggle('hidden',i!==n); }); }
-    function goPrivacy(){ if(state.mode==='manual') state.currentRole=document.getElementById('currentRole').value; if(state.mode==='voz') state.careerText=document.getElementById('careerText').value; showStep(3); }
+    function startWith(mode){ state.mode=mode; state.resumeDraft=null; state.resumeDraftSynthetic=false; save(); showStep(2); ['cvBlock','voiceBlock','manualBlock'].forEach(id=>document.getElementById(id).classList.add('hidden')); const copy={cv:['📄 Traga seu currículo','Nós organizaremos o que for possível e você confirmará antes de qualquer uso.'],voz:['🎙️ Conte sua trajetória','Fale naturalmente. Neste protótipo, a transcrição depende do navegador.'],manual:['✍️ Vamos aos poucos','Uma pergunta agora. Outras apenas quando forem necessárias.']}; document.getElementById('step2Title').textContent=copy[mode][0]; document.getElementById('step2Help').textContent=copy[mode][1]; document.getElementById(mode==='cv'?'cvBlock':mode==='voz'?'voiceBlock':'manualBlock').classList.remove('hidden'); }
+    function backStart(){ showStep(1); }
+    function showStep(n){ const target=typeof n==='number'?`step${n}`:n; ['step1','step2','confirmStep','step3','step4'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.toggle('hidden',id!==target); }); }
+    function goPrivacy(){ if(state.mode==='manual') state.currentRole=document.getElementById('currentRole').value; if(state.mode==='voz') state.careerText=document.getElementById('careerText').value; if(state.mode==='cv'){ if(!state.cvName){ alert('Selecione um currículo PDF ou DOCX para continuar.'); return; } openResumeConfirmation(); return; } save(); showStep(3); }
+    function openResumeConfirmation(){ showStep('confirmStep'); const notice=document.getElementById('confirmModeNotice'); notice.textContent=`Arquivo selecionado: ${state.cvName}. Por segurança, este protótipo local ainda não envia nem lê o conteúdo. A tela abaixo já aceita o contrato de saída do parser real quando a integração autenticada estiver pronta.`; renderResumeDraft(state.resumeDraft); }
+    function normalizeField(field){ if(field==null)return ''; if(typeof field==='string')return field; if(typeof field==='object'&&'value' in field)return field.value??''; return String(field); }
+    function confidenceTag(field){ const c=(field&&field.confidence)||'PENDENTE'; return `<span class="tag ${c==='HIGH'?'ok':c==='LOW'?'warn':''}">${escapeHtml(c)}</span>`; }
+    function renderResumeDraft(draft){ const root=document.getElementById('resumeConfirmList'); const no=document.getElementById('noDraft'); const confirm=document.getElementById('confirmDraftBtn'); const skip=document.getElementById('continueNoDraftBtn'); root.innerHTML=''; if(!draft){ no.classList.remove('hidden'); confirm.classList.add('hidden'); skip.classList.remove('hidden'); return; } no.classList.add('hidden'); skip.classList.add('hidden'); confirm.classList.remove('hidden'); const sections=[]; if(draft.name) sections.push(['Nome',[draft.name]]); if(draft.emails?.length) sections.push(['E-mail',draft.emails]); if(draft.phones?.length) sections.push(['Telefone',draft.phones]); if(draft.experience_evidence?.length) sections.push(['Experiência',draft.experience_evidence]); if(draft.education_evidence?.length) sections.push(['Formação',draft.education_evidence]); if(draft.skills_evidence?.length) sections.push(['Competências',draft.skills_evidence]); sections.forEach(([title,items],sidx)=>{ const box=document.createElement('div'); box.className='confirm-section'; box.innerHTML=`<div class="confirm-head"><h3>${escapeHtml(title)}</h3><span class="tag">confirme</span></div>`; items.slice(0,12).forEach((field,i)=>{ const row=document.createElement('div'); row.className='confirm-line'; const multiline=['Experiência','Formação','Competências'].includes(title); row.innerHTML=`${multiline?`<textarea data-confirm="${sidx}:${i}">${escapeHtml(normalizeField(field))}</textarea>`:`<input data-confirm="${sidx}:${i}" value="${escapeAttr(normalizeField(field))}" />`}${confidenceTag(field)}`; box.appendChild(row); }); root.appendChild(box); }); if(!sections.length){ no.classList.remove('hidden'); no.textContent='O rascunho não contém campos exibíveis. Você poderá corrigir manualmente antes de qualquer uso.'; } }
+    function loadSyntheticDraft(){ state.resumeDraftSynthetic=true; state.resumeDraft={name:{value:'Nome de demonstração',confidence:'MEDIUM',inferred:true,user_confirmed:false},emails:[{value:'exemplo@demo.invalid',confidence:'HIGH',inferred:false,user_confirmed:false}],experience_evidence:[{value:'Gerente Comercial — Empresa Demonstrativa — 2022–Atual',confidence:'MEDIUM',inferred:false,user_confirmed:false}],education_evidence:[{value:'Administração — Universidade Demonstrativa',confidence:'MEDIUM',inferred:false,user_confirmed:false}],skills_evidence:[{value:'Negociação',confidence:'MEDIUM',inferred:false,user_confirmed:false},{value:'Liderança',confidence:'MEDIUM',inferred:false,user_confirmed:false}]}; document.getElementById('confirmModeNotice').textContent='MODO QA: os dados abaixo são 100% sintéticos e existem apenas para validar a experiência da tela. Eles nunca serão gravados como dados do cliente.'; renderResumeDraft(state.resumeDraft); }
+    function confirmResumeDraft(){ if(state.resumeDraftSynthetic){ state.resumeConfirmationUiValidated=true; state.resumeDraft=null; state.resumeDraftSynthetic=false; save(); showStep(3); return; } state.resumeDraftConfirmed=true; save(); showStep(3); }
+    function continueWithoutDraft(){ state.resumeDraftConfirmed=false; state.resumeDraft=null; save(); showStep(3); }
     function toggleEmployer(){ document.getElementById('employerBlock').classList.toggle('hidden',document.getElementById('employed').value!=='yes'); }
     function addBlocked(){ const input=document.getElementById('blockedCompany'); const v=input.value.trim(); if(!v)return; state.blocked=state.blocked||[]; state.blocked.push(v); input.value=''; renderBlocked(); save(); }
     function renderBlocked(){ const el=document.getElementById('blockedList'); el.innerHTML=(state.blocked||[]).map((x,i)=>`<div class="item"><span>🔒 ${escapeHtml(x)}</span><button class="ghost" onclick="removeBlocked(${i})">remover</button></div>`).join(''); }
@@ -153,8 +180,9 @@
     function editProfile(){ document.getElementById('app').classList.add('hidden'); document.getElementById('bottom').classList.add('hidden'); document.getElementById('onboarding').classList.remove('hidden'); showStep(3); renderBlocked(); document.getElementById('employed').value=state.employed||''; document.getElementById('employer').value=state.employer||''; toggleEmployer(); }
     function demoAgent(){ const text=document.getElementById('agentText').value.trim(); const out=document.getElementById('agentReply'); out.classList.remove('hidden'); out.textContent=text?'Entendi. No produto real, eu transformaria isso em ação somente depois de verificar contexto, permissões e regras de segurança.':'Escreva ou fale alguma coisa para testar a interface.'; }
     function startVoice(targetId){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){ alert('Reconhecimento de voz não está disponível neste navegador. Você pode escrever normalmente.'); return; } const rec=new SR(); rec.lang='pt-BR'; rec.interimResults=false; rec.onresult=e=>{ const t=e.results[0][0].transcript; const target=document.getElementById(targetId); target.value=(target.value?target.value+' ':'')+t; }; rec.onerror=()=>alert('Não consegui usar o microfone. Você pode continuar por texto.'); rec.start(); }
-    function escapeHtml(s){ return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
-    document.getElementById('cv').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f)return; state.cvName=f.name; save(); const out=document.getElementById('fileResult'); out.classList.remove('hidden'); out.textContent=`Arquivo selecionado: ${f.name}. Neste protótipo local o conteúdo ainda não é enviado nem extraído. A próxima etapa segura será implementar extração + confirmação.`; });
+    function escapeHtml(s){ return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+    function escapeAttr(s){ return escapeHtml(s).replace(/`/g,'&#96;'); }
+    document.getElementById('cv').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f)return; state.cvName=f.name; state.resumeDraft=null; state.resumeDraftSynthetic=false; save(); const out=document.getElementById('fileResult'); out.classList.remove('hidden'); out.textContent=`Arquivo selecionado: ${f.name}. O parser real já existe e passou em CI, mas neste protótipo local o arquivo ainda não é enviado. Ao continuar, você verá a etapa de confirmação que receberá o rascunho do parser quando o backend autenticado estiver conectado.`; });
     if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
     if(state.ready){ document.getElementById('onboarding').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); document.getElementById('bottom').classList.remove('hidden'); renderPrivacy(); } else { renderBlocked(); }
   </script>
