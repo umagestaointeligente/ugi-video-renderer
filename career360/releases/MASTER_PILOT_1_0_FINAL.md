@@ -40,25 +40,43 @@ Após o teste:
 
 Nenhum dado real de cliente foi usado no E2E.
 
-## Hardening pós-E2E
+## Hardening pós-E2E — FINAL
 
-O painel mestre deixou de depender de service role dentro da Edge Function.
+A auditoria executada depois das últimas migrations encontrou dois WARN de funções `SECURITY DEFINER` diretamente executáveis pelo papel `authenticated`.
 
-Arquitetura final:
-`JWT DO USUÁRIO -> career-master-status -> career_master_status_v1() -> auth.uid() + role master -> agregados`
+Eles foram tratados antes da promoção:
+- `public.career_master_status_v1()` removida;
+- `public.career_score_opportunity_self(uuid, boolean)` removida;
+- motor base `career_score_opportunity` permanece sem EXECUTE para authenticated;
+- criado `public.career_master_metrics` somente com dados agregados;
+- RLS permite leitura desse snapshot apenas quando a role do próprio `auth.uid()` é `master`;
+- authenticated não pode escrever no snapshot;
+- refresh privilegiado foi movido para `career_private.refresh_master_metrics()` sem EXECUTE para authenticated;
+- cron atualiza métricas mestre a cada 5 minutos;
+- Edge `career-master-status` usa somente o JWT do usuário + cliente público e não contém service role.
 
-A RPC `career_master_status_v1()` é `SECURITY DEFINER`, tem `search_path` fixo, exige role master e não retorna currículo, nome, e-mail ou histórico de outro usuário.
+Security Advisor executado novamente após essa alteração: `lints=[]`.
+
+Performance Advisor final contém apenas avisos `INFO` de índices ainda não utilizados em uma base sem carga real; não são findings de segurança nem blockers do piloto.
 
 ## CI
 
-Última referência antes da finalização:
+Referência final:
 - Career 360 Parser Tests = SUCCESS;
 - Career 360 Prototype Smoke = SUCCESS;
 - Career 360 Edge Typecheck = SUCCESS.
 
 ## Segurança
 
-Último Security Advisor verificado: zero lints.
+Estado final do Master Pilot:
+- Security Advisor = ZERO LINTS;
+- Auth real E2E = PASS;
+- RLS A/B = PASS;
+- bucket privado = PASS;
+- raw delete após confirmação = PASS E2E;
+- Proteção de Carreira = PASS no escopo do piloto;
+- Matching V1 = PASS no escopo do piloto;
+- painel mestre = agregados sem PII e protegido por RLS.
 
 ## Limites de escopo
 
