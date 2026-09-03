@@ -25,7 +25,7 @@
       "draftId": null,
       "assetUrls": [],
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"4ed32255-b6b6-4839-867c-7363ea568fe5\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"8ecfa2c6-904c-4348-be67-916e8d596287\", \"publicationTriggered\": false}",
       "state": "FAILED"
     },
     {
@@ -46,7 +46,7 @@
       "draftId": null,
       "assetUrls": [],
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"a768ecba-5bd6-4b88-a5bb-5efa5d4fcfe8\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"deaa707c-68c4-4cd7-aee1-213539e944d1\", \"publicationTriggered\": false}",
       "state": "FAILED"
     },
     {
@@ -67,7 +67,7 @@
       "draftId": null,
       "assetUrls": [],
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"0c69e9bd-6b25-4fdc-a75c-a73620112d95\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"49e1818b-717a-422e-a28c-965692a07211\", \"publicationTriggered\": false}",
       "state": "FAILED"
     },
     {
@@ -88,7 +88,7 @@
       "draftId": null,
       "assetUrls": [],
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"55acc138-57f5-463b-a07c-48d4008d0deb\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"22ddebb4-0f42-413b-a094-d51123a1e29b\", \"publicationTriggered\": false}",
       "state": "FAILED"
     },
     {
@@ -109,7 +109,7 @@
       "draftId": null,
       "assetUrls": [],
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"69f4f8b3-5386-41eb-98f6-db659e0b6f48\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"13a52244-1c0e-47c7-bac0-60d45f27c44c\", \"publicationTriggered\": false}",
       "state": "FAILED"
     },
     {
@@ -127,7 +127,7 @@
       "generateHttp": 200,
       "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": "a4d2d838-66c3-4c50-954e-090f05741997",
+      "draftId": "9e3f6210-9cd5-4691-aae5-d6d8b7cbdfe1",
       "assetUrls": [],
       "qa": {
         "pass": false,
@@ -159,9 +159,9 @@
       "draftId": null,
       "assetUrls": [],
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"4f3ce35e-4322-4743-b8bc-944f789c0ac2\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"8a0cf5c3-b6f1-45f1-a379-729daaad9fd9\", \"publicationTriggered\": false}",
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-03T09:00:54.121799+00:00"
+  "timestamp": "2026-09-03T09:23:44.170890+00:00"
 }
