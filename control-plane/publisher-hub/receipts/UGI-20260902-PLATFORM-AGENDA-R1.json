@@ -49,11 +49,11 @@
       "platform": "tiktok",
       "draftId": "ugi-20260902122528-579678435982",
       "renderId": "ugi-20260902122528-579678435982",
-      "dueAt": "2026-09-02T22:45:00.000Z",
-      "bufferPostId": "6a981d98bd40efcdd2fd9f95",
-      "status": "published",
-      "bufferStatus": "sent",
-      "externalLink": "https://tiktok.com/@umagestaointelige/video/7681072507583040784",
+      "dueAt": null,
+      "bufferPostId": null,
+      "status": null,
+      "bufferStatus": null,
+      "externalLink": null,
       "alreadyActive": true,
       "readbackPass": false,
       "ok": false
@@ -63,15 +63,15 @@
       "platform": "youtube",
       "draftId": "ugi-20260902122542-bed398150a02",
       "renderId": "ugi-20260902122542-bed398150a02",
-      "dueAt": "2026-09-02T23:30:00.000Z",
-      "bufferPostId": "6a981d9eb107cffcd0c5086f",
-      "status": "published",
-      "bufferStatus": "sent",
-      "externalLink": "https://www.youtube.com/watch?v=q66pQY20Fg0",
+      "dueAt": null,
+      "bufferPostId": null,
+      "status": null,
+      "bufferStatus": null,
+      "externalLink": null,
       "alreadyActive": true,
       "readbackPass": false,
       "ok": false
     }
   ],
-  "timestamp": "2026-09-03T01:57:06.232715+00:00"
+  "timestamp": "2026-09-03T05:16:43.931766+00:00"
 }
