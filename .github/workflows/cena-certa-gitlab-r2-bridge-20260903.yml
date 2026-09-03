@@ -82,3 +82,5 @@ jobs:
               d=json.load(open(path,encoding='utf-8'))
               print('R2_RESULT', d.get('renderId'), d.get('status'), d.get('videoUrl') or d.get('url') or d.get('mediaUrl'))
           PY
+
+# manual retrigger 2026-09-03T20:30:00-03:00
