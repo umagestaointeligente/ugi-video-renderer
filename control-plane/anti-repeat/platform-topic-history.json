@@ -2,7 +2,7 @@
   "project": "UGI",
   "component": "PLATFORM_TOPIC_HISTORY",
   "schemaVersion": "1.0",
-  "updatedAt": "2026-09-02T21:28:00-03:00",
+  "updatedAt": "2026-09-03T00:26:26.848424+00:00",
   "cooldownDays": 15,
   "scope": "PER_PLATFORM",
   "status": "SEEDED_BACKFILL_IN_PROGRESS",
@@ -15,7 +15,9 @@
   "historyQuality": {
     "complete": false,
     "reason": "Registry introduced on 2026-09-02. Older durable receipts/manifests must be progressively backfilled. Current editorial selection must also reconcile publisher receipts, manifests and commands before lock.",
-    "failClosedOnCredibleMissingHistoryRisk": true
+    "failClosedOnCredibleMissingHistoryRisk": true,
+    "lastReceiptSyncAt": "2026-09-03T00:26:26.848424+00:00",
+    "receiptSyncActive": true
   },
   "unresolvedRisks": [
     {
@@ -29,11 +31,21 @@
     {
       "platform": "instagram",
       "topicKey": "apple-ceo-succession-tim-cook-john-ternus",
-      "primaryEntities": ["Apple", "Tim Cook", "John Ternus"],
+      "primaryEntities": [
+        "Apple",
+        "Tim Cook",
+        "John Ternus"
+      ],
       "eventOrCase": "Apple CEO succession / Tim Cook to executive chairman / John Ternus to CEO",
       "managementThesis": "succession planning, continuity, autonomy and transfer of leadership authority",
-      "formats": ["story", "carousel"],
-      "contentIds": ["UGI-20260901-IG-STORY-04-APPLE", "UGI-20260901-IG-CAROUSEL-APPLE-SUCCESSION"],
+      "formats": [
+        "story",
+        "carousel"
+      ],
+      "contentIds": [
+        "UGI-20260901-IG-STORY-04-APPLE",
+        "UGI-20260901-IG-CAROUSEL-APPLE-SUCCESSION"
+      ],
       "audienceDate": "2026-09-01",
       "state": "AUDIENCE_OCCURRENCE_CONFIRMED_BY_USER_MANIFEST_PRESENT_PUBLISHER_BACKFILL_PENDING",
       "evidenceRef": "control-plane/instagram-20260901/assets/manifest.json",
@@ -44,11 +56,17 @@
     {
       "platform": "instagram",
       "topicKey": "dell-ai-infrastructure-capacity",
-      "primaryEntities": ["Dell"],
+      "primaryEntities": [
+        "Dell"
+      ],
       "eventOrCase": "AI infrastructure demand / server capacity",
       "managementThesis": "AI strategy requires physical capacity, energy, networking, cooling, data and capital",
-      "formats": ["story"],
-      "contentIds": ["UGI-20260902-IG-STORY-DELL-INFRASTRUCTURE"],
+      "formats": [
+        "story"
+      ],
+      "contentIds": [
+        "UGI-20260902-IG-STORY-DELL-INFRASTRUCTURE"
+      ],
       "audienceDate": "2026-09-02",
       "state": "AUDIENCE_OCCURRENCE_USER_CONFIRMED_STORIES_PUBLISHED_PUBLISHER_BACKFILL_PENDING",
       "evidenceRef": "control-plane/editorial/UGI_EDITORIAL_2026-09-02.md",
@@ -59,11 +77,18 @@
     {
       "platform": "instagram",
       "topicKey": "brazil-gdp-household-consumption-q2-2026",
-      "primaryEntities": ["Brazil"],
+      "primaryEntities": [
+        "Brazil"
+      ],
       "eventOrCase": "Brazil Q2 GDP growth with household consumption decline",
       "managementThesis": "stock, margin, pricing and cash discipline under slower consumer demand",
-      "formats": ["story", "static"],
-      "contentIds": ["UGI-20260902-IG-GDP-CONSUMPTION"],
+      "formats": [
+        "story",
+        "static"
+      ],
+      "contentIds": [
+        "UGI-20260902-IG-GDP-CONSUMPTION"
+      ],
       "audienceDate": "2026-09-02",
       "state": "AUDIENCE_OCCURRENCE_USER_CONFIRMED_STORIES_PUBLISHED_PUBLISHER_BACKFILL_PENDING",
       "evidenceRef": "control-plane/editorial/UGI_EDITORIAL_2026-09-02.md",
@@ -74,11 +99,18 @@
     {
       "platform": "instagram",
       "topicKey": "pix-med-fraud-contestation-rule",
-      "primaryEntities": ["Pix", "Banco Central do Brasil"],
+      "primaryEntities": [
+        "Pix",
+        "Banco Central do Brasil"
+      ],
       "eventOrCase": "Pix MED fraud contestation deadline change",
       "managementThesis": "payment innovation requires evidence trail, proof of delivery and reconciliation",
-      "formats": ["story"],
-      "contentIds": ["UGI-20260902-IG-STORY-PIX-MED"],
+      "formats": [
+        "story"
+      ],
+      "contentIds": [
+        "UGI-20260902-IG-STORY-PIX-MED"
+      ],
       "audienceDate": "2026-09-02",
       "state": "AUDIENCE_OCCURRENCE_USER_CONFIRMED_STORIES_PUBLISHED_PUBLISHER_BACKFILL_PENDING",
       "evidenceRef": "control-plane/editorial/UGI_EDITORIAL_2026-09-02.md",
@@ -89,11 +121,17 @@
     {
       "platform": "instagram",
       "topicKey": "g20-ai-regulation-internal-governance",
-      "primaryEntities": ["G20"],
+      "primaryEntities": [
+        "G20"
+      ],
       "eventOrCase": "G20 lighter-touch AI regulation debate",
       "managementThesis": "external regulation does not replace internal AI governance",
-      "formats": ["story"],
-      "contentIds": ["UGI-20260902-IG-STORY-G20-AI"],
+      "formats": [
+        "story"
+      ],
+      "contentIds": [
+        "UGI-20260902-IG-STORY-G20-AI"
+      ],
       "audienceDate": "2026-09-02",
       "state": "AUDIENCE_OCCURRENCE_USER_CONFIRMED_STORIES_PUBLISHED_PUBLISHER_BACKFILL_PENDING",
       "evidenceRef": "control-plane/editorial/UGI_EDITORIAL_2026-09-02.md",
@@ -104,11 +142,17 @@
     {
       "platform": "instagram",
       "topicKey": "ai-enhanced-cyberattacks-energy",
-      "primaryEntities": ["energy sector"],
+      "primaryEntities": [
+        "energy sector"
+      ],
       "eventOrCase": "AI-enhanced cyberattacks against energy infrastructure",
       "managementThesis": "digitalization must scale with permissions, monitoring and incident response",
-      "formats": ["story"],
-      "contentIds": ["UGI-20260902-IG-STORY-CYBER-ENERGY"],
+      "formats": [
+        "story"
+      ],
+      "contentIds": [
+        "UGI-20260902-IG-STORY-CYBER-ENERGY"
+      ],
       "audienceDate": "2026-09-02",
       "state": "AUDIENCE_OCCURRENCE_USER_CONFIRMED_STORIES_PUBLISHED_PUBLISHER_BACKFILL_PENDING",
       "evidenceRef": "control-plane/editorial/UGI_EDITORIAL_2026-09-02.md",
@@ -119,11 +163,19 @@
     {
       "platform": "instagram",
       "topicKey": "us-open-experiential-marketing",
-      "primaryEntities": ["US Open"],
+      "primaryEntities": [
+        "US Open"
+      ],
       "eventOrCase": "US Open sponsorship and experiential marketing",
       "managementThesis": "brands create more value by becoming part of the customer experience rather than only buying exposure",
-      "formats": ["carousel", "reel_fallback"],
-      "contentIds": ["UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE", "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE-R1-VIDEO"],
+      "formats": [
+        "carousel",
+        "reel_fallback"
+      ],
+      "contentIds": [
+        "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE",
+        "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE-R1-VIDEO"
+      ],
       "audienceDate": "2026-09-02",
       "state": "RECENT_INSTAGRAM_CAMPAIGN_FAMILY_PUBLISHER_BACKFILL_PENDING",
       "evidenceRef": "control-plane/editorial/UGI_EDITORIAL_2026-09-02.md",
@@ -134,11 +186,19 @@
     {
       "platform": "instagram",
       "topicKey": "ai-hardware-manufacturing-demand",
-      "primaryEntities": ["AI hardware", "manufacturing"],
+      "primaryEntities": [
+        "AI hardware",
+        "manufacturing"
+      ],
       "eventOrCase": "AI hardware demand supporting manufacturing activity",
       "managementThesis": "AI changes capacity planning, suppliers, capex, skills and supply-chain decisions",
-      "formats": ["story", "reel_fallback"],
-      "contentIds": ["UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO"],
+      "formats": [
+        "story",
+        "reel_fallback"
+      ],
+      "contentIds": [
+        "UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO"
+      ],
       "audienceDate": "2026-09-02",
       "state": "RECENT_INSTAGRAM_CAMPAIGN_FAMILY_PUBLISHER_BACKFILL_PENDING",
       "evidenceRef": "control-plane/editorial/UGI_EDITORIAL_2026-09-02.md",
@@ -152,8 +212,12 @@
       "primaryEntities": [],
       "eventOrCase": "meeting overload / decision-purpose test",
       "managementThesis": "meetings should exist for decisions or work, not default information transfer",
-      "formats": ["video"],
-      "contentIds": ["UGI-20260830-TT-01-MEETINGS"],
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260830-TT-01-MEETINGS"
+      ],
       "audienceDate": "2026-08-30",
       "state": "PUBLISHED_VERIFIED_RECEIPT",
       "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
@@ -167,8 +231,12 @@
       "primaryEntities": [],
       "eventOrCase": "AI productivity changing outcome-vs-hours management",
       "managementThesis": "measure value delivered rather than effort alone",
-      "formats": ["short"],
-      "contentIds": ["UGI-20260830-YT-01-RESULT-HOURS"],
+      "formats": [
+        "short"
+      ],
+      "contentIds": [
+        "UGI-20260830-YT-01-RESULT-HOURS"
+      ],
       "audienceDate": "2026-08-30",
       "state": "SCHEDULED_VERIFIED_RECEIPT_AT_CAPTURE",
       "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
@@ -179,16 +247,89 @@
     {
       "platform": "instagram",
       "topicKey": "cisco-myagent-human-agent-workforce",
-      "primaryEntities": ["Cisco", "MyAgent"],
+      "primaryEntities": [
+        "Cisco",
+        "MyAgent"
+      ],
       "eventOrCase": "Cisco MyAgent rollout to workforce",
       "managementThesis": "leaders will coordinate people, agents, permissions and outcomes",
-      "formats": ["reel"],
-      "contentIds": ["UGI-20260830-IG-01-CISCO-AGENTS"],
+      "formats": [
+        "reel"
+      ],
+      "contentIds": [
+        "UGI-20260830-IG-01-CISCO-AGENTS"
+      ],
       "audienceDate": "2026-08-30",
       "state": "SCHEDULED_VERIFIED_RECEIPT_AND_DUPLICATE_MEDIA_REGRESSION",
       "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260830-LIVE-IMPORT.json",
       "cooldownEligible": true,
       "cooldownUntil": "2026-09-14T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "youtube",
+      "topicKey": "por que investir em ia não garante resultado",
+      "primaryEntities": [],
+      "eventOrCase": "Por que investir em IA não garante resultado",
+      "managementThesis": "Siga a UGI para gestão prática.",
+      "formats": [
+        "short"
+      ],
+      "contentIds": [
+        "UGI-20260827-YT-AM-001"
+      ],
+      "audienceDate": "2026-08-27",
+      "dueAt": "2026-08-27T10:30:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a8e101a4236595eb3cb47c9",
+      "evidenceRef": "control-plane/publisher-hub/receipts/ugi-20260827-morning.json",
+      "commandRef": "control-plane/commands/ugi-20260827-youtube-morning.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-11T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "tiktok",
+      "topicKey": "o erro de comprar ia antes de preparar o gestor",
+      "primaryEntities": [],
+      "eventOrCase": "O erro de comprar IA antes de preparar o gestor",
+      "managementThesis": "Siga a UGI para gestão prática.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260827-TT-AM-001"
+      ],
+      "audienceDate": "2026-08-27",
+      "dueAt": "2026-08-27T11:00:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a8e10214236595eb3cb47f5",
+      "evidenceRef": "control-plane/publisher-hub/receipts/ugi-20260827-morning.json",
+      "commandRef": "control-plane/commands/ugi-20260827-tiktok-morning.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-11T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "instagram",
+      "topicKey": "3 sinais de que sua empresa está comprando ia sem adoção",
+      "primaryEntities": [],
+      "eventOrCase": "3 sinais de que sua empresa está comprando IA sem adoção",
+      "managementThesis": "Siga a UGI para gestão prática.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260827-IG-AM-001"
+      ],
+      "audienceDate": "2026-08-27",
+      "dueAt": "2026-08-27T11:30:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a8e1027adb733be1944598a",
+      "evidenceRef": "control-plane/publisher-hub/receipts/ugi-20260827-morning.json",
+      "commandRef": "control-plane/commands/ugi-20260827-instagram-morning.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-11T23:59:59-03:00",
       "repeatException": null
     }
   ],
