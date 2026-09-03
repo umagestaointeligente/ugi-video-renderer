@@ -2,12 +2,12 @@
   "project": "UGI",
   "component": "UGI-PUBLISHER-HUB",
   "state": "DEGRADED",
-  "manifestsSeen": 2,
+  "manifestsSeen": 1,
   "proven": 0,
   "waitingForRender": 0,
-  "degraded": 2,
+  "degraded": 1,
   "publisher": "BUFFER",
   "metricoolPublicationAllowed": false,
   "chatRuntimeRequired": false,
-  "timestamp": "2026-09-03T05:48:26.281834+00:00"
+  "timestamp": "2026-09-03T06:00:52.386103+00:00"
 }
