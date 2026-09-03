@@ -9,7 +9,7 @@ Status: `READY_FOR_MASTER_USE`
 
 HTTP 200 verificado internamente após deploy.
 
-## E2E final
+## E2E funcional final
 
 Teste executado com usuário QA criado pelo Supabase Auth real e dados 100% sintéticos.
 
@@ -29,7 +29,7 @@ Resultado:
 - master panel = master;
 - overall = PASS.
 
-## Cleanup E2E
+## Cleanup do E2E funcional
 
 Após o teste:
 - QA users = 0;
@@ -59,6 +59,22 @@ Security Advisor executado novamente após essa alteração: `lints=[]`.
 
 Performance Advisor final contém apenas avisos `INFO` de índices ainda não utilizados em uma base sem carga real; não são findings de segurança nem blockers do piloto.
 
+## E2E de autorização pós-hardening
+
+Como a arquitetura do Painel Mestre mudou depois do E2E funcional, foi executada uma segunda prova com duas sessões reais do Supabase Auth:
+- usuário QA com hash mestre autorizado -> role `master` -> `career-master-status` = HTTP 200;
+- resposta mestre -> `PASS_READY_FOR_MASTER_USE`;
+- usuário QA comum -> role `candidate` -> `career-master-status` = HTTP 403;
+- erro candidato -> `MASTER_REQUIRED`.
+
+Resultado: `MASTER_STATUS_POST_HARDENING_E2E=PASS`.
+
+Cleanup após essa segunda prova:
+- QA users = 0;
+- QA hashes = 0;
+- tabela/gate temporário = 0;
+- runner E2E redeployado em modo desativado com JWT obrigatório.
+
 ## CI
 
 Referência final:
@@ -71,6 +87,7 @@ Referência final:
 Estado final do Master Pilot:
 - Security Advisor = ZERO LINTS;
 - Auth real E2E = PASS;
+- autorização mestre 200 / candidato 403 = PASS;
 - RLS A/B = PASS;
 - bucket privado = PASS;
 - raw delete após confirmação = PASS E2E;
