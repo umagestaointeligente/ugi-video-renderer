@@ -1,0 +1,32 @@
+name: Career 360 Edge Typecheck
+
+on:
+  pull_request:
+    paths:
+      - 'career360/edge-functions/**'
+      - '.github/workflows/career360-edge-typecheck.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  edge-typecheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.5.2
+
+      - name: Check Edge Functions
+        run: |
+          set -euo pipefail
+          for file in career360/edge-functions/*/index.ts; do
+            echo "Checking $file"
+            deno check --node-modules-dir=auto "$file"
+          done
