@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#13213c" />
+  <meta name="description" content="Protótipo local do LSI Career 360 Beta 1.0" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <title>LSI Career 360 — Beta 1.0</title>
+  <style>
+    :root { color-scheme: light; --bg:#f4f6fa; --card:#fff; --ink:#172033; --muted:#657087; --line:#dfe4ed; --brand:#13213c; --accent:#5a4ff3; --ok:#177a4d; --warn:#a65a00; --radius:20px; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+    button, input, textarea, select { font:inherit; }
+    button { min-height:48px; border:0; border-radius:14px; cursor:pointer; }
+    .shell { max-width:880px; margin:0 auto; min-height:100dvh; padding:18px 16px 96px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:22px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:800; }
+    .mark { width:38px; height:38px; border-radius:12px; background:var(--brand); color:white; display:grid; place-items:center; font-size:14px; }
+    .pill { background:#e8ecf5; color:var(--muted); padding:8px 12px; border-radius:99px; font-size:13px; }
+    h1 { font-size:clamp(28px, 6vw, 42px); line-height:1.08; margin:8px 0 10px; letter-spacing:-.03em; }
+    h2 { margin:0 0 8px; font-size:22px; }
+    p { line-height:1.55; color:var(--muted); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px; box-shadow:0 8px 30px rgba(31,43,70,.05); }
+    .grid { display:grid; gap:12px; }
+    .choice { text-align:left; padding:18px; background:white; border:1px solid var(--line); color:var(--ink); }
+    .choice strong { display:block; font-size:17px; margin-bottom:5px; }
+    .primary { background:var(--brand); color:white; padding:0 18px; font-weight:700; }
+    .secondary { background:#e9ecf5; color:var(--ink); padding:0 18px; font-weight:700; }
+    .ghost { background:transparent; color:var(--accent); padding:0; min-height:36px; }
+    .field { display:grid; gap:7px; margin-top:14px; }
+    label { font-weight:700; font-size:14px; }
+    input, textarea, select { width:100%; border:1px solid #cfd6e3; border-radius:13px; padding:14px; background:white; color:var(--ink); min-height:48px; }
+    textarea { min-height:112px; resize:vertical; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+    .hidden { display:none !important; }
+    .notice { border-left:4px solid var(--accent); background:#f0efff; padding:14px; border-radius:12px; margin:14px 0; color:#383571; }
+    .safe { border-left-color:var(--ok); background:#edf8f2; color:#235d43; }
+    .statgrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .stat { padding:16px; border-radius:16px; background:white; border:1px solid var(--line); }
+    .stat b { display:block; font-size:26px; margin-top:8px; }
+    .list { display:grid; gap:10px; margin-top:12px; }
+    .item { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:13px; border:1px solid var(--line); border-radius:13px; }
+    .tag { font-size:12px; padding:6px 8px; border-radius:99px; background:#eef1f6; color:var(--muted); }
+    .tag.ok { color:var(--ok); background:#edf8f2; }
+    .tag.warn { color:var(--warn); background:#fff3e5; }
+    .bottom { position:fixed; left:0; right:0; bottom:0; background:rgba(255,255,255,.96); backdrop-filter:blur(16px); border-top:1px solid var(--line); padding:max(8px, env(safe-area-inset-bottom)) 10px; display:flex; justify-content:center; z-index:10; }
+    .nav { width:min(880px,100%); display:grid; grid-template-columns:repeat(5,1fr); gap:4px; }
+    .nav button { background:transparent; color:var(--muted); font-size:12px; min-height:54px; }
+    .nav button.active { color:var(--brand); font-weight:800; background:#eef1f7; }
+    .composer { display:flex; gap:8px; margin-top:14px; }
+    .composer textarea { min-height:54px; height:54px; }
+    .mic { width:54px; flex:0 0 54px; background:#eef1f7; }
+    .progress { height:8px; background:#e7ebf2; border-radius:99px; overflow:hidden; margin:18px 0; }
+    .progress span { display:block; height:100%; width:20%; background:var(--accent); border-radius:99px; transition:.25s; }
+    .comfort { font-size:18px; }
+    @media (min-width:720px){ .grid.cols3{ grid-template-columns:repeat(3,1fr); } .statgrid{ grid-template-columns:repeat(4,1fr); } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="mark">LSI</div><div>Career 360</div></div>
+      <span class="pill">Beta 1.0 • protótipo local</span>
+    </header>
+
+    <section id="onboarding">
+      <div id="step1">
+        <p>Bem-vindo ao seu agente de carreira.</p>
+        <h1>Conte uma vez.<br>A LSI organiza o resto.</h1>
+        <p>Você não precisa preencher um cadastro enorme. Escolha a forma mais confortável de começar.</p>
+        <div class="grid cols3" style="margin-top:22px">
+          <button class="choice" onclick="startWith('cv')"><strong>📄 Tenho meu currículo</strong><span>PDF ou Word. Nós organizamos e você confirma.</span></button>
+          <button class="choice" onclick="startWith('voz')"><strong>🎙️ Prefiro contar</strong><span>Fale sobre sua trajetória e confirme o que entendemos.</span></button>
+          <button class="choice" onclick="startWith('manual')"><strong>✍️ Quero preencher aos poucos</strong><span>Uma pergunta de cada vez, sem formulário longo.</span></button>
+        </div>
+      </div>
+
+      <div id="step2" class="hidden card">
+        <h2 id="step2Title">Vamos começar</h2>
+        <p id="step2Help"></p>
+        <div id="cvBlock" class="hidden">
+          <div class="field"><label for="cv">Seu currículo</label><input id="cv" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" /></div>
+          <div id="fileResult" class="notice hidden"></div>
+        </div>
+        <div id="voiceBlock" class="hidden">
+          <div class="notice">A voz neste protótipo usa o reconhecimento disponível no próprio navegador, quando suportado. Nada é enviado para um backend da LSI nesta versão local.</div>
+          <button class="secondary" onclick="startVoice('careerText')">🎙️ Começar a falar</button>
+          <div class="field"><label for="careerText">O que entendemos</label><textarea id="careerText" placeholder="Ex.: Sou gerente comercial, tenho experiência em varejo e busco uma posição de Head..."></textarea></div>
+        </div>
+        <div id="manualBlock" class="hidden">
+          <div class="field"><label for="currentRole">Seu cargo atual ou mais recente</label><input id="currentRole" placeholder="Ex.: Gerente Comercial" /></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="goPrivacy()">Continuar</button><button class="secondary" onclick="backStart()">Voltar</button></div>
+      </div>
+
+      <div id="step3" class="hidden card">
+        <h2>🔒 Vamos proteger sua busca</h2>
+        <p>Antes de procurar oportunidades, precisamos saber onde seu perfil nunca deve aparecer.</p>
+        <div class="field"><label>Você está trabalhando atualmente?</label><select id="employed" onchange="toggleEmployer()"><option value="">Selecione</option><option value="yes">Sim</option><option value="no">Não</option></select></div>
+        <div id="employerBlock" class="field hidden"><label for="employer">Empresa atual</label><input id="employer" placeholder="Nome da empresa" /><div class="notice safe">Por padrão, sua empresa atual será tratada como protegida. A arquitetura completa também deverá resolver grupo econômico antes de qualquer exposição.</div></div>
+        <div class="field"><label for="blockedCompany">Outra empresa que nunca deve receber seu perfil</label><div style="display:flex;gap:8px"><input id="blockedCompany" placeholder="Opcional" /><button class="secondary" onclick="addBlocked()">Adicionar</button></div></div>
+        <div id="blockedList" class="list"></div>
+        <div class="actions"><button class="primary" onclick="goGoals()">Continuar</button><button class="secondary" onclick="showStep(2)">Voltar</button></div>
+      </div>
+
+      <div id="step4" class="hidden card">
+        <h2>🎯 Para onde você quer ir?</h2>
+        <p>Agora só o que normalmente não está claro no currículo.</p>
+        <div class="field"><label for="targetRole">Cargo ou nível desejado</label><input id="targetRole" placeholder="Ex.: Head Comercial / Diretoria" /></div>
+        <div class="field"><label for="workModel">Como você aceita trabalhar?</label><select id="workModel"><option>Remoto, híbrido ou presencial</option><option>Somente remoto</option><option>Híbrido</option><option>Presencial</option></select></div>
+        <div class="field"><label for="location">Região preferida</label><input id="location" placeholder="Ex.: Rio de Janeiro ou remoto" /></div>
+        <div class="actions"><button class="primary" onclick="finishOnboarding()">Ativar meu agente</button><button class="secondary" onclick="showStep(3)">Voltar</button></div>
+      </div>
+    </section>
+
+    <section id="app" class="hidden">
+      <section data-page="inicio">
+        <p>Boa noite 👋</p><h1>Seu agente trabalhou enquanto você estava fora.</h1>
+        <div class="statgrid">
+          <div class="stat">🎯 Oportunidades<b>7</b><span class="tag ok">novas</span></div>
+          <div class="stat">📨 Retornos<b>2</b><span class="tag ok">requer atenção</span></div>
+          <div class="stat">⚡ Preciso de você<b>1</b><span class="tag warn">ação humana</span></div>
+          <div class="stat">⏱️ Tempo poupado<b>3h42</b><span class="tag">estimado</span></div>
+        </div>
+        <div class="card" style="margin-top:14px"><h2>🧠 Insight de carreira</h2><p>Este protótipo ainda não calcula insights reais. Aqui será mostrado somente aprendizado sustentado por dados confirmados.</p><button class="ghost">Entender por quê →</button></div>
+      </section>
+
+      <section data-page="oportunidades" class="hidden"><h1>Oportunidades</h1><div class="card"><div class="item"><div><strong>Gerência Comercial</strong><p style="margin:4px 0">Empresa demonstrativa • Rio de Janeiro</p></div><span class="tag ok">82% aderência</span></div><p>Dados demonstrativos: o Beta real não poderá apresentar oportunidade como qualificada sem evidência e validação do empregador.</p></div></section>
+      <section data-page="jornada" class="hidden"><h1>Minha Jornada</h1><div class="card"><p>DISCOVERED → QUALIFIED → APPLIED → RESPONSE → INTERVIEW → OFFER.</p><p>O funil real será preenchido somente com evidências verificadas.</p></div></section>
+      <section data-page="carreira" class="hidden"><h1>Minha Carreira</h1><div class="card"><h2>🔒 Proteção de Carreira</h2><p id="privacySummary">Nenhuma configuração carregada.</p><button class="secondary" onclick="editProfile()">Revisar preferências</button></div></section>
+      <section data-page="agente" class="hidden"><h1>Meu Agente</h1><div class="card"><h2>Fale do seu jeito</h2><p>Escreva ou use voz. Regras críticas sempre serão confirmadas antes de serem aplicadas.</p><div class="composer"><textarea id="agentText" placeholder="O que você está pensando?"></textarea><button class="mic" onclick="startVoice('agentText')">🎙️</button></div><div class="actions"><button class="primary" onclick="demoAgent()">Enviar</button></div><div id="agentReply" class="notice hidden"></div></div></section>
+    </section>
+  </main>
+
+  <footer id="bottom" class="bottom hidden"><nav class="nav"><button class="active" onclick="openPage('inicio',this)">🏠<br>Início</button><button onclick="openPage('oportunidades',this)">🎯<br>Oportunidades</button><button onclick="openPage('jornada',this)">📬<br>Jornada</button><button onclick="openPage('carreira',this)">👤<br>Carreira</button><button onclick="openPage('agente',this)">💬<br>Agente</button></nav></footer>
+
+  <script>
+    const state = JSON.parse(localStorage.getItem('career360-demo') || '{"blocked":[]}');
+    function save(){ localStorage.setItem('career360-demo', JSON.stringify(state)); }
+    function startWith(mode){ state.mode=mode; save(); document.getElementById('step1').classList.add('hidden'); document.getElementById('step2').classList.remove('hidden'); ['cvBlock','voiceBlock','manualBlock'].forEach(id=>document.getElementById(id).classList.add('hidden')); const copy={cv:['📄 Traga seu currículo','Nós organizaremos o que for possível e você confirmará antes de qualquer uso.'],voz:['🎙️ Conte sua trajetória','Fale naturalmente. Neste protótipo, a transcrição depende do navegador.'],manual:['✍️ Vamos aos poucos','Uma pergunta agora. Outras apenas quando forem necessárias.']}; document.getElementById('step2Title').textContent=copy[mode][0]; document.getElementById('step2Help').textContent=copy[mode][1]; document.getElementById(mode==='cv'?'cvBlock':mode==='voz'?'voiceBlock':'manualBlock').classList.remove('hidden'); }
+    function backStart(){ document.getElementById('step2').classList.add('hidden'); document.getElementById('step1').classList.remove('hidden'); }
+    function showStep(n){ [1,2,3,4].forEach(i=>{ const el=document.getElementById('step'+i); if(el) el.classList.toggle('hidden',i!==n); }); }
+    function goPrivacy(){ if(state.mode==='manual') state.currentRole=document.getElementById('currentRole').value; if(state.mode==='voz') state.careerText=document.getElementById('careerText').value; showStep(3); }
+    function toggleEmployer(){ document.getElementById('employerBlock').classList.toggle('hidden',document.getElementById('employed').value!=='yes'); }
+    function addBlocked(){ const input=document.getElementById('blockedCompany'); const v=input.value.trim(); if(!v)return; state.blocked=state.blocked||[]; state.blocked.push(v); input.value=''; renderBlocked(); save(); }
+    function renderBlocked(){ const el=document.getElementById('blockedList'); el.innerHTML=(state.blocked||[]).map((x,i)=>`<div class="item"><span>🔒 ${escapeHtml(x)}</span><button class="ghost" onclick="removeBlocked(${i})">remover</button></div>`).join(''); }
+    function removeBlocked(i){ state.blocked.splice(i,1); renderBlocked(); save(); }
+    function goGoals(){ state.employed=document.getElementById('employed').value; state.employer=document.getElementById('employer').value.trim(); if(state.employed==='yes'&&state.employer&&!state.blocked.includes(state.employer)) state.blocked.unshift(state.employer); save(); showStep(4); }
+    function finishOnboarding(){ state.targetRole=document.getElementById('targetRole').value.trim(); state.workModel=document.getElementById('workModel').value; state.location=document.getElementById('location').value.trim(); state.ready=true; save(); document.getElementById('onboarding').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); document.getElementById('bottom').classList.remove('hidden'); renderPrivacy(); }
+    function renderPrivacy(){ document.getElementById('privacySummary').textContent=(state.blocked&&state.blocked.length)?`Empresas protegidas neste protótipo: ${state.blocked.join(', ')}.`:'Nenhuma empresa adicional foi informada.'; }
+    function openPage(page,btn){ document.querySelectorAll('[data-page]').forEach(el=>el.classList.toggle('hidden',el.dataset.page!==page)); document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+    function editProfile(){ document.getElementById('app').classList.add('hidden'); document.getElementById('bottom').classList.add('hidden'); document.getElementById('onboarding').classList.remove('hidden'); showStep(3); renderBlocked(); document.getElementById('employed').value=state.employed||''; document.getElementById('employer').value=state.employer||''; toggleEmployer(); }
+    function demoAgent(){ const text=document.getElementById('agentText').value.trim(); const out=document.getElementById('agentReply'); out.classList.remove('hidden'); out.textContent=text?'Entendi. No produto real, eu transformaria isso em ação somente depois de verificar contexto, permissões e regras de segurança.':'Escreva ou fale alguma coisa para testar a interface.'; }
+    function startVoice(targetId){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){ alert('Reconhecimento de voz não está disponível neste navegador. Você pode escrever normalmente.'); return; } const rec=new SR(); rec.lang='pt-BR'; rec.interimResults=false; rec.onresult=e=>{ const t=e.results[0][0].transcript; const target=document.getElementById(targetId); target.value=(target.value?target.value+' ':'')+t; }; rec.onerror=()=>alert('Não consegui usar o microfone. Você pode continuar por texto.'); rec.start(); }
+    function escapeHtml(s){ return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+    document.getElementById('cv').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f)return; state.cvName=f.name; save(); const out=document.getElementById('fileResult'); out.classList.remove('hidden'); out.textContent=`Arquivo selecionado: ${f.name}. Neste protótipo local o conteúdo ainda não é enviado nem extraído. A próxima etapa segura será implementar extração + confirmação.`; });
+    if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    if(state.ready){ document.getElementById('onboarding').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); document.getElementById('bottom').classList.remove('hidden'); renderPrivacy(); } else { renderBlocked(); }
+  </script>
+</body>
+</html>
