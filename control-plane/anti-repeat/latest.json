@@ -6,8 +6,8 @@
   "storiesIncluded": true,
   "historyRegistry": "control-plane/anti-repeat/platform-topic-history.json",
   "historyComplete": false,
-  "checkedAt": "2026-09-03T00:42:57.003958+00:00",
-  "queuedCount": 6,
+  "checkedAt": "2026-09-03T01:31:19.414243+00:00",
+  "queuedCount": 5,
   "blocked": 0,
   "state": "PASS",
   "results": [
@@ -56,30 +56,6 @@
       "signature": {
         "exactHash": "ccbf23be51ed2b521a55f60e96e784d4f6fbe4b579d464d9ede05e0fa428a51e",
         "renderId": "",
-        "draftId": ""
-      }
-    },
-    {
-      "contentId": "UGI-20260902-YT-NATIVE-GTAVI-LAUNCH",
-      "platform": "youtube",
-      "command": "control-plane/commands/ugi-20260902-youtube-gtavi-launch.json",
-      "windowDays": 15,
-      "decision": "ANTI_REPEAT_PASS",
-      "reasons": [],
-      "mediaDecision": "ANTI_REPEAT_PASS",
-      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
-      "samePlatformTopicMatches": [],
-      "closest": {
-        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1510",
-        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1510.json",
-        "textSimilarity": 0.0242,
-        "hookSimilarity": 0.1874,
-        "visualSimilarity": 0.0,
-        "combinedSimilarity": 0.0601
-      },
-      "signature": {
-        "exactHash": "261b4d5ccaaa0165d4642381018788e8246f0443cfdcb7ab0fef4852726ca846",
-        "renderId": "ugi-20260902-yt-native-gtavi-launch",
         "draftId": ""
       }
     },
