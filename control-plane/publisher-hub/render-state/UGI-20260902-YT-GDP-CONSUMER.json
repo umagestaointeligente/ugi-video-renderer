@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T17:53:26.800048+00:00",
+  "updatedAt": "2026-09-03T02:19:44.806149+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -192,26 +192,26 @@
         "approvalStatus": "approved",
         "approvalDecisionAt": "2026-09-02T12:59:08.031Z",
         "publication": {
-          "status": "scheduled",
-          "bufferStatus": "scheduled",
+          "status": "published",
+          "bufferStatus": "sent",
           "bufferPostId": "6a981d9eb107cffcd0c5086f",
           "channelId": "6a78974ab2d9d577434584b7",
           "channelService": "youtube",
           "channelSource": "BUFFER_CHANNEL_YOUTUBE",
           "mode": "customScheduled",
           "dueAt": "2026-09-02T23:30:00.000Z",
-          "sentAt": null,
-          "externalLink": null,
+          "sentAt": "2026-09-02T23:30:28.587Z",
+          "externalLink": "https://www.youtube.com/watch?v=q66pQY20Fg0",
           "sharedNow": false,
           "requestedAt": "2026-09-02T12:59:09.659Z",
-          "updatedAt": "2026-09-02T17:44:42.228Z",
+          "updatedAt": "2026-09-03T02:12:21.238Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a34e52fce8c176c5-LHR",
-            "rateLimitRemaining": "1402",
+            "requestId": "a3513aa01e98aace-YYZ",
+            "rateLimitRemaining": "1382",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Sua gestão está olhando crescimento e consumo ao mesmo tempo?",
-    "updatedAt": "2026-09-02T17:44:44.076Z",
+    "updatedAt": "2026-09-03T02:12:22.073Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,

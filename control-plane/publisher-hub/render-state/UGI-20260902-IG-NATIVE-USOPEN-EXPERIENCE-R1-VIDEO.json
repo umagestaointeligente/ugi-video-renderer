@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-02T17:53:24.198491+00:00",
+  "updatedAt": "2026-09-03T02:19:44.238295+00:00",
   "allPlatformsReady": true,
   "lastResult": {
     "ok": true,
@@ -162,26 +162,26 @@
         "approvalStatus": "approved",
         "approvalDecisionAt": "2026-09-02T13:16:54.917Z",
         "publication": {
-          "status": "scheduled",
-          "bufferStatus": "scheduled",
+          "status": "published",
+          "bufferStatus": "sent",
           "bufferPostId": "6a9821c9e987b8f4b4f12478",
           "channelId": "6a7896cdb2d9d57743457e33",
           "channelService": "instagram",
           "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
           "mode": "customScheduled",
           "dueAt": "2026-09-02T22:15:00.000Z",
-          "sentAt": null,
-          "externalLink": null,
+          "sentAt": "2026-09-02T22:16:04.375Z",
+          "externalLink": "https://www.instagram.com/reel/DczSUqfj8CD/",
           "sharedNow": false,
           "requestedAt": "2026-09-02T13:16:56.996Z",
-          "updatedAt": "2026-09-02T17:42:16.878Z",
+          "updatedAt": "2026-09-03T02:12:07.847Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a34e4f70b9900203-CDG",
-            "rateLimitRemaining": "1409",
+            "requestId": "a3513a4c2c4eeae8-ORD",
+            "rateLimitRemaining": "1387",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Na sua marca, o cliente só vê o patrocínio — ou participa dele?",
-    "updatedAt": "2026-09-02T17:42:18.397Z",
+    "updatedAt": "2026-09-03T02:12:09.063Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,

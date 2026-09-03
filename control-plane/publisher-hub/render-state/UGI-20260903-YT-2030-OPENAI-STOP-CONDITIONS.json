@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-03T00:52:15.851528+00:00",
+  "updatedAt": "2026-09-03T02:19:45.358433+00:00",
   "lastKnownStatus": "queued",
   "lastResult": {
     "ok": true,
@@ -189,7 +189,33 @@
         "githubRunId": "33700740091",
         "r2Etag": "414abe04fc74d2536f5f494dcb6a2502",
         "uploadedAt": "2026-09-03T00:51:02.137Z",
-        "approvalStatus": "pending_approval"
+        "approvalStatus": "approved",
+        "approvalDecisionAt": "2026-09-03T01:57:25.974Z",
+        "publication": {
+          "status": "scheduled",
+          "bufferStatus": "scheduled",
+          "bufferPostId": "6a98d4080e7870bed4e435b4",
+          "channelId": "6a78974ab2d9d577434584b7",
+          "channelService": "youtube",
+          "channelSource": "BUFFER_CHANNEL_YOUTUBE",
+          "mode": "customScheduled",
+          "dueAt": "2026-09-03T23:30:00.000Z",
+          "sentAt": null,
+          "externalLink": null,
+          "sharedNow": false,
+          "requestedAt": "2026-09-03T01:57:27.558Z",
+          "updatedAt": "2026-09-03T01:57:29.788Z",
+          "error": null,
+          "bufferError": null,
+          "bufferDiagnostics": {
+            "httpStatus": 200,
+            "httpOk": true,
+            "requestId": "a35124dccc90d683-IAD",
+            "rateLimitRemaining": "1388",
+            "graphqlErrors": [],
+            "postError": null
+          }
+        }
       }
     },
     "readyPlatforms": [
@@ -713,7 +739,20 @@
       }
     ],
     "finalCta": "Na sua empresa, quem decide quando uma IA precisa parar?",
-    "updatedAt": "2026-09-03T00:51:04.168Z"
+    "updatedAt": "2026-09-03T01:57:30.343Z",
+    "approvalSummary": {
+      "workflowStatus": "partially_approved",
+      "approvedCount": 1,
+      "rejectedCount": 0,
+      "pendingCount": 2,
+      "platformStates": {
+        "instagram": "pending_approval",
+        "tiktok": "pending_approval",
+        "youtube": "approved"
+      },
+      "allReviewed": false
+    },
+    "approvalWorkflowStatus": "partially_approved"
   },
   "allPlatformsReady": true
 }
