@@ -112,7 +112,7 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-03T11:27:04.827608+00:00",
+  "updatedAt": "2026-09-03T11:41:53.161251+00:00",
   "lastKnownStatus": "queued",
   "lastResult": {
     "ok": true,
@@ -204,14 +204,14 @@
           "externalLink": null,
           "sharedNow": false,
           "requestedAt": "2026-09-03T01:57:27.558Z",
-          "updatedAt": "2026-09-03T11:15:20.119Z",
+          "updatedAt": "2026-09-03T11:27:28.112Z",
           "error": null,
           "bufferError": null,
           "bufferDiagnostics": {
             "httpStatus": 200,
             "httpOk": true,
-            "requestId": "a3545601e99756cd-IAD",
-            "rateLimitRemaining": "1192",
+            "requestId": "a35467c7ef732ade-IAD",
+            "rateLimitRemaining": "1185",
             "graphqlErrors": [],
             "postError": null
           }
@@ -739,7 +739,7 @@
       }
     ],
     "finalCta": "Na sua empresa, quem decide quando uma IA precisa parar?",
-    "updatedAt": "2026-09-03T11:15:20.895Z",
+    "updatedAt": "2026-09-03T11:27:28.639Z",
     "approvalSummary": {
       "workflowStatus": "partially_approved",
       "approvedCount": 1,
