@@ -13,15 +13,17 @@ Comando: `LSI::RECOVERY::CURRENT`
 
 ## 1. Última decisão estrutural
 
-Foi adotada uma arquitetura documental cirúrgica para continuidade entre chats:
+Foi adotada e versionada a arquitetura de Recovery Canônico LSI:
 - um índice canônico curto;
 - um snapshot CURRENT sempre atualizado;
 - um manifesto CURRENT por projeto;
 - documentos especializados estáveis apenas quando necessários;
 - ADR somente para mudanças arquiteturais materiais;
-- runtime/evidência vence memória de conversa para estado operacional atual.
+- runtime/evidência vence memória de conversa para estado operacional atual;
+- política machine-readable em `config/lsi/recovery-policy.json`.
 
 Comando único de recuperação: `LSI::RECOVERY::CURRENT`.
+ADR: `docs/decisions/ADR-2026-09-02-LSI-RECOVERY-CANONICO.md`.
 
 ## 2. LSI Career 360 — estado atual
 
@@ -42,12 +44,19 @@ Fundação já criada na branch:
 - manifest + service worker;
 - fundação canônica Beta 1.0;
 - Segurança e Privacidade P0;
-- Contrato de Dados V1 desacoplado de fornecedor.
+- Contrato de Dados V1 desacoplado de fornecedor;
+- Recovery Canônico LSI + manifesto CURRENT do Career.
 
 Documentos Career já existentes:
 - `career360/docs/CAREER360_BETA1_FOUNDATION_V1.md`
 - `career360/docs/CAREER360_SECURITY_PRIVACY_P0_V1.md`
 - `career360/docs/CAREER360_DATA_CONTRACT_V1.md`
+
+Recovery/continuidade:
+- `docs/LSI_CANONICAL_INDEX.md`
+- `docs/LSI_RECOVERY_CURRENT.md`
+- `docs/projects/LSI_CAREER360.md`
+- `config/lsi/recovery-policy.json`
 
 Protótipo:
 - `career360/prototype/`
@@ -208,12 +217,12 @@ Protótipo navegável existe, mas isso NÃO significa Beta pronta para pessoas r
 ## 11. Próxima sequência obrigatória
 
 `NEXT_ACTION=`
-1. consolidar manifesto CURRENT do Career e protocolo de recovery;
-2. construir parser seguro PDF/DOCX com confirmação explícita;
+1. construir parser seguro PDF/DOCX com extração estruturada e confiança por campo;
+2. tela de confirmação/correção dos dados extraídos;
 3. autenticação + isolamento multiusuário;
 4. Proteção de Carreira P0 completa;
 5. Matching Engine V1;
-6. audit log / checkpoints / recovery;
+6. audit log / checkpoints / recovery operacional;
 7. Security + Privacy P0 tests;
 8. UX/visual QA;
 9. somente então liberar Primeira Turma/Beta 1.0.
@@ -244,6 +253,6 @@ Depois, somente conforme tarefa:
 
 ## 14. Last verified change
 
-`LAST_VERIFIED_CHANGE=RECOVERY_ARCHITECTURE_CANONICALIZED_ON_CAREER_BRANCH`
+`LAST_VERIFIED_CHANGE=RECOVERY_CANONICALIZED_AND_CAREER_MANIFEST_REGISTERED`
 
 O estado deve ser atualizado durante a execução, não apenas no fim do chat.
