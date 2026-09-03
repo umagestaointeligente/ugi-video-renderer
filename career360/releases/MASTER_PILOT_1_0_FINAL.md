@@ -1,0 +1,112 @@
+# LSI Career 360 — Master Pilot 1.0 FINAL
+
+Data: 2026-09-03 BRT
+Status: `READY_FOR_MASTER_USE`
+
+## Hosted app
+
+`https://nxjdnzdxclszqyqrkwdk.supabase.co/functions/v1/career-app`
+
+HTTP 200 verificado internamente após deploy.
+
+## E2E funcional final
+
+Teste executado com usuário QA criado pelo Supabase Auth real e dados 100% sintéticos.
+
+Resultado:
+- auth user created = PASS;
+- bootstrap role = master;
+- real auth session = PASS;
+- document ingest = QUARANTINED;
+- deep process = DRAFT_REQUIRES_CONFIRMATION;
+- profile confirm = AGENT_READY;
+- raw file deleted after confirmation = PASS;
+- matching = QUALIFIED_SALARY_CONFIRM;
+- score = 100;
+- visible opportunities = 1;
+- agent intent = opportunities;
+- support = resolved;
+- master panel = master;
+- overall = PASS.
+
+## Cleanup do E2E funcional
+
+Após o teste:
+- QA users = 0;
+- QA opportunities = 0;
+- QA master hashes = 0;
+- one-time gate removido;
+- E2E runner redeployado em modo desativado.
+
+Nenhum dado real de cliente foi usado no E2E.
+
+## Hardening pós-E2E — FINAL
+
+A auditoria executada depois das últimas migrations encontrou dois WARN de funções `SECURITY DEFINER` diretamente executáveis pelo papel `authenticated`.
+
+Eles foram tratados antes da promoção:
+- `public.career_master_status_v1()` removida;
+- `public.career_score_opportunity_self(uuid, boolean)` removida;
+- motor base `career_score_opportunity` permanece sem EXECUTE para authenticated;
+- criado `public.career_master_metrics` somente com dados agregados;
+- RLS permite leitura desse snapshot apenas quando a role do próprio `auth.uid()` é `master`;
+- authenticated não pode escrever no snapshot;
+- refresh privilegiado foi movido para `career_private.refresh_master_metrics()` sem EXECUTE para authenticated;
+- cron atualiza métricas mestre a cada 5 minutos;
+- Edge `career-master-status` usa somente o JWT do usuário + cliente público e não contém service role.
+
+Security Advisor executado novamente após essa alteração: `lints=[]`.
+
+Performance Advisor final contém apenas avisos `INFO` de índices ainda não utilizados em uma base sem carga real; não são findings de segurança nem blockers do piloto.
+
+## E2E de autorização pós-hardening
+
+Como a arquitetura do Painel Mestre mudou depois do E2E funcional, foi executada uma segunda prova com duas sessões reais do Supabase Auth:
+- usuário QA com hash mestre autorizado -> role `master` -> `career-master-status` = HTTP 200;
+- resposta mestre -> `PASS_READY_FOR_MASTER_USE`;
+- usuário QA comum -> role `candidate` -> `career-master-status` = HTTP 403;
+- erro candidato -> `MASTER_REQUIRED`.
+
+Resultado: `MASTER_STATUS_POST_HARDENING_E2E=PASS`.
+
+Cleanup após essa segunda prova:
+- QA users = 0;
+- QA hashes = 0;
+- tabela/gate temporário = 0;
+- runner E2E redeployado em modo desativado com JWT obrigatório.
+
+## CI
+
+Referência final:
+- Career 360 Parser Tests = SUCCESS;
+- Career 360 Prototype Smoke = SUCCESS;
+- Career 360 Edge Typecheck = SUCCESS.
+
+## Segurança
+
+Estado final do Master Pilot:
+- Security Advisor = ZERO LINTS;
+- Auth real E2E = PASS;
+- autorização mestre 200 / candidato 403 = PASS;
+- RLS A/B = PASS;
+- bucket privado = PASS;
+- raw delete após confirmação = PASS E2E;
+- Proteção de Carreira = PASS no escopo do piloto;
+- Matching V1 = PASS no escopo do piloto;
+- painel mestre = agregados sem PII e protegido por RLS.
+
+## Limites de escopo
+
+Master Pilot 1.0 pronto não significa:
+- browser pago já contratado;
+- automação irrestrita de ATS;
+- bypass de CAPTCHA/MFA;
+- Founding Beta 20 automaticamente aberta;
+- candidatura automática liberada.
+
+Esses itens são Próximos Degraus e exigem gates próprios.
+
+## Recovery
+
+Em qualquer novo chat:
+`Recovery LSI`

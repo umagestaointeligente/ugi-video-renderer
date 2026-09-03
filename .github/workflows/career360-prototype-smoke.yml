@@ -1,0 +1,50 @@
+name: Career 360 Prototype Smoke
+
+on:
+  push:
+    branches:
+      - lsi-career360-beta1-foundation-20260902
+    paths:
+      - 'career360/prototype/**'
+      - '.github/workflows/career360-prototype-smoke.yml'
+  pull_request:
+    paths:
+      - 'career360/prototype/**'
+      - '.github/workflows/career360-prototype-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prototype-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python static tests
+        working-directory: career360/prototype
+        run: python3 -m unittest -v test_prototype_static.py
+
+      - name: Check inline JavaScript syntax
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          class P(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.ins=False; self.parts=[]; self.scripts=[]
+              def handle_starttag(self,t,a):
+                  d=dict(a)
+                  if t=='script' and 'src' not in d: self.ins=True; self.parts=[]
+              def handle_data(self,d):
+                  if self.ins: self.parts.append(d)
+              def handle_endtag(self,t):
+                  if t=='script' and self.ins:
+                      self.scripts.append(''.join(self.parts)); self.ins=False
+          p=P(); p.feed(Path('career360/prototype/index.html').read_text())
+          Path('/tmp/career360-inline.js').write_text('\n'.join(p.scripts))
+          PY
+          node --check /tmp/career360-inline.js

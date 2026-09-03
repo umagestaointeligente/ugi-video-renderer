@@ -1,0 +1,19 @@
+{
+  "name": "LSI Career 360",
+  "short_name": "Career 360",
+  "description": "Beta 1.0 do agente de carreira LSI",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#13213c",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

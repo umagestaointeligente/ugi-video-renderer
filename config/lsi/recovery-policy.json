@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "status": "canonical",
+  "human_recovery_anchor": "Recovery LSI",
+  "technical_recovery_alias": "LSI::RECOVERY::CURRENT",
+  "expected_first_line": "LSI_RECOVERY=TRUE",
+  "read_order": [
+    "docs/LSI_CANONICAL_INDEX.md",
+    "docs/LSI_RECOVERY_CURRENT.md",
+    "CURRENT_FOCUS_MANIFEST",
+    "READ_NEXT_IF_NEEDED"
+  ],
+  "limits": {
+    "recovery_current_target_max_lines": 250,
+    "project_manifest_target_max_lines": 350,
+    "read_all_project_docs_by_default": false,
+    "create_adr_for_every_chat": false
+  },
+  "precedence": {
+    "operational_state": [
+      "live_runtime_evidence",
+      "docs/LSI_RECOVERY_CURRENT.md",
+      "current_project_manifest",
+      "recent_versioned_evidence",
+      "historical_docs",
+      "conversation_memory"
+    ],
+    "intended_architecture": [
+      "current_canonical_project_doc",
+      "latest_material_adr",
+      "versioned_config",
+      "conversation_if_not_yet_canonicalized"
+    ]
+  },
+  "material_change_requires": [
+    "affected_artifact_or_policy_update",
+    "current_project_manifest_update",
+    "recovery_current_update_if_state_changed",
+    "adr_only_if_structural_decision"
+  ],
+  "recovery_output_fields": [
+    "CURRENT_FOCUS",
+    "CURRENT_STATUS",
+    "LAST_VERIFIED_CHANGE",
+    "CURRENT_BLOCKERS",
+    "NEXT_ACTION",
+    "DO_NOT_REDO",
+    "FILES_READ"
+  ],
+  "principles": [
+    "human_anchor_must_be_simple_portuguese",
+    "runtime_evidence_over_chat_memory_for_current_state",
+    "git_history_is_audit_trail",
+    "do_not_duplicate_current_docs_per_minor_change",
+    "update_state_during_work_not_only_at_chat_end",
+    "portuguese_outside_technical_standard_inside",
+    "no_secrets_or_customer_data_in_git"
+  ]
+}
