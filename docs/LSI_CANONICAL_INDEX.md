@@ -5,11 +5,19 @@ Versão: 1.0
 Data-base: 2026-09-02 BRT
 Objetivo: permitir continuidade exata entre chats sem reler uma biblioteca inteira e sem reconstruir estado por memória.
 
-## 1. Comando único de recuperação
+## 1. Âncora única de recuperação
 
-Em um chat novo, usar:
+Em um chat novo, o usuário precisa digitar apenas:
+
+`Recovery LSI`
+
+Essa é a âncora humana oficial e deve disparar todo o protocolo canônico de recuperação.
+
+Alias técnico interno de compatibilidade:
 
 `LSI::RECOVERY::CURRENT`
+
+O usuário NÃO precisa conhecer nem digitar o alias técnico.
 
 Resposta esperada na primeira linha:
 
@@ -106,7 +114,7 @@ Chaves internas podem continuar como `SHADOW`, `ROLLBACK`, `CANARY`, `CIRCUIT_BR
 
 ## 8. Recuperação deve ser cirúrgica
 
-Ao receber `LSI::RECOVERY::CURRENT`, o novo chat deve retornar de forma compacta:
+Ao receber `Recovery LSI` — ou o alias técnico interno — o novo chat deve retornar de forma compacta:
 
 `LSI_RECOVERY=TRUE`
 `CURRENT_FOCUS=`
@@ -138,3 +146,7 @@ Runtime/evidência é prova do estado real.
 
 Um chat novo deve conseguir recuperar o ponto exato de trabalho lendo poucos arquivos curtos.
 Detalhe existe sob demanda; estado atual nunca deve depender de reler toda a história.
+
+Para o usuário, a recuperação começa e termina com uma frase simples:
+
+`Recovery LSI`
