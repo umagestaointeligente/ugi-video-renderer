@@ -1,14 +1,14 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-03T05:47:28.457185+00:00",
+  "checkedAt": "2026-09-03T06:01:55.218888+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 3,
+  "delivered": 4,
   "pendingWithinGrace": 0,
-  "late": 1,
+  "late": 0,
   "failed": 0,
-  "state": "ALERT",
+  "state": "HEALTHY",
   "results": [
     {
       "receipt": "control-plane/publisher-hub/receipts/UGI-20260902-INSTAGRAM-FALLBACK-VIDEO-AGENDA-R1.json",
@@ -82,17 +82,20 @@
       "platform": "youtube",
       "kind": "video",
       "draftId": "ugi-20260902112432-1fd8ca34846e",
-      "bufferPostId": null,
+      "bufferPostId": "6a981d93bd40efcdd2fd9f3b",
       "dueAt": "2026-09-02T19:30:00+00:00",
-      "readbackHttp": 400,
-      "bufferStatus": null,
-      "status": null,
-      "sentAt": null,
-      "externalLink": null,
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-09-02T19:30:43.771Z",
+      "externalLink": "https://www.youtube.com/shorts/vx9hgO_rqZo",
       "error": null,
-      "state": "LATE",
+      "state": "DELIVERED",
       "externalProof": {
-        "attempted": false
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.youtube.com/shorts/vx9hgO_rqZo"
       }
     }
   ]
