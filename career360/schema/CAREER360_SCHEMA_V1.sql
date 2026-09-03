@@ -1,6 +1,5 @@
 -- LSI Career 360 — Schema lógico Beta 1.0
--- Status: DESIGN EXECUTÁVEL / NÃO APLICADO A PROJETO SUPABASE AINDA
--- Motivo: Career terá projeto Supabase próprio; não reutilizar lsi-revenue-autopilot.
+-- Status: DESIGN EXECUTÁVEL / PROJETO CAREER DEDICADO
 --
 -- Regras:
 -- 1) RLS em toda tabela exposta;
@@ -16,7 +15,7 @@ create table if not exists public.career_profiles (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null unique references auth.users(id) on delete cascade,
   display_name text,
-  current_role text,
+  current_role_title text,
   current_employer text,
   current_employment_confirmed boolean not null default false,
   city text,
@@ -127,14 +126,12 @@ create table if not exists public.career_audit_events (
   created_at timestamptz not null default now()
 );
 
--- Índices de ownership e consulta seletiva; evitar full scans conforme a base crescer.
 create index if not exists idx_career_blocks_user_active on public.career_employer_blocks(user_id, active);
 create index if not exists idx_career_documents_user_created on public.career_documents(user_id, created_at desc);
 create index if not exists idx_career_drafts_user_created on public.career_profile_drafts(user_id, created_at desc);
 create index if not exists idx_career_facts_user_type on public.career_confirmed_facts(user_id, fact_type) where superseded_at is null;
 create index if not exists idx_career_audit_user_created on public.career_audit_events(user_id, created_at desc);
 
--- RLS explícito em todas as tabelas do schema public.
 alter table public.career_profiles enable row level security;
 alter table public.career_preferences enable row level security;
 alter table public.career_employer_blocks enable row level security;
@@ -144,7 +141,6 @@ alter table public.career_confirmed_facts enable row level security;
 alter table public.career_action_permissions enable row level security;
 alter table public.career_audit_events enable row level security;
 
--- Revogar defaults antes de conceder o mínimo necessário.
 revoke all on table public.career_profiles from anon, authenticated;
 revoke all on table public.career_preferences from anon, authenticated;
 revoke all on table public.career_employer_blocks from anon, authenticated;
@@ -154,7 +150,6 @@ revoke all on table public.career_confirmed_facts from anon, authenticated;
 revoke all on table public.career_action_permissions from anon, authenticated;
 revoke all on table public.career_audit_events from anon, authenticated;
 
--- Usuário autenticado pode administrar apenas dados que pertencem a ele.
 grant select, insert, update, delete on public.career_profiles to authenticated;
 grant select, insert, update, delete on public.career_preferences to authenticated;
 grant select, insert, update, delete on public.career_employer_blocks to authenticated;
@@ -163,8 +158,6 @@ grant select on public.career_profile_drafts to authenticated;
 grant select, insert, update, delete on public.career_confirmed_facts to authenticated;
 grant select, insert, update on public.career_action_permissions to authenticated;
 grant select on public.career_audit_events to authenticated;
-
--- Helper textual repetido de propósito: políticas explícitas por operação facilitam auditoria.
 
 create policy career_profiles_select_own on public.career_profiles for select to authenticated
 using ((select auth.uid()) is not null and (select auth.uid()) = user_id);
