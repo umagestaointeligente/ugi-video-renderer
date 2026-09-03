@@ -234,6 +234,13 @@ def topic_history_decision(
             continue
         if norm(row.get("platform")) != platform:
             continue
+
+        prior_ids = row.get("contentIds") or ([row.get("contentId")] if row.get("contentId") else [])
+        # Idempotent reconciliation: a durable history record for the exact same
+        # CONTENT_ID must not block its own later Publisher Hub readback/retry.
+        if cid and cid in {str(x) for x in prior_ids if x}:
+            continue
+
         prior_date = parse_date(row.get("audienceDate") or row.get("dueAt") or row.get("publishedAt"))
         if prior_date is None:
             continue
@@ -258,7 +265,7 @@ def topic_history_decision(
         if exact_key or semantic_topic or entity_cluster:
             matches.append({
                 "priorTopicKey": row.get("topicKey"),
-                "priorContentIds": row.get("contentIds") or ([row.get("contentId")] if row.get("contentId") else []),
+                "priorContentIds": prior_ids,
                 "priorDate": prior_date.isoformat(),
                 "ageDays": age,
                 "entityHits": entity_hits,
