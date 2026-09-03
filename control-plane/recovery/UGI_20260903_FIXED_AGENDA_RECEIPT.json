@@ -1,0 +1,427 @@
+{
+  "project": "UGI",
+  "date": "2026-09-03",
+  "publisher": "BUFFER",
+  "workerVersion": "lola-v8-r45-4-story-video-buffer-direct-2026-09-03",
+  "results": [
+    {
+      "contentId": "UGI-20260903-IG-STORY-1030-GOOGLE-ANTITRUST",
+      "platform": "instagram",
+      "dueAt": "2026-09-03T10:30:00-03:00",
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": []
+      },
+      "renderId": "ugi-20260903131157-30f0639b4e67",
+      "draftId": "ugi-20260903131157-30f0639b4e67",
+      "githubAccepted": true,
+      "ok": false,
+      "state": "BUFFER_MUTATION_FAIL",
+      "diagnostic": {
+        "ok": false,
+        "version": "lola-v8-r45-4-story-video-buffer-direct-2026-09-03",
+        "route": "/api/platform-publish",
+        "platform": "instagram",
+        "mode": "customScheduled",
+        "errorClass": "platform_publish_failed",
+        "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+        "bufferDiagnostics": {
+          "httpStatus": 429,
+          "httpOk": false,
+          "requestId": "a3550d26187f2b29-SJC",
+          "rateLimitRemaining": "0",
+          "graphqlErrors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "path": null,
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "bufferPayload": {
+          "errors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "otherPlatformsUnaffected": true
+      }
+    },
+    {
+      "contentId": "UGI-20260903-IG-STORY-1100-BP-GOVERNANCE",
+      "platform": "instagram",
+      "dueAt": "2026-09-03T11:00:00-03:00",
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": []
+      },
+      "renderId": "ugi-20260903131256-8d37d5de095c",
+      "draftId": "ugi-20260903131256-8d37d5de095c",
+      "githubAccepted": true,
+      "ok": false,
+      "state": "BUFFER_MUTATION_FAIL",
+      "diagnostic": {
+        "ok": false,
+        "version": "lola-v8-r45-4-story-video-buffer-direct-2026-09-03",
+        "route": "/api/platform-publish",
+        "platform": "instagram",
+        "mode": "customScheduled",
+        "errorClass": "platform_publish_failed",
+        "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+        "bufferDiagnostics": {
+          "httpStatus": 429,
+          "httpOk": false,
+          "requestId": "a3550f460d1ccef5-SJC",
+          "rateLimitRemaining": "0",
+          "graphqlErrors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "path": null,
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "bufferPayload": {
+          "errors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "otherPlatformsUnaffected": true
+      }
+    },
+    {
+      "contentId": "UGI-20260903-TT-1215-ANTHROPIC-RETAIL-AGENTS",
+      "platform": "tiktok",
+      "dueAt": "2026-09-03T12:15:00-03:00",
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": []
+      },
+      "renderId": "ugi-20260903131349-d1c181392fa6",
+      "draftId": "ugi-20260903131349-d1c181392fa6",
+      "githubAccepted": true,
+      "ok": false,
+      "state": "BUFFER_MUTATION_FAIL",
+      "diagnostic": {
+        "ok": false,
+        "version": "lola-v8-r45-4-story-video-buffer-direct-2026-09-03",
+        "route": "/api/platform-publish",
+        "platform": "tiktok",
+        "mode": "customScheduled",
+        "errorClass": "platform_publish_failed",
+        "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+        "bufferDiagnostics": {
+          "httpStatus": 429,
+          "httpOk": false,
+          "requestId": "a355109ade4667af-SJC",
+          "rateLimitRemaining": "0",
+          "graphqlErrors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "path": null,
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "bufferPayload": {
+          "errors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "otherPlatformsUnaffected": true
+      }
+    },
+    {
+      "contentId": "UGI-20260903-YT-1630-HARRY-POTTER-LEGACY-BRAND",
+      "platform": "youtube",
+      "dueAt": "2026-09-03T16:30:00-03:00",
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": []
+      },
+      "renderId": "ugi-20260903131623-b88de4de833f",
+      "draftId": "ugi-20260903131623-b88de4de833f",
+      "githubAccepted": true,
+      "ok": false,
+      "state": "BUFFER_MUTATION_FAIL",
+      "diagnostic": {
+        "ok": false,
+        "version": "lola-v8-r45-4-story-video-buffer-direct-2026-09-03",
+        "route": "/api/platform-publish",
+        "platform": "youtube",
+        "mode": "customScheduled",
+        "errorClass": "platform_publish_failed",
+        "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+        "bufferDiagnostics": {
+          "httpStatus": 429,
+          "httpOk": false,
+          "requestId": "a35515c6087afb40-SJC",
+          "rateLimitRemaining": "0",
+          "graphqlErrors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "path": null,
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "bufferPayload": {
+          "errors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "otherPlatformsUnaffected": true
+      }
+    },
+    {
+      "contentId": "UGI-20260903-TT-1945-ANITTA-PORTFOLIO",
+      "platform": "tiktok",
+      "dueAt": "2026-09-03T19:45:00-03:00",
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": []
+      },
+      "renderId": "ugi-20260903131722-1f806370e03a",
+      "draftId": "ugi-20260903131722-1f806370e03a",
+      "githubAccepted": true,
+      "ok": false,
+      "state": "BUFFER_MUTATION_FAIL",
+      "diagnostic": {
+        "ok": false,
+        "version": "lola-v8-r45-4-story-video-buffer-direct-2026-09-03",
+        "route": "/api/platform-publish",
+        "platform": "tiktok",
+        "mode": "customScheduled",
+        "errorClass": "platform_publish_failed",
+        "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+        "bufferDiagnostics": {
+          "httpStatus": 429,
+          "httpOk": false,
+          "requestId": "a35516b4ffdf8ac8-SJC",
+          "rateLimitRemaining": "0",
+          "graphqlErrors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "path": null,
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "bufferPayload": {
+          "errors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "otherPlatformsUnaffected": true
+      }
+    },
+    {
+      "contentId": "UGI-20260903-YT-2030-OPENAI-STOP-CONDITIONS",
+      "platform": "youtube",
+      "dueAt": "2026-09-03T20:30:00-03:00",
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": []
+      },
+      "renderId": "ugi-20260903131820-3be270c48a23",
+      "draftId": "ugi-20260903004215-5ed49aac0424",
+      "githubAccepted": true,
+      "ok": false,
+      "state": "BUFFER_MUTATION_FAIL",
+      "diagnostic": {
+        "ok": false,
+        "version": "lola-v8-r45-4-story-video-buffer-direct-2026-09-03",
+        "route": "/api/platform-publish",
+        "errorClass": "publication_idempotency_lock_exists",
+        "error": "Publicação youtube bloqueada por exactly-once lock (asset).",
+        "lockType": "asset",
+        "existingLock": {
+          "schemaVersion": "1.1",
+          "token": "093c3374-6ff8-4102-ba7d-a31b1f943ec3",
+          "state": "confirmed",
+          "project": "UGI",
+          "draftId": "ugi-20260903004215-5ed49aac0424",
+          "renderId": "ugi-20260903004310-a3da36a066d0",
+          "contentId": "UGI-20260903-YT-2030-OPENAI-STOP-CONDITIONS",
+          "platform": "youtube",
+          "mode": "customScheduled",
+          "dueAt": "2026-09-03T23:30:00.000Z",
+          "requestedAt": "2026-09-03T01:57:27.203Z",
+          "bufferPostId": "6a98d4080e7870bed4e435b4",
+          "lockType": "asset",
+          "key": "lola/publication-locks/asset/youtube/UGI-20260903-YT-2030-OPENAI-STOP-CONDITIONS.json",
+          "bufferStatus": "scheduled",
+          "externalLink": null,
+          "updatedAt": "2026-09-03T01:57:28.834Z"
+        },
+        "publicationTriggered": false,
+        "bufferMutationPerformed": false
+      }
+    },
+    {
+      "contentId": "UGI-20260903-IG-1245-AI-PROFILE-TRANSPARENCY",
+      "platform": "instagram",
+      "dueAt": "2026-09-03T12:45:00-03:00",
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": []
+      },
+      "renderId": "ugi-20260903131440-6ad89be9f9d6",
+      "draftId": "ugi-20260903131440-6ad89be9f9d6",
+      "githubAccepted": true,
+      "ok": false,
+      "state": "BUFFER_MUTATION_FAIL",
+      "diagnostic": {
+        "ok": false,
+        "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+        "route": "/api/platform-publish",
+        "platform": "instagram",
+        "mode": "customScheduled",
+        "errorClass": "platform_publish_failed",
+        "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+        "bufferDiagnostics": {
+          "httpStatus": 429,
+          "httpOk": false,
+          "requestId": "a355186fcb3015f7-SJC",
+          "rateLimitRemaining": "0",
+          "graphqlErrors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "path": null,
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "bufferPayload": {
+          "errors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "otherPlatformsUnaffected": true
+      }
+    },
+    {
+      "contentId": "UGI-20260903-IG-STORY-1415-COST-OF-CAPITAL",
+      "platform": "instagram",
+      "dueAt": "2026-09-03T14:15:00-03:00",
+      "antiRepeat": {
+        "pass": true,
+        "decision": "ANTI_REPEAT_PASS",
+        "reasons": [],
+        "matches": []
+      },
+      "renderId": "ugi-20260903131530-fba2ef0f7d15",
+      "draftId": "ugi-20260903131530-fba2ef0f7d15",
+      "githubAccepted": true,
+      "ok": false,
+      "state": "BUFFER_MUTATION_FAIL",
+      "diagnostic": {
+        "ok": false,
+        "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+        "route": "/api/platform-publish",
+        "platform": "instagram",
+        "mode": "customScheduled",
+        "errorClass": "platform_publish_failed",
+        "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+        "bufferDiagnostics": {
+          "httpStatus": 429,
+          "httpOk": false,
+          "requestId": "a3551ad48855042c-SJC",
+          "rateLimitRemaining": "0",
+          "graphqlErrors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "path": null,
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "bufferPayload": {
+          "errors": [
+            {
+              "message": "Too many requests from this client. Please try again later.",
+              "extensions": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "window": "24h"
+              }
+            }
+          ]
+        },
+        "otherPlatformsUnaffected": true
+      }
+    }
+  ],
+  "createdAt": "2026-09-03T13:11:56.873907+00:00",
+  "ok": false,
+  "completedAt": "2026-09-03T13:29:44.964789+00:00"
+}
