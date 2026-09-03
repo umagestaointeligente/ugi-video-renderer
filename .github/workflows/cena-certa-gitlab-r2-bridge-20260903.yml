@@ -1,4 +1,4 @@
-name: Cena Certa GitLab PASS -> R2 bridge 2026-09-03
+name: Cena Certa canonical render -> R2 2026-09-03
 
 on:
   push:
@@ -11,76 +11,86 @@ permissions:
   contents: read
 
 jobs:
-  deliver:
+  render-deliver:
+    strategy:
+      fail-fast: false
+      matrix:
+        video_id:
+          - CC-20260903-DEAD-DROP
+          - CC-20260903-PASION-ORIENTAL
+          - CC-20260903-MAN-BEHIND-MACHINE
+          - CC-20260903-CONTAINMENT-BREACH
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 30
     env:
       UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
       UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
-      GITLAB_JOB_ID: '16291063675'
-      GITLAB_PROJECT_PATH: 'umagestaointeligente-group/umagestaointeligente-project'
+      VIDEO_ID: ${{ matrix.video_id }}
     steps:
-      - name: Validate existing R2 route
+      - uses: actions/checkout@v4
+
+      - name: Validate existing delivery route
         shell: bash
         run: |
           set -euo pipefail
           test -n "$UGI_VIDEO_UPLOAD_URL"
           test -n "$UGI_VIDEO_UPLOAD_KEY"
-          echo 'R2_ROUTE_PRESENT'
+          echo "R2_ROUTE_PRESENT $VIDEO_ID"
 
-      - name: Acquire only canonically PASS masters from GitLab artifact
+      - name: Install canonical runtime dependencies
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p media
-          base="https://gitlab.com/${GITLAB_PROJECT_PATH}/-/jobs/${GITLAB_JOB_ID}/artifacts/raw/output"
-          ids=(
-            CC-20260903-DEAD-DROP
-            CC-20260903-PASION-ORIENTAL
-            CC-20260903-MAN-BEHIND-MACHINE
-            CC-20260903-CONTAINMENT-BREACH
-          )
-          # Run Chicken Run from this job is intentionally excluded: its narration
-          # was technically PASS but editorially superseded by the corrected factual script.
-          for id in "${ids[@]}"; do
-            curl --fail-with-body --location --silent --show-error \
-              --retry 2 --connect-timeout 15 --max-time 180 \
-              "$base/${id}.mp4" -o "media/${id}.mp4"
-            test -s "media/${id}.mp4"
-            head12="$(xxd -p -l 12 "media/${id}.mp4")"
-            echo "$head12" | grep -qi '66747970'
-            echo "GITLAB_MASTER_ACQUIRED $id bytes=$(stat -c%s "media/${id}.mp4")"
-          done
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-lato fluidsynth timgm6mb-soundfont >/dev/null
+          python -m pip install -q edge-tts aiohttp numpy pillow mido yt-dlp
 
-      - name: Deliver PASS masters through existing Worker R2 route
+      - name: Render and run fail-closed QA
         shell: bash
         run: |
           set -euo pipefail
-          base="${UGI_VIDEO_UPLOAD_URL%/}"
-          mkdir -p receipts
-          for f in media/*.mp4; do
-            id="$(basename "$f" .mp4)"
-            response="$(curl --fail-with-body --silent --show-error \
-              --retry 3 --retry-delay 2 --retry-all-errors \
-              --connect-timeout 15 --max-time 180 \
-              -X POST "${base}/api/video-upload?renderId=${id}&duration=60" \
-              -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
-              -H 'Content-Type: video/mp4' \
-              --data-binary @"$f")"
-            printf '%s\n' "$response" > "receipts/${id}.json"
-            echo "$response" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"'
-            echo "R2_DELIVERY_SUCCESS $id"
-          done
+          # Edge currently emits SentenceBoundary for this voice; preserve every sentence,
+          # not only the first one, when generating literal CC timing.
+          sed -i "s/elif chunk\['type'\]=='SentenceBoundary' and not words:/elif chunk['type']=='SentenceBoundary':/" ops/cena-certa-runtime/runtime_20260903.py
+          python ops/cena-certa-runtime/runtime_20260903.py --id "$VIDEO_ID"
+          test -s "output/${VIDEO_ID}.mp4"
+          test -s "output/${VIDEO_ID}.receipt.json"
+          grep -q '"canonical_mask_pass": true' "output/${VIDEO_ID}.receipt.json"
+          grep -q '"mask_last_layer_pass": true' "output/${VIDEO_ID}.receipt.json"
+          grep -q '"tech_qa_pass": true' "output/${VIDEO_ID}.receipt.json"
+          grep -q '"editorial_qa_pass": true' "output/${VIDEO_ID}.receipt.json"
 
-      - name: Print public result metadata
+      - name: Deliver PASS master to existing R2 route
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import json, glob
-          for path in sorted(glob.glob('receipts/*.json')):
-              d=json.load(open(path,encoding='utf-8'))
-              print('R2_RESULT', d.get('renderId'), d.get('status'), d.get('videoUrl') or d.get('url') or d.get('mediaUrl'))
+          duration="$(ffprobe -v error -show_entries format=duration -of csv=p=0 "output/${VIDEO_ID}.mp4" | awk -F. '{print $1}')"
+          response="$(curl --fail-with-body --silent --show-error \
+            --retry 3 --retry-delay 2 --retry-all-errors \
+            --connect-timeout 15 --max-time 240 \
+            -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${VIDEO_ID}&duration=${duration}" \
+            -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
+            -H 'Content-Type: video/mp4' \
+            --data-binary @"output/${VIDEO_ID}.mp4")"
+          printf '%s\n' "$response" | tee "output/${VIDEO_ID}.r2.json"
+          echo "$response" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"'
+          python - "$VIDEO_ID" "output/${VIDEO_ID}.r2.json" <<'PY'
+          import json,sys
+          vid,path=sys.argv[1:]
+          d=json.load(open(path,encoding='utf-8'))
+          print('R2_RESULT',vid,d.get('status'),d.get('videoUrl') or d.get('url') or d.get('mediaUrl'))
           PY
 
-# manual retrigger 2026-09-03T20:30:00-03:00
+      - name: Preserve proof artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-${{ matrix.video_id }}
+          path: |
+            output/${{ matrix.video_id }}.mp4
+            output/${{ matrix.video_id }}.receipt.json
+            output/${{ matrix.video_id }}.r2.json
+          if-no-files-found: warn
+          retention-days: 7
+
+# self-render bridge trigger 2026-09-03T20:29:00-03:00
