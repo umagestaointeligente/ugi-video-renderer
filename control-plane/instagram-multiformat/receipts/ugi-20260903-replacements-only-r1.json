@@ -22,7 +22,7 @@
       "generateHttp": 200,
       "generationOk": true,
       "workerVersion": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
-      "draftId": "dd0fcac7-d1a9-463b-b943-e0a10cd98f2c",
+      "draftId": "a5516c19-ce1c-4c62-9c7a-520d8e0bd9ef",
       "assetUrls": [],
       "qa": {
         "pass": false,
@@ -37,5 +37,5 @@
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-03T16:03:50.617301+00:00"
+  "timestamp": "2026-09-03T16:27:33.055099+00:00"
 }
