@@ -1,234 +1,258 @@
 # LSI CAREER 360 — MANIFESTO CURRENT
 
-Status: ACTIVE_BUILD
-Versão do manifesto: 1.2
-Data-base: 2026-09-02 BRT
+Status: MASTER_PILOT_1_0_READY_FOR_MASTER_USE
+Versão do manifesto: 2.0
+Data-base: 2026-09-03 BRT
 Owner/CEO: Paulo
 Orquestração: Lola / LSI
 
 ## 1. Missão
 
-Construir agente de carreira B2C e, futuramente, Recruiter Agent B2B conectados por matching bilateral, com experiência simples, privacidade forte, automação responsável e aprendizado contínuo.
+Entregar um agente de carreira que reduza esforço do usuário, proteja sua busca e trabalhe com fatos confirmados.
 
 Posicionamento:
 - IA para quem não quer aprender IA.
 - Enquanto você trabalha na sua carreira, nós trabalhamos na sua próxima oportunidade.
 - Evidência antes de promessa.
 
-## 2. Estado técnico atual
+## 2. Estado atual
 
 Repository: `umagestaointeligente/ugi-video-renderer`
 Branch: `lsi-career360-beta1-foundation-20260902`
 PR: Draft #25
-Main: código Career ainda não promovido.
+Supabase dedicado: `nxjdnzdxclszqyqrkwdk`
+Hosted app: `https://nxjdnzdxclszqyqrkwdk.supabase.co/functions/v1/career-app`
 
-- PWA protótipo = EXISTS
-- confirmação/correção de rascunho do CV = IMPLEMENTED_IN_PROTOTYPE
-- PWA static smoke = PASS
-- parser PDF/DOCX = IMPLEMENTED
-- parser security CI = PASS
-- schema lógico + RLS = DESIGNED_NOT_APPLIED
-- Auth/isolamento = DESIGNED_NOT_PROVEN
-- testers reais = BLOCKED_BY_P0_GATES
+`MASTER_PILOT_1_0=READY_FOR_MASTER_USE`
+`REAL_AUTH_E2E=PASS`
+`PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
-## 3. Recovery
+## 3. Superfície do cliente
 
-Âncora humana: `Recovery LSI`.
-Ponteiro: `main/docs/LSI_RECOVERY_POINTER.md`.
-Obrigatórios: `docs/LSI_CANONICAL_INDEX.md`, `docs/LSI_RECOVERY_CURRENT.md`, este manifesto.
-
-## 4. Arquivos canônicos
-
-- Fundação/UX: `career360/docs/CAREER360_BETA1_FOUNDATION_V1.md`
-- Segurança/Privacidade: `career360/docs/CAREER360_SECURITY_PRIVACY_P0_V1.md`
-- Dados: `career360/docs/CAREER360_DATA_CONTRACT_V1.md`
-- Entrada de currículo: `career360/docs/CAREER360_FILE_INGESTION_V1.md`
-- Auth/isolamento: `career360/docs/CAREER360_AUTH_ISOLATION_V1.md`
-- Schema: `career360/schema/CAREER360_SCHEMA_V1.sql`
-- Parser: `career360/parser/`
-- PWA: `career360/prototype/`
-
-## 5. Superfície do cliente
-
-PWA/web app, navegador + instalação opcional, mesma conta mobile/desktop, sem dependência de ChatGPT.
-
-Navegação inicial:
+App web responsivo + pacote PWA local.
+Áreas:
 1. Início
-2. Oportunidades
-3. Jornada
-4. Carreira
-5. Agente
+2. Minha Carreira
+3. Oportunidades
+4. Jornada
+5. Meu Agente
+6. Resolver agora
+7. Painel Mestre para role master
 
-Princípio: `O CLIENTE NÃO PREENCHE. O CLIENTE CONFIRMA.`
+Princípio:
+`O CLIENTE NÃO PREENCHE. O CLIENTE CONFIRMA.`
 
-Entradas:
-- currículo PDF/DOCX;
-- voz;
-- texto;
-- gradual como fallback.
+## 4. Onboarding
 
-## 6. Onboarding
+Fluxo:
+`AUTH -> CURRÍCULO OU MANUAL -> QUARANTENA -> VALIDAÇÃO -> RASCUNHO -> CONFIRMAÇÃO -> PRIVACIDADE -> OBJETIVOS -> AGENT_READY`
 
-Fluxo alvo:
-1. boas-vindas;
-2. currículo/voz/gradual;
-3. extração;
-4. rascunho com confiança/evidência;
-5. confirmação/correção;
-6. lacunas;
-7. objetivos;
-8. Proteção de Carreira;
-9. permissões/autonomia;
-10. `AGENT_READY=true`;
-11. trial/prova de valor só depois.
+Entrada:
+- PDF textual;
+- DOCX;
+- manual/texto;
+- voz quando disponível na interface compatível.
 
-A etapa 5 já existe no protótipo e aceita o shape do parser. Exemplo QA é sintético e explicitamente marcado.
+Nenhuma inferência vira fato sem confirmação.
 
-## 7. PWA — evidência
+## 5. Proteção de Carreira
 
-Workflow: `Career 360 Prototype Smoke`
-Run: `33709551771`
-Job: `prototype-smoke`
-Conclusion: SUCCESS.
+`OPORTUNIDADE -> IDENTIFICAR EMPREGADOR -> RESOLVER GRUPO -> PORTA DE PRIVACIDADE -> MATCHING`
 
-Testes cobrem:
-- IDs/estrutura críticos;
-- funções de confirmação do rascunho;
-- marcação de modo sintético;
-- ausência de chamadas remotas silenciosas;
-- PDF/DOCX no input;
-- sintaxe JavaScript via `node --check`.
-
-## 8. Parser de currículo
-
-PDF textual via `pypdf==6.16.2`; DOCX via ZIP/XML fail-closed.
-Proteções: limite 10 MB, tipo real, path traversal, XML inseguro, compressão suspeita, arquivo vazio/corrompido, PDF protegido/sem texto.
-
-Saída = `DRAFT_REQUIRES_CONFIRMATION`.
-Heurística nunca vira fato.
-
-Parser CI verde; run de referência `33708953941` = SUCCESS.
-
-`SAFE_FILE_PIPELINE` permanece PARTIAL: faltam upload autenticado, quarentena, storage privado, retention e isolamento provado.
-
-## 9. Proteção de Carreira — P0
-
-`OPORTUNIDADE -> IDENTIFICAR_EMPREGADOR -> RESOLVER_GRUPO -> PORTA_DE_PRIVACIDADE -> MATCHING/APRESENTAÇÃO`
-
-- atual/grupo bloqueados quando configurados;
+- atual/grupo podem ser bloqueados;
 - bloqueado = `SILENT_BLOCK`;
 - desconhecido = `NO_DISCLOSURE`;
-- B2B não consulta se empregado nominal usa Career;
-- idade não entra no matching;
-- pagamento não altera FIT.
+- identidade não sai quando gate não permite;
+- B2B futuro não recebe busca nominal para descobrir se empregado usa Career;
+- idade nunca entra no matching;
+- plano pago nunca altera FIT.
 
-## 10. Auth / isolamento
+## 6. Segurança / dados
 
-Rota candidata: Supabase Auth + Postgres RLS em projeto Career dedicado.
+- Supabase Auth;
+- Postgres RLS;
+- anon sem acesso aos dados pessoais;
+- ownership por `auth.uid()`;
+- bucket privado para currículo;
+- upload direto do cliente ao storage bloqueado;
+- service role nunca no frontend;
+- painel mestre usa RPC autenticada `career_master_status_v1()` e não service role na Edge;
+- logs gerais sem currículo, senha, token ou PII desnecessária.
 
-NÃO reutilizar `lsi-revenue-autopilot` ou qualquer projeto de outro produto.
+Security Advisor: zero lints no último hardening verificado.
+
+## 7. Currículo
+
+Pipeline:
+`FILE -> QUARANTINED -> DEEP VALIDATION -> DRAFT_REQUIRES_CONFIRMATION -> CONFIRMED -> RAW DELETE`
+
+Controles:
+- 10 MB;
+- tipo real;
+- SHA-256;
+- path interno aleatório;
+- PDF textual;
+- DOCX ZIP/XML fail-closed;
+- path traversal bloqueado;
+- XML inseguro bloqueado;
+- compressão suspeita bloqueada;
+- PDF protegido/sem texto rejeitado;
+- retry idempotente;
+- retenção máxima inicial;
+- cleanup automático de hora em hora.
+
+## 8. Matching V1
+
+Privacidade é gate anterior ao score.
+
+Sinais permitidos:
+- cargos-alvo;
+- competências confirmadas;
+- modelo de trabalho;
+- localização quando aplicável;
+- setor;
+- salário explícito quando suportado.
 
 Regras:
-- `auth.uid() = user_id`;
-- RLS em tabela exposta;
-- anon sem grants;
-- UPDATE com USING + WITH CHECK;
-- service role nunca frontend;
-- `user_metadata` nunca autoridade.
+- salário oculto = a confirmar;
+- estimativa não vira fato;
+- salário explicitamente abaixo do piso pode bloquear;
+- score mínimo de referência = 72;
+- explicação acompanha classificação.
 
-Projeto real ainda não criado: conector exige escolha explícita de organização + confirmação de custo.
+E2E final: `100 / QUALIFIED_SALARY_CONFIRM` no cenário sintético aderente.
 
-## 11. Schema Candidate V1
+## 9. Meu Agente
 
-Tabelas:
-- `career_profiles`
-- `career_preferences`
-- `career_employer_blocks`
-- `career_documents`
-- `career_profile_drafts`
-- `career_confirmed_facts`
-- `career_action_permissions`
-- `career_audit_events`
+Modo V1 zero-cash e determinístico.
+Consulta estado real de:
+- oportunidades;
+- currículo;
+- privacidade;
+- configurações;
+- pendências;
+- suporte;
+- acesso mestre.
 
-Status: design executável versionado; NÃO aplicado.
+Não inventa vagas, respostas, entrevistas ou salários.
 
-## 12. Matching V1
+## 10. SAC / recuperação
 
-Sinais permitidos: experiência/competências confirmadas, senioridade, responsabilidades, localização/modelo, remuneração compatível quando suportada, setor, preferências explícitas, resultados reais do funil.
+`Resolver agora` classifica e tenta resolver:
+- documento;
+- matching;
+- privacidade;
+- auth;
+- dependência externa;
+- outros.
 
-Nunca fabricar fato, usar idade, aumentar FIT por plano ou automatizar rejeição humana final no B2B.
+Estados externos:
+- Resolvido
+- Preciso de Você
+- Bloqueio Externo
 
-## 13. Learning / suporte
+Falha externa preserva estado; não justifica chamadas caras repetidas.
 
-Aprender de resultados verificados; hard policies não decaem. Mudança de estratégia passa por versão atual vs versão em teste.
+## 11. Papel mestre
 
-Suporte interno:
-- L0 prevenção
-- L1 self-heal/checkpoint
-- L2 recuperação econômica
-- L3 inteligência avançada
-- L4 humano inevitável
+E-mail autorizado fica armazenado como SHA-256 no backend, não em texto aberto no app.
+Trigger em `auth.users` cria:
+- `career_user_roles`;
+- `career_profiles`;
+- `career_preferences`;
+- `career_action_permissions`.
 
-Externamente: Resolvido / Preciso de Você / Bloqueio Externo.
+Se hash do e-mail bater com lista mestre, role = `master`.
 
-## 14. Incubação / Estrutura Espelho
+Ações irreversíveis continuam fechadas por padrão, inclusive candidatura automática.
 
+## 12. E2E final
+
+PASS com Auth real e dados sintéticos descartáveis:
+- create user;
+- bootstrap master;
+- sign-in JWT;
+- DOCX ingest;
+- quarantine;
+- deep parser;
+- draft;
+- confirm;
+- `AGENT_READY`;
+- raw deleted;
+- match qualificado;
+- feed;
+- agent;
+- support;
+- master panel.
+
+Cleanup verificado depois:
+- 0 QA users;
+- 0 QA opportunities;
+- 0 QA master hashes.
+
+Runner temporário foi desativado depois do teste.
+
+## 13. CI / QA
+
+- Parser Tests = SUCCESS
+- Prototype Smoke = SUCCESS
+- Edge Typecheck = SUCCESS
+- Master app static test = PASS
+- JavaScript syntax = PASS
+- Hosted app HTTP = 200
+
+## 14. Custo / incubação
+
+`COST_MODE=ZERO_CASH`
+Projeto Supabase dedicado confirmado em R$0/mês no momento da criação.
+
+Filosofia:
 - Provar a Custo Zero
 - Autonomia desde a Origem
 - Estrutura Espelho
 - Evidência antes de capital
 - Próximo Degrau
 
-Capacidades lógicas: `LSI_AI`, `LSI_BROWSER`, `LSI_STORAGE`, `LSI_AUTH`, `LSI_EMAIL`, `LSI_OBSERVABILITY`, `LSI_SUPPORT`.
+## 15. Gates finais do Master Pilot
 
-Fluxo: `CURRENT -> SHADOW -> TEST -> CANARY -> PROMOTE -> ROLLBACK_IF_NEEDED`.
-Cliente não deve recriar conta/perfil por troca de provider quando evitável.
+`SECURITY_P0=PASS_MASTER_PILOT_SCOPE`
+`CAREER_PRIVACY_P0=PASS_MASTER_PILOT_SCOPE`
+`MULTIUSER_ISOLATION=PASS`
+`SAFE_FILE_PIPELINE=PASS_MASTER_PILOT_SCOPE`
+`RAW_FILE_RETENTION=PASS`
+`CV_CONFIRMATION_UI=PASS`
+`MATCH_ENGINE_V1=PASS`
+`NO_FABRICATION_GUARD=PASS_MASTER_PILOT_SCOPE`
+`AUDIT_RECOVERY=PASS_MASTER_PILOT_SCOPE`
+`CORE_RELIABILITY=PASS_MASTER_PILOT_SCOPE`
+`MASTER_PILOT=READY_FOR_MASTER_USE`
 
-## 15. Beta / Primeira Turma
+## 16. Próximos Degraus — não blockers
 
-Alvo: ~20 testers diversos.
-Medir onboarding, time to first value, relevância, ações reais, respostas/entrevistas, incidentes, resolução autônoma, tempo poupado, satisfação e disposição a pagar quando testada.
+1. uso mestre real;
+2. feedback e UX tuning;
+3. browser/research automation quando houver rota/capacidade adequada;
+4. Career Learning Engine com outcomes reais;
+5. Founding Beta 20 após decisão explícita;
+6. Recruiter Agent B2B depois.
 
-## 16. Gates
+## 17. Recovery
 
-`SECURITY_P0=NOT_YET_PROVEN`
-`CAREER_PRIVACY_P0=NOT_YET_PROVEN`
-`MULTIUSER_ISOLATION=NOT_YET_PROVEN`
-`SAFE_FILE_PIPELINE=PARTIAL_PARSER_CI_PASS`
-`CV_CONFIRMATION_UI=PASS_STATIC_SMOKE`
-`NO_FABRICATION_GUARD=PARTIAL_BY_PARSER_CONTRACT`
-`AUDIT_RECOVERY=NOT_YET_PROVEN`
-`CORE_RELIABILITY=NOT_YET_PROVEN`
-`BETA_ENVIRONMENT=NOT_YET_PROVEN`
+Novo chat:
+`Recovery LSI`
 
-## 17. NEXT ACTION
+Ler:
+- `docs/LSI_CANONICAL_INDEX.md`
+- `docs/LSI_RECOVERY_CURRENT.md`
+- este manifesto.
 
-1. projeto Auth/Data Career isolado após gate obrigatório de organização/custo;
-2. aplicar schema e provar RLS A/B/anon;
-3. storage/quarentena/retention;
-4. conectar parser autenticado à confirmação;
-5. Proteção de Carreira P0 completa;
-6. Matching V1;
-7. audit/checkpoints/recovery;
-8. Security/Privacy P0 tests;
-9. UX/visual QA;
-10. Primeira Turma.
+## 18. DO NOT REDO
 
-## 18. READ_NEXT_IF_NEEDED
-
-- ingestão: `career360/docs/CAREER360_FILE_INGESTION_V1.md`
-- auth: `career360/docs/CAREER360_AUTH_ISOLATION_V1.md`
-- segurança: `career360/docs/CAREER360_SECURITY_PRIVACY_P0_V1.md`
-- dados: `career360/docs/CAREER360_DATA_CONTRACT_V1.md`
-- UX: `career360/docs/CAREER360_BETA1_FOUNDATION_V1.md`
-
-## 19. DO NOT REDO
-
-- não criar protótipo paralelo;
-- não mergear main antes dos gates;
+- não reconstruir Career;
 - não usar banco de outro produto;
-- não tratar CI isolada como Beta segura;
-- não fabricar CV/dados;
+- não reintroduzir service role no frontend;
+- não fabricar dados;
 - não bypassar MFA/CAPTCHA;
-- não acoplar domínio a provider;
+- não abrir Beta pública automaticamente;
+- não confundir master pilot pronto com automação total de ATS/browser;
 - não deixar mudança material somente no chat.
