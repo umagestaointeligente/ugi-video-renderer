@@ -2,7 +2,7 @@
   "project": "UGI",
   "component": "PLATFORM_TOPIC_HISTORY",
   "schemaVersion": "1.0",
-  "updatedAt": "2026-09-02T21:20:00-03:00",
+  "updatedAt": "2026-09-02T21:28:00-03:00",
   "cooldownDays": 15,
   "scope": "PER_PLATFORM",
   "status": "SEEDED_BACKFILL_IN_PROGRESS",
@@ -17,6 +17,14 @@
     "reason": "Registry introduced on 2026-09-02. Older durable receipts/manifests must be progressively backfilled. Current editorial selection must also reconcile publisher receipts, manifests and commands before lock.",
     "failClosedOnCredibleMissingHistoryRisk": true
   },
+  "unresolvedRisks": [
+    {
+      "entity": "Uber",
+      "platform": "unknown",
+      "state": "HISTORY_REVIEW_REQUIRED",
+      "reason": "Credible recent-use recollection exists but durable search has not yet resolved the network. Block Uber on new slots until platform history is reconciled."
+    }
+  ],
   "entries": [
     {
       "platform": "instagram",
