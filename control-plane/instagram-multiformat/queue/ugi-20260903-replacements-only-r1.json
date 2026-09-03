@@ -2,6 +2,7 @@
   "project": "UGI",
   "batchId": "UGI-20260903-REPLACEMENTS-ONLY-IG-R1",
   "timezone": "America/Sao_Paulo",
+  "recoveryRevision": 2,
   "posts": [
     {
       "contentId": "UGI-20260903-IG-1915-COFFEE-EUDR",
@@ -12,10 +13,10 @@
       "topic": "EUDR e café: quando a regra de um mercado redesenha a cadeia inteira",
       "objective": "Mostrar como uma exigência regulatória de um mercado pode alterar sourcing, rastreabilidade, dados e processos de toda a cadeia de suprimentos.",
       "audience": "gestores, líderes, operações, compras, supply chain e negócios",
-      "hook": "Uma regra europeia pode mudar até o café que nunca será vendido na Europa.",
+      "hook": "A Europa pode mudar o café do mundo.",
       "key_message": "A EUDR exige rastreabilidade para comprovar que produtos destinados à União Europeia não vêm de áreas desmatadas. Estudo da Trase reportado pela Reuters em 2 de setembro de 2026 indica que, para muitos produtores de café, separar cadeias conformes e não conformes pode ser mais caro do que aplicar o padrão a toda a operação. Para gestão, compliance passa a ser arquitetura de fornecedores, dados, processos e custo operacional.",
-      "instructions": "CARROSSEL DE 7 SLIDES, 1080x1350, visual UGI premium, limpo, executivo e editorial. Usar contexto real/editorialmente seguro de café, lavoura, exportação, logística, rastreabilidade e cadeia de suprimentos; priorizar contexto brasileiro quando factualmente apropriado. Não fabricar certificação, mapa de propriedade, documento, selo ou endosso. S1 COVER: 'Uma regra europeia pode mudar até o café que nunca será vendido na Europa.' S2 FATO: explicar de forma curta que a EUDR exige rastreabilidade até a origem para produtos destinados à UE. S3 TENSÃO: manter duas cadeias — conforme e não conforme — pode elevar custo e complexidade. S4 MECANISMO: quando separar custa mais, o padrão mais exigente pode virar padrão operacional para toda a cadeia. S5 GESTÃO: compliance deixa o jurídico e entra em sourcing, dados, fornecedor e processo. S6 TESTE PRÁTICO: 'Você consegue rastrear origem? Quais dados de fornecedor faltam? Quanto custa operar dois padrões?' S7 UGI: 'Regulação distante pode virar processo local. O gestor precisa enxergar antes.' Incluir fonte discreta e legível: 'Fonte: Reuters / Trase, 02 set 2026'. Sem ghost text, sem excesso de lower third, sem slide corporativo poluído. Carrossel silencioso.",
-      "cta": "Regulação distante pode virar processo local. O gestor precisa enxergar antes.",
+      "instructions": "CARROSSEL DE 7 SLIDES, 1080x1350, visual UGI premium, limpo, executivo e editorial. Usar contexto real/editorialmente seguro de café, lavoura, exportação, logística, rastreabilidade e cadeia de suprimentos; priorizar contexto brasileiro quando factualmente apropriado. Não fabricar certificação, mapa de propriedade, documento, selo ou endosso. S1 COVER CURTA: 'A EUROPA PODE MUDAR O CAFÉ DO MUNDO'. S2 FATO: EUDR exige rastreabilidade até a origem para produtos destinados à UE. S3 TENSÃO: manter duas cadeias — conforme e não conforme — pode elevar custo e complexidade. S4 MECANISMO: quando separar custa mais, o padrão mais exigente pode virar padrão operacional para toda a cadeia. S5 GESTÃO: compliance entra em sourcing, dados, fornecedor e processo. S6 TESTE PRÁTICO: 'Você rastreia a origem? Quais dados faltam? Quanto custa operar dois padrões?' S7 UGI: 'Regulação distante pode virar processo local.' Fonte discreta e legível: 'Reuters / Trase, 02 set 2026'. Sem ghost text, sem excesso de lower third, sem slide corporativo poluído. Carrossel silencioso.",
+      "cta": "Regulação distante pode virar processo local.",
       "slides": 7
     }
   ]
