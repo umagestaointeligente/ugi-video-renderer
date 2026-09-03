@@ -46,7 +46,7 @@
         "narration": {"instagram":"A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?","tiktok":"A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?","youtube":"A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?"}
       },
       {
-        "role": "context",
+        "role": "pain",
         "visual_intent": "autonomous software agent executing multiple digital tasks with limited supervision, generic and realistic",
         "pexels_query": "automation artificial intelligence workflow computer operations",
         "overlay": {"instagram":"AUTONOMIA MUDA O TIPO DE RISCO","tiktok":"AUTONOMIA MUDA O TIPO DE RISCO","youtube":"AUTONOMIA MUDA O TIPO DE RISCO"},
@@ -54,7 +54,7 @@
         "narration": {"instagram":"Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer.","tiktok":"Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer.","youtube":"Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer."}
       },
       {
-        "role": "risk",
+        "role": "consequence",
         "visual_intent": "security team reviewing permissions, internet access and automated actions on dashboards",
         "pexels_query": "cybersecurity team permissions monitoring dashboard",
         "overlay": {"instagram":"EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO","tiktok":"EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO","youtube":"EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO"},
@@ -62,7 +62,7 @@
         "narration": {"instagram":"O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança.","tiktok":"O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança.","youtube":"O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança."}
       },
       {
-        "role": "framework",
+        "role": "turn",
         "visual_intent": "management team defining guardrails and escalation workflow around AI deployment",
         "pexels_query": "business team governance risk workflow planning",
         "overlay": {"instagram":"5 TRAVAS ANTES DE DAR AUTONOMIA","tiktok":"5 TRAVAS ANTES DE DAR AUTONOMIA","youtube":"5 TRAVAS ANTES DE DAR AUTONOMIA"},
