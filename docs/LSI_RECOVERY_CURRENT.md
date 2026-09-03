@@ -10,242 +10,182 @@ Alias técnico interno: `LSI::RECOVERY::CURRENT`
 `LSI_RECOVERY=TRUE`
 `CURRENT_FOCUS=LSI_CAREER_360_BETA_1_0`
 `CURRENT_STATUS=FOUNDATION_AND_CORE_PIPELINE_IN_PROGRESS`
-`VERIFIED_REVENUE=R$0,00` para esta lógica de incubação; reconfirmar fonte antes de qualquer decisão monetária.
+`VERIFIED_REVENUE=R$0,00` para esta lógica de incubação; reconfirmar fonte antes de decisão monetária.
 
 ## 1. Recovery canônico
 
-Arquitetura vigente:
-- ponteiro estável no `main`: `docs/LSI_RECOVERY_POINTER.md`;
-- índice: `docs/LSI_CANONICAL_INDEX.md`;
-- este snapshot CURRENT;
-- manifesto CURRENT do projeto ativo;
-- documentos especializados somente sob demanda;
-- ADR apenas para decisão estrutural material;
-- runtime/evidência vence memória para estado operacional atual.
+Entrada estável no `main`: `docs/LSI_RECOVERY_POINTER.md`.
+Ler depois:
+- `docs/LSI_CANONICAL_INDEX.md`
+- este CURRENT
+- `docs/projects/LSI_CAREER360.md`
+- especializados somente sob demanda.
 
-Comando do usuário em chat novo: `Recovery LSI`.
+Runtime/evidência vence memória para estado operacional atual.
 
-## 2. Career 360 — localização
+## 2. Localização Career
 
 Repository: `umagestaointeligente/ugi-video-renderer`
-Branch isolada: `lsi-career360-beta1-foundation-20260902`
-PR Draft: `#25 — Career 360 Beta 1.0 — fundação zero-cost e protótipo PWA`
-Main: código Career permanece não promovido.
+Branch: `lsi-career360-beta1-foundation-20260902`
+PR: Draft #25
+Main: código Career não promovido.
 
-## 3. Entregas já existentes
+## 3. Produto/UX implementado
 
-### Produto/UX
-- protótipo PWA mobile/desktop;
-- onboarding curto: currículo / voz / gradual;
-- Proteção de Carreira inicial;
+- PWA mobile/desktop;
+- onboarding currículo / voz / gradual;
 - cinco áreas: Início / Oportunidades / Jornada / Carreira / Agente;
+- Proteção de Carreira inicial;
 - texto + voz;
-- manifest + service worker;
-- princípio: `O CLIENTE NÃO PREENCHE. O CLIENTE CONFIRMA.`
+- etapa `Confira o que entendemos` integrada ao mesmo PWA;
+- UI aceita o contrato `candidate_profile_draft` do parser;
+- campos exibem confiança e permitem correção;
+- exemplo visual é explicitamente `MODO QA`, 100% sintético e não vira dado do cliente;
+- arquivo real continua sem upload/leitura remota no protótipo local.
 
-### Documentação
-- `career360/docs/CAREER360_BETA1_FOUNDATION_V1.md`
-- `career360/docs/CAREER360_SECURITY_PRIVACY_P0_V1.md`
-- `career360/docs/CAREER360_DATA_CONTRACT_V1.md`
-- `career360/docs/CAREER360_FILE_INGESTION_V1.md`
-- `docs/projects/LSI_CAREER360.md`
+Princípio: `O CLIENTE NÃO PREENCHE. O CLIENTE CONFIRMA.`
 
-### Parser de currículo
+## 4. Evidências PWA
+
+Workflow: `Career 360 Prototype Smoke`
+Run: `33709551771`
+Job: `prototype-smoke`
+Conclusion: `SUCCESS`
+
+Passaram:
+- testes estáticos de IDs/estrutura;
+- funções de confirmação de rascunho;
+- marcação explícita de dados sintéticos;
+- ausência de fetch/XHR/WebSocket/sendBeacon no protótipo;
+- restrição do file input a PDF/DOCX;
+- `node --check` no JavaScript inline.
+
+## 5. Parser de currículo
+
+Arquivos:
 - `career360/parser/resume_parser.py`
 - `career360/parser/test_resume_parser.py`
 - `career360/parser/requirements.txt`
+
+Características:
 - PDF textual via `pypdf==6.16.2`;
-- DOCX via ZIP/XML fail-closed;
+- DOCX ZIP/XML fail-closed;
 - limite inicial 10 MB;
-- validação de assinatura real;
-- proteção contra path traversal / XML inseguro / compressão suspeita;
-- saída sempre `DRAFT_REQUIRES_CONFIRMATION`;
+- valida tipo real;
+- bloqueia path traversal, XML inseguro e compressão suspeita;
+- rejeita PDF protegido/sem texto;
+- saída = `DRAFT_REQUIRES_CONFIRMATION`;
 - heurística nunca vira fato confirmado.
 
-### Evidência CI
-Workflow: `Career 360 Parser Tests`
-Run: `33708953941`
-Job: `parser-tests`
-Conclusão: `SUCCESS`
-Passaram: checkout, Python, instalação limpa e testes determinísticos.
+Parser CI já teve run `33708953941` = SUCCESS e execuções subsequentes continuam verdes.
 
-IMPORTANTE: parser verde isolado NÃO equivale a `SAFE_FILE_PIPELINE=PASS`.
+`SAFE_FILE_PIPELINE` ainda NÃO é PASS porque faltam upload autenticado, quarentena, storage privado, retenção e isolamento provado.
 
-### Schema lógico candidato
+## 6. Dados/Auth — desenho pronto, implantação pendente
+
+Docs:
+- `career360/docs/CAREER360_AUTH_ISOLATION_V1.md`
+- `career360/docs/CAREER360_DATA_CONTRACT_V1.md`
 - `career360/schema/CAREER360_SCHEMA_V1.sql`
-- ainda NÃO aplicado a banco real;
+
+Rota candidata: Supabase Auth + Postgres RLS em projeto **dedicado ao Career**.
+Não reutilizar `lsi-revenue-autopilot` nem projeto de outro produto.
+
+Schema desenhado com:
 - RLS explícito;
-- `anon` sem grants;
+- anon sem grants;
 - ownership por `auth.uid() = user_id`;
-- nenhuma autorização baseada em `user_metadata`;
-- audit events sem insert direto do cliente;
-- Candidate side isolado por ownership.
+- UPDATE com USING + WITH CHECK;
+- audit events sem insert direto do frontend;
+- nenhuma autorização por `user_metadata`.
 
-## 4. Decisão de infraestrutura de dados
+Projeto real Career ainda não foi criado porque o conector exige escolha explícita de organização + confirmação de custo antes da criação.
 
-Supabase foi avaliado como rota candidata zero-custo para Auth/Postgres/RLS.
-Há projetos Supabase já existentes na conta, mas NÃO reutilizar `lsi-revenue-autopilot` para Career.
-Career deve possuir projeto próprio para preservar isolamento.
-Criação de projeto real permanece pendente porque o conector exige confirmação explícita da organização e custo antes da criação.
+## 7. Proteção de Carreira — P0
 
-Até lá:
-- código/schema/testes avançam na branch;
-- nenhum dado real de cliente é colocado em projeto compartilhado.
+Fluxo:
+`OPORTUNIDADE -> IDENTIFICAR_EMPREGADOR -> RESOLVER_GRUPO -> PORTA_DE_PRIVACIDADE -> MATCHING/APRESENTAÇÃO`
 
-## 5. Princípios obrigatórios Career
+Regras duras:
+- atual/grupo bloqueados quando configurados;
+- bloqueado = `SILENT_BLOCK`;
+- desconhecido = `NO_DISCLOSURE`;
+- B2B não consulta se empregado nominal usa Career;
+- idade nunca entra no matching;
+- pagamento nunca altera FIT.
 
-### Produto
-- PWA/web app primeiro;
-- cliente não precisa ter ChatGPT;
-- interface guiada;
-- PDF/DOCX pré-preenche e usuário confirma;
-- voz crítica exige confirmação;
-- poucos campos visíveis;
-- Português por Fora, Padrão Técnico por Dentro.
-
-### Público/UX
-- público amplo;
-- atenção a profissionais experientes/40+ é hipótese de mercado, nunca filtro de matching;
-- interface simples, legível e confortável;
-- otimizar valor por visita, não tempo de tela.
-
-### Privacidade
-- Proteção de Carreira = P0;
-- empregador atual/grupo bloqueados quando configurados;
-- empresa bloqueada = silêncio total;
-- empregador desconhecido = sem divulgação automática;
-- B2B não consulta nominalmente se empregado usa Career;
-- pagamento nunca aumenta FIT;
-- idade nunca entra no matching.
-
-### Segurança
-- custo zero não vence segurança/privacidade/legalidade;
-- secrets nunca em Git;
-- least privilege;
-- logs sem PII desnecessária;
-- suporte/recuperação fazem parte do produto.
-
-## 6. Incubadora LSI
-
-Pilares transversais aprovados:
-1. `PROVAR A CUSTO ZERO`.
-2. `AUTONOMIA DESDE A ORIGEM`.
-3. `ESTRUTURA ESPELHO` como requisito técnico.
-4. investimento compra o `PRÓXIMO DEGRAU` útil.
-5. evidência antes de capital.
-6. projeto ruim morre barato; vencedor recebe capital.
-
-Exceção de investimento inicial somente via `EXCEPTIONAL_BUILD` com evidência forte, risco controlado e payback plausível.
-
-## 7. Infraestrutura progressiva
+## 8. Incubadora / infraestrutura
 
 Pilares:
-- Browser
-- IA
-- Reliability
-- Security
-- Database
-- Observability
-- Support
-- Scale
+- Provar a Custo Zero
+- Autonomia desde a Origem
+- Estrutura Espelho
+- Evidência antes de capital
+- Próximo Degrau
 
-Fluxo interno permitido:
+Fluxo interno:
 `CURRENT -> SHADOW -> TEST -> CANARY -> PROMOTE -> ROLLBACK_IF_NEEDED`
 
 Regra externa:
-`ZERO_CUSTOMER_MIGRATION` sempre que tecnicamente possível.
+`ZERO_CUSTOMER_MIGRATION` sempre que possível.
 
-## 8. Caixa/ecossistema
+## 9. Ecossistema
 
-Separar:
-- receita bruta;
-- taxas/impostos/chargebacks/obrigações;
-- reserva operacional;
-- reinvestimento empresarial;
-- excedente livre.
+NEXO permanece frente paralela conceitual: educação/inteligência financeira acessível; NEXO Product != NEXO Capital.
 
-Níveis:
-1. Ecosystem Capital Allocator — qual projeto recebe.
-2. Project Infrastructure Allocator — qual Próximo Degrau recebe.
-
-NEXO Product != NEXO Capital.
-
-## 9. NEXO
-
-NEXO = Núcleo de Entendimento, eXplicação e Oportunidades.
-Tagline: `Entenda antes de investir.`
-
-Direção:
-- educação/inteligência financeira acessível;
-- provar metodologia antes de produto maduro;
-- execução/recomendação financeira regulada exige gates próprios;
-- avançar em paralelo conforme allocator, sem drenar recursos críticos.
-
-## 10. Ecossistema pós-Career
-
-Tese: reter relação com LSI, não prender usuário ao Career.
-Caminhos conceituais:
-- Primeiros 90 Dias
-- Management
-- Career Guardian
-- Cofre de Conquistas
-- Skills / Promotion / Leadership
-- Network / Personal Brand
-- Sales
-- Business
+Pós-Career: Primeiros 90 Dias, Management, Career Guardian, Cofre de Conquistas, Skills/Promotion/Leadership, Network/Personal Brand, Sales, Business.
 
 Career concluído com sucesso = `MISSÃO CUMPRIDA`.
 
-## 11. Bloqueios antes de tester real
+## 10. Gates atuais
 
 `SECURITY_P0=NOT_YET_PROVEN`
 `CAREER_PRIVACY_P0=NOT_YET_PROVEN`
 `MULTIUSER_ISOLATION=NOT_YET_PROVEN`
 `SAFE_FILE_PIPELINE=PARTIAL_PARSER_CI_PASS`
+`CV_CONFIRMATION_UI=PASS_STATIC_SMOKE`
 `MATCH_ENGINE_V1=NOT_YET_PROVEN`
 `AUDIT_RECOVERY=NOT_YET_PROVEN`
 `BETA_ENVIRONMENT=NOT_YET_PROVEN`
 
-## 12. NEXT_ACTION
+## 11. NEXT_ACTION
 
-1. criar tela de confirmação/correção conectada ao contrato do parser;
-2. fechar arquitetura de Auth + isolamento multiusuário;
-3. preparar/applicar schema somente em projeto Career isolado;
-4. completar quarentena/storage/retention do upload;
-5. Proteção de Carreira P0 completa;
+1. criar projeto Auth/Data Career isolado quando passar o gate obrigatório de organização/custo;
+2. aplicar schema e testar RLS usuário A / usuário B / anônimo;
+3. criar storage privado + quarentena + política de retenção/exclusão;
+4. conectar parser autenticado à tela de confirmação;
+5. implementar Proteção de Carreira P0 completa;
 6. Matching Engine V1;
-7. audit log/checkpoints/recovery operacional;
+7. audit/checkpoints/recovery operacional;
 8. Security + Privacy P0 tests;
 9. UX/visual QA;
-10. liberar Primeira Turma somente após PASS.
+10. Primeira Turma somente após PASS.
 
-## 13. DO NOT REDO
+## 12. DO NOT REDO
 
-- não reconstruir Career do zero;
+- não reconstruir Career;
 - não mergear código Career no main antes dos gates;
-- não usar projeto Supabase de outro produto;
-- não confundir parser CI verde com upload de produção seguro;
-- não fabricar fatos de CV;
+- não usar banco de outro produto;
+- não transformar dados sintéticos em fatos;
+- não confundir parser/PWA CI verde com Beta segura;
 - não bypassar MFA/CAPTCHA;
 - não ativar API/modelo pago sem decisão de reinvestimento;
-- não criar centenas de handoffs; atualizar CURRENT + manifestos estáveis;
-- não deixar decisão material apenas no chat.
+- não criar centenas de handoffs; atualizar CURRENT + manifestos estáveis.
 
-## 14. READ NEXT
+## 13. READ NEXT
 
-Obrigatórios no Recovery:
+Obrigatórios:
 - `docs/LSI_CANONICAL_INDEX.md`
 - `docs/LSI_RECOVERY_CURRENT.md`
 - `docs/projects/LSI_CAREER360.md`
 
 Sob demanda:
 - ingestão: `career360/docs/CAREER360_FILE_INGESTION_V1.md`
+- auth: `career360/docs/CAREER360_AUTH_ISOLATION_V1.md`
 - segurança: `career360/docs/CAREER360_SECURITY_PRIVACY_P0_V1.md`
 - dados: `career360/docs/CAREER360_DATA_CONTRACT_V1.md`
 - UX: `career360/docs/CAREER360_BETA1_FOUNDATION_V1.md`
 
-## 15. Última alteração verificada
+## 14. Última alteração verificada
 
-`LAST_VERIFIED_CHANGE=RESUME_PARSER_IMPLEMENTED_AND_CI_PASS_SCHEMA_DESIGN_ADDED`
-
-O CURRENT deve ser atualizado durante o trabalho, não somente no fim do chat.
+`LAST_VERIFIED_CHANGE=CV_CONFIRMATION_UI_IMPLEMENTED_AND_PWA_SMOKE_CI_PASS`
