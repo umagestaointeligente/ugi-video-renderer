@@ -1,0 +1,90 @@
+{
+  "project": "UGI",
+  "platform": "youtube",
+  "topic_key": "openai-autonomous-agents-automated-shutdown-governance",
+  "title": "OpenAI e o limite da autonomia: quando um agente precisa parar",
+  "duration": "52",
+  "render_id": "ugi-20260903-yt-openai-stop-conditions",
+  "content_id": "UGI-20260903-YT-2030-OPENAI-STOP-CONDITIONS",
+  "experiment_id": "UGI-EDITORIAL-20260903-REPLACEMENT-OPENAI",
+  "variant": "GENERAL_WORLD_REPLACEMENT",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "youtube",
+  "event_or_case": "OpenAI developing automated shutdown capabilities for autonomous AI systems after a safety-test incident",
+  "management_thesis": "Autonomy should be deployed only with explicit permission ceilings, monitored actions, escalation ownership and stop conditions.",
+  "scenes_json": {
+    "cta": "Na sua empresa, quem decide quando uma IA precisa parar?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {"enabled": true, "mode": "exact", "strict": true},
+    "exact_copy": {"enabled": true},
+    "music_profile": {
+      "mood": "modern intelligent tension, controlled technology pulse, cinematic but restrained",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": ["chiptune", "ringtone", "beeps", "metallic loop", "single-note loop", "alarm siren"],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared real technology, AI-agent, cybersecurity, monitoring and governance context.",
+      "Do not fabricate footage of the reported safety-test incident.",
+      "Do not show a fake OpenAI interface, fake breach screen, fake lawmaker quote or fabricated company statement.",
+      "If OpenAI branding is used, use only rights-cleared editorial context and keep it factual.",
+      "Every scene must visually match the narration and use distinct assets.",
+      "No flash cuts, excessive zoom, static image held too long or sensational hacker imagery."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "AI operations monitoring room with autonomous task flows and a visible stop-control concept, realistic technology environment",
+        "pexels_query": "artificial intelligence monitoring control room technology",
+        "overlay": {"instagram":"QUEM DECIDE QUANDO A IA PARA?","tiktok":"QUEM DECIDE QUANDO A IA PARA?","youtube":"QUEM DECIDE QUANDO A IA PARA?"},
+        "support": {"instagram":"OpenAI diz estar desenvolvendo desligamento automático","tiktok":"OpenAI diz estar desenvolvendo desligamento automático","youtube":"OpenAI diz estar desenvolvendo desligamento automático"},
+        "narration": {"instagram":"A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?","tiktok":"A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?","youtube":"A OpenAI disse a parlamentares que está desenvolvendo capacidades de desligamento automático para sistemas de IA. Para gestão, a pergunta mais importante vem antes: quem decide quando uma IA precisa parar?"}
+      },
+      {
+        "role": "context",
+        "visual_intent": "autonomous software agent executing multiple digital tasks with limited supervision, generic and realistic",
+        "pexels_query": "automation artificial intelligence workflow computer operations",
+        "overlay": {"instagram":"AUTONOMIA MUDA O TIPO DE RISCO","tiktok":"AUTONOMIA MUDA O TIPO DE RISCO","youtube":"AUTONOMIA MUDA O TIPO DE RISCO"},
+        "support": {"instagram":"Agentes executam várias etapas com pouca supervisão","tiktok":"Agentes executam várias etapas com pouca supervisão","youtube":"Agentes executam várias etapas com pouca supervisão"},
+        "narration": {"instagram":"Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer.","tiktok":"Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer.","youtube":"Agentes de IA podem executar várias etapas e acessar ferramentas com pouca supervisão humana. Quanto maior a autonomia, maior precisa ser a clareza sobre o que eles podem — e não podem — fazer."}
+      },
+      {
+        "role": "risk",
+        "visual_intent": "security team reviewing permissions, internet access and automated actions on dashboards",
+        "pexels_query": "cybersecurity team permissions monitoring dashboard",
+        "overlay": {"instagram":"EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO","tiktok":"EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO","youtube":"EFICIÊNCIA SEM LIMITE = EXPOSIÇÃO"},
+        "support": {"instagram":"Permissão • acesso • ação • consequência","tiktok":"Permissão • acesso • ação • consequência","youtube":"Permissão • acesso • ação • consequência"},
+        "narration": {"instagram":"O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança.","tiktok":"O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança.","youtube":"O problema não é só a IA errar uma resposta. Um sistema autônomo pode agir. E ação sem limite claro transforma eficiência em exposição operacional, reputacional e de segurança."}
+      },
+      {
+        "role": "framework",
+        "visual_intent": "management team defining guardrails and escalation workflow around AI deployment",
+        "pexels_query": "business team governance risk workflow planning",
+        "overlay": {"instagram":"5 TRAVAS ANTES DE DAR AUTONOMIA","tiktok":"5 TRAVAS ANTES DE DAR AUTONOMIA","youtube":"5 TRAVAS ANTES DE DAR AUTONOMIA"},
+        "support": {"instagram":"Teto • monitoramento • escalada • dono • parada","tiktok":"Teto • monitoramento • escalada • dono • parada","youtube":"Teto • monitoramento • escalada • dono • parada"},
+        "narration": {"instagram":"Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada.","tiktok":"Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada.","youtube":"Antes de colocar um agente em produção, defina cinco coisas: teto de permissão, ações monitoradas, gatilho de escalada, responsável humano e condição objetiva de parada."}
+      },
+      {
+        "role": "result",
+        "visual_intent": "controlled AI workflow with human approval gates and stop condition, calm professional context",
+        "pexels_query": "human approval artificial intelligence workflow business",
+        "overlay": {"instagram":"AUTONOMIA BOA TEM FRONTEIRA","tiktok":"AUTONOMIA BOA TEM FRONTEIRA","youtube":"AUTONOMIA BOA TEM FRONTEIRA"},
+        "support": {"instagram":"Governança não elimina autonomia — torna a autonomia utilizável","tiktok":"Governança não elimina autonomia — torna a autonomia utilizável","youtube":"Governança não elimina autonomia — torna a autonomia utilizável"},
+        "narration": {"instagram":"Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário.","tiktok":"Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário.","youtube":"Autonomia boa não é autonomia sem limite. É autonomia com fronteira clara, responsabilidade definida e capacidade real de interromper o sistema quando necessário."}
+      },
+      {
+        "role": "cta",
+        "visual_intent": "clean UGI closing frame over moving technology governance context",
+        "pexels_query": "technology governance business control modern office",
+        "overlay": {"instagram":"QUEM TEM O BOTÃO DE PARAR?","tiktok":"QUEM TEM O BOTÃO DE PARAR?","youtube":"QUEM TEM O BOTÃO DE PARAR?"},
+        "support": {"instagram":"Fonte factual: Reuters, 02 set 2026 • UGI","tiktok":"Fonte factual: Reuters, 02 set 2026 • UGI","youtube":"Fonte factual: Reuters, 02 set 2026 • UGI"},
+        "narration": {"instagram":"A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?","tiktok":"A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?","youtube":"A pergunta para levar para sua próxima implantação é simples: na sua empresa, quem decide quando uma IA precisa parar?"}
+      }
+    ]
+  }
+}
