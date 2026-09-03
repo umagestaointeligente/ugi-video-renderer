@@ -8,255 +8,206 @@ Alias técnico interno: `LSI::RECOVERY::CURRENT`
 ## 0. Estado global
 
 `LSI_RECOVERY=TRUE`
-`CURRENT_FOCUS=LSI_CAREER_360_BETA_1_0`
-`CURRENT_STATUS=CORE_DATA_QUARANTINE_AND_RETENTION_IN_PROGRESS`
-`VERIFIED_REVENUE=R$0,00` para esta lógica de incubação; reconfirmar fonte antes de decisão monetária.
+`CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
+`CURRENT_STATUS=MASTER_PILOT_READY_FOR_MASTER_USE`
+`VERIFIED_REVENUE=R$0,00` para a lógica de incubação; reconfirmar antes de decisão monetária.
 
-## 1. Recovery canônico
-
-Entrada estável no `main`: `docs/LSI_RECOVERY_POINTER.md`.
-Ler depois:
-- `docs/LSI_CANONICAL_INDEX.md`
-- este CURRENT
-- `docs/projects/LSI_CAREER360.md`
-- especializados somente sob demanda.
-
-Runtime/evidência vence memória para estado operacional atual.
-
-## 2. Localização Career
+## 1. Localização
 
 Repository: `umagestaointeligente/ugi-video-renderer`
 Branch: `lsi-career360-beta1-foundation-20260902`
 PR: Draft #25
-Main: código Career ainda não promovido.
+Main: Career ainda não promovido.
+Supabase dedicado: `LSI Career 360`
+Project ref: `nxjdnzdxclszqyqrkwdk`
+Região: `sa-east-1`
+Custo confirmado do projeto: `R$0/mês`.
 
-## 3. Produto/UX já implementado
+## 2. Produto entregue
 
-- PWA mobile/desktop;
-- onboarding currículo / voz / gradual;
-- cinco áreas: Início / Oportunidades / Jornada / Carreira / Agente;
-- Proteção de Carreira inicial;
-- etapa `Confira o que entendemos` integrada ao mesmo PWA;
-- UI aceita o contrato `candidate_profile_draft`;
-- campos exibem confiança e permitem correção;
-- exemplo visual marcado como `MODO QA`, 100% sintético;
-- protótipo local segue sem envio remoto silencioso.
+Master Pilot 1.0 funcional com:
+- app web responsivo;
+- pacote PWA local;
+- Auth individual;
+- papel `master` automático pelo e-mail autorizado usando SHA-256 no backend;
+- currículo PDF/DOCX;
+- quarentena privada;
+- validação profunda + parser determinístico;
+- rascunho com confirmação humana;
+- Proteção de Carreira;
+- Matching V1 explicável;
+- cadastro manual de oportunidade para piloto zero-cash;
+- radar de oportunidades;
+- Meu Agente zero-cash;
+- SAC `Resolver agora`;
+- incidentes/checkpoints;
+- Painel Mestre agregado;
+- retenção/cleanup do arquivo bruto;
+- audit trail seguro.
 
-Princípio: `O CLIENTE NÃO PREENCHE. O CLIENTE CONFIRMA.`
+Hosted app:
+`https://nxjdnzdxclszqyqrkwdk.supabase.co/functions/v1/career-app`
 
-PWA smoke:
-- workflow `Career 360 Prototype Smoke`;
-- run `33709551771`;
-- job `prototype-smoke`;
-- conclusion `SUCCESS`.
+## 3. E2E final — PASS
 
-## 4. Parser de currículo
+Teste descartável com Auth real e dados 100% sintéticos:
+1. conta criada via Supabase Auth Admin;
+2. trigger `on_auth_user_created_career_bootstrap` executado;
+3. papel atribuído = `master`;
+4. login por senha produziu sessão JWT real;
+5. DOCX sintético enviado;
+6. ingest = `QUARANTINED`;
+7. deep process = `DRAFT_REQUIRES_CONFIRMATION`;
+8. confirmação = `AGENT_READY`;
+9. arquivo bruto removido após confirmação;
+10. oportunidade sintética avaliada;
+11. match = `100 / QUALIFIED_SALARY_CONFIRM`;
+12. feed retornou 1 oportunidade visível;
+13. Meu Agente respondeu intent `opportunities`;
+14. SAC retornou `resolved`;
+15. Painel Mestre retornou role `master`.
 
-Arquivos:
-- `career360/parser/resume_parser.py`
-- `career360/parser/test_resume_parser.py`
-- `career360/parser/requirements.txt`
+Resultado: `MASTER_PILOT_E2E=PASS`.
 
-Características:
-- PDF textual via `pypdf==6.16.2`;
-- DOCX ZIP/XML fail-closed;
-- limite inicial 10 MB;
-- valida tipo real;
-- bloqueia path traversal, XML inseguro e compressão suspeita;
-- rejeita PDF protegido/sem texto;
-- saída sempre requer confirmação;
-- heurística nunca vira fato confirmado.
+Cleanup pós-teste verificado:
+- QA users = 0;
+- QA opportunities = 0;
+- QA master hashes = 0;
+- runner E2E redeployado em modo desativado;
+- gate temporário removido.
 
-Parser CI: PASS.
+## 4. Segurança / Privacidade
 
-## 5. Supabase dedicado — CRIADO
+`SECURITY_ADVISOR=PASS_ZERO_LINTS` no último hardening.
+`MULTIUSER_ISOLATION=PASS_CORE_AB_TEST`.
+`PRIVATE_STORAGE=PASS`.
+`DIRECT_CLIENT_STORAGE_WRITE=DENIED_BY_RLS`.
+`AUTH_REAL_SESSION=PASS_E2E`.
+`MASTER_BOOTSTRAP=PASS_E2E`.
+`CAREER_PRIVACY_GATE=PASS_SYNTHETIC_SCENARIOS`.
 
-Organização selecionada pelo usuário:
-`paulosk8.sk8@gmail.com`
+Painel Mestre foi endurecido depois do E2E:
+- agregação movida para `public.career_master_status_v1()`;
+- `SECURITY DEFINER` com `auth.uid()` + verificação de role master;
+- Edge `career-master-status` não precisa mais de service role;
+- função retorna apenas agregados, nunca CV/nome/e-mail/histórico de outro usuário.
 
-Projeto:
-- nome: `LSI Career 360`;
-- project ref/id: `nxjdnzdxclszqyqrkwdk`;
-- região: `sa-east-1`;
-- status verificado: `ACTIVE_HEALTHY`;
-- custo consultado e confirmado: `R$0/mês`.
+## 5. Currículo / arquivos
 
-Regra preservada:
-- NÃO reutilizar `lsi-revenue-autopilot`;
-- NÃO compartilhar banco Career com outro produto.
+Bucket: `career-resumes-quarantine`
+- privado;
+- até 10 MB;
+- PDF/DOCX;
+- caminho interno aleatório;
+- nome original só como display metadata;
+- hash e tamanho reconferidos no deep process;
+- DOCX protegido contra path traversal, XML inseguro e zip bomb suspeito;
+- PDF protegido/sem texto rejeitado;
+- heurística nunca vira fato confirmado;
+- raw removido após confirmação quando possível;
+- cleanup automático de hora em hora.
 
-## 6. Schema/RLS — APLICADO E TESTADO
+Funções ativas:
+- `career-document-ingest`
+- `career-document-process`
+- `career-document-delete`
+- `career-document-cleanup`
+- `career-profile-confirm`
 
-Migrations aplicadas:
-- `career360_schema_v1` = SUCCESS;
-- `career360_cover_foreign_keys` = SUCCESS;
-- `career360_private_quarantine_bucket` = SUCCESS.
+## 6. Matching / privacidade
 
-Correção capturada antes de dados reais:
-- coluna `current_role` colidia com palavra reservada PostgreSQL `CURRENT_ROLE`;
-- renomeada para `current_role_title`;
-- primeira migration falhou sem aplicar schema;
-- correção versionada e migration reaplicada com sucesso.
-
-Tabelas atuais:
-- `career_profiles`
-- `career_preferences`
-- `career_employer_blocks`
-- `career_documents`
-- `career_profile_drafts`
-- `career_confirmed_facts`
-- `career_action_permissions`
-- `career_audit_events`
-
-Controles provados:
-- RLS habilitado em todas as 8 tabelas;
-- `anon` sem SELECT/INSERT;
-- authenticated com acesso apenas conforme grants + ownership;
-- USER_A enxergou exatamente 1 linha própria em teste A/B;
-- USER_A tentando gravar dado de USER_B foi bloqueado por RLS (`42501`);
-- transações sintéticas revertidas;
-- 0 usuários sintéticos e 0 linhas sintéticas permaneceram após testes.
-
-Security Advisor Supabase:
-`LINTS=[]`.
-
-Performance Advisor:
-- três FKs sem índice foram detectadas e corrigidas;
-- avisos remanescentes são apenas `unused_index` INFO, esperados em banco recém-criado e vazio.
-
-## 7. Quarentena/storage — ATIVO PARCIAL
-
-Bucket:
-`career-resumes-quarantine`
-
-Configuração verificada:
-- `public=false`;
-- limite 10 MB;
-- MIME permitido: PDF e DOCX;
-- sem política de upload direto do cliente.
-
-Teste negativo:
-- escrita direta como `authenticated` em `storage.objects` foi bloqueada por RLS (`42501`).
-
-Edge Functions ativas:
-- `career-document-ingest` — `verify_jwt=true`;
-- `career-document-delete` — `verify_jwt=true`.
-
-Código versionado:
-- `career360/edge-functions/career-document-ingest/index.ts`;
-- `career360/edge-functions/career-document-delete/index.ts`.
-
-`career-document-ingest`:
-- exige sessão válida;
-- bloqueia request/file acima do limite;
-- aceita apenas extensão PDF/DOCX;
-- verifica assinatura real mínima e compatibilidade extensão/assinatura;
-- calcula SHA-256;
-- gera caminho interno aleatório por user_id + UUID;
-- nunca usa nome original como object path;
-- grava somente em bucket privado;
-- cria metadado em `career_documents` como `quarantined`;
-- limita documentos ativos de onboarding a 3;
-- define retenção inicial máxima de 7 dias;
-- remove objeto se a escrita de metadado falhar.
-
-`career-document-delete`:
-- exige sessão válida;
-- resolve ownership por user_id;
-- usuário não consegue deletar documento de terceiro;
-- remove objeto privado;
-- marca tombstone `deleted`;
-- limpa `storage_object_path`;
-- é idempotente para documento já deletado.
-
-## 8. Retenção do arquivo bruto — POLÍTICA DEFINIDA
-
-Documento:
-`career360/docs/CAREER360_RAW_FILE_RETENTION_V1.md`
-
-Beta 1.0:
-- QUARANTINED/PARSED aguardando confirmação: máximo inicial 7 dias;
-- REJECTED: alvo de exclusão em até 24h;
-- após confirmação do perfil: excluir bruto imediatamente quando possível, SLO máximo 24h;
-- exclusão pedida pelo usuário: imediata best-effort, com recovery se terceiro falhar.
-
-Ainda falta:
-- cleanup automático para abandonados/rejeitados expirados;
-- teste end-to-end autenticado real das Edge Functions;
-- conexão deep validation/parser ao objeto em quarentena.
-
-IMPORTANTE:
-- assinatura ZIP compatível com DOCX não equivale a `SAFE_FOR_PARSE`;
-- parser determinístico continua sendo o gate de validação profunda;
-- funções ainda não foram ligadas ao PWA de testers reais.
-
-## 9. Proteção de Carreira — P0
-
-Fluxo obrigatório:
-`OPORTUNIDADE -> IDENTIFICAR_EMPREGADOR -> RESOLVER_GRUPO -> PORTA_DE_PRIVACIDADE -> MATCHING/APRESENTAÇÃO`
-
-Regras duras:
-- atual/grupo bloqueados quando configurados;
+Matching V1:
+- privacidade antes do score;
+- idade nunca entra;
+- pagamento nunca altera FIT;
+- salário oculto/estimado não vira fato;
+- salário explícito abaixo do piso pode bloquear;
+- trabalho/localização/setor/cargo/skills entram somente quando suportados por dados disponíveis;
 - bloqueado = `SILENT_BLOCK`;
-- desconhecido = `NO_DISCLOSURE`;
-- B2B não consulta se empregado nominal usa Career;
-- idade nunca entra no matching;
-- pagamento nunca altera FIT.
+- empregador não resolvido = `NO_DISCLOSURE`.
 
-## 10. Gates atuais
+## 7. Agente / suporte
 
-`SECURITY_P0=PARTIAL_CORE_DB_SECURITY_ADVISOR_CLEAN`
-`CAREER_PRIVACY_P0=NOT_YET_PROVEN`
-`MULTIUSER_ISOLATION=CORE_DB_AB_TEST_PASS`
-`SAFE_FILE_PIPELINE=PARTIAL_AUTH_QUARANTINE_DELETE_ACTIVE_DEEP_SCAN_AND_CLEANUP_PENDING`
-`RAW_FILE_RETENTION_POLICY=DEFINED`
-`CV_CONFIRMATION_UI=PASS_STATIC_SMOKE`
-`MATCH_ENGINE_V1=NOT_YET_PROVEN`
-`AUDIT_RECOVERY=NOT_YET_PROVEN`
-`BETA_ENVIRONMENT=NOT_YET_PROVEN`
-`BETA_USERS_REAL=BLOCKED`
+Ativos:
+- `career-opportunity-add`
+- `career-opportunity-list`
+- `career-agent`
+- `career-support`
+- `career-master-status`
 
-## 11. NEXT_ACTION
+Meu Agente V1 é determinístico e zero-cash; responde com o estado real do usuário, não inventa vagas ou resultados.
+SAC registra incidente seguro sem currículo/senha/token em metadata geral.
 
-1. implementar cleanup automático dos raws expirados/rejeitados;
-2. conectar deep validation/parser ao objeto `QUARANTINED` e promover somente após PASS para `SAFE_FOR_PARSE`;
-3. criar teste end-to-end autenticado das Edge Functions com usuário sintético controlado;
-4. conectar `LSI_DOCUMENT_INGEST` ao PWA somente em ambiente de teste;
-5. completar Proteção de Carreira P0;
-6. Matching Engine V1;
-7. audit/checkpoints/recovery operacional;
-8. Security + Privacy P0 end-to-end tests;
-9. UX/visual QA;
-10. Primeira Turma somente após PASS.
+## 8. CI / QA
 
-## 12. DO NOT REDO
+Referência final antes do release:
+- `Career 360 Parser Tests` = SUCCESS;
+- `Career 360 Prototype Smoke` = SUCCESS;
+- `Career 360 Edge Typecheck` = SUCCESS.
 
-- não reconstruir Career;
-- não mergear código Career no main antes dos gates;
-- não usar banco de outro produto;
-- não transformar dados sintéticos em fatos;
-- não confundir core DB/RLS verde com Beta segura;
-- não tratar `QUARANTINED` como arquivo seguro;
-- não declarar retenção cumprida sem cleanup verificado;
+Aplicação local final:
+- `MASTER_APP_STATIC_TEST=PASS`;
+- `node --check app/app.js` = PASS.
+
+Hosted app:
+- HTTP 200 verificado internamente via `pg_net`.
+
+## 9. Gates
+
+`DEDICATED_PROJECT=PASS`
+`SECURITY_P0=PASS_MASTER_PILOT_SCOPE`
+`CAREER_PRIVACY_P0=PASS_MASTER_PILOT_SCOPE`
+`MULTIUSER_ISOLATION=PASS_CORE_AB_AND_REAL_AUTH_E2E`
+`SAFE_FILE_PIPELINE=PASS_MASTER_PILOT_SCOPE`
+`RAW_FILE_RETENTION=PASS_CRON_AND_E2E_DELETE`
+`CV_CONFIRMATION_UI=PASS`
+`MATCH_ENGINE_V1=PASS`
+`NO_FABRICATION_GUARD=PASS_MASTER_PILOT_SCOPE`
+`AUDIT_RECOVERY=PASS_MASTER_PILOT_SCOPE`
+`CORE_RELIABILITY=PASS_MASTER_PILOT_SCOPE`
+`MASTER_PILOT=READY_FOR_MASTER_USE`
+`PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
+
+Importante: `PUBLIC_BETA` não é sinônimo de Master Pilot pronto. Abrir Primeira Turma continua uma decisão separada de produto/comercial.
+
+## 10. Primeiro uso mestre
+
+1. abrir hosted app;
+2. usar o e-mail mestre já autorizado;
+3. criar a conta escolhendo a própria senha;
+4. confirmar e-mail se o provedor solicitar;
+5. login;
+6. o trigger atribui `master` automaticamente;
+7. completar Minha Carreira;
+8. enviar CV ou configurar manualmente;
+9. definir ao menos um cargo-alvo;
+10. estado vira `AGENT_READY`;
+11. usar Oportunidades / Meu Agente / Resolver agora / Painel Mestre.
+
+Nunca pedir senha no chat.
+
+## 11. DO NOT REDO
+
+- não reconstruir Career do zero;
+- não reutilizar banco de outro produto;
+- não reintroduzir service role no frontend ou no master status;
+- não criar acesso mestre baseado em e-mail enviado pelo cliente;
+- não transformar inferência em fato;
 - não bypassar MFA/CAPTCHA;
-- não ativar API/modelo pago sem decisão de reinvestimento;
-- não criar centenas de handoffs; atualizar CURRENT + manifestos estáveis.
+- não abrir Beta pública automaticamente só porque Master Pilot passou;
+- não ativar browser/modelo pago sem decisão de Próximo Degrau;
+- não criar metodologia paralela de recovery.
 
-## 13. READ NEXT
+## 12. NEXT_ACTION
 
-Obrigatórios:
-- `docs/LSI_CANONICAL_INDEX.md`
-- `docs/LSI_RECOVERY_CURRENT.md`
-- `docs/projects/LSI_CAREER360.md`
+Master Pilot 1.0 está finalizado para uso mestre.
+Próximas frentes são evolutivas, não blockers do piloto:
+1. uso mestre real e feedback;
+2. browser/research automation no Próximo Degrau quando houver orçamento/rota adequada;
+3. Career Learning Engine com evidência real;
+4. preparação da Founding Beta 20 quando houver decisão explícita de abertura;
+5. B2B Recruiter Agent em fase posterior.
 
-Sob demanda:
-- ingestão: `career360/docs/CAREER360_FILE_INGESTION_V1.md`
-- retenção: `career360/docs/CAREER360_RAW_FILE_RETENTION_V1.md`
-- auth: `career360/docs/CAREER360_AUTH_ISOLATION_V1.md`
-- segurança: `career360/docs/CAREER360_SECURITY_PRIVACY_P0_V1.md`
-- dados: `career360/docs/CAREER360_DATA_CONTRACT_V1.md`
-- UX: `career360/docs/CAREER360_BETA1_FOUNDATION_V1.md`
+## 13. Última alteração verificada
 
-## 14. Última alteração verificada
-
-`LAST_VERIFIED_CHANGE=DEDICATED_SUPABASE_RLS_AB_PASS_PRIVATE_QUARANTINE_INGEST_AND_AUTH_DELETE_ACTIVE_RETENTION_DEFINED`
+`LAST_VERIFIED_CHANGE=MASTER_PILOT_E2E_PASS_HOSTED_APP_HTTP200_QA_CLEAN_MASTER_STATUS_NO_SERVICE_ROLE`
