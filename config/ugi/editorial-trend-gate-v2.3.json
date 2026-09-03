@@ -5,13 +5,24 @@
   "status": "canonical_for_new_content",
   "predecessor": "config/ugi/editorial-trend-gate-v2.2.json",
   "nonRegression": true,
-  "purpose": "Require general-market and platform-native demand research before editorial lock, while preserving factual fit, platform differentiation and existing publication safety gates.",
+  "purpose": "Require general-market and platform-native demand research before editorial lock, while preserving factual fit, platform differentiation, per-platform topical novelty and publication safety gates.",
   "trendWindowsHours": {
     "platformNativePreferred": 24,
     "generalPrimary": 72,
     "generalSecondary": 168
   },
   "minimumTopicScore": 70,
+  "topicCooldown": {
+    "days": 15,
+    "scope": "PER_PLATFORM",
+    "formatsShareHistory": true,
+    "instagramFormats": ["story", "reel", "carousel", "static"],
+    "sameTopicOnDifferentPlatformAutomaticallyBlocked": false,
+    "historyRegistry": "control-plane/anti-repeat/platform-topic-history.json",
+    "policy": "control-plane/policies/UGI_ANTI_REPEAT_V1.md",
+    "ambiguousHistory": "FAIL_CLOSED_OR_SELECT_NEXT_CLEAN_TOPIC",
+    "extraordinaryExceptionState": "EDITORIAL_REPEAT_EXCEPTION_BREAKING"
+  },
   "requiredFlow": [
     "general_trend_scan",
     "tiktok_native_scan",
@@ -19,6 +30,9 @@
     "instagram_native_scan_or_evidenced_proxy",
     "cross_platform_corroboration",
     "cross_platform_dedup",
+    "normalize_topic_and_entities",
+    "same_platform_15d_topic_history_lookup",
+    "anti_repeat_decision",
     "topic_score",
     "editorial_allocation",
     "fact_verification",
@@ -27,6 +41,7 @@
     "frame_by_frame_qa",
     "publication",
     "readback",
+    "platform_topic_history_update",
     "analytics",
     "platform_native_vs_general_learning",
     "kill_retest_scale"
@@ -37,6 +52,8 @@
     "allowUnavailableState": true,
     "unavailableStateMustIncludeEvidence": true,
     "crossPlatformDedupRequired": true,
+    "samePlatform15dTopicHistoryRequired": true,
+    "storiesIncludedInTopicHistory": true,
     "factVerificationRequired": true
   },
   "dailyAllocation": {
@@ -45,9 +62,9 @@
       "generalOrMarketSlot": 1,
       "platformNativeTrendSlot": 1
     },
-    "instagramStories": "supporting_layer_not_required_to_follow_two-core-post split",
+    "instagramStories": "supporting_layer_not_required_to_follow_two-core-post split_but_subject_to_same_platform_15d_topic_cooldown",
     "nativeTrendCrossPostDefault": false,
-    "nativeTrendCrossPostOverride": "allowed only when the same topic independently qualifies as a native signal on the second platform and the override is recorded"
+    "nativeTrendCrossPostOverride": "allowed only when the same topic independently qualifies as a native signal on the second platform, that platform has clean 15d topic history, and the override is recorded"
   },
   "platformSources": {
     "tiktok": {
@@ -82,6 +99,9 @@
     "no_forced_management_angle",
     "no_unverified_factual_claims",
     "contextual_visual_required_for_real_subjects",
+    "same_platform_topic_cooldown_15d",
+    "stories_participate_in_same_platform_topic_cooldown",
+    "extraordinary_repeat_requires_durable_exception_record",
     "no_native_trend_duplication_across_platforms_by_default",
     "no_trend_selected_only_for_raw_volume",
     "no_paid_dependency_or_incremental_cost_without_explicit_authorization",
@@ -106,7 +126,8 @@
   },
   "durableEvidence": {
     "dailySnapshotPath": "control-plane/trend-intelligence/YYYY-MM-DD.json",
-    "requiredFields": ["capturedAt", "region", "generalSignals", "platformSignals", "sources", "scores", "selectedTopics", "dedupDecision", "factStatus"]
+    "topicHistoryPath": "control-plane/anti-repeat/platform-topic-history.json",
+    "requiredFields": ["capturedAt", "region", "generalSignals", "platformSignals", "sources", "scores", "selectedTopics", "dedupDecision", "samePlatform15dHistoryDecision", "factStatus"]
   },
   "preserveExistingScheduledPosts": true
 }
