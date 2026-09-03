@@ -12,7 +12,10 @@ from typing import Any
 import requests
 from PIL import Image
 
+from ugi_anti_repeat_gate import EXCEPTION_STATE, TOPIC_HISTORY, load as load_history, topic_history_decision
+
 WORKER = "https://lola-operacional-ugi.umagestaointeligente.workers.dev"
+TOPIC_COOLDOWN_DAYS = 15
 
 
 def parse_time(value: str) -> dt.datetime:
@@ -26,6 +29,104 @@ def same_instant(a: str | None, b: str | None, tolerance_seconds: int = 90) -> b
         return abs((parse_time(a).astimezone(dt.timezone.utc) - parse_time(b).astimezone(dt.timezone.utc)).total_seconds()) <= tolerance_seconds
     except Exception:
         return False
+
+
+def normalized_topic_command(row: dict[str, Any]) -> dict[str, Any]:
+    """Map an Instagram multiformat row into the canonical topical gate shape."""
+    return {
+        "platform": "instagram",
+        "topic_key": row.get("topicKey") or row.get("topic_key") or row.get("topic"),
+        "topic": row.get("topic"),
+        "title": row.get("title") or row.get("hook") or row.get("topic"),
+        "event_or_case": row.get("eventOrCase") or row.get("event_or_case") or row.get("topic"),
+        "management_thesis": row.get("managementThesis") or row.get("management_thesis") or row.get("key_message"),
+        "angle": row.get("angle") or row.get("objective"),
+        "repeat_exception": row.get("repeatException") or row.get("repeat_exception"),
+        "scenes": [
+            {
+                "role": "hook",
+                "overlay": {"instagram": row.get("hook", "")},
+                "narration": {"instagram": row.get("key_message", "")},
+            }
+        ],
+    }
+
+
+def topical_gate(row: dict[str, Any], history: dict[str, Any]) -> dict[str, Any]:
+    cid = str(row.get("contentId") or "")
+    decision, reasons, matches = topic_history_decision(cid, normalized_topic_command(row), history)
+    allowed = decision in {"ANTI_REPEAT_PASS", EXCEPTION_STATE}
+    return {
+        "pass": allowed,
+        "decision": decision,
+        "reasons": reasons,
+        "matches": matches,
+        "platform": "instagram",
+        "windowDays": TOPIC_COOLDOWN_DAYS,
+    }
+
+
+def _topic_key(row: dict[str, Any]) -> str:
+    return str(row.get("topicKey") or row.get("topic_key") or row.get("topic") or row.get("hook") or "").strip()
+
+
+def _format_label(row: dict[str, Any]) -> str:
+    raw = str(row.get("type") or "").lower()
+    return {
+        "story_image": "story",
+        "story_video": "story",
+        "carousel": "carousel",
+        "reel": "reel",
+        "static": "static",
+        "static_image": "static",
+    }.get(raw, raw or "instagram_content")
+
+
+def record_proven_scheduled_topic(
+    history: dict[str, Any],
+    row: dict[str, Any],
+    manifest_path: Path,
+    buffer_post_id: str,
+    due_at: str,
+) -> bool:
+    """Persist only audience-bound content. Draft-only assets do not consume topical cooldown."""
+    cid = str(row.get("contentId") or "").strip()
+    if not cid:
+        return False
+
+    entries = history.setdefault("entries", [])
+    for existing in entries:
+        ids = existing.get("contentIds") or ([existing.get("contentId")] if existing.get("contentId") else [])
+        if cid in ids:
+            return False
+
+    try:
+        due = parse_time(due_at)
+        audience_date = due.date()
+    except Exception:
+        audience_date = dt.datetime.now(dt.timezone.utc).date()
+    cooldown_until = audience_date + dt.timedelta(days=TOPIC_COOLDOWN_DAYS)
+
+    entry = {
+        "platform": "instagram",
+        "topicKey": _topic_key(row),
+        "primaryEntities": row.get("primaryEntities") or row.get("entities") or [],
+        "eventOrCase": row.get("eventOrCase") or row.get("event_or_case") or row.get("topic") or "",
+        "managementThesis": row.get("managementThesis") or row.get("management_thesis") or row.get("key_message") or "",
+        "formats": [_format_label(row)],
+        "contentIds": [cid],
+        "audienceDate": audience_date.isoformat(),
+        "dueAt": due_at,
+        "state": "PROVEN_SCHEDULED",
+        "bufferPostId": buffer_post_id,
+        "evidenceRef": str(manifest_path),
+        "cooldownEligible": True,
+        "cooldownUntil": cooldown_until.isoformat() + "T23:59:59-03:00",
+        "repeatException": row.get("repeatException") or row.get("repeat_exception"),
+    }
+    entries.append(entry)
+    history["updatedAt"] = dt.datetime.now(dt.timezone.utc).isoformat()
+    return True
 
 
 class Client:
@@ -117,15 +218,25 @@ def main() -> int:
     rows = manifest.get("posts") or []
     if not rows:
         raise SystemExit("NO_POSTS")
+    if not TOPIC_HISTORY.exists():
+        raise SystemExit("ANTI_REPEAT_HISTORY_MISSING")
+    history = load_history(TOPIC_HISTORY)
 
     client = Client(key)
     results: list[dict[str, Any]] = []
     hard_fail = False
+    history_changed = False
 
     for row in rows:
         cid = str(row.get("contentId") or "")
         item: dict[str, Any] = {"contentId": cid, "type": row.get("type"), "publish": row.get("publish") is True}
         try:
+            topic_gate = topical_gate(row, history)
+            item["antiRepeat"] = topic_gate
+            if not topic_gate["pass"]:
+                item["state"] = topic_gate["decision"]
+                raise RuntimeError("ANTI_REPEAT_FAIL:" + topic_gate["decision"] + ":" + "|".join(topic_gate["reasons"]))
+
             payload = {
                 "source": "UGI-R45-PILOT",
                 "type": row["type"],
@@ -198,6 +309,9 @@ def main() -> int:
             })
             if not readback_pass:
                 raise RuntimeError("READBACK_FAIL:" + json.dumps(readback, ensure_ascii=False)[:1600])
+
+            if record_proven_scheduled_topic(history, row, manifest_path, str(buffer_id), due_at):
+                history_changed = True
         except Exception as exc:
             hard_fail = True
             item.setdefault("ok", False)
@@ -205,11 +319,18 @@ def main() -> int:
             item.setdefault("state", "FAILED")
         results.append(item)
 
+    if history_changed:
+        TOPIC_HISTORY.parent.mkdir(parents=True, exist_ok=True)
+        TOPIC_HISTORY.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
     receipt = {
         "ok": not hard_fail and all(x.get("ok") is True for x in results),
         "project": "UGI",
         "component": "R45-INSTAGRAM-MULTIFORMAT-PILOT",
         "batchId": manifest.get("batchId"),
+        "topicCooldownDays": TOPIC_COOLDOWN_DAYS,
+        "topicCooldownScope": "PER_PLATFORM",
+        "topicHistoryUpdated": history_changed,
         "results": results,
         "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
