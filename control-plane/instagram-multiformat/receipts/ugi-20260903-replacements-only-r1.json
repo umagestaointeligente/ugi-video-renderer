@@ -19,23 +19,15 @@
         "platform": "instagram",
         "windowDays": 15
       },
-      "generateHttp": 200,
-      "generationOk": true,
+      "generateHttp": 500,
+      "generationOk": false,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": "22ed7e61-205c-4bb0-b753-dd26f7ae68bc",
+      "draftId": null,
       "assetUrls": [],
-      "qa": {
-        "pass": false,
-        "issues": [
-          "render_not_ready:partial",
-          "carousel_asset_count:0"
-        ],
-        "dimensions": []
-      },
       "ok": false,
-      "error": "RuntimeError:QA_FAIL:render_not_ready:partial|carousel_asset_count:0",
+      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"error\": \"put: We encountered an internal error. Please try again. (10001)\"}",
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-03T07:26:28.008020+00:00"
+  "timestamp": "2026-09-03T07:38:00.332398+00:00"
 }
