@@ -1,14 +1,14 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-03T05:11:27.926962+00:00",
+  "checkedAt": "2026-09-03T05:47:28.457185+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 6,
+  "delivered": 3,
   "pendingWithinGrace": 0,
-  "late": 0,
+  "late": 1,
   "failed": 0,
-  "state": "HEALTHY",
+  "state": "ALERT",
   "results": [
     {
       "receipt": "control-plane/publisher-hub/receipts/UGI-20260902-INSTAGRAM-FALLBACK-VIDEO-AGENDA-R1.json",
@@ -82,64 +82,17 @@
       "platform": "youtube",
       "kind": "video",
       "draftId": "ugi-20260902112432-1fd8ca34846e",
-      "bufferPostId": "6a981d93bd40efcdd2fd9f3b",
+      "bufferPostId": null,
       "dueAt": "2026-09-02T19:30:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-09-02T19:30:43.771Z",
-      "externalLink": "https://www.youtube.com/shorts/vx9hgO_rqZo",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
       "error": null,
-      "state": "DELIVERED",
+      "state": "LATE",
       "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.youtube.com/shorts/vx9hgO_rqZo"
-      }
-    },
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260902-PLATFORM-AGENDA-R1.json",
-      "contentId": "UGI-20260902-TT-NASA-ROMAN-EXECUTION",
-      "platform": "tiktok",
-      "kind": "video",
-      "draftId": "ugi-20260902122528-579678435982",
-      "bufferPostId": "6a981d98bd40efcdd2fd9f95",
-      "dueAt": "2026-09-02T22:45:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-09-02T22:47:51.466Z",
-      "externalLink": "https://tiktok.com/@umagestaointelige/video/7681072507583040784",
-      "error": null,
-      "state": "DELIVERED",
-      "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7681072507583040784"
-      }
-    },
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260902-PLATFORM-AGENDA-R1.json",
-      "contentId": "UGI-20260902-YT-GDP-CONSUMER",
-      "platform": "youtube",
-      "kind": "video",
-      "draftId": "ugi-20260902122542-bed398150a02",
-      "bufferPostId": "6a981d9eb107cffcd0c5086f",
-      "dueAt": "2026-09-02T23:30:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-09-02T23:30:28.587Z",
-      "externalLink": "https://www.youtube.com/watch?v=q66pQY20Fg0",
-      "error": null,
-      "state": "DELIVERED",
-      "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.youtube.com/watch?v=q66pQY20Fg0"
+        "attempted": false
       }
     }
   ]
