@@ -12,30 +12,46 @@ Alias técnico interno: `LSI::RECOVERY::CURRENT`
 `CURRENT_STATUS=MASTER_PILOT_READY_FOR_MASTER_USE`
 `VERIFIED_REVENUE=R$0,00` para a lógica de incubação; reconfirmar antes de decisão monetária.
 
-## 1. Localização
+## 1. Localização canônica
 
 Repository: `umagestaointeligente/ugi-video-renderer`
-Branch: `lsi-career360-beta1-foundation-20260902`
-PR: #25, promoção para main em fechamento final.
-Supabase dedicado: `LSI Career 360`
-Project ref: `nxjdnzdxclszqyqrkwdk`
-Região: `sa-east-1`
-Custo confirmado do projeto: `R$0/mês`.
+Fonte canônica de código/documentação: `main`
+PR #25: MERGED
+Merge commit: `1347d4ec4c3221e20fc7f9ce443b86141de1b533`
+
+Backend dedicado:
+- Supabase project: `LSI Career 360`
+- project ref: `nxjdnzdxclszqyqrkwdk`
+- região: `sa-east-1`
+- custo confirmado na criação: `R$0/mês`.
+
+Frontend oficial:
+`https://lsi-career-360.vercel.app`
+
+Projeto Vercel:
+- nome: `lsi-career-360`
+- project id: `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`
+- plano da equipe: Hobby
+- production deployment verificado: READY.
+
+Rota antiga:
+`https://nxjdnzdxclszqyqrkwdk.supabase.co/functions/v1/career-app`
+
+A rota Supabase NÃO é mais a superfície web. O gateway Supabase força HTML de Edge Function para `text/plain`/sandbox. A função `career-app` foi convertida em redirect para o frontend Vercel.
 
 ## 2. Produto entregue
 
 Master Pilot 1.0 funcional com:
 - app web responsivo;
-- pacote PWA local;
 - Auth individual;
-- papel `master` automático pelo e-mail autorizado usando SHA-256 no backend;
+- papel `master` automático por hash SHA-256 de e-mail autorizado no backend;
 - currículo PDF/DOCX;
 - quarentena privada;
 - validação profunda + parser determinístico;
 - rascunho com confirmação humana;
 - Proteção de Carreira;
 - Matching V1 explicável;
-- cadastro manual de oportunidade para piloto zero-cash;
+- cadastro/análise manual de oportunidade no piloto;
 - radar de oportunidades;
 - Meu Agente zero-cash;
 - SAC `Resolver agora`;
@@ -44,62 +60,75 @@ Master Pilot 1.0 funcional com:
 - retenção/cleanup do arquivo bruto;
 - audit trail seguro.
 
-Hosted app:
-`https://nxjdnzdxclszqyqrkwdk.supabase.co/functions/v1/career-app`
+## 3. Frontend — correção operacional 2026-09-03
 
-## 3. E2E final — PASS
+Problema observado em Android/Chrome:
+- URL Supabase mostrava o HTML bruto em tela.
+
+Diagnóstico provado:
+- Edge Function devolvia HTML correto;
+- gateway Supabase sobrescrevia resposta para `content-type: text/plain` e CSP sandbox;
+- portanto Supabase Edge não deve hospedar a UI.
+
+Correção:
+- frontend separado do backend;
+- deploy estático em Vercel;
+- `index.html` = HTTP 200 / `text/html; charset=utf-8`;
+- `style.css` = HTTP 200 / `text/css; charset=utf-8`;
+- `app.js` = HTTP 200 / `application/javascript; charset=utf-8`;
+- alias de produção: `https://lsi-career-360.vercel.app`;
+- rota antiga do Supabase redireciona para a URL nova.
+
+Arquitetura correta:
+`VERCEL FRONTEND -> SUPABASE AUTH/DATA/EDGE BACKEND`
+
+## 4. E2E funcional — PASS
 
 Teste descartável com Auth real e dados 100% sintéticos:
-1. conta criada via Supabase Auth Admin;
-2. trigger `on_auth_user_created_career_bootstrap` executado;
-3. papel atribuído = `master`;
-4. login por senha produziu sessão JWT real;
-5. DOCX sintético enviado;
+1. conta criada por Supabase Auth;
+2. bootstrap executado;
+3. role = `master`;
+4. sessão JWT real;
+5. DOCX sintético;
 6. ingest = `QUARANTINED`;
 7. deep process = `DRAFT_REQUIRES_CONFIRMATION`;
 8. confirmação = `AGENT_READY`;
-9. arquivo bruto removido após confirmação;
-10. oportunidade sintética avaliada;
+9. raw file removido;
+10. oportunidade avaliada;
 11. match = `100 / QUALIFIED_SALARY_CONFIRM`;
-12. feed retornou 1 oportunidade visível;
-13. Meu Agente respondeu intent `opportunities`;
-14. SAC retornou `resolved`;
-15. Painel Mestre retornou role `master`.
+12. feed = PASS;
+13. agente = PASS;
+14. SAC = `resolved`;
+15. Painel Mestre = PASS.
 
-Resultado: `MASTER_PILOT_E2E=PASS`.
-
-Cleanup pós-teste verificado:
+Cleanup pós-teste:
 - QA users = 0;
 - QA opportunities = 0;
-- QA master hashes = 0;
-- runner E2E redeployado em modo desativado;
-- gate temporário removido.
+- QA hashes = 0;
+- gates temporários = 0;
+- runner E2E desativado novamente.
 
-## 4. Segurança / Privacidade
+## 5. Segurança / Privacidade
 
-`SECURITY_ADVISOR=PASS_ZERO_LINTS` após a migration final de hardening.
-`MULTIUSER_ISOLATION=PASS_CORE_AB_TEST`.
+`SECURITY_ADVISOR=PASS_ZERO_LINTS` após hardening final.
+`MULTIUSER_ISOLATION=PASS_CORE_AB_AND_REAL_AUTH_E2E`.
 `PRIVATE_STORAGE=PASS`.
 `DIRECT_CLIENT_STORAGE_WRITE=DENIED_BY_RLS`.
 `AUTH_REAL_SESSION=PASS_E2E`.
 `MASTER_BOOTSTRAP=PASS_E2E`.
 `CAREER_PRIVACY_GATE=PASS_SYNTHETIC_SCENARIOS`.
 
-Hardening final do Painel Mestre:
-- a auditoria pós-migration detectou dois WARN de funções `SECURITY DEFINER` executáveis por `authenticated`;
-- `public.career_master_status_v1()` foi removida;
-- `public.career_score_opportunity_self(uuid, boolean)` foi removida; o motor privilegiado base permanece inacessível ao usuário final;
-- foi criado `public.career_master_metrics`, contendo apenas contagens agregadas sem PII;
-- RLS permite SELECT desse snapshot somente quando `auth.uid()` possui role `master`;
-- usuários autenticados não possuem INSERT/UPDATE/DELETE nesse snapshot;
-- `career_private.refresh_master_metrics()` é interna, sem EXECUTE para `authenticated`, e atualiza o snapshot a cada 5 minutos via cron;
-- Edge `career-master-status` usa somente JWT do usuário + publishable/anon client e lê o snapshot protegido por RLS;
-- nenhum service role é necessário na Edge;
-- Security Advisor foi executado novamente depois da mudança e retornou `lints=[]`.
+Painel Mestre final:
+- somente métricas agregadas em `career_master_metrics`;
+- SELECT protegido por RLS para role `master`;
+- authenticated não escreve no snapshot;
+- refresh interno privilegiado sem EXECUTE para authenticated;
+- cron de atualização a cada 5 minutos;
+- Edge `career-master-status` sem service role;
+- candidato real = HTTP 403 `MASTER_REQUIRED`;
+- mestre real = HTTP 200 `PASS_READY_FOR_MASTER_USE`.
 
-Performance Advisor final possui apenas avisos `INFO` de índices ainda não utilizados em um banco sem carga real; não há finding de segurança ou blocker do Master Pilot.
-
-## 5. Currículo / arquivos
+## 6. Currículo / arquivos
 
 Bucket: `career-resumes-quarantine`
 - privado;
@@ -107,21 +136,14 @@ Bucket: `career-resumes-quarantine`
 - PDF/DOCX;
 - caminho interno aleatório;
 - nome original só como display metadata;
-- hash e tamanho reconferidos no deep process;
-- DOCX protegido contra path traversal, XML inseguro e zip bomb suspeito;
-- PDF protegido/sem texto rejeitado;
+- hash/tamanho reconferidos;
+- DOCX fail-closed para path traversal/XML inseguro/compressão suspeita;
+- PDF protegido ou sem texto rejeitado;
 - heurística nunca vira fato confirmado;
 - raw removido após confirmação quando possível;
 - cleanup automático de hora em hora.
 
-Funções ativas:
-- `career-document-ingest`
-- `career-document-process`
-- `career-document-delete`
-- `career-document-cleanup`
-- `career-profile-confirm`
-
-## 6. Matching / privacidade
+## 7. Matching / privacidade
 
 Matching V1:
 - privacidade antes do score;
@@ -129,66 +151,50 @@ Matching V1:
 - pagamento nunca altera FIT;
 - salário oculto/estimado não vira fato;
 - salário explícito abaixo do piso pode bloquear;
-- trabalho/localização/setor/cargo/skills entram somente quando suportados por dados disponíveis;
-- bloqueado = `SILENT_BLOCK`;
-- empregador não resolvido = `NO_DISCLOSURE`.
-
-## 7. Agente / suporte
-
-Ativos:
-- `career-opportunity-add`
-- `career-opportunity-list`
-- `career-agent`
-- `career-support`
-- `career-master-status`
-
-Meu Agente V1 é determinístico e zero-cash; responde com o estado real do usuário, não inventa vagas ou resultados.
-SAC registra incidente seguro sem currículo/senha/token em metadata geral.
+- sinais somente quando suportados por dados disponíveis;
+- `SILENT_BLOCK` para empresa protegida;
+- `NO_DISCLOSURE` para empregador não resolvido.
 
 ## 8. CI / QA
 
-Referência final:
-- `Career 360 Parser Tests` = SUCCESS;
-- `Career 360 Prototype Smoke` = SUCCESS;
-- `Career 360 Edge Typecheck` = SUCCESS.
-
-Aplicação local final:
-- `MASTER_APP_STATIC_TEST=PASS`;
-- `node --check app/app.js` = PASS.
-
-Hosted app:
-- HTTP 200 verificado internamente via `pg_net`.
+Referência final da fundação:
+- Career 360 Parser Tests = SUCCESS;
+- Career 360 Prototype Smoke = SUCCESS;
+- Career 360 Edge Typecheck = SUCCESS;
+- Master app static test = PASS;
+- JavaScript syntax = PASS;
+- Hosted frontend Vercel = READY / HTTP 200;
+- MIME de HTML/CSS/JS = PASS.
 
 ## 9. Gates
 
 `DEDICATED_PROJECT=PASS`
 `SECURITY_P0=PASS_MASTER_PILOT_SCOPE`
 `CAREER_PRIVACY_P0=PASS_MASTER_PILOT_SCOPE`
-`MULTIUSER_ISOLATION=PASS_CORE_AB_AND_REAL_AUTH_E2E`
+`MULTIUSER_ISOLATION=PASS`
 `SAFE_FILE_PIPELINE=PASS_MASTER_PILOT_SCOPE`
-`RAW_FILE_RETENTION=PASS_CRON_AND_E2E_DELETE`
+`RAW_FILE_RETENTION=PASS`
 `CV_CONFIRMATION_UI=PASS`
 `MATCH_ENGINE_V1=PASS`
 `NO_FABRICATION_GUARD=PASS_MASTER_PILOT_SCOPE`
 `AUDIT_RECOVERY=PASS_MASTER_PILOT_SCOPE`
 `CORE_RELIABILITY=PASS_MASTER_PILOT_SCOPE`
+`FRONTEND_HOSTING=PASS_VERCEL`
 `MASTER_PILOT=READY_FOR_MASTER_USE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
-Importante: `PUBLIC_BETA` não é sinônimo de Master Pilot pronto. Abrir Primeira Turma continua uma decisão separada de produto/comercial.
-
 ## 10. Primeiro uso mestre
 
-1. abrir hosted app;
+1. abrir `https://lsi-career-360.vercel.app`;
 2. usar o e-mail mestre já autorizado;
 3. criar a conta escolhendo a própria senha;
-4. confirmar e-mail se o provedor solicitar;
-5. login;
-6. o trigger atribui `master` automaticamente;
+4. confirmar e-mail se solicitado;
+5. entrar;
+6. backend atribui `master` automaticamente;
 7. completar Minha Carreira;
 8. enviar CV ou configurar manualmente;
 9. definir ao menos um cargo-alvo;
-10. estado vira `AGENT_READY`;
+10. atingir `AGENT_READY`;
 11. usar Oportunidades / Meu Agente / Resolver agora / Painel Mestre.
 
 Nunca pedir senha no chat.
@@ -196,26 +202,27 @@ Nunca pedir senha no chat.
 ## 11. DO NOT REDO
 
 - não reconstruir Career do zero;
+- não usar Supabase Edge Function como hospedagem HTML;
 - não reutilizar banco de outro produto;
-- não reintroduzir service role no frontend ou no master status;
-- não expor `SECURITY DEFINER` diretamente ao papel `authenticated`;
-- não criar acesso mestre baseado em e-mail enviado pelo cliente;
+- não reintroduzir service role no frontend/master status;
+- não expor `SECURITY DEFINER` ao authenticated;
 - não transformar inferência em fato;
 - não bypassar MFA/CAPTCHA;
-- não abrir Beta pública automaticamente só porque Master Pilot passou;
-- não ativar browser/modelo pago sem decisão de Próximo Degrau;
-- não criar metodologia paralela de recovery.
+- não abrir Beta pública automaticamente;
+- não ativar browser/modelo pago sem Próximo Degrau;
+- não criar recovery paralelo.
 
 ## 12. NEXT_ACTION
 
-Master Pilot 1.0 está finalizado para uso mestre.
-Próximas frentes são evolutivas, não blockers do piloto:
-1. uso mestre real e feedback;
-2. browser/research automation no Próximo Degrau quando houver orçamento/rota adequada;
-3. Career Learning Engine com evidência real;
-4. preparação da Founding Beta 20 quando houver decisão explícita de abertura;
-5. B2B Recruiter Agent em fase posterior.
+Master Pilot 1.0 está pronto para uso mestre.
+Próximos passos são evolutivos:
+1. uso mestre real e feedback de UX;
+2. corrigir qualquer incidente observado em uso real;
+3. Career Learning Engine com outcomes reais;
+4. browser/research automation quando houver rota/capacidade adequada;
+5. Founding Beta 20 após decisão explícita;
+6. Recruiter Agent B2B depois.
 
 ## 13. Última alteração verificada
 
-`LAST_VERIFIED_CHANGE=MASTER_PILOT_E2E_PASS_HOSTED_APP_HTTP200_QA_CLEAN_MASTER_METRICS_RLS_SECURITY_ADVISOR_ZERO_LINTS`
+`LAST_VERIFIED_CHANGE=FRONTEND_MOVED_TO_VERCEL_HTML_CSS_JS_MIME_PASS_SUPABASE_OLD_ROUTE_REDIRECTS_RECOVERY_MAIN_FIXED`
