@@ -1,27 +1,42 @@
 from __future__ import annotations
 
-import json
 import os
 import re
 import subprocess
+import time
 from pathlib import Path
 
 import requests
 
 import r45_instagram_multiformat_deploy as base
 
-NEW_VERSION = "lola-v8-r45-4-story-video-buffer-direct-2026-09-03"
+NEW_VERSION = "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03"
 STATUS = Path("cloudflare/status/ugi-20260903-worker-recovery.txt")
 CHANNELS = {
     "BUFFER_CHANNEL_INSTAGRAM": "6a7896cdb2d9d57743457e33",
     "BUFFER_CHANNEL_TIKTOK": "6a789721b2d9d5774345839d",
     "BUFFER_CHANNEL_YOUTUBE": "6a78974ab2d9d577434584b7",
 }
+TODAY_STORY_PATTERN = r"UGI-20260903-IG-(1030|1100|1415)-"
 
 
 def write_status(lines: list[str]) -> None:
     STATUS.parent.mkdir(parents=True, exist_ok=True)
     STATUS.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def wait_exact_health() -> dict:
+    last: dict = {}
+    for _ in range(35):
+        try:
+            response = requests.get(base.WORKER_ORIGIN + "/api/health", timeout=15)
+            last = response.json()
+            if response.ok and last.get("ok") is True and last.get("version") == NEW_VERSION:
+                return last
+        except Exception as exc:
+            last = {"error": str(exc)}
+        time.sleep(2)
+    raise RuntimeError(f"Unexpected live health after deploy: {last}")
 
 
 def main() -> None:
@@ -46,18 +61,17 @@ def main() -> None:
     ]
     write_status(lines)
 
-    # Preserve the exact live worker and patch only two operational contracts:
-    # 1) IG video drafts whose contentId explicitly contains -IG-STORY- publish as Story;
-    # 2) canonical Buffer channel IDs are bound as Worker vars, eliminating discovery calls.
+    # Patch only the live routing contract. Existing renders/drafts are preserved.
     patched, n = re.subn(r'var VERSION = "[^"]+";', f'var VERSION = "{NEW_VERSION}";', source, count=1)
     if n != 1:
         raise RuntimeError("VERSION anchor missing")
 
-    ig_anchor = 'if (platform === "instagram") {\n    return `\n      metadata: {\n        instagram: {\n          type: reel\n          shouldShareToFeed: true'
-    if ig_anchor not in patched:
-        raise RuntimeError("Instagram metadata anchor missing")
-    ig_replacement = 'if (platform === "instagram") {\n    const instagramStory = /-IG-STORY-/i.test(String(draft?.contentId || "")) || ["story", "story_image", "story_video"].includes(String(draft?.type || "").toLowerCase());\n    return `\n      metadata: {\n        instagram: {\n          type: ${instagramStory ? "story" : "reel"}\n          shouldShareToFeed: ${instagramStory ? "false" : "true"}'
-    patched = patched.replace(ig_anchor, ig_replacement, 1)
+    old_story = 'const instagramStory = /-IG-STORY-/i.test(String(draft?.contentId || "")) || ["story", "story_image", "story_video"].includes(String(draft?.type || "").toLowerCase());'
+    new_story = 'const instagramStory = /-IG-STORY-/i.test(String(draft?.contentId || "")) || /UGI-20260903-IG-(1030|1100|1415)-/i.test(String(draft?.contentId || "")) || ["story", "story_image", "story_video"].includes(String(draft?.type || "").toLowerCase());'
+    if old_story not in patched:
+        # Fail closed rather than risk turning Stories into Reels.
+        raise RuntimeError("Current Story routing anchor missing; refusing unsafe deploy")
+    patched = patched.replace(old_story, new_story, 1)
 
     probe = Path("/tmp/ugi-20260903-worker.mjs")
     probe.write_text(patched, encoding="utf-8")
@@ -76,15 +90,14 @@ def main() -> None:
 
     version_id = base.create_version(api_base, headers, patched, bindings)
     deployment_id = base.deploy_version(api_base, headers, version_id)
-    health = base.wait_health()
-    if health.get("version") != NEW_VERSION or health.get("ok") is not True:
-        raise RuntimeError(f"Unexpected live health: {health}")
+    health = wait_exact_health()
 
     lines += [
         f"VERSION_ID={version_id}",
         f"DEPLOYMENT_ID={deployment_id}",
         f"LIVE_VERSION={health.get('version')}",
         "STORY_VIDEO_ROUTING=true",
+        "TODAY_STORY_IDS_LOCKED=1030,1100,1415",
         "DIRECT_CANONICAL_BUFFER_CHANNELS=true",
         "OK=true",
     ]
