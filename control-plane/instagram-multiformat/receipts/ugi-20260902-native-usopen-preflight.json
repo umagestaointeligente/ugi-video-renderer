@@ -22,20 +22,63 @@
       "generateHttp": 200,
       "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": "5abdceca-8442-4c64-acd3-0cfa9e717ac0",
-      "assetUrls": [],
+      "draftId": "93362bb6-abb7-42a4-a5f6-ecffc1ad651c",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/93362bb6-abb7-42a4-a5f6-ecffc1ad651c-slide-1.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/93362bb6-abb7-42a4-a5f6-ecffc1ad651c-slide-2.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/93362bb6-abb7-42a4-a5f6-ecffc1ad651c-slide-3.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/93362bb6-abb7-42a4-a5f6-ecffc1ad651c-slide-4.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/93362bb6-abb7-42a4-a5f6-ecffc1ad651c-slide-5.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/93362bb6-abb7-42a4-a5f6-ecffc1ad651c-slide-7.png"
+      ],
       "qa": {
         "pass": false,
         "issues": [
-          "render_not_ready:partial",
-          "carousel_asset_count:0"
+          "render_not_ready:partial"
         ],
-        "dimensions": []
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1001098
+          },
+          {
+            "index": 2,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 887673
+          },
+          {
+            "index": 3,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1153177
+          },
+          {
+            "index": 4,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 819063
+          },
+          {
+            "index": 5,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 831972
+          },
+          {
+            "index": 6,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1109616
+          }
+        ]
       },
       "ok": false,
-      "error": "RuntimeError:QA_FAIL:render_not_ready:partial|carousel_asset_count:0",
+      "error": "RuntimeError:QA_FAIL:render_not_ready:partial",
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-03T12:30:52.626188+00:00"
+  "timestamp": "2026-09-03T12:59:01.580300+00:00"
 }

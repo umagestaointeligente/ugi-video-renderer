@@ -19,13 +19,34 @@
         "platform": "instagram",
         "windowDays": 15
       },
-      "generateHttp": 500,
-      "generationOk": false,
+      "generateHttp": 200,
+      "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": null,
-      "assetUrls": [],
+      "draftId": "125af2c8-bb7f-4ef6-aaf0-fefab152ed86",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788439805580-125af2c8-bb7f-4ef6-aaf0-fefab152ed86.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 2068317
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 400,
+      "publishResponse": {
+        "ok": false,
+        "error": "dueAt must be >1 minute in future"
+      },
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"199ec705-3669-42e4-917c-baf79ca0339f\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:PUBLISH_FAIL:{\"ok\": false, \"error\": \"dueAt must be >1 minute in future\"}",
       "state": "FAILED"
     },
     {
@@ -40,13 +61,34 @@
         "platform": "instagram",
         "windowDays": 15
       },
-      "generateHttp": 500,
-      "generationOk": false,
+      "generateHttp": 200,
+      "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": null,
-      "assetUrls": [],
+      "draftId": "4b3c06c5-226b-4dfd-b7f8-58ad78f2d33b",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/posts-visuais/1788439817575-4b3c06c5-226b-4dfd-b7f8-58ad78f2d33b.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1446217
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 400,
+      "publishResponse": {
+        "ok": false,
+        "error": "dueAt must be >1 minute in future"
+      },
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"42c8b467-b7fe-4a8d-a2c3-99d817d3e2de\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:PUBLISH_FAIL:{\"ok\": false, \"error\": \"dueAt must be >1 minute in future\"}",
       "state": "FAILED"
     },
     {
@@ -61,13 +103,34 @@
         "platform": "instagram",
         "windowDays": 15
       },
-      "generateHttp": 500,
-      "generationOk": false,
+      "generateHttp": 200,
+      "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": null,
-      "assetUrls": [],
+      "draftId": "9067c006-0536-4286-b61d-d257820530e2",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788439828864-9067c006-0536-4286-b61d-d257820530e2.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 1983881
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 400,
+      "publishResponse": {
+        "ok": false,
+        "error": "dueAt must be >1 minute in future"
+      },
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"1f7356e4-62c0-462f-8a9e-128ec7cb5841\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:PUBLISH_FAIL:{\"ok\": false, \"error\": \"dueAt must be >1 minute in future\"}",
       "state": "FAILED"
     },
     {
@@ -82,13 +145,34 @@
         "platform": "instagram",
         "windowDays": 15
       },
-      "generateHttp": 500,
-      "generationOk": false,
+      "generateHttp": 200,
+      "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": null,
-      "assetUrls": [],
+      "draftId": "2333a0e9-ce23-489a-84b0-f6ea4516c234",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788439839985-2333a0e9-ce23-489a-84b0-f6ea4516c234.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 2000081
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 400,
+      "publishResponse": {
+        "ok": false,
+        "error": "dueAt must be >1 minute in future"
+      },
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"20f20b3d-cd10-4b4f-a668-06e586d69085\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:PUBLISH_FAIL:{\"ok\": false, \"error\": \"dueAt must be >1 minute in future\"}",
       "state": "FAILED"
     },
     {
@@ -103,13 +187,34 @@
         "platform": "instagram",
         "windowDays": 15
       },
-      "generateHttp": 500,
-      "generationOk": false,
+      "generateHttp": 200,
+      "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": null,
-      "assetUrls": [],
+      "draftId": "c12c0df9-7f85-4716-9538-4df4922f1f42",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788439887852-c12c0df9-7f85-4716-9538-4df4922f1f42.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 1985670
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 400,
+      "publishResponse": {
+        "ok": false,
+        "error": "dueAt must be >1 minute in future"
+      },
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"65f19f31-6059-4348-98ad-42c3382d5ea2\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:PUBLISH_FAIL:{\"ok\": false, \"error\": \"dueAt must be >1 minute in future\"}",
       "state": "FAILED"
     },
     {
@@ -127,18 +232,80 @@
       "generateHttp": 200,
       "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": "ee467acb-7843-4d73-8f0e-dacb91855070",
-      "assetUrls": [],
+      "draftId": "053ee180-8c1c-4d4e-86a7-b2a45df22e69",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/053ee180-8c1c-4d4e-86a7-b2a45df22e69-slide-1.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/053ee180-8c1c-4d4e-86a7-b2a45df22e69-slide-2.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/053ee180-8c1c-4d4e-86a7-b2a45df22e69-slide-3.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/053ee180-8c1c-4d4e-86a7-b2a45df22e69-slide-4.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/053ee180-8c1c-4d4e-86a7-b2a45df22e69-slide-5.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/053ee180-8c1c-4d4e-86a7-b2a45df22e69-slide-6.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/053ee180-8c1c-4d4e-86a7-b2a45df22e69-slide-7.png",
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/carrosseis/053ee180-8c1c-4d4e-86a7-b2a45df22e69-slide-8.png"
+      ],
       "qa": {
-        "pass": false,
-        "issues": [
-          "render_not_ready:partial",
-          "carousel_asset_count:0"
-        ],
-        "dimensions": []
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1107716
+          },
+          {
+            "index": 2,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 799286
+          },
+          {
+            "index": 3,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1105754
+          },
+          {
+            "index": 4,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 790832
+          },
+          {
+            "index": 5,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 941783
+          },
+          {
+            "index": 6,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 734582
+          },
+          {
+            "index": 7,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 1102108
+          },
+          {
+            "index": 8,
+            "width": 1080,
+            "height": 1350,
+            "bytes": 975400
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 400,
+      "publishResponse": {
+        "ok": false,
+        "error": "dueAt must be >1 minute in future"
       },
       "ok": false,
-      "error": "RuntimeError:QA_FAIL:render_not_ready:partial|carousel_asset_count:0",
+      "error": "RuntimeError:PUBLISH_FAIL:{\"ok\": false, \"error\": \"dueAt must be >1 minute in future\"}",
       "state": "FAILED"
     },
     {
@@ -153,15 +320,36 @@
         "platform": "instagram",
         "windowDays": 15
       },
-      "generateHttp": 500,
-      "generationOk": false,
+      "generateHttp": 200,
+      "generationOk": true,
       "workerVersion": "lola-v8-r45-3-instagram-scheduled-media-2026-08-30",
-      "draftId": null,
-      "assetUrls": [],
+      "draftId": "91ac0384-a63b-41df-8c75-3c8b866072f5",
+      "assetUrls": [
+        "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas/stories/1788440086806-91ac0384-a63b-41df-8c75-3c8b866072f5.png"
+      ],
+      "qa": {
+        "pass": true,
+        "issues": [],
+        "dimensions": [
+          {
+            "index": 1,
+            "width": 1080,
+            "height": 1920,
+            "bytes": 1943018
+          }
+        ]
+      },
+      "approvalHttp": 200,
+      "approvalOk": true,
+      "publishHttp": 400,
+      "publishResponse": {
+        "ok": false,
+        "error": "dueAt must be >1 minute in future"
+      },
       "ok": false,
-      "error": "RuntimeError:GENERATE_FAIL:{\"ok\": false, \"version\": \"lola-v8-r45-3-instagram-scheduled-media-2026-08-30\", \"route\": \"/api/r45/generate\", \"errorClass\": \"r45_generation_failed\", \"error\": \"4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage.\", \"commandId\": \"08038784-c57d-4d32-ac55-b6217d012957\", \"publicationTriggered\": false}",
+      "error": "RuntimeError:PUBLISH_FAIL:{\"ok\": false, \"error\": \"dueAt must be >1 minute in future\"}",
       "state": "FAILED"
     }
   ],
-  "timestamp": "2026-09-03T12:28:54.898324+00:00"
+  "timestamp": "2026-09-03T12:54:54.322552+00:00"
 }
