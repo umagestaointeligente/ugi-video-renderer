@@ -21,15 +21,15 @@
       "platform": "youtube",
       "draftId": "ugi-20260903004215-5ed49aac0424",
       "renderId": "ugi-20260903004310-a3da36a066d0",
-      "dueAt": "2026-09-03T23:30:00.000Z",
-      "bufferPostId": "6a98d4080e7870bed4e435b4",
-      "status": "scheduled",
-      "bufferStatus": "scheduled",
+      "dueAt": null,
+      "bufferPostId": null,
+      "status": null,
+      "bufferStatus": null,
       "externalLink": null,
       "alreadyActive": true,
       "readbackPass": false,
       "ok": false
     }
   ],
-  "timestamp": "2026-09-03T02:22:30.316895+00:00"
+  "timestamp": "2026-09-03T12:38:45.665121+00:00"
 }
