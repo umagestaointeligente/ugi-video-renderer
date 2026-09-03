@@ -1,0 +1,12 @@
+{
+  "ok": false,
+  "retryable": true,
+  "state": "DEGRADED",
+  "project": "UGI",
+  "publisher": "BUFFER",
+  "manifest": "control-plane/publisher-hub/queue/ugi-20260903-replacements-only-youtube-r1.json",
+  "publicationTriggered": false,
+  "paymentTriggered": false,
+  "error": "RuntimeError:BUFFER_CHANNELS_FAIL",
+  "timestamp": "2026-09-03T00:43:58.939535+00:00"
+}

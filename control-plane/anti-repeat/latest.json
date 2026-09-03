@@ -6,7 +6,7 @@
   "storiesIncluded": true,
   "historyRegistry": "control-plane/anti-repeat/platform-topic-history.json",
   "historyComplete": false,
-  "checkedAt": "2026-09-03T00:39:38.672329+00:00",
+  "checkedAt": "2026-09-03T00:42:57.003958+00:00",
   "queuedCount": 6,
   "blocked": 0,
   "state": "PASS",
@@ -150,7 +150,7 @@
         "combinedSimilarity": 0.0372
       },
       "signature": {
-        "exactHash": "3abf97d4c70cc0a834ed3dd50dcc8bc78e1402a19aa734f33049ec823e0b5c06",
+        "exactHash": "9ad12884677c8fc69976307edffe1bb8aef5d6cc4e4d6fd5499977eac430a8dc",
         "renderId": "ugi-20260903-yt-openai-stop-conditions",
         "draftId": ""
       }
