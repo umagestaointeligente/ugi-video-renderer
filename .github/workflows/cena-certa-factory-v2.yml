@@ -1,0 +1,222 @@
+name: Cena Certa Factory V2 Bridge
+
+on:
+  push:
+    branches:
+      - feat/cena-certa-factory-v2-bridge
+    paths:
+      - config/cena-certa/factory-dispatch.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GL_REPO: https://gitlab.com/umagestaointeligente-group/umagestaointeligente-project.git
+
+jobs:
+  control-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    outputs:
+      enabled: ${{ steps.dispatch.outputs.enabled }}
+      gl_ref: ${{ steps.dispatch.outputs.gl_ref }}
+      gl_sha: ${{ steps.dispatch.outputs.gl_sha }}
+      batch: ${{ steps.dispatch.outputs.batch }}
+    env:
+      UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read immutable dispatch
+        id: dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          p='config/cena-certa/factory-dispatch.json'
+          d=json.load(open(p,encoding='utf-8'))
+          required=('enabled','gitlab_ref','gitlab_sha','batch_path')
+          missing=[k for k in required if k not in d]
+          if missing: raise SystemExit(f'DISPATCH_FIELDS_MISSING {missing}')
+          if len(d['gitlab_sha']) != 40: raise SystemExit('DISPATCH_SHA_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write(f"enabled={str(bool(d['enabled'])).lower()}\n")
+              f.write(f"gl_ref={d['gitlab_ref']}\n")
+              f.write(f"gl_sha={d['gitlab_sha']}\n")
+              f.write(f"batch={d['batch_path']}\n")
+          print('FACTORY_DISPATCH_PASS', d['gitlab_ref'], d['gitlab_sha'], 'enabled=', d['enabled'])
+          PY
+
+      - name: Clone exact Factory source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "${{ steps.dispatch.outputs.gl_ref }}" "$GL_REPO" src
+          cd src
+          test "$(git rev-parse HEAD)" = "${{ steps.dispatch.outputs.gl_sha }}"
+          test -s factory/cena_certa/v2/contract_v9_factory.json
+          test -s factory/cena_certa/v2/requirements.lock.txt
+          echo "FACTORY_SOURCE_PIN_PASS $(git rev-parse HEAD)"
+
+      - name: Runtime without heavy reinstall
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends ffmpeg >/dev/null
+          fi
+          if ! fc-match Lato | grep -qi Lato; then
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends fonts-lato fonts-dejavu-core >/dev/null
+          fi
+          python -m pip install -q -r src/factory/cena_certa/v2/requirements.lock.txt
+          ffmpeg -version | head -1
+          python --version
+
+      - name: Compile and V9 preflight
+        working-directory: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile factory/__init__.py factory/cena_certa/__init__.py factory/cena_certa/v2/*.py
+          python -m factory.cena_certa.v2.preflight preflight
+
+      - name: Three-second visual canary
+        working-directory: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m factory.cena_certa.v2.preflight canary
+          test -s output/cena-certa-v2/FACTORY-V2-CANARY.mp4
+
+      - name: R2 route smoke test
+        working-directory: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UGI_VIDEO_UPLOAD_URL"
+          test -n "$UGI_VIDEO_UPLOAD_KEY"
+          id="CC-FACTORY-V2-SMOKE-${GITHUB_RUN_ID}"
+          file="output/cena-certa-v2/FACTORY-V2-CANARY.mp4"
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$file")
+          response=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 180 -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${id}&duration=${dur}" -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" -H 'Content-Type: video/mp4' --data-binary @"$file")
+          printf '%s\n' "$response" | tee output/cena-certa-v2/FACTORY-V2-R2-SMOKE.json
+          echo "$response" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"'
+          echo "FACTORY_R2_ROUTE_PASS"
+
+      - name: Smoke proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-factory-v2-smoke-${{ github.run_id }}
+          path: |
+            src/output/cena-certa-v2/FACTORY-V2-CANARY.mp4
+            src/output/cena-certa-v2/FACTORY-V2-R2-SMOKE.json
+          if-no-files-found: warn
+          retention-days: 7
+
+  validate-production-batch:
+    needs: control-smoke
+    if: needs.control-smoke.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Clone exact Factory source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "${{ needs.control-smoke.outputs.gl_ref }}" "$GL_REPO" src
+          cd src
+          test "$(git rev-parse HEAD)" = "${{ needs.control-smoke.outputs.gl_sha }}"
+      - name: Runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! fc-match Lato | grep -qi Lato; then sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends fonts-lato fonts-dejavu-core >/dev/null; fi
+          python -m pip install -q -r src/factory/cena_certa/v2/requirements.lock.txt
+      - name: Validate exactly eight ready manifests
+        working-directory: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "${{ needs.control-smoke.outputs.batch }}"
+          python -m factory.cena_certa.v2.preflight validate-batch --batch "${{ needs.control-smoke.outputs.batch }}" --expect 8
+
+  render-deliver-8:
+    needs: [control-smoke, validate-production-batch]
+    if: needs.control-smoke.outputs.enabled == 'true'
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        index: [0,1,2,3,4,5,6,7]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      ORBIT_X264_PRESET: veryfast
+      ORBIT_CRF: '18'
+    steps:
+      - name: Clone exact Factory source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "${{ needs.control-smoke.outputs.gl_ref }}" "$GL_REPO" src
+          cd src
+          test "$(git rev-parse HEAD)" = "${{ needs.control-smoke.outputs.gl_sha }}"
+      - name: Runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! fc-match Lato | grep -qi Lato; then sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends fonts-lato fonts-dejavu-core >/dev/null; fi
+          python -m pip install -q -r src/factory/cena_certa/v2/requirements.lock.txt
+      - name: Timed render and QA
+        id: render
+        working-directory: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          t0=$(date +%s%3N)
+          python -m factory.cena_certa.v2.render --batch "${{ needs.control-smoke.outputs.batch }}" --index "${{ matrix.index }}"
+          t1=$(date +%s%3N)
+          echo "elapsed_ms=$((t1-t0))" >> "$GITHUB_OUTPUT"
+      - name: Deliver only QA-passed MP4 to R2
+        working-directory: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' > /tmp/item.env
+          import json, os, pathlib, shlex
+          batch=json.load(open(os.environ['BATCH'],encoding='utf-8'))
+          x=batch[int(os.environ['INDEX'])]
+          rid=x['id']
+          receipt=json.load(open(f'output/cena-certa-v2/{rid}.receipt.json',encoding='utf-8'))
+          assert receipt['render_pass'] and receipt['qa_pass'] and receipt['state']=='PREVIEW_READY'
+          print('RID='+shlex.quote(rid))
+          PY
+          source /tmp/item.env
+          file="output/cena-certa-v2/${RID}.mp4"
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$file")
+          response=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 180 -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${RID}&duration=${dur}" -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" -H 'Content-Type: video/mp4' --data-binary @"$file")
+          printf '%s\n' "$response" | tee "output/cena-certa-v2/${RID}.r2.json"
+          echo "$response" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"'
+        env:
+          BATCH: ${{ needs.control-smoke.outputs.batch }}
+          INDEX: ${{ matrix.index }}
+      - name: Per-video proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-factory-v2-slot-${{ matrix.index }}
+          path: |
+            src/output/cena-certa-v2/*.mp4
+            src/output/cena-certa-v2/*.receipt.json
+            src/output/cena-certa-v2/*.r2.json
+            src/output/cena-certa-v2/*-contact.jpg
+          if-no-files-found: warn
+          retention-days: 7
