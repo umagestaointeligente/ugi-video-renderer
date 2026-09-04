@@ -7,6 +7,8 @@ batch BUFFER_SCHEDULED only when every post has a real Buffer id, scheduled
 state and an exact due instant after timezone normalization.
 """
 
+# live-readback trigger: 2026-09-04T07:48-03:00
+
 from __future__ import annotations
 
 import datetime as dt
