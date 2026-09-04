@@ -1,303 +1,59 @@
 import JSZip from "npm:jszip@3.10.1";
 import { extractText, getDocumentProxy } from "npm:unpdf@1.8.1";
 
-export const PARSER_VERSION = "career360-edge-parser/1.0.1";
-export const MAX_FILE_BYTES = 10 * 1024 * 1024;
-const MAX_DOCX_ENTRIES = 500;
-const MAX_DOCX_UNCOMPRESSED_BYTES = 40 * 1024 * 1024;
-const MAX_DOCX_COMPRESSION_RATIO = 120;
-const MAX_TEXT_CHARS = 250_000;
-const MAX_PDF_PAGES = 30;
-const MAX_PDF_IMAGE_SIZE = 16_777_216;
-const PDF_TIMEOUT_MS = 12_000;
+export const PARSER_VERSION="career360-edge-parser/1.0.3";
+export const MAX_FILE_BYTES=10*1024*1024;
+const MAX_TEXT=250000, MAX_PAGES=30, PDF_TIMEOUT=12000, MAX_DOCX_ENTRIES=500, MAX_EXPANDED=40*1024*1024;
+export class ParseError extends Error{code:string;constructor(code:string,message:string){super(message);this.code=code}}
+const normSpace=(s:string)=>s.replace(/\u00a0/g," ").replace(/[\t\r ]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
+const cleanLine=(s:string)=>s.replace(/[\t\r ]+/g," ").replace(/^[ \t•·▪◦\-–—|]+|[ \t•·▪◦\-–—|]+$/g,"").trim();
+function hex(b:ArrayBuffer){return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+export async function sha256Hex(bytes:Uint8Array){const b=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength) as ArrayBuffer;return hex(await crypto.subtle.digest("SHA-256",b))}
+function u16(d:Uint8Array,o:number){return d[o]|(d[o+1]<<8)} function u32(d:Uint8Array,o:number){return(d[o]|(d[o+1]<<8)|(d[o+2]<<16)|(d[o+3]<<24))>>>0}
+function validateZip(d:Uint8Array){let e=-1;for(let i=d.length-22;i>=Math.max(0,d.length-65557);i--){if(u32(d,i)===0x06054b50){e=i;break}}if(e<0)throw new ParseError("DOCX_CORRUPT","DOCX inválido.");const total=u16(d,e+10),off=u32(d,e+16),size=u32(d,e+12);if(total<1||total>MAX_DOCX_ENTRIES||off+size>d.length)throw new ParseError("DOCX_TOO_COMPLEX","DOCX fora dos limites de segurança.");let cur=off,expanded=0;const dec=new TextDecoder();const names=new Set<string>();for(let n=0;n<total;n++){if(cur+46>d.length||u32(d,cur)!==0x02014b50)throw new ParseError("DOCX_CORRUPT","Entrada DOCX inválida.");const comp=u32(d,cur+20),unc=u32(d,cur+24),nl=u16(d,cur+28),el=u16(d,cur+30),cl=u16(d,cur+32),start=cur+46,end=start+nl;if(end>d.length)throw new ParseError("DOCX_CORRUPT","DOCX inválido.");const name=dec.decode(d.slice(start,end)).replace(/\\/g,"/");if(!name||name.startsWith("/")||name.includes("../"))throw new ParseError("DOCX_PATH_TRAVERSAL","Caminho interno inválido.");names.add(name);expanded+=unc;if(expanded>MAX_EXPANDED)throw new ParseError("DOCX_EXPANDED_TOO_LARGE","DOCX expandido excede o limite.");if(unc>1000000&&unc/Math.max(1,comp)>120)throw new ParseError("DOCX_SUSPICIOUS_COMPRESSION","Compressão suspeita.");cur=end+el+cl}if(!names.has("[Content_Types].xml")||!names.has("word/document.xml"))throw new ParseError("DOCX_NOT_WORD_DOCUMENT","DOCX não é um Word válido.")}
+function xmlText(s:string){return s.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&apos;/g,"'")}
+async function docxText(bytes:Uint8Array){validateZip(bytes);let zip:JSZip;try{zip=await JSZip.loadAsync(bytes,{checkCRC32:true,createFolders:false})}catch{throw new ParseError("DOCX_CORRUPT","DOCX corrompido.")}const f=zip.file("word/document.xml");if(!f)throw new ParseError("DOCX_MISSING_DOCUMENT_XML","Documento principal ausente.");const xml=await f.async("string"),up=xml.toUpperCase();if(up.includes("<!DOCTYPE")||up.includes("<!ENTITY"))throw new ParseError("DOCX_XML_UNSAFE","XML não permitido.");const lines:string[]=[];for(const m of xml.matchAll(/<w:p(?:\s[^>]*)?>([\s\S]*?)<\/w:p>/g)){const inner=m[1].replace(/<w:br(?:\s[^>]*)?\/>/g,"<w:t>\n</w:t>").replace(/<w:tab(?:\s[^>]*)?\/>/g,"<w:t> </w:t>");const para=[...inner.matchAll(/<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>/g)].map(t=>xmlText(t[1])).join("");for(const part of para.split(/\n+/)){const c=cleanLine(part);if(c)lines.push(c)}}const text=normSpace(lines.join("\n"));if(!text)throw new ParseError("NO_TEXT","Não encontramos texto utilizável.");if(text.length>MAX_TEXT)throw new ParseError("TEXT_TOO_LARGE","Texto excede o limite.");return text}
+async function pdfText(bytes:Uint8Array){const run=async()=>{let pdf:any;try{pdf=await getDocumentProxy(bytes,{maxImageSize:16777216})}catch(e:any){if(String(e?.name||"").includes("Password")||String(e?.message||"").toLowerCase().includes("password"))throw new ParseError("PDF_PASSWORD_PROTECTED","PDF protegido por senha.");throw new ParseError("PDF_CORRUPT","PDF não pôde ser lido.")}if(pdf.numPages>MAX_PAGES)throw new ParseError("PDF_TOO_MANY_PAGES","PDF excede o limite de páginas.");const r=await extractText(pdf,{mergePages:true});const t=normSpace(String(r.text||""));if(!t)throw new ParseError("NO_TEXT","PDF sem texto utilizável.");if(t.length>MAX_TEXT)throw new ParseError("TEXT_TOO_LARGE","Texto excede o limite.");return t};return await Promise.race([run(),new Promise<never>((_,rej)=>setTimeout(()=>rej(new ParseError("PDF_PARSE_TIMEOUT","PDF excedeu o tempo de processamento.")),PDF_TIMEOUT))])}
 
-export class ParseError extends Error {
-  code: string;
-  constructor(code: string, message: string) {
-    super(message);
-    this.code = code;
-  }
-}
-
-function normalizeSpaces(value: string) {
-  return value.replace(/\u00a0/g, " ").replace(/[\t\r ]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
-}
-
-function cleanLine(value: string) {
-  return value.replace(/\s+/g, " ").replace(/^[ \t•·▪◦\-–—|]+|[ \t•·▪◦\-–—|]+$/g, "").trim();
-}
-
-function safeExcerpt(text: string, value: string, radius = 80) {
-  if (!value) return null;
-  const idx = text.toLocaleLowerCase("pt-BR").indexOf(value.toLocaleLowerCase("pt-BR"));
-  if (idx < 0) return null;
-  return normalizeSpaces(text.slice(Math.max(0, idx - radius), Math.min(text.length, idx + value.length + radius)));
-}
-
-function hex(buffer: ArrayBuffer) {
-  return [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-export async function sha256Hex(bytes: Uint8Array) {
-  const exact = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
-  return hex(await crypto.subtle.digest("SHA-256", exact));
-}
-
-function u16(data: Uint8Array, offset: number) {
-  return data[offset] | (data[offset + 1] << 8);
-}
-
-function u32(data: Uint8Array, offset: number) {
-  return (data[offset] | (data[offset + 1] << 8) | (data[offset + 2] << 16) | (data[offset + 3] << 24)) >>> 0;
-}
-
-function findEndOfCentralDirectory(data: Uint8Array) {
-  const min = Math.max(0, data.length - 65_557);
-  for (let i = data.length - 22; i >= min; i--) {
-    if (u32(data, i) === 0x06054b50) return i;
-  }
-  return -1;
-}
-
-export function validateDocxCentralDirectory(data: Uint8Array) {
-  const eocd = findEndOfCentralDirectory(data);
-  if (eocd < 0) throw new ParseError("DOCX_CORRUPT", "O DOCX não possui diretório ZIP válido.");
-
-  const totalEntries = u16(data, eocd + 10);
-  const centralSize = u32(data, eocd + 12);
-  const centralOffset = u32(data, eocd + 16);
-  if (totalEntries <= 0 || totalEntries > MAX_DOCX_ENTRIES) {
-    throw new ParseError("DOCX_TOO_COMPLEX", "O DOCX contém arquivos internos demais.");
-  }
-  if (centralOffset + centralSize > data.length) {
-    throw new ParseError("DOCX_CORRUPT", "Diretório ZIP fora dos limites do arquivo.");
-  }
-
-  const decoder = new TextDecoder("utf-8", { fatal: false });
-  let cursor = centralOffset;
-  let expandedTotal = 0;
-  const names = new Set<string>();
-
-  for (let entry = 0; entry < totalEntries; entry++) {
-    if (cursor + 46 > data.length || u32(data, cursor) !== 0x02014b50) {
-      throw new ParseError("DOCX_CORRUPT", "Entrada ZIP inválida.");
-    }
-    const compressedSize = u32(data, cursor + 20);
-    const uncompressedSize = u32(data, cursor + 24);
-    const nameLength = u16(data, cursor + 28);
-    const extraLength = u16(data, cursor + 30);
-    const commentLength = u16(data, cursor + 32);
-    const nameStart = cursor + 46;
-    const nameEnd = nameStart + nameLength;
-    if (nameEnd > data.length) throw new ParseError("DOCX_CORRUPT", "Nome de entrada ZIP inválido.");
-
-    const name = decoder.decode(data.slice(nameStart, nameEnd)).replace(/\\/g, "/");
-    if (!name || name.startsWith("/") || name === ".." || name.includes("../")) {
-      throw new ParseError("DOCX_PATH_TRAVERSAL", "O DOCX contém caminho interno inválido.");
-    }
-    names.add(name);
-    expandedTotal += uncompressedSize;
-    if (expandedTotal > MAX_DOCX_UNCOMPRESSED_BYTES) {
-      throw new ParseError("DOCX_EXPANDED_TOO_LARGE", "O DOCX expandido excede o limite de segurança.");
-    }
-    if (uncompressedSize > 1_000_000) {
-      if (compressedSize === 0) throw new ParseError("DOCX_SUSPICIOUS_COMPRESSION", "Compressão suspeita no DOCX.");
-      const ratio = uncompressedSize / Math.max(1, compressedSize);
-      if (ratio > MAX_DOCX_COMPRESSION_RATIO) {
-        throw new ParseError("DOCX_SUSPICIOUS_COMPRESSION", "Taxa de compressão suspeita no DOCX.");
-      }
-    }
-    cursor = nameEnd + extraLength + commentLength;
-  }
-
-  if (!names.has("[Content_Types].xml") || !names.has("word/document.xml")) {
-    throw new ParseError("DOCX_NOT_WORD_DOCUMENT", "O arquivo ZIP não é um documento Word válido.");
-  }
-}
-
-async function extractDocxText(bytes: Uint8Array) {
-  validateDocxCentralDirectory(bytes);
-  let zip: JSZip;
-  try {
-    zip = await JSZip.loadAsync(bytes, { checkCRC32: true, createFolders: false });
-  } catch {
-    throw new ParseError("DOCX_CORRUPT", "O DOCX está corrompido.");
-  }
-  const documentXml = zip.file("word/document.xml");
-  if (!documentXml) throw new ParseError("DOCX_MISSING_DOCUMENT_XML", "O DOCX não contém o documento principal.");
-  const xml = await documentXml.async("string");
-  const upper = xml.toUpperCase();
-  if (upper.includes("<!DOCTYPE") || upper.includes("<!ENTITY")) {
-    throw new ParseError("DOCX_XML_UNSAFE", "O DOCX contém construções XML não permitidas.");
-  }
-
-  const paragraphs = [...xml.matchAll(/<w:p(?:\s[^>]*)?>([\s\S]*?)<\/w:p>/g)].map((m) => {
-    const inner = m[1].replace(/<w:tab\s*\/?\s*>/g, "\t").replace(/<w:br\s*\/?\s*>/g, "\n");
-    const pieces = [...inner.matchAll(/<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>/g)].map((t) =>
-      t[1]
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&amp;/g, "&")
-        .replace(/&quot;/g, '"')
-        .replace(/&apos;/g, "'")
-    );
-    return cleanLine(pieces.join(""));
-  }).filter(Boolean);
-
-  const text = normalizeSpaces(paragraphs.join("\n"));
-  if (!text) throw new ParseError("NO_TEXT", "Não encontramos texto utilizável no DOCX.");
-  if (text.length > MAX_TEXT_CHARS) throw new ParseError("TEXT_TOO_LARGE", "O texto extraído excede o limite do Beta 1.0.");
-  return text;
-}
-
-async function extractPdfText(bytes: Uint8Array) {
-  const parse = async () => {
-    let pdf;
-    try {
-      pdf = await getDocumentProxy(bytes, { maxImageSize: MAX_PDF_IMAGE_SIZE });
-    } catch (err) {
-      const name = err instanceof Error ? err.name : "";
-      const msg = err instanceof Error ? err.message.toLowerCase() : "";
-      if (name.includes("Password") || msg.includes("password")) {
-        throw new ParseError("PDF_PASSWORD_PROTECTED", "PDF protegido por senha não é aceito no Beta 1.0.");
-      }
-      throw new ParseError("PDF_CORRUPT", "O PDF não pôde ser lido com segurança.");
-    }
-    if (pdf.numPages > MAX_PDF_PAGES) throw new ParseError("PDF_TOO_MANY_PAGES", "O PDF excede o limite de páginas do Beta 1.0.");
-    const result = await extractText(pdf, { mergePages: true });
-    const text = normalizeSpaces(String(result.text ?? ""));
-    if (!text) throw new ParseError("NO_TEXT", "Este PDF não possui texto utilizável. Envie um PDF textual ou DOCX.");
-    if (text.length > MAX_TEXT_CHARS) throw new ParseError("TEXT_TOO_LARGE", "O texto extraído excede o limite do Beta 1.0.");
-    return text;
-  };
-
-  const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new ParseError("PDF_PARSE_TIMEOUT", "O PDF excedeu o tempo seguro de processamento.")), PDF_TIMEOUT_MS)
-  );
-  return await Promise.race([parse(), timeout]);
-}
-
-const EMAIL_RE = /(?<![\w.+-])([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})(?![\w.-])/gi;
-const PHONE_RE = /(?<!\d)(?:\+?55\s*)?(?:\(?\d{2}\)?\s*)?(?:9\s*)?\d{4}[-\s]?\d{4}(?!\d)/g;
-const URL_RE = /\b(?:https?:\/\/|www\.)[^\s<>]+/gi;
-const LINKEDIN_RE = /\b(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[^\s<>]+/gi;
-
-const SECTION_ALIASES: Record<string, string[]> = {
-  experiencia: ["experiência", "experiencia", "experiência profissional", "experiencia profissional", "histórico profissional", "historico profissional"],
-  formacao: ["formação", "formacao", "formação acadêmica", "formacao academica", "educação", "educacao"],
-  competencias: ["competências", "competencias", "habilidades", "skills", "conhecimentos"],
-  idiomas: ["idiomas", "línguas", "linguas"],
-  certificacoes: ["certificações", "certificacoes", "cursos", "cursos e certificações", "cursos e certificacoes"],
-  resumo: ["resumo", "resumo profissional", "perfil", "perfil profissional", "objetivo"],
+const EMAIL_RE=/(?<![\w.+-])([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})(?![\w.-])/gi;
+const PHONE_RE=/(?<!\d)(?:\+?55[\s.-]*)?\(?\d{2}\)?[\s.-]*(?:9[\s.-]*)?\d{4}[\s.-]?\d{4}(?!\d)/g;
+const LINKEDIN_RE=/\b(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[^\s<>]+/gi;
+const URL_RE=/\b(?:https?:\/\/|www\.)[^\s<>]+/gi;
+const aliases:Record<string,string[]>={
+ resumo:["resumo","resumo profissional","perfil","perfil profissional","objetivo","executive profile","professional profile","professional summary","executive summary","career summary","profile summary"],
+ impacto:["executive impact","career impact","key achievements","selected achievements","career highlights","business impact","impacto executivo","principais resultados","resultados"],
+ transformacoes:["selected business transformations","business transformations","selected transformations","transformações de negócio","transformacoes de negocio","projetos de transformação","projetos de transformacao"],
+ lideranca:["leadership & enterprise scope","leadership and enterprise scope","leadership scope","leadership","liderança e escopo","lideranca e escopo","liderança","lideranca"],
+ experiencia:["experiência","experiencia","experiência profissional","experiencia profissional","histórico profissional","historico profissional","professional experience","work experience","career history","employment history","career track record","track record","experience"],
+ formacao:["formação","formacao","formação acadêmica","formacao academica","educação","educacao","education","academic background","education & credentials","education and credentials","academic education"],
+ competencias:["competências","competencias","habilidades","skills","conhecimentos","core competencies","key skills","areas of expertise","expertise","competencies","professional skills"],
+ idiomas:["idiomas","línguas","linguas","languages","language skills"],
+ certificacoes:["certificações","certificacoes","cursos","cursos e certificações","cursos e certificacoes","certifications","credentials","courses & certifications","courses and certifications"]
 };
+function key(s:string){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[:|]+$/g,"").replace(/\s+/g," ").trim()}
+const headingMap=new Map<string,string>();for(const[c,a]of Object.entries(aliases))for(const x of a)headingMap.set(key(x),c);
+function splitSections(text:string){const out:Record<string,string[]>={cabecalho:[]};let cur="cabecalho";for(const raw of text.split("\n")){const line=cleanLine(raw);if(!line)continue;const k=key(line);let section=headingMap.get(k);if(!section&&line.length<=80){for(const[alias,canon]of headingMap){if(k===alias||k.startsWith(alias+" ")){section=canon;break}}}if(section){cur=section;out[cur]??=[];continue}out[cur]??=[];out[cur].push(line)}return out}
+function excerpt(text:string,v:string,r=90){const i=text.toLowerCase().indexOf(v.toLowerCase());return i<0?null:normSpace(text.slice(Math.max(0,i-r),Math.min(text.length,i+v.length+r)))}
+function ev(value:any,confidence="MEDIUM",source:string|null=null,inferred=false){return{value,confidence,source_excerpt:source,inferred,user_confirmed:false}}
+function matches(text:string,re:RegExp,group=0){re.lastIndex=0;const seen=new Set<string>(),out:string[]=[];for(const m of text.matchAll(re)){const raw=String(m[group]??m[0]).trim().replace(/[.,;)]+$/g,"");const k=raw.toLowerCase();if(raw&&!seen.has(k)){seen.add(k);out.push(raw)}}return out}
+function nameFrom(lines:string[]){for(const line of lines.slice(0,10)){if(line.includes("@")||/\d{4}/.test(line)||line.length>90)continue;const words=line.split(/\s+/);if(words.length>=2&&words.length<=7&&words.every(w=>/[A-Za-zÀ-ÿ]/.test(w)))return ev(line,"MEDIUM",line,true)}return null}
+function unique(xs:string[]){const out:string[]=[],seen=new Set<string>();for(const x0 of xs){const x=cleanLine(x0);const k=key(x);if(x&&!seen.has(k)){seen.add(k);out.push(x)}}return out}
+function headerSkills(lines:string[]){for(const line of lines.slice(0,12)){if(line.includes("@")||/linkedin|\(\d{2}\)/i.test(line))continue;if(line.includes("|")||line.includes("•")){const parts=line.split(/[|•]/).map(cleanLine).filter(x=>x.length>=3&&x.length<=70);if(parts.length>=2&&parts.length<=10)return parts}}return[]}
+function credentialBuckets(lines:string[]){const education:string[]=[],languages:string[]=[],certifications:string[]=[],skills:string[]=[];for(const line of lines){const parts=line.split(/[|•]/).map(cleanLine).filter(Boolean);for(const p of parts){const n=key(p);if(/(^| )(ingles|english|espanhol|spanish|frances|french|alemao|german)(:| |$)/.test(n)){languages.push(p);continue}if(/(lean six sigma|yellow belt|green belt|black belt|pmp|scrum|certif|certification|certificado|credential)/.test(n)){certifications.push(p);continue}if(/(pos-graduacao|pos graduacao|graduacao|bacharel|tecnologo|mba|administracao|universidade|faculdade|university|college|estacio|fgv|fundacao getulio vargas)/.test(n)){education.push(p);continue}if(p.length<=90)skills.push(p);else education.push(p)}}return{education:unique(education),languages:unique(languages),certifications:unique(certifications),skills:unique(skills)}}
+function evidenceLines(lines:string[],confidence="MEDIUM"){return unique(lines).map(x=>ev(x,confidence,x,false))}
 
-function evidence(value: unknown, confidence: "HIGH" | "MEDIUM" | "LOW", source_excerpt: string | null, inferred = false) {
-  return { value, confidence, source_excerpt, inferred, user_confirmed: false };
+export function buildDraft(text:string){
+  const s=splitSections(text),emails=matches(text,EMAIL_RE,1),phones=matches(text,PHONE_RE).filter(x=>!/^\d{4}[\s-]\d{4}$/.test(x)),li=matches(text,LINKEDIN_RE),urls=matches(text,URL_RE).filter(x=>!x.toLowerCase().includes("linkedin.com/in/"));
+  const summary=(s.resumo||[]).slice(0,8), exp=(s.experiencia||[]).slice(0,100), impact=(s.impacto||[]).slice(0,50), transformations=(s.transformacoes||[]).slice(0,80), leadership=(s.lideranca||[]).slice(0,50), skillsSection=(s.competencias||[]).slice(0,60), langsSection=(s.idiomas||[]).slice(0,30), certSection=(s.certificacoes||[]).slice(0,50);
+  const buckets=credentialBuckets((s.formacao||[]).slice(0,80));
+  const skillRaw=unique([...(skillsSection.length?skillsSection:headerSkills(s.cabecalho||[])),...buckets.skills]);
+  const langRaw=unique([...langsSection,...buckets.languages]);
+  const certRaw=unique([...certSection,...buckets.certifications]);
+  const eduRaw=unique(buckets.education.length?buckets.education:(s.formacao||[]));
+  const highlightsRaw=unique([...impact,...transformations]);
+  const draft:any={name:nameFrom(s.cabecalho||[]),emails:emails.slice(0,5).map(v=>ev(v,"HIGH",excerpt(text,v))),phones:phones.slice(0,5).map(v=>ev(v,"HIGH",excerpt(text,v))),linkedin:li.slice(0,5).map(v=>ev(v,"HIGH",excerpt(text,v))),links:urls.slice(0,10).map(v=>ev(v,"HIGH",excerpt(text,v))),summary:summary.length?ev(summary.join("\n"),"HIGH",summary.join("\n"),false):null,experience_evidence:evidenceLines(exp),highlights_evidence:evidenceLines(highlightsRaw),leadership_evidence:evidenceLines(leadership),education_evidence:evidenceLines(eduRaw),skills_evidence:evidenceLines(skillRaw),languages_evidence:evidenceLines(langRaw),certifications_evidence:evidenceLines(certRaw),requires_user_confirmation:true};
+  const counts={summary:summary.length,experience:exp.length,highlights:highlightsRaw.length,leadership:leadership.length,education:eduRaw.length,skills:skillRaw.length,languages:langRaw.length,certifications:certRaw.length};
+  const meaningful=Object.values(counts).filter(n=>n>0).length;
+  return{draft,quality:{meaningful_sections:meaningful,summary_lines:counts.summary,experience_lines:counts.experience,highlights_lines:counts.highlights,leadership_lines:counts.leadership,education_lines:counts.education,skills_lines:counts.skills,languages_lines:counts.languages,certification_lines:counts.certifications}}
 }
-
-function uniqueMatches(text: string, re: RegExp, group = 0) {
-  re.lastIndex = 0;
-  const seen = new Set<string>();
-  const result: string[] = [];
-  for (const match of text.matchAll(re)) {
-    const raw = String(match[group] ?? match[0]).trim().replace(/[.,;)]+$/g, "");
-    const key = raw.toLocaleLowerCase("pt-BR");
-    if (raw && !seen.has(key)) {
-      seen.add(key);
-      result.push(raw);
-    }
-  }
-  return result;
-}
-
-function splitSections(text: string) {
-  const lookup = new Map<string, string>();
-  for (const [canonical, aliases] of Object.entries(SECTION_ALIASES)) {
-    for (const alias of aliases) lookup.set(alias, canonical);
-  }
-  const sections: Record<string, string[]> = { cabecalho: [] };
-  let current = "cabecalho";
-  for (const raw of text.split("\n")) {
-    const line = cleanLine(raw);
-    if (!line) continue;
-    const heading = line.toLocaleLowerCase("pt-BR").replace(/:$/, "").replace(/\s+/g, " ");
-    if (line.length <= 60 && lookup.has(heading)) {
-      current = lookup.get(heading)!;
-      sections[current] ??= [];
-      continue;
-    }
-    sections[current] ??= [];
-    sections[current].push(line);
-  }
-  return sections;
-}
-
-function candidateName(lines: string[]) {
-  for (const line of lines.slice(0, 8)) {
-    if (line.includes("@") || /\d{4}/.test(line) || line.length > 80) continue;
-    const words = line.split(/\s+/);
-    if (words.length >= 2 && words.length <= 6 && words.every((w) => /[A-Za-zÀ-ÿ]/.test(w))) {
-      return evidence(line, "MEDIUM", line, true);
-    }
-  }
-  return null;
-}
-
-export function buildDraft(text: string) {
-  const sections = splitSections(text);
-  const emails = uniqueMatches(text, EMAIL_RE, 1);
-  const phones = uniqueMatches(text, PHONE_RE);
-  const linkedin = uniqueMatches(text, LINKEDIN_RE);
-  const urls = uniqueMatches(text, URL_RE).filter((u) => !u.toLocaleLowerCase("pt-BR").includes("linkedin.com/in/"));
-
-  const draft: Record<string, unknown> = {
-    name: candidateName(sections.cabecalho ?? []),
-    emails: emails.slice(0, 5).map((v) => evidence(v, "HIGH", safeExcerpt(text, v))),
-    phones: phones.slice(0, 5).map((v) => evidence(v, "HIGH", safeExcerpt(text, v))),
-    linkedin: linkedin.slice(0, 5).map((v) => evidence(v, "HIGH", safeExcerpt(text, v))),
-    links: urls.slice(0, 10).map((v) => evidence(v, "HIGH", safeExcerpt(text, v))),
-    summary: null,
-    experience_evidence: [],
-    education_evidence: [],
-    skills_evidence: [],
-    languages_evidence: [],
-    certifications_evidence: [],
-    requires_user_confirmation: true,
-  };
-
-  const summary = sections.resumo ?? [];
-  if (summary.length) {
-    const value = summary.slice(0, 12).join("\n");
-    draft.summary = evidence(value, "HIGH", value, false);
-  }
-
-  const mappings: Array<[string, string]> = [
-    ["experiencia", "experience_evidence"],
-    ["formacao", "education_evidence"],
-    ["competencias", "skills_evidence"],
-    ["idiomas", "languages_evidence"],
-    ["certificacoes", "certifications_evidence"],
-  ];
-  for (const [section, target] of mappings) {
-    draft[target] = (sections[section] ?? []).slice(0, 80).map((line) => evidence(line, "MEDIUM", line, false));
-  }
-  return draft;
-}
-
-export async function extractAndDraft(bytes: Uint8Array, detectedType: "pdf" | "docx") {
-  if (bytes.length <= 0) throw new ParseError("EMPTY_FILE", "O arquivo está vazio.");
-  if (bytes.length > MAX_FILE_BYTES) throw new ParseError("FILE_TOO_LARGE", "O arquivo excede o limite do Beta 1.0.");
-
-  let text: string;
-  if (detectedType === "pdf") {
-    if (!(bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46 && bytes[4] === 0x2d)) {
-      throw new ParseError("TYPE_MISMATCH", "A assinatura PDF não corresponde ao arquivo.");
-    }
-    text = await extractPdfText(bytes);
-  } else {
-    if (!(bytes[0] === 0x50 && bytes[1] === 0x4b)) throw new ParseError("TYPE_MISMATCH", "A assinatura DOCX não corresponde ao arquivo.");
-    text = await extractDocxText(bytes);
-  }
-
-  return { text, draft: buildDraft(text) };
-}
+export async function extractAndDraft(bytes:Uint8Array,type:"pdf"|"docx"){if(bytes.length<=0)throw new ParseError("EMPTY_FILE","Arquivo vazio.");if(bytes.length>MAX_FILE_BYTES)throw new ParseError("FILE_TOO_LARGE","Arquivo acima de 10 MB.");let text:string;if(type==="pdf"){if(!(bytes[0]===0x25&&bytes[1]===0x50&&bytes[2]===0x44&&bytes[3]===0x46&&bytes[4]===0x2d))throw new ParseError("TYPE_MISMATCH","Assinatura PDF inválida.");text=await pdfText(bytes)}else{if(!(bytes[0]===0x50&&bytes[1]===0x4b))throw new ParseError("TYPE_MISMATCH","Assinatura DOCX inválida.");text=await docxText(bytes)}const r=buildDraft(text);return{text,draft:r.draft,quality:r.quality}}
