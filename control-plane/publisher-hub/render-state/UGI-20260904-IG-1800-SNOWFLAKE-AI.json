@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260904021739-4fc5c7eb31fe",
   "approvalDraftId": "ugi-20260904021739-4fc5c7eb31fe",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-04T02:18:22.033425+00:00"
+  "updatedAt": "2026-09-04T02:32:13.699398+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260904021739-4fc5c7eb31fe",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33829021761",
+    "githubRunNumber": 214,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-04T02:18:18Z",
+    "githubRunUpdatedAt": "2026-09-04T02:18:18Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33829021761",
+    "githubRunDisplayTitle": "UGI ugi-20260904021739-4fc5c7eb31fe",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "09090bc394a7bd73adf4c92e0585f0451fcfce50",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "IA vira estratégia quando aparece em uso, receita ou eficiência",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021739-4fc5c7eb31fe/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021739-4fc5c7eb31fe%2Finstagram.mp4",
+        "videoBytes": 12743993,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33829021761",
+        "r2Etag": "022190c3febd5b2d14c3fa178698624d",
+        "uploadedAt": "2026-09-04T02:24:30.811Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021739-4fc5c7eb31fe/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021739-4fc5c7eb31fe%2Ftiktok.mp4",
+        "videoBytes": 9663966,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33829021761",
+        "r2Etag": "a7d9f813c0b18beea4f15892d376ed91",
+        "uploadedAt": "2026-09-04T02:24:34.651Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021739-4fc5c7eb31fe/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021739-4fc5c7eb31fe%2Fyoutube.mp4",
+        "videoBytes": 14339990,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33829021761",
+        "r2Etag": "d986ad826af91ea211441c5a636b8548",
+        "uploadedAt": "2026-09-04T02:24:38.148Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021739-4fc5c7eb31fe%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260904021739-4fc5c7eb31fe/instagram.mp4",
+    "approvalDraftId": "ugi-20260904021739-4fc5c7eb31fe",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+    "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+    "variant": "GENERAL_WORLD",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "story_video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "story_video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-04T02:24:41.850Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "1adb04719f5e5fbedde14e0c994280ea5319b72e8b206116229be8d7749aa725",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-04T02:18:18.955Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260904021739-4fc5c7eb31fe",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 12743993,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-04T02:24:38.148Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260904021739-4fc5c7eb31fe",
+      "githubRunId": "33829021761",
+      "contentId": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+      "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+      "variant": "GENERAL_WORLD",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "cloud data technology business",
+          "pexels_query": "cloud data technology business",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "IA vira estratégia quando aparece em uso, receita ou eficiência",
+            "tiktok": "IA vira estratégia quando aparece em uso, receita ou eficiência",
+            "youtube": "IA vira estratégia quando aparece em uso, receita ou eficiência"
+          },
+          "narration": {
+            "instagram": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso.",
+            "tiktok": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso.",
+            "youtube": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "enterprise AI data team",
+          "pexels_query": "enterprise AI data team",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento.",
+            "tiktok": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento.",
+            "youtube": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "software usage analytics team",
+          "pexels_query": "software usage analytics team",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico.",
+            "tiktok": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico.",
+            "youtube": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "executive technology metrics",
+          "pexels_query": "executive technology metrics",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico.",
+            "tiktok": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico.",
+            "youtube": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "team measuring AI adoption",
+          "pexels_query": "team measuring AI adoption",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA.",
+            "tiktok": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA.",
+            "youtube": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "modern cloud office closing",
+          "pexels_query": "modern cloud office closing",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+            "tiktok": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+            "youtube": "Sua IA já aparece em uso real ou ainda só em roadmap?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "IA vira estratégia quando aparece em uso, receita ou eficiência",
+            "tiktok": "IA vira estratégia quando aparece em uso, receita ou eficiência",
+            "youtube": "IA vira estratégia quando aparece em uso, receita ou eficiência"
+          },
+          "narration": {
+            "instagram": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso.",
+            "tiktok": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso.",
+            "youtube": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento.",
+            "tiktok": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento.",
+            "youtube": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico.",
+            "tiktok": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico.",
+            "youtube": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico.",
+            "tiktok": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico.",
+            "youtube": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA.",
+            "tiktok": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA.",
+            "youtube": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+            "tiktok": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+            "youtube": "Sua IA já aparece em uso real ou ainda só em roadmap?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "1adb04719f5e5fbedde14e0c994280ea5319b72e8b206116229be8d7749aa725",
+      "canonicalPayloadSha256": "e756a2c64928b03b091c7dc266190bd29c4e01656e7ba6922b53408bddba45c1",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+      "finalCtaByPlatform": {
+        "instagram": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+        "tiktok": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+        "youtube": "Sua IA já aparece em uso real ou ainda só em roadmap?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "story_video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "story_video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "cloud data technology business",
+        "provider_video_id": 7252716,
+        "provider_page_url": "https://www.pexels.com/video/people-discussing-chart-on-computer-screen-7252716/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "enterprise AI data team",
+        "provider_video_id": 8124266,
+        "provider_page_url": "https://www.pexels.com/video/business-man-explaining-the-writings-on-the-board-during-the-meeting-8124266/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "software usage analytics team",
+        "provider_video_id": 38901947,
+        "provider_page_url": "https://www.pexels.com/video/tech-project-management-on-tablet-38901947/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "executive technology metrics",
+        "provider_video_id": 38455184,
+        "provider_page_url": "https://www.pexels.com/video/digital-bar-chart-analysis-on-tablet-38455184/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "team measuring AI adoption",
+        "provider_video_id": 7475022,
+        "provider_page_url": "https://www.pexels.com/video/person-love-hand-blue-7475022/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "modern cloud office closing",
+        "provider_video_id": 38993329,
+        "provider_page_url": "https://www.pexels.com/video/coding-at-home-office-on-mechanical-keyboard-38993329/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+    "updatedAt": "2026-09-04T02:24:41.850Z"
+  }
 }

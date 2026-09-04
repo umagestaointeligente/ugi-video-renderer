@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260904021346-40d5655f05d9",
   "approvalDraftId": "ugi-20260904021346-40d5655f05d9",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-04T02:14:39.669306+00:00"
+  "updatedAt": "2026-09-04T02:32:12.400907+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260904021346-40d5655f05d9",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33828783590",
+    "githubRunNumber": 209,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-04T02:14:33Z",
+    "githubRunUpdatedAt": "2026-09-04T02:14:33Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33828783590",
+    "githubRunDisplayTitle": "UGI ugi-20260904021346-40d5655f05d9",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "09090bc394a7bd73adf4c92e0585f0451fcfce50",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Um sinal interessante não é uma conclusão",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021346-40d5655f05d9/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021346-40d5655f05d9%2Finstagram.mp4",
+        "videoBytes": 13350879,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33828783590",
+        "r2Etag": "887294b3379b0709c968ce5a46098c0f",
+        "uploadedAt": "2026-09-04T02:21:46.744Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021346-40d5655f05d9/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021346-40d5655f05d9%2Ftiktok.mp4",
+        "videoBytes": 10175163,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33828783590",
+        "r2Etag": "16f1cdfb6c63d16b264df43c71fa93c0",
+        "uploadedAt": "2026-09-04T02:21:48.816Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021346-40d5655f05d9/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021346-40d5655f05d9%2Fyoutube.mp4",
+        "videoBytes": 15041493,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33828783590",
+        "r2Etag": "69546370edf9034a54be79b810de95e2",
+        "uploadedAt": "2026-09-04T02:21:50.924Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021346-40d5655f05d9%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260904021346-40d5655f05d9/instagram.mp4",
+    "approvalDraftId": "ugi-20260904021346-40d5655f05d9",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
+    "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+    "variant": "GENERAL_WORLD",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "story_video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "story_video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-04T02:21:53.501Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "9f37d6b37e3a36e932e2249e5fbdbc085d9e72c0f539ea5078426cb753a48fbf",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-04T02:14:33.373Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260904021346-40d5655f05d9",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 13350879,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-04T02:21:50.924Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260904021346-40d5655f05d9",
+      "githubRunId": "33828783590",
+      "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
+      "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+      "variant": "GENERAL_WORLD",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "physics laboratory experiment scientists",
+          "pexels_query": "physics laboratory experiment scientists",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Um sinal interessante não é uma conclusão",
+            "tiktok": "Um sinal interessante não é uma conclusão",
+            "youtube": "Um sinal interessante não é uma conclusão"
+          },
+          "narration": {
+            "instagram": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta.",
+            "tiktok": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta.",
+            "youtube": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "scientists reviewing detector data",
+          "pexels_query": "scientists reviewing detector data",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "LZ Collaboration / Reuters, 01 set 2026",
+            "tiktok": "LZ Collaboration / Reuters, 01 set 2026",
+            "youtube": "LZ Collaboration / Reuters, 01 set 2026"
+          },
+          "narration": {
+            "instagram": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados.",
+            "tiktok": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados.",
+            "youtube": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "research team uncertainty analysis",
+          "pexels_query": "research team uncertainty analysis",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva.",
+            "tiktok": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva.",
+            "youtube": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "manager evaluating evidence decision",
+          "pexels_query": "manager evaluating evidence decision",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta.",
+            "tiktok": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta.",
+            "youtube": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "team planning next experiment",
+          "pexels_query": "team planning next experiment",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final.",
+            "tiktok": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final.",
+            "youtube": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "modern science technology closing",
+          "pexels_query": "modern science technology closing",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "LZ Collaboration / Reuters, 01 set 2026",
+            "tiktok": "LZ Collaboration / Reuters, 01 set 2026",
+            "youtube": "LZ Collaboration / Reuters, 01 set 2026"
+          },
+          "narration": {
+            "instagram": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+            "tiktok": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+            "youtube": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Um sinal interessante não é uma conclusão",
+            "tiktok": "Um sinal interessante não é uma conclusão",
+            "youtube": "Um sinal interessante não é uma conclusão"
+          },
+          "narration": {
+            "instagram": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta.",
+            "tiktok": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta.",
+            "youtube": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "LZ Collaboration / Reuters, 01 set 2026",
+            "tiktok": "LZ Collaboration / Reuters, 01 set 2026",
+            "youtube": "LZ Collaboration / Reuters, 01 set 2026"
+          },
+          "narration": {
+            "instagram": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados.",
+            "tiktok": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados.",
+            "youtube": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva.",
+            "tiktok": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva.",
+            "youtube": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta.",
+            "tiktok": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta.",
+            "youtube": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final.",
+            "tiktok": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final.",
+            "youtube": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "LZ Collaboration / Reuters, 01 set 2026",
+            "tiktok": "LZ Collaboration / Reuters, 01 set 2026",
+            "youtube": "LZ Collaboration / Reuters, 01 set 2026"
+          },
+          "narration": {
+            "instagram": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+            "tiktok": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+            "youtube": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "9f37d6b37e3a36e932e2249e5fbdbc085d9e72c0f539ea5078426cb753a48fbf",
+      "canonicalPayloadSha256": "aaac1f92cb0acefac6d0fe5c56a26ce5d695e3eb3941b1ce07f2a8971795b607",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+      "finalCtaByPlatform": {
+        "instagram": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+        "tiktok": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+        "youtube": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "story_video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "story_video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "physics laboratory experiment scientists",
+        "provider_video_id": 8514757,
+        "provider_page_url": "https://www.pexels.com/video/woman-writing-on-glass-8514757/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "scientists reviewing detector data",
+        "provider_video_id": 8539785,
+        "provider_page_url": "https://www.pexels.com/video/female-scientists-working-in-a-lab-8539785/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "research team uncertainty analysis",
+        "provider_video_id": 8381711,
+        "provider_page_url": "https://www.pexels.com/video/man-and-woman-looking-at-a-document-8381711/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "manager evaluating evidence decision",
+        "provider_video_id": 5438973,
+        "provider_page_url": "https://www.pexels.com/video/young-man-in-job-interview-5438973/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "team planning next experiment",
+        "provider_video_id": 38902001,
+        "provider_page_url": "https://www.pexels.com/video/efficient-task-management-on-digital-device-38902001/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "modern science technology closing",
+        "provider_video_id": 8875569,
+        "provider_page_url": "https://www.pexels.com/video/a-man-under-observation-8875569/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+    "updatedAt": "2026-09-04T02:21:53.501Z"
+  }
 }

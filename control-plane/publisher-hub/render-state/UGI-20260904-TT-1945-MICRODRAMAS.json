@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260904-TT-1945-MICRODRAMAS",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260904021902-e92b9d5e738d",
   "approvalDraftId": "ugi-20260904021902-e92b9d5e738d",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-04T02:19:45.430865+00:00"
+  "updatedAt": "2026-09-04T02:32:14.264645+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260904021902-e92b9d5e738d",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33829104177",
+    "githubRunNumber": 216,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-04T02:19:41Z",
+    "githubRunUpdatedAt": "2026-09-04T02:19:41Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33829104177",
+    "githubRunDisplayTitle": "UGI ugi-20260904021902-e92b9d5e738d",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "09090bc394a7bd73adf4c92e0585f0451fcfce50",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Quando vídeo curto deixa de ser formato e vira modelo de negócio",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021902-e92b9d5e738d/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021902-e92b9d5e738d%2Finstagram.mp4",
+        "videoBytes": 15082254,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33829104177",
+        "r2Etag": "023f3c0e9c891ccfe6d59667974b2036",
+        "uploadedAt": "2026-09-04T02:27:09.716Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021902-e92b9d5e738d/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021902-e92b9d5e738d%2Ftiktok.mp4",
+        "videoBytes": 11689846,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33829104177",
+        "r2Etag": "0281229a3f330b469f147a7be171529e",
+        "uploadedAt": "2026-09-04T02:27:12.146Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021902-e92b9d5e738d/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021902-e92b9d5e738d%2Fyoutube.mp4",
+        "videoBytes": 17026594,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33829104177",
+        "r2Etag": "ef1d437385384a2c7d3785e23cfa1e9d",
+        "uploadedAt": "2026-09-04T02:27:14.433Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021902-e92b9d5e738d%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260904021902-e92b9d5e738d/instagram.mp4",
+    "approvalDraftId": "ugi-20260904021902-e92b9d5e738d",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260904-TT-1945-MICRODRAMAS",
+    "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+    "variant": "GENERAL_WORLD",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-04T02:27:16.266Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "ff0be546a32971b84dad85efe336dee243dc72c9a7f9f238b9831c4fbe2ae38a",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-04T02:19:41.989Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260904021902-e92b9d5e738d",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 15082254,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-04T02:27:14.433Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260904021902-e92b9d5e738d",
+      "githubRunId": "33829104177",
+      "contentId": "UGI-20260904-TT-1945-MICRODRAMAS",
+      "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+      "variant": "GENERAL_WORLD",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "vertical video smartphone entertainment",
+          "pexels_query": "vertical video smartphone entertainment",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Quando vídeo curto deixa de ser formato e vira modelo de negócio",
+            "tiktok": "Quando vídeo curto deixa de ser formato e vira modelo de negócio",
+            "youtube": "Quando vídeo curto deixa de ser formato e vira modelo de negócio"
+          },
+          "narration": {
+            "instagram": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros.",
+            "tiktok": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros.",
+            "youtube": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "short form series mobile viewing",
+          "pexels_query": "short form series mobile viewing",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular.",
+            "tiktok": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular.",
+            "youtube": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "content production mobile studio",
+          "pexels_query": "content production mobile studio",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica.",
+            "tiktok": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica.",
+            "youtube": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "media business product planning",
+          "pexels_query": "media business product planning",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo.",
+            "tiktok": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo.",
+            "youtube": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "mobile audience retention strategy",
+          "pexels_query": "mobile audience retention strategy",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela.",
+            "tiktok": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela.",
+            "youtube": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "creator economy closing",
+          "pexels_query": "creator economy closing",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Qual hábito novo do seu cliente já pede um produto diferente?",
+            "tiktok": "Qual hábito novo do seu cliente já pede um produto diferente?",
+            "youtube": "Qual hábito novo do seu cliente já pede um produto diferente?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Quando vídeo curto deixa de ser formato e vira modelo de negócio",
+            "tiktok": "Quando vídeo curto deixa de ser formato e vira modelo de negócio",
+            "youtube": "Quando vídeo curto deixa de ser formato e vira modelo de negócio"
+          },
+          "narration": {
+            "instagram": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros.",
+            "tiktok": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros.",
+            "youtube": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular.",
+            "tiktok": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular.",
+            "youtube": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica.",
+            "tiktok": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica.",
+            "youtube": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo.",
+            "tiktok": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo.",
+            "youtube": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela.",
+            "tiktok": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela.",
+            "youtube": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Qual hábito novo do seu cliente já pede um produto diferente?",
+            "tiktok": "Qual hábito novo do seu cliente já pede um produto diferente?",
+            "youtube": "Qual hábito novo do seu cliente já pede um produto diferente?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "ff0be546a32971b84dad85efe336dee243dc72c9a7f9f238b9831c4fbe2ae38a",
+      "canonicalPayloadSha256": "55e056faceb5f27dc86e78a391e1359c511cb7181ba7d679344a14fb618fb059",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Qual hábito novo do seu cliente já pede um produto diferente?",
+      "finalCtaByPlatform": {
+        "instagram": "Qual hábito novo do seu cliente já pede um produto diferente?",
+        "tiktok": "Qual hábito novo do seu cliente já pede um produto diferente?",
+        "youtube": "Qual hábito novo do seu cliente já pede um produto diferente?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "vertical video smartphone entertainment",
+        "provider_video_id": 38410501,
+        "provider_page_url": "https://www.pexels.com/video/scrolling-through-social-media-on-smartphone-38410501/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "short form series mobile viewing",
+        "provider_video_id": 38410502,
+        "provider_page_url": "https://www.pexels.com/video/scrolling-social-media-on-smartphone-screen-38410502/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "content production mobile studio",
+        "provider_video_id": 7677006,
+        "provider_page_url": "https://www.pexels.com/video/woman-recording-a-video-7677006/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "media business product planning",
+        "provider_video_id": 6962511,
+        "provider_page_url": "https://www.pexels.com/video/a-brown-papers-with-printed-text-6962511/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "mobile audience retention strategy",
+        "provider_video_id": 8041860,
+        "provider_page_url": "https://www.pexels.com/video/a-person-recording-a-video-of-a-band-8041860/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "creator economy closing",
+        "provider_video_id": 12433212,
+        "provider_page_url": "https://www.pexels.com/video/a-fashion-blogger-recording-a-video-while-showing-a-white-t-shirt-12433212/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Qual hábito novo do seu cliente já pede um produto diferente?",
+    "updatedAt": "2026-09-04T02:27:16.266Z"
+  }
 }

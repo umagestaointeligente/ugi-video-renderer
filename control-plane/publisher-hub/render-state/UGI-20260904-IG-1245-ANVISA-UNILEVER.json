@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260904-IG-1245-ANVISA-UNILEVER",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260904021611-fe96e6d89c24",
   "approvalDraftId": "ugi-20260904021611-fe96e6d89c24",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-04T02:16:56.783806+00:00"
+  "updatedAt": "2026-09-04T02:32:13.168934+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260904021611-fe96e6d89c24",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33828930730",
+    "githubRunNumber": 212,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-04T02:16:51Z",
+    "githubRunUpdatedAt": "2026-09-04T02:16:51Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33828930730",
+    "githubRunDisplayTitle": "UGI ugi-20260904021611-fe96e6d89c24",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "09090bc394a7bd73adf4c92e0585f0451fcfce50",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Quando qualidade e compliance viram capacidade operacional",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021611-fe96e6d89c24/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021611-fe96e6d89c24%2Finstagram.mp4",
+        "videoBytes": 16250103,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33828930730",
+        "r2Etag": "7d2712f5df23bf7262f6a012fcfa9916",
+        "uploadedAt": "2026-09-04T02:24:47.830Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021611-fe96e6d89c24/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021611-fe96e6d89c24%2Ftiktok.mp4",
+        "videoBytes": 12205884,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33828930730",
+        "r2Etag": "5d8bb4bf825ec8016d6a4808c8a15c94",
+        "uploadedAt": "2026-09-04T02:24:50.619Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021611-fe96e6d89c24/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021611-fe96e6d89c24%2Fyoutube.mp4",
+        "videoBytes": 18018247,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33828930730",
+        "r2Etag": "b5a3f8e1af220e37c19953d17821fcff",
+        "uploadedAt": "2026-09-04T02:24:53.422Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021611-fe96e6d89c24%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260904021611-fe96e6d89c24/instagram.mp4",
+    "approvalDraftId": "ugi-20260904021611-fe96e6d89c24",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260904-IG-1245-ANVISA-UNILEVER",
+    "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+    "variant": "GENERAL_WORLD",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-04T02:24:55.918Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "a1fb2637ea9e0f30edd389685d9172cdf058c1ae47c11e70715d6e50bb49b070",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-04T02:16:51.560Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260904021611-fe96e6d89c24",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 16250103,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-04T02:24:53.422Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260904021611-fe96e6d89c24",
+      "githubRunId": "33828930730",
+      "contentId": "UGI-20260904-IG-1245-ANVISA-UNILEVER",
+      "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+      "variant": "GENERAL_WORLD",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "factory quality inspection cleaning products",
+          "pexels_query": "factory quality inspection cleaning products",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Quando qualidade e compliance viram capacidade operacional",
+            "tiktok": "Quando qualidade e compliance viram capacidade operacional",
+            "youtube": "Quando qualidade e compliance viram capacidade operacional"
+          },
+          "narration": {
+            "instagram": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas.",
+            "tiktok": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas.",
+            "youtube": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "manufacturing compliance inspection",
+          "pexels_query": "manufacturing compliance inspection",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Anvisa, 02 set 2026",
+            "tiktok": "Anvisa, 02 set 2026",
+            "youtube": "Anvisa, 02 set 2026"
+          },
+          "narration": {
+            "instagram": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado.",
+            "tiktok": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado.",
+            "youtube": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "production line quality control",
+          "pexels_query": "production line quality control",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço.",
+            "tiktok": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço.",
+            "youtube": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "operations manager compliance planning",
+          "pexels_query": "operations manager compliance planning",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar.",
+            "tiktok": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar.",
+            "youtube": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "factory continuity risk team",
+          "pexels_query": "factory continuity risk team",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade.",
+            "tiktok": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade.",
+            "youtube": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "industrial management closing",
+          "pexels_query": "industrial management closing",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Anvisa, 02 set 2026",
+            "tiktok": "Anvisa, 02 set 2026",
+            "youtube": "Anvisa, 02 set 2026"
+          },
+          "narration": {
+            "instagram": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+            "tiktok": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+            "youtube": "Na sua operação, qual requisito pode virar gargalo de capacidade?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Quando qualidade e compliance viram capacidade operacional",
+            "tiktok": "Quando qualidade e compliance viram capacidade operacional",
+            "youtube": "Quando qualidade e compliance viram capacidade operacional"
+          },
+          "narration": {
+            "instagram": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas.",
+            "tiktok": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas.",
+            "youtube": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Anvisa, 02 set 2026",
+            "tiktok": "Anvisa, 02 set 2026",
+            "youtube": "Anvisa, 02 set 2026"
+          },
+          "narration": {
+            "instagram": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado.",
+            "tiktok": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado.",
+            "youtube": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço.",
+            "tiktok": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço.",
+            "youtube": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar.",
+            "tiktok": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar.",
+            "youtube": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade.",
+            "tiktok": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade.",
+            "youtube": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Anvisa, 02 set 2026",
+            "tiktok": "Anvisa, 02 set 2026",
+            "youtube": "Anvisa, 02 set 2026"
+          },
+          "narration": {
+            "instagram": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+            "tiktok": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+            "youtube": "Na sua operação, qual requisito pode virar gargalo de capacidade?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "a1fb2637ea9e0f30edd389685d9172cdf058c1ae47c11e70715d6e50bb49b070",
+      "canonicalPayloadSha256": "598d932965c372fbb96c6ef2ee13217a285c3c2512bfc54b57164410aad4cd52",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+      "finalCtaByPlatform": {
+        "instagram": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+        "tiktok": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+        "youtube": "Na sua operação, qual requisito pode virar gargalo de capacidade?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "factory quality inspection cleaning products",
+        "provider_video_id": 5930407,
+        "provider_page_url": "https://www.pexels.com/video/a-person-wearing-pink-gloves-5930407/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "manufacturing compliance inspection",
+        "provider_video_id": 7817165,
+        "provider_page_url": "https://www.pexels.com/video/woman-wearing-safety-work-helmet-while-writing-7817165/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "production line quality control",
+        "provider_video_id": 32953313,
+        "provider_page_url": "https://www.pexels.com/video/automated-lime-sorting-process-in-factory-32953313/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "operations manager compliance planning",
+        "provider_video_id": 5981905,
+        "provider_page_url": "https://www.pexels.com/video/schedules-and-goals-written-on-the-office-whiteboard-5981905/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "factory continuity risk team",
+        "provider_video_id": 38852130,
+        "provider_page_url": "https://www.pexels.com/video/high-tech-textile-production-line-in-action-38852130/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "industrial management closing",
+        "provider_video_id": 8482307,
+        "provider_page_url": "https://www.pexels.com/video/people-using-laptop-while-talking-8482307/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+    "updatedAt": "2026-09-04T02:24:55.918Z"
+  }
 }

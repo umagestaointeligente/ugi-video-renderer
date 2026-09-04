@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260904-IG-1915-LULULEMON",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260904021822-5e213b14150d",
   "approvalDraftId": "ugi-20260904021822-5e213b14150d",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-04T02:19:02.534594+00:00"
+  "updatedAt": "2026-09-04T02:32:14.036976+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260904021822-5e213b14150d",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33829058803",
+    "githubRunNumber": 215,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-04T02:18:57Z",
+    "githubRunUpdatedAt": "2026-09-04T02:18:57Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33829058803",
+    "githubRunDisplayTitle": "UGI ugi-20260904021822-5e213b14150d",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "09090bc394a7bd73adf4c92e0585f0451fcfce50",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Quando uma marca premium perde novidade",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021822-5e213b14150d/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021822-5e213b14150d%2Finstagram.mp4",
+        "videoBytes": 14399255,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33829058803",
+        "r2Etag": "80df8bda88c2e180c4fad13ac7d58df2",
+        "uploadedAt": "2026-09-04T02:27:21.532Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021822-5e213b14150d/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021822-5e213b14150d%2Ftiktok.mp4",
+        "videoBytes": 10920418,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33829058803",
+        "r2Etag": "0bf5081e5cfb3fa28c35622ae3c2010a",
+        "uploadedAt": "2026-09-04T02:27:25.436Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021822-5e213b14150d/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021822-5e213b14150d%2Fyoutube.mp4",
+        "videoBytes": 16200522,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33829058803",
+        "r2Etag": "95a4f93748a366d66e1a51287f8d48eb",
+        "uploadedAt": "2026-09-04T02:27:28.817Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021822-5e213b14150d%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260904021822-5e213b14150d/instagram.mp4",
+    "approvalDraftId": "ugi-20260904021822-5e213b14150d",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260904-IG-1915-LULULEMON",
+    "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+    "variant": "GENERAL_WORLD",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "reel",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-04T02:27:32.490Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "fdd3f9a98276fa3c8f691e5ad30b5b770095c89dcba5c2289b258e9af61eecd7",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-04T02:18:57.446Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260904021822-5e213b14150d",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 14399255,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-04T02:27:28.817Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260904021822-5e213b14150d",
+      "githubRunId": "33829058803",
+      "contentId": "UGI-20260904-IG-1915-LULULEMON",
+      "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+      "variant": "GENERAL_WORLD",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "premium activewear retail store",
+          "pexels_query": "premium activewear retail store",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Quando uma marca premium perde novidade",
+            "tiktok": "Quando uma marca premium perde novidade",
+            "youtube": "Quando uma marca premium perde novidade"
+          },
+          "narration": {
+            "instagram": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade.",
+            "tiktok": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade.",
+            "youtube": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "fashion retail product assortment",
+          "pexels_query": "fashion retail product assortment",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio.",
+            "tiktok": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio.",
+            "youtube": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "premium brand customer shopping",
+          "pexels_query": "premium brand customer shopping",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação.",
+            "tiktok": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação.",
+            "youtube": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "product innovation merchandising team",
+          "pexels_query": "product innovation merchandising team",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento.",
+            "tiktok": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento.",
+            "youtube": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "retail discount strategy planning",
+          "pexels_query": "retail discount strategy planning",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção.",
+            "tiktok": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção.",
+            "youtube": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "fashion business closing",
+          "pexels_query": "fashion business closing",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Sua marca está vendendo valor novo ou apenas preço menor?",
+            "tiktok": "Sua marca está vendendo valor novo ou apenas preço menor?",
+            "youtube": "Sua marca está vendendo valor novo ou apenas preço menor?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Quando uma marca premium perde novidade",
+            "tiktok": "Quando uma marca premium perde novidade",
+            "youtube": "Quando uma marca premium perde novidade"
+          },
+          "narration": {
+            "instagram": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade.",
+            "tiktok": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade.",
+            "youtube": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio.",
+            "tiktok": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio.",
+            "youtube": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação.",
+            "tiktok": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação.",
+            "youtube": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento.",
+            "tiktok": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento.",
+            "youtube": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção.",
+            "tiktok": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção.",
+            "youtube": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Sua marca está vendendo valor novo ou apenas preço menor?",
+            "tiktok": "Sua marca está vendendo valor novo ou apenas preço menor?",
+            "youtube": "Sua marca está vendendo valor novo ou apenas preço menor?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "fdd3f9a98276fa3c8f691e5ad30b5b770095c89dcba5c2289b258e9af61eecd7",
+      "canonicalPayloadSha256": "cb90fae61b298968a6958cfd512c4757d62f0164c8c5eb187002e1a6a178758e",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Sua marca está vendendo valor novo ou apenas preço menor?",
+      "finalCtaByPlatform": {
+        "instagram": "Sua marca está vendendo valor novo ou apenas preço menor?",
+        "tiktok": "Sua marca está vendendo valor novo ou apenas preço menor?",
+        "youtube": "Sua marca está vendendo valor novo ou apenas preço menor?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "reel",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "premium activewear retail store",
+        "provider_video_id": 31059559,
+        "provider_page_url": "https://www.pexels.com/video/aerial-view-of-shopping-mall-in-orlando-31059559/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "fashion retail product assortment",
+        "provider_video_id": 8306458,
+        "provider_page_url": "https://www.pexels.com/video/a-woman-touching-clothes-at-a-store-8306458/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "premium brand customer shopping",
+        "provider_video_id": 9595330,
+        "provider_page_url": "https://www.pexels.com/video/a-salesperson-handing-shopping-bags-to-a-customer-9595330/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "product innovation merchandising team",
+        "provider_video_id": 7688133,
+        "provider_page_url": "https://www.pexels.com/video/employees-brainstorming-7688133/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "retail discount strategy planning",
+        "provider_video_id": 5924991,
+        "provider_page_url": "https://www.pexels.com/video/video-of-miniature-shopping-carts-5924991/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "fashion business closing",
+        "provider_video_id": 7316981,
+        "provider_page_url": "https://www.pexels.com/video/person-holding-a-white-paper-bag-7316981/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Sua marca está vendendo valor novo ou apenas preço menor?",
+    "updatedAt": "2026-09-04T02:27:32.490Z"
+  }
 }

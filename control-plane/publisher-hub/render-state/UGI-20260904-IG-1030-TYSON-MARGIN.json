@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260904021439-a82118ed6b7e",
   "approvalDraftId": "ugi-20260904021439-a82118ed6b7e",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-04T02:15:25.820691+00:00"
+  "updatedAt": "2026-09-04T02:32:12.697499+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260904021439-a82118ed6b7e",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33828834224",
+    "githubRunNumber": 210,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-04T02:15:20Z",
+    "githubRunUpdatedAt": "2026-09-04T02:15:20Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33828834224",
+    "githubRunDisplayTitle": "UGI Reel Renderer R43.8.6 Correlated Dynamic Scenes + Semantic Callback",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "09090bc394a7bd73adf4c92e0585f0451fcfce50",
+    "githubCorrelationMethod": "legacy_unique_temporal_window",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Preço recorde não significa margem recorde",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021439-a82118ed6b7e/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021439-a82118ed6b7e%2Finstagram.mp4",
+        "videoBytes": 18223333,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33828834224",
+        "r2Etag": "eee7ae3d46bf271756290e938697f185",
+        "uploadedAt": "2026-09-04T02:22:26.445Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021439-a82118ed6b7e/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021439-a82118ed6b7e%2Ftiktok.mp4",
+        "videoBytes": 13853820,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33828834224",
+        "r2Etag": "9e7a2cda65863da6c434a9495d7812b6",
+        "uploadedAt": "2026-09-04T02:22:28.708Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021439-a82118ed6b7e/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021439-a82118ed6b7e%2Fyoutube.mp4",
+        "videoBytes": 20381874,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33828834224",
+        "r2Etag": "05d019e4f715765de9b005aabd3f36cd",
+        "uploadedAt": "2026-09-04T02:22:31.303Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021439-a82118ed6b7e%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260904021439-a82118ed6b7e/instagram.mp4",
+    "approvalDraftId": "ugi-20260904021439-a82118ed6b7e",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
+    "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+    "variant": "GENERAL_WORLD",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "story_video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "story_video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-04T02:22:33.585Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "21670f7f2d223cc2040a2d1b39708baa766d5ab310fe7da67130e1842aab3100",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-04T02:15:20.239Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260904021439-a82118ed6b7e",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 18223333,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-04T02:22:31.303Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260904021439-a82118ed6b7e",
+      "githubRunId": "33828834224",
+      "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
+      "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+      "variant": "GENERAL_WORLD",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "food production beef supply chain",
+          "pexels_query": "food production beef supply chain",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Preço recorde não significa margem recorde",
+            "tiktok": "Preço recorde não significa margem recorde",
+            "youtube": "Preço recorde não significa margem recorde"
+          },
+          "narration": {
+            "instagram": "A carne pode estar mais cara e, mesmo assim, a margem apertar.",
+            "tiktok": "A carne pode estar mais cara e, mesmo assim, a margem apertar.",
+            "youtube": "A carne pode estar mais cara e, mesmo assim, a margem apertar."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "cattle supply business operations",
+          "pexels_query": "cattle supply business operations",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade.",
+            "tiktok": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade.",
+            "youtube": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "pricing cost margin analysis",
+          "pexels_query": "pricing cost margin analysis",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem.",
+            "tiktok": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem.",
+            "youtube": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "manager reviewing category economics",
+          "pexels_query": "manager reviewing category economics",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume.",
+            "tiktok": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume.",
+            "youtube": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "retail pricing planning team",
+          "pexels_query": "retail pricing planning team",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura.",
+            "tiktok": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura.",
+            "youtube": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "food business closing frame",
+          "pexels_query": "food business closing frame",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+            "tiktok": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+            "youtube": "Na sua categoria, o preço está crescendo mais rápido que a margem?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Preço recorde não significa margem recorde",
+            "tiktok": "Preço recorde não significa margem recorde",
+            "youtube": "Preço recorde não significa margem recorde"
+          },
+          "narration": {
+            "instagram": "A carne pode estar mais cara e, mesmo assim, a margem apertar.",
+            "tiktok": "A carne pode estar mais cara e, mesmo assim, a margem apertar.",
+            "youtube": "A carne pode estar mais cara e, mesmo assim, a margem apertar."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade.",
+            "tiktok": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade.",
+            "youtube": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem.",
+            "tiktok": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem.",
+            "youtube": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume.",
+            "tiktok": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume.",
+            "youtube": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura.",
+            "tiktok": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura.",
+            "youtube": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+            "tiktok": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+            "youtube": "Na sua categoria, o preço está crescendo mais rápido que a margem?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "21670f7f2d223cc2040a2d1b39708baa766d5ab310fe7da67130e1842aab3100",
+      "canonicalPayloadSha256": "5fdaf1ccad8572190521116aaddf0d2ce2a298fb5d6323b16c96158ce7a18328",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+      "finalCtaByPlatform": {
+        "instagram": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+        "tiktok": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+        "youtube": "Na sua categoria, o preço está crescendo mais rápido que a margem?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "story_video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "story_video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "food production beef supply chain",
+        "provider_video_id": 35258750,
+        "provider_page_url": "https://www.pexels.com/video/farm-worker-loading-corn-into-a-truck-35258750/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "cattle supply business operations",
+        "provider_video_id": 10041402,
+        "provider_page_url": "https://www.pexels.com/video/domestic-cattle-feeding-in-farm-10041402/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "pricing cost margin analysis",
+        "provider_video_id": 6120120,
+        "provider_page_url": "https://www.pexels.com/video/a-person-using-magnifying-glass-6120120/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "manager reviewing category economics",
+        "provider_video_id": 38901937,
+        "provider_page_url": "https://www.pexels.com/video/digital-tablet-showing-stock-market-data-insights-38901937/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "retail pricing planning team",
+        "provider_video_id": 37685002,
+        "provider_page_url": "https://www.pexels.com/video/dynamic-cryptocurrency-market-analysis-37685002/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "food business closing frame",
+        "provider_video_id": 5981416,
+        "provider_page_url": "https://www.pexels.com/video/the-word-thank-you-over-a-pink-surface-5981416/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+    "updatedAt": "2026-09-04T02:22:33.585Z"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260904-YT-1630-STATE-OF-PLAY",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260904021656-c3d328666627",
   "approvalDraftId": "ugi-20260904021656-c3d328666627",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-04T02:17:39.768136+00:00"
+  "updatedAt": "2026-09-04T02:32:13.431102+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260904021656-c3d328666627",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33828975626",
+    "githubRunNumber": 213,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-04T02:17:34Z",
+    "githubRunUpdatedAt": "2026-09-04T02:17:34Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33828975626",
+    "githubRunDisplayTitle": "UGI ugi-20260904021656-c3d328666627",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "09090bc394a7bd73adf4c92e0585f0451fcfce50",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Mais de 30 novidades: como lançar sem diluir atenção",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021656-c3d328666627/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021656-c3d328666627%2Finstagram.mp4",
+        "videoBytes": 15506827,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33828975626",
+        "r2Etag": "23b1bd1bc3aa042136b9e5d62c50a73a",
+        "uploadedAt": "2026-09-04T02:24:56.563Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021656-c3d328666627/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021656-c3d328666627%2Ftiktok.mp4",
+        "videoBytes": 11373676,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33828975626",
+        "r2Etag": "f0a902bba38d252b975be5669ba8c789",
+        "uploadedAt": "2026-09-04T02:24:58.643Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021656-c3d328666627/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021656-c3d328666627%2Fyoutube.mp4",
+        "videoBytes": 17409819,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33828975626",
+        "r2Etag": "0e59929ca8fe38f6c5bad8f0802f11e3",
+        "uploadedAt": "2026-09-04T02:25:00.664Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021656-c3d328666627%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260904021656-c3d328666627/instagram.mp4",
+    "approvalDraftId": "ugi-20260904021656-c3d328666627",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260904-YT-1630-STATE-OF-PLAY",
+    "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+    "variant": "GENERAL_WORLD",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-04T02:25:02.731Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "44fe617c5f68353ffd9d234a34e09a985a07c6fb2e85fbfd19e691e53f720328",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-04T02:17:35.090Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260904021656-c3d328666627",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 15506827,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-04T02:25:00.664Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260904021656-c3d328666627",
+      "githubRunId": "33828975626",
+      "contentId": "UGI-20260904-YT-1630-STATE-OF-PLAY",
+      "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+      "variant": "GENERAL_WORLD",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "video game presentation audience",
+          "pexels_query": "video game presentation audience",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Mais de 30 novidades: como lançar sem diluir atenção",
+            "tiktok": "Mais de 30 novidades: como lançar sem diluir atenção",
+            "youtube": "Mais de 30 novidades: como lançar sem diluir atenção"
+          },
+          "narration": {
+            "instagram": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada.",
+            "tiktok": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada.",
+            "youtube": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "gaming launch event screens",
+          "pexels_query": "gaming launch event screens",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "PlayStation Blog, 03 set 2026",
+            "tiktok": "PlayStation Blog, 03 set 2026",
+            "youtube": "PlayStation Blog, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio.",
+            "tiktok": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio.",
+            "youtube": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "product portfolio launch planning",
+          "pexels_query": "product portfolio launch planning",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória.",
+            "tiktok": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória.",
+            "youtube": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "marketing team launch sequencing",
+          "pexels_query": "marketing team launch sequencing",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela.",
+            "tiktok": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela.",
+            "youtube": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "product roadmap prioritization",
+          "pexels_query": "product roadmap prioritization",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção.",
+            "tiktok": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção.",
+            "youtube": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "gaming business closing",
+          "pexels_query": "gaming business closing",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "PlayStation Blog, 03 set 2026",
+            "tiktok": "PlayStation Blog, 03 set 2026",
+            "youtube": "PlayStation Blog, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Seu portfólio tem prioridades ou só datas?",
+            "tiktok": "Seu portfólio tem prioridades ou só datas?",
+            "youtube": "Seu portfólio tem prioridades ou só datas?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Mais de 30 novidades: como lançar sem diluir atenção",
+            "tiktok": "Mais de 30 novidades: como lançar sem diluir atenção",
+            "youtube": "Mais de 30 novidades: como lançar sem diluir atenção"
+          },
+          "narration": {
+            "instagram": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada.",
+            "tiktok": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada.",
+            "youtube": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "PlayStation Blog, 03 set 2026",
+            "tiktok": "PlayStation Blog, 03 set 2026",
+            "youtube": "PlayStation Blog, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio.",
+            "tiktok": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio.",
+            "youtube": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória.",
+            "tiktok": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória.",
+            "youtube": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela.",
+            "tiktok": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela.",
+            "youtube": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção.",
+            "tiktok": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção.",
+            "youtube": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "PlayStation Blog, 03 set 2026",
+            "tiktok": "PlayStation Blog, 03 set 2026",
+            "youtube": "PlayStation Blog, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Seu portfólio tem prioridades ou só datas?",
+            "tiktok": "Seu portfólio tem prioridades ou só datas?",
+            "youtube": "Seu portfólio tem prioridades ou só datas?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "44fe617c5f68353ffd9d234a34e09a985a07c6fb2e85fbfd19e691e53f720328",
+      "canonicalPayloadSha256": "345743d70e3ba3e308c95651dcf2f6d103feb1665722eea5ee4cf5046501f5a2",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Seu portfólio tem prioridades ou só datas?",
+      "finalCtaByPlatform": {
+        "instagram": "Seu portfólio tem prioridades ou só datas?",
+        "tiktok": "Seu portfólio tem prioridades ou só datas?",
+        "youtube": "Seu portfólio tem prioridades ou só datas?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "video game presentation audience",
+        "provider_video_id": 7914806,
+        "provider_page_url": "https://www.pexels.com/video/men-celebrating-a-win-in-computer-gaming-7914806/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "gaming launch event screens",
+        "provider_video_id": 8128353,
+        "provider_page_url": "https://www.pexels.com/video/people-playing-video-game-while-using-computer-8128353/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "product portfolio launch planning",
+        "provider_video_id": 6120116,
+        "provider_page_url": "https://www.pexels.com/video/graphs-and-a-magnifying-glass-6120116/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "marketing team launch sequencing",
+        "provider_video_id": 7652266,
+        "provider_page_url": "https://www.pexels.com/video/sticky-notes-on-documents-7652266/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "product roadmap prioritization",
+        "provider_video_id": 38899338,
+        "provider_page_url": "https://www.pexels.com/video/interactive-project-management-on-tablet-38899338/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "gaming business closing",
+        "provider_video_id": 8888807,
+        "provider_page_url": "https://www.pexels.com/video/friends-playing-video-game-8888807/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Seu portfólio tem prioridades ou só datas?",
+    "updatedAt": "2026-09-04T02:25:02.731Z"
+  }
 }

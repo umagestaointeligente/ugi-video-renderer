@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "contentId": "UGI-20260904-YT-2030-VINFAST-GSM",
-  "state": "RENDER_DISPATCHED",
+  "state": "MEDIA_READY_WAITING_DRAFT_READBACK",
   "workerRenderId": "ugi-20260904021945-36e49ab0b774",
   "approvalDraftId": "ugi-20260904021945-36e49ab0b774",
   "existingDraftReused": false,
@@ -112,5 +112,607 @@
     "centralApproval": true,
     "approvalBridgeError": null
   },
-  "updatedAt": "2026-09-04T02:20:30.624190+00:00"
+  "updatedAt": "2026-09-04T02:32:14.772752+00:00",
+  "allPlatformsReady": true,
+  "lastResult": {
+    "ok": true,
+    "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+    "route": "/api/video-upload",
+    "routing": "GITHUB_ACTIONS_TO_WORKER_TO_R2_MULTI_ASSET",
+    "renderer": "github-actions-ffmpeg",
+    "costMode": "zero_cost_initial",
+    "renderId": "ugi-20260904021945-36e49ab0b774",
+    "githubAccepted": true,
+    "githubStatus": 204,
+    "githubRunId": "33829150150",
+    "githubRunNumber": 217,
+    "githubRunAttempt": 1,
+    "githubWorkflowStatus": "queued",
+    "githubWorkflowConclusion": null,
+    "githubRunCreatedAt": "2026-09-04T02:20:25Z",
+    "githubRunUpdatedAt": "2026-09-04T02:20:25Z",
+    "githubRunHtmlUrl": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/33829150150",
+    "githubRunDisplayTitle": "UGI ugi-20260904021945-36e49ab0b774",
+    "githubRunEvent": "workflow_dispatch",
+    "githubRunHeadBranch": "main",
+    "githubRunHeadSha": "09090bc394a7bd73adf4c92e0585f0451fcfce50",
+    "githubCorrelationMethod": "render_id_run_name",
+    "githubRunIdExpectedInDispatchResponse": false,
+    "repository": "umagestaointeligente/ugi-video-renderer",
+    "workflow": "render-video.yml",
+    "ref": "main",
+    "title": "Crescer rápido não garante crescimento saudável",
+    "duration": 32,
+    "status": "ready",
+    "ready": true,
+    "assets": {
+      "instagram": {
+        "platform": "instagram",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021945-36e49ab0b774/instagram.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021945-36e49ab0b774%2Finstagram.mp4",
+        "videoBytes": 17478163,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 32,
+        "githubRunId": "33829150150",
+        "r2Etag": "1bd75335202422bc0665547ce689735f",
+        "uploadedAt": "2026-09-04T02:27:19.589Z",
+        "approvalStatus": "pending_approval"
+      },
+      "tiktok": {
+        "platform": "tiktok",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021945-36e49ab0b774/tiktok.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021945-36e49ab0b774%2Ftiktok.mp4",
+        "videoBytes": 13337405,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 24,
+        "githubRunId": "33829150150",
+        "r2Etag": "e1d23ba132e4f3a2a2b911a044a977d7",
+        "uploadedAt": "2026-09-04T02:27:22.562Z",
+        "approvalStatus": "pending_approval"
+      },
+      "youtube": {
+        "platform": "youtube",
+        "status": "ready",
+        "ready": true,
+        "videoKey": "geradas/videos/ugi-20260904021945-36e49ab0b774/youtube.mp4",
+        "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021945-36e49ab0b774%2Fyoutube.mp4",
+        "videoBytes": 19775133,
+        "contentType": "video/mp4",
+        "mp4Signature": true,
+        "duration": 36,
+        "githubRunId": "33829150150",
+        "r2Etag": "b83c09da058af8382e19133520f40614",
+        "uploadedAt": "2026-09-04T02:27:25.268Z",
+        "approvalStatus": "pending_approval"
+      }
+    },
+    "readyPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "expectedPlatforms": [
+      "instagram",
+      "tiktok",
+      "youtube"
+    ],
+    "allPlatformsReady": true,
+    "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2Fugi-20260904021945-36e49ab0b774%2Finstagram.mp4",
+    "videoKey": "geradas/videos/ugi-20260904021945-36e49ab0b774/instagram.mp4",
+    "approvalDraftId": "ugi-20260904021945-36e49ab0b774",
+    "existingDraftReused": false,
+    "contentId": "UGI-20260904-YT-2030-VINFAST-GSM",
+    "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+    "variant": "GENERAL_WORLD",
+    "commercialIntent": "none",
+    "commercialOffer": false,
+    "editorialMode": "management_explainer",
+    "commerce": {
+      "required": false,
+      "productId": null,
+      "priceId": null,
+      "paymentLink": null,
+      "materialId": null,
+      "materialUrl": null,
+      "fulfillmentReady": false,
+      "provider": null,
+      "currency": "BRL",
+      "price": null
+    },
+    "copyLock": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "exactCopy": {
+      "enabled": true,
+      "mode": "exact",
+      "type": "video",
+      "caption": null,
+      "cta": null,
+      "slides": null,
+      "videoScenes": null,
+      "strict": true
+    },
+    "semanticValidationRequired": true,
+    "semanticValidationAvailable": true,
+    "semanticValidation": {
+      "pass": true,
+      "qaPass": true,
+      "copyLockPass": true,
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "declaredSceneCount": 6,
+      "canonicalSceneCount": 6,
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "exactCopyScope": "canonical_payload",
+      "smokeTest": false,
+      "mismatches": [],
+      "receivedAt": "2026-09-04T02:27:28.321Z"
+    },
+    "copyLockValidation": {
+      "required": true,
+      "exactCopyRequired": true,
+      "pass": true,
+      "mode": "exact",
+      "strict": true,
+      "scope": "canonical_payload",
+      "canonicalCopyPass": true,
+      "renderedCopyPass": true,
+      "canonicalCopySha256": "3e8657550137b24d17637c6c6b2a9abe291615642705f314eb056e5a76a10a3b",
+      "mismatches": []
+    },
+    "legacyContentLeakDetected": false,
+    "sceneSource": "dynamic",
+    "sceneCount": 6,
+    "sceneRoles": [
+      "hook",
+      "pain",
+      "consequence",
+      "turn",
+      "result",
+      "cta"
+    ],
+    "legacyHardcodedScenesDisabled": true,
+    "requestedAt": "2026-09-04T02:20:25.631Z",
+    "statusUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/video-result/ugi-20260904021945-36e49ab0b774",
+    "note": "O GitHub aceitou o job. O workflow produzirá o MP4 e o enviará automaticamente ao R2 pelo Worker.",
+    "videoBytes": 17478163,
+    "contentType": "video/mp4",
+    "mp4Signature": true,
+    "uploadedAt": "2026-09-04T02:27:25.268Z",
+    "semanticEvidence": {
+      "version": "R43.8.6",
+      "renderId": "ugi-20260904021945-36e49ab0b774",
+      "githubRunId": "33829150150",
+      "contentId": "UGI-20260904-YT-2030-VINFAST-GSM",
+      "experimentId": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+      "variant": "GENERAL_WORLD",
+      "sceneCount": 6,
+      "sceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalSceneCount": 6,
+      "canonicalSceneRoles": [
+        "hook",
+        "pain",
+        "consequence",
+        "turn",
+        "result",
+        "cta"
+      ],
+      "canonicalScenes": [
+        {
+          "role": "hook",
+          "visual_intent": "electric vehicle ride hailing fleet",
+          "pexels_query": "electric vehicle ride hailing fleet",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Crescer rápido não garante crescimento saudável",
+            "tiktok": "Crescer rápido não garante crescimento saudável",
+            "youtube": "Crescer rápido não garante crescimento saudável"
+          },
+          "narration": {
+            "instagram": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes.",
+            "tiktok": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes.",
+            "youtube": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes."
+          }
+        },
+        {
+          "role": "pain",
+          "visual_intent": "EV fleet operations charging",
+          "pexels_query": "EV fleet operations charging",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade.",
+            "tiktok": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade.",
+            "youtube": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade."
+          }
+        },
+        {
+          "role": "consequence",
+          "visual_intent": "mobility business operations",
+          "pexels_query": "mobility business operations",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade.",
+            "tiktok": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade.",
+            "youtube": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade."
+          }
+        },
+        {
+          "role": "turn",
+          "visual_intent": "capital intensive business planning",
+          "pexels_query": "capital intensive business planning",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos.",
+            "tiktok": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos.",
+            "youtube": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos."
+          }
+        },
+        {
+          "role": "result",
+          "visual_intent": "fleet utilization management",
+          "pexels_query": "fleet utilization management",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade.",
+            "tiktok": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade.",
+            "youtube": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade."
+          }
+        },
+        {
+          "role": "cta",
+          "visual_intent": "electric mobility closing",
+          "pexels_query": "electric mobility closing",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+            "tiktok": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+            "youtube": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?"
+          }
+        }
+      ],
+      "canonicalCopy": [
+        {
+          "index": 1,
+          "role": "hook",
+          "overlay": {
+            "instagram": "O SINAL",
+            "tiktok": "O SINAL",
+            "youtube": "O SINAL"
+          },
+          "support": {
+            "instagram": "Crescer rápido não garante crescimento saudável",
+            "tiktok": "Crescer rápido não garante crescimento saudável",
+            "youtube": "Crescer rápido não garante crescimento saudável"
+          },
+          "narration": {
+            "instagram": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes.",
+            "tiktok": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes.",
+            "youtube": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes."
+          }
+        },
+        {
+          "index": 2,
+          "role": "pain",
+          "overlay": {
+            "instagram": "O FATO",
+            "tiktok": "O FATO",
+            "youtube": "O FATO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade.",
+            "tiktok": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade.",
+            "youtube": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade."
+          }
+        },
+        {
+          "index": 3,
+          "role": "consequence",
+          "overlay": {
+            "instagram": "POR QUE IMPORTA",
+            "tiktok": "POR QUE IMPORTA",
+            "youtube": "POR QUE IMPORTA"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade.",
+            "tiktok": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade.",
+            "youtube": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade."
+          }
+        },
+        {
+          "index": 4,
+          "role": "turn",
+          "overlay": {
+            "instagram": "A LEITURA DE GESTÃO",
+            "tiktok": "A LEITURA DE GESTÃO",
+            "youtube": "A LEITURA DE GESTÃO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos.",
+            "tiktok": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos.",
+            "youtube": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos."
+          }
+        },
+        {
+          "index": 5,
+          "role": "result",
+          "overlay": {
+            "instagram": "O TESTE PRÁTICO",
+            "tiktok": "O TESTE PRÁTICO",
+            "youtube": "O TESTE PRÁTICO"
+          },
+          "support": {
+            "instagram": "Leitura UGI",
+            "tiktok": "Leitura UGI",
+            "youtube": "Leitura UGI"
+          },
+          "narration": {
+            "instagram": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade.",
+            "tiktok": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade.",
+            "youtube": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade."
+          }
+        },
+        {
+          "index": 6,
+          "role": "cta",
+          "overlay": {
+            "instagram": "LEVE PARA A DECISÃO",
+            "tiktok": "LEVE PARA A DECISÃO",
+            "youtube": "LEVE PARA A DECISÃO"
+          },
+          "support": {
+            "instagram": "Reuters, 03 set 2026",
+            "tiktok": "Reuters, 03 set 2026",
+            "youtube": "Reuters, 03 set 2026"
+          },
+          "narration": {
+            "instagram": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+            "tiktok": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+            "youtube": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?"
+          }
+        }
+      ],
+      "canonicalCopySha256": "3e8657550137b24d17637c6c6b2a9abe291615642705f314eb056e5a76a10a3b",
+      "canonicalPayloadSha256": "737ccc3e9fc76450aed8e29387b19b9c1fd0104be1054299bb48e9cbed0a2656",
+      "canonicalCopyValidation": {
+        "pass": true,
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "validatedPlatforms": [
+          "instagram",
+          "tiktok",
+          "youtube"
+        ],
+        "validatedFields": [
+          "overlay",
+          "support",
+          "narration"
+        ],
+        "mismatches": []
+      },
+      "validatedPlatforms": [
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "renderedSceneCounts": {
+        "instagram": 6,
+        "tiktok": 6,
+        "youtube": 6
+      },
+      "renderedCopyValidation": {
+        "pass": true,
+        "mismatches": []
+      },
+      "smokeTest": false,
+      "exactCopyScope": "canonical_payload",
+      "renderedValidationScope": "all_rendered_platform_scenes",
+      "finalCta": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+      "finalCtaByPlatform": {
+        "instagram": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+        "tiktok": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+        "youtube": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?"
+      },
+      "commercialOffer": false,
+      "commerce": {
+        "required": false,
+        "productId": null,
+        "priceId": null,
+        "paymentLink": null,
+        "materialId": null,
+        "materialUrl": null,
+        "fulfillmentReady": false,
+        "provider": null,
+        "currency": "BRL",
+        "price": null
+      },
+      "copyLock": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "exactCopy": {
+        "enabled": true,
+        "mode": "exact",
+        "type": "video",
+        "caption": null,
+        "cta": null,
+        "slides": null,
+        "videoScenes": null,
+        "strict": true
+      },
+      "manifest": {
+        "version": "R43_8_4_DYNAMIC_SCENES_MULTI_PROVIDER_COMPAT",
+        "sceneSource": "dynamic",
+        "sceneCount": 6,
+        "sceneRoles": [
+          "hook",
+          "pain",
+          "consequence",
+          "turn",
+          "result",
+          "cta"
+        ],
+        "legacyHardcodedScenesDisabled": true
+      },
+      "legacyContentLeakDetected": false,
+      "legacyHits": []
+    },
+    "mediaProviders": [
+      {
+        "scene": 1,
+        "provider": "Pexels",
+        "query": "electric vehicle ride hailing fleet",
+        "provider_video_id": 9790209,
+        "provider_page_url": "https://www.pexels.com/video/charging-the-electric-car-9790209/",
+        "local_file": "output/media/scene-1.mp4"
+      },
+      {
+        "scene": 2,
+        "provider": "Pexels",
+        "query": "EV fleet operations charging",
+        "provider_video_id": 9790187,
+        "provider_page_url": "https://www.pexels.com/video/close-up-of-an-electric-car-at-a-charging-station-9790187/",
+        "local_file": "output/media/scene-2.mp4"
+      },
+      {
+        "scene": 3,
+        "provider": "Pexels",
+        "query": "mobility business operations",
+        "provider_video_id": 38870355,
+        "provider_page_url": "https://www.pexels.com/video/dynamic-touchscreen-interface-in-tech-setting-38870355/",
+        "local_file": "output/media/scene-3.mp4"
+      },
+      {
+        "scene": 4,
+        "provider": "Pexels",
+        "query": "capital intensive business planning",
+        "provider_video_id": 7252718,
+        "provider_page_url": "https://www.pexels.com/video/people-working-on-finance-7252718/",
+        "local_file": "output/media/scene-4.mp4"
+      },
+      {
+        "scene": 5,
+        "provider": "Pexels",
+        "query": "fleet utilization management",
+        "provider_video_id": 38845212,
+        "provider_page_url": "https://www.pexels.com/video/trucks-on-scenic-mountain-highway-38845212/",
+        "local_file": "output/media/scene-5.mp4"
+      },
+      {
+        "scene": 6,
+        "provider": "Pexels",
+        "query": "electric mobility closing",
+        "provider_video_id": 9790183,
+        "provider_page_url": "https://www.pexels.com/video/an-electric-car-charging-9790183/",
+        "local_file": "output/media/scene-6.mp4"
+      }
+    ],
+    "finalCta": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+    "updatedAt": "2026-09-04T02:27:28.321Z"
+  }
 }
