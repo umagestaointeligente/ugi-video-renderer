@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "component": "BUFFER-PUBLICATION-OBSERVER",
-  "checkedAt": "2026-09-04T22:45:43.120670+00:00",
+  "checkedAt": "2026-09-04T23:44:11.566597+00:00",
   "publicationProvider": "BUFFER",
   "publicationMutationPerformed": false,
   "gateway": {
@@ -28,14 +28,14 @@
     "state": "WAITING_BUFFER_24H_RATE_LIMIT",
     "platform": "linkedin",
     "target": "UGI — Uma Gestão Inteligente",
-    "timestamp": "2026-09-04T22:34:41.941518+00:00",
+    "timestamp": "2026-09-04T23:33:24.170793+00:00",
     "publicationTriggered": false,
     "bufferMutationPerformed": false,
     "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
     "bufferDiagnostics": {
       "httpStatus": 429,
       "httpOk": false,
-      "requestId": "a360768b4cc6f0b2-DFW",
+      "requestId": "a360cc895f6b7137-IAD",
       "rateLimitRemaining": "0",
       "graphqlErrors": [
         {
