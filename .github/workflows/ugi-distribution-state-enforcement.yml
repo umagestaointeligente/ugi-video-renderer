@@ -1,0 +1,78 @@
+name: UGI Distribution State Enforcement
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-distribution-state-enforcement.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch Publisher Hub distribution gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/ugi_publisher_hub.py')
+          s = p.read_text(encoding='utf-8')
+
+          constant = 'ROUTING_POLICY = ROOT / "config" / "ugi" / "integration-routing.json"\n'
+          if 'DISTRIBUTION_STATE = ROOT / "config" / "ugi" / "distribution-state.json"' not in s:
+              if constant not in s:
+                  raise SystemExit('ROUTING_POLICY_MARKER_NOT_FOUND')
+              s = s.replace(constant, constant + 'DISTRIBUTION_STATE = ROOT / "config" / "ugi" / "distribution-state.json"\n', 1)
+
+          helper = '''\n\ndef _filter_distribution_rows(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:\n    """Allow publication only to currently active Buffer distribution platforms.\n\n    Paused platforms are intentionally skipped without blocking active platforms in\n    the same historical manifest. Unknown platforms fail closed by being skipped\n    whenever an explicit active set exists.\n    """\n    if not DISTRIBUTION_STATE.exists():\n        return rows, []\n    state = load_json(DISTRIBUTION_STATE)\n    buffer_state = state.get("buffer") or {}\n    active = {str(x).lower() for x in (buffer_state.get("active_platforms") or [])}\n    paused = {str(x).lower() for x in (buffer_state.get("paused_platforms") or [])}\n    allowed: list[dict[str, Any]] = []\n    skipped: list[dict[str, Any]] = []\n    for row in rows:\n        platform = str(row.get("platform") or "").lower()\n        if platform in paused or (active and platform not in active):\n            skipped.append({\n                "contentId": row.get("contentId"),\n                "platform": platform,\n                "dueAt": row.get("dueAt"),\n                "reason": "PLATFORM_DISTRIBUTION_PAUSED_OR_INACTIVE",\n            })\n            continue\n        allowed.append(row)\n    return allowed, skipped\n'''
+          process_marker = '\ndef process_manifest(\n'
+          if '_filter_distribution_rows(' not in s:
+              if process_marker not in s:
+                  raise SystemExit('PROCESS_MANIFEST_MARKER_NOT_FOUND')
+              s = s.replace(process_marker, helper + process_marker, 1)
+
+          target = '    receipt = receipt_path(data, manifest)\n\n'
+          insertion = '''    receipt = receipt_path(data, manifest)\n\n    rows, distribution_skipped = _filter_distribution_rows(rows)\n    if not rows:\n        result = {\n            "ok": True,\n            "retryable": False,\n            "state": "SKIPPED_BY_DISTRIBUTION_POLICY",\n            "project": "UGI",\n            "publisher": "BUFFER",\n            "manifest": str(manifest.relative_to(ROOT)),\n            "manifestSha256": mf_hash,\n            "publicationTriggered": False,\n            "paymentTriggered": False,\n            "expectedTargets": 0,\n            "results": [],\n            "distributionSkipped": distribution_skipped,\n            "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(),\n        }\n        receipt.parent.mkdir(parents=True, exist_ok=True)\n        receipt.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")\n        return result\n\n'''
+          if 'rows, distribution_skipped = _filter_distribution_rows(rows)' not in s:
+              if target not in s:
+                  raise SystemExit('RECEIPT_MARKER_NOT_FOUND')
+              s = s.replace(target, insertion, 1)
+
+          # Preserve an audit trail for mixed historical manifests while keeping
+          # active-platform success semantics based only on active rows.
+          out_marker = '        "results": results,\n'
+          if '"distributionSkipped": distribution_skipped' not in s[s.find('def process_manifest'):]:
+              if out_marker in s:
+                  s = s.replace(out_marker, out_marker + '        "distributionSkipped": distribution_skipped,\n', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+          python3 -m py_compile scripts/ugi_publisher_hub.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          state = json.loads(Path('config/ugi/distribution-state.json').read_text())
+          assert state['buffer']['active_platforms'] == ['linkedin','instagram','tiktok']
+          assert state['buffer']['paused_platforms'] == ['youtube']
+          PY
+      - name: Commit enforcement
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No changes required'
+            exit 0
+          fi
+          git config user.name 'ugi-distribution-bot'
+          git config user.email 'ugi-distribution-bot@users.noreply.github.com'
+          git add scripts/ugi_publisher_hub.py
+          git commit -m 'fix(ugi): enforce active distribution channels in Publisher Hub'
+          git pull --rebase origin main
+          git push origin HEAD:main
