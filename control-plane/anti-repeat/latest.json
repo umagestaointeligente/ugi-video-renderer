@@ -6,35 +6,11 @@
   "storiesIncluded": true,
   "historyRegistry": "control-plane/anti-repeat/platform-topic-history.json",
   "historyComplete": false,
-  "checkedAt": "2026-09-04T02:13:39.213058+00:00",
-  "queuedCount": 10,
+  "checkedAt": "2026-09-04T05:41:57.339204+00:00",
+  "queuedCount": 9,
   "blocked": 0,
   "state": "PASS",
   "results": [
-    {
-      "contentId": "UGI-20260903-YT-2030-OPENAI-STOP-CONDITIONS",
-      "platform": "youtube",
-      "command": "control-plane/commands/ugi-20260903-youtube-openai-stop-conditions.json",
-      "windowDays": 15,
-      "decision": "ANTI_REPEAT_PASS",
-      "reasons": [],
-      "mediaDecision": "ANTI_REPEAT_PASS",
-      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
-      "samePlatformTopicMatches": [],
-      "closest": {
-        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1510",
-        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1510.json",
-        "textSimilarity": 0.0147,
-        "hookSimilarity": 0.1164,
-        "visualSimilarity": 0.0,
-        "combinedSimilarity": 0.0372
-      },
-      "signature": {
-        "exactHash": "9ad12884677c8fc69976307edffe1bb8aef5d6cc4e4d6fd5499977eac430a8dc",
-        "renderId": "ugi-20260903-yt-openai-stop-conditions",
-        "draftId": ""
-      }
-    },
     {
       "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
       "platform": "instagram",
