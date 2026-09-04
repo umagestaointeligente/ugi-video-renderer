@@ -1,0 +1,21 @@
+{
+  "project": "UGI",
+  "batchId": "UGI-20260904-FULL-AGENDA-R1",
+  "timezone": "America/Sao_Paulo",
+  "publisher": "BUFFER",
+  "publicationMode": "customScheduled",
+  "posts": [
+    {"contentId":"UGI-20260904-IG-0900-LZ-DARK-MATTER","platform":"instagram","format":"story_video","dueAt":"2026-09-04T09:00:00-03:00"},
+    {"contentId":"UGI-20260904-IG-1030-TYSON-MARGIN","platform":"instagram","format":"story_video","dueAt":"2026-09-04T10:30:00-03:00"},
+    {"contentId":"UGI-20260904-TT-1215-JOBLIFE","platform":"tiktok","format":"video","dueAt":"2026-09-04T12:15:00-03:00"},
+    {"contentId":"UGI-20260904-IG-1245-ANVISA-UNILEVER","platform":"instagram","format":"reel","dueAt":"2026-09-04T12:45:00-03:00"},
+    {"contentId":"UGI-20260904-YT-1630-STATE-OF-PLAY","platform":"youtube","format":"short","dueAt":"2026-09-04T16:30:00-03:00"},
+    {"contentId":"UGI-20260904-IG-1800-SNOWFLAKE-AI","platform":"instagram","format":"story_video","dueAt":"2026-09-04T18:00:00-03:00"},
+    {"contentId":"UGI-20260904-IG-1915-LULULEMON","platform":"instagram","format":"reel_fallback_from_carousel","dueAt":"2026-09-04T19:15:00-03:00"},
+    {"contentId":"UGI-20260904-TT-1945-MICRODRAMAS","platform":"tiktok","format":"video","dueAt":"2026-09-04T19:45:00-03:00"},
+    {"contentId":"UGI-20260904-YT-2030-VINFAST-GSM","platform":"youtube","format":"short","dueAt":"2026-09-04T20:30:00-03:00"}
+  ],
+  "zeroCost": true,
+  "cloudflareWorkersAIGenerationRequired": false,
+  "notes": "Lululemon 19:15 is rendered as a Reel fallback to preserve the topic and exact slot without relying on the exhausted Workers AI daily allocation. All schedule claims remain fail-closed until Buffer post id + exact dueAt + scheduled readback are present."
+}
