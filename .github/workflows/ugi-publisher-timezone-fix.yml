@@ -1,0 +1,98 @@
+name: UGI Publisher Timezone Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-publisher-timezone-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch timezone-safe Buffer readback gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/ugi_publisher_hub.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''def _scheduled_readback_pass(readback: dict[str, Any], requested_due: str) -> tuple[bool, dict[str, Any]]:\n    publication = readback.get("publication") or {}\n    status = str(publication.get("status") or "").lower()\n    passed = (\n        readback.get("ok") is True\n        and bool(publication.get("bufferPostId"))\n        and str(publication.get("dueAt") or "")[:16] == requested_due[:16]\n        and status == "scheduled"\n    )\n    return passed, publication\n'''
+          new = '''def _scheduled_readback_pass(readback: dict[str, Any], requested_due: str) -> tuple[bool, dict[str, Any]]:\n    publication = readback.get("publication") or {}\n    status = str(publication.get("status") or "").lower()\n\n    # Buffer can return the same scheduled instant in UTC (Z) while the\n    # canonical manifest keeps America/Sao_Paulo (-03:00). Compare absolute\n    # instants, never wall-clock strings, so 09:00-03:00 == 12:00Z.\n    requested_instant = _due_at(requested_due)\n    buffer_instant = _due_at(publication.get("dueAt"))\n    exact_instant = (\n        requested_instant is not None\n        and buffer_instant is not None\n        and requested_instant == buffer_instant\n    )\n\n    passed = (\n        readback.get("ok") is True\n        and bool(publication.get("bufferPostId"))\n        and exact_instant\n        and status == "scheduled"\n    )\n    return passed, publication\n'''
+          if old not in text:
+              raise SystemExit('EXPECTED_READBACK_BLOCK_NOT_FOUND')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Verify timezone equivalence and fail-closed behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/ugi_publisher_hub.py
+          python3 - <<'PY'
+          import importlib.util
+          from pathlib import Path
+
+          p = Path('scripts/ugi_publisher_hub.py')
+          spec = importlib.util.spec_from_file_location('ugi_publisher_hub', p)
+          mod = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+
+          good = {
+              'ok': True,
+              'publication': {
+                  'bufferPostId': 'proof-id',
+                  'dueAt': '2026-09-04T12:00:00.000Z',
+                  'status': 'scheduled',
+              },
+          }
+          passed, _ = mod._scheduled_readback_pass(good, '2026-09-04T09:00:00-03:00')
+          assert passed is True, 'timezone-equivalent instant must pass'
+
+          bad_time = {
+              'ok': True,
+              'publication': {
+                  'bufferPostId': 'proof-id',
+                  'dueAt': '2026-09-04T12:01:00.000Z',
+                  'status': 'scheduled',
+              },
+          }
+          passed, _ = mod._scheduled_readback_pass(bad_time, '2026-09-04T09:00:00-03:00')
+          assert passed is False, 'wrong instant must fail closed'
+
+          bad_status = {
+              'ok': True,
+              'publication': {
+                  'bufferPostId': 'proof-id',
+                  'dueAt': '2026-09-04T12:00:00.000Z',
+                  'status': 'draft',
+              },
+          }
+          passed, _ = mod._scheduled_readback_pass(bad_status, '2026-09-04T09:00:00-03:00')
+          assert passed is False, 'non-scheduled status must fail closed'
+          print('TIMEZONE_SAFE_READBACK_PASS')
+          PY
+
+      - name: Commit permanent fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-publisher-hub-bot'
+          git config user.email 'ugi-publisher-hub@users.noreply.github.com'
+          git add scripts/ugi_publisher_hub.py
+          if git diff --cached --quiet; then
+            echo 'No change needed'
+            exit 0
+          fi
+          git commit -m 'fix(ugi): compare Buffer schedule as absolute instant'
+          git pull --rebase origin main
+          git push origin HEAD:main
