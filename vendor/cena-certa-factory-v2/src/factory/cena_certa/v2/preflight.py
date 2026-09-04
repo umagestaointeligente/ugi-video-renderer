@@ -28,7 +28,11 @@ def schedule_instant(c,value):
  if dt.tzinfo is None: raise RuntimeError('SCHEDULE_TIMEZONE_REQUIRED')
  local=dt.astimezone(ZoneInfo(c['scheduler']['timezone']))
  lead=(local.astimezone(timezone.utc)-datetime.now(timezone.utc)).total_seconds()
- if lead<c['scheduler']['minimum_schedule_lead_seconds']: raise RuntimeError(f'SCHEDULE_LEAD_TIME_FAIL seconds={lead:.0f}')
+ publisher_min=float(c['scheduler'].get('publisher_minimum_lead_seconds',900))
+ factory_budget=float(c.get('sla',{}).get('target_seconds',660))
+ configured=float(c['scheduler'].get('minimum_schedule_lead_seconds',0))
+ required=max(configured,publisher_min+factory_budget)
+ if lead<required: raise RuntimeError(f'SCHEDULE_LEAD_TIME_FAIL seconds={lead:.0f} required={required:.0f}')
  return local
 
 def validate_schedule(c,item):

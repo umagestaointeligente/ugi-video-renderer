@@ -4,7 +4,7 @@ import json, time
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from .common import *
-from .fingerprint import prepared_asset_fingerprint, prepared_contract_fingerprint
+from .fingerprint import prepared_asset_fingerprint, prepared_contract_fingerprint, engine_fingerprint
 from .render import render_one
 
 def _tone(path,freq,dur):
@@ -20,9 +20,11 @@ def run():
  for i in range(10):
   timeline_start=0.0 if i==0 else float(i); timeline_end=float(i+1) if i<9 else story; target=timeline_end-timeline_start
   p=pr/f'scene-{i:02d}.mp4'; sh(['ffmpeg','-loglevel','error','-y','-f','lavfi','-i',f'testsrc2=size=1280x720:rate=30:duration={target:.3f}','-vf',f'hue=h={i*18}:s=1','-an','-c:v','libx264','-threads','1','-preset','ultrafast','-crf','21','-pix_fmt','yuv420p','-movflags','+faststart',str(p)],timeout=60); media_probe(p,'video'); scenes.append({'index':i,'file':p.name,'sha256':sha256(p),'duration':duration(p),'target_duration':target,'timeline_start':timeline_start,'timeline_end':timeline_end,'source_start':float(i),'caption_start':i,'caption_end':i,'semantic_reason':f'SELFTEST_SCENE_{i}'})
- manifest={'schema':'CENA_CERTA_PREPARED_ASSETS_V2','id':rid,'prepared_pass':True,'prepared_asset_fingerprint':prepared_asset_fingerprint(item),'prepared_contract_fingerprint':prepared_contract_fingerprint(c),'created_epoch':time.time(),'source_duration':60,'story_duration':story,'voice_wpm':150.0,'cues':cues,'voice':{'file':voice.name,'sha256':sha256(voice),'duration':duration(voice)},'cta_voice':{'file':cta_voice.name,'sha256':sha256(cta_voice),'duration':duration(cta_voice)},'music':{'file':music.name,'sha256':sha256(music),'duration':duration(music),'track_id':'SELFTEST-MUSIC'},'scenes':scenes,'timeline_coverage_seconds':sum(x['target_duration'] for x in scenes)}
+ manifest={'schema':'CENA_CERTA_PREPARED_ASSETS_V2','id':rid,'prepared_pass':True,'prepared_asset_fingerprint':prepared_asset_fingerprint(item),'prepared_contract_fingerprint':prepared_contract_fingerprint(c),'prepared_engine_fingerprint':engine_fingerprint(),'created_epoch':time.time(),'source_duration':60,'story_duration':story,'voice_wpm':150.0,'cues':cues,'voice':{'file':voice.name,'sha256':sha256(voice),'duration':duration(voice)},'cta_voice':{'file':cta_voice.name,'sha256':sha256(cta_voice),'duration':duration(cta_voice)},'music':{'file':music.name,'sha256':sha256(music),'duration':duration(music),'track_id':'SELFTEST-MUSIC'},'scenes':scenes,'timeline_coverage_seconds':sum(x['target_duration'] for x in scenes)}
  (pr/'prepared.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
  t0=time.time(); render_one(batch,0,prepared); elapsed=time.time()-t0; out=OUT/f'{rid}.mp4'; rec=json.loads((OUT/f'{rid}.receipt.json').read_text(encoding='utf-8'))
  if not out.exists() or not rec.get('qa_pass') or rec.get('mask_composite_order')!='FILM_CC_TITLE_THEN_FINAL_STATIC_MASK': raise RuntimeError('FACTORY_V2_SELFTEST_FAIL')
+ if rec.get('prepared_engine_fingerprint')!=engine_fingerprint(): raise RuntimeError('FACTORY_V2_SELFTEST_ENGINE_FINGERPRINT_FAIL')
+ if rec.get('audio_repair_used') is not False: raise RuntimeError('FACTORY_V2_SELFTEST_UNEXPECTED_AUDIO_REPAIR')
  print('FACTORY_V2_SELFTEST_PASS',round(elapsed,2),'seconds')
 if __name__=='__main__': run()

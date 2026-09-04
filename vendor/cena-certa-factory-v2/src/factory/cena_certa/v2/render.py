@@ -4,7 +4,7 @@ import argparse, json, os, re, time
 from pathlib import Path
 from .common import *
 from .preflight import validate_item
-from .fingerprint import prepared_asset_fingerprint, prepared_contract_fingerprint, dispatch_fingerprint
+from .fingerprint import prepared_asset_fingerprint, prepared_contract_fingerprint, dispatch_fingerprint, engine_fingerprint
 from .qa import qa_video
 
 def _asset(root,spec,kind):
@@ -23,6 +23,8 @@ def load_prepared(c,item,prepared_root):
  asset_fp=m.get('prepared_asset_fingerprint',m.get('item_fingerprint'))
  if asset_fp!=prepared_asset_fingerprint(item): raise RuntimeError('PREPARED_ASSET_FINGERPRINT_FAIL')
  if m.get('prepared_contract_fingerprint')!=prepared_contract_fingerprint(c): raise RuntimeError('PREPARED_CONTRACT_FINGERPRINT_FAIL')
+ current_engine=engine_fingerprint()
+ if m.get('prepared_engine_fingerprint')!=current_engine: raise RuntimeError('PREPARED_ENGINE_FINGERPRINT_FAIL')
  age=(time.time()-float(m.get('created_epoch',0)))/3600; max_age=float(c['prepared_assets'].get('expire_hours',c['ready_queue']['expire_hours']))
  if age<-.25 or age>max_age: raise RuntimeError(f'PREPARED_ASSETS_STALE age_hours={age:.2f} max={max_age:.2f}')
  voice=_asset(root,m['voice'],'audio'); cta_voice=_asset(root,m['cta_voice'],'audio'); music=_asset(root,m['music'],'audio')
@@ -41,7 +43,7 @@ def load_prepared(c,item,prepared_root):
  cues=m.get('cues') or []
  if len(cues)!=len(item['caption_chunks']): raise RuntimeError('PREPARED_CUES_COUNT_FAIL')
  if normalize_text(' '.join(x['text'] for x in cues))!=normalize_text(' '.join(item['caption_chunks'])): raise RuntimeError('PREPARED_CUES_TEXT_FAIL')
- return root,m,voice,cta_voice,music,scenes,cues
+ return root,m,voice,cta_voice,music,scenes,cues,current_engine
 
 def concat_scenes(root,scenes,expected_story):
  concat=root/'concat-render.txt'; concat.write_text('\n'.join("file '"+str(p.resolve()).replace("'","'\\''")+"'" for p in scenes),encoding='utf-8')
@@ -72,7 +74,7 @@ def audio_only_repair(c,path):
 def render_one(batch,index,prepared_root):
  t0=time.time(); c=verify_contract_and_assets(); mask=prepare_static_assets(c); items=json.loads(Path(batch).read_text(encoding='utf-8'))
  if index<0 or index>=len(items): raise RuntimeError(f'RENDER_INDEX_FAIL {index}/{len(items)}')
- item=items[index]; validate_item(c,item); rid=safe_id(item['id']); root,m,voice,cta_voice,music,scenes,cues=load_prepared(c,item,prepared_root)
+ item=items[index]; validate_item(c,item); rid=safe_id(item['id']); root,m,voice,cta_voice,music,scenes,cues,engine_fp=load_prepared(c,item,prepared_root)
  vd=float(m['voice']['duration']); story=float(m['story_duration']); wpm=float(m['voice_wpm']); cvd=float(m['cta_voice']['duration']); cta_seconds=float(c['cta']['duration_seconds']); total=story+cta_seconds
  if cvd>cta_seconds-0.15: raise RuntimeError(f'CTA_VOICE_DURATION_FAIL voice={cvd:.3f} budget={cta_seconds-0.15:.3f}')
  cta_cues=m['cta_voice'].get('cues') or []
@@ -96,12 +98,15 @@ def render_one(batch,index,prepared_root):
   media_probe(tmp,'video'); os.replace(tmp,out)
  finally: tmp.unlink(missing_ok=True)
  audio_repair=False
- try: qa=qa_video(c,item,out,story,cues)
+ try:
+  qa=qa_video(c,item,out,story,cues)
  except RuntimeError as e:
-  if str(e).startswith(('LUFS_FAIL','TRUE_PEAK_FAIL')):
+  repair_allowed=os.getenv('ORBIT_ALLOW_AUDIO_REPAIR','0')=='1' and c.get('runtime',{}).get('audio_repair_in_timed_run',False) is not False
+  if repair_allowed and str(e).startswith(('LUFS_FAIL','TRUE_PEAK_FAIL')):
    audio_only_repair(c,out); audio_repair=True; qa=qa_video(c,item,out,story,cues)
-  else: raise
- receipt={'schema':'CENA_CERTA_FACTORY_V2_RECEIPT','id':rid,'state':'PREVIEW_READY','ready_assets_pass':True,'render_pass':True,'qa_pass':True,'editorial_pass':False,'private_preview_pass':False,'human_approval':False,'delivered':False,'scheduled':False,'published':False,'duration':duration(out),'story_duration':story,'cta_duration':cta_seconds,'voice_wpm':round(wpm,1),'music_track_id':item['music_track']['id'],'rights_evidence':item['rights_evidence'],'anti_repeat_evidence':item['anti_repeat_evidence'],'relevance_evidence':item['relevance_evidence'],'scene_plan_count':len(item['scene_plan']),'prepared_manifest_sha256':sha256(root/'prepared.json'),'prepared_asset_fingerprint':prepared_asset_fingerprint(item),'dispatch_fingerprint':dispatch_fingerprint(item),'audio_repair_used':audio_repair,'mask_composite_order':'FILM_CC_TITLE_THEN_FINAL_STATIC_MASK','qa':qa,'elapsed_seconds':round(time.time()-t0,2)}
+  else:
+   raise
+ receipt={'schema':'CENA_CERTA_FACTORY_V2_RECEIPT','id':rid,'state':'PREVIEW_READY','ready_assets_pass':True,'render_pass':True,'qa_pass':True,'editorial_pass':False,'private_preview_pass':False,'human_approval':False,'delivered':False,'scheduled':False,'published':False,'duration':duration(out),'story_duration':story,'cta_duration':cta_seconds,'voice_wpm':round(wpm,1),'music_track_id':item['music_track']['id'],'rights_evidence':item['rights_evidence'],'anti_repeat_evidence':item['anti_repeat_evidence'],'relevance_evidence':item['relevance_evidence'],'scene_plan_count':len(item['scene_plan']),'prepared_manifest_sha256':sha256(root/'prepared.json'),'prepared_asset_fingerprint':prepared_asset_fingerprint(item),'prepared_engine_fingerprint':engine_fp,'dispatch_fingerprint':dispatch_fingerprint(item),'audio_repair_used':audio_repair,'mask_composite_order':'FILM_CC_TITLE_THEN_FINAL_STATIC_MASK','qa':qa,'elapsed_seconds':round(time.time()-t0,2)}
  tmpj=OUT/f'{rid}.receipt.json.tmp'; tmpj.write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8'); os.replace(tmpj,OUT/f'{rid}.receipt.json')
  print('FACTORY_V2_RENDER_PASS',rid,receipt['elapsed_seconds'])
 

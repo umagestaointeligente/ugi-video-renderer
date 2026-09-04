@@ -5,7 +5,7 @@ from pathlib import Path
 from .common import *
 from .preflight import validate_item
 from .voice import tts_with_real_boundaries
-from .fingerprint import prepared_asset_fingerprint, prepared_contract_fingerprint
+from .fingerprint import prepared_asset_fingerprint, prepared_contract_fingerprint, engine_fingerprint
 
 def precut_scene(src,start,dur,out,threads=1):
  dur=max(0.8,float(dur)); out=Path(out); tmp=out.with_name(out.stem+f'.part-{os.getpid()}'+out.suffix)
@@ -69,7 +69,7 @@ def prepare_one(batch,index,prepared_root):
   actual=duration(out); timeline_start,timeline_end,_=timeline[i]
   if actual+0.12<target: raise RuntimeError(f'SCENE_PRECUT_SHORT scene={i} actual={actual:.3f} target={target:.3f}')
   scenes.append({'index':i,'file':out.name,'sha256':sha256(out),'duration':actual,'target_duration':target,'timeline_start':timeline_start,'timeline_end':timeline_end,'source_start':start,'caption_start':item['scene_plan'][i]['caption_start'],'caption_end':item['scene_plan'][i]['caption_end'],'semantic_reason':item['scene_plan'][i]['semantic_reason']})
- manifest={'schema':'CENA_CERTA_PREPARED_ASSETS_V2','id':rid,'prepared_pass':True,'prepared_asset_fingerprint':prepared_asset_fingerprint(item),'prepared_contract_fingerprint':prepared_contract_fingerprint(c),'created_epoch':time.time(),'source_duration':source_dur,'story_duration':story,'voice_wpm':round(wpm,1),'cues':cues,'voice':{'file':voice.name,'sha256':sha256(voice),'duration':vd},'cta_voice':{'file':cta_voice.name,'sha256':sha256(cta_voice),'duration':cvd,'cues':cta_cues},'music':{'file':music.name,'sha256':sha256(music),'duration':duration(music),'track_id':mt['id'],'master_lufs':music_lufs,'master_true_peak':music_tp},'scenes':scenes,'timeline_coverage_seconds':sum(x['target_duration'] for x in scenes),'prepare_elapsed_seconds':round(time.time()-t0,2)}
+ manifest={'schema':'CENA_CERTA_PREPARED_ASSETS_V2','id':rid,'prepared_pass':True,'prepared_asset_fingerprint':prepared_asset_fingerprint(item),'prepared_contract_fingerprint':prepared_contract_fingerprint(c),'prepared_engine_fingerprint':engine_fingerprint(),'created_epoch':time.time(),'source_duration':source_dur,'story_duration':story,'voice_wpm':round(wpm,1),'cues':cues,'voice':{'file':voice.name,'sha256':sha256(voice),'duration':vd},'cta_voice':{'file':cta_voice.name,'sha256':sha256(cta_voice),'duration':cvd,'cues':cta_cues},'music':{'file':music.name,'sha256':sha256(music),'duration':duration(music),'track_id':mt['id'],'master_lufs':music_lufs,'master_true_peak':music_tp},'scenes':scenes,'timeline_coverage_seconds':sum(x['target_duration'] for x in scenes),'prepare_elapsed_seconds':round(time.time()-t0,2)}
  tmp=root/'prepared.json.tmp'; tmp.write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8'); os.replace(tmp,root/'prepared.json')
  print('FACTORY_V2_READY_ASSETS_PASS',rid,manifest['prepare_elapsed_seconds'])
 
