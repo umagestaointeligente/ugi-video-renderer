@@ -2,12 +2,12 @@
   "enabled": false,
   "source_mode": "CERTIFIED_SNAPSHOT_ONLY",
   "gitlab_ref": "feat/cena-certa-render-factory-v2",
-  "gitlab_source_sha": "4cebcd93f18b091136c4abcc1eb868ff1cddddb8",
+  "gitlab_source_sha": "8cd954c4e4bb2a8f0313be9e6622d85bd707fe93",
   "snapshot_ready": false,
   "candidate_pool_size": 10,
   "daily_publish_count": 8,
   "hot_reserve_count": 2,
   "prepared_run_id": null,
-  "requested_at": "2026-09-04T16:50:00-03:00",
-  "reason": "fail_closed_until_story_cta_snapshot_and_continuity_smoke_pass"
+  "requested_at": "2026-09-04T16:55:00-03:00",
+  "reason": "fail_closed_until_story_cta_snapshot_full_8_plus_2_smoke_and_4_network_continuity_pass"
 }
