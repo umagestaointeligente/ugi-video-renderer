@@ -1,0 +1,55 @@
+name: UGI Story Format Contract
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ugi_story_format_contract_patch.py'
+      - '.github/workflows/ugi-story-format-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-cloudflare-worker-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Deploy generic manifest format contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --quiet requests
+          python -m py_compile scripts/r45_instagram_multiformat_deploy.py scripts/ugi_story_format_contract_patch.py
+          PYTHONPATH=scripts python scripts/ugi_story_format_contract_patch.py
+      - name: Verify deployment evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '^OK=true$' cloudflare/status/ugi-story-format-contract.txt
+          grep -q '^MANIFEST_FORMAT_OVERRIDE=instagram$' cloudflare/status/ugi-story-format-contract.txt
+          grep -q '^FAIL_CLOSED_INVALID_FORMAT=true$' cloudflare/status/ugi-story-format-contract.txt
+      - name: Persist deployment evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-recovery-bot'
+          git config user.email 'ugi-recovery@users.noreply.github.com'
+          git add cloudflare/status/ugi-story-format-contract.txt
+          git commit -m 'chore: persist UGI Story format contract' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
