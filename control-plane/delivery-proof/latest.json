@@ -1,11 +1,11 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T22:07:48.325976+00:00",
+  "checkedAt": "2026-09-04T22:21:29.002773+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
-  "pendingWithinGrace": 0,
+  "pendingWithinGrace": 1,
   "late": 6,
   "failed": 0,
   "state": "ALERT",
@@ -120,6 +120,25 @@
       "externalLink": null,
       "error": null,
       "state": "LATE",
+      "externalProof": {
+        "attempted": false
+      }
+    },
+    {
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "contentId": "UGI-20260904-IG-1915-LULULEMON",
+      "platform": "instagram",
+      "kind": "video",
+      "draftId": "ugi-20260904021822-5e213b14150d",
+      "bufferPostId": null,
+      "dueAt": "2026-09-04T22:15:00+00:00",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
+      "error": null,
+      "state": "PENDING_WITHIN_GRACE",
       "externalProof": {
         "attempted": false
       }
