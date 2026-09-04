@@ -1,12 +1,12 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T21:09:37.241731+00:00",
+  "checkedAt": "2026-09-04T21:23:08.692010+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
-  "pendingWithinGrace": 1,
-  "late": 5,
+  "pendingWithinGrace": 0,
+  "late": 6,
   "failed": 0,
   "state": "ALERT",
   "results": [
@@ -119,7 +119,7 @@
       "sentAt": null,
       "externalLink": null,
       "error": null,
-      "state": "PENDING_WITHIN_GRACE",
+      "state": "LATE",
       "externalProof": {
         "attempted": false
       }
