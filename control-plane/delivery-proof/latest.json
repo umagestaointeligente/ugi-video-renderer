@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T11:58:01.098165+00:00",
+  "checkedAt": "2026-09-04T12:18:15.640875+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 1,
@@ -11,25 +11,25 @@
   "state": "HEALTHY",
   "results": [
     {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260902-INSTAGRAM-FALLBACK-VIDEO-AGENDA-R1.json",
-      "contentId": "UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO",
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
       "platform": "instagram",
       "kind": "video",
-      "draftId": "ugi-20260902124135-f68ed802eb40",
-      "bufferPostId": "6a9821d0aa3e12fdd58a7cb5",
-      "dueAt": "2026-09-03T00:00:00+00:00",
+      "draftId": "ugi-20260904021346-40d5655f05d9",
+      "bufferPostId": "6a9a359f82940622ebb35ffb",
+      "dueAt": "2026-09-04T12:00:00+00:00",
       "readbackHttp": 200,
       "bufferStatus": "sent",
       "status": "published",
-      "sentAt": "2026-09-03T00:02:17.360Z",
-      "externalLink": "https://www.instagram.com/reel/DczegDkoNcC/",
+      "sentAt": "2026-09-04T12:01:14.052Z",
+      "externalLink": "https://www.instagram.com/reel/Dc3VnBVDIHj/",
       "error": null,
       "state": "DELIVERED",
       "externalProof": {
         "attempted": true,
         "ok": true,
         "httpStatus": 200,
-        "finalUrl": "https://www.instagram.com/reel/DczegDkoNcC/"
+        "finalUrl": "https://www.instagram.com/reel/Dc3VnBVDIHj/"
       }
     }
   ]
