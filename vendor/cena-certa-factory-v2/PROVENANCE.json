@@ -1,0 +1,15 @@
+{
+  "schema": "CENA_CERTA_CERTIFIED_FACTORY_SNAPSHOT_V2",
+  "source_repository": "gitlab:umagestaointeligente-group/umagestaointeligente-project",
+  "source_branch": "feat/cena-certa-render-factory-v2",
+  "source_sha": "827e866080b238776c4ef83843167fb0dc2b63d7",
+  "snapshot_policy": "IMMUTABLE_PIN_FAIL_CLOSED",
+  "runtime_visual_assets": ["story", "cta", "title_anchor"],
+  "daily_batch_size": 8,
+  "networks": ["facebook", "instagram", "tiktok", "youtube"],
+  "expected_placements": 32,
+  "render_stage_target_seconds": 480,
+  "scheduler_target_seconds": 180,
+  "end_to_end_target_seconds": 660,
+  "publication_triggered_by_snapshot": false
+}
