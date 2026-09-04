@@ -1,96 +1,118 @@
-name: Cena Certa canonical render -> R2 2026-09-03
-
+name: Cena Certa canonical GitLab -> R2 2026-09-04
 on:
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/cena-certa-gitlab-r2-bridge-20260903.yml'
+    paths: ['.github/workflows/cena-certa-gitlab-r2-bridge-20260903.yml']
   workflow_dispatch:
-
-permissions:
-  contents: read
-
+permissions: {contents: read}
+env:
+  GL_REPO: https://gitlab.com/umagestaointeligente-group/umagestaointeligente-project.git
+  GL_REF: feat/cena-certa-mask-last-pilot-v1
+  GL_SHA: 5ebc7f699236a73f2b6a90a808ea9bcc91c4fa6a
+  BATCH: golden_master/batch_2026_09_04_v1.json
 jobs:
   render-deliver:
     strategy:
       fail-fast: false
       matrix:
-        video_id:
-          - CC-20260903-DEAD-DROP
-          - CC-20260903-PASION-ORIENTAL
-          - CC-20260903-MAN-BEHIND-MACHINE
-          - CC-20260903-CONTAINMENT-BREACH
+        video_id: [CC-20260904-KM72, CC-20260904-CASA-FIM-TEMPOS, CC-20260904-LA-HORA-CERO, CC-20260904-PAPITA, CC-20260904-RELAJO-LORO]
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
       UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
       VIDEO_ID: ${{ matrix.video_id }}
+      ORBIT_X264_PRESET: veryfast
+      ORBIT_CRF: '12'
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Validate existing delivery route
-        shell: bash
+      - name: Route and canonical source
         run: |
           set -euo pipefail
-          test -n "$UGI_VIDEO_UPLOAD_URL"
-          test -n "$UGI_VIDEO_UPLOAD_KEY"
-          echo "R2_ROUTE_PRESENT $VIDEO_ID"
-
-      - name: Install canonical runtime dependencies
-        shell: bash
+          test -n "$UGI_VIDEO_UPLOAD_URL"; test -n "$UGI_VIDEO_UPLOAD_KEY"
+          git clone --depth 1 --branch "$GL_REF" "$GL_REPO" src
+          cd src; test "$(git rev-parse HEAD)" = "$GL_SHA"
+          test -s "$BATCH"; test -s canonical/cena_certa/v1/contract_cena_certa_canonical_mask_v1.json
+          echo "CANONICAL_SOURCE_PIN_PASS $GL_SHA"
+      - name: Runtime
         run: |
-          set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends ffmpeg fonts-lato fluidsynth timgm6mb-soundfont >/dev/null
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-lato fonts-dejavu-core fluidsynth timgm6mb-soundfont ca-certificates curl >/dev/null
           python -m pip install -q edge-tts aiohttp numpy pillow mido yt-dlp
-
-      - name: Render and run fail-closed QA
-        shell: bash
+      - name: Hard lock preflight
+        working-directory: src
         run: |
           set -euo pipefail
-          # Edge currently emits SentenceBoundary for this voice; preserve every sentence,
-          # not only the first one, when generating literal CC timing.
-          sed -i "s/elif chunk\['type'\]=='SentenceBoundary' and not words:/elif chunk['type']=='SentenceBoundary':/" ops/cena-certa-runtime/runtime_20260903.py
-          python ops/cena-certa-runtime/runtime_20260903.py --id "$VIDEO_ID"
-          test -s "output/${VIDEO_ID}.mp4"
-          test -s "output/${VIDEO_ID}.receipt.json"
-          grep -q '"canonical_mask_pass": true' "output/${VIDEO_ID}.receipt.json"
-          grep -q '"mask_last_layer_pass": true' "output/${VIDEO_ID}.receipt.json"
-          grep -q '"tech_qa_pass": true' "output/${VIDEO_ID}.receipt.json"
-          grep -q '"editorial_qa_pass": true' "output/${VIDEO_ID}.receipt.json"
-
-      - name: Deliver PASS master to existing R2 route
-        shell: bash
-        run: |
-          set -euo pipefail
-          duration="$(ffprobe -v error -show_entries format=duration -of csv=p=0 "output/${VIDEO_ID}.mp4" | awk -F. '{print $1}')"
-          response="$(curl --fail-with-body --silent --show-error \
-            --retry 3 --retry-delay 2 --retry-all-errors \
-            --connect-timeout 15 --max-time 240 \
-            -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${VIDEO_ID}&duration=${duration}" \
-            -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
-            -H 'Content-Type: video/mp4' \
-            --data-binary @"output/${VIDEO_ID}.mp4")"
-          printf '%s\n' "$response" | tee "output/${VIDEO_ID}.r2.json"
-          echo "$response" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"'
-          python - "$VIDEO_ID" "output/${VIDEO_ID}.r2.json" <<'PY'
-          import json,sys
-          vid,path=sys.argv[1:]
-          d=json.load(open(path,encoding='utf-8'))
-          print('R2_RESULT',vid,d.get('status'),d.get('videoUrl') or d.get('url') or d.get('mediaUrl'))
+          python - <<'PY'
+          import base64,pathlib
+          p=pathlib.Path('canonical/cena_certa/v1/assets/cena_certa_story_logo_static_v1.b64')
+          if p.exists(): pathlib.Path('canonical/cena_certa/v1/assets/cena_certa_story_logo_static_v1.jpg').write_bytes(base64.b64decode(p.read_text().strip()))
           PY
-
-      - name: Preserve proof artifacts
+          sed -i 's/d=\.25/d=0.25/g;s/normalize=0\[voc\]/normalize=0[voc0];[voc0]asplit=2[vkey][vmain]/;s/\[m0\]\[voc\]sidechaincompress/[m0][vkey]sidechaincompress/;s/\[voc\]\[md\]amix/[vmain][md]amix/;s/setpts=PTS-STARTPTS\[ctav\]/setpts=PTS-STARTPTS,setsar=1[ctav]/;s/setpts=PTS-STARTPTS\[sv\]/setpts=PTS-STARTPTS,setsar=1[sv]/' canonical/cena_certa/v1/render_canonical_v1.py
+          python golden_master/mask_last_layer_patch.py
+          python canonical/cena_certa/v1/canonical_mask_guard.py --contract canonical/cena_certa/v1/contract_cena_certa_canonical_mask_v1.json
+          python - <<'PY'
+          import json,os,pathlib
+          b=json.load(open(os.environ['BATCH'],encoding='utf-8')); x=next(i for i in b if i['id']==os.environ['VIDEO_ID'])
+          banned=('trailer','teaser','preview','recap','sizzle','promo','editorial','animation','animated')
+          assert x['film_year']>=2000 and x['dedup_60d_pass'] is True and x['publication_gate']=='AUTHORIZED_BY_USER'
+          assert x['rights_evidence'].startswith('https://commons.wikimedia.org/wiki/File:') and 'Public Domain' in x['license']
+          assert not any(w in (x['film_title']+' '+x['title']+' '+x['description']).lower() for w in banned)
+          p=pathlib.Path('tmp')/f"single-{x['id']}.json"; p.parent.mkdir(exist_ok=True); p.write_text(json.dumps([x],ensure_ascii=False),encoding='utf-8')
+          print('RIGHTS_PASS'); print('ANTI_REPEAT_PASS'); print('EDITORIAL_PREFLIGHT_PASS')
+          PY
+      - name: Render
+        working-directory: src
+        run: |
+          set -euo pipefail
+          python canonical/cena_certa/v1/render_canonical_v1.py --batch "tmp/single-${VIDEO_ID}.json"
+          test -s "output/${VIDEO_ID}.mp4"; test -s "output/${VIDEO_ID}.receipt.json"; test -s "output/${VIDEO_ID}-canonical-mask-report.txt"
+      - name: Eight gate QA
+        working-directory: src
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,pathlib,re,subprocess,unicodedata
+          from PIL import Image
+          import numpy as np
+          vid=os.environ['VIDEO_ID']; o=pathlib.Path('output'); mp4=o/f'{vid}.mp4'
+          rec=json.load(open(o/f'{vid}.receipt.json',encoding='utf-8')); item=next(x for x in json.load(open(os.environ['BATCH'],encoding='utf-8')) if x['id']==vid)
+          assert rec['canonical_mask_pass'] and rec['mask_last_layer_pass'] and rec['mask_composite_order']=='FINAL_STORY_LAYER_AFTER_FILM_TITLE_CC'
+          assert rec['cta_static_source']=='APPROVED_CTA_SOURCE_V1_BYTE_EXACT' and rec['publication_gate']=='AUTHORIZED_BY_USER'
+          p=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-show_format','-of','json',str(mp4)],text=True)); v=next(s for s in p['streams'] if s['codec_type']=='video'); a=next(s for s in p['streams'] if s['codec_type']=='audio')
+          assert (v['codec_name'],int(v['width']),int(v['height']),v['pix_fmt'])==('h264',1080,1920,'yuv420p'); n,d=map(int,v['avg_frame_rate'].split('/')); assert abs(n/d-30)<.01; assert a['codec_name']=='aac'
+          ass=pathlib.Path('tmp/canonical-v1')/f'{vid}.ass'; lines=[z.split(',',9)[-1].replace('\\N',' ') for z in ass.read_text(encoding='utf-8').splitlines() if z.startswith('Dialogue:')]
+          norm=lambda s: re.sub(r'[^a-z0-9]+',' ',unicodedata.normalize('NFKD',s).encode('ascii','ignore').decode().lower()).strip()
+          assert norm(' '.join(lines))==norm(item['script'])
+          vol=subprocess.run(['ffmpeg','-hide_banner','-i',str(mp4),'-af','volumedetect','-f','null','-'],text=True,capture_output=True).stderr
+          mean=float(re.search(r'mean_volume:\s*(-?[0-9.]+) dB',vol).group(1)); peak=float(re.search(r'max_volume:\s*(-?[0-9.]+) dB',vol).group(1)); assert mean>-32 and peak<=0
+          t=float(rec['story_duration'])+1; frame=o/f'{vid}-cta.png'; ref=o/f'{vid}-cta-ref.png'
+          subprocess.check_call(['ffmpeg','-loglevel','error','-y','-ss',str(t),'-i',str(mp4),'-frames:v','1',str(frame)]); subprocess.check_call(['ffmpeg','-loglevel','error','-y','-i','canonical/cena_certa/v1/assets/approved_cta_source_v1.png','-vf','scale=1080:1920','-frames:v','1',str(ref)])
+          mae=float(np.abs(np.asarray(Image.open(frame).convert('RGB')).astype(np.int16)-np.asarray(Image.open(ref).convert('RGB')).astype(np.int16)).mean()); assert mae<10
+          qa={'id':vid,'RIGHTS':'PASS','ANTI_REPEAT':'PASS','EDITORIAL':'PASS','TECH':'PASS','MASK':'PASS','AUDIO':'PASS','CC':'PASS','CTA':'PASS','cta_mae':round(mae,3),'audio_mean_db':mean,'audio_peak_db':peak}; (o/f'{vid}.qa.json').write_text(json.dumps(qa,ensure_ascii=False,indent=2)); print('EIGHT_GATE_QA_PASS',qa)
+          PY
+          ffmpeg -loglevel error -y -i "output/${VIDEO_ID}.mp4" -vf "fps=1/5,scale=216:384,tile=5x2:padding=3:margin=3" -frames:v 1 "output/${VIDEO_ID}-contact.jpg"
+          ffmpeg -loglevel error -y -i "output/${VIDEO_ID}.mp4" -vf "fps=1/5,crop=1080:330:0:1590,scale=360:110,tile=3x3:padding=2:margin=2" -frames:v 1 "output/${VIDEO_ID}-footer.jpg"
+      - name: Deliver to existing R2
+        working-directory: src
+        run: |
+          set -euo pipefail
+          grep -q '"CTA": "PASS"' "output/${VIDEO_ID}.qa.json"
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "output/${VIDEO_ID}.mp4")
+          response=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 240 -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${VIDEO_ID}&duration=${dur}" -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" -H 'Content-Type: video/mp4' --data-binary @"output/${VIDEO_ID}.mp4")
+          printf '%s\n' "$response" | tee "output/${VIDEO_ID}.r2.json"; echo "$response" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"'
+      - name: Proof artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cena-certa-${{ matrix.video_id }}
           path: |
-            output/${{ matrix.video_id }}.mp4
-            output/${{ matrix.video_id }}.receipt.json
-            output/${{ matrix.video_id }}.r2.json
+            src/output/${{ matrix.video_id }}.mp4
+            src/output/${{ matrix.video_id }}.receipt.json
+            src/output/${{ matrix.video_id }}.qa.json
+            src/output/${{ matrix.video_id }}.r2.json
+            src/output/${{ matrix.video_id }}-canonical-mask-report.txt
+            src/output/${{ matrix.video_id }}-contact.jpg
+            src/output/${{ matrix.video_id }}-footer.jpg
+            src/output/${{ matrix.video_id }}-cta.png
           if-no-files-found: warn
           retention-days: 7
-
-# self-render bridge trigger 2026-09-03T20:29:00-03:00
