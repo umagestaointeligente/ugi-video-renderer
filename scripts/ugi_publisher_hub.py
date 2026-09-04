@@ -306,10 +306,22 @@ def resolve_ready_drafts(
 def _scheduled_readback_pass(readback: dict[str, Any], requested_due: str) -> tuple[bool, dict[str, Any]]:
     publication = readback.get("publication") or {}
     status = str(publication.get("status") or "").lower()
+
+    # Buffer can return the same scheduled instant in UTC (Z) while the
+    # canonical manifest keeps America/Sao_Paulo (-03:00). Compare absolute
+    # instants, never wall-clock strings, so 09:00-03:00 == 12:00Z.
+    requested_instant = _due_at(requested_due)
+    buffer_instant = _due_at(publication.get("dueAt"))
+    exact_instant = (
+        requested_instant is not None
+        and buffer_instant is not None
+        and requested_instant == buffer_instant
+    )
+
     passed = (
         readback.get("ok") is True
         and bool(publication.get("bufferPostId"))
-        and str(publication.get("dueAt") or "")[:16] == requested_due[:16]
+        and exact_instant
         and status == "scheduled"
     )
     return passed, publication
