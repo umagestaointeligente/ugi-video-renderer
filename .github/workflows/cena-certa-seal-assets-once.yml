@@ -1,0 +1,51 @@
+name: Cena Certa Seal Canonical Assets Once
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-bridge]
+    paths: ['.github/workflows/cena-certa-seal-assets-once.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  seal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feat/cena-certa-factory-v2-bridge
+      - name: Fetch and cryptographically seal exact canonical masters
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p canonical/cena_certa/v1/assets
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 45 \
+            'https://drive.usercontent.google.com/download?id=1YhAr-UaldGMsCgLfwAvvnucv-tHZ-ASU&export=download&confirm=t' \
+            -o canonical/cena_certa/v1/assets/approved_story_source_v1.png
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 45 \
+            'https://drive.usercontent.google.com/download?id=1mbrG5F67Sw_50SLV8KkVUEVPExyEAcMt&export=download&confirm=t' \
+            -o canonical/cena_certa/v1/assets/approved_cta_source_v1.png
+          echo '256448409d6016598d4a27650bec6c35f8ecc67b4e8d294a87246e1b4c4ae4ce  canonical/cena_certa/v1/assets/approved_story_source_v1.png' | sha256sum -c -
+          echo 'b19d5ccb51417c6d71ea7fa672e64a9f34023954e3d76ed9b285b83bcd41745b  canonical/cena_certa/v1/assets/approved_cta_source_v1.png' | sha256sum -c -
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected={
+            'canonical/cena_certa/v1/assets/approved_story_source_v1.png':'bebaa2c265733236ab31cd80b24f8f8b46e740bd',
+            'canonical/cena_certa/v1/assets/approved_cta_source_v1.png':'66cdec74979388a3435125a89584fc0a4c5d889a',
+          }
+          for path,want in expected.items():
+              b=Path(path).read_bytes()
+              got=hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
+              if got!=want: raise SystemExit(f'GIT_BLOB_MISMATCH {path} {got} != {want}')
+              print('CANONICAL_ASSET_BLOB_PASS',path,got)
+          PY
+          git config user.name 'Cena Certa Factory Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add canonical/cena_certa/v1/assets/approved_story_source_v1.png canonical/cena_certa/v1/assets/approved_cta_source_v1.png
+          git diff --cached --quiet && { echo 'ASSETS_ALREADY_SEALED'; exit 0; }
+          git commit -m 'Cena Certa V2: seal exact Story and CTA canonical masters'
+          git push origin HEAD:feat/cena-certa-factory-v2-bridge
