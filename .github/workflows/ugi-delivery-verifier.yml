@@ -1,13 +1,11 @@
 name: UGI Delivery Verifier
 
 on:
+  # Hourly only. The previous */10 cadence could multiply Buffer status reads
+  # across every due receipt and exhaust the provider's rolling API quota.
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '23 * * * *'
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/ugi-delivery-verifier.yml'
 
 permissions:
   contents: write
