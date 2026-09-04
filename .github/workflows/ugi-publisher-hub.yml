@@ -12,8 +12,11 @@ on:
         required: false
         default: '0'
         type: string
+  # Queue pushes remain immediate. The hourly schedule is recovery-only and
+  # deliberately conservative because Buffer enforces a 500-request / 24h
+  # client window; 15-minute polling unnecessarily exhausted that quota.
   schedule:
-    - cron: '7,22,37,52 * * * *'
+    - cron: '7 * * * *'
   push:
     branches: [main]
     paths:
@@ -116,7 +119,6 @@ jobs:
           git add control-plane/publisher-hub/render-state/*.json 2>/dev/null || true
           git add control-plane/publisher-hub/receipts/*.json 2>/dev/null || true
           git add control-plane/publisher-hub/status/latest.json 2>/dev/null || true
-          git add control-plane/anti-repeat/latest.json 2>/dev/null || true
           git add control-plane/anti-repeat/platform-topic-history.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No Publisher Hub state changes"
