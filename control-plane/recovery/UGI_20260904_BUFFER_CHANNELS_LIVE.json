@@ -1,0 +1,9 @@
+{
+  "httpStatus": 400,
+  "body": {
+    "ok": false,
+    "version": "lola-v8-r45-5-manifest-format-contract-2026-09-04",
+    "errorClass": "buffer_channel_discovery_failed",
+    "error": "Buffer HTTP 429: Too many requests from this client. Please try again later."
+  }
+}
