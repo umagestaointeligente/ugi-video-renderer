@@ -1,0 +1,54 @@
+{
+  "schema": "CENA_CERTA_CONTINUITY_ROUTING_V2",
+  "checked_at": "2026-09-04T16:50:00-03:00",
+  "state": "CONTINUITY_NOT_READY",
+  "primary": {
+    "provider": "Metricool",
+    "brand_id": "6809869",
+    "brand_label": "Cena Certa Ofc",
+    "connected_networks": ["facebook", "instagram", "tiktok", "youtube"],
+    "connected_count": 4,
+    "required_count": 4,
+    "health": "CONNECTED_4_OF_4"
+  },
+  "secondary": {
+    "provider": "post_bridge",
+    "connected_accounts": {
+      "facebook": "88242",
+      "youtube": "88240"
+    },
+    "connected_networks": ["facebook", "youtube"],
+    "missing_networks": ["instagram", "tiktok"],
+    "health": "PARTIAL_2_OF_4",
+    "reconcile_before_use": true
+  },
+  "schedule_buffer": {
+    "next_day_required_posts": 8,
+    "healthy_48h_posts": 16,
+    "observed_next_day_posts": 0,
+    "observed_48h_posts": 0,
+    "health": "EMPTY"
+  },
+  "content_resilience": {
+    "candidate_pool": 10,
+    "primary_slots": 8,
+    "hot_reserves": 2,
+    "max_simultaneous_primary_failures_recoverable": 2
+  },
+  "sla_seconds": {
+    "render_qa_stage": 480,
+    "primary_schedule_attempt": 90,
+    "reconcile": 45,
+    "fallback": 45,
+    "scheduler_total": 180,
+    "end_to_end": 660
+  },
+  "green_gate": {
+    "primary_4_of_4": true,
+    "secondary_4_of_4": false,
+    "next_day_buffer_8": false,
+    "healthy_48h_buffer_16": false,
+    "certified_snapshot": false,
+    "fault_matrix_pass": false
+  }
+}
