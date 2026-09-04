@@ -4,10 +4,10 @@
   "state": "DEGRADED",
   "manifestsSeen": 2,
   "proven": 0,
-  "waitingForRender": 1,
-  "degraded": 1,
+  "waitingForRender": 0,
+  "degraded": 2,
   "publisher": "BUFFER",
   "metricoolPublicationAllowed": false,
   "chatRuntimeRequired": false,
-  "timestamp": "2026-09-04T03:37:00.324709+00:00"
+  "timestamp": "2026-09-04T03:48:46.637789+00:00"
 }
