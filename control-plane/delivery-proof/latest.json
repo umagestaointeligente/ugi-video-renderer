@@ -1,7 +1,7 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T14:22:40.776363+00:00",
+  "checkedAt": "2026-09-04T14:38:46.315451+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 2,
@@ -50,7 +50,7 @@
       "externalProof": {
         "attempted": true,
         "ok": true,
-        "httpStatus": 429,
+        "httpStatus": 200,
         "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3978789137503099329&is_from_rle"
       }
     }
