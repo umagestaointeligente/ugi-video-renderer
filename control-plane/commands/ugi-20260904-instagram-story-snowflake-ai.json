@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "instagram",
+  "type": "story_video",
+  "topic_key": "snowflake-ai-usage-revenue-strategy",
+  "title": "IA vira estratégia quando aparece em uso, receita ou eficiência",
+  "duration": "36",
+  "render_id": "ugi-20260904-instagram-story-snowflake-ai",
+  "content_id": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "instagram",
+  "event_or_case": "Snowflake earnings and AI contribution commentary reported 2026-09-03",
+  "management_thesis": "Tecnologia só vira estratégia quando pode ser conectada a comportamento de uso, receita, custo ou produtividade.",
+  "scenes_json": {
+    "type": "story_video",
+    "cta": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "story_video"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "story_video"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "cloud data technology business",
+        "pexels_query": "cloud data technology business",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "IA vira estratégia quando aparece em uso, receita ou eficiência",
+          "tiktok": "IA vira estratégia quando aparece em uso, receita ou eficiência",
+          "youtube": "IA vira estratégia quando aparece em uso, receita ou eficiência"
+        },
+        "narration": {
+          "instagram": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso.",
+          "tiktok": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso.",
+          "youtube": "A melhor prova de uma estratégia de IA não é a apresentação. É o uso."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "enterprise AI data team",
+        "pexels_query": "enterprise AI data team",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento.",
+          "tiktok": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento.",
+          "youtube": "A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "software usage analytics team",
+        "pexels_query": "software usage analytics team",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico.",
+          "tiktok": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico.",
+          "youtube": "Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "executive technology metrics",
+        "pexels_query": "executive technology metrics",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico.",
+          "tiktok": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico.",
+          "youtube": "Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "team measuring AI adoption",
+        "pexels_query": "team measuring AI adoption",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA.",
+          "tiktok": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA.",
+          "youtube": "Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "modern cloud office closing",
+        "pexels_query": "modern cloud office closing",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+          "tiktok": "Sua IA já aparece em uso real ou ainda só em roadmap?",
+          "youtube": "Sua IA já aparece em uso real ou ainda só em roadmap?"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "instagram",
+  "type": "reel",
+  "topic_key": "anvisa-unilever-quality-compliance-capacity",
+  "title": "Quando qualidade e compliance viram capacidade operacional",
+  "duration": "46",
+  "render_id": "ugi-20260904-instagram-reel-anvisa-unilever",
+  "content_id": "UGI-20260904-IG-1245-ANVISA-UNILEVER",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "instagram",
+  "event_or_case": "Anvisa preventive suspension of cleaning-product manufacturing at Unilever Vinhedo reported 2026-09-02",
+  "management_thesis": "Compliance deixa de ser função de suporte quando uma falha pode limitar a capacidade de produzir.",
+  "scenes_json": {
+    "type": "reel",
+    "cta": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "reel"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "reel"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "factory quality inspection cleaning products",
+        "pexels_query": "factory quality inspection cleaning products",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "Quando qualidade e compliance viram capacidade operacional",
+          "tiktok": "Quando qualidade e compliance viram capacidade operacional",
+          "youtube": "Quando qualidade e compliance viram capacidade operacional"
+        },
+        "narration": {
+          "instagram": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas.",
+          "tiktok": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas.",
+          "youtube": "Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "manufacturing compliance inspection",
+        "pexels_query": "manufacturing compliance inspection",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "Anvisa, 02 set 2026",
+          "tiktok": "Anvisa, 02 set 2026",
+          "youtube": "Anvisa, 02 set 2026"
+        },
+        "narration": {
+          "instagram": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado.",
+          "tiktok": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado.",
+          "youtube": "A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "production line quality control",
+        "pexels_query": "production line quality control",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço.",
+          "tiktok": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço.",
+          "youtube": "Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "operations manager compliance planning",
+        "pexels_query": "operations manager compliance planning",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar.",
+          "tiktok": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar.",
+          "youtube": "O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "factory continuity risk team",
+        "pexels_query": "factory continuity risk team",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade.",
+          "tiktok": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade.",
+          "youtube": "Mapeie requisito, processo afetado, dono, evidência e plano de continuidade."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "industrial management closing",
+        "pexels_query": "industrial management closing",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "Anvisa, 02 set 2026",
+          "tiktok": "Anvisa, 02 set 2026",
+          "youtube": "Anvisa, 02 set 2026"
+        },
+        "narration": {
+          "instagram": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+          "tiktok": "Na sua operação, qual requisito pode virar gargalo de capacidade?",
+          "youtube": "Na sua operação, qual requisito pode virar gargalo de capacidade?"
+        }
+      }
+    ]
+  }
+}

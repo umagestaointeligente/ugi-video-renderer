@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "tiktok",
+  "type": "video",
+  "topic_key": "tiktok-joblife-authentic-employer-brand",
+  "title": "#joblife: employer brand começa na experiência real",
+  "duration": "42",
+  "render_id": "ugi-20260904-tiktok-joblife",
+  "content_id": "UGI-20260904-TT-1215-JOBLIFE",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "tiktok",
+  "event_or_case": "TikTok Next 2026 identifies #joblife as an evolution of #worklife",
+  "management_thesis": "Marca empregadora sustentável nasce da experiência vivida e só depois da comunicação.",
+  "scenes_json": {
+    "type": "video",
+    "cta": "O que um funcionário mostraria da sua empresa sem roteiro?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "video"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "video"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "real office workday employees",
+        "pexels_query": "real office workday employees",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "#joblife: employer brand começa na experiência real",
+          "tiktok": "#joblife: employer brand começa na experiência real",
+          "youtube": "#joblife: employer brand começa na experiência real"
+        },
+        "narration": {
+          "instagram": "#joblife está crescendo porque as pessoas querem ver o trabalho como ele realmente é.",
+          "tiktok": "#joblife está crescendo porque as pessoas querem ver o trabalho como ele realmente é.",
+          "youtube": "#joblife está crescendo porque as pessoas querem ver o trabalho como ele realmente é."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "return to office authentic workplace",
+        "pexels_query": "return to office authentic workplace",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "TikTok Next 2026",
+          "tiktok": "TikTok Next 2026",
+          "youtube": "TikTok Next 2026"
+        },
+        "narration": {
+          "instagram": "O próprio TikTok destaca a hashtag como evolução de #worklife, com criadores mostrando volta ao escritório e carreiras não tradicionais de forma mais realista.",
+          "tiktok": "O próprio TikTok destaca a hashtag como evolução de #worklife, com criadores mostrando volta ao escritório e carreiras não tradicionais de forma mais realista.",
+          "youtube": "O próprio TikTok destaca a hashtag como evolução de #worklife, com criadores mostrando volta ao escritório e carreiras não tradicionais de forma mais realista."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "employee experience teamwork",
+        "pexels_query": "employee experience teamwork",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Quando a experiência do funcionário e a mensagem da empresa divergem, a audiência percebe a distância rapidamente.",
+          "tiktok": "Quando a experiência do funcionário e a mensagem da empresa divergem, a audiência percebe a distância rapidamente.",
+          "youtube": "Quando a experiência do funcionário e a mensagem da empresa divergem, a audiência percebe a distância rapidamente."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "manager employee culture conversation",
+        "pexels_query": "manager employee culture conversation",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Employer branding não começa no vídeo de recrutamento. Começa no desenho do trabalho, na liderança e na rotina que as pessoas encontram.",
+          "tiktok": "Employer branding não começa no vídeo de recrutamento. Começa no desenho do trabalho, na liderança e na rotina que as pessoas encontram.",
+          "youtube": "Employer branding não começa no vídeo de recrutamento. Começa no desenho do trabalho, na liderança e na rotina que as pessoas encontram."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "team authentic workplace process",
+        "pexels_query": "team authentic workplace process",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Antes de comunicar cultura, escolha três evidências observáveis de que ela existe no dia a dia.",
+          "tiktok": "Antes de comunicar cultura, escolha três evidências observáveis de que ela existe no dia a dia.",
+          "youtube": "Antes de comunicar cultura, escolha três evidências observáveis de que ela existe no dia a dia."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "modern office candid closing",
+        "pexels_query": "modern office candid closing",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "TikTok Next 2026",
+          "tiktok": "TikTok Next 2026",
+          "youtube": "TikTok Next 2026"
+        },
+        "narration": {
+          "instagram": "O que um funcionário mostraria da sua empresa sem roteiro?",
+          "tiktok": "O que um funcionário mostraria da sua empresa sem roteiro?",
+          "youtube": "O que um funcionário mostraria da sua empresa sem roteiro?"
+        }
+      }
+    ]
+  }
+}

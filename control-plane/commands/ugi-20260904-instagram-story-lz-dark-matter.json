@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "instagram",
+  "type": "story_video",
+  "topic_key": "lz-dark-matter-signal-decision-under-uncertainty",
+  "title": "Um sinal interessante não é uma conclusão",
+  "duration": "36",
+  "render_id": "ugi-20260904-instagram-story-lz-dark-matter",
+  "content_id": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "instagram",
+  "event_or_case": "LUX-ZEPLIN dark-matter search result reported 2026-09-01",
+  "management_thesis": "Gestão sob incerteza exige separar sinal, evidência e decisão antes de transformar hipótese em conclusão.",
+  "scenes_json": {
+    "type": "story_video",
+    "cta": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "story_video"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "story_video"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "physics laboratory experiment scientists",
+        "pexels_query": "physics laboratory experiment scientists",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "Um sinal interessante não é uma conclusão",
+          "tiktok": "Um sinal interessante não é uma conclusão",
+          "youtube": "Um sinal interessante não é uma conclusão"
+        },
+        "narration": {
+          "instagram": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta.",
+          "tiktok": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta.",
+          "youtube": "Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "scientists reviewing detector data",
+        "pexels_query": "scientists reviewing detector data",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "LZ Collaboration / Reuters, 01 set 2026",
+          "tiktok": "LZ Collaboration / Reuters, 01 set 2026",
+          "youtube": "LZ Collaboration / Reuters, 01 set 2026"
+        },
+        "narration": {
+          "instagram": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados.",
+          "tiktok": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados.",
+          "youtube": "O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "research team uncertainty analysis",
+        "pexels_query": "research team uncertainty analysis",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva.",
+          "tiktok": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva.",
+          "youtube": "Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "manager evaluating evidence decision",
+        "pexels_query": "manager evaluating evidence decision",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta.",
+          "tiktok": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta.",
+          "youtube": "O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "team planning next experiment",
+        "pexels_query": "team planning next experiment",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final.",
+          "tiktok": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final.",
+          "youtube": "Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "modern science technology closing",
+        "pexels_query": "modern science technology closing",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "LZ Collaboration / Reuters, 01 set 2026",
+          "tiktok": "LZ Collaboration / Reuters, 01 set 2026",
+          "youtube": "LZ Collaboration / Reuters, 01 set 2026"
+        },
+        "narration": {
+          "instagram": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+          "tiktok": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?",
+          "youtube": "Na sua empresa, qual sinal você está tratando como certeza cedo demais?"
+        }
+      }
+    ]
+  }
+}

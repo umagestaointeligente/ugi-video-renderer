@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "instagram",
+  "type": "reel",
+  "topic_key": "lululemon-premium-brand-innovation-novelty",
+  "title": "Quando uma marca premium perde novidade",
+  "duration": "46",
+  "render_id": "ugi-20260904-instagram-reel-lululemon",
+  "content_id": "UGI-20260904-IG-1915-LULULEMON",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "instagram",
+  "event_or_case": "Lululemon outlook cut and Americas weakness reported 2026-09-03",
+  "management_thesis": "Marca premium sustenta preço quando entrega novidade e relevância; desconto não substitui inovação de produto.",
+  "scenes_json": {
+    "type": "reel",
+    "cta": "Sua marca está vendendo valor novo ou apenas preço menor?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "reel"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "reel"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "premium activewear retail store",
+        "pexels_query": "premium activewear retail store",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "Quando uma marca premium perde novidade",
+          "tiktok": "Quando uma marca premium perde novidade",
+          "youtube": "Quando uma marca premium perde novidade"
+        },
+        "narration": {
+          "instagram": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade.",
+          "tiktok": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade.",
+          "youtube": "Uma marca premium pode continuar conhecida e ainda perder poder de novidade."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "fashion retail product assortment",
+        "pexels_query": "fashion retail product assortment",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio.",
+          "tiktok": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio.",
+          "youtube": "A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "premium brand customer shopping",
+        "pexels_query": "premium brand customer shopping",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação.",
+          "tiktok": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação.",
+          "youtube": "Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "product innovation merchandising team",
+        "pexels_query": "product innovation merchandising team",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento.",
+          "tiktok": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento.",
+          "youtube": "Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "retail discount strategy planning",
+        "pexels_query": "retail discount strategy planning",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção.",
+          "tiktok": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção.",
+          "youtube": "Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "fashion business closing",
+        "pexels_query": "fashion business closing",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "Sua marca está vendendo valor novo ou apenas preço menor?",
+          "tiktok": "Sua marca está vendendo valor novo ou apenas preço menor?",
+          "youtube": "Sua marca está vendendo valor novo ou apenas preço menor?"
+        }
+      }
+    ]
+  }
+}

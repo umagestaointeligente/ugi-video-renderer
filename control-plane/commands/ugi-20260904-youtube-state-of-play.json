@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "youtube",
+  "type": "video",
+  "topic_key": "state-of-play-launch-portfolio-attention",
+  "title": "Mais de 30 novidades: como lançar sem diluir atenção",
+  "duration": "48",
+  "render_id": "ugi-20260904-youtube-state-of-play",
+  "content_id": "UGI-20260904-YT-1630-STATE-OF-PLAY",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "youtube",
+  "event_or_case": "PlayStation State of Play two-show recap with more than 30 games on 2026-09-03",
+  "management_thesis": "Portfólio amplo exige arquitetura de atenção: hierarquia, sequência e memória são tão importantes quanto quantidade de lançamentos.",
+  "scenes_json": {
+    "type": "video",
+    "cta": "Seu portfólio tem prioridades ou só datas?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "video"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "video"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "video game presentation audience",
+        "pexels_query": "video game presentation audience",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "Mais de 30 novidades: como lançar sem diluir atenção",
+          "tiktok": "Mais de 30 novidades: como lançar sem diluir atenção",
+          "youtube": "Mais de 30 novidades: como lançar sem diluir atenção"
+        },
+        "narration": {
+          "instagram": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada.",
+          "tiktok": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada.",
+          "youtube": "Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "gaming launch event screens",
+        "pexels_query": "gaming launch event screens",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "PlayStation Blog, 03 set 2026",
+          "tiktok": "PlayStation Blog, 03 set 2026",
+          "youtube": "PlayStation Blog, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio.",
+          "tiktok": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio.",
+          "youtube": "A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "product portfolio launch planning",
+        "pexels_query": "product portfolio launch planning",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória.",
+          "tiktok": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória.",
+          "youtube": "Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "marketing team launch sequencing",
+        "pexels_query": "marketing team launch sequencing",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela.",
+          "tiktok": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela.",
+          "youtube": "Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "product roadmap prioritization",
+        "pexels_query": "product roadmap prioritization",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção.",
+          "tiktok": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção.",
+          "youtube": "Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "gaming business closing",
+        "pexels_query": "gaming business closing",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "PlayStation Blog, 03 set 2026",
+          "tiktok": "PlayStation Blog, 03 set 2026",
+          "youtube": "PlayStation Blog, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "Seu portfólio tem prioridades ou só datas?",
+          "tiktok": "Seu portfólio tem prioridades ou só datas?",
+          "youtube": "Seu portfólio tem prioridades ou só datas?"
+        }
+      }
+    ]
+  }
+}

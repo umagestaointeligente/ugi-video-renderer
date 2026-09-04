@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "youtube",
+  "type": "video",
+  "topic_key": "gsm-vinfast-capital-heavy-growth-unit-economics",
+  "title": "Crescer rápido não garante crescimento saudável",
+  "duration": "48",
+  "render_id": "ugi-20260904-youtube-vinfast-gsm",
+  "content_id": "UGI-20260904-YT-2030-VINFAST-GSM",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "youtube",
+  "event_or_case": "GSM international expansion plans reported 2026-09-03",
+  "management_thesis": "Modelos intensivos em ativos podem acelerar controle e expansão, mas exigem disciplina maior de capital, utilização e unit economics.",
+  "scenes_json": {
+    "type": "video",
+    "cta": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "video"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "video"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "electric vehicle ride hailing fleet",
+        "pexels_query": "electric vehicle ride hailing fleet",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "Crescer rápido não garante crescimento saudável",
+          "tiktok": "Crescer rápido não garante crescimento saudável",
+          "youtube": "Crescer rápido não garante crescimento saudável"
+        },
+        "narration": {
+          "instagram": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes.",
+          "tiktok": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes.",
+          "youtube": "Duas empresas podem crescer na mesma categoria com economias completamente diferentes."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "EV fleet operations charging",
+        "pexels_query": "EV fleet operations charging",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade.",
+          "tiktok": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade.",
+          "youtube": "A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "mobility business operations",
+        "pexels_query": "mobility business operations",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade.",
+          "tiktok": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade.",
+          "youtube": "Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "capital intensive business planning",
+        "pexels_query": "capital intensive business planning",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos.",
+          "tiktok": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos.",
+          "youtube": "Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "fleet utilization management",
+        "pexels_query": "fleet utilization management",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade.",
+          "tiktok": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade.",
+          "youtube": "Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "electric mobility closing",
+        "pexels_query": "electric mobility closing",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+          "tiktok": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?",
+          "youtube": "Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?"
+        }
+      }
+    ]
+  }
+}

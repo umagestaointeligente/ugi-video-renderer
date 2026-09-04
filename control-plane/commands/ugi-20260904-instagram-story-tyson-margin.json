@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "instagram",
+  "type": "story_video",
+  "topic_key": "tyson-beef-price-cost-margin-elasticity",
+  "title": "Preço recorde não significa margem recorde",
+  "duration": "36",
+  "render_id": "ugi-20260904-instagram-story-tyson-margin",
+  "content_id": "UGI-20260904-IG-1030-TYSON-MARGIN",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "instagram",
+  "event_or_case": "Tyson Foods beef pricing and cattle-cost pressure reported 2026-09-03",
+  "management_thesis": "Preço alto só cria resultado quando a estrutura de custo, volume e elasticidade permite capturar margem.",
+  "scenes_json": {
+    "type": "story_video",
+    "cta": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "story_video"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "story_video"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "food production beef supply chain",
+        "pexels_query": "food production beef supply chain",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "Preço recorde não significa margem recorde",
+          "tiktok": "Preço recorde não significa margem recorde",
+          "youtube": "Preço recorde não significa margem recorde"
+        },
+        "narration": {
+          "instagram": "A carne pode estar mais cara e, mesmo assim, a margem apertar.",
+          "tiktok": "A carne pode estar mais cara e, mesmo assim, a margem apertar.",
+          "youtube": "A carne pode estar mais cara e, mesmo assim, a margem apertar."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "cattle supply business operations",
+        "pexels_query": "cattle supply business operations",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade.",
+          "tiktok": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade.",
+          "youtube": "A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "pricing cost margin analysis",
+        "pexels_query": "pricing cost margin analysis",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem.",
+          "tiktok": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem.",
+          "youtube": "Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "manager reviewing category economics",
+        "pexels_query": "manager reviewing category economics",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume.",
+          "tiktok": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume.",
+          "youtube": "Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "retail pricing planning team",
+        "pexels_query": "retail pricing planning team",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura.",
+          "tiktok": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura.",
+          "youtube": "Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "food business closing frame",
+        "pexels_query": "food business closing frame",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+          "tiktok": "Na sua categoria, o preço está crescendo mais rápido que a margem?",
+          "youtube": "Na sua categoria, o preço está crescendo mais rápido que a margem?"
+        }
+      }
+    ]
+  }
+}

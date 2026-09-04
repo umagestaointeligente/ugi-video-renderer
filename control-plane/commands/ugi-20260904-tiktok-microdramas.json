@@ -1,0 +1,180 @@
+{
+  "project": "UGI",
+  "platform": "tiktok",
+  "type": "video",
+  "topic_key": "microdrama-atwist-short-video-business-model",
+  "title": "Quando vídeo curto deixa de ser formato e vira modelo de negócio",
+  "duration": "42",
+  "render_id": "ugi-20260904-tiktok-microdramas",
+  "content_id": "UGI-20260904-TT-1945-MICRODRAMAS",
+  "experiment_id": "UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY",
+  "variant": "GENERAL_WORLD",
+  "commercial_intent": "none",
+  "smoke_test": false,
+  "smoke_test_platform": "tiktok",
+  "event_or_case": "aTwist microdrama launch reported 2026-09-03",
+  "management_thesis": "Mudança de hábito de consumo pode criar nova unidade econômica, nova cadência de produto e nova lógica de monetização.",
+  "scenes_json": {
+    "type": "video",
+    "cta": "Qual hábito novo do seu cliente já pede um produto diferente?",
+    "commercial_offer": false,
+    "editorial_mode": "management_explainer",
+    "copy_lock": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "video"
+    },
+    "exact_copy": {
+      "enabled": true,
+      "mode": "exact",
+      "strict": true,
+      "type": "video"
+    },
+    "music_profile": {
+      "mood": "modern professional editorial pulse matched to the topic",
+      "modern": true,
+      "audible": true,
+      "progressive": true,
+      "no_vocals": true,
+      "forbid": [
+        "chiptune",
+        "ringtone",
+        "beeps",
+        "metallic loop",
+        "single-note loop",
+        "alarm siren"
+      ],
+      "cta_no_silence": true
+    },
+    "visual_rules": [
+      "Use rights-cleared realistic context only.",
+      "Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.",
+      "Every scene must match narration and use distinct moving or naturally dynamic context.",
+      "No flash cuts, excessive zoom, long static holds or sensational imagery.",
+      "For Instagram Stories, preserve audible music through the CTA and vertical safe areas."
+    ],
+    "scenes": [
+      {
+        "role": "hook",
+        "visual_intent": "vertical video smartphone entertainment",
+        "pexels_query": "vertical video smartphone entertainment",
+        "overlay": {
+          "instagram": "O SINAL",
+          "tiktok": "O SINAL",
+          "youtube": "O SINAL"
+        },
+        "support": {
+          "instagram": "Quando vídeo curto deixa de ser formato e vira modelo de negócio",
+          "tiktok": "Quando vídeo curto deixa de ser formato e vira modelo de negócio",
+          "youtube": "Quando vídeo curto deixa de ser formato e vira modelo de negócio"
+        },
+        "narration": {
+          "instagram": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros.",
+          "tiktok": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros.",
+          "youtube": "Vídeo curto não está mudando só marketing. Está criando negócios inteiros."
+        }
+      },
+      {
+        "role": "pain",
+        "visual_intent": "short form series mobile viewing",
+        "pexels_query": "short form series mobile viewing",
+        "overlay": {
+          "instagram": "O FATO",
+          "tiktok": "O FATO",
+          "youtube": "O FATO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular.",
+          "tiktok": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular.",
+          "youtube": "A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular."
+        }
+      },
+      {
+        "role": "consequence",
+        "visual_intent": "content production mobile studio",
+        "pexels_query": "content production mobile studio",
+        "overlay": {
+          "instagram": "POR QUE IMPORTA",
+          "tiktok": "POR QUE IMPORTA",
+          "youtube": "POR QUE IMPORTA"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica.",
+          "tiktok": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica.",
+          "youtube": "Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica."
+        }
+      },
+      {
+        "role": "turn",
+        "visual_intent": "media business product planning",
+        "pexels_query": "media business product planning",
+        "overlay": {
+          "instagram": "A LEITURA DE GESTÃO",
+          "tiktok": "A LEITURA DE GESTÃO",
+          "youtube": "A LEITURA DE GESTÃO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo.",
+          "tiktok": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo.",
+          "youtube": "O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo."
+        }
+      },
+      {
+        "role": "result",
+        "visual_intent": "mobile audience retention strategy",
+        "pexels_query": "mobile audience retention strategy",
+        "overlay": {
+          "instagram": "O TESTE PRÁTICO",
+          "tiktok": "O TESTE PRÁTICO",
+          "youtube": "O TESTE PRÁTICO"
+        },
+        "support": {
+          "instagram": "Leitura UGI",
+          "tiktok": "Leitura UGI",
+          "youtube": "Leitura UGI"
+        },
+        "narration": {
+          "instagram": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela.",
+          "tiktok": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela.",
+          "youtube": "Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela."
+        }
+      },
+      {
+        "role": "cta",
+        "visual_intent": "creator economy closing",
+        "pexels_query": "creator economy closing",
+        "overlay": {
+          "instagram": "LEVE PARA A DECISÃO",
+          "tiktok": "LEVE PARA A DECISÃO",
+          "youtube": "LEVE PARA A DECISÃO"
+        },
+        "support": {
+          "instagram": "Reuters, 03 set 2026",
+          "tiktok": "Reuters, 03 set 2026",
+          "youtube": "Reuters, 03 set 2026"
+        },
+        "narration": {
+          "instagram": "Qual hábito novo do seu cliente já pede um produto diferente?",
+          "tiktok": "Qual hábito novo do seu cliente já pede um produto diferente?",
+          "youtube": "Qual hábito novo do seu cliente já pede um produto diferente?"
+        }
+      }
+    ]
+  }
+}
