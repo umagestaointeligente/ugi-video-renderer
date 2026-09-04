@@ -1,37 +1,15 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T10:08:36.228299+00:00",
+  "checkedAt": "2026-09-04T10:24:27.785550+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 2,
+  "delivered": 1,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
   "state": "HEALTHY",
   "results": [
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260902-INSTAGRAM-FALLBACK-VIDEO-AGENDA-R1.json",
-      "contentId": "UGI-20260902-IG-NATIVE-USOPEN-EXPERIENCE-R1-VIDEO",
-      "platform": "instagram",
-      "kind": "video",
-      "draftId": "ugi-20260902124118-9f3cac54dda6",
-      "bufferPostId": "6a9821c9e987b8f4b4f12478",
-      "dueAt": "2026-09-02T22:15:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-09-02T22:16:04.375Z",
-      "externalLink": "https://www.instagram.com/reel/DczSUqfj8CD/",
-      "error": null,
-      "state": "DELIVERED",
-      "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.instagram.com/reel/DczSUqfj8CD/"
-      }
-    },
     {
       "receipt": "control-plane/publisher-hub/receipts/UGI-20260902-INSTAGRAM-FALLBACK-VIDEO-AGENDA-R1.json",
       "contentId": "UGI-20260902-IG-2100-AI-HARDWARE-MANUFACTURING-R1-VIDEO",
