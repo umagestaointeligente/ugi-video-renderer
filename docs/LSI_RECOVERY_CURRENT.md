@@ -3,338 +3,251 @@
 Status: CURRENT / AUTORITATIVO PARA HANDOFF
 Atualizado: 2026-09-04 BRT
 Âncora humana: `Recovery LSI`
-Alias técnico interno: `LSI::RECOVERY::CURRENT`
 
 ## 0. Estado global
 
-`LSI_RECOVERY=TRUE`
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=MASTER_PILOT_ACTIVE_V12_PROACTIVE_BACKEND_WITH_V11_1_UI`
+`CURRENT_STATUS=V11_1_PRODUCTION_V12_PROACTIVE_BACKEND_LIVE_V13_VISUAL_PROFILE_VERSIONED`
 `VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
-## 1. Fonte canônica
+## 1. Canônico / runtime
 
 Repository: `umagestaointeligente/ugi-video-renderer`
 Branch: `main`
-Backend: Supabase `nxjdnzdxclszqyqrkwdk`, `sa-east-1`
+Supabase: `nxjdnzdxclszqyqrkwdk`
 Frontend oficial: `https://lsi-career-360.vercel.app/`
 Vercel project: `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`
-Arquitetura: `VERCEL STATIC FRONTEND -> SUPABASE AUTH/DATA/EDGE BACKEND`
 
-Produção visual comprovada atual: V11.1
+Produção visual comprovada atual:
+`UX_V11_1=LIVE`
 Deployment: `dpl_EjNc9WzK1uPCZFWhY8ympukcAMGG`
-Rollback visual imediato V11: `dpl_59kEVUkAGkkZZXfRcRP9p4duWoSF`
 
-## 2. Gates atuais
+Arquitetura Vercel atual continua bundle estático/framework null. Não fazer deploy cego do projeto; promoções visuais devem preservar os scripts já pinados e manter rollback.
 
-`DEDICATED_PROJECT=PASS`
+## 2. Produto LIVE
+
 `AUTH=LIVE`
 `MASTER_ROLE=LIVE`
 `REAL_AUTH_E2E=PASS`
 `CAREER_PRIVACY_P0=PASS_MASTER_PILOT_SCOPE`
 `MULTIUSER_ISOLATION=PASS`
 `SAFE_FILE_PIPELINE=PASS_MASTER_PILOT_SCOPE`
+`PROFILE_PHOTO_PRIVATE_BACKEND=LIVE`
+`PARSER_1_0_3=LIVE`
+`PROFESSIONAL_PROFILE_V3=LIVE`
+`CONTE_DO_SEU_JEITO=LIVE`
+`SMART_CV=LIVE`
 `MATCH_ENGINE_V2=CHAMPION`
 `MATCH_ENGINE_V1=ROLLBACK`
-`NO_FABRICATION_GUARD=PASS_MASTER_PILOT_SCOPE`
-`FRONTEND_HOSTING=PASS_VERCEL`
-`GUIDED_ONBOARDING_V6=LIVE`
-`PROFILE_CV_V7_V8=LIVE`
-`UX_V11_1=LIVE`
+`REGION_FILTER_V2=LIVE`
 `AUTOMATED_OPPORTUNITY_RESEARCH=LIVE_PILOT_SCOPE`
 `PROACTIVE_AGENT_CORE_V12=LIVE`
 `PROACTIVE_DIGEST_CRON=LIVE`
-`PROACTIVE_UI_V12=VERSIONED_NOT_YET_PROMOTED`
 `MAIL_DECISION=LIVE`
 `MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
-Security Advisor atual:
-- sem lint estrutural novo de RLS;
-- permanece `auth_leaked_password_protection = WARN / DISABLED`.
-Não declarar `PASS_ZERO_LINTS` enquanto esse WARN existir.
-
-## 3. Princípios de produto
+## 3. Princípios duros
 
 `O CLIENTE NÃO PREENCHE. O CLIENTE CONFIRMA.`
 `O CLIENTE NÃO OPERA A BUSCA. O AGENTE OPERA; O CLIENTE CONFIRMA O QUE IMPORTA.`
 `O CAREER NÃO DEPENDE DO USUÁRIO ABRIR O CHAT PARA CONTINUAR TRABALHANDO.`
+`COMPLEXIDADE POR TRÁS. IDENTIDADE PROFISSIONAL NA FRENTE.`
 
 - privacidade antes de matching;
-- idade nunca entra no matching;
-- foto nunca entra no matching/FIT;
-- plano pago nunca altera FIT;
-- plano pode alterar cadência de acompanhamento;
+- idade/foto/plano nunca elevam FIT;
 - salário oculto/estimado nunca vira fato;
-- nenhuma candidatura vira `applied` sem evidência real;
-- nenhum e-mail vira `sent` apenas porque foi aprovado;
-- currículo/perfil nunca fabrica experiência, cargo, empresa, resultado, competência, formação ou certificação.
+- currículo/perfil nunca fabrica informação;
+- candidatura não vira `applied` sem evidência;
+- e-mail não vira `sent` apenas porque foi aprovado;
+- perfil não é público sem consentimento explícito.
 
-## 4. UX atual — V11.1 LIVE
+## 4. Proactive Agent V12 — BACKEND LIVE
 
-Superfície principal:
-- `Minha Página` = perfil profissional limpo;
-- `Oportunidades` = Radar;
-- `Meu Agente`;
-- edição/suporte ficam em superfícies secundárias/`Mais`;
-- Painel Mestre somente role master.
-
-Minha Página suporta:
-- foto opcional;
-- nome/headline/localização;
-- resumo compacto;
-- competências;
-- Destaques profissionais;
-- Liderança e escopo;
-- Experiência;
-- Formação.
-
-Smart CV PDF inclui Destaques/Liderança quando disponíveis e foto opt-in quando autorizada.
-
-Frontend V11.1: `career360/frontend/app-h.js`
-Commit carregado pela produção: `2bff879b2b2a99815ed3933009f9a6a19a8a9501`
-
-## 5. Proactive Agent V12 — BACKEND LIVE
-
-Objetivo:
-`PESQUISAR -> ANALISAR -> AGIR -> REGISTRAR -> ACOMPANHAR -> DETECTAR MUDANÇA -> AVISAR -> CONTINUAR`
-
-Componentes LIVE:
+Componentes:
 - `career_activity_ledger`;
 - `career_digest_preferences`;
 - `career_digest_runs`;
 - `career_notifications`;
 - `career_applications` foundation;
 - `career_mail_actions` foundation;
-- Edge `career-proactive-digest`;
-- Edge `career-proactive-status`;
-- Edge `career-mail-decision`.
+- `career-proactive-digest`;
+- `career-proactive-status`;
+- `career-mail-decision`.
 
-Cadências suportadas:
-`4h / 6h / 8h / 12h`.
+Cadências suportadas: `4h / 6h / 8h / 12h`.
+Conta piloto: `4h`.
+Cron: `career-proactive-digest`, schedule `7 * * * *`, ACTIVE.
 
-Conta piloto atual:
-`plan_key=pilot`
-`cadence_hours=4`
+QA comprovado:
+- primeiro ciclo forçado: 1 usuário / 1 digest;
+- segundo ciclo imediato: 0 usuários, sem duplicação;
+- `awaiting_user` -> Ledger + action_required;
+- mensagem crítica simulada -> Ledger + critical notification;
+- testes transacionais não deixaram dados QA.
 
-Cron:
-`career-proactive-digest`
-Schedule: `7 * * * *`
-Estado: `ACTIVE`
+Política de e-mail:
+- suggestion;
+- one_tap;
+- controlled_autopilot.
 
-O cron roda a cada hora, mas só gera digest quando `next_digest_at` venceu.
+`always_confirm_sensitive_email=true` para salary/offer/documents/identity/interview_commitment/legal.
 
-QA real do digest:
-- ciclo forçado HTTP 200;
-- 1 usuário processado;
-- 1 digest criado;
-- janela do teste: 1 oportunidade analisada / 0 qualificada;
-- segundo ciclo imediatamente após: 0 usuários processados, comprovando cadência sem duplicação.
+Conta piloto permanece conservadora:
+`autonomy_level=one_action`
+`email_autonomy_mode=suggestion`
+`allow_inbox_monitoring=false`
+`allow_recruiter_reply_send=false`
+`allow_followup_send=false`
 
-QA transacional com rollback:
-- candidatura `awaiting_user` -> 1 Ledger event + 1 notification;
-- mensagem crítica simulada -> 1 Ledger event + 1 critical notification;
-- 0 dados QA persistidos.
+## 5. UI Proativa V12 — PRONTA, NÃO PROMOVIDA
 
-## 6. UI Proativa V12 — NÃO PROMOVIDA
-
-Arquivo versionado:
+Arquivo:
 `career360/frontend/app-i.js`
 
 Prevê:
-- card `Atualizações do seu agente` na Minha Página;
+- `Atualizações do seu agente`;
 - última/próxima atualização;
 - analisadas/qualificadas/candidaturas/respostas;
 - alertas críticos/action-required;
 - badge no Meu Agente;
-- `Atualizar agora`.
+- Atualizar agora.
 
 `PROACTIVE_UI_V12=VERSIONED_NOT_YET_PROMOTED`
 
-Não declarar LIVE até novo bundle Vercel carregar `app-i.js` no domínio oficial e passar teste autenticado no Android.
+## 6. Visual Profile V13 — PRONTO, NÃO PROMOVIDO
 
-## 7. E-mail / autonomia
+Arquivo:
+`career360/frontend/app-j.js`
+Release:
+`career360/releases/MASTER_PILOT_1_0_VISUAL_PROFILE_V13_2026-09-04.md`
 
-Reutiliza `career_action_permissions`.
+Nova arquitetura de experiência:
+`MINHA PÁGINA -> MEU PERFIL -> OPORTUNIDADES -> MEU AGENTE -> MAIS`
 
-Modos:
-- `suggestion`;
-- `one_tap`;
-- `controlled_autopilot`.
+### Minha Página
+Uso diário, enxuto:
+- identidade resumida;
+- agente trabalhando;
+- Radar;
+- alertas importantes;
+- poucos atalhos.
 
-Permissões técnicas:
-- inbox monitoring;
-- recruiter reply draft/send;
-- follow-up draft/send;
-- auto-send de acknowledgement simples;
-- auto-send de disponibilidade simples;
-- auto-send de follow-up.
+### Meu Perfil
+Superfície visual interna própria da LSI:
+- capa;
+- foto;
+- nome/headline/localização;
+- selo `Só você vê por enquanto`;
+- Sobre;
+- Destaques;
+- Liderança/Escopo;
+- Experiência em timeline;
+- competências em chips;
+- direcionamento de carreira;
+- formação;
+- idiomas/certificações.
 
-Regra dura:
-`always_confirm_sensitive_email=true`.
+Ações:
+- `Copiar para LinkedIn` abre painel por blocos: Headline/Sobre/Experiência/Competências;
+- `Baixar currículo`;
+- `Editar informações`.
 
-Categorias tratadas como sensíveis no gate:
-- salary;
-- offer;
-- documents;
-- identity;
-- interview_commitment;
-- legal.
+Não existe ainda:
+- URL pública;
+- compartilhamento externo automático;
+- indexação;
+- exposição a recrutadores.
 
-`career-mail-decision` permite:
-- ler/alterar política;
-- approve;
-- copy;
-- dismiss.
+Futura publicação deve obedecer:
+`PRIVATE -> PREVIEW -> SELECT FIELDS -> EXPLICIT CONSENT -> SHARE/REVOKE`
 
-Aprovar = registrar autorização.
-Aprovar NÃO = enviar.
+`VISUAL_PROFILE_V13=VERSIONED_NOT_YET_PROMOTED`
 
-`MAIL_DELIVERY_CONNECTOR=NOT_LIVE`.
-Conectar Gmail/Outlook exige OAuth/consentimento do próprio usuário + receipt real de entrega.
+## 7. Currículo / Perfil
 
-## 8. Currículo — Parser 1.0.3
+Parser: `career360-edge-parser/1.0.3`.
+Separa summary/highlights/leadership/experience/education/skills/languages/certifications.
+Regra: `EXTRAIR -> MOSTRAR -> USUÁRIO CONFIRMA -> VIRA FATO`.
 
-`PARSER_VERSION=career360-edge-parser/1.0.3`
-`career-document-process=ACTIVE / JWT_REQUIRED`
+Perfil/CV V3 consome somente informação confirmada/aceita.
+Foto no PDF continua opt-in.
 
-Separa:
-- summary;
-- highlights;
-- leadership;
-- experience;
-- education;
-- skills;
-- languages;
-- certifications.
-
-Regra:
-`EXTRAIR -> MOSTRAR -> USUÁRIO CONFIRMA -> VIRA FATO`
-
-## 9. Perfil Profissional / Currículo Inteligente — V3
-
-Edge: `career-professional-profile=ACTIVE / V3 / JWT_REQUIRED`
-Persistência: `career_professional_profile_versions`
-
-Consome apenas dados confirmados/aceitos e produz headline, resumo, skills, highlights, leadership, experience, education, languages e certifications.
-
-Versionamento:
-`draft -> accepted -> superseded`
-
-## 10. Conte do Seu Jeito — LIVE
-
-Fluxo:
-`FALAR/ESCREVER -> ORGANIZAR -> MOSTRAR -> APROVAR/AJUSTAR/DESCARTAR -> PERFIL/CURRÍCULO`
-
-Somente narrativa `accepted` entra no Perfil Profissional.
-
-## 11. Foto
-
-`career-profile-photo=LIVE / JWT_REQUIRED`
-- opcional;
-- storage privado;
-- não entra no FIT;
-- não inferir atributos sensíveis;
-- foto em PDF opt-in.
-
-`PROFESSIONAL_PHOTO_STUDIO=NOT_LIVE`
-Não mostrar botão até image-to-image + preview + aceite explícito funcionarem ponta a ponta.
-
-## 12. Radar automático — LIVE piloto
-
-`AUTOMATED_OPPORTUNITY_RESEARCH=LIVE_PILOT_SCOPE`
-Fontes piloto ativas: 10.
-Ciclo: aproximadamente 1h por lote/rotação, cobertura completa ~4h no desenho atual.
-Ação manual: `Pesquisar agora`.
-
-Region Filter V2 LIVE.
-Última limpeza integral comprovada:
-- 126 anteriormente ativas;
-- 70 expiradas como ruído regional;
-- 56 permaneceram ativas no recorte naquele checkpoint;
-- 0 qualificadas naquele checkpoint.
-
-Zero qualificada é estado válido.
-
-Edges:
-- `career-opportunity-research`;
-- `career-opportunity-list`;
-- `career-radar-status`.
-
-## 13. Matching V2 — CHAMPION
+## 8. Radar / Matching
 
 `CHAMPION=v2.0`
 `ROLLBACK=v1.0`
-
-Combina família profissional bilíngue, senioridade, similaridade lexical, competências quando evidenciadas, localização, modelo de trabalho e setor quando aplicável.
-
-Gates anteriores ao score:
-- privacidade;
-- salário explícito abaixo do piso;
-- modelo incompatível;
-- localização não permitida quando aplicável.
-
 Threshold de referência: `72`.
-QA de promoção: 6/6 casos esperados.
 
-## 14. Empresa / autocomplete
+Radar piloto:
+- 10 fontes estruturadas;
+- rotação aproximadamente horária;
+- cobertura completa ~4h no desenho atual;
+- `Pesquisar agora` disponível.
 
-`career-employer-suggest=LIVE`.
-`EMPLOYER_CATALOG_HYDRATION=PENDING`.
-Não fingir cobertura ampla.
+Region Filter V2 removeu ruído internacional causado por texto institucional.
+Zero vaga qualificada é estado válido; não mostrar vaga ruim para preencher tela.
 
-## 15. Auth / redirect / segurança
+## 9. Segurança / pendências pré-Beta
 
-Supabase Auth + RLS.
-Service role nunca no frontend.
+Security Advisor no último checkpoint:
+- sem lint estrutural novo de RLS;
+- `auth_leaked_password_protection=DISABLED/WARN` permanece.
 
-Pendências pré-Beta:
-`SUPABASE_GLOBAL_SITE_URL_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`
-`LEAKED_PASSWORD_PROTECTION=DISABLED/WARN`
+Também pendente:
+`SUPABASE_GLOBAL_SITE_URL_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`.
 
-## 16. Próximos gargalos reais
+Não declarar `PASS_ZERO_LINTS`.
 
-1. promover `app-i.js` no bundle oficial Vercel e testar no Android;
-2. conectar provedor real de e-mail com OAuth/consentimento por usuário;
-3. ingestão de e-mail -> resumo -> classificação -> resposta sugerida;
-4. delivery somente depois de policy gate + receipt real;
-5. ligar submissão real de candidatura à tabela `career_applications`;
-6. follow-up scheduler por candidatura;
-7. alertas críticos fora do digest;
-8. reprocessar currículo real pelo Parser 1.0.3 e confirmar draft;
+## 10. Próxima promoção visual
+
+Promover V12 + V13 juntas em bundle controlado:
+- manter todos os scripts da V11.1;
+- adicionar `app-i.js`;
+- adicionar `app-j.js`;
+- validar alias oficial;
+- HTTP 200;
+- runtime errors;
+- teste autenticado Android;
+- manter V11.1 como rollback.
+
+Não usar `deploy current project` cego enquanto a rota de bundle estático não estiver reconstruída com segurança.
+
+## 11. Próximos gargalos
+
+1. promoção controlada V12+V13;
+2. teste Android da Minha Página + Meu Perfil;
+3. conectar provedor real de e-mail com OAuth por usuário;
+4. ingestão e-mail -> resumo -> estágio -> resposta sugerida;
+5. delivery apenas com policy gate + receipt;
+6. ligar submissão real de candidatura ao funil;
+7. follow-up scheduler;
+8. reprocessar/confirmar currículo pelo Parser 1.0.3;
 9. hidratar catálogo de empregadores;
-10. ampliar fontes do Radar sem degradar precisão;
-11. provar redirect allowlist;
-12. resolver leaked-password protection antes da Beta;
+10. ampliar Radar mantendo precisão;
+11. Professional Photo Studio com geração real;
+12. resolver redirect/password warning;
 13. Career Learning Engine;
-14. Professional Photo Studio somente com endpoint real;
-15. Founding Beta 20 somente após decisão explícita.
+14. Founding Beta 20 somente após decisão explícita.
 
-## 17. DO NOT REDO / DO NOT FAKE
+## 12. DO NOT FAKE / DO NOT REDO
 
-- não reconstruir Career do zero;
+- não reconstruir Career;
 - não copiar LinkedIn/trade dress;
-- não tornar foto obrigatória;
+- não chamar perfil de público enquanto for privado;
 - não usar foto/idade/plano no FIT;
-- não reintroduzir vaga manual ao candidato;
-- não transformar inferência em fato;
-- não conservar raw por conveniência;
-- não fingir oportunidade qualificada;
-- não fingir candidatura aplicada;
-- não fingir e-mail enviado;
-- não marcar `sent` a partir de `approved`;
-- não declarar UI V12 LIVE antes do deployment validado;
-- não declarar CI PASS sem check real;
-- não declarar Security Advisor zero warnings;
-- não abrir Beta automaticamente;
-- não criar recovery paralelo.
+- não inventar fatos;
+- não fingir vaga/candidatura/e-mail;
+- não marcar sent a partir de approved;
+- não expor identidade sem consentimento;
+- não declarar UI V12/V13 LIVE antes do deployment validado;
+- não abrir Beta automaticamente.
 
-## 18. Leitura sob demanda
+## 13. Leitura sob demanda
 
 Manifesto: `docs/projects/LSI_CAREER360.md`
 V11.1: `career360/releases/MASTER_PILOT_1_0_INTELLIGENCE_UX_V11_1_2026-09-04.md`
-V12 Proactive: `career360/releases/MASTER_PILOT_1_0_PROACTIVE_AGENT_V12_2026-09-04.md`
+V12: `career360/releases/MASTER_PILOT_1_0_PROACTIVE_AGENT_V12_2026-09-04.md`
+V13: `career360/releases/MASTER_PILOT_1_0_VISUAL_PROFILE_V13_2026-09-04.md`
 
-## 19. Última alteração verificada
-
-`LAST_VERIFIED_CHANGE=PROACTIVE_AGENT_V12_CORE_LIVE_DIGEST_CRON_ACTIVE_LEDGER_NOTIFICATIONS_APPLICATION_MAIL_FOUNDATION_MAIL_DECISION_LIVE_UI_VERSIONED_NOT_PROMOTED_MAIL_DELIVERY_NOT_LIVE`
+`LAST_VERIFIED_CHANGE=VISUAL_PROFILE_V13_VERSIONED_PROACTIVE_V12_BACKEND_LIVE_V12_V13_UI_NOT_YET_PROMOTED_V11_1_STILL_PRODUCTION`
