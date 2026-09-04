@@ -1,0 +1,154 @@
+name: Cena Certa V2 Ready Assets
+
+on:
+  push:
+    branches:
+      - feat/cena-certa-factory-v2-bridge
+    paths:
+      - config/cena-certa/ready-assets-dispatch.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GL_REPO: https://gitlab.com/umagestaointeligente-group/umagestaointeligente-project.git
+
+jobs:
+  validate-ready-batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    outputs:
+      enabled: ${{ steps.dispatch.outputs.enabled }}
+      gl_ref: ${{ steps.dispatch.outputs.gl_ref }}
+      gl_sha: ${{ steps.dispatch.outputs.gl_sha }}
+      batch: ${{ steps.dispatch.outputs.batch }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read ready-assets dispatch
+        id: dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os
+          d=json.load(open('config/cena-certa/ready-assets-dispatch.json',encoding='utf-8'))
+          for k in ('enabled','gitlab_ref','gitlab_sha','batch_path'):
+              if k not in d: raise SystemExit(f'READY_DISPATCH_FIELD_MISSING {k}')
+          if len(str(d['gitlab_sha']))!=40: raise SystemExit('READY_DISPATCH_SHA_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write(f"enabled={str(bool(d['enabled'])).lower()}\n")
+              f.write(f"gl_ref={d['gitlab_ref']}\n")
+              f.write(f"gl_sha={d['gitlab_sha']}\n")
+              f.write(f"batch={d['batch_path']}\n")
+          PY
+      - name: Clone exact source
+        if: steps.dispatch.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none --no-tags --depth 1 --branch "${{ steps.dispatch.outputs.gl_ref }}" "$GL_REPO" src
+          cd src; test "$(git rev-parse HEAD)" = "${{ steps.dispatch.outputs.gl_sha }}"
+      - uses: actions/setup-python@v5
+        if: steps.dispatch.outputs.enabled == 'true'
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: src/factory/cena_certa/v2/requirements.render.lock.txt
+      - name: Validate exact 8 selected manifests
+        if: steps.dispatch.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! fc-match Lato | grep -qi Lato; then sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends fonts-lato fonts-dejavu-core >/dev/null; fi
+          python -m pip install -q -r src/factory/cena_certa/v2/requirements.render.lock.txt
+          cd src
+          python -m factory.cena_certa.v2.preflight validate-batch --batch "${{ steps.dispatch.outputs.batch }}" --expect 8
+
+  prepare-8:
+    needs: validate-ready-batch
+    if: needs.validate-ready-batch.outputs.enabled == 'true'
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        index: [0,1,2,3,4,5,6,7]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Clone exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none --no-tags --depth 1 --branch "${{ needs.validate-ready-batch.outputs.gl_ref }}" "$GL_REPO" src
+          cd src; test "$(git rev-parse HEAD)" = "${{ needs.validate-ready-batch.outputs.gl_sha }}"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: src/factory/cena_certa/v2/requirements.lock.txt
+      - name: Preparation runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v ffmpeg >/dev/null; command -v ffprobe >/dev/null
+          if ! fc-match Lato | grep -qi Lato; then sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends fonts-lato fonts-dejavu-core >/dev/null; fi
+          python -m pip install -q -r src/factory/cena_certa/v2/requirements.lock.txt
+      - name: Build sealed READY_ASSETS
+        working-directory: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m factory.cena_certa.v2.prepare --batch "${{ needs.validate-ready-batch.outputs.batch }}" --index "${{ matrix.index }}" --prepared-root ../prepared
+          test -s ../prepared/*/prepared.json
+      - name: Upload sealed slot
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-ready-slot-${{ matrix.index }}
+          path: prepared/
+          if-no-files-found: error
+          retention-days: 7
+
+  ready-proof:
+    needs: [validate-ready-batch, prepare-8]
+    if: needs.validate-ready-batch.outputs.enabled == 'true' && always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Clone exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none --no-tags --depth 1 --branch "${{ needs.validate-ready-batch.outputs.gl_ref }}" "$GL_REPO" src
+          cd src; test "$(git rev-parse HEAD)" = "${{ needs.validate-ready-batch.outputs.gl_sha }}"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cena-certa-ready-slot-*
+          path: prepared
+          merge-multiple: true
+      - name: Prove all 8 sealed manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,glob,hashlib,os
+          batch=json.load(open('src/${{ needs.validate-ready-batch.outputs.batch }}',encoding='utf-8'))
+          files=glob.glob('prepared/*/prepared.json')
+          byid={json.load(open(p,encoding='utf-8'))['id']:p for p in files}
+          missing=[x['id'] for x in batch if x['id'] not in byid]
+          if missing or len(byid)!=8: raise SystemExit(f'READY_ASSETS_COUNT_FAIL missing={missing} count={len(byid)}')
+          rows=[]
+          for x in batch:
+              m=json.load(open(byid[x['id']],encoding='utf-8'))
+              if m.get('prepared_pass') is not True or len(m.get('scenes') or [])<10: raise SystemExit(f'READY_ASSETS_MANIFEST_FAIL {x["id"]}')
+              rows.append({'id':x['id'],'prepared_manifest':byid[x['id']],'scene_count':len(m['scenes']),'prepare_seconds':m.get('prepare_elapsed_seconds')})
+          proof={'schema':'CENA_CERTA_READY_ASSETS_RUN_V2','run_id':'${{ github.run_id }}','gitlab_sha':'${{ needs.validate-ready-batch.outputs.gl_sha }}','batch_path':'${{ needs.validate-ready-batch.outputs.batch }}','ready_count':8,'ready_assets_pass':True,'items':rows}
+          json.dump(proof,open('ready-assets-proof.json','w',encoding='utf-8'),ensure_ascii=False,indent=2)
+          print('FACTORY_V2_READY_RUN_PASS run_id=${{ github.run_id }}')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-ready-proof-${{ github.run_id }}
+          path: ready-assets-proof.json
+          if-no-files-found: error
+          retention-days: 7
