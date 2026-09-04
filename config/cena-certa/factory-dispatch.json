@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "gitlab_ref": "feat/cena-certa-render-factory-v2",
+  "gitlab_sha": "50d3f4f3cb3f1fa7b0cb29b2518c1b4895e360e3",
+  "batch_path": "golden_master/batch_2026_09_04_v1.json",
+  "prepared_run_id": null,
+  "requested_at": "2026-09-04T14:30:41-03:00",
+  "reason": "isolated_factory_v2_smoke_no_publication_no_schedule"
+}
