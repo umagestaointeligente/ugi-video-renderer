@@ -1,0 +1,207 @@
+{
+  "project": "UGI",
+  "component": "BUFFER-PUBLICATION-OBSERVER",
+  "checkedAt": "2026-09-04T22:36:46.782474+00:00",
+  "publicationProvider": "BUFFER",
+  "publicationMutationPerformed": false,
+  "gateway": {
+    "ok": false,
+    "httpStatus": 400,
+    "state": "BLOCKED",
+    "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+    "rateLimitRemaining": null,
+    "rateLimitCode": null,
+    "rateLimitWindow": null,
+    "requestId": null
+  },
+  "deliverySummary": {
+    "checkedAt": "2026-09-04T22:35:50.478581+00:00",
+    "delivered": 0,
+    "pendingWithinGrace": 0,
+    "late": 7,
+    "failed": 0,
+    "state": "ALERT"
+  },
+  "linkedinEditorial001": {
+    "file": "UGI-20260904-LI-EDITORIAL-001.json",
+    "ok": false,
+    "state": "WAITING_BUFFER_24H_RATE_LIMIT",
+    "platform": "linkedin",
+    "target": "UGI — Uma Gestão Inteligente",
+    "timestamp": "2026-09-04T22:34:41.941518+00:00",
+    "publicationTriggered": false,
+    "bufferMutationPerformed": false,
+    "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+    "bufferDiagnostics": {
+      "httpStatus": 429,
+      "httpOk": false,
+      "requestId": "a360768b4cc6f0b2-DFW",
+      "rateLimitRemaining": "0",
+      "graphqlErrors": [
+        {
+          "message": "Too many requests from this client. Please try again later.",
+          "path": null,
+          "extensions": {
+            "code": "RATE_LIMIT_EXCEEDED",
+            "window": "24h"
+          }
+        }
+      ]
+    }
+  },
+  "receiptContradictions": [
+    {
+      "file": "UGI-20260904-FULL-AGENDA-R1.json",
+      "issue": "PROVEN_SCHEDULED_WITH_PUBLICATION_TRIGGERED_FALSE",
+      "timestamp": "2026-09-04T03:59:16.677920+00:00"
+    }
+  ],
+  "readbackMismatches": [
+    {
+      "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9a359f82940622ebb35ffb",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9a35a582940622ebb360af",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-TT-1215-JOBLIFE",
+      "platform": "tiktok",
+      "receiptBufferPostId": "6a9a35aacfb379682d06d661",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-1245-ANVISA-UNILEVER",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9a35b0cfb379682d06d6e9",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-YT-1630-STATE-OF-PLAY",
+      "platform": "youtube",
+      "receiptBufferPostId": "6a9a35b53134b0c21abe870e",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9a35ba3134b0c21abe877c",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-1915-LULULEMON",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9a35c0cfb379682d06d793",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9a359f82940622ebb35ffb",
+      "receiptStatus": "published",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9ab86e00f893faf312c0b5",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-TT-1215-JOBLIFE",
+      "platform": "tiktok",
+      "receiptBufferPostId": "6a9a35aacfb379682d06d661",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-1245-ANVISA-UNILEVER",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9a35b0cfb379682d06d6e9",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-YT-1630-STATE-OF-PLAY",
+      "platform": "youtube",
+      "receiptBufferPostId": "6a9a35b53134b0c21abe870e",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9ab8713aa9acec7f3df243",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    },
+    {
+      "contentId": "UGI-20260904-IG-1915-LULULEMON",
+      "platform": "instagram",
+      "receiptBufferPostId": "6a9a35c0cfb379682d06d793",
+      "receiptStatus": "scheduled",
+      "liveReadbackHttp": 400,
+      "liveBufferPostId": null,
+      "liveState": "LATE",
+      "issue": "RECEIPT_AND_LIVE_READBACK_DISAGREE"
+    }
+  ],
+  "rootCauseFlags": [
+    "CANONICAL_RECEIPT_FALSE_POSITIVE_RISK",
+    "BUFFER_ID_READBACK_MISMATCH",
+    "DELIVERY_VERIFIER_CONFIRMS_ZERO_DELIVERED"
+  ],
+  "state": "BLOCKED"
+}
