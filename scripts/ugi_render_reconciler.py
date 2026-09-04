@@ -289,6 +289,7 @@ def build_worker_payload(command: dict[str, Any], content_id: str) -> dict[str, 
     payload: dict[str, Any] = {
         "title": command.get("title"),
         "duration": command.get("duration"),
+        "type": command.get("type") or package_meta.get("type") or "reel",
         "content_id": content_id,
         "experiment_id": command.get("experiment_id") or command.get("experimentId"),
         "variant": command.get("variant"),
