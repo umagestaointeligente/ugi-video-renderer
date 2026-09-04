@@ -24,16 +24,22 @@ jobs:
       - name: Read live Buffer channels
         shell: bash
         run: |
-          set -euo pipefail
-          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          set -u
+          test -n "${UGI_LOLA_COMMAND_KEY:-}" || exit 2
           mkdir -p control-plane/recovery
           code=$(curl --silent --show-error --output /tmp/channels.json --write-out '%{http_code}' \
             -H "x-lola-command-key: ${UGI_LOLA_COMMAND_KEY}" \
             -H 'accept: application/json' \
-            "${BASE}/api/buffer/channels")
-          test "$code" = 200
-          jq -e '.ok == true' /tmp/channels.json >/dev/null
-          cp /tmp/channels.json control-plane/recovery/UGI_20260904_BUFFER_CHANNELS_LIVE.json
+            "${BASE}/api/buffer/channels" || true)
+          python - "$code" <<'PY'
+          import json, pathlib, sys
+          code=sys.argv[1]
+          raw=pathlib.Path('/tmp/channels.json').read_text(encoding='utf-8') if pathlib.Path('/tmp/channels.json').exists() else ''
+          try: body=json.loads(raw) if raw else {}
+          except Exception: body={'raw':raw[:4000]}
+          out={'httpStatus':int(code) if str(code).isdigit() else code,'body':body}
+          pathlib.Path('control-plane/recovery/UGI_20260904_BUFFER_CHANNELS_LIVE.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
       - name: Persist probe
         shell: bash
         run: |
@@ -44,3 +50,8 @@ jobs:
           git commit -m 'chore: persist live Buffer channel probe' || true
           git pull --rebase origin main
           git push origin HEAD:main
+      - name: Assert Buffer channels ready
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '.httpStatus == 200 and .body.ok == true' control-plane/recovery/UGI_20260904_BUFFER_CHANNELS_LIVE.json >/dev/null
