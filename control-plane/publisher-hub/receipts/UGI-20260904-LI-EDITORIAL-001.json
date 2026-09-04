@@ -16,7 +16,7 @@
     "bufferDiagnostics": {
       "httpStatus": 429,
       "httpOk": false,
-      "requestId": "a35ebe840a8230a4-SEA",
+      "requestId": "a35ed3be9ecd26b2-ATL",
       "rateLimitRemaining": "0",
       "graphqlErrors": [
         {
@@ -34,5 +34,5 @@
   },
   "readback": null,
   "publication": null,
-  "timestamp": "2026-09-04T17:34:18.454020+00:00"
+  "timestamp": "2026-09-04T17:48:47.918902+00:00"
 }
