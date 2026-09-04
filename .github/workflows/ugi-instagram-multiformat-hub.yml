@@ -61,6 +61,29 @@ jobs:
           for manifest in "${files[@]}"; do
             stem=$(basename "$manifest" .json)
             receipt="control-plane/instagram-multiformat/receipts/${stem}.json"
+
+            # Keep durable history in queue without retrying expired failures forever.
+            # This matches Publisher Hub's six-hour stale-window semantics.
+            if python3 - "$manifest" <<'PY_STALE'
+          import datetime as dt, json, sys
+          path=sys.argv[1]
+          try:
+              rows=(json.load(open(path,encoding='utf-8')).get('posts') or [])
+              dues=[]
+              for row in rows:
+                  raw=str(row.get('dueAt') or '')
+                  if raw:
+                      dues.append(dt.datetime.fromisoformat(raw.replace('Z','+00:00')).astimezone(dt.timezone.utc))
+              stale=bool(dues) and max(dues) < dt.datetime.now(dt.timezone.utc)-dt.timedelta(hours=6)
+          except Exception:
+              stale=False
+          raise SystemExit(0 if stale else 1)
+          PY_STALE
+            then
+              echo "SKIP_STALE $manifest"
+              continue
+            fi
+
             if [ -f "$receipt" ] && jq -e '.ok == true' "$receipt" >/dev/null 2>&1; then
               echo "SKIP_PROVEN $manifest"
               continue
@@ -68,7 +91,15 @@ jobs:
             # r45_instagram_multiformat_pilot.py fails closed before generation when
             # SAME-PLATFORM topic history returns BLOCK/REVIEW_REQUIRED. Successful
             # Buffer readback appends the topic to the durable 15-day registry.
-            python scripts/r45_instagram_multiformat_pilot.py "$manifest" --receipt "$receipt" || failed=1
+            if ! python scripts/r45_instagram_multiformat_pilot.py "$manifest" --receipt "$receipt"; then
+              failed=1
+              # Error 4006 is batch-global capacity exhaustion. Stop this cycle on the
+              # first proof instead of spending more requests on the remaining queue.
+              if [ -f "$receipt" ] && jq -e '.. | strings | select(test("4006|daily free allocation|used up your daily free allocation"; "i"))' "$receipt" >/dev/null 2>&1; then
+                echo "STOP_CAPACITY_EXHAUSTED $manifest"
+                break
+              fi
+            fi
           done
           exit "$failed"
       - name: Persist receipts and per-platform topic history
