@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Extract live platform-publish route only
+      - name: Extract live publish routing functions
         shell: bash
         run: |
           set -euo pipefail
@@ -34,16 +34,19 @@ jobs:
           if not token or not account: raise SystemExit('Cloudflare credentials missing')
           api_base=f"https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts/{base.WORKER_NAME}"
           r=requests.get(api_base+'/content/v2',headers=base.api_headers(token),timeout=45)
-          r.raise_for_status()
-          src=base.extract_worker_source(r)
-          anchor='if (path === "/api/platform-publish" && request.method === "POST")'
-          i=src.find(anchor)
-          if i < 0: raise SystemExit('anchor missing')
-          j=src.find('if (path === "/api/platform-publication-status"', i)
-          if j < 0: j=min(len(src),i+16000)
-          out=src[i:j]
+          r.raise_for_status(); src=base.extract_worker_source(r)
+          chunks=[]
+          for anchor,limit in [
+              ('async function createBufferPlatformVideoPost',12000),
+              ('function platformMetadataGraphQL',6000),
+              ('if (path === "/api/platform-publish" && request.method === "POST")',16000),
+          ]:
+              i=src.find(anchor)
+              if i < 0: raise SystemExit(f'anchor missing: {anchor}')
+              chunks.append(f'\n===== {anchor} =====\n'+src[i:min(len(src),i+limit)])
+          out=''.join(chunks)
           Path('control-plane/recovery/UGI_WORKER_PLATFORM_PUBLISH_SNIPPET_20260904.txt').write_text(out,encoding='utf-8')
-          print(out[:12000])
+          print(out[:24000])
           PY
       - name: Persist snippet
         shell: bash
@@ -52,6 +55,6 @@ jobs:
           git config user.name 'ugi-diagnostic-bot'
           git config user.email 'ugi-diagnostic@users.noreply.github.com'
           git add control-plane/recovery/UGI_WORKER_PLATFORM_PUBLISH_SNIPPET_20260904.txt
-          git commit -m 'diag(ugi): persist live platform publish route' || true
+          git commit -m 'diag(ugi): persist live platform publish routing functions' || true
           git pull --rebase origin main
           git push origin HEAD:main
