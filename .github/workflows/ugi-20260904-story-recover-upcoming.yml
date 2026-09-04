@@ -1,0 +1,53 @@
+name: UGI 2026-09-04 Recover Upcoming Stories
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-20260904-story-recover-upcoming.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Recover 10:30 and 18:00 as true Instagram Stories
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UGI_WORKER_COMMAND_KEY"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          mkdir -p control-plane/recovery
+          health=$(curl --silent --show-error --location --max-time 60 -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H 'accept: application/json' "$WORKER_URL/api/health")
+          echo "$health" | jq -e '.ok == true and .version == "lola-v8-r45-4c-story-recovery-2026-09-04"' >/dev/null
+          r1=$(curl --silent --show-error --location --max-time 90 -X POST -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H 'content-type: application/json' -H 'accept: application/json' --data '{"id":"ugi-20260904021439-a82118ed6b7e"}' "$WORKER_URL/api/ugi/story-recover-20260904")
+          echo "$r1" | jq -e '.ok == true and .metadata.instagram.type == "story" and .metadata.instagram.shouldShareToFeed == false and .publication.status == "scheduled" and (.publication.bufferPostId|length>0)' >/dev/null
+          r2=$(curl --silent --show-error --location --max-time 90 -X POST -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H 'content-type: application/json' -H 'accept: application/json' --data '{"id":"ugi-20260904021739-4fc5c7eb31fe"}' "$WORKER_URL/api/ugi/story-recover-20260904")
+          echo "$r2" | jq -e '.ok == true and .metadata.instagram.type == "story" and .metadata.instagram.shouldShareToFeed == false and .publication.status == "scheduled" and (.publication.bufferPostId|length>0)' >/dev/null
+          s1=$(curl --silent --show-error --location --max-time 90 -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H 'accept: application/json' "$WORKER_URL/api/platform-publication-status?id=ugi-20260904021439-a82118ed6b7e&platform=instagram")
+          s2=$(curl --silent --show-error --location --max-time 90 -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" -H 'accept: application/json' "$WORKER_URL/api/platform-publication-status?id=ugi-20260904021739-4fc5c7eb31fe&platform=instagram")
+          echo "$s1" | jq -e '.ok == true and .publication.status == "scheduled" and .publication.dueAt == "2026-09-04T13:30:00.000Z"' >/dev/null
+          echo "$s2" | jq -e '.ok == true and .publication.status == "scheduled" and .publication.dueAt == "2026-09-04T21:00:00.000Z"' >/dev/null
+          jq -n --argjson health "$health" --argjson recovery1030 "$r1" --argjson recovery1800 "$r2" --argjson readback1030 "$s1" --argjson readback1800 "$s2" '{project:"UGI",incident:"STORY_ROUTED_AS_REEL",mutationTriggered:true,health:$health,recovery1030:$recovery1030,recovery1800:$recovery1800,readback1030:$readback1030,readback1800:$readback1800,ok:true}' > control-plane/recovery/UGI_20260904_UPCOMING_STORIES_RECOVERED.json
+      - name: Persist recovery receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-recovery-bot'
+          git config user.email 'ugi-recovery@users.noreply.github.com'
+          git add control-plane/recovery/UGI_20260904_UPCOMING_STORIES_RECOVERED.json
+          git commit -m 'chore: persist 04/09 upcoming Story recovery' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
