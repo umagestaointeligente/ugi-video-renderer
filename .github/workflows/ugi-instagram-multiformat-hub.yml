@@ -6,8 +6,10 @@ on:
     paths:
       - 'control-plane/instagram-multiformat/queue/*.json'
   workflow_dispatch:
+  # Queue pushes remain immediate. Hourly recovery avoids exhausting Buffer's
+  # 500-request / 24h client window with repeated reconciliation polling.
   schedule:
-    - cron: '11,26,41,56 * * * *'
+    - cron: '26 * * * *'
 
 permissions:
   contents: write
