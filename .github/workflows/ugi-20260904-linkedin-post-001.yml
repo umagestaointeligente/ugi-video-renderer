@@ -1,0 +1,112 @@
+name: UGI LinkedIn Editorial 001 via Buffer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-20260904-linkedin-post-001.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-linkedin-editorial-001-buffer
+  cancel-in-progress: false
+
+env:
+  BASE: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  publish-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Publish text-only editorial through Buffer
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          mkdir -p control-plane/publisher-hub/receipts
+          cat > /tmp/payload.json <<'JSON'
+          {
+            "mode": "shareNow",
+            "text": "A Adobe escolheu seu próximo CEO justamente quando a IA está redesenhando o próprio negócio da empresa.\n\nMas a parte mais interessante dessa sucessão talvez não seja quem entra.\n\nÉ tudo o que a organização precisa decidir ao redor dessa escolha.\n\n📌 O que aconteceu\n\nAnil Chakravarthy assumirá como CEO da Adobe em 1º de dezembro.\n\nShantanu Narayen, que lidera a companhia desde 2007, passa a Executive Chair e continuará próximo da transição.\n\nTudo isso acontece enquanto a Adobe tenta responder a uma transformação profunda provocada pela inteligência artificial — não apenas nos seus produtos, mas no próprio mercado em que compete.\n\n🧠 O que realmente importa\n\nSucessão não é simplesmente substituir um executivo por outro.\n\nÉ decidir quais capacidades devem liderar o próximo ciclo da empresa.\n\nO líder ideal para preservar o negócio que construiu o passado pode não ser necessariamente o mesmo perfil necessário para construir o negócio dos próximos dez anos.\n\n⚠️ E existe outra decisão que quase nunca aparece no anúncio oficial\n\nDavid Wadhwani, outro nome apontado entre os principais candidatos internos à sucessão, anunciou sua saída.\n\nIsso levanta uma pergunta que vale para qualquer organização:\n\ncomo reter os grandes líderes que também se imaginavam ocupando aquela cadeira?\n\n💡 Na visão da UGI, uma boa sucessão precisa responder pelo menos três perguntas:\n\n1️⃣ Estamos escolhendo o melhor líder para o negócio atual — ou para o negócio que ainda precisa nascer?\n\n2️⃣ Quanto o antigo líder deve permanecer próximo sem impedir que o novo realmente lidere?\n\n3️⃣ Qual é o plano para preservar os talentos que não foram escolhidos?\n\nTecnologia muda aquilo em que uma empresa precisa competir.\n\nGestão determina se ela conseguirá fazer essa transição sem destruir aquilo que já funciona.\n\nNa era da IA, sucessão deixou de ser apenas uma pauta de pessoas.\n\nVirou estratégia + tecnologia + governança.\n\nE na sua empresa: se o principal líder saísse amanhã, o plano de sucessão estaria preparado para preservar o passado — ou construir o futuro?\n\n#Gestão #Liderança #Estratégia #InteligênciaArtificial #UGI"
+          }
+          JSON
+          success=false
+          for attempt in 1 2 3 4; do
+            code=$(curl --silent --show-error --location --max-time 90 \
+              --output /tmp/create.json --write-out '%{http_code}' \
+              -X POST "${BASE}/api/linkedin-text-publish" \
+              -H "x-lola-command-key: ${UGI_LOLA_COMMAND_KEY}" \
+              -H 'content-type: application/json' \
+              --data-binary @/tmp/payload.json || true)
+            if jq -e '.ok == true and .publication.bufferPostId != null' /tmp/create.json >/dev/null 2>&1; then
+              success=true
+              break
+            fi
+            safe=$(jq -r '(.stage == "channel_discovery") and (.bufferMutationPerformed == false) and ((.error // "") | contains("429"))' /tmp/create.json 2>/dev/null || echo false)
+            if [ "$safe" = true ] && [ "$attempt" -lt 4 ]; then
+              sleep $((attempt * 30))
+              continue
+            fi
+            break
+          done
+          cp /tmp/create.json /tmp/create-final.json
+          if [ "$success" != true ]; then
+            python - <<'PY'
+          import json, pathlib, datetime
+          try: create=json.loads(pathlib.Path('/tmp/create-final.json').read_text())
+          except Exception: create={'ok':False,'error':'unparseable_create_response'}
+          out={'ok':False,'provider':'BUFFER','platform':'linkedin','target':'UGI — Uma Gestão Inteligente','create':create,'readback':None,'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          pathlib.Path('control-plane/publisher-hub/receipts/UGI-20260904-LI-EDITORIAL-001.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+            exit 2
+          fi
+          post_id=$(jq -r '.publication.bufferPostId' /tmp/create-final.json)
+          read_ok=false
+          for attempt in 1 2 3; do
+            sleep 15
+            curl --silent --show-error --location --max-time 60 \
+              --output /tmp/status.json \
+              -H "x-lola-command-key: ${UGI_LOLA_COMMAND_KEY}" \
+              "${BASE}/api/linkedin-publication-status?postId=${post_id}" || true
+            if jq -e '.ok == true and .publication.bufferPostId != null' /tmp/status.json >/dev/null 2>&1; then
+              read_ok=true
+              break
+            fi
+          done
+          python - <<'PY'
+          import json, pathlib, datetime
+          create=json.loads(pathlib.Path('/tmp/create-final.json').read_text())
+          try: readback=json.loads(pathlib.Path('/tmp/status.json').read_text())
+          except Exception: readback={'ok':False,'error':'unparseable_status_response'}
+          pub=readback.get('publication') if readback.get('ok') else create.get('publication')
+          out={
+            'ok': bool(create.get('ok') and readback.get('ok')),
+            'provider':'BUFFER','platform':'linkedin','target':'UGI — Uma Gestão Inteligente',
+            'personalProfileTargetAllowed':False,
+            'create':create,'readback':readback,'publication':pub,
+            'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }
+          pathlib.Path('control-plane/publisher-hub/receipts/UGI-20260904-LI-EDITORIAL-001.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+          test "$read_ok" = true
+      - name: Persist Buffer receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f control-plane/publisher-hub/receipts/UGI-20260904-LI-EDITORIAL-001.json || printf '{"ok":false,"error":"receipt_missing"}\n' > control-plane/publisher-hub/receipts/UGI-20260904-LI-EDITORIAL-001.json
+          git config user.name 'ugi-linkedin-publisher-bot'
+          git config user.email 'ugi-linkedin-publisher@users.noreply.github.com'
+          git add control-plane/publisher-hub/receipts/UGI-20260904-LI-EDITORIAL-001.json
+          git commit -m 'chore: persist UGI LinkedIn Buffer editorial 001 receipt' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
