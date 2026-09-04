@@ -1,0 +1,343 @@
+{
+  "project": "UGI",
+  "diagnostic": "2026-09-04 Instagram Story routing",
+  "mutationTriggered": false,
+  "targets": [
+    {
+      "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
+      "lookup": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "content_id": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
+          "found": true,
+          "draftId": "ugi-20260904021346-40d5655f05d9",
+          "status": "draft"
+        }
+      },
+      "draftId": "ugi-20260904021346-40d5655f05d9",
+      "collectionMatches": [],
+      "eligibility": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "draftId": "ugi-20260904021346-40d5655f05d9",
+          "platformStates": {
+            "instagram": {
+              "platform": "instagram",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "approved",
+              "eligible": false,
+              "reasons": [
+                "buffer_publication_already_active"
+              ],
+              "bufferPostId": "6a9a359f82940622ebb35ffb",
+              "publicationStatus": "published"
+            },
+            "tiktok": {
+              "platform": "tiktok",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "pending_approval",
+              "eligible": false,
+              "reasons": [
+                "pending_approval"
+              ],
+              "bufferPostId": null,
+              "publicationStatus": null
+            },
+            "youtube": {
+              "platform": "youtube",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "pending_approval",
+              "eligible": false,
+              "reasons": [
+                "pending_approval"
+              ],
+              "bufferPostId": null,
+              "publicationStatus": null
+            }
+          }
+        }
+      },
+      "publicationStatus": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "platform": "instagram",
+          "publication": {
+            "status": "published",
+            "bufferStatus": "sent",
+            "bufferPostId": "6a9a359f82940622ebb35ffb",
+            "channelId": "6a7896cdb2d9d57743457e33",
+            "channelService": "instagram",
+            "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+            "mode": "customScheduled",
+            "dueAt": "2026-09-04T12:00:00.000Z",
+            "sentAt": "2026-09-04T12:01:14.052Z",
+            "externalLink": "https://www.instagram.com/reel/Dc3VnBVDIHj/",
+            "sharedNow": false,
+            "requestedAt": "2026-09-04T03:06:06.912Z",
+            "updatedAt": "2026-09-04T12:14:02.788Z",
+            "error": null,
+            "bufferError": null,
+            "bufferDiagnostics": {
+              "httpStatus": 200,
+              "httpOk": true,
+              "requestId": "a35ce9624e7b77fd-IAD",
+              "rateLimitRemaining": "979",
+              "graphqlErrors": [],
+              "postError": null
+            }
+          }
+        }
+      },
+      "draftDetailProbes": {
+        "/api/drafts/ugi-20260904021346-40d5655f05d9": {
+          "http": 401,
+          "body": {
+            "ok": false
+          }
+        },
+        "/api/draft/ugi-20260904021346-40d5655f05d9": {
+          "http": 401,
+          "body": {
+            "ok": false
+          }
+        }
+      }
+    },
+    {
+      "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
+      "lookup": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "content_id": "UGI-20260904-IG-1030-TYSON-MARGIN",
+          "found": true,
+          "draftId": "ugi-20260904021439-a82118ed6b7e",
+          "status": "draft"
+        }
+      },
+      "draftId": "ugi-20260904021439-a82118ed6b7e",
+      "collectionMatches": [],
+      "eligibility": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "draftId": "ugi-20260904021439-a82118ed6b7e",
+          "platformStates": {
+            "instagram": {
+              "platform": "instagram",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "approved",
+              "eligible": false,
+              "reasons": [
+                "buffer_publication_already_active"
+              ],
+              "bufferPostId": "6a9a35a582940622ebb360af",
+              "publicationStatus": "scheduled"
+            },
+            "tiktok": {
+              "platform": "tiktok",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "pending_approval",
+              "eligible": false,
+              "reasons": [
+                "pending_approval"
+              ],
+              "bufferPostId": null,
+              "publicationStatus": null
+            },
+            "youtube": {
+              "platform": "youtube",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "pending_approval",
+              "eligible": false,
+              "reasons": [
+                "pending_approval"
+              ],
+              "bufferPostId": null,
+              "publicationStatus": null
+            }
+          }
+        }
+      },
+      "publicationStatus": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "platform": "instagram",
+          "publication": {
+            "status": "scheduled",
+            "bufferStatus": "scheduled",
+            "bufferPostId": "6a9a35a582940622ebb360af",
+            "channelId": "6a7896cdb2d9d57743457e33",
+            "channelService": "instagram",
+            "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+            "mode": "customScheduled",
+            "dueAt": "2026-09-04T13:30:00.000Z",
+            "sentAt": null,
+            "externalLink": null,
+            "sharedNow": false,
+            "requestedAt": "2026-09-04T03:06:12.410Z",
+            "updatedAt": "2026-09-04T12:14:36.214Z",
+            "error": null,
+            "bufferError": null,
+            "bufferDiagnostics": {
+              "httpStatus": 200,
+              "httpOk": true,
+              "requestId": "a35cea33fc8b77fd-IAD",
+              "rateLimitRemaining": "978",
+              "graphqlErrors": [],
+              "postError": null
+            }
+          }
+        }
+      },
+      "draftDetailProbes": {
+        "/api/drafts/ugi-20260904021439-a82118ed6b7e": {
+          "http": 401,
+          "body": {
+            "ok": false
+          }
+        },
+        "/api/draft/ugi-20260904021439-a82118ed6b7e": {
+          "http": 401,
+          "body": {
+            "ok": false
+          }
+        }
+      }
+    },
+    {
+      "contentId": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+      "lookup": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "content_id": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+          "found": true,
+          "draftId": "ugi-20260904021739-4fc5c7eb31fe",
+          "status": "draft"
+        }
+      },
+      "draftId": "ugi-20260904021739-4fc5c7eb31fe",
+      "collectionMatches": [],
+      "eligibility": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "draftId": "ugi-20260904021739-4fc5c7eb31fe",
+          "platformStates": {
+            "instagram": {
+              "platform": "instagram",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "approved",
+              "eligible": false,
+              "reasons": [
+                "buffer_publication_already_active"
+              ],
+              "bufferPostId": "6a9a35ba3134b0c21abe877c",
+              "publicationStatus": "scheduled"
+            },
+            "tiktok": {
+              "platform": "tiktok",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "pending_approval",
+              "eligible": false,
+              "reasons": [
+                "pending_approval"
+              ],
+              "bufferPostId": null,
+              "publicationStatus": null
+            },
+            "youtube": {
+              "platform": "youtube",
+              "assetExists": true,
+              "ready": true,
+              "approvalStatus": "pending_approval",
+              "eligible": false,
+              "reasons": [
+                "pending_approval"
+              ],
+              "bufferPostId": null,
+              "publicationStatus": null
+            }
+          }
+        }
+      },
+      "publicationStatus": {
+        "http": 200,
+        "body": {
+          "ok": true,
+          "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+          "platform": "instagram",
+          "publication": {
+            "status": "scheduled",
+            "bufferStatus": "scheduled",
+            "bufferPostId": "6a9a35ba3134b0c21abe877c",
+            "channelId": "6a7896cdb2d9d57743457e33",
+            "channelService": "instagram",
+            "channelSource": "BUFFER_CHANNEL_INSTAGRAM",
+            "mode": "customScheduled",
+            "dueAt": "2026-09-04T21:00:00.000Z",
+            "sentAt": null,
+            "externalLink": null,
+            "sharedNow": false,
+            "requestedAt": "2026-09-04T03:06:34.259Z",
+            "updatedAt": "2026-09-04T12:15:14.613Z",
+            "error": null,
+            "bufferError": null,
+            "bufferDiagnostics": {
+              "httpStatus": 200,
+              "httpOk": true,
+              "requestId": "a35ceb239c53fc18-IAD",
+              "rateLimitRemaining": "977",
+              "graphqlErrors": [],
+              "postError": null
+            }
+          }
+        }
+      },
+      "draftDetailProbes": {
+        "/api/drafts/ugi-20260904021739-4fc5c7eb31fe": {
+          "http": 401,
+          "body": {
+            "ok": false
+          }
+        },
+        "/api/draft/ugi-20260904021739-4fc5c7eb31fe": {
+          "http": 401,
+          "body": {
+            "ok": false
+          }
+        }
+      }
+    }
+  ],
+  "health": {
+    "http": 200,
+    "body": {
+      "ok": true,
+      "version": "lola-v8-r45-4b-story-video-buffer-direct-2026-09-03",
+      "status": "online"
+    }
+  },
+  "draftCollectionHttp": 200
+}
