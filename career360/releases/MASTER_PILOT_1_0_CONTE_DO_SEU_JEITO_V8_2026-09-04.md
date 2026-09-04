@@ -28,6 +28,46 @@ Depois da entrada:
 - mostrar `Nós organizamos assim`;
 - permitir `Está perfeito`, `Quero ajustar`, `Tentar outra versão`, `Não usar`.
 
+## Comece por aqui — sugestões dinâmicas
+
+A pessoa não deve receber um campo vazio sem orientação.
+
+Nova ação backend:
+`career-personal-narrative -> action=prompts`
+
+A função consulta somente contexto profissional necessário do próprio usuário:
+- cargo atual;
+- cargos-alvo.
+
+A partir disso, devolve sugestões contextualizadas.
+
+Exemplos universais:
+- `Sou o tipo de profissional que...`
+- `Uma coisa que faço muito bem é...`
+- `No trabalho, eu gosto especialmente de...`
+- `As pessoas costumam me procurar quando precisam de...`
+- `Um desafio que eu gosto de resolver é...`
+
+Exemplos para liderança/gestão:
+- `Quando lidero uma equipe, eu procuro...`
+- `Meu jeito de desenvolver pessoas é...`
+- `Quando preciso tomar uma decisão difícil, eu...`
+
+Exemplos para comercial/compras/categorias:
+- `Em uma negociação importante, meu ponto forte é...`
+- `Eu gosto de transformar dados de mercado em...`
+- `Quando uma categoria ou negócio precisa melhorar resultado, eu começo por...`
+
+Também existem conjuntos contextuais iniciais para tecnologia/produto, RH/People, finanças e operações.
+
+UX recomendada:
+- mostrar apenas 3 sugestões de cada vez em `Comece por aqui`;
+- botão `Quero mais ideias` revela outras;
+- depois da primeira resposta, oferecer temas como Liderança, Resultados, Decisão, Transformação, Pontos fortes, Jeito de trabalhar, Motivação, Aprendizados e Próximo passo;
+- nunca exigir que o usuário responda todas.
+
+Objetivo: estimular lembranças e evidências úteis sem transformar a experiência em entrevista ou formulário longo.
+
 ## Voz
 
 Direção zero-cash para o piloto:
@@ -48,9 +88,10 @@ Edge Function:
 `career-personal-narrative`
 
 Status:
-`ACTIVE / JWT_REQUIRED`
+`ACTIVE / JWT_REQUIRED / VERSION=3`
 
 Ações suportadas:
+- `prompts` — devolve sugestões baseadas em cargo atual + cargos-alvo;
 - `generate` — cria rascunho que exige confirmação;
 - `accept` — aceita texto proposto ou texto editado pelo usuário;
 - `reject` — descarta.
@@ -90,7 +131,8 @@ A transformação inicial é conservadora/determinística:
 - normaliza pontuação/espaços;
 - preserva o sentido original;
 - não inventa fatos;
-- sugere alguns temas de carreira apenas como apoio visual.
+- sugere temas de carreira apenas como apoio visual;
+- sugestões de conversa são orientadas ao cargo, não afirmações sobre o usuário.
 
 Em níveis futuros de inteligência, uma camada de linguagem mais sofisticada poderá propor redações melhores, desde que continue submetendo tudo à aprovação do usuário e nunca fabrique experiência.
 
@@ -98,10 +140,17 @@ Em níveis futuros de inteligência, uma camada de linguagem mais sofisticada po
 
 Incorporar esta etapa na próxima promoção visual junto com Perfil Profissional + Currículo Inteligente.
 
+Frontend esperado:
+- bloco `Comece por aqui` com 3 chips contextuais;
+- `Quero mais ideias`;
+- `🎙️ Falar` / `✍️ Escrever`;
+- comparação `Você contou` x `Nós organizamos assim`;
+- aprovação/ajuste/descarte.
+
 Não declarar `CONTE_DO_SEU_JEITO_FRONTEND=LIVE` antes de deploy e validação no domínio oficial.
 
 ## Recovery
 
 Novo chat: `Recovery LSI`.
 
-`LAST_VERIFIED_CHANGE=PERSONAL_NARRATIVE_BACKEND_LIVE_USER_CONFIRMATION_REQUIRED_RAW_TEXT_MINIMIZED_PROFILE_GENERATOR_V2_USES_ONLY_ACCEPTED_NARRATIVE_FRONTEND_PENDING`
+`LAST_VERIFIED_CHANGE=PERSONAL_NARRATIVE_V3_ROLE_AWARE_PROMPTS_LIVE_USER_CONFIRMATION_REQUIRED_RAW_TEXT_MINIMIZED_PROFILE_GENERATOR_USES_ONLY_ACCEPTED_NARRATIVE_FRONTEND_PENDING`
