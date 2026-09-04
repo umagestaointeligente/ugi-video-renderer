@@ -1,0 +1,124 @@
+name: UGI 2026-09-04 Prepare Agenda
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-20260904-prepare-agenda.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-20260904-prepare-agenda
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build canonical commands
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          OUT=Path('control-plane/commands')
+          OUT.mkdir(parents=True,exist_ok=True)
+
+          items=[
+            dict(slug='ugi-20260904-instagram-story-lz-dark-matter',cid='UGI-20260904-IG-0900-LZ-DARK-MATTER',platform='instagram',type='story_video',duration='36',topic_key='lz-dark-matter-signal-decision-under-uncertainty',title='Um sinal interessante não é uma conclusão',event='LUX-ZEPLIN dark-matter search result reported 2026-09-01',thesis='Gestão sob incerteza exige separar sinal, evidência e decisão antes de transformar hipótese em conclusão.',source='LZ Collaboration / Reuters, 01 set 2026',hook='Um experimento de matéria escura viu um evento incomum. Isso ainda não é uma descoberta.',fact='O LUX-ZEPLIN registrou um evento compatível com recuo nuclear; a significância global ficou em 2,6 sigma e a colaboração diz que são necessários mais dados.',mechanism='Na gestão acontece o mesmo: um sinal pode merecer atenção sem merecer uma conclusão definitiva.',turn='O erro é pular do indício para a certeza. Primeiro pergunte qual hipótese o dado sustenta, qual alternativa ainda explica o resultado e qual evidência falta.',takeaway='Decisão boa sob incerteza define o próximo teste antes de definir a narrativa final.',cta='Na sua empresa, qual sinal você está tratando como certeza cedo demais?',queries=['physics laboratory experiment scientists','scientists reviewing detector data','research team uncertainty analysis','manager evaluating evidence decision','team planning next experiment','modern science technology closing']),
+            dict(slug='ugi-20260904-instagram-story-tyson-margin',cid='UGI-20260904-IG-1030-TYSON-MARGIN',platform='instagram',type='story_video',duration='36',topic_key='tyson-beef-price-cost-margin-elasticity',title='Preço recorde não significa margem recorde',event='Tyson Foods beef pricing and cattle-cost pressure reported 2026-09-03',thesis='Preço alto só cria resultado quando a estrutura de custo, volume e elasticidade permite capturar margem.',source='Reuters, 03 set 2026',hook='A carne pode estar mais cara e, mesmo assim, a margem apertar.',fact='A Tyson enfrenta preços elevados de carne bovina ao mesmo tempo em que a escassez de gado e o custo do rebanho pressionam a rentabilidade.',mechanism='Preço de venda é apenas uma parte da equação. Custo de matéria-prima, volume, mix e elasticidade definem quanto realmente chega à margem.',turn='Quando o mercado sobe preço, não comemore antes de decompor a ponte entre preço, custo e volume.',takeaway='Acompanhe preço realizado, custo unitário e elasticidade na mesma leitura.',cta='Na sua categoria, o preço está crescendo mais rápido que a margem?',queries=['food production beef supply chain','cattle supply business operations','pricing cost margin analysis','manager reviewing category economics','retail pricing planning team','food business closing frame']),
+            dict(slug='ugi-20260904-tiktok-joblife',cid='UGI-20260904-TT-1215-JOBLIFE',platform='tiktok',type='video',duration='42',topic_key='tiktok-joblife-authentic-employer-brand',title='#joblife: employer brand começa na experiência real',event='TikTok Next 2026 identifies #joblife as an evolution of #worklife',thesis='Marca empregadora sustentável nasce da experiência vivida e só depois da comunicação.',source='TikTok Next 2026',hook='#joblife está crescendo porque as pessoas querem ver o trabalho como ele realmente é.',fact='O próprio TikTok destaca a hashtag como evolução de #worklife, com criadores mostrando volta ao escritório e carreiras não tradicionais de forma mais realista.',mechanism='Quando a experiência do funcionário e a mensagem da empresa divergem, a audiência percebe a distância rapidamente.',turn='Employer branding não começa no vídeo de recrutamento. Começa no desenho do trabalho, na liderança e na rotina que as pessoas encontram.',takeaway='Antes de comunicar cultura, escolha três evidências observáveis de que ela existe no dia a dia.',cta='O que um funcionário mostraria da sua empresa sem roteiro?',queries=['real office workday employees','return to office authentic workplace','employee experience teamwork','manager employee culture conversation','team authentic workplace process','modern office candid closing']),
+            dict(slug='ugi-20260904-instagram-reel-anvisa-unilever',cid='UGI-20260904-IG-1245-ANVISA-UNILEVER',platform='instagram',type='reel',duration='46',topic_key='anvisa-unilever-quality-compliance-capacity',title='Quando qualidade e compliance viram capacidade operacional',event='Anvisa preventive suspension of cleaning-product manufacturing at Unilever Vinhedo reported 2026-09-02',thesis='Compliance deixa de ser função de suporte quando uma falha pode limitar a capacidade de produzir.',source='Anvisa, 02 set 2026',hook='Uma falha de qualidade pode virar uma restrição de capacidade em poucas horas.',fact='A Anvisa suspendeu preventivamente a fabricação de produtos de limpeza na unidade da Unilever em Vinhedo após identificar falhas de boas práticas; a medida não determinou recolhimento dos produtos já no mercado.',mechanism='Quando um requisito regulatório interrompe produção, qualidade deixa de ser checklist e passa a integrar capacidade, continuidade e serviço.',turn='O controle certo não pergunta apenas se a regra foi cumprida. Pergunta qual processo crítico para se a regra falhar.',takeaway='Mapeie requisito, processo afetado, dono, evidência e plano de continuidade.',cta='Na sua operação, qual requisito pode virar gargalo de capacidade?',queries=['factory quality inspection cleaning products','manufacturing compliance inspection','production line quality control','operations manager compliance planning','factory continuity risk team','industrial management closing']),
+            dict(slug='ugi-20260904-youtube-state-of-play',cid='UGI-20260904-YT-1630-STATE-OF-PLAY',platform='youtube',type='video',duration='48',topic_key='state-of-play-launch-portfolio-attention',title='Mais de 30 novidades: como lançar sem diluir atenção',event='PlayStation State of Play two-show recap with more than 30 games on 2026-09-03',thesis='Portfólio amplo exige arquitetura de atenção: hierarquia, sequência e memória são tão importantes quanto quantidade de lançamentos.',source='PlayStation Blog, 03 set 2026',hook='Mais de 30 jogos em dois eventos. O problema não é ter novidade — é fazer cada novidade ser lembrada.',fact='A PlayStation reuniu dois State of Play e apresentou mais de 30 jogos, disputando atenção dentro do próprio portfólio.',mechanism='Quanto maior o volume de lançamentos, maior o risco de canibalização de atenção, mensagem e memória.',turn='Portfólio não é lista. É arquitetura: o que abre, o que ancora, o que surpreende e o que fica para a próxima janela.',takeaway='Dê a cada lançamento um papel claro, uma prioridade e uma janela de atenção.',cta='Seu portfólio tem prioridades ou só datas?',queries=['video game presentation audience','gaming launch event screens','product portfolio launch planning','marketing team launch sequencing','product roadmap prioritization','gaming business closing']),
+            dict(slug='ugi-20260904-instagram-story-snowflake-ai',cid='UGI-20260904-IG-1800-SNOWFLAKE-AI',platform='instagram',type='story_video',duration='36',topic_key='snowflake-ai-usage-revenue-strategy',title='IA vira estratégia quando aparece em uso, receita ou eficiência',event='Snowflake earnings and AI contribution commentary reported 2026-09-03',thesis='Tecnologia só vira estratégia quando pode ser conectada a comportamento de uso, receita, custo ou produtividade.',source='Reuters, 03 set 2026',hook='A melhor prova de uma estratégia de IA não é a apresentação. É o uso.',fact='A Snowflake elevou sua perspectiva de receita de produto e seu CEO atribuiu à IA uma parcela importante da aceleração recente do crescimento.',mechanism='Quando uma tecnologia muda uso, expansão de clientes ou eficiência, ela deixa de ser narrativa e passa a ser motor econômico.',turn='Evite medir IA apenas por projetos lançados. Meça adoção, frequência, valor entregue e efeito econômico.',takeaway='Escolha uma métrica de uso e uma métrica de resultado para cada iniciativa de IA.',cta='Sua IA já aparece em uso real ou ainda só em roadmap?',queries=['cloud data technology business','enterprise AI data team','software usage analytics team','executive technology metrics','team measuring AI adoption','modern cloud office closing']),
+            dict(slug='ugi-20260904-instagram-reel-lululemon',cid='UGI-20260904-IG-1915-LULULEMON',platform='instagram',type='reel',duration='46',topic_key='lululemon-premium-brand-innovation-novelty',title='Quando uma marca premium perde novidade',event='Lululemon outlook cut and Americas weakness reported 2026-09-03',thesis='Marca premium sustenta preço quando entrega novidade e relevância; desconto não substitui inovação de produto.',source='Reuters, 03 set 2026',hook='Uma marca premium pode continuar conhecida e ainda perder poder de novidade.',fact='A Lululemon voltou a reduzir sua projeção, com fraqueza nas Américas e pressão sobre categorias importantes do portfólio.',mechanism='Quando novidade e diferenciação desaceleram, o cliente compara mais preço e o desconto começa a carregar um trabalho que deveria ser da inovação.',turn='Promoção resolve estoque. Inovação resolve relevância. Misturar as duas respostas pode proteger o trimestre e enfraquecer o posicionamento.',takeaway='Monitore novidade percebida, conversão sem desconto e repetição de compra antes de ampliar promoção.',cta='Sua marca está vendendo valor novo ou apenas preço menor?',queries=['premium activewear retail store','fashion retail product assortment','premium brand customer shopping','product innovation merchandising team','retail discount strategy planning','fashion business closing']),
+            dict(slug='ugi-20260904-tiktok-microdramas',cid='UGI-20260904-TT-1945-MICRODRAMAS',platform='tiktok',type='video',duration='42',topic_key='microdrama-atwist-short-video-business-model',title='Quando vídeo curto deixa de ser formato e vira modelo de negócio',event='aTwist microdrama launch reported 2026-09-03',thesis='Mudança de hábito de consumo pode criar nova unidade econômica, nova cadência de produto e nova lógica de monetização.',source='Reuters, 03 set 2026',hook='Vídeo curto não está mudando só marketing. Está criando negócios inteiros.',fact='A plataforma aTwist estreou com dez micro-séries originais e uma biblioteca voltada a histórias muito curtas para consumo no celular.',mechanism='Quando o hábito muda, muda também o produto: duração, frequência, custo de produção, retenção e monetização passam a obedecer outra lógica.',turn='O erro é tratar um novo comportamento como apenas um canal novo. Às vezes ele exige um produto novo.',takeaway='Pergunte qual unidade de consumo o cliente está escolhendo agora e redesenhe a oferta ao redor dela.',cta='Qual hábito novo do seu cliente já pede um produto diferente?',queries=['vertical video smartphone entertainment','short form series mobile viewing','content production mobile studio','media business product planning','mobile audience retention strategy','creator economy closing']),
+            dict(slug='ugi-20260904-youtube-vinfast-gsm',cid='UGI-20260904-YT-2030-VINFAST-GSM',platform='youtube',type='video',duration='48',topic_key='gsm-vinfast-capital-heavy-growth-unit-economics',title='Crescer rápido não garante crescimento saudável',event='GSM international expansion plans reported 2026-09-03',thesis='Modelos intensivos em ativos podem acelerar controle e expansão, mas exigem disciplina maior de capital, utilização e unit economics.',source='Reuters, 03 set 2026',hook='Duas empresas podem crescer na mesma categoria com economias completamente diferentes.',fact='A GSM, ligada ao ecossistema VinFast, planeja avançar em Estados Unidos e Europa com um modelo mais intensivo em ativos do que plataformas tradicionais de mobilidade.',mechanism='Ter mais ativos e operação própria aumenta controle, mas também eleva necessidade de capital, utilização mínima e risco de ociosidade.',turn='Crescimento saudável não é só receita. É receita depois de capital, custo de servir e utilização dos ativos.',takeaway='Antes de escalar, acompanhe contribuição por unidade, utilização e caixa necessário para cada nova cidade ou capacidade.',cta='Seu crescimento melhora a economia do negócio ou só aumenta o tamanho?',queries=['electric vehicle ride hailing fleet','EV fleet operations charging','mobility business operations','capital intensive business planning','fleet utilization management','electric mobility closing'])
+          ]
+
+          roles=['hook','pain','consequence','turn','result','cta']
+          labels=['O SINAL','O FATO','POR QUE IMPORTA','A LEITURA DE GESTÃO','O TESTE PRÁTICO','LEVE PARA A DECISÃO']
+          def pmap(x): return {'instagram':x,'tiktok':x,'youtube':x}
+          for item in items:
+              narr=[item['hook'],item['fact'],item['mechanism'],item['turn'],item['takeaway'],item['cta']]
+              scenes=[]
+              for i,role in enumerate(roles):
+                  scenes.append({
+                      'role':role,
+                      'visual_intent':item['queries'][i],
+                      'pexels_query':item['queries'][i],
+                      'overlay':pmap(labels[i]),
+                      'support':pmap(item['source'] if i in (1,5) else ('Leitura UGI' if i>=2 else item['title'])),
+                      'narration':pmap(narr[i])
+                  })
+              cmd={
+                  'project':'UGI','platform':item['platform'],'type':item['type'],'topic_key':item['topic_key'],
+                  'title':item['title'],'duration':item['duration'],'render_id':item['slug'],
+                  'content_id':item['cid'],'experiment_id':'UGI-EDITORIAL-20260904-ZERO-COST-RECOVERY',
+                  'variant':'GENERAL_WORLD','commercial_intent':'none','smoke_test':False,
+                  'smoke_test_platform':item['platform'],'event_or_case':item['event'],'management_thesis':item['thesis'],
+                  'scenes_json':{
+                      'type':item['type'],'cta':item['cta'],'commercial_offer':False,'editorial_mode':'management_explainer',
+                      'copy_lock':{'enabled':True,'mode':'exact','strict':True,'type':item['type']},
+                      'exact_copy':{'enabled':True,'mode':'exact','strict':True,'type':item['type']},
+                      'music_profile':{'mood':'modern professional editorial pulse matched to the topic','modern':True,'audible':True,'progressive':True,'no_vocals':True,'forbid':['chiptune','ringtone','beeps','metallic loop','single-note loop','alarm siren'],'cta_no_silence':True},
+                      'visual_rules':['Use rights-cleared realistic context only.','Do not fabricate screens, quotes, documents, certifications, endorsements or incident footage.','Every scene must match narration and use distinct moving or naturally dynamic context.','No flash cuts, excessive zoom, long static holds or sensational imagery.','For Instagram Stories, preserve audible music through the CTA and vertical safe areas.'],
+                      'scenes':scenes
+                  }
+              }
+              (OUT/f"{item['slug']}.json").write_text(json.dumps(cmd,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          evidence={
+              'project':'UGI','date':'2026-09-04','mode':'ZERO_COST_VIDEO_NATIVE',
+              'videoCommandCount':len(items),'cloudflareWorkersAIGenerationRequired':False,
+              'carouselFallback':'Lululemon 19:15 converted from carousel to Reel to avoid exhausted Workers AI daily allocation while preserving topic and slot.',
+              'publicationTriggered':False
+          }
+          Path('control-plane/editorial/UGI_20260904_OPERATIONAL_PREP.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Validate command package
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths=sorted(Path('control-plane/commands').glob('ugi-20260904-*.json'))
+          assert len(paths)==9, len(paths)
+          for p in paths:
+              d=json.loads(p.read_text(encoding='utf-8'))
+              assert d['project']=='UGI'
+              assert d['type'] in {'story_video','reel','video'}
+              scenes=d['scenes_json']['scenes']
+              assert len(scenes)==6
+              assert d['scenes_json']['copy_lock']['enabled'] is True
+              assert d['scenes_json']['music_profile']['cta_no_silence'] is True
+          print('UGI_20260904_COMMANDS_VALID=9')
+          PY
+          python3 -m py_compile scripts/ugi_render_reconciler.py scripts/ugi_publisher_hub.py
+
+      - name: Commit commands only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-agenda-prep-bot'
+          git config user.email 'ugi-agenda-prep@users.noreply.github.com'
+          git add control-plane/commands/ugi-20260904-*.json control-plane/editorial/UGI_20260904_OPERATIONAL_PREP.json
+          if git diff --cached --quiet; then
+            echo 'Agenda commands already prepared.'
+            exit 0
+          fi
+          git commit -m 'ops: prepare UGI 04 Sep video-native commands'
+          git pull --rebase origin main
+          git push origin HEAD:main
