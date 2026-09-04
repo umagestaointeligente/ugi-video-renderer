@@ -23,15 +23,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Apply reliability patches
+      - name: Repair Publisher Hub Buffer readiness gate
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-
           hub = Path('scripts/ugi_publisher_hub.py')
           text = hub.read_text(encoding='utf-8')
+
           old_doc = '- Worker health and Buffer channels must be proven before mutation;'
           new_doc = '- Worker health must be proven before mutation; Buffer is proven on the actual per-post create/readback path;'
           if old_doc in text:
@@ -40,45 +40,36 @@ jobs:
               raise SystemExit('PUBLISHER_HUB_DOCSTRING_ANCHOR_NOT_FOUND')
 
           old_gate = '''    channels = client.get("/api/buffer/channels")\n    if not channels.get("ok"):\n        raise RuntimeError("BUFFER_CHANNELS_FAIL")\n\n'''
-          new_gate = '''    # Do not make Buffer channel discovery a global hard gate. The Worker owns\n    # canonical channel resolution and the authoritative proof is the actual\n    # per-post /api/platform-publish response followed by scheduled readback.\n    # This keeps publication fail-closed without allowing a discovery endpoint\n    # false-negative to block otherwise healthy Buffer create/readback calls.\n\n'''
+          new_gate = '''    # Buffer channel discovery is not a global hard gate. The Worker owns\n    # canonical channel resolution; the authoritative proof is the actual\n    # per-post /api/platform-publish response followed by scheduled readback.\n    # A real Buffer create/readback failure still fails closed below.\n\n'''
           if old_gate in text:
               text = text.replace(old_gate, new_gate, 1)
           elif new_gate not in text:
               raise SystemExit('PUBLISHER_HUB_BUFFER_GATE_ANCHOR_NOT_FOUND')
-          hub.write_text(text, encoding='utf-8')
 
-          wf = Path('.github/workflows/ugi-instagram-multiformat-hub.yml')
-          text = wf.read_text(encoding='utf-8')
-          old_loop = '''          for manifest in "${files[@]}"; do\n            stem=$(basename "$manifest" .json)\n            receipt="control-plane/instagram-multiformat/receipts/${stem}.json"\n            if [ -f "$receipt" ] && jq -e '.ok == true' "$receipt" >/dev/null 2>&1; then\n              echo "SKIP_PROVEN $manifest"\n              continue\n            fi\n            # r45_instagram_multiformat_pilot.py fails closed before generation when\n            # SAME-PLATFORM topic history returns BLOCK/REVIEW_REQUIRED. Successful\n            # Buffer readback appends the topic to the durable 15-day registry.\n            python scripts/r45_instagram_multiformat_pilot.py "$manifest" --receipt "$receipt" || failed=1\n          done\n'''
-          new_loop = '''          for manifest in "${files[@]}"; do\n            stem=$(basename "$manifest" .json)\n            receipt="control-plane/instagram-multiformat/receipts/${stem}.json"\n\n            # Durable history remains in queue, but expired failed manifests must not\n            # consume fresh free-generation capacity forever. Match Publisher Hub's\n            # six-hour stale-window semantics and skip them before any Worker call.\n            if python3 - "$manifest" <<'PY_STALE'\n          import datetime as dt, json, sys\n          path=sys.argv[1]\n          try:\n              rows=(json.load(open(path,encoding='utf-8')).get('posts') or [])\n              dues=[]\n              for row in rows:\n                  raw=str(row.get('dueAt') or '')\n                  if raw:\n                      dues.append(dt.datetime.fromisoformat(raw.replace('Z','+00:00')).astimezone(dt.timezone.utc))\n              stale=bool(dues) and max(dues) < dt.datetime.now(dt.timezone.utc)-dt.timedelta(hours=6)\n          except Exception:\n              stale=False\n          raise SystemExit(0 if stale else 1)\n          PY_STALE\n            then\n              echo "SKIP_STALE $manifest"\n              continue\n            fi\n\n            if [ -f "$receipt" ] && jq -e '.ok == true' "$receipt" >/dev/null 2>&1; then\n              echo "SKIP_PROVEN $manifest"\n              continue\n            fi\n            # r45_instagram_multiformat_pilot.py fails closed before generation when\n            # SAME-PLATFORM topic history returns BLOCK/REVIEW_REQUIRED. Successful\n            # Buffer readback appends the topic to the durable 15-day registry.\n            if ! python scripts/r45_instagram_multiformat_pilot.py "$manifest" --receipt "$receipt"; then\n              failed=1\n              # Capacity exhaustion is batch-global. Stop after the first 4006/free\n              # allocation failure instead of burning retries on every queued manifest.\n              if [ -f "$receipt" ] && jq -e '.. | strings | select(test("4006|daily free allocation|used up your daily free allocation"; "i"))' "$receipt" >/dev/null 2>&1; then\n                echo "STOP_CAPACITY_EXHAUSTED $manifest"\n                break\n              fi\n            fi\n          done\n'''
-          if old_loop in text:
-              text = text.replace(old_loop, new_loop, 1)
-          elif 'STOP_CAPACITY_EXHAUSTED' not in text:
-              raise SystemExit('INSTAGRAM_LOOP_ANCHOR_NOT_FOUND')
-          wf.write_text(text, encoding='utf-8')
+          hub.write_text(text, encoding='utf-8')
           PY
 
-      - name: Static validation
+      - name: Validate Publisher Hub patch
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile scripts/ugi_publisher_hub.py scripts/r45_instagram_multiformat_pilot.py
+          python3 -m py_compile scripts/ugi_publisher_hub.py
           grep -q 'per-post /api/platform-publish' scripts/ugi_publisher_hub.py
           ! grep -q 'raise RuntimeError("BUFFER_CHANNELS_FAIL")' scripts/ugi_publisher_hub.py
-          grep -q 'SKIP_STALE' .github/workflows/ugi-instagram-multiformat-hub.yml
-          grep -q 'STOP_CAPACITY_EXHAUSTED' .github/workflows/ugi-instagram-multiformat-hub.yml
+          grep -q 'gate": "BUFFER_CREATE"' scripts/ugi_publisher_hub.py
+          grep -q '_scheduled_readback_pass' scripts/ugi_publisher_hub.py
 
-      - name: Commit reliability fix
+      - name: Commit Publisher Hub repair
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'ugi-reliability-bot'
           git config user.email 'ugi-reliability@users.noreply.github.com'
-          git add scripts/ugi_publisher_hub.py .github/workflows/ugi-instagram-multiformat-hub.yml
+          git add scripts/ugi_publisher_hub.py
           if git diff --cached --quiet; then
-            echo 'Reliability patches already applied.'
+            echo 'Publisher Hub repair already applied.'
             exit 0
           fi
-          git commit -m 'fix: harden UGI Buffer and Instagram queue gates'
+          git commit -m 'fix: prove Buffer on create and readback path'
           git pull --rebase origin main
           git push origin HEAD:main
