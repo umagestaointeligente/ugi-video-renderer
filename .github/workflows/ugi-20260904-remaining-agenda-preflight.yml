@@ -1,0 +1,53 @@
+name: UGI 20260904 Remaining Agenda Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-20260904-remaining-agenda-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read-only preflight remaining 04-09 agenda
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          specs=(
+            '1215|tiktok|ugi-20260904021525-f2ebb78198dd|2026-09-04T15:15:00.000Z'
+            '1245|instagram|ugi-20260904021611-fe96e6d89c24|2026-09-04T15:45:00.000Z'
+            '1630|youtube|ugi-20260904021656-c3d328666627|2026-09-04T19:30:00.000Z'
+            '1800|instagram|ugi-20260904021739-4fc5c7eb31fe|2026-09-04T21:00:00.000Z'
+            '1915|instagram|ugi-20260904021822-5e213b14150d|2026-09-04T22:15:00.000Z'
+            '1945|tiktok|ugi-20260904021902-e92b9d5e738d|2026-09-04T22:45:00.000Z'
+            '2030|youtube|ugi-20260904021945-36e49ab0b774|2026-09-04T23:30:00.000Z'
+          )
+          for spec in "${specs[@]}"; do
+            IFS='|' read -r slot platform id expected <<< "$spec"
+            r=$(curl --silent --show-error --location --max-time 90 \
+              -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" \
+              -H 'accept: application/json' \
+              "$WORKER_URL/api/platform-publication-status?id=$id&platform=$platform")
+            echo "===== ${slot} ${platform} ====="
+            echo "$r" | jq '{ok,version,platform,publication,post,bufferDiagnostics}'
+            echo "$r" | jq -e --arg expected "$expected" '
+              .ok == true and
+              .publication.status == "scheduled" and
+              .publication.bufferStatus == "scheduled" and
+              .publication.dueAt == $expected and
+              (.publication.bufferPostId | type == "string" and length > 0) and
+              (.publication.error == null)
+            ' >/dev/null
+          done
