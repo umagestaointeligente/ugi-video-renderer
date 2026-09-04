@@ -1,7 +1,8 @@
 {
-  "schema_version": "1.2",
-  "effective_date": "2026-08-25",
+  "schema_version": "1.3",
+  "effective_date": "2026-09-04",
   "project": "UGI",
+  "distribution_state_ref": "config/ugi/distribution-state.json",
   "control_plane": {
     "canonical_publication_hub": "UGI Publisher Hub",
     "queue_path": "control-plane/publisher-hub/queue",
@@ -44,6 +45,8 @@
       "provider": "buffer",
       "exclusive": true,
       "orchestrator": "UGI Publisher Hub",
+      "active_platforms": ["linkedin", "instagram", "tiktok"],
+      "paused_platforms": ["youtube"],
       "allowed_operations": [
         "schedule",
         "queue",
@@ -53,7 +56,18 @@
         "publication_readback"
       ],
       "fallback_provider": null,
-      "fail_closed_if_unavailable": true
+      "fail_closed_if_unavailable": true,
+      "linkedin_target": {
+        "type": "LinkedIn Page",
+        "page_name": "UGI — Uma Gestão Inteligente",
+        "buffer_name": "uma-gestao-inteligente",
+        "personal_profile_target_allowed": false
+      },
+      "youtube": {
+        "buffer_status": "PAUSED",
+        "strategy_abandoned": false,
+        "buffer_mutation_allowed": false
+      }
     },
     "analytics": {
       "provider": "metricool",
@@ -82,12 +96,15 @@
   "hard_invariants": [
     "Metricool must never mutate the UGI publishing plan.",
     "Metricool must never be used as fallback publisher.",
-    "Buffer is the sole official scheduler and publisher for UGI.",
+    "Buffer is the sole official scheduler and publisher for active UGI Buffer channels.",
     "UGI Publisher Hub is the sole canonical render and publication orchestrator.",
     "Production video renders must enter through Worker /api/video-render so approvalDraftId is persisted before media upload.",
     "Direct production dispatch from legacy chat control planes to render-video.yml is forbidden.",
     "Chat runtimes, including Lola 5.3, are optional command clients and are never required for render, scheduling or publication.",
     "If Buffer publication cannot be proven by readback, status is BLOCKED, WAITING or NOT_PROVEN.",
+    "LinkedIn publication must target only UGI — Uma Gestão Inteligente Company Page and never Paulo Oliveira's personal profile.",
+    "YouTube Buffer status is PAUSED; no new Buffer mutation may target YouTube while paused.",
+    "YouTube strategy, content and history remain preserved for future evidence-based reactivation.",
     "Any migration away from Buffer requires an explicit ADR, smoke test, rollback plan and policy update before production use."
   ]
 }
