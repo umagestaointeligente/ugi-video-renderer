@@ -1,4 +1,5 @@
 import './app-a.js';
+import './app-c.js';
 const {sb,$,csv,F,S,msg,pt,esc,call,setMode,restore}=window.C;
 function view(v){document.querySelectorAll('.v').forEach(x=>x.classList.toggle('on',x.id===v));document.querySelectorAll('[data-v]').forEach(x=>{x.classList.toggle('on',x.dataset.v===v);x.classList.toggle('sec',x.dataset.v!==v)});if(v==='opps')loadOpps();if(v==='master')loadMaster()}document.querySelectorAll('[data-v]').forEach(x=>x.onclick=()=>view(x.dataset.v));
 window.C.view=view;
