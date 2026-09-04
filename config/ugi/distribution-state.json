@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "effective_at": "2026-09-04T11:05:00-03:00",
+  "project": "UGI",
+  "state": "UPDATED",
+  "buffer": {
+    "active_channel_count": 3,
+    "active_platforms": ["linkedin", "instagram", "tiktok"],
+    "paused_platforms": ["youtube"],
+    "publisher": "buffer",
+    "youtube_buffer_status": "PAUSED",
+    "youtube_strategy": "PRESERVED_FOR_FUTURE_REEVALUATION"
+  },
+  "channels": {
+    "linkedin": {
+      "status": "ACTIVE",
+      "role": "authority_management_career_leadership_strategy_ai_applied_b2b_b2c_relationship",
+      "page_name": "UGI — Uma Gestão Inteligente",
+      "public_url": "https://www.linkedin.com/company/uma-gestao-inteligente/",
+      "buffer_channel_type": "LinkedIn Page",
+      "buffer_channel_name": "uma-gestao-inteligente",
+      "buffer_channel_id": null,
+      "company_page_only": true,
+      "personal_profile_publication_forbidden": true,
+      "admin_auth_via_personal_profile_allowed": true,
+      "posts_initial_baseline": 0,
+      "baseline_maturity": "NEW_CHANNEL",
+      "content_principle": "A NOTÍCIA É O GANCHO. A INTELIGÊNCIA DE GESTÃO É O PRODUTO.",
+      "mandatory_management_angle": true
+    },
+    "instagram": {
+      "status": "ACTIVE",
+      "role": "brand_identity_reach_visual_education_relationship_community_fast_insights"
+    },
+    "tiktok": {
+      "status": "ACTIVE",
+      "role": "discovery_cold_audience_experimentation_trends_hooks_fast_distribution_audience_acquisition"
+    },
+    "youtube": {
+      "buffer_status": "PAUSED",
+      "strategy_status": "NOT_ABANDONED",
+      "content_history_preserve": true,
+      "reactivation_requires": [
+        "explicit_new_decision_or_operational_evidence",
+        "higher_strategic_fit",
+        "additional_publication_capacity_or_tooling_change",
+        "format_performance_evidence"
+      ]
+    }
+  },
+  "distribution_priority": ["linkedin", "instagram", "tiktok"],
+  "analytics": {
+    "compare_raw_platform_performance_without_context": false,
+    "context_dimensions": [
+      "channel_maturity",
+      "audience_size",
+      "format",
+      "strategic_objective",
+      "time_since_activation",
+      "reach",
+      "retention",
+      "interactions",
+      "shares",
+      "saves",
+      "followers_generated",
+      "clicks",
+      "messages",
+      "authority_signals"
+    ],
+    "linkedin_own_baseline_required": true,
+    "do_not_kill_linkedin_for_low_initial_audience": true
+  },
+  "linkedin_intelligence_engine": {
+    "status": "PROGRESSIVE_ACTIVE",
+    "flow": [
+      "RESEARCH",
+      "DETECT_TRENDS",
+      "CLASSIFY",
+      "TRANSFORM_TO_INTELLIGENCE",
+      "PRODUCE",
+      "PUBLISH",
+      "MEASURE",
+      "LEARN",
+      "IMPROVE"
+    ],
+    "management_angle_required": true,
+    "trend_threshold_policy": "config/ugi/editorial-trend-gate-v2.4.json",
+    "publish_only_because_viral": false
+  },
+  "career_products": {
+    "sales_status": "DO_NOT_SELL_YET",
+    "sequence": ["AUTHORITY", "AUDIENCE", "LEARNING", "BETA", "PRODUCT", "MONETIZATION"],
+    "future_acquisition_assets": ["LSI Career 360", "Career Agent B2C", "Recruiter Agent B2B", "LSI Talent Match"],
+    "initial_communication_dominance": false
+  },
+  "hard_invariants": [
+    "Publish LinkedIn content exclusively to the UGI Company Page, never Paulo Oliveira's personal profile.",
+    "Do not reactivate YouTube in Buffer without a new explicit decision or qualifying operational evidence.",
+    "Do not delete YouTube strategy, content or history because Buffer distribution is paused.",
+    "Do not mutate existing Instagram or TikTok publications without necessity.",
+    "Buffer active distribution baseline is exactly three channels: LinkedIn, Instagram and TikTok."
+  ]
+}
