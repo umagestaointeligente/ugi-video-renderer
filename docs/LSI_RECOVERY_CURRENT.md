@@ -1,169 +1,148 @@
 # LSI — RECOVERY CURRENT
 
 Status: CURRENT / AUTORITATIVO PARA HANDOFF
-Atualizado: 2026-09-03 BRT
+Atualizado: 2026-09-04 BRT
 Âncora humana: `Recovery LSI`
-Alias técnico interno: `LSI::RECOVERY::CURRENT`
+Alias técnico: `LSI::RECOVERY::CURRENT`
 
 ## 0. Estado global
 
 `LSI_RECOVERY=TRUE`
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=MASTER_PILOT_READY_FOR_MASTER_USE`
-`VERIFIED_REVENUE=R$0,00` para a lógica de incubação; reconfirmar antes de decisão monetária.
+`CURRENT_STATUS=MASTER_PILOT_READY_FOR_MASTER_USE_UX_V6`
+`VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
-## 1. Localização canônica
+## 1. Fonte canônica / runtime
 
 Repository: `umagestaointeligente/ugi-video-renderer`
-Fonte canônica: `main`
-PR #25: MERGED
+Branch canônica: `main`
+PR fundação #25: MERGED
+
 Backend: Supabase `LSI Career 360`, ref `nxjdnzdxclszqyqrkwdk`, região `sa-east-1`.
 Frontend oficial: `https://lsi-career-360.vercel.app/`
-Projeto Vercel: `lsi-career-360`, project id `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`.
+Vercel project id: `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`.
 
 Arquitetura:
 `VERCEL FRONTEND -> SUPABASE AUTH/DATA/EDGE BACKEND`
 
-Não usar Supabase Edge Function como superfície HTML; a rota antiga serve apenas como redirecionamento.
+Não usar Supabase Edge Function como superfície HTML.
 
 ## 2. Produto entregue
 
-Master Pilot 1.0 possui:
+Master Pilot 1.0:
 - Auth individual;
-- papel `master` por hash SHA-256 de e-mail autorizado;
+- role `master` por hash de e-mail autorizado;
 - onboarding guiado;
 - currículo PDF/DOCX em quarentena privada;
-- deep parser determinístico;
-- confirmação humana antes de transformar extração em dado operacional;
+- parser determinístico + confirmação humana;
 - Proteção de Carreira;
-- Matching V1 explicável;
-- radar/análise de oportunidades no piloto;
-- Meu Agente zero-cash;
+- Matching V1;
+- Meu Agente;
 - SAC `Resolver agora`;
 - Painel Mestre agregado;
-- retenção/cleanup de arquivo bruto;
-- audit trail seguro.
+- audit trail / retenção de raw;
+- frontend responsivo no Vercel.
 
-## 3. UX atual — Onboarding Guiado V5
-
-Alteração publicada em 2026-09-03 após feedback de uso mestre real.
-
-Quando `onboarding_status != agent_ready`, o usuário entra em um passo a passo visual de 5 etapas:
-
-1. `Sobre você`
-   - nome;
-   - cargo atual;
-   - cidade;
-   - UF.
-
-2. `Seu objetivo`
-   - cargos-alvo;
-   - locais aceitos;
-   - salário mínimo opcional;
-   - salário alvo opcional.
-
-3. `Proteção`
-   - situação profissional atual;
-   - empregador atual;
-   - proteção do empregador atual;
-   - empresas adicionais bloqueadas.
-
-4. `Competências`
-   - competências principais confirmadas.
-
-5. `Currículo — agora ou depois`
-   - PDF textual/DOCX até 10 MB;
-   - currículo é opcional para ativação;
-   - pode ser adicionado depois;
-   - interface explica que o currículo automatiza organização/preenchimento, sempre sujeito à confirmação.
-
-UX adicional:
-- barra de progresso 1/5;
-- Próximo / Voltar;
-- `Continuar depois` / `Fazer depois`;
-- progresso temporário preservado em `sessionStorage`;
-- Home lembra `Termine de preparar seu agente`;
-- Minha Carreira permite revisar dados e adicionar currículo posteriormente;
-- senha e confirmação possuem mostrar/ocultar senha (olho).
-
-Princípio preservado:
+Princípios:
 `O CLIENTE NÃO PREENCHE. O CLIENTE CONFIRMA.`
+`O CLIENTE NÃO OPERA A BUSCA. O AGENTE OPERA; O CLIENTE CONFIRMA O QUE IMPORTA.`
 
-Release note:
-`career360/releases/MASTER_PILOT_1_0_ONBOARDING_GUIADO_2026-09-03.md`
+## 3. UX atual — V6 LIVE
 
-## 4. Auth real do usuário mestre
+Feedback do primeiro uso mestre real gerou a V6.
 
-Conta mestre real criada e verificada:
-- e-mail confirmado = TRUE;
-- role = `master`;
-- onboarding = `started` no último readback antes da conclusão do fluxo guiado.
+### Onboarding
+1. **Nome completo** — não ambíguo; primeiro nome é usado apenas na saudação.
+2. Objetivos de carreira.
+3. Proteção de Carreira.
+4. **Atribuições/competências por seleção**: até 10 sugestões conforme cargo, `Marcar todas`, `Limpar` e campo `Outras`.
+5. Currículo agora ou depois.
 
-Incidente encontrado em primeiro cadastro:
-- confirmação de e-mail redirecionou para `localhost:3000`;
-- confirmação em si funcionou;
-- frontend passou a enviar `emailRedirectTo=https://lsi-career-360.vercel.app/?email-confirmado=1`;
-- release: `career360/releases/MASTER_PILOT_1_0_AUTH_REDIRECT_FIX_2026-09-03.md`.
+### Empresa
+- autocomplete após 2 caracteres;
+- Edge autenticada `career-employer-suggest` = ACTIVE;
+- digitação livre permanece fallback;
+- catálogo dedicado amplo ainda NÃO está hidratado: `career_employer_entities=0` e `career_employer_aliases=0` no readback de 2026-09-04;
+- não reutilizar dados privados de candidatos/recrutamento como catálogo global sem governança.
 
-PENDÊNCIA antes de Beta pública:
+### Home
+- prioriza cartão `Seu perfil` e completude de dados essenciais;
+- resume nome, cargo, objetivos, local, competências, proteções e estado de currículo;
+- radar continua visível, porém não domina a experiência com zeros.
+
+### Navegação
+Correção crítica:
+`.v { display:none!important }`
+`.v.on { display:block!important }`
+
+Antes, `.stack` podia fazer Home, Minha Carreira e Oportunidades aparecerem juntas no scroll. Agora: **uma aba = uma superfície**.
+
+### Oportunidades
+- formulário manual de vaga REMOVIDO da experiência do candidato;
+- candidato recebe radar read-only;
+- formulário `Empresa/Cargo/Modelo/Salário/Skills` existe apenas em `Painel Mestre > Laboratório técnico de matching`;
+- pesquisa automática externa ainda NÃO está conectada ao Master Pilot; não fingir que está e não transferir cadastro de vagas para o candidato.
+
+## 4. Currículo — incidente real e correção
+
+Readback após o primeiro upload real do usuário mestre:
+- `career_documents = 0`;
+- evento de confirmação existente indicava `source=manual`.
+
+Conclusão: a tentativa de upload observada na UX anterior NÃO concluiu o pipeline. Não declarar arquivo armazenado.
+
+V6:
+- estado de processamento visível;
+- sucesso explícito apenas após `ingest + process`;
+- mensagem: `Currículo recebido e processado com sucesso. Revise e confirme antes de usar os dados.`;
+- falha fica visível;
+- `Minha Carreira` mostra metadata/status e permite trocar arquivo;
+- latest structured draft pode ser aberto em `Ver dados extraídos do currículo` (resumo/experiência/formação/skills/idiomas/certificações quando o parser suportar);
+- não manter raw indefinidamente só para oferecer visualizador.
+
+`career-profile-confirm` V3 = ACTIVE:
+- após raw delete imediato bem-sucedido, metadata passa para `file_status=deleted`, `deleted_at=now()`, storage path nulo;
+- dados estruturados/confirmados continuam disponíveis sob RLS.
+
+## 5. Frontend V6 — evidência
+
+Deployment produção:
+`dpl_3CVnsu8JqoxwqL1fZ18rFg3Ztaty`
+
+Estado: `READY`
+Aliases incluem `lsi-career-360.vercel.app`.
+
+Validação:
+- `/` = HTTP 200 / `text/html`;
+- `/style.css` = HTTP 200 / `text/css`;
+- `/app-b.js` = HTTP 200 / `application/javascript`;
+- conteúdo V6 presente no domínio oficial.
+
+Release detalhada:
+`career360/releases/MASTER_PILOT_1_0_UX_V6_2026-09-04.md`
+
+## 6. Auth / segurança
+
+Conta mestre real:
+- e-mail confirmado;
+- role `master`.
+
+Incidente anterior:
+- e-mail de confirmação havia redirecionado para `localhost:3000`;
+- frontend hoje envia `emailRedirectTo=https://lsi-career-360.vercel.app/?email-confirmado=1`.
+
+PENDÊNCIA pré-Beta:
 `SUPABASE_GLOBAL_SITE_URL_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`
-A configuração global do provider deve ser alinhada ao domínio oficial; não declarar concluída sem evidência real.
 
-## 5. E2E funcional
-
-PASS com Auth real e dados sintéticos descartáveis:
-- create user;
-- bootstrap master;
-- JWT real;
-- DOCX ingest;
-- quarantine;
-- deep parser;
-- draft;
-- confirm;
-- `AGENT_READY`;
-- raw deleted;
-- Matching = `100 / QUALIFIED_SALARY_CONFIRM` no cenário sintético;
-- feed;
-- agent;
-- support;
-- master panel.
-
-Cleanup pós-teste: 0 QA users, 0 QA opportunities, 0 QA master hashes e runner temporário desativado.
-
-## 6. Segurança / Privacidade
-
-`SECURITY_ADVISOR=PASS_ZERO_LINTS` no último hardening verificado.
+Último hardening comprovado antes da V6:
+`SECURITY_ADVISOR=PASS_ZERO_LINTS`
 `MULTIUSER_ISOLATION=PASS`
 `PRIVATE_STORAGE=PASS`
 `DIRECT_CLIENT_STORAGE_WRITE=DENIED_BY_RLS`
-`AUTH_REAL_SESSION=PASS_E2E`
-`CAREER_PRIVACY_GATE=PASS_SYNTHETIC_SCENARIOS`
 
-Painel Mestre:
-- somente agregados em `career_master_metrics`;
-- leitura protegida por RLS para role `master`;
-- authenticated não escreve no snapshot;
-- refresh interno sem EXECUTE para authenticated;
-- candidato = HTTP 403;
-- mestre = HTTP 200.
+Não transformar estes PASS em promessa além do escopo testado.
 
-## 7. Currículo
-
-Pipeline:
-`FILE -> QUARANTINED -> DEEP VALIDATION -> DRAFT_REQUIRES_CONFIRMATION -> CONFIRMED -> RAW DELETE`
-
-Controles principais:
-- bucket privado `career-resumes-quarantine`;
-- 10 MB;
-- PDF textual/DOCX;
-- tipo real + SHA-256;
-- DOCX fail-closed para path traversal/XML inseguro/compressão suspeita;
-- PDF protegido/sem texto rejeitado;
-- retry idempotente;
-- cleanup automático;
-- nenhuma heurística vira fato confirmado.
-
-## 8. Matching V1
+## 7. Matching / privacidade
 
 - privacidade antes do score;
 - idade nunca entra;
@@ -173,46 +152,61 @@ Controles principais:
 - `SILENT_BLOCK` para empresa protegida;
 - `NO_DISCLOSURE` para empregador não resolvido.
 
-## 9. Gates
+## 8. Gates
 
 `DEDICATED_PROJECT=PASS`
 `SECURITY_P0=PASS_MASTER_PILOT_SCOPE`
 `CAREER_PRIVACY_P0=PASS_MASTER_PILOT_SCOPE`
 `MULTIUSER_ISOLATION=PASS`
 `SAFE_FILE_PIPELINE=PASS_MASTER_PILOT_SCOPE`
-`RAW_FILE_RETENTION=PASS`
-`CV_CONFIRMATION_UI=PASS`
 `MATCH_ENGINE_V1=PASS`
 `NO_FABRICATION_GUARD=PASS_MASTER_PILOT_SCOPE`
-`AUDIT_RECOVERY=PASS_MASTER_PILOT_SCOPE`
-`CORE_RELIABILITY=PASS_MASTER_PILOT_SCOPE`
 `FRONTEND_HOSTING=PASS_VERCEL`
-`GUIDED_ONBOARDING_V5=LIVE`
+`GUIDED_ONBOARDING_V6=LIVE`
+`CANDIDATE_MANUAL_JOB_ENTRY=REMOVED`
+`EMPLOYER_AUTOCOMPLETE_API=LIVE_CATALOG_HYDRATION_PENDING`
 `MASTER_PILOT=READY_FOR_MASTER_USE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
+
+## 9. Próximo gargalo real
+
+O candidato não deve cadastrar vagas.
+
+Próximo salto funcional:
+`AUTOMATED_OPPORTUNITY_RESEARCH`
+
+Precisa nascer com:
+- custo zero / Próximo Degrau compatível;
+- evidência de fonte;
+- deduplicação;
+- expiração/fechamento;
+- privacidade antes de matching;
+- filtros de localização/modelo/salário/FIT;
+- nenhum bypass de CAPTCHA/MFA;
+- checkpoint e tratamento de dependência externa.
 
 ## 10. DO NOT REDO
 
 - não reconstruir Career do zero;
-- não usar Supabase Edge como hospedagem da UI;
-- não reutilizar banco de outro produto;
+- não reintroduzir formulário manual de vaga ao candidato;
+- não usar Supabase Edge como hospedagem HTML;
 - não reintroduzir service role no frontend;
-- não expor `SECURITY DEFINER` ao authenticated;
 - não transformar inferência em fato;
-- não bypassar MFA/CAPTCHA;
+- não manter raw de currículo indefinidamente por conveniência;
+- não fingir pesquisa automática de vagas como LIVE;
 - não abrir Beta pública automaticamente;
-- não ativar browser/modelo pago sem Próximo Degrau;
 - não criar recovery paralelo.
 
 ## 11. NEXT_ACTION
 
-1. continuar uso mestre real e coletar feedback de UX;
-2. corrigir incidentes observados no fluxo real;
-3. provar/corrigir `Site URL` + Redirect allowlist global do Supabase antes da Beta;
-4. evoluir Career Learning Engine com outcomes reais;
-5. preparar browser/research automation conforme capacidade;
-6. Founding Beta 20 somente após decisão explícita.
+1. usuário mestre reabrir V6 e validar navegação/UX;
+2. reenviar currículo real e exigir confirmação explícita de `ingest + process`;
+3. corrigir qualquer incidente real observado nesse reteste;
+4. hidratar catálogo público/curado de empregadores sem contaminar com dados privados;
+5. construir rota automática de pesquisa de oportunidades;
+6. provar Site URL/Redirect allowlist antes de Beta;
+7. Founding Beta 20 somente após decisão explícita.
 
 ## 12. Última alteração verificada
 
-`LAST_VERIFIED_CHANGE=GUIDED_ONBOARDING_V5_LIVE_PASSWORD_EYE_AUTH_REDIRECT_FRONTEND_FIXED_MASTER_ACCOUNT_CONFIRMED`
+`LAST_VERIFIED_CHANGE=CAREER_UX_V6_FULL_NAME_EMPLOYER_AUTOCOMPLETE_ROLE_CHECKLIST_CV_EXPLICIT_STATUS_PROFILE_SUMMARY_CANDIDATE_JOB_FORM_REMOVED_TAB_VISIBILITY_FIXED_DEPLOY_READY`
