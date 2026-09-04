@@ -1,0 +1,55 @@
+name: UGI Buffer Official Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ugi_buffer_official_proof.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-buffer-official-proof
+  cancel-in-progress: false
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove 04-09 Buffer schedule by live readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python3 scripts/ugi_buffer_official_proof.py
+
+      - name: Persist official proof
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof='control-plane/publisher-hub/receipts/UGI-20260904-OFFICIAL-BUFFER-PROOF.json'
+          test -f "$proof"
+          git config user.name 'ugi-buffer-proof-bot'
+          git config user.email 'ugi-buffer-proof@users.noreply.github.com'
+          git add "$proof"
+          if git diff --cached --quiet; then
+            echo 'No proof change'
+            exit 0
+          fi
+          git commit -m 'chore: persist official Buffer proof for 2026-09-04'
+          git pull --rebase origin main
+          git push origin HEAD:main
