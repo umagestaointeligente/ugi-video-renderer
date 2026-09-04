@@ -1,0 +1,47 @@
+name: UGI 2026-09-04 Live Worker Buffer Extract
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ugi_20260904_live_worker_buffer_extract.py'
+      - '.github/workflows/ugi-20260904-live-worker-buffer-extract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-cloudflare-worker-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Extract live Buffer routing neighborhoods
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --quiet requests
+          PYTHONPATH=scripts python scripts/ugi_20260904_live_worker_buffer_extract.py
+      - name: Persist diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-diagnostic-bot'
+          git config user.email 'ugi-diagnostic@users.noreply.github.com'
+          git add control-plane/recovery/UGI_20260904_LIVE_WORKER_BUFFER_EXTRACT.txt
+          git commit -m 'chore: persist live Worker Buffer routing extract' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
