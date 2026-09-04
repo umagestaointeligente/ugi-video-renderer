@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T15:38:51.898214+00:00",
+  "checkedAt": "2026-09-04T15:49:49.202018+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 3,
+  "delivered": 4,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -74,6 +74,28 @@
         "ok": true,
         "httpStatus": 200,
         "finalUrl": "https://www.tiktok.com/@umagestaointelige/video/7681699064634789127"
+      }
+    },
+    {
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "contentId": "UGI-20260904-IG-1245-ANVISA-UNILEVER",
+      "platform": "instagram",
+      "kind": "video",
+      "draftId": "ugi-20260904021611-fe96e6d89c24",
+      "bufferPostId": "6a9a35b0cfb379682d06d6e9",
+      "dueAt": "2026-09-04T15:45:00+00:00",
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-09-04T15:45:45.664Z",
+      "externalLink": "https://www.instagram.com/reel/Dc3vTGrjlY7/",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 200,
+        "finalUrl": "https://www.instagram.com/reel/Dc3vTGrjlY7/"
       }
     }
   ]
