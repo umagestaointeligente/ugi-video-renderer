@@ -1,12 +1,15 @@
-name: Cena Certa V2 Continuity Selftest
+name: Cena Certa V2 Continuity and Publication Truth Selftest
 
 on:
   push:
     branches:
       - feat/cena-certa-factory-v2-bridge
     paths:
+      - 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_manifest.py'
       - 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_reconcile.py'
       - 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_reconcile_selftest.py'
+      - 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/publish_reconcile.py'
+      - 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/publish_reconcile_selftest.py'
       - 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/contract_v9_factory.json'
       - '.github/workflows/cena-certa-continuity-selftest-v2.yml'
   workflow_dispatch:
@@ -15,24 +18,34 @@ permissions:
   contents: read
 
 jobs:
-  fault-matrix:
+  truth-matrix:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 4
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/requirements.render.lock.txt
       - name: Install minimal runtime
         run: python -m pip install -q -r vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/requirements.render.lock.txt
-      - name: Compile continuity modules
+      - name: Compile continuity and publication truth modules
         env:
           PYTHONPATH: vendor/cena-certa-factory-v2/src
         run: |
-          python -m py_compile vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/common.py vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_reconcile.py vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_reconcile_selftest.py
-      - name: Run 32-placement fault matrix
+          python -m py_compile \
+            vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/common.py \
+            vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_manifest.py \
+            vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_reconcile.py \
+            vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_reconcile_selftest.py \
+            vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/publish_reconcile.py \
+            vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/publish_reconcile_selftest.py
+      - name: Run 32-placement schedule fault matrix
         env:
           PYTHONPATH: vendor/cena-certa-factory-v2/src
         run: python -m factory.cena_certa.v2.schedule_reconcile_selftest
+      - name: Run 32-placement publication false-positive matrix
+        env:
+          PYTHONPATH: vendor/cena-certa-factory-v2/src
+        run: python -m factory.cena_certa.v2.publish_reconcile_selftest
