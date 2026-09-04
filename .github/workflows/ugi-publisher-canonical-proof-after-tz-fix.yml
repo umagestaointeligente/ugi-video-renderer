@@ -1,0 +1,31 @@
+name: UGI Publisher Canonical Proof After TZ Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-publisher-canonical-proof-after-tz-fix.yml'
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  canonical-readback:
+    runs-on: ubuntu-latest
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prove 04-09 through canonical Publisher Hub
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python3 scripts/ugi_publisher_hub.py \
+            --manifest control-plane/publisher-hub/queue/ugi-20260904-full-agenda-r1.json \
+            --wait-seconds 0
