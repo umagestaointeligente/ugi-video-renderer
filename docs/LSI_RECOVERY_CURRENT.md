@@ -9,7 +9,7 @@ Alias técnico: `LSI::RECOVERY::CURRENT`
 
 `LSI_RECOVERY=TRUE`
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=MASTER_PILOT_READY_FOR_MASTER_USE_UX_V6`
+`CURRENT_STATUS=MASTER_PILOT_READY_FOR_MASTER_USE_UX_V6_V7_BACKEND_FOUNDATION`
 `VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
 ## 1. Fonte canônica / runtime
@@ -75,7 +75,7 @@ Correção crítica:
 `.v { display:none!important }`
 `.v.on { display:block!important }`
 
-Antes, `.stack` podia fazer Home, Minha Carreira e Oportunidades aparecerem juntas no scroll. Agora: **uma aba = uma superfície**.
+Agora: **uma aba = uma superfície**.
 
 ### Oportunidades
 - formulário manual de vaga REMOVIDO da experiência do candidato;
@@ -83,21 +83,20 @@ Antes, `.stack` podia fazer Home, Minha Carreira e Oportunidades aparecerem junt
 - formulário `Empresa/Cargo/Modelo/Salário/Skills` existe apenas em `Painel Mestre > Laboratório técnico de matching`;
 - pesquisa automática externa ainda NÃO está conectada ao Master Pilot; não fingir que está e não transferir cadastro de vagas para o candidato.
 
-## 4. Currículo — incidente real e correção
+## 4. Currículo — incidente real e correção V6
 
 Readback após o primeiro upload real do usuário mestre:
 - `career_documents = 0`;
 - evento de confirmação existente indicava `source=manual`.
 
-Conclusão: a tentativa de upload observada na UX anterior NÃO concluiu o pipeline. Não declarar arquivo armazenado.
+Conclusão: a tentativa de upload observada na UX anterior NÃO concluiu o pipeline.
 
 V6:
 - estado de processamento visível;
 - sucesso explícito apenas após `ingest + process`;
-- mensagem: `Currículo recebido e processado com sucesso. Revise e confirme antes de usar os dados.`;
 - falha fica visível;
 - `Minha Carreira` mostra metadata/status e permite trocar arquivo;
-- latest structured draft pode ser aberto em `Ver dados extraídos do currículo` (resumo/experiência/formação/skills/idiomas/certificações quando o parser suportar);
+- latest structured draft pode ser aberto em `Ver dados extraídos do currículo`;
 - não manter raw indefinidamente só para oferecer visualizador.
 
 `career-profile-confirm` V3 = ACTIVE:
@@ -121,7 +120,69 @@ Validação:
 Release detalhada:
 `career360/releases/MASTER_PILOT_1_0_UX_V6_2026-09-04.md`
 
-## 6. Auth / segurança
+## 6. V7 — Perfil Profissional + Currículo Inteligente
+
+Decisão de produto aprovada após feedback mestre: aumentar valor percebido entregando ao usuário um **Perfil Profissional LSI** próprio e um **Currículo Inteligente** gerado a partir de dados confirmados.
+
+### Backend LIVE
+
+Migration aplicada:
+`career_profile_media_and_generated_profiles_v1`
+
+Tabelas:
+- `career_profile_media`;
+- `career_professional_profile_versions`.
+
+Edge Functions LIVE / JWT obrigatório:
+- `career-profile-photo`;
+- `career-professional-profile`.
+
+### Foto
+- opcional;
+- JPG/PNG/WebP até 5 MB;
+- assinatura real + SHA-256;
+- storage privado;
+- signed URL temporária;
+- usuário pode substituir/remover;
+- foto NUNCA participa do matching;
+- foto NUNCA altera FIT;
+- não inferir atributos sensíveis;
+- foto no PDF fica DESLIGADA por padrão.
+
+### Perfil Profissional / Currículo Inteligente
+A inteligência pode reorganizar e reescrever com clareza dados confirmados, mas não pode fabricar:
+- cargo;
+- experiência;
+- tempo de carreira;
+- empresa;
+- competência;
+- formação;
+- certificação;
+- resultado.
+
+Versionamento:
+- draft / accepted / superseded;
+- source hash para evitar versões duplicadas quando os dados não mudaram;
+- aceite explícito do usuário para tornar versão principal.
+
+Direção frontend V7 preparada localmente:
+- foto opcional no onboarding e Perfil;
+- aba `Meu Perfil` com identidade visual própria;
+- preview `Seu Currículo Inteligente`;
+- `Gerar meu novo currículo`;
+- `Baixar PDF` client-side;
+- `Copiar resumo profissional`;
+- `Usar esta versão como principal`;
+- opção de incluir foto no PDF, desligada por padrão.
+
+IMPORTANTE:
+`FRONTEND_V7=NOT_YET_PROVEN_LIVE`
+Não declarar V7 visual publicada até deploy de produção + validação do domínio oficial.
+
+Release:
+`career360/releases/MASTER_PILOT_1_0_PROFILE_CV_V7_2026-09-04.md`
+
+## 7. Auth / segurança
 
 Conta mestre real:
 - e-mail confirmado;
@@ -134,7 +195,7 @@ Incidente anterior:
 PENDÊNCIA pré-Beta:
 `SUPABASE_GLOBAL_SITE_URL_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`
 
-Último hardening comprovado antes da V6:
+Último hardening comprovado antes da V7:
 `SECURITY_ADVISOR=PASS_ZERO_LINTS`
 `MULTIUSER_ISOLATION=PASS`
 `PRIVATE_STORAGE=PASS`
@@ -142,17 +203,18 @@ PENDÊNCIA pré-Beta:
 
 Não transformar estes PASS em promessa além do escopo testado.
 
-## 7. Matching / privacidade
+## 8. Matching / privacidade
 
 - privacidade antes do score;
 - idade nunca entra;
+- foto nunca entra;
 - pagamento nunca altera FIT;
 - salário oculto/estimado não vira fato;
 - salário explicitamente abaixo do piso pode bloquear;
 - `SILENT_BLOCK` para empresa protegida;
 - `NO_DISCLOSURE` para empregador não resolvido.
 
-## 8. Gates
+## 9. Gates
 
 `DEDICATED_PROJECT=PASS`
 `SECURITY_P0=PASS_MASTER_PILOT_SCOPE`
@@ -165,17 +227,20 @@ Não transformar estes PASS em promessa além do escopo testado.
 `GUIDED_ONBOARDING_V6=LIVE`
 `CANDIDATE_MANUAL_JOB_ENTRY=REMOVED`
 `EMPLOYER_AUTOCOMPLETE_API=LIVE_CATALOG_HYDRATION_PENDING`
-`MASTER_PILOT=READY_FOR_MASTER_USE`
+`PROFILE_PHOTO_PRIVATE_BACKEND=LIVE`
+`PROFESSIONAL_PROFILE_VERSIONING_BACKEND=LIVE`
+`FRONTEND_V7=NOT_YET_PROVEN_LIVE`
+`MASTER_PILOT=READY_FOR_MASTER_USE_V6`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
-## 9. Próximo gargalo real
+## 10. Próximo gargalo real
 
-O candidato não deve cadastrar vagas.
+Dois trilhos imediatos:
 
-Próximo salto funcional:
-`AUTOMATED_OPPORTUNITY_RESEARCH`
+1. promover/validar frontend V7 de Perfil Profissional + Currículo Inteligente;
+2. conectar `AUTOMATED_OPPORTUNITY_RESEARCH` sem transferir trabalho ao candidato.
 
-Precisa nascer com:
+Pesquisa automática precisa nascer com:
 - custo zero / Próximo Degrau compatível;
 - evidência de fonte;
 - deduplicação;
@@ -185,28 +250,36 @@ Precisa nascer com:
 - nenhum bypass de CAPTCHA/MFA;
 - checkpoint e tratamento de dependência externa.
 
-## 10. DO NOT REDO
+Currículo por oportunidade é próximo nível:
+`CURRÍCULO GERAL -> VERSÃO PARA OPORTUNIDADE`, sempre com os mesmos fatos confirmados e apenas mudança de ênfase/ordem/redação.
+
+## 11. DO NOT REDO
 
 - não reconstruir Career do zero;
 - não reintroduzir formulário manual de vaga ao candidato;
+- não copiar interface/trade dress/métricas do LinkedIn;
+- não usar foto no matching;
+- não tornar foto obrigatória;
 - não usar Supabase Edge como hospedagem HTML;
 - não reintroduzir service role no frontend;
 - não transformar inferência em fato;
 - não manter raw de currículo indefinidamente por conveniência;
 - não fingir pesquisa automática de vagas como LIVE;
+- não declarar frontend V7 LIVE antes de prova;
 - não abrir Beta pública automaticamente;
 - não criar recovery paralelo.
 
-## 11. NEXT_ACTION
+## 12. NEXT_ACTION
 
-1. usuário mestre reabrir V6 e validar navegação/UX;
-2. reenviar currículo real e exigir confirmação explícita de `ingest + process`;
-3. corrigir qualquer incidente real observado nesse reteste;
-4. hidratar catálogo público/curado de empregadores sem contaminar com dados privados;
+1. promover frontend V7 para produção e validar página/JS/CSS no domínio oficial;
+2. usuário mestre testar foto + Perfil Profissional + geração/download de Currículo Inteligente;
+3. reenviar currículo real e exigir confirmação explícita de `ingest + process`;
+4. hidratar catálogo público/curado de empregadores;
 5. construir rota automática de pesquisa de oportunidades;
-6. provar Site URL/Redirect allowlist antes de Beta;
-7. Founding Beta 20 somente após decisão explícita.
+6. evoluir para currículo adaptado por oportunidade sem fabricação;
+7. provar Site URL/Redirect allowlist antes de Beta;
+8. Founding Beta 20 somente após decisão explícita.
 
-## 12. Última alteração verificada
+## 13. Última alteração verificada
 
-`LAST_VERIFIED_CHANGE=CAREER_UX_V6_FULL_NAME_EMPLOYER_AUTOCOMPLETE_ROLE_CHECKLIST_CV_EXPLICIT_STATUS_PROFILE_SUMMARY_CANDIDATE_JOB_FORM_REMOVED_TAB_VISIBILITY_FIXED_DEPLOY_READY`
+`LAST_VERIFIED_CHANGE=PROFILE_PHOTO_PRIVATE_BACKEND_AND_PROFESSIONAL_PROFILE_VERSIONING_LIVE_FRONTEND_V7_PREPARED_NOT_YET_PROMOTED`
