@@ -1,11 +1,11 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T19:24:58.717129+00:00",
+  "checkedAt": "2026-09-04T19:35:11.573321+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
-  "pendingWithinGrace": 0,
+  "pendingWithinGrace": 1,
   "late": 4,
   "failed": 0,
   "state": "ALERT",
@@ -82,6 +82,25 @@
       "externalLink": null,
       "error": null,
       "state": "LATE",
+      "externalProof": {
+        "attempted": false
+      }
+    },
+    {
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "contentId": "UGI-20260904-YT-1630-STATE-OF-PLAY",
+      "platform": "youtube",
+      "kind": "video",
+      "draftId": "ugi-20260904021656-c3d328666627",
+      "bufferPostId": null,
+      "dueAt": "2026-09-04T19:30:00+00:00",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
+      "error": null,
+      "state": "PENDING_WITHIN_GRACE",
       "externalProof": {
         "attempted": false
       }
