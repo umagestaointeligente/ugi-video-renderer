@@ -12,40 +12,42 @@ permissions:
 jobs:
   seal:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 4
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: feat/cena-certa-factory-v2-bridge
-      - name: Fetch and cryptographically seal exact canonical masters
+          fetch-depth: 1
+      - name: Migrate exact canonical masters into snapshot
         shell: bash
         run: |
           set -euo pipefail
+          SRC_REPO='https://gitlab.com/umagestaointeligente-group/umagestaointeligente-project.git'
+          SRC_BRANCH='feat/cena-certa-render-factory-v2'
+          SRC_SHA='8cd954c4e4bb2a8f0313be9e6622d85bd707fe93'
+          git clone --filter=blob:none --no-tags --depth 1 --branch "$SRC_BRANCH" "$SRC_REPO" source
+          test "$(git -C source rev-parse HEAD)" = "$SRC_SHA"
+          STORY_SRC="$(find source -type f -name 'approved_story_source_v1.png' -print -quit)"
+          CTA_SRC="$(find source -type f -name 'approved_cta_source_v1.png' -print -quit)"
+          test -n "$STORY_SRC" && test -n "$CTA_SRC"
+          echo '256448409d6016598d4a27650bec6c35f8ecc67b4e8d294a87246e1b4c4ae4ce  '"$STORY_SRC" | sha256sum -c -
+          echo 'b19d5ccb51417c6d71ea7fa672e64a9f34023954e3d76ed9b285b83bcd41745b  '"$CTA_SRC" | sha256sum -c -
+          test "$(git hash-object "$STORY_SRC")" = 'bebaa2c265733236ab31cd80b24f8f8b46e740bd'
+          test "$(git hash-object "$CTA_SRC")" = '66cdec74979388a3435125a89584fc0a4c5d889a'
           mkdir -p canonical/cena_certa/v1/assets
-          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 45 \
-            'https://drive.usercontent.google.com/download?id=1YhAr-UaldGMsCgLfwAvvnucv-tHZ-ASU&export=download&confirm=t' \
-            -o canonical/cena_certa/v1/assets/approved_story_source_v1.png
-          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 45 \
-            'https://drive.usercontent.google.com/download?id=1mbrG5F67Sw_50SLV8KkVUEVPExyEAcMt&export=download&confirm=t' \
-            -o canonical/cena_certa/v1/assets/approved_cta_source_v1.png
+          cp "$STORY_SRC" canonical/cena_certa/v1/assets/approved_story_source_v1.png
+          cp "$CTA_SRC" canonical/cena_certa/v1/assets/approved_cta_source_v1.png
           echo '256448409d6016598d4a27650bec6c35f8ecc67b4e8d294a87246e1b4c4ae4ce  canonical/cena_certa/v1/assets/approved_story_source_v1.png' | sha256sum -c -
           echo 'b19d5ccb51417c6d71ea7fa672e64a9f34023954e3d76ed9b285b83bcd41745b  canonical/cena_certa/v1/assets/approved_cta_source_v1.png' | sha256sum -c -
-          python - <<'PY'
-          import hashlib
-          from pathlib import Path
-          expected={
-            'canonical/cena_certa/v1/assets/approved_story_source_v1.png':'bebaa2c265733236ab31cd80b24f8f8b46e740bd',
-            'canonical/cena_certa/v1/assets/approved_cta_source_v1.png':'66cdec74979388a3435125a89584fc0a4c5d889a',
-          }
-          for path,want in expected.items():
-              b=Path(path).read_bytes()
-              got=hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
-              if got!=want: raise SystemExit(f'GIT_BLOB_MISMATCH {path} {got} != {want}')
-              print('CANONICAL_ASSET_BLOB_PASS',path,got)
-          PY
+          test "$(git hash-object canonical/cena_certa/v1/assets/approved_story_source_v1.png)" = 'bebaa2c265733236ab31cd80b24f8f8b46e740bd'
+          test "$(git hash-object canonical/cena_certa/v1/assets/approved_cta_source_v1.png)" = '66cdec74979388a3435125a89584fc0a4c5d889a'
           git config user.name 'Cena Certa Factory Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add canonical/cena_certa/v1/assets/approved_story_source_v1.png canonical/cena_certa/v1/assets/approved_cta_source_v1.png
-          git diff --cached --quiet && { echo 'ASSETS_ALREADY_SEALED'; exit 0; }
-          git commit -m 'Cena Certa V2: seal exact Story and CTA canonical masters'
+          if git diff --cached --quiet; then
+            echo 'CANONICAL_ASSETS_ALREADY_PHYSICAL_AND_LOCKED'
+            exit 0
+          fi
+          git commit -m 'Cena Certa V2: seal exact physical Story and CTA masters'
           git push origin HEAD:feat/cena-certa-factory-v2-bridge
+          echo 'CANONICAL_STORY_CTA_PHYSICAL_SEAL_PASS'
