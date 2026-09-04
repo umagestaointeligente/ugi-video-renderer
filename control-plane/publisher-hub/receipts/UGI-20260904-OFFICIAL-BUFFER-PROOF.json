@@ -5,9 +5,9 @@
   "verificationMode": "READ_ONLY_LIVE_READBACK",
   "mutationTriggered": false,
   "expectedTargets": 9,
-  "provenTargets": 9,
-  "ok": true,
-  "state": "BUFFER_SCHEDULED",
+  "provenTargets": 8,
+  "ok": false,
+  "state": "NOT_PROVEN",
   "results": [
     {
       "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
@@ -18,12 +18,12 @@
       "requestedDueUtc": "2026-09-04T12:00:00+00:00",
       "bufferDueUtc": "2026-09-04T12:00:00+00:00",
       "bufferPostId": "6a9a359f82940622ebb35ffb",
-      "status": "scheduled",
-      "bufferStatus": "scheduled",
+      "status": "published",
+      "bufferStatus": "sent",
       "readbackOk": true,
       "exactInstant": true,
-      "readbackPass": true,
-      "ok": true
+      "readbackPass": false,
+      "ok": false
     },
     {
       "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
@@ -33,7 +33,7 @@
       "bufferDueAt": "2026-09-04T13:30:00.000Z",
       "requestedDueUtc": "2026-09-04T13:30:00+00:00",
       "bufferDueUtc": "2026-09-04T13:30:00+00:00",
-      "bufferPostId": "6a9a35a582940622ebb360af",
+      "bufferPostId": "6a9ab86e00f893faf312c0b5",
       "status": "scheduled",
       "bufferStatus": "scheduled",
       "readbackOk": true,
@@ -97,7 +97,7 @@
       "bufferDueAt": "2026-09-04T21:00:00.000Z",
       "requestedDueUtc": "2026-09-04T21:00:00+00:00",
       "bufferDueUtc": "2026-09-04T21:00:00+00:00",
-      "bufferPostId": "6a9a35ba3134b0c21abe877c",
+      "bufferPostId": "6a9ab8713aa9acec7f3df243",
       "status": "scheduled",
       "bufferStatus": "scheduled",
       "readbackOk": true,
@@ -154,5 +154,5 @@
       "ok": true
     }
   ],
-  "verifiedAt": "2026-09-04T10:50:16.654111+00:00"
+  "verifiedAt": "2026-09-04T13:29:01.209952+00:00"
 }
