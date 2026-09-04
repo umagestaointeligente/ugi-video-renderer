@@ -1,10 +1,10 @@
 name: UGI Delivery Verifier
 
 on:
-  # Hourly only. The previous */10 cadence could multiply Buffer status reads
-  # across every due receipt and exhaust the provider's rolling API quota.
-  schedule:
-    - cron: '23 * * * *'
+  # TEMPORARY CIRCUIT BREAKER (2026-09-04): manual only while the Buffer
+  # rolling API window recovers. The previous */10 cadence multiplied one
+  # status lookup by every due receipt and exhausted the provider quota.
+  # Re-enable only after the verifier is converted to cached/id-based checks.
   workflow_dispatch:
 
 permissions:
