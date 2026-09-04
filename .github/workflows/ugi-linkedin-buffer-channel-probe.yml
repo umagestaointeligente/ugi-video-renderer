@@ -1,0 +1,46 @@
+name: UGI LinkedIn Buffer Channel Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-linkedin-buffer-channel-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      BASE: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read live Buffer channels
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          mkdir -p control-plane/recovery
+          code=$(curl --silent --show-error --output /tmp/channels.json --write-out '%{http_code}' \
+            -H "x-lola-command-key: ${UGI_LOLA_COMMAND_KEY}" \
+            -H 'accept: application/json' \
+            "${BASE}/api/buffer/channels")
+          test "$code" = 200
+          jq -e '.ok == true' /tmp/channels.json >/dev/null
+          cp /tmp/channels.json control-plane/recovery/UGI_20260904_BUFFER_CHANNELS_LIVE.json
+      - name: Persist probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-linkedin-buffer-probe-bot'
+          git config user.email 'ugi-linkedin-buffer-probe@users.noreply.github.com'
+          git add control-plane/recovery/UGI_20260904_BUFFER_CHANNELS_LIVE.json
+          git commit -m 'chore: persist live Buffer channel probe' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
