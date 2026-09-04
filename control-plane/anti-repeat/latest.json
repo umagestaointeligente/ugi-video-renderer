@@ -6,8 +6,8 @@
   "storiesIncluded": true,
   "historyRegistry": "control-plane/anti-repeat/platform-topic-history.json",
   "historyComplete": false,
-  "checkedAt": "2026-09-03T06:00:01.342451+00:00",
-  "queuedCount": 1,
+  "checkedAt": "2026-09-04T02:13:39.213058+00:00",
+  "queuedCount": 10,
   "blocked": 0,
   "state": "PASS",
   "results": [
@@ -32,6 +32,222 @@
       "signature": {
         "exactHash": "9ad12884677c8fc69976307edffe1bb8aef5d6cc4e4d6fd5499977eac430a8dc",
         "renderId": "ugi-20260903-yt-openai-stop-conditions",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-IG-0900-LZ-DARK-MATTER",
+      "platform": "instagram",
+      "command": "control-plane/commands/ugi-20260904-instagram-story-lz-dark-matter.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0257,
+        "hookSimilarity": 0.1771,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0584
+      },
+      "signature": {
+        "exactHash": "01fa7096b482388a5061d86848885467d67fe12d8baf4ce0cbc3ade5f88ae21b",
+        "renderId": "ugi-20260904-instagram-story-lz-dark-matter",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
+      "platform": "instagram",
+      "command": "control-plane/commands/ugi-20260904-instagram-story-tyson-margin.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0197,
+        "hookSimilarity": 0.2618,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0763
+      },
+      "signature": {
+        "exactHash": "cbe9e16108d8ebf856961ef24b39e923b7b4ac939eda3d2b704efe49f664244a",
+        "renderId": "ugi-20260904-instagram-story-tyson-margin",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-TT-1215-JOBLIFE",
+      "platform": "tiktok",
+      "command": "control-plane/commands/ugi-20260904-tiktok-joblife.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0227,
+        "hookSimilarity": 0.3084,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0896
+      },
+      "signature": {
+        "exactHash": "391decb9a2697566988d573a344f4a9738f356edc809ea7c27e94eef06708da7",
+        "renderId": "ugi-20260904-tiktok-joblife",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-IG-1245-ANVISA-UNILEVER",
+      "platform": "instagram",
+      "command": "control-plane/commands/ugi-20260904-instagram-reel-anvisa-unilever.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0333,
+        "hookSimilarity": 0.3073,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0951
+      },
+      "signature": {
+        "exactHash": "6ab227c8f200f40ba3bbabeacc5efd783d56144fff48e2d6390ca647b4c562a0",
+        "renderId": "ugi-20260904-instagram-reel-anvisa-unilever",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-YT-1630-STATE-OF-PLAY",
+      "platform": "youtube",
+      "command": "control-plane/commands/ugi-20260904-youtube-state-of-play.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0234,
+        "hookSimilarity": 0.1613,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0532
+      },
+      "signature": {
+        "exactHash": "2ae6673ad264134b978ae9ec4f24e50f74c31a524b0ca86a1bf90475971a7a2d",
+        "renderId": "ugi-20260904-youtube-state-of-play",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+      "platform": "instagram",
+      "command": "control-plane/commands/ugi-20260904-instagram-story-snowflake-ai.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0394,
+        "hookSimilarity": 0.2857,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0931
+      },
+      "signature": {
+        "exactHash": "00bbda7deef3bde58c86d61bcfdff9978a26573b58d3e2e3151c1edd948d0edb",
+        "renderId": "ugi-20260904-instagram-story-snowflake-ai",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-IG-1915-LULULEMON",
+      "platform": "instagram",
+      "command": "control-plane/commands/ugi-20260904-instagram-reel-lululemon.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.022,
+        "hookSimilarity": 0.2465,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0737
+      },
+      "signature": {
+        "exactHash": "89a2289b44819f93f2c7a84f8034db29b39aa83390da06e2dc9e3def91300628",
+        "renderId": "ugi-20260904-instagram-reel-lululemon",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-TT-1945-MICRODRAMAS",
+      "platform": "tiktok",
+      "command": "control-plane/commands/ugi-20260904-tiktok-microdramas.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0202,
+        "hookSimilarity": 0.3135,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0895
+      },
+      "signature": {
+        "exactHash": "292ae3b9d8c4d7770f58a96f5268e208df3696cbc94406d9bfc9b1d3381a547a",
+        "renderId": "ugi-20260904-tiktok-microdramas",
+        "draftId": ""
+      }
+    },
+    {
+      "contentId": "UGI-20260904-YT-2030-VINFAST-GSM",
+      "platform": "youtube",
+      "command": "control-plane/commands/ugi-20260904-youtube-vinfast-gsm.json",
+      "windowDays": 15,
+      "decision": "ANTI_REPEAT_PASS",
+      "reasons": [],
+      "mediaDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicDecision": "ANTI_REPEAT_PASS",
+      "samePlatformTopicMatches": [],
+      "closest": {
+        "priorContentId": "UGI-CHAT-CONTROL-PLANE-SMOKE-20260822-1440",
+        "priorCommand": "control-plane/commands/ugi-chat-smoke-20260822-1440.json",
+        "textSimilarity": 0.0278,
+        "hookSimilarity": 0.1435,
+        "visualSimilarity": 0.0,
+        "combinedSimilarity": 0.0512
+      },
+      "signature": {
+        "exactHash": "47cc857db83994b4df668becad63cbee68fa7208f7f20fb15edf62efa35782f0",
+        "renderId": "ugi-20260904-youtube-vinfast-gsm",
         "draftId": ""
       }
     }
