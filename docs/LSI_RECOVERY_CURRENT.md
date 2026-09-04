@@ -9,7 +9,7 @@ Alias técnico interno: `LSI::RECOVERY::CURRENT`
 
 `LSI_RECOVERY=TRUE`
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=MASTER_PILOT_READY_FOR_MASTER_USE_V6_WITH_V7_V8_BACKEND_LIVE_FRONTEND_PROMOTION_PENDING`
+`CURRENT_STATUS=MASTER_PILOT_ACTIVE_V11_1_WITH_MATCHING_V2_RADAR_LIVE`
 `VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
 ## 1. Fonte canônica
@@ -18,7 +18,14 @@ Repository: `umagestaointeligente/ugi-video-renderer`
 Branch: `main`
 Backend: Supabase `nxjdnzdxclszqyqrkwdk`, `sa-east-1`
 Frontend oficial: `https://lsi-career-360.vercel.app/`
-Arquitetura: `VERCEL FRONTEND -> SUPABASE AUTH/DATA/EDGE BACKEND`
+Vercel project: `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`
+Arquitetura: `VERCEL STATIC FRONTEND -> SUPABASE AUTH/DATA/EDGE BACKEND`
+
+Deployment de produção V11.1:
+`dpl_EjNc9WzK1uPCZFWhY8ympukcAMGG`
+
+Rollback imediato da camada visual V11:
+`dpl_59kEVUkAGkkZZXfRcRP9p4duWoSF`
 
 ## 2. Estado comprovado do Master Pilot
 
@@ -26,18 +33,25 @@ Arquitetura: `VERCEL FRONTEND -> SUPABASE AUTH/DATA/EDGE BACKEND`
 `AUTH=LIVE`
 `MASTER_ROLE=LIVE`
 `REAL_AUTH_E2E=PASS`
-`SECURITY_P0=PASS_MASTER_PILOT_SCOPE`
+`SECURITY_P0=PASS_MASTER_PILOT_SCOPE_WITH_AUTH_WARNING`
 `CAREER_PRIVACY_P0=PASS_MASTER_PILOT_SCOPE`
 `MULTIUSER_ISOLATION=PASS`
 `SAFE_FILE_PIPELINE=PASS_MASTER_PILOT_SCOPE`
-`MATCH_ENGINE_V1=PASS`
+`MATCH_ENGINE_V2=CHAMPION`
+`MATCH_ENGINE_V1=ROLLBACK`
 `NO_FABRICATION_GUARD=PASS_MASTER_PILOT_SCOPE`
 `FRONTEND_HOSTING=PASS_VERCEL`
 `GUIDED_ONBOARDING_V6=LIVE`
+`PROFILE_CV_V7_V8=LIVE`
+`UX_V11_1=LIVE`
+`AUTOMATED_OPPORTUNITY_RESEARCH=LIVE_PILOT_SCOPE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
-Último Security Advisor comprovado antes das extensões V7/V8: `PASS_ZERO_LINTS`.
-Não extrapolar PASS além do escopo testado.
+Security Advisor atual:
+- sem lint estrutural de RLS pendente;
+- permanece `auth_leaked_password_protection = WARN / DISABLED`.
+
+Não declarar `PASS_ZERO_LINTS` enquanto esse WARN existir.
 
 ## 3. Princípios de produto
 
@@ -47,144 +61,255 @@ Não extrapolar PASS além do escopo testado.
 - português por fora, padrão técnico por dentro;
 - privacidade antes de matching;
 - idade nunca entra no matching;
-- foto nunca entra no matching;
+- foto nunca entra no matching/FIT;
 - plano pago nunca altera FIT;
 - salário oculto/estimado nunca vira fato;
 - nada de currículo/perfil pode fabricar experiência, cargo, empresa, resultado, competência, formação ou certificação.
 
-## 4. UX V6 — LIVE
+## 4. UX atual — V11.1 LIVE
 
-Onboarding atual:
-1. Nome completo;
-2. objetivo de carreira;
-3. Proteção de Carreira;
-4. competências/atribuições por seleção;
-5. currículo agora ou depois.
+Superfície principal do candidato:
+- `Minha Página` = leitura profissional limpa;
+- `Oportunidades` = Radar;
+- `Meu Agente`;
+- edição e suporte ficam em superfícies secundárias/`Mais`;
+- Painel Mestre somente role master.
 
-Correções V6:
-- uma aba = uma superfície;
-- candidato não preenche vaga manualmente;
-- Home prioriza completude do perfil;
-- upload de currículo só mostra sucesso após `ingest + process` reais;
-- formulário manual de oportunidade existe somente no Laboratório do Painel Mestre.
+Minha Página:
+- foto opcional;
+- nome/headline/localização;
+- resumo profissional com leitura compacta;
+- competências;
+- Destaques profissionais quando confirmados;
+- Liderança e escopo quando confirmados;
+- Experiência;
+- Formação.
 
-`AUTOMATED_OPPORTUNITY_RESEARCH=NOT_YET_LIVE`
+V11.1:
+- reduz parede de texto;
+- usa blocos compactos no mobile;
+- Smart CV PDF inclui Destaques e Liderança quando disponíveis;
+- checkbox de foto no PDF tenta incluir de fato a foto autorizada, convertendo a imagem para JPEG no dispositivo;
+- recarrega perfil após geração/aceite/narrativa/currículo/foto.
 
-## 5. Empresa / autocomplete
+Módulo frontend:
+`career360/frontend/app-h.js`
 
-Edge `career-employer-suggest=LIVE`.
-Autocomplete começa após 2 caracteres e permite digitação livre.
+Commit V11.1 carregado pela produção:
+`2bff879b2b2a99815ed3933009f9a6a19a8a9501`
 
-Pendência:
-`EMPLOYER_CATALOG_HYDRATION=PENDING`
-No último readback, catálogo dedicado estava vazio; não fingir cobertura ampla.
+## 5. Currículo — Parser 1.0.3
 
-## 6. V7 — Perfil Profissional LSI + Currículo Inteligente
+`PARSER_VERSION=career360-edge-parser/1.0.3`
+`career-document-process=ACTIVE / JWT_REQUIRED`
+
+Parser 1.0.3 separa:
+- resumo;
+- `highlights_evidence`;
+- `leadership_evidence`;
+- `experience_evidence`;
+- `education_evidence`;
+- competências;
+- idiomas;
+- certificações.
+
+Corpus real de QA comprovou que a versão anterior misturava seções e podia gerar `0 experience` mesmo quando havia trajetória no currículo.
+
+QA do corpus real 1.0.3:
+- 1 bloco de resumo;
+- 4 itens de impacto executivo;
+- 10 linhas de transformações/resultados;
+- 3 linhas de liderança/escopo;
+- 3 linhas de trajetória profissional.
+
+Regra preservada:
+`EXTRAIR -> MOSTRAR -> USUÁRIO CONFIRMA -> VIRA FATO`
+
+Raw de currículo continua sujeito a minimização/remoção após confirmação. Não reconstruir automaticamente fatos de um raw já removido.
+
+## 6. Perfil Profissional + Currículo Inteligente — V3 backend
+
+Edge:
+`career-professional-profile=ACTIVE / V3 / JWT_REQUIRED`
+
+Persistência:
+`career_professional_profile_versions`
+
+Consome somente fonte confirmada:
+- perfil básico;
+- preferências;
+- competências confirmadas;
+- último draft de currículo `confirmed`;
+- narrativa pessoal `accepted`.
+
+Saída suporta:
+- headline;
+- resumo;
+- skills;
+- highlights;
+- leadership;
+- experience;
+- education;
+- languages;
+- certifications.
+
+Versionamento:
+`draft -> accepted -> superseded`
+
+## 7. Conte do Seu Jeito — V8
 
 Backend LIVE:
-- `career-profile-photo` JWT required;
-- `career-professional-profile` JWT required;
-- `career_profile_media`;
-- `career_professional_profile_versions`.
+- `career_personal_narratives_v1`;
+- minimização de raw;
+- Edge `career-personal-narrative` JWT required;
+- Perfil Profissional usa somente narrativa `accepted`.
 
-Foto:
+Fluxo:
+`FALAR/ESCREVER -> ORGANIZAR -> MOSTRAR -> APROVAR/AJUSTAR/DESCARTAR -> PERFIL/CURRÍCULO`
+
+Sugestões dinâmicas usam cargo atual + cargos-alvo e não inventam fatos.
+
+## 8. Foto
+
+Backend LIVE:
+`career-profile-photo=JWT_REQUIRED`
+
 - opcional;
 - JPG/PNG/WebP até 5 MB;
 - storage privado + signed URL;
 - não entra no matching/FIT;
 - não inferir atributos sensíveis;
-- foto no currículo fica desligada por padrão.
+- foto no currículo continua opt-in.
 
-Currículo Inteligente:
-- usa somente dados confirmados;
-- versões `draft / accepted / superseded`;
-- source hash evita duplicações;
-- pode reorganizar e reescrever, não inventar fatos.
+`PROFESSIONAL_PHOTO_STUDIO=NOT_LIVE`
 
-Frontend V7 preparado, mas:
-`FRONTEND_V7=NOT_YET_PROVEN_LIVE`
+Não mostrar botão de transformação profissional até existir geração image-to-image ponta a ponta + preview + aceite explícito original/nova.
 
-Release:
-`career360/releases/MASTER_PILOT_1_0_PROFILE_CV_V7_2026-09-04.md`
+## 9. Empresa / autocomplete
 
-## 7. V8 — Conte do Seu Jeito
+Edge `career-employer-suggest=LIVE`.
+Autocomplete começa após 2 caracteres e permite digitação livre.
 
-Backend LIVE:
-- migration `career_personal_narratives_v1`;
-- migration `career_personal_narratives_minimize_raw_v1`;
-- Edge `career-personal-narrative` V3 / JWT required;
-- `career-professional-profile` V2 usa apenas narrativa `accepted`.
+`EMPLOYER_CATALOG_HYDRATION=PENDING`
 
-Fluxo:
-`FALAR/ESCREVER -> ORGANIZAR -> MOSTRAR -> APROVAR/AJUSTAR/DESCARTAR -> PERFIL/CURRÍCULO`
+Não fingir cobertura ampla enquanto catálogo dedicado não estiver hidratado.
 
-Ações backend:
-- `prompts`;
-- `generate`;
-- `accept`;
-- `reject`.
+## 10. Radar automático — LIVE piloto
 
-### Sugestões dinâmicas
+`AUTOMATED_OPPORTUNITY_RESEARCH=LIVE_PILOT_SCOPE`
 
-`action=prompts` consulta apenas:
-- cargo atual;
-- cargos-alvo.
+Fontes piloto ativas: 10.
+Ciclo automatizado: aproximadamente 1h por lote/rotação, cobertura completa em cerca de 4h no desenho atual.
+Ação manual adicional: `Pesquisar agora`.
 
-Devolve sugestões contextuais em vez de pergunta genérica.
-UX desejada:
-- 3 sugestões em `Comece por aqui`;
-- `Quero mais ideias`;
-- depois temas como Liderança, Resultados, Decisão, Transformação, Pontos fortes, Jeito de trabalhar, Motivação, Aprendizados e Próximo passo.
+Region Filter V2:
+- título/localização são sinais primários;
+- descrição só é aceita como evidência regional quando contém formulação específica de elegibilidade Brasil/LATAM;
+- país não é mais gravado como BR indiscriminadamente.
 
-Exemplos:
-- `Sou o tipo de profissional que...`
-- `Uma coisa que faço muito bem é...`
-- `Quando lidero uma equipe, eu procuro...`
-- `Em uma negociação importante, meu ponto forte é...`
+Última limpeza integral comprovada:
+- 126 oportunidades anteriormente ativas;
+- 70 expiradas como ruído regional;
+- 56 permaneceram ativas no recorte piloto;
+- 0 qualificadas para o perfil mestre naquele checkpoint.
 
-Minimização:
-- texto bruto é limpo após aceite ou rejeição;
-- só texto profissional aceito pode alimentar Perfil/CV.
+Zero qualificada é estado válido: o agente não deve mostrar vaga ruim para parecer ocupado.
 
-`CONTE_DO_SEU_JEITO_FRONTEND=NOT_YET_LIVE`
+Edges:
+- `career-opportunity-research` = LIVE, region-v2;
+- `career-opportunity-list` = LIVE, lê somente motor campeão e só expõe qualificadas ativas ao candidato;
+- `career-radar-status` = LIVE.
 
-Release:
-`career360/releases/MASTER_PILOT_1_0_CONTE_DO_SEU_JEITO_V8_2026-09-04.md`
+## 11. Matching V2 — CHAMPION
 
-## 8. Auth / redirect
+Governança:
+`CHAMPION=v2.0`
+`ROLLBACK=v1.0`
 
-Conta mestre real:
-- e-mail confirmado;
-- role `master`.
+Tabela interna:
+`career_engine_control`
 
-Frontend envia:
-`emailRedirectTo=https://lsi-career-360.vercel.app/?email-confirmado=1`
+V2 combina:
+- família profissional bilíngue/conceitual;
+- senioridade;
+- similaridade lexical;
+- competências quando há evidência de vaga;
+- localização;
+- modelo de trabalho;
+- setor quando aplicável.
 
-Pendência pré-Beta:
-`SUPABASE_GLOBAL_SITE_URL_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`
+Gates anteriores ao score:
+- privacidade;
+- salário explícito abaixo do piso;
+- modelo de trabalho explícito incompatível;
+- localização não permitida quando aplicável.
 
-## 9. Proteção / Matching
+Threshold de referência: `72`.
+
+QA de promoção — 6/6 casos esperados:
+1. Head of Sales remoto -> qualificado com salário a confirmar;
+2. Director of Marketing -> BELOW_FIT;
+3. Sales Development Representative -> BELOW_FIT;
+4. localização não aceita -> BLOCKED_REQUIREMENT;
+5. salário explícito abaixo do piso -> BLOCKED_REQUIREMENT;
+6. empregador bloqueado -> BLOCKED_PRIVACY.
+
+Migrations canônicas:
+- `career360/migrations/20260904_matching_v2_control_and_helpers.sql`
+- `career360/migrations/20260904_matching_v2_score.sql`
+
+## 12. Proteção / Matching
 
 `OPORTUNIDADE -> IDENTIFICAR EMPREGADOR -> RESOLVER GRUPO -> PORTA DE PRIVACIDADE -> MATCHING`
 
 - bloqueado = `SILENT_BLOCK`;
 - não resolvido = `NO_DISCLOSURE`;
-- score de referência = 72;
-- explicação acompanha classificação.
+- identidade continua sujeita às permissões do usuário;
+- foto/idade/plano não alteram FIT.
 
-## 10. Próximos gargalos reais
+## 13. Auth / redirect
 
-1. promover e validar frontend V7 + V8 no domínio oficial;
-2. teste mestre de foto + Perfil Profissional + Currículo Inteligente + `Conte do seu jeito`;
-3. reteste real de upload de currículo;
+Supabase Auth + RLS.
+Service role nunca no frontend.
+
+Pendência pré-Beta:
+`SUPABASE_GLOBAL_SITE_URL_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`
+
+Pendência de segurança Auth:
+`LEAKED_PASSWORD_PROTECTION=DISABLED/WARN`
+
+## 14. Deploy / evidência
+
+Produção V11.1:
+`dpl_EjNc9WzK1uPCZFWhY8ympukcAMGG`
+
+Estado verificado:
+- `READY`;
+- target `production`;
+- alias `lsi-career-360.vercel.app` presente;
+- `aliasError=null`;
+- fetch do domínio oficial = HTTP 200;
+- HTML oficial referencia `app-h.js` no commit `2bff879...`;
+- Vercel Runtime Errors = nenhum erro no período verificado.
+
+Observação CI:
+GitHub não publicou status/check associado ao commit V11.1. Não declarar `CI_PASS` por inferência.
+
+## 15. Próximos gargalos reais
+
+1. teste humano autenticado da V11.1 no celular: leitura da Minha Página + PDF + foto opt-in;
+2. reenviar/reprocessar um currículo pelo Parser 1.0.3 e confirmar o novo draft;
+3. validar na interface os blocos Destaques/Liderança/Experiência após confirmação 1.0.3;
 4. hidratar catálogo público/curado de empregadores;
-5. conectar `AUTOMATED_OPPORTUNITY_RESEARCH`;
-6. evoluir para currículo adaptado por oportunidade sem fabricação;
+5. ampliar fontes do Radar sem degradar precisão regional;
+6. currículo adaptado por oportunidade sem fabricação;
 7. provar redirect allowlist global;
-8. Career Learning Engine;
-9. Founding Beta 20 somente após decisão explícita.
+8. habilitar/provar leaked-password protection ou registrar decisão alternativa antes da Beta;
+9. Career Learning Engine;
+10. Professional Photo Studio somente com endpoint real;
+11. Founding Beta 20 somente após decisão explícita.
 
-## 11. DO NOT REDO
+## 16. DO NOT REDO
 
 - não reconstruir Career do zero;
 - não copiar LinkedIn/trade dress/métricas;
@@ -194,25 +319,30 @@ Pendência pré-Beta:
 - não usar service role no frontend;
 - não transformar inferência em fato;
 - não conservar raw de currículo/narrativa por conveniência;
-- não fingir pesquisa automática como LIVE;
-- não declarar V7/V8 frontend LIVE sem prova;
+- não fingir cobertura de empregadores;
+- não fingir oportunidade qualificada;
+- não declarar CI PASS sem check real;
+- não declarar Security Advisor zero warnings;
 - não abrir Beta automaticamente;
 - não criar recovery paralelo.
 
-## 12. Arquivos de leitura sob demanda
+## 17. Arquivos de leitura sob demanda
 
 Manifesto:
 `docs/projects/LSI_CAREER360.md`
 
-V6:
+UX V6:
 `career360/releases/MASTER_PILOT_1_0_UX_V6_2026-09-04.md`
 
-V7:
+Perfil/CV V7:
 `career360/releases/MASTER_PILOT_1_0_PROFILE_CV_V7_2026-09-04.md`
 
-V8:
+Conte do Seu Jeito V8:
 `career360/releases/MASTER_PILOT_1_0_CONTE_DO_SEU_JEITO_V8_2026-09-04.md`
 
-## 13. Última alteração verificada
+V11.1:
+`career360/releases/MASTER_PILOT_1_0_INTELLIGENCE_UX_V11_1_2026-09-04.md`
 
-`LAST_VERIFIED_CHANGE=PERSONAL_NARRATIVE_V3_ROLE_AWARE_PROMPTS_LIVE_USER_CONFIRMATION_REQUIRED_FRONTEND_V8_PENDING`
+## 18. Última alteração verificada
+
+`LAST_VERIFIED_CHANGE=UX_V11_1_PRODUCTION_MATCHING_V2_CHAMPION_REGION_V2_PARSER_1_0_3_PROFILE_V3_CANONICAL_SYNC`
