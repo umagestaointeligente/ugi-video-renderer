@@ -1,11 +1,11 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T20:56:19.387577+00:00",
+  "checkedAt": "2026-09-04T21:09:37.241731+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
   "delivered": 0,
-  "pendingWithinGrace": 0,
+  "pendingWithinGrace": 1,
   "late": 5,
   "failed": 0,
   "state": "ALERT",
@@ -101,6 +101,25 @@
       "externalLink": null,
       "error": null,
       "state": "LATE",
+      "externalProof": {
+        "attempted": false
+      }
+    },
+    {
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "contentId": "UGI-20260904-IG-1800-SNOWFLAKE-AI",
+      "platform": "instagram",
+      "kind": "video",
+      "draftId": "ugi-20260904021739-4fc5c7eb31fe",
+      "bufferPostId": null,
+      "dueAt": "2026-09-04T21:00:00+00:00",
+      "readbackHttp": 400,
+      "bufferStatus": null,
+      "status": null,
+      "sentAt": null,
+      "externalLink": null,
+      "error": null,
+      "state": "PENDING_WITHIN_GRACE",
       "externalProof": {
         "attempted": false
       }
