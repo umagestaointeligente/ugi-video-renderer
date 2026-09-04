@@ -1,0 +1,51 @@
+name: UGI Publisher Pass Native Format
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-publisher-pass-native-format.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Pass canonical manifest format into Worker publish request
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/ugi_publisher_hub.py')
+          s=p.read_text(encoding='utf-8')
+          old='''            {\n                "id": draft_id,\n                "platform": plat,\n                "mode": "customScheduled",\n                "dueAt": due,\n            },'''
+          new='''            {\n                "id": draft_id,\n                "platform": plat,\n                "format": row.get("format"),\n                "mode": "customScheduled",\n                "dueAt": due,\n            },'''
+          if old not in s:
+              if '"format": row.get("format")' in s:
+                  print('format already passed')
+              else:
+                  raise SystemExit('platform-publish payload anchor missing')
+          else:
+              s=s.replace(old,new,1)
+              p.write_text(s,encoding='utf-8')
+          PY
+          python3 -m py_compile scripts/ugi_publisher_hub.py
+          grep -q '"format": row.get("format")' scripts/ugi_publisher_hub.py
+      - name: Commit permanent Publisher Hub fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-publisher-hub-bot'
+          git config user.email 'ugi-publisher-hub@users.noreply.github.com'
+          git add scripts/ugi_publisher_hub.py
+          git commit -m 'fix(ugi): propagate canonical native format to publisher' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
