@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,10 +26,12 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import os, requests
+          import os, requests, sys
           from pathlib import Path
-          import scripts.r45_instagram_multiformat_deploy as base
+          sys.path.insert(0,'scripts')
+          import r45_instagram_multiformat_deploy as base
           token=os.environ['CF_API_TOKEN']; account=os.environ['CF_ACCOUNT_ID']
+          if not token or not account: raise SystemExit('Cloudflare credentials missing')
           api_base=f"https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts/{base.WORKER_NAME}"
           r=requests.get(api_base+'/content/v2',headers=base.api_headers(token),timeout=45)
           r.raise_for_status()
