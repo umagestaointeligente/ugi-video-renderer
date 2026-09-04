@@ -1,0 +1,1564 @@
+--- lines 542-563 ---
+542:       if (request.method === "GET" && path === "/governanca-ia") {
+543:         const config = resolveCommercePermalink("priorizacao");
+544:         const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);
+545:         const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);
+546:         if (!product || !material || product.status !== "active" || material.assetReady !== true || material.qualityStatus !== "PASS" || material.deliveryEnabled !== true) {
+547:           return new Response("Material temporariamente indispon\xEDvel.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
+548:         }
+549:         const checkoutState = String(url.searchParams.get("checkout") || "").toLowerCase();
+550:         const notice = checkoutState === "expired" ? "A sess\xE3o anterior expirou. Clique em Comprar agora para gerar uma nova sess\xE3o segura." : checkoutState === "cancelled" ? "A compra anterior foi cancelada. Voc\xEA pode iniciar uma nova compra quando quiser." : "";
+551:         return new Response(commercePermalinkHtml(url.origin, "priorizacao", product, material, notice), {
+552:           status: 200,
+553:           headers: {
+554:             "Content-Type": "text/html; charset=utf-8",
+555:             "Cache-Control": "no-store",
+556:             "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
+557:           }
+558:         });
+559:       }
+560:       if ((request.method === "POST" || request.method === "GET") && path === "/comprar/governanca-ia") {
+561:         const config = resolveCommercePermalink("priorizacao");
+562:         const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);
+563:         const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);
+--- lines 587-608 ---
+587:       if (request.method === "GET" && path === "/decisao-humana-ia") {
+588:         const config = resolveCommercePermalink("priorizacao");
+589:         const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);
+590:         const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);
+591:         if (!product || !material || product.status !== "active" || material.assetReady !== true || material.qualityStatus !== "PASS" || material.deliveryEnabled !== true) {
+592:           return new Response("Material temporariamente indispon\xEDvel.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
+593:         }
+594:         const checkoutState = String(url.searchParams.get("checkout") || "").toLowerCase();
+595:         const notice = checkoutState === "expired" ? "A sess\xE3o anterior expirou. Clique em Comprar agora para gerar uma nova sess\xE3o segura." : checkoutState === "cancelled" ? "A compra anterior foi cancelada. Voc\xEA pode iniciar uma nova compra quando quiser." : "";
+596:         return new Response(commercePermalinkHtml(url.origin, "priorizacao", product, material, notice), {
+597:           status: 200,
+598:           headers: {
+599:             "Content-Type": "text/html; charset=utf-8",
+600:             "Cache-Control": "no-store",
+601:             "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
+602:           }
+603:         });
+604:       }
+605:       if ((request.method === "POST" || request.method === "GET") && path === "/comprar/decisao-humana-ia") {
+606:         const config = resolveCommercePermalink("priorizacao");
+607:         const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);
+608:         const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);
+--- lines 633-654 ---
+633:       if (request.method === "GET" && path === "/priorizacao") {
+634:         const config = resolveCommercePermalink("priorizacao");
+635:         const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);
+636:         const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);
+637:         if (!product || !material || product.status !== "active" || material.assetReady !== true || material.qualityStatus !== "PASS" || material.deliveryEnabled !== true) {
+638:           return new Response("Material temporariamente indispon\xEDvel.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
+639:         }
+640:         const checkoutState = String(url.searchParams.get("checkout") || "").toLowerCase();
+641:         const notice = checkoutState === "expired" ? "A sess\xE3o anterior expirou. Clique em Comprar agora para gerar uma nova sess\xE3o segura." : checkoutState === "cancelled" ? "A compra anterior foi cancelada. Voc\xEA pode iniciar uma nova compra quando quiser." : "";
+642:         return new Response(commercePermalinkHtml(url.origin, "priorizacao", product, material, notice), {
+643:           status: 200,
+644:           headers: {
+645:             "Content-Type": "text/html; charset=utf-8",
+646:             "Cache-Control": "no-store",
+647:             "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
+648:           }
+649:         });
+650:       }
+651:       if ((request.method === "POST" || request.method === "GET") && path === "/comprar/priorizacao") {
+652:         const config = resolveCommercePermalink("priorizacao");
+653:         const product = await getJsonR2(env, `${PRODUCT_PREFIX}${config.productId}.json`);
+654:         const material = await getJsonR2(env, `${MATERIAL_PREFIX}${config.materialId}.json`);
+--- lines 2500-2521 ---
+2500:           return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+2501:         const referenceId = sanitizeCommerceId(decodeURIComponent(path.slice("/api/commerce/order/".length)));
+2502:         const order = referenceId ? await getJsonR2(env, `${ORDER_PREFIX}${referenceId}.json`) : null;
+2503:         return order ? json({ ok: true, version: VERSION, order }) : json({ ok: false, errorClass: "order_not_found" }, 404);
+2504:       }
+2505:       if (request.method === "GET" && path.startsWith("/api/commerce/checkout-return/")) {
+2506:         const outcome = path.slice("/api/commerce/checkout-return/".length);
+2507:         const referenceId = sanitizeCommerceId(url.searchParams.get("referenceId") || "");
+2508:         const allowed = /* @__PURE__ */ new Set(["success", "cancel", "expired"]);
+2509:         if (!allowed.has(outcome))
+2510:           return new Response("Not found", { status: 404 });
+2511:         const titles = {
+2512:           success: "Pagamento enviado",
+2513:           cancel: "Checkout cancelado",
+2514:           expired: "Checkout expirado"
+2515:         };
+2516:         const messages = {
+2517:           success: "Recebemos o retorno do checkout. A libera\xE7\xE3o do material ocorrer\xE1 somente ap\xF3s a confirma\xE7\xE3o financeira oficial do Asaas.",
+2518:           cancel: "O checkout foi cancelado. Nenhum material foi liberado.",
+2519:           expired: "O checkout expirou. Gere um novo checkout para concluir a compra."
+2520:         };
+2521:         return new Response(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UGI</title></head><body style="font-family:system-ui;background:#061A2B;color:#fff;padding:36px"><h1 style="color:#E7A72C">UMA GEST\xC3O INTELIGENTE</h1><h2>${titles[outcome]}</h2><p>${messages[outcome]}</p><p>Refer\xEAncia: <code>${referenceId || "n\xE3o informada"}</code></p></body></html>`, {
+--- lines 2505-2526 ---
+2505:       if (request.method === "GET" && path.startsWith("/api/commerce/checkout-return/")) {
+2506:         const outcome = path.slice("/api/commerce/checkout-return/".length);
+2507:         const referenceId = sanitizeCommerceId(url.searchParams.get("referenceId") || "");
+2508:         const allowed = /* @__PURE__ */ new Set(["success", "cancel", "expired"]);
+2509:         if (!allowed.has(outcome))
+2510:           return new Response("Not found", { status: 404 });
+2511:         const titles = {
+2512:           success: "Pagamento enviado",
+2513:           cancel: "Checkout cancelado",
+2514:           expired: "Checkout expirado"
+2515:         };
+2516:         const messages = {
+2517:           success: "Recebemos o retorno do checkout. A libera\xE7\xE3o do material ocorrer\xE1 somente ap\xF3s a confirma\xE7\xE3o financeira oficial do Asaas.",
+2518:           cancel: "O checkout foi cancelado. Nenhum material foi liberado.",
+2519:           expired: "O checkout expirou. Gere um novo checkout para concluir a compra."
+2520:         };
+2521:         return new Response(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UGI</title></head><body style="font-family:system-ui;background:#061A2B;color:#fff;padding:36px"><h1 style="color:#E7A72C">UMA GEST\xC3O INTELIGENTE</h1><h2>${titles[outcome]}</h2><p>${messages[outcome]}</p><p>Refer\xEAncia: <code>${referenceId || "n\xE3o informada"}</code></p></body></html>`, {
+2522:           status: 200,
+2523:           headers: {
+2524:             "Content-Type": "text/html; charset=utf-8",
+2525:             "Cache-Control": "no-store",
+2526:             "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"
+--- lines 2510-2531 ---
+2510:           return new Response("Not found", { status: 404 });
+2511:         const titles = {
+2512:           success: "Pagamento enviado",
+2513:           cancel: "Checkout cancelado",
+2514:           expired: "Checkout expirado"
+2515:         };
+2516:         const messages = {
+2517:           success: "Recebemos o retorno do checkout. A libera\xE7\xE3o do material ocorrer\xE1 somente ap\xF3s a confirma\xE7\xE3o financeira oficial do Asaas.",
+2518:           cancel: "O checkout foi cancelado. Nenhum material foi liberado.",
+2519:           expired: "O checkout expirou. Gere um novo checkout para concluir a compra."
+2520:         };
+2521:         return new Response(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UGI</title></head><body style="font-family:system-ui;background:#061A2B;color:#fff;padding:36px"><h1 style="color:#E7A72C">UMA GEST\xC3O INTELIGENTE</h1><h2>${titles[outcome]}</h2><p>${messages[outcome]}</p><p>Refer\xEAncia: <code>${referenceId || "n\xE3o informada"}</code></p></body></html>`, {
+2522:           status: 200,
+2523:           headers: {
+2524:             "Content-Type": "text/html; charset=utf-8",
+2525:             "Cache-Control": "no-store",
+2526:             "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"
+2527:           }
+2528:         });
+2529:       }
+2530:       // BEGIN_LSI_FIAT_RAIL_R1
+2531:       if (request.method === "GET" && path === "/api/lsi/fiat-health") {
+--- lines 2584-2605 ---
+2584:         if (!/^lsi-pipeline-[a-f0-9-]{36}$/i.test(referenceId)) return json({ok:false,errorClass:"reference_invalid"},400);
+2585:         const order = await getJsonR2(env, `${LSI_ORDER_PREFIX}${referenceId}.json`);
+2586:         if (!order) return json({ok:false,errorClass:"lsi_order_not_found"},404);
+2587:         return json({ok:true,order:{referenceId:order.referenceId,offerCode:order.offerCode,amount:order.amount,currency:order.currency,paymentStatus:order.paymentStatus,paidAt:order.paidAt || null,fulfillmentTriggered:false}});
+2588:       }
+2589: 
+2590:       if (request.method === "GET" && path.startsWith("/lsi/payment/")) {
+2591:         const outcome = String(path.slice("/lsi/payment/".length) || "");
+2592:         if (!["success","cancel","expired"].includes(outcome)) return new Response("Not found",{status:404});
+2593:         const title = outcome === "success" ? "Retorno recebido" : outcome === "cancel" ? "Checkout cancelado" : "Checkout expirado";
+2594:         const message = outcome === "success"
+2595:           ? "O checkout foi concluído no navegador. A confirmação financeira é processada separadamente pelo webhook do provedor."
+2596:           : outcome === "cancel" ? "Nenhuma confirmação de pagamento foi registrada por este retorno." : "Este checkout expirou; um novo link pode ser gerado.";
+2597:         return new Response(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head><body style="font-family:system-ui;max-width:720px;margin:48px auto;padding:24px"><h1>${title}</h1><p>${message}</p></body></html>`,{status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","Content-Security-Policy":"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"}});
+2598:       }
+2599:       // END_LSI_FIAT_RAIL_R1
+2600: 
+2601:       if (request.method === "POST" && path === "/api/commerce/webhook/asaas") {
+2602:         if (!env.ASAAS_WEBHOOK_TOKEN)
+2603:           return json({ ok: false, errorClass: "asaas_webhook_token_missing" }, 503);
+2604:         const receivedToken = request.headers.get("asaas-access-token") || "";
+2605:         if (receivedToken !== env.ASAAS_WEBHOOK_TOKEN)
+--- lines 2585-2606 ---
+2585:         const order = await getJsonR2(env, `${LSI_ORDER_PREFIX}${referenceId}.json`);
+2586:         if (!order) return json({ok:false,errorClass:"lsi_order_not_found"},404);
+2587:         return json({ok:true,order:{referenceId:order.referenceId,offerCode:order.offerCode,amount:order.amount,currency:order.currency,paymentStatus:order.paymentStatus,paidAt:order.paidAt || null,fulfillmentTriggered:false}});
+2588:       }
+2589: 
+2590:       if (request.method === "GET" && path.startsWith("/lsi/payment/")) {
+2591:         const outcome = String(path.slice("/lsi/payment/".length) || "");
+2592:         if (!["success","cancel","expired"].includes(outcome)) return new Response("Not found",{status:404});
+2593:         const title = outcome === "success" ? "Retorno recebido" : outcome === "cancel" ? "Checkout cancelado" : "Checkout expirado";
+2594:         const message = outcome === "success"
+2595:           ? "O checkout foi concluído no navegador. A confirmação financeira é processada separadamente pelo webhook do provedor."
+2596:           : outcome === "cancel" ? "Nenhuma confirmação de pagamento foi registrada por este retorno." : "Este checkout expirou; um novo link pode ser gerado.";
+2597:         return new Response(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head><body style="font-family:system-ui;max-width:720px;margin:48px auto;padding:24px"><h1>${title}</h1><p>${message}</p></body></html>`,{status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","Content-Security-Policy":"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"}});
+2598:       }
+2599:       // END_LSI_FIAT_RAIL_R1
+2600: 
+2601:       if (request.method === "POST" && path === "/api/commerce/webhook/asaas") {
+2602:         if (!env.ASAAS_WEBHOOK_TOKEN)
+2603:           return json({ ok: false, errorClass: "asaas_webhook_token_missing" }, 503);
+2604:         const receivedToken = request.headers.get("asaas-access-token") || "";
+2605:         if (receivedToken !== env.ASAAS_WEBHOOK_TOKEN)
+2606:           return json({ ok: false, errorClass: "invalid_webhook_signature" }, 401);
+--- lines 2588-2609 ---
+2588:       }
+2589: 
+2590:       if (request.method === "GET" && path.startsWith("/lsi/payment/")) {
+2591:         const outcome = String(path.slice("/lsi/payment/".length) || "");
+2592:         if (!["success","cancel","expired"].includes(outcome)) return new Response("Not found",{status:404});
+2593:         const title = outcome === "success" ? "Retorno recebido" : outcome === "cancel" ? "Checkout cancelado" : "Checkout expirado";
+2594:         const message = outcome === "success"
+2595:           ? "O checkout foi concluído no navegador. A confirmação financeira é processada separadamente pelo webhook do provedor."
+2596:           : outcome === "cancel" ? "Nenhuma confirmação de pagamento foi registrada por este retorno." : "Este checkout expirou; um novo link pode ser gerado.";
+2597:         return new Response(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head><body style="font-family:system-ui;max-width:720px;margin:48px auto;padding:24px"><h1>${title}</h1><p>${message}</p></body></html>`,{status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","Content-Security-Policy":"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"}});
+2598:       }
+2599:       // END_LSI_FIAT_RAIL_R1
+2600: 
+2601:       if (request.method === "POST" && path === "/api/commerce/webhook/asaas") {
+2602:         if (!env.ASAAS_WEBHOOK_TOKEN)
+2603:           return json({ ok: false, errorClass: "asaas_webhook_token_missing" }, 503);
+2604:         const receivedToken = request.headers.get("asaas-access-token") || "";
+2605:         if (receivedToken !== env.ASAAS_WEBHOOK_TOKEN)
+2606:           return json({ ok: false, errorClass: "invalid_webhook_signature" }, 401);
+2607:         const body = await request.json().catch(() => null);
+2608:         if (!body)
+2609:           return json({ ok: false, errorClass: "invalid_json" }, 400);
+--- lines 2666-2687 ---
+2666:       if (request.method === "GET" && path === "/b71c8a3f6e2d4c1590af7381d9e64b2c.txt") return new Response("b71c8a3f6e2d4c1590af7381d9e64b2c",{status:200,headers:{"Content-Type":"text/plain; charset=utf-8","Cache-Control":"public,max-age=86400"}});
+2667:       if (request.method === "GET" && path === "/brazil-opportunity-radar-sitemap.xml") return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://lola-operacional-ugi.umagestaointeligente.workers.dev/brazil-opportunity-radar</loc><changefreq>daily</changefreq><priority>0.9</priority></url></urlset>`,{status:200,headers:{"Content-Type":"application/xml; charset=utf-8","Cache-Control":"public,max-age=3600"}});
+2668:       if (request.method === "GET" && path === "/greenfield/brazil-opportunity-radar/source-health") { try{const probe=new URL(request.url);probe.search="?limit=3";const x=await radarLiveFeed(probe);return json({ok:true,performanceVersion:x.performanceVersion,densityVersion:x.densityVersion,count:x.count,upstream:x.upstream,elapsedMs:x.elapsedMs,upstreamTimeoutMs:x.upstreamTimeoutMs})}catch(error){return json({ok:false,error:"source_probe_failed",detail:String(error?.message||error).slice(0,100)},502)} }
+2669:       if ((request.method === "GET" || request.method === "HEAD") && path === "/brazil-opportunity-radar") return new Response(request.method === "HEAD" ? null : radarLandingHtml(), {status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"public,max-age=180","X-Robots-Tag":"index,follow"}});
+2670:       if (request.method === "GET" && path === "/greenfield/brazil-opportunity-radar/health") return json({ok:true,extensionVersion:RADAR_COMMERCE_EXTENSION_VERSION,productId:RADAR_PRODUCT_ID,price:RADAR_PRICE_BRL,currency:"BRL",accessDays:30,provider:"asaas",fixedServerPrice:true,deliveryRequiresPaidWebhook:true,liveData:true,renewalAutomatic:false,spendCapability:false,piiCollectedByWorker:false,greenfield:true});
+2671:       if (request.method === "GET" && path.startsWith("/greenfield/brazil-opportunity-radar/order/")) { const referenceId=sanitizeCommerceId(decodeURIComponent(path.slice("/greenfield/brazil-opportunity-radar/order/".length))); if(!referenceId||!referenceId.startsWith("radar-")) return json({ok:false,error:"order_not_found"},404); const order=await getJsonR2(env,`${ORDER_PREFIX}${referenceId}.json`); if(!order||order.productId!==RADAR_PRODUCT_ID||order.greenfield!==true) return json({ok:false,error:"order_not_found"},404); return json({ok:true,referenceId,paymentStatus:order.paymentStatus||"pending",fulfillmentReady:Boolean(order.fulfilledAt&&order.deliveryUrl),deliveryUrl:order.fulfilledAt?order.deliveryUrl||null:null,deliveryExpiresAt:order.fulfilledAt?order.deliveryExpiresAt||null:null}); }
+2672:       if (request.method === "GET" && path.startsWith("/greenfield/brazil-opportunity-radar/access/")) { const token=decodeURIComponent(path.slice("/greenfield/brazil-opportunity-radar/access/".length)); const grant=await radarGrant(env,token); if(!grant) return new Response("Passe inválido ou expirado.",{status:410,headers:{"Content-Type":"text/plain; charset=utf-8","Cache-Control":"no-store"}}); return new Response(radarAccessHtml(token),{status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"private,no-store","X-Robots-Tag":"noindex,nofollow"}}); }
+2673:       if (request.method === "GET" && path.startsWith("/greenfield/brazil-opportunity-radar/feed/")) { const token=decodeURIComponent(path.slice("/greenfield/brazil-opportunity-radar/feed/".length)); const grant=await radarGrant(env,token); if(!grant) return json({ok:false,error:"pass_invalid_or_expired"},410); try{return json(await radarLiveFeed(url));}catch(error){return json({ok:false,error:"official_upstream_unavailable",detail:String(error?.message||error).slice(0,120)},502)} }
+2674:       if (request.method === "GET" && path.startsWith("/greenfield/brazil-opportunity-radar/checkout-return/")) { const outcome=path.slice("/greenfield/brazil-opportunity-radar/checkout-return/".length), referenceId=sanitizeCommerceId(url.searchParams.get("referenceId")||""); if(!new Set(["success","cancel","expired"]).has(outcome)||!referenceId.startsWith("radar-")) return new Response("Not found",{status:404}); return radarReturnHtml(outcome,referenceId); }
+2675:       if (request.method === "POST" && path === "/greenfield/brazil-opportunity-radar/checkout") { if(!env.ASAAS_API_KEY||!env.MEDIA) return json({ok:false,error:"payment_rail_unavailable"},503); const raw=await request.text(); if(raw.length>1024) return json({ok:false,error:"request_too_large"},413); let body={}; if(raw.trim()){try{body=JSON.parse(raw)}catch{return json({ok:false,error:"invalid_json"},400)}} if(!body||typeof body!=="object"||Array.isArray(body)||Object.keys(body).length!==0) return json({ok:false,error:"fixed_offer_accepts_no_client_parameters"},400); const material=await ensureRadarMaterial(env), product=radarProduct(), referenceId=sanitizeCommerceId(`radar-${crypto.randomUUID()}`); let checkout; try{checkout=await createProviderCheckout(env,"asaas",product,material,{referenceId},url.origin)}catch(error){return json({ok:false,error:"checkout_provider_failed",providerStatus:Number(error?.providerStatus||0)||null,providerErrors:Array.isArray(error?.providerErrors)?error.providerErrors:[]},502)} await putJsonR2(env,`${CHECKOUT_PREFIX}${checkout.checkoutId}.json`,{...checkout,greenfield:true,brand:"LSI"}); await putJsonR2(env,`${ORDER_PREFIX}${checkout.referenceId}.json`,{...checkout,greenfield:true,brand:"LSI",productId:RADAR_PRODUCT_ID,materialId:RADAR_MATERIAL_ID,orderStatus:"awaiting_payment",paymentStatus:"pending",fulfilledAt:null,createdAt:checkout.createdAt||new Date().toISOString()}); return json({ok:true,extensionVersion:RADAR_COMMERCE_EXTENSION_VERSION,productId:RADAR_PRODUCT_ID,amount:RADAR_PRICE_BRL,currency:"BRL",accessDays:30,referenceId:checkout.referenceId,checkoutId:checkout.checkoutId,checkoutUrl:checkout.checkoutUrl,provider:"asaas",deliveryRequiresPaidWebhook:true,renewalAutomatic:false},201); }
+2676: 
+2677:       // LSI PackValue PRO — fixed public SKU only; no admin capability.
+2678:       if ((request.method === "GET" || request.method === "HEAD") && path === "/packvalue-pro") return new Response(request.method === "HEAD" ? null : packValueProLandingHtml(), {status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"public,max-age=300","X-Robots-Tag":"index,follow"}});
+2679:       if (request.method === "GET" && path === "/greenfield/packvalue-pro/health") return json({ok:true,coreVersion:VERSION,extensionVersion:PACKVALUE_EXTENSION_VERSION,productId:PACKVALUE_PRO_PRODUCT_ID,price:PACKVALUE_PRO_PRICE,currency:"BRL",provider:"asaas",fixedServerPrice:true,buyerDataCollectedByWorker:false,deliveryRequiresPaidWebhook:true,spendCapability:false,greenfield:true,checkoutImageQa:"ASAAS_SAMPLE_PNG_R2"});
+2680:       if (request.method === "GET" && path.startsWith("/greenfield/packvalue-pro/order/")) { const referenceId=sanitizeCommerceId(decodeURIComponent(path.slice("/greenfield/packvalue-pro/order/".length))); if(!referenceId||!referenceId.startsWith("pvpro-")) return json({ok:false,error:"order_not_found"},404); const order=await getJsonR2(env,`${ORDER_PREFIX}${referenceId}.json`); if(!order||order.productId!==PACKVALUE_PRO_PRODUCT_ID||order.greenfield!==true) return json({ok:false,error:"order_not_found"},404); return json({ok:true,referenceId,paymentStatus:order.paymentStatus||"pending",fulfillmentReady:Boolean(order.fulfilledAt&&order.deliveryUrl),deliveryUrl:order.fulfilledAt?order.deliveryUrl||null:null,deliveryExpiresAt:order.fulfilledAt?order.deliveryExpiresAt||null:null}); }
+2681:       if (request.method === "GET" && path.startsWith("/greenfield/packvalue-pro/checkout-return/")) { const outcome=path.slice("/greenfield/packvalue-pro/checkout-return/".length), referenceId=sanitizeCommerceId(url.searchParams.get("referenceId")||""); if(!new Set(["success","cancel","expired"]).has(outcome)||!referenceId.startsWith("pvpro-")) return new Response("Not found",{status:404}); return packValueProReturn(outcome,referenceId); }
+2682:       if (request.method === "POST" && path === "/greenfield/packvalue-pro/checkout") { if(!env.ASAAS_API_KEY||!env.MEDIA) return json({ok:false,error:"payment_rail_unavailable"},503); const raw=await request.text(); if(raw.length>1024) return json({ok:false,error:"request_too_large"},413); let body={}; if(raw.trim()){try{body=JSON.parse(raw)}catch{return json({ok:false,error:"invalid_json"},400)}} if(!body||typeof body!=="object"||Array.isArray(body)||Object.keys(body).length!==0) return json({ok:false,error:"fixed_offer_accepts_no_client_parameters"},400); const material=await ensurePackValueProMaterial(env), product=packValueProProduct(), referenceId=sanitizeCommerceId(`pvpro-${crypto.randomUUID()}`); let checkout; try{checkout=await createProviderCheckout(env,"asaas",product,material,{referenceId},url.origin)}catch(error){return json({ok:false,error:"checkout_provider_failed",providerStatus:Number(error?.providerStatus||0)||null,providerErrors:Array.isArray(error?.providerErrors)?error.providerErrors:[]},502)} await putJsonR2(env,`${CHECKOUT_PREFIX}${checkout.checkoutId}.json`,{...checkout,greenfield:true,brand:"PackValue"}); await putJsonR2(env,`${ORDER_PREFIX}${checkout.referenceId}.json`,{...checkout,greenfield:true,brand:"PackValue",orderStatus:"awaiting_payment",paymentStatus:"pending",fulfilledAt:null,createdAt:checkout.createdAt||new Date().toISOString()}); return json({ok:true,coreVersion:VERSION,extensionVersion:PACKVALUE_EXTENSION_VERSION,productId:PACKVALUE_PRO_PRODUCT_ID,amount:PACKVALUE_PRO_PRICE,currency:"BRL",referenceId:checkout.referenceId,checkoutId:checkout.checkoutId,checkoutUrl:checkout.checkoutUrl,provider:"asaas",deliveryRequiresPaidWebhook:true},201); }
+2683: 
+2684:             if (path === "/health" || path === "/api/health") {
+2685:         return json({
+2686:           ok: true,
+2687:           service: "Lola Operacional UGI",
+--- lines 2673-2694 ---
+2673:       if (request.method === "GET" && path.startsWith("/greenfield/brazil-opportunity-radar/feed/")) { const token=decodeURIComponent(path.slice("/greenfield/brazil-opportunity-radar/feed/".length)); const grant=await radarGrant(env,token); if(!grant) return json({ok:false,error:"pass_invalid_or_expired"},410); try{return json(await radarLiveFeed(url));}catch(error){return json({ok:false,error:"official_upstream_unavailable",detail:String(error?.message||error).slice(0,120)},502)} }
+2674:       if (request.method === "GET" && path.startsWith("/greenfield/brazil-opportunity-radar/checkout-return/")) { const outcome=path.slice("/greenfield/brazil-opportunity-radar/checkout-return/".length), referenceId=sanitizeCommerceId(url.searchParams.get("referenceId")||""); if(!new Set(["success","cancel","expired"]).has(outcome)||!referenceId.startsWith("radar-")) return new Response("Not found",{status:404}); return radarReturnHtml(outcome,referenceId); }
+2675:       if (request.method === "POST" && path === "/greenfield/brazil-opportunity-radar/checkout") { if(!env.ASAAS_API_KEY||!env.MEDIA) return json({ok:false,error:"payment_rail_unavailable"},503); const raw=await request.text(); if(raw.length>1024) return json({ok:false,error:"request_too_large"},413); let body={}; if(raw.trim()){try{body=JSON.parse(raw)}catch{return json({ok:false,error:"invalid_json"},400)}} if(!body||typeof body!=="object"||Array.isArray(body)||Object.keys(body).length!==0) return json({ok:false,error:"fixed_offer_accepts_no_client_parameters"},400); const material=await ensureRadarMaterial(env), product=radarProduct(), referenceId=sanitizeCommerceId(`radar-${crypto.randomUUID()}`); let checkout; try{checkout=await createProviderCheckout(env,"asaas",product,material,{referenceId},url.origin)}catch(error){return json({ok:false,error:"checkout_provider_failed",providerStatus:Number(error?.providerStatus||0)||null,providerErrors:Array.isArray(error?.providerErrors)?error.providerErrors:[]},502)} await putJsonR2(env,`${CHECKOUT_PREFIX}${checkout.checkoutId}.json`,{...checkout,greenfield:true,brand:"LSI"}); await putJsonR2(env,`${ORDER_PREFIX}${checkout.referenceId}.json`,{...checkout,greenfield:true,brand:"LSI",productId:RADAR_PRODUCT_ID,materialId:RADAR_MATERIAL_ID,orderStatus:"awaiting_payment",paymentStatus:"pending",fulfilledAt:null,createdAt:checkout.createdAt||new Date().toISOString()}); return json({ok:true,extensionVersion:RADAR_COMMERCE_EXTENSION_VERSION,productId:RADAR_PRODUCT_ID,amount:RADAR_PRICE_BRL,currency:"BRL",accessDays:30,referenceId:checkout.referenceId,checkoutId:checkout.checkoutId,checkoutUrl:checkout.checkoutUrl,provider:"asaas",deliveryRequiresPaidWebhook:true,renewalAutomatic:false},201); }
+2676: 
+2677:       // LSI PackValue PRO — fixed public SKU only; no admin capability.
+2678:       if ((request.method === "GET" || request.method === "HEAD") && path === "/packvalue-pro") return new Response(request.method === "HEAD" ? null : packValueProLandingHtml(), {status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"public,max-age=300","X-Robots-Tag":"index,follow"}});
+2679:       if (request.method === "GET" && path === "/greenfield/packvalue-pro/health") return json({ok:true,coreVersion:VERSION,extensionVersion:PACKVALUE_EXTENSION_VERSION,productId:PACKVALUE_PRO_PRODUCT_ID,price:PACKVALUE_PRO_PRICE,currency:"BRL",provider:"asaas",fixedServerPrice:true,buyerDataCollectedByWorker:false,deliveryRequiresPaidWebhook:true,spendCapability:false,greenfield:true,checkoutImageQa:"ASAAS_SAMPLE_PNG_R2"});
+2680:       if (request.method === "GET" && path.startsWith("/greenfield/packvalue-pro/order/")) { const referenceId=sanitizeCommerceId(decodeURIComponent(path.slice("/greenfield/packvalue-pro/order/".length))); if(!referenceId||!referenceId.startsWith("pvpro-")) return json({ok:false,error:"order_not_found"},404); const order=await getJsonR2(env,`${ORDER_PREFIX}${referenceId}.json`); if(!order||order.productId!==PACKVALUE_PRO_PRODUCT_ID||order.greenfield!==true) return json({ok:false,error:"order_not_found"},404); return json({ok:true,referenceId,paymentStatus:order.paymentStatus||"pending",fulfillmentReady:Boolean(order.fulfilledAt&&order.deliveryUrl),deliveryUrl:order.fulfilledAt?order.deliveryUrl||null:null,deliveryExpiresAt:order.fulfilledAt?order.deliveryExpiresAt||null:null}); }
+2681:       if (request.method === "GET" && path.startsWith("/greenfield/packvalue-pro/checkout-return/")) { const outcome=path.slice("/greenfield/packvalue-pro/checkout-return/".length), referenceId=sanitizeCommerceId(url.searchParams.get("referenceId")||""); if(!new Set(["success","cancel","expired"]).has(outcome)||!referenceId.startsWith("pvpro-")) return new Response("Not found",{status:404}); return packValueProReturn(outcome,referenceId); }
+2682:       if (request.method === "POST" && path === "/greenfield/packvalue-pro/checkout") { if(!env.ASAAS_API_KEY||!env.MEDIA) return json({ok:false,error:"payment_rail_unavailable"},503); const raw=await request.text(); if(raw.length>1024) return json({ok:false,error:"request_too_large"},413); let body={}; if(raw.trim()){try{body=JSON.parse(raw)}catch{return json({ok:false,error:"invalid_json"},400)}} if(!body||typeof body!=="object"||Array.isArray(body)||Object.keys(body).length!==0) return json({ok:false,error:"fixed_offer_accepts_no_client_parameters"},400); const material=await ensurePackValueProMaterial(env), product=packValueProProduct(), referenceId=sanitizeCommerceId(`pvpro-${crypto.randomUUID()}`); let checkout; try{checkout=await createProviderCheckout(env,"asaas",product,material,{referenceId},url.origin)}catch(error){return json({ok:false,error:"checkout_provider_failed",providerStatus:Number(error?.providerStatus||0)||null,providerErrors:Array.isArray(error?.providerErrors)?error.providerErrors:[]},502)} await putJsonR2(env,`${CHECKOUT_PREFIX}${checkout.checkoutId}.json`,{...checkout,greenfield:true,brand:"PackValue"}); await putJsonR2(env,`${ORDER_PREFIX}${checkout.referenceId}.json`,{...checkout,greenfield:true,brand:"PackValue",orderStatus:"awaiting_payment",paymentStatus:"pending",fulfilledAt:null,createdAt:checkout.createdAt||new Date().toISOString()}); return json({ok:true,coreVersion:VERSION,extensionVersion:PACKVALUE_EXTENSION_VERSION,productId:PACKVALUE_PRO_PRODUCT_ID,amount:PACKVALUE_PRO_PRICE,currency:"BRL",referenceId:checkout.referenceId,checkoutId:checkout.checkoutId,checkoutUrl:checkout.checkoutUrl,provider:"asaas",deliveryRequiresPaidWebhook:true},201); }
+2683: 
+2684:             if (path === "/health" || path === "/api/health") {
+2685:         return json({
+2686:           ok: true,
+2687:           service: "Lola Operacional UGI",
+2688:           version: VERSION,
+2689:           status: "online",
+2690:           multimedia: true,
+2691:           capabilities: {
+2692:             post: true,
+2693:             carousel: true,
+2694:             carouselExactText: true,
+--- lines 2823-2844 ---
+2823:             centralMultiAssetApproval: true,
+2824:             platformApprovalIndependent: true,
+2825:             platformApprovalPublishesAutomatically: false,
+2826:             platformApprovalRoute: "/api/platform-approval",
+2827:             multiPlatformPublishing: true,
+2828:             r45InstagramMultiFormat: true,
+2829:             r45InstagramCarousel: true,
+2830:             r45InstagramVisualPost: true,
+2831:             r45InstagramStoryImage: true,
+2832:             r452StoryVideoSmoke: true,
+2833:             r452MixedCarouselSmoke: true,
+2834:             r453ScheduledStoryVideo: true,
+2835:             r453ScheduledMixedCarousel: true,
+2836:             r453BufferDelete: true,
+2837:             publicationExactlyOnceGuard: true,
+2838:             publicationAssetLockR2: true,
+2839:             publicationSlotLockR2: true,
+2840:             publicationRetryCreateBlockedOnUncertain: true,
+2841:             platformPublishRoute: "/api/platform-publish",
+2842:             platformPublicationStatusRoute: "/api/platform-publication-status",
+2843:             carouselSlideRecoveryRoute: "/api/carousel-slide-recovery",
+2844:             carouselSlideRecoveryInPlace: true,
+--- lines 2833-2854 ---
+2833:             r452MixedCarouselSmoke: true,
+2834:             r453ScheduledStoryVideo: true,
+2835:             r453ScheduledMixedCarousel: true,
+2836:             r453BufferDelete: true,
+2837:             publicationExactlyOnceGuard: true,
+2838:             publicationAssetLockR2: true,
+2839:             publicationSlotLockR2: true,
+2840:             publicationRetryCreateBlockedOnUncertain: true,
+2841:             platformPublishRoute: "/api/platform-publish",
+2842:             platformPublicationStatusRoute: "/api/platform-publication-status",
+2843:             carouselSlideRecoveryRoute: "/api/carousel-slide-recovery",
+2844:             carouselSlideRecoveryInPlace: true,
+2845:             bufferChannelsRoute: "/api/buffer/channels",
+2846:             approvalSeparatedFromPublishing: true,
+2847:             operationalAuthFix: true,
+2848:             r2AssetValidationFix: true,
+2849:             publicationAssetValidation: "R2 binding first, public HEAD fallback",
+2850:             operationalAuthRoutes: [
+2851:               "/api/platform-approval",
+2852:               "/api/platform-publish",
+2853:               "/api/platform-publication-status"
+2854:             ],
+--- lines 2834-2855 ---
+2834:             r453ScheduledStoryVideo: true,
+2835:             r453ScheduledMixedCarousel: true,
+2836:             r453BufferDelete: true,
+2837:             publicationExactlyOnceGuard: true,
+2838:             publicationAssetLockR2: true,
+2839:             publicationSlotLockR2: true,
+2840:             publicationRetryCreateBlockedOnUncertain: true,
+2841:             platformPublishRoute: "/api/platform-publish",
+2842:             platformPublicationStatusRoute: "/api/platform-publication-status",
+2843:             carouselSlideRecoveryRoute: "/api/carousel-slide-recovery",
+2844:             carouselSlideRecoveryInPlace: true,
+2845:             bufferChannelsRoute: "/api/buffer/channels",
+2846:             approvalSeparatedFromPublishing: true,
+2847:             operationalAuthFix: true,
+2848:             r2AssetValidationFix: true,
+2849:             publicationAssetValidation: "R2 binding first, public HEAD fallback",
+2850:             operationalAuthRoutes: [
+2851:               "/api/platform-approval",
+2852:               "/api/platform-publish",
+2853:               "/api/platform-publication-status"
+2854:             ],
+2855:             supportedPublishModes: ["shareNow", "customScheduled", "addToQueue"],
+--- lines 2844-2865 ---
+2844:             carouselSlideRecoveryInPlace: true,
+2845:             bufferChannelsRoute: "/api/buffer/channels",
+2846:             approvalSeparatedFromPublishing: true,
+2847:             operationalAuthFix: true,
+2848:             r2AssetValidationFix: true,
+2849:             publicationAssetValidation: "R2 binding first, public HEAD fallback",
+2850:             operationalAuthRoutes: [
+2851:               "/api/platform-approval",
+2852:               "/api/platform-publish",
+2853:               "/api/platform-publication-status"
+2854:             ],
+2855:             supportedPublishModes: ["shareNow", "customScheduled", "addToQueue"],
+2856:             bufferChannelOverrides: {
+2857:               instagram: Boolean(env.BUFFER_CHANNEL_INSTAGRAM || IG),
+2858:               tiktok: Boolean(env.BUFFER_CHANNEL_TIKTOK),
+2859:               youtube: Boolean(env.BUFFER_CHANNEL_YOUTUBE)
+2860:             },
+2861:             githubActionHttp200Compatibility: true,
+2862:             videoImageFallbackDisabled: true,
+2863:             videoGateway: "workers-ai-direct"
+2864:           },
+2865:           bindings: {
+--- lines 2845-2866 ---
+2845:             bufferChannelsRoute: "/api/buffer/channels",
+2846:             approvalSeparatedFromPublishing: true,
+2847:             operationalAuthFix: true,
+2848:             r2AssetValidationFix: true,
+2849:             publicationAssetValidation: "R2 binding first, public HEAD fallback",
+2850:             operationalAuthRoutes: [
+2851:               "/api/platform-approval",
+2852:               "/api/platform-publish",
+2853:               "/api/platform-publication-status"
+2854:             ],
+2855:             supportedPublishModes: ["shareNow", "customScheduled", "addToQueue"],
+2856:             bufferChannelOverrides: {
+2857:               instagram: Boolean(env.BUFFER_CHANNEL_INSTAGRAM || IG),
+2858:               tiktok: Boolean(env.BUFFER_CHANNEL_TIKTOK),
+2859:               youtube: Boolean(env.BUFFER_CHANNEL_YOUTUBE)
+2860:             },
+2861:             githubActionHttp200Compatibility: true,
+2862:             videoImageFallbackDisabled: true,
+2863:             videoGateway: "workers-ai-direct"
+2864:           },
+2865:           bindings: {
+2866:             AI: Boolean(env.AI),
+--- lines 3694-3715 ---
+3694:       if (path === "/api/r45/static-approval" && request.method === "POST") {
+3695:         if (!isAdminAuthorized(request,env) && !isLolaUGIAuthorized(request,env)) return json({ok:false,error:"Não autorizado"},401);
+3696:         const body=await readBody(request); const id=String(body?.id || "").trim();
+3697:         const decision=String(body?.decision || "").trim().toLowerCase();
+3698:         if (!id || !["approved","rejected"].includes(decision)) return json({ok:false,error:"id/decision invalid"},400);
+3699:         const draft=await getLocalDraft(env,id); if (!draft) return json({ok:false,error:"Rascunho não encontrado"},404);
+3700:         const descriptor=r45StaticAsset(draft); if (!descriptor?.ready) return json({ok:false,error:"R45 static asset not ready"},409);
+3701:         const current=draft.assets?.instagram || {};
+3702:         if (current?.publication?.bufferPostId && !["error","cancelled"].includes(String(current?.publication?.status || "").toLowerCase())) return json({ok:false,error:"R45 static already has active Buffer publication",publication:current.publication},409);
+3703:         const at=(new Date()).toISOString();
+3704:         draft.assets={...(draft.assets || {}),instagram:{...descriptor,...current,approvalStatus:decision,approvalDecisionAt:at}};
+3705:         draft.workflowStatus=decision === "approved" ? "approved" : "rejected"; draft.updatedAt=at;
+3706:         const saved=await saveLocalDraft(env,draft);
+3707:         await saveContentEvent(env,saved,decision === "approved" ? "r45_static_approved" : "r45_static_rejected",{platform:"instagram",type:draft.type});
+3708:         return json({ok:true,version:VERSION,route:"/api/r45/static-approval",draftId:id,platform:"instagram",decision,asset:saved.assets?.instagram,publicationTriggered:false});
+3709:       }
+3710: 
+3711:       if (path.startsWith("/api/r45/static-eligibility/") && request.method === "GET") {
+3712:         if (!isAdminAuthorized(request,env) && !isLolaUGIAuthorized(request,env)) return json({ok:false,error:"Não autorizado"},401);
+3713:         const id=decodeURIComponent(path.slice("/api/r45/static-eligibility/".length)); const draft=await getLocalDraft(env,id);
+3714:         if (!draft) return json({ok:false,error:"Rascunho não encontrado"},404);
+3715:         const descriptor=r45StaticAsset(draft); const current=draft.assets?.instagram || {};
+--- lines 3723-3744 ---
+3723:         if (!isAdminAuthorized(request,env) && !isLolaUGIAuthorized(request,env)) return json({ok:false,error:"Não autorizado"},401);
+3724:         const body=await readBody(request); const id=String(body?.id || "").trim(); const mode=normalizePublishMode(body?.mode);
+3725:         if (!id || !mode) return json({ok:false,error:"id/mode invalid"},400);
+3726:         let dueAt=null; if (mode === "customScheduled") { const parsed=new Date(body?.dueAt || ""); if (Number.isNaN(parsed.getTime()) || parsed.getTime() <= Date.now()+60000) return json({ok:false,error:"dueAt must be >1 minute in future"},400); dueAt=parsed.toISOString(); }
+3727:         const draft=await getLocalDraft(env,id); if (!draft) return json({ok:false,error:"Rascunho não encontrado"},404);
+3728:         const descriptor=r45StaticAsset(draft); const asset=draft.assets?.instagram || {};
+3729:         const gate=[...commerceGateReasons(draft),...semanticGateReasons(draft)]; if (gate.length) return json({ok:false,errorClass:"commerce_or_semantic_gate_blocked",reasons:gate,publicationTriggered:false},409);
+3730:         if (!descriptor?.ready || normalizeAssetApprovalStatus(asset.approvalStatus) !== "approved") return json({ok:false,error:"R45 static asset must be ready and approved"},409);
+3731:         if (asset?.publication?.bufferPostId && !["error","cancelled"].includes(String(asset?.publication?.status || "").toLowerCase())) return json({ok:false,error:"R45 static already has active Buffer publication",publication:asset.publication},409);
+3732:         const locks=await acquirePublicationLocks(env,draft,"instagram",mode,dueAt); if (!locks.acquired) return json({ok:false,errorClass:"publication_idempotency_lock_exists",lockType:locks.failedType,existingLock:locks.existing || null,publicationTriggered:false},409);
+3733:         const requestedAt=(new Date()).toISOString();
+3734:         try {
+3735:           const created=await r45CreateBufferInstagramStaticPost(draft,mode,dueAt,env); const post=created.post;
+3736:           const publication={status:publicationStateFromBufferPost(post),bufferStatus:post.status || null,bufferPostId:post.id || null,channelId:created.channel?.id || null,channelService:post.channelService || created.channel?.service || "instagram",channelSource:created.channel?.source || null,mode,dueAt:post.dueAt || dueAt || null,sentAt:post.sentAt || null,externalLink:post.externalLink || null,sharedNow:Boolean(post.sharedNow),requestedAt,updatedAt:(new Date()).toISOString(),error:post?.error?.message || null,bufferError:post?.error || null,bufferDiagnostics:created.bufferDiagnostics || null};
+3737:           draft.assets={...(draft.assets || {}),instagram:{...asset,...descriptor,publication}}; draft.updatedAt=publication.updatedAt; const saved=await saveLocalDraft(env,draft);
+3738:           await updatePublicationLocks(env,locks,{state:"confirmed",bufferPostId:publication.bufferPostId || null,bufferStatus:publication.bufferStatus || null,dueAt:publication.dueAt || dueAt || null,externalLink:publication.externalLink || null});
+3739:           await saveContentEvent(env,saved,mode === "shareNow" ? "r45_static_publish_requested" : "r45_static_scheduled",{platform:"instagram",type:draft.type,bufferPostId:publication.bufferPostId,dueAt:publication.dueAt});
+3740:           return json({ok:true,version:VERSION,route:"/api/r45/static-publish",platform:"instagram",type:draft.type,mode,publication,post,assetValidation:created.assetValidation,publicationTriggered:true});
+3741:         } catch (e) {
+3742:           try { await updatePublicationLocks(env,locks,{state:"uncertain",failureAt:(new Date()).toISOString(),error:e?.message || String(e)}); } catch (_) {}
+3743:           return json({ok:false,version:VERSION,route:"/api/r45/static-publish",errorClass:"r45_static_publish_failed",error:e?.message || String(e),bufferDiagnostics:e?.bufferDiagnostics || null,bufferPayload:e?.bufferPayload || null,publicationTriggered:false},400);
+3744:         }
+--- lines 3739-3760 ---
+3739:           await saveContentEvent(env,saved,mode === "shareNow" ? "r45_static_publish_requested" : "r45_static_scheduled",{platform:"instagram",type:draft.type,bufferPostId:publication.bufferPostId,dueAt:publication.dueAt});
+3740:           return json({ok:true,version:VERSION,route:"/api/r45/static-publish",platform:"instagram",type:draft.type,mode,publication,post,assetValidation:created.assetValidation,publicationTriggered:true});
+3741:         } catch (e) {
+3742:           try { await updatePublicationLocks(env,locks,{state:"uncertain",failureAt:(new Date()).toISOString(),error:e?.message || String(e)}); } catch (_) {}
+3743:           return json({ok:false,version:VERSION,route:"/api/r45/static-publish",errorClass:"r45_static_publish_failed",error:e?.message || String(e),bufferDiagnostics:e?.bufferDiagnostics || null,bufferPayload:e?.bufferPayload || null,publicationTriggered:false},400);
+3744:         }
+3745:       }
+3746: 
+3747:       if (path === "/api/r45/static-publication-status" && request.method === "GET") {
+3748:         if (!isAdminAuthorized(request,env) && !isLolaUGIAuthorized(request,env)) return json({ok:false,error:"Não autorizado"},401);
+3749:         const id=String(url.searchParams.get("id") || "").trim(); const draft=id ? await getLocalDraft(env,id) : null;
+3750:         const pub=draft?.assets?.instagram?.publication || null; if (!draft || !pub?.bufferPostId) return json({ok:false,error:"R45 static publication not found"},404);
+3751:         const live=await getBufferPostStatus(pub.bufferPostId,env); const post=live.post;
+3752:         const publication={...pub,status:publicationStateFromBufferPost(post),bufferStatus:post.status || null,dueAt:post.dueAt || pub.dueAt || null,sentAt:post.sentAt || null,externalLink:post.externalLink || null,sharedNow:Boolean(post.sharedNow),error:post?.error?.message || null,bufferError:post?.error || null,updatedAt:(new Date()).toISOString()};
+3753:         draft.assets={...(draft.assets || {}),instagram:{...draft.assets.instagram,publication}}; await saveLocalDraft(env,draft);
+3754:         return json({ok:true,version:VERSION,route:"/api/r45/static-publication-status",draftId:id,platform:"instagram",type:draft.type,publication});
+3755:       }
+3756: 
+3757:       if (path === "/api/platform-publish" && request.method === "POST") {
+3758:         if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+3759:           return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+3760:         }
+--- lines 3746-3767 ---
+3746: 
+3747:       if (path === "/api/r45/static-publication-status" && request.method === "GET") {
+3748:         if (!isAdminAuthorized(request,env) && !isLolaUGIAuthorized(request,env)) return json({ok:false,error:"Não autorizado"},401);
+3749:         const id=String(url.searchParams.get("id") || "").trim(); const draft=id ? await getLocalDraft(env,id) : null;
+3750:         const pub=draft?.assets?.instagram?.publication || null; if (!draft || !pub?.bufferPostId) return json({ok:false,error:"R45 static publication not found"},404);
+3751:         const live=await getBufferPostStatus(pub.bufferPostId,env); const post=live.post;
+3752:         const publication={...pub,status:publicationStateFromBufferPost(post),bufferStatus:post.status || null,dueAt:post.dueAt || pub.dueAt || null,sentAt:post.sentAt || null,externalLink:post.externalLink || null,sharedNow:Boolean(post.sharedNow),error:post?.error?.message || null,bufferError:post?.error || null,updatedAt:(new Date()).toISOString()};
+3753:         draft.assets={...(draft.assets || {}),instagram:{...draft.assets.instagram,publication}}; await saveLocalDraft(env,draft);
+3754:         return json({ok:true,version:VERSION,route:"/api/r45/static-publication-status",draftId:id,platform:"instagram",type:draft.type,publication});
+3755:       }
+3756: 
+3757:       if (path === "/api/platform-publish" && request.method === "POST") {
+3758:         if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+3759:           return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+3760:         }
+3761:         const body = await readBody(request);
+3762:         if (!body?.id) {
+3763:           return json({ ok: false, error: "id ausente" }, 400);
+3764:         }
+3765:         const platform = normalizeApprovalPlatform(body.platform);
+3766:         if (!platform) {
+3767:           return json({
+--- lines 3749-3770 ---
+3749:         const id=String(url.searchParams.get("id") || "").trim(); const draft=id ? await getLocalDraft(env,id) : null;
+3750:         const pub=draft?.assets?.instagram?.publication || null; if (!draft || !pub?.bufferPostId) return json({ok:false,error:"R45 static publication not found"},404);
+3751:         const live=await getBufferPostStatus(pub.bufferPostId,env); const post=live.post;
+3752:         const publication={...pub,status:publicationStateFromBufferPost(post),bufferStatus:post.status || null,dueAt:post.dueAt || pub.dueAt || null,sentAt:post.sentAt || null,externalLink:post.externalLink || null,sharedNow:Boolean(post.sharedNow),error:post?.error?.message || null,bufferError:post?.error || null,updatedAt:(new Date()).toISOString()};
+3753:         draft.assets={...(draft.assets || {}),instagram:{...draft.assets.instagram,publication}}; await saveLocalDraft(env,draft);
+3754:         return json({ok:true,version:VERSION,route:"/api/r45/static-publication-status",draftId:id,platform:"instagram",type:draft.type,publication});
+3755:       }
+3756: 
+3757:       if (path === "/api/platform-publish" && request.method === "POST") {
+3758:         if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+3759:           return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+3760:         }
+3761:         const body = await readBody(request);
+3762:         if (!body?.id) {
+3763:           return json({ ok: false, error: "id ausente" }, 400);
+3764:         }
+3765:         const platform = normalizeApprovalPlatform(body.platform);
+3766:         if (!platform) {
+3767:           return json({
+3768:             ok: false,
+3769:             error: "platform inv\xE1lida",
+3770:             allowedPlatforms: VIDEO_PLATFORMS
+--- lines 3808-3829 ---
+3808:         }
+3809:         const commerceReasons = commerceGateReasons(draft);
+3810:         const semanticReasons = semanticGateReasons(draft);
+3811:         const publicationGateReasons = [...commerceReasons, ...semanticReasons];
+3812:         if (publicationGateReasons.length) {
+3813:           return json({
+3814:             ok: false,
+3815:             version: VERSION,
+3816:             route: "/api/platform-publish",
+3817:             errorClass: "commerce_or_semantic_gate_blocked",
+3818:             error: "Publica\xE7\xE3o bloqueada por hard gate Commerce/Semantic.",
+3819:             reasons: publicationGateReasons,
+3820:             publicationTriggered: false,
+3821:             bufferMutationPerformed: false
+3822:           }, 409);
+3823:         }
+3824:         if (!hasMultiPlatformAssets(draft)) {
+3825:           return json({
+3826:             ok: false,
+3827:             error: "Este conte\xFAdo n\xE3o possui assets multi-plataforma."
+3828:           }, 409);
+3829:         }
+--- lines 3838-3859 ---
+3838:           asset.approvalStatus
+3839:         ) !== "approved") {
+3840:           return json({
+3841:             ok: false,
+3842:             error: `Asset ${platform} precisa estar aprovado antes da publica\xE7\xE3o.`
+3843:           }, 409);
+3844:         }
+3845:         const currentPublication = asset.publication || {};
+3846:         if (currentPublication.bufferPostId && !["error", "cancelled"].includes(
+3847:           String(
+3848:             currentPublication.status || ""
+3849:           ).toLowerCase()
+3850:         )) {
+3851:           return json({
+3852:             ok: false,
+3853:             error: `Asset ${platform} j\xE1 possui publica\xE7\xE3o Buffer ativa.`,
+3854:             publication: currentPublication
+3855:           }, 409);
+3856:         }
+3857:         // R44.5.22 — exactly-once gate before any Buffer mutation.
+3858:         // Asset lock blocks repeated publication of the same UGI content on the same platform.
+3859:         // Slot lock blocks different drafts from occupying the same platform/time slot.
+--- lines 3855-3876 ---
+3855:           }, 409);
+3856:         }
+3857:         // R44.5.22 — exactly-once gate before any Buffer mutation.
+3858:         // Asset lock blocks repeated publication of the same UGI content on the same platform.
+3859:         // Slot lock blocks different drafts from occupying the same platform/time slot.
+3860:         const publicationLocks = await acquirePublicationLocks(env, draft, platform, mode, dueAt);
+3861:         if (!publicationLocks.acquired) {
+3862:           return json({
+3863:             ok:false, version:VERSION, route:"/api/platform-publish",
+3864:             errorClass:"publication_idempotency_lock_exists",
+3865:             error:`Publicação ${platform} bloqueada por exactly-once lock (${publicationLocks.failedType}).`,
+3866:             lockType:publicationLocks.failedType, existingLock:publicationLocks.existing || null,
+3867:             publicationTriggered:false, bufferMutationPerformed:false
+3868:           },409);
+3869:         }
+3870: 
+3871:         const requestedAt = (/* @__PURE__ */ new Date()).toISOString();
+3872:         try {
+3873:           const created = await createBufferPlatformVideoPost(
+3874:             draft,
+3875:             platform,
+3876:             mode,
+--- lines 3931-3952 ---
+3931:               publicationStatus: publication.status,
+3932:               dueAt: publication.dueAt,
+3933:               externalLink: publication.externalLink
+3934:             }
+3935:           );
+3936:           return json({
+3937:             ok: true,
+3938:             version: VERSION,
+3939:             route: "/api/platform-publish",
+3940:             platform,
+3941:             mode,
+3942:             publication,
+3943:             post,
+3944:             assetValidation: created.assetValidation || null,
+3945:             publicationTriggered: true,
+3946:             otherPlatformsUnaffected: true
+3947:           });
+3948:         } catch (error) {
+3949:           const failedAt = (/* @__PURE__ */ new Date()).toISOString();
+3950:           // Fail closed: never release locks after an uncertain Buffer failure.
+3951:           // A timeout can mean the remote post was created but the response was lost.
+3952:           try {
+--- lines 3988-4009 ---
+3988:               platform,
+3989:               mode,
+3990:               error: error?.message || String(error)
+3991:             }
+3992:           );
+3993:           return json({
+3994:             ok: false,
+3995:             version: VERSION,
+3996:             route: "/api/platform-publish",
+3997:             platform,
+3998:             mode,
+3999:             errorClass: "platform_publish_failed",
+4000:             error: error?.message || String(error),
+4001:             bufferDiagnostics: error?.bufferDiagnostics || null,
+4002:             bufferPayload: error?.bufferPayload || null,
+4003:             otherPlatformsUnaffected: true
+4004:           }, 400);
+4005:         }
+4006:       }
+4007:       // BEGIN_R44_5_22_LOCK_ROUTES
+4008:       if (path === "/api/publication-lock-status" && request.method === "GET") {
+4009:         if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) return json({ok:false,error:"Não autorizado"},401);
+--- lines 4070-4091 ---
+4070:         for (const platform of VIDEO_PLATFORMS) {
+4071:           const asset = draft.assets?.[platform] || null;
+4072:           const approvalStatus = normalizeAssetApprovalStatus(
+4073:             asset?.approvalStatus
+4074:           );
+4075:           const ready = asset?.ready === true && Boolean(asset?.videoUrl);
+4076:           const publication = asset?.publication || null;
+4077:           const activeBufferPublication = Boolean(
+4078:             publication?.bufferPostId && !["error", "cancelled"].includes(
+4079:               String(publication?.status || "").toLowerCase()
+4080:             )
+4081:           );
+4082:           const reasons = [
+4083:             ...commerceGateReasons(draft),
+4084:             ...semanticGateReasons(draft)
+4085:           ];
+4086:           if (!asset)
+4087:             reasons.push("asset_missing");
+4088:           else if (!ready)
+4089:             reasons.push("asset_not_ready");
+4090:           if (approvalStatus !== "approved") {
+4091:             reasons.push(
+--- lines 4123-4144 ---
+4123:           ineligiblePlatforms,
+4124:           anyEligible: eligiblePlatforms.length > 0,
+4125:           allEligible: eligiblePlatforms.length === VIDEO_PLATFORMS.length,
+4126:           publicationTriggered: false,
+4127:           bufferMutationPerformed: false,
+4128:           note: "Consulta read-only. Nenhuma publica\xE7\xE3o, agendamento ou cria\xE7\xE3o de post no Buffer foi executada."
+4129:         });
+4130:       }
+4131:       if (path === "/api/platform-publication-status" && request.method === "GET") {
+4132:         if (!isAdminAuthorized(request, env) && !isLolaUGIAuthorized(request, env)) {
+4133:           return json({ ok: false, error: "N\xE3o autorizado" }, 401);
+4134:         }
+4135:         const id = String(
+4136:           url.searchParams.get("id") || ""
+4137:         ).trim();
+4138:         const platform = normalizeApprovalPlatform(
+4139:           url.searchParams.get("platform")
+4140:         );
+4141:         if (!id || !platform) {
+4142:           return json({
+4143:             ok: false,
+4144:             error: "id e platform s\xE3o obrigat\xF3rios."
+--- lines 4208-4229 ---
+4208:               publicationStatus: publication.status,
+4209:               sentAt: publication.sentAt,
+4210:               externalLink: publication.externalLink
+4211:             }
+4212:           );
+4213:           return json({
+4214:             ok: true,
+4215:             version: VERSION,
+4216:             route: "/api/platform-publication-status",
+4217:             platform,
+4218:             publication,
+4219:             post,
+4220:             bufferDiagnostics: statusResult.bufferDiagnostics || null
+4221:           });
+4222:         } catch (error) {
+4223:           return json({
+4224:             ok: false,
+4225:             version: VERSION,
+4226:             route: "/api/platform-publication-status",
+4227:             platform,
+4228:             errorClass: "buffer_status_check_failed",
+4229:             error: error?.message || String(error),
+--- lines 4218-4239 ---
+4218:             publication,
+4219:             post,
+4220:             bufferDiagnostics: statusResult.bufferDiagnostics || null
+4221:           });
+4222:         } catch (error) {
+4223:           return json({
+4224:             ok: false,
+4225:             version: VERSION,
+4226:             route: "/api/platform-publication-status",
+4227:             platform,
+4228:             errorClass: "buffer_status_check_failed",
+4229:             error: error?.message || String(error),
+4230:             bufferDiagnostics: error?.bufferDiagnostics || null,
+4231:             bufferPayload: error?.bufferPayload || null
+4232:           }, 400);
+4233:         }
+4234:       }
+4235:       const LOLA_OPERATIONAL_ROUTES = [
+4236:         "/api/platform-approval",
+4237:         "/api/platform-publish",
+4238:         "/api/platform-publication-status",
+4239:         "/api/carousel-slide-recovery"
+--- lines 4229-4250 ---
+4229:             error: error?.message || String(error),
+4230:             bufferDiagnostics: error?.bufferDiagnostics || null,
+4231:             bufferPayload: error?.bufferPayload || null
+4232:           }, 400);
+4233:         }
+4234:       }
+4235:       const LOLA_OPERATIONAL_ROUTES = [
+4236:         "/api/platform-approval",
+4237:         "/api/platform-publish",
+4238:         "/api/platform-publication-status",
+4239:         "/api/carousel-slide-recovery"
+4240:       ];
+4241:       const isLolaOperationalRoute = LOLA_OPERATIONAL_ROUTES.includes(path);
+4242:       if (path.startsWith("/api/") && !isAdminAuthorized(request, env) && !(isLolaOperationalRoute && isLolaUGIAuthorized(request, env))) {
+4243:         return json(
+4244:           {
+4245:             ok: false,
+4246:             error: "N\xE3o autorizado"
+4247:           },
+4248:           401
+4249:         );
+4250:       }
+--- lines 4230-4251 ---
+4230:             bufferDiagnostics: error?.bufferDiagnostics || null,
+4231:             bufferPayload: error?.bufferPayload || null
+4232:           }, 400);
+4233:         }
+4234:       }
+4235:       const LOLA_OPERATIONAL_ROUTES = [
+4236:         "/api/platform-approval",
+4237:         "/api/platform-publish",
+4238:         "/api/platform-publication-status",
+4239:         "/api/carousel-slide-recovery"
+4240:       ];
+4241:       const isLolaOperationalRoute = LOLA_OPERATIONAL_ROUTES.includes(path);
+4242:       if (path.startsWith("/api/") && !isAdminAuthorized(request, env) && !(isLolaOperationalRoute && isLolaUGIAuthorized(request, env))) {
+4243:         return json(
+4244:           {
+4245:             ok: false,
+4246:             error: "N\xE3o autorizado"
+4247:           },
+4248:           401
+4249:         );
+4250:       }
+4251:       if (path === "/api/propose" && request.method === "POST") {
+--- lines 4350-4371 ---
+4350:           }, 409);
+4351:         }
+4352:         if (currentAsset.ready !== true || !currentAsset.videoUrl) {
+4353:           return json({
+4354:             ok: false,
+4355:             error: `Asset ${platform} ainda n\xE3o est\xE1 pronto para revis\xE3o.`
+4356:           }, 409);
+4357:         }
+4358:         if (currentAsset?.publication?.bufferPostId && !["error", "cancelled"].includes(
+4359:           String(
+4360:             currentAsset?.publication?.status || ""
+4361:           ).toLowerCase()
+4362:         )) {
+4363:           return json({
+4364:             ok: false,
+4365:             error: `A decis\xE3o de ${platform} n\xE3o pode ser alterada porque a publica\xE7\xE3o j\xE1 foi enviada ao Buffer.`,
+4366:             publication: currentAsset.publication
+4367:           }, 409);
+4368:         }
+4369:         const decidedAt = (/* @__PURE__ */ new Date()).toISOString();
+4370:         draft.assets = {
+4371:           ...draft.assets,
+--- lines 4471-4492 ---
+4471:             return json(
+4472:               {
+4473:                 ok: false,
+4474:                 error: "Imagem ainda n\xE3o dispon\xEDvel."
+4475:               },
+4476:               409
+4477:             );
+4478:           }
+4479:           result = await bufferCreatePost(draft, env);
+4480:         }
+4481:         const created = result?.data?.createPost;
+4482:         if (!created?.post) {
+4483:           throw new Error(
+4484:             created?.message || firstGraphQLError(result) || "O Buffer n\xE3o criou a publica\xE7\xE3o."
+4485:           );
+4486:         }
+4487:         draft.status = created.post.status || "scheduled";
+4488:         draft.workflowStatus = draft.status;
+4489:         draft.bufferPostId = created.post.id;
+4490:         draft.dueAt = created.post.dueAt || null;
+4491:         draft.approvedAt = (/* @__PURE__ */ new Date()).toISOString();
+4492:         draft.updatedAt = draft.approvedAt;
+--- lines 5339-5360 ---
+5339:   const key=`${MATERIAL_PREFIX}${PACKVALUE_PRO_MATERIAL_ID}.json`, current=await getJsonR2(env,key);
+5340:   if (current?.assetReady===true && current?.qualityStatus==="PASS" && current?.deliveryEnabled===true && current?.fileKey===PACKVALUE_PRO_ASSET_KEY && current?.packValueAssetSha256===PACKVALUE_PRO_ASSET_SHA256) return current;
+5341:   const bytes=packValueProBytes(), now=new Date().toISOString();
+5342:   await env.MEDIA.put(PACKVALUE_PRO_ASSET_KEY,bytes,{httpMetadata:{contentType:"text/html; charset=utf-8",cacheControl:"private,no-store"},customMetadata:{productId:PACKVALUE_PRO_PRODUCT_ID,greenfield:"true",sha256:PACKVALUE_PRO_ASSET_SHA256}});
+5343:   const material={materialId:PACKVALUE_PRO_MATERIAL_ID,title:"packvalue-pro",description:"Standalone local SKU price comparison tool",version:"1",fileKey:PACKVALUE_PRO_ASSET_KEY,materialKey:PACKVALUE_PRO_ASSET_KEY,mimeType:"text/html; charset=utf-8",size:bytes.length,assetReady:true,qualityStatus:"PASS",deliveryEnabled:true,qualityGates:{deterministicCore:true,standalone:true,noNetwork:true,noPiiCollection:true},commercialQaScore:100,pagesValidated:1,greenfield:true,brand:"PackValue",packValueAssetSha256:PACKVALUE_PRO_ASSET_SHA256,createdAt:current?.createdAt||now,updatedAt:now};
+5344:   await putJsonR2(env,key,material); return material;
+5345: }
+5346: function packValueProLandingHtml() { const p=PACKVALUE_PRO_PRICE.toLocaleString("pt-BR",{minimumFractionDigits:2}); return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PackValue PRO — Comparador em lote</title><meta name="description" content="Compare SKUs por kg, litro ou unidade, com frete e desconto."><style>:root{font-family:Inter,system-ui,sans-serif;color:#172033;background:#f4f6fb}*{box-sizing:border-box}body{margin:0}main{max-width:880px;margin:auto;padding:48px 22px 80px}.tag{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#4055d8;font-weight:800}h1{font-size:clamp(38px,7vw,70px);line-height:1;margin:9px 0 20px}.lead{font-size:20px;line-height:1.55;color:#59667e}.card{background:#fff;border:1px solid #dfe4ee;border-radius:18px;padding:22px;margin:25px 0}ul{line-height:1.9}.price{font-size:38px;font-weight:900}button{border:0;border-radius:11px;background:#3048d8;color:#fff;font-size:17px;font-weight:800;padding:14px 20px;cursor:pointer}#status{min-height:24px;color:#53617b;margin-top:12px}small{color:#69758c;line-height:1.5;display:block;margin-top:16px}</style></head><body><main><div class="tag">PackValue PRO</div><h1>Preço por unidade real, em lote.</h1><p class="lead">Importe ou cole dezenas de SKUs. Normalize por kg, litro ou unidade, incorpore frete e desconto, ranqueie o melhor valor e exporte CSV.</p><div class="card"><ul><li>CSV/TSV e colagem direta</li><li>Ranking por kg, litro e unidade</li><li>Frete + desconto no custo efetivo</li><li>Arquivo HTML local: dados ficam no seu dispositivo</li><li>Compra única, sem assinatura</li></ul><div class="price">R$ ${p}</div><p>Checkout hospedado pelo Asaas via PIX ou cartão.</p><button id="buy">Comprar PackValue PRO</button><div id="status"></div><small>Nenhuma economia, margem ou resultado financeiro é garantido.</small></div></main><script>const b=document.querySelector('#buy'),s=document.querySelector('#status');b.addEventListener('click',async()=>{b.disabled=true;s.textContent='Abrindo checkout seguro…';try{const r=await fetch('/greenfield/packvalue-pro/checkout',{method:'POST',headers:{'content-type':'application/json'},body:'{}'}),j=await r.json();if(!r.ok||!j.checkoutUrl)throw 0;location.assign(j.checkoutUrl)}catch(e){s.textContent='Checkout indisponível agora. Tente novamente em instantes.';b.disabled=false}});</script></body></html>`; }
+5347: function packValueProReturn(outcome,referenceId) { const title={success:"Pagamento enviado",cancel:"Checkout cancelado",expired:"Checkout expirado"}[outcome]||"Checkout"; const body=outcome==="success"?`<p id="status">Aguardando confirmação financeira oficial do Asaas…</p><p id="download"></p><script>const r=${JSON.stringify(referenceId)};let n=0;async function p(){try{const x=await fetch('/greenfield/packvalue-pro/order/'+encodeURIComponent(r),{cache:'no-store'}),j=await x.json();if(j.fulfillmentReady&&j.deliveryUrl){document.querySelector('#status').textContent='Pagamento confirmado.';document.querySelector('#download').innerHTML='<a href="'+j.deliveryUrl+'">Baixar PackValue PRO</a>';return}if(++n<90)setTimeout(p,2000)}catch(e){if(++n<90)setTimeout(p,2000)}}p();</script>`:`<p>Nenhum arquivo foi liberado.</p>`; return new Response(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PackValue PRO</title><style>body{font-family:system-ui;background:#f4f6fb;color:#172033;padding:36px;max-width:760px;margin:auto}a{display:inline-block;background:#3048d8;color:#fff;padding:13px 17px;border-radius:10px;text-decoration:none;font-weight:800}</style></head><body><h1>PackValue PRO</h1><h2>${title}</h2>${body}<p>Referência: <code>${referenceId}</code></p></body></html>`,{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","Content-Security-Policy":"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'"}}); }
+5348: 
+5349: 
+5350: // ============================================================
+5351: // LSI GREENFIELD EXTENSION — BRAZIL OPPORTUNITY RADAR FOUNDER PASS
+5352: // Demand-first product: live official procurement opportunities.
+5353: // Fixed server-side price. Asaas webhook remains sole payment truth.
+5354: // ============================================================
+5355: const RADAR_COMMERCE_EXTENSION_VERSION = "brazil-opportunity-radar-commerce-r1-2026-08-31";
+5356: const RADAR_PRODUCT_ID = "brazil-opportunity-radar-founder-r1";
+5357: const RADAR_MATERIAL_ID = "brazil-opportunity-radar-live-r1";
+5358: const RADAR_PRICE_BRL = 19.90;
+5359: const RADAR_ACCESS_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+5360: const RADAR_CHECKOUT_IMAGE_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=";
+--- lines 5560-5581 ---
+5560:     const permanentUrl = permanentPath.startsWith("/") ? `${origin}${permanentPath}` : null;
+5561:     payload = {
+5562:       billingTypes: ["PIX", "CREDIT_CARD"],
+5563:       chargeTypes: ["DETACHED"],
+5564:       minutesToExpire: 60,
+5565:       externalReference: referenceId,
+5566:       callback: {
+5567:         successUrl: `${callbackBase}/success?referenceId=${encodeURIComponent(referenceId)}`,
+5568:         cancelUrl: permanentUrl ? `${permanentUrl}?checkout=cancelled` : `${callbackBase}/cancel?referenceId=${encodeURIComponent(referenceId)}`,
+5569:         expiredUrl: permanentUrl ? `${permanentUrl}?checkout=expired` : `${callbackBase}/expired?referenceId=${encodeURIComponent(referenceId)}`
+5570:       },
+5571:       items: [
+5572:         {
+5573:           externalReference: String(product.productId || referenceId).slice(0, 200),
+5574:           name: String(product.title || "Produto UGI").trim().slice(0, 30),
+5575:           description: String(product.description || material.description || "Material digital UGI").trim().slice(0, 150),
+5576:           quantity: 1,
+5577:           value: Number(amount.toFixed(2)),
+5578:           imageBase64: String(product.checkoutImageBase64 || UGI_CHECKOUT_IMAGE_BASE64)
+5579:         }
+5580:       ]
+5581:     };
+--- lines 5609-5630 ---
+5609:       description: String(item?.description || "").slice(0, 500)
+5610:     })) : [];
+5611:     error.providerResponse = data;
+5612:     error.payloadDiagnostics = provider === "asaas" ? {
+5613:       billingTypes: payload.billingTypes,
+5614:       chargeTypes: payload.chargeTypes,
+5615:       minutesToExpire: payload.minutesToExpire,
+5616:       externalReference: payload.externalReference,
+5617:       callbackPresent: Boolean(payload.callback?.successUrl && payload.callback?.cancelUrl && payload.callback?.expiredUrl),
+5618:       itemCount: Array.isArray(payload.items) ? payload.items.length : 0,
+5619:       firstItem: payload.items?.[0] ? {
+5620:         externalReference: payload.items[0].externalReference,
+5621:         namePresent: Boolean(payload.items[0].name),
+5622:         descriptionPresent: Boolean(payload.items[0].description),
+5623:         quantity: payload.items[0].quantity,
+5624:         value: payload.items[0].value,
+5625:         imageBase64Present: Boolean(payload.items[0].imageBase64)
+5626:       } : null
+5627:     } : null;
+5628:     throw error;
+5629:   }
+5630:   const providerId = String(data?.id || data?.checkoutId || data?.checkout_id || "").trim();
+--- lines 7626-7647 ---
+7626: .publication-box{
+7627:   margin-top:10px;
+7628:   padding:10px;
+7629:   border-radius:10px;
+7630:   background:#0b2138;
+7631:   border:1px solid #315a7b;
+7632: }
+7633: 
+7634: .publication-status{
+7635:   font-size:12px;
+7636:   color:#b8cde0;
+7637:   line-height:1.45;
+7638:   margin-bottom:8px;
+7639: }
+7640: 
+7641: .publish-actions{
+7642:   display:grid;
+7643:   grid-template-columns:1fr 1fr;
+7644:   gap:8px;
+7645: }
+7646: 
+7647: .publish-actions .queue{
+--- lines 9582-9603 ---
+9582:   return "submitted";
+9583: }
+9584: __name(publicationStateFromBufferPost, "publicationStateFromBufferPost");
+9585: function normalizePublishMode(value) {
+9586:   const raw = String(value || "").trim();
+9587:   return ["shareNow", "customScheduled", "addToQueue"].includes(raw) ? raw : null;
+9588: }
+9589: __name(normalizePublishMode, "normalizePublishMode");
+9590: async function bufferGraphQL(query, env) {
+9591:   if (!env.BUFFER_API_KEY) {
+9592:     throw new Error("BUFFER_API_KEY ausente.");
+9593:   }
+9594:   const response = await fetch(
+9595:     "https://api.buffer.com",
+9596:     {
+9597:       method: "POST",
+9598:       headers: {
+9599:         Authorization: "Bearer " + env.BUFFER_API_KEY,
+9600:         "content-type": "application/json",
+9601:         accept: "application/json"
+9602:       },
+9603:       body: JSON.stringify({ query })
+--- lines 9642-9663 ---
+9642:     error.bufferPayload = payload;
+9643:     throw error;
+9644:   }
+9645:   return {
+9646:     ...payload,
+9647:     __bufferDiagnostics: diagnostics
+9648:   };
+9649: }
+9650: __name(bufferGraphQL, "bufferGraphQL");
+9651: async function discoverBufferChannels(env) {
+9652:   const accountPayload = await bufferGraphQL(
+9653:     `query {
+9654:       account {
+9655:         organizations {
+9656:           id
+9657:           name
+9658:         }
+9659:       }
+9660:     }`,
+9661:     env
+9662:   );
+9663:   const organizations = accountPayload?.data?.account?.organizations || [];
+--- lines 9644-9665 ---
+9644:   }
+9645:   return {
+9646:     ...payload,
+9647:     __bufferDiagnostics: diagnostics
+9648:   };
+9649: }
+9650: __name(bufferGraphQL, "bufferGraphQL");
+9651: async function discoverBufferChannels(env) {
+9652:   const accountPayload = await bufferGraphQL(
+9653:     `query {
+9654:       account {
+9655:         organizations {
+9656:           id
+9657:           name
+9658:         }
+9659:       }
+9660:     }`,
+9661:     env
+9662:   );
+9663:   const organizations = accountPayload?.data?.account?.organizations || [];
+9664:   if (!organizations.length) {
+9665:     throw new Error("Buffer n\xE3o retornou organiza\xE7\xF5es.");
+--- lines 9677-9698 ---
+9677:     }
+9678:   } else if (organizations.length === 1) {
+9679:     organization = organizations[0];
+9680:   } else {
+9681:     throw new Error(
+9682:       "H\xE1 mais de uma organiza\xE7\xE3o no Buffer. Configure BUFFER_ORGANIZATION_ID."
+9683:     );
+9684:   }
+9685:   const channelsPayload = await bufferGraphQL(
+9686:     `query {
+9687:       channels(
+9688:         input: {
+9689:           organizationId: ${JSON.stringify(organization.id)}
+9690:         }
+9691:       ) {
+9692:         id
+9693:         name
+9694:         displayName
+9695:         service
+9696:         isQueuePaused
+9697:       }
+9698:     }`,
+--- lines 9746-9767 ---
+9746:   const source = String(
+9747:     draft.topic || draft.title || draft.hook || "Uma Gest\xE3o Inteligente"
+9748:   ).trim();
+9749:   return source.slice(0, 100);
+9750: }
+9751: __name(cleanYoutubeTitle, "cleanYoutubeTitle");
+9752: function platformMetadataGraphQL(platform, draft = {}) {
+9753:   if (platform === "instagram") {
+9754:     const instagramStory = /-IG-STORY-/i.test(String(draft?.contentId || "")) || /UGI-20260903-IG-(1030|1100|1415)-/i.test(String(draft?.contentId || "")) || ["story", "story_image", "story_video"].includes(String(draft?.type || "").toLowerCase());
+9755:     return `
+9756:       metadata: {
+9757:         instagram: {
+9758:           type: ${instagramStory ? "story" : "reel"}
+9759:           shouldShareToFeed: ${instagramStory ? "false" : "true"}
+9760:         }
+9761:       }
+9762:     `;
+9763:   }
+9764:   if (platform === "tiktok") {
+9765:     return `
+9766:       metadata: {
+9767:         tiktok: {
+--- lines 9750-9771 ---
+9750: }
+9751: __name(cleanYoutubeTitle, "cleanYoutubeTitle");
+9752: function platformMetadataGraphQL(platform, draft = {}) {
+9753:   if (platform === "instagram") {
+9754:     const instagramStory = /-IG-STORY-/i.test(String(draft?.contentId || "")) || /UGI-20260903-IG-(1030|1100|1415)-/i.test(String(draft?.contentId || "")) || ["story", "story_image", "story_video"].includes(String(draft?.type || "").toLowerCase());
+9755:     return `
+9756:       metadata: {
+9757:         instagram: {
+9758:           type: ${instagramStory ? "story" : "reel"}
+9759:           shouldShareToFeed: ${instagramStory ? "false" : "true"}
+9760:         }
+9761:       }
+9762:     `;
+9763:   }
+9764:   if (platform === "tiktok") {
+9765:     return `
+9766:       metadata: {
+9767:         tiktok: {
+9768:           isAiGenerated: false
+9769:         }
+9770:       }
+9771:     `;
+--- lines 9751-9772 ---
+9751: __name(cleanYoutubeTitle, "cleanYoutubeTitle");
+9752: function platformMetadataGraphQL(platform, draft = {}) {
+9753:   if (platform === "instagram") {
+9754:     const instagramStory = /-IG-STORY-/i.test(String(draft?.contentId || "")) || /UGI-20260903-IG-(1030|1100|1415)-/i.test(String(draft?.contentId || "")) || ["story", "story_image", "story_video"].includes(String(draft?.type || "").toLowerCase());
+9755:     return `
+9756:       metadata: {
+9757:         instagram: {
+9758:           type: ${instagramStory ? "story" : "reel"}
+9759:           shouldShareToFeed: ${instagramStory ? "false" : "true"}
+9760:         }
+9761:       }
+9762:     `;
+9763:   }
+9764:   if (platform === "tiktok") {
+9765:     return `
+9766:       metadata: {
+9767:         tiktok: {
+9768:           isAiGenerated: false
+9769:         }
+9770:       }
+9771:     `;
+9772:   }
+--- lines 10022-10043 ---
+10022:   const callbackBase = `${origin}/lsi/payment`;
+10023:   const payload = {
+10024:     billingTypes: ["PIX", "CREDIT_CARD"],
+10025:     chargeTypes: ["DETACHED"],
+10026:     minutesToExpire: 1440,
+10027:     externalReference: referenceId,
+10028:     callback: {
+10029:       successUrl: `${callbackBase}/success?referenceId=${encodeURIComponent(referenceId)}`,
+10030:       cancelUrl: `${callbackBase}/cancel?referenceId=${encodeURIComponent(referenceId)}`,
+10031:       expiredUrl: `${callbackBase}/expired?referenceId=${encodeURIComponent(referenceId)}`
+10032:     },
+10033:     items: [{
+10034:       externalReference: offer.code,
+10035:       name: offer.title,
+10036:       description: offer.description,
+10037:       quantity: 1,
+10038:       value: Number(offer.amount.toFixed(2))
+10039:     }]
+10040:   };
+10041:   const endpoint = `${String(env.ASAAS_API_BASE || "https://api.asaas.com/v3").replace(/\/$/, "")}/checkouts`;
+10042:   const response = await fetch(endpoint, {
+10043:     method: "POST",
+--- lines 10105-10126 ---
+10105:   if (!asset?.ready) throw new Error("R45 static asset not ready");
+10106:   const channel=await resolveBufferChannel("instagram",env);
+10107:   const urls=asset.kind === "carousel" ? asset.imageUrls : [asset.imageUrl];
+10108:   for (const u of urls) await r45VerifyPublicImage(u,env);
+10109:   const assetGraphQL=urls.map(u=>`{ image: { url: ${JSON.stringify(u)} } }`).join(",");
+10110:   const dueAtGraphQL=mode === "customScheduled" ? `dueAt: ${JSON.stringify(dueAt)}` : "";
+10111:   const story=asset.kind === "story_image";
+10112:   const text=story ? "" : permanentCommercePublicationText(draft);
+10113:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10114:   const query=`mutation { createPost(input:{ text:${JSON.stringify(text)} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:${mode} ${dueAtGraphQL} aiAssisted:true assets:[${assetGraphQL}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10115:   const result=await bufferGraphQL(query,env);
+10116:   const created=result?.data?.createPost;
+10117:   if (!created?.post) {
+10118:     const error=new Error(created?.message || firstGraphQLError(result) || "Buffer did not create R45 static post");
+10119:     error.bufferDiagnostics={...(result?.__bufferDiagnostics || {}),responseType:created?.__typename || null,mutationMessage:created?.message || null};
+10120:     error.bufferPayload=result;
+10121:     throw error;
+10122:   }
+10123:   return {post:created.post,channel,assetValidation:{ok:true,kind:asset.kind,count:urls.length},bufferDiagnostics:{...(result?.__bufferDiagnostics || {}),responseType:created?.__typename || null,postError:created?.post?.error || null}};
+10124: }
+10125: __name(r45CreateBufferInstagramStaticPost, "r45CreateBufferInstagramStaticPost");
+10126: 
+--- lines 10106-10127 ---
+10106:   const channel=await resolveBufferChannel("instagram",env);
+10107:   const urls=asset.kind === "carousel" ? asset.imageUrls : [asset.imageUrl];
+10108:   for (const u of urls) await r45VerifyPublicImage(u,env);
+10109:   const assetGraphQL=urls.map(u=>`{ image: { url: ${JSON.stringify(u)} } }`).join(",");
+10110:   const dueAtGraphQL=mode === "customScheduled" ? `dueAt: ${JSON.stringify(dueAt)}` : "";
+10111:   const story=asset.kind === "story_image";
+10112:   const text=story ? "" : permanentCommercePublicationText(draft);
+10113:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10114:   const query=`mutation { createPost(input:{ text:${JSON.stringify(text)} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:${mode} ${dueAtGraphQL} aiAssisted:true assets:[${assetGraphQL}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10115:   const result=await bufferGraphQL(query,env);
+10116:   const created=result?.data?.createPost;
+10117:   if (!created?.post) {
+10118:     const error=new Error(created?.message || firstGraphQLError(result) || "Buffer did not create R45 static post");
+10119:     error.bufferDiagnostics={...(result?.__bufferDiagnostics || {}),responseType:created?.__typename || null,mutationMessage:created?.message || null};
+10120:     error.bufferPayload=result;
+10121:     throw error;
+10122:   }
+10123:   return {post:created.post,channel,assetValidation:{ok:true,kind:asset.kind,count:urls.length},bufferDiagnostics:{...(result?.__bufferDiagnostics || {}),responseType:created?.__typename || null,postError:created?.post?.error || null}};
+10124: }
+10125: __name(r45CreateBufferInstagramStaticPost, "r45CreateBufferInstagramStaticPost");
+10126: 
+10127: 
+--- lines 10107-10128 ---
+10107:   const urls=asset.kind === "carousel" ? asset.imageUrls : [asset.imageUrl];
+10108:   for (const u of urls) await r45VerifyPublicImage(u,env);
+10109:   const assetGraphQL=urls.map(u=>`{ image: { url: ${JSON.stringify(u)} } }`).join(",");
+10110:   const dueAtGraphQL=mode === "customScheduled" ? `dueAt: ${JSON.stringify(dueAt)}` : "";
+10111:   const story=asset.kind === "story_image";
+10112:   const text=story ? "" : permanentCommercePublicationText(draft);
+10113:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10114:   const query=`mutation { createPost(input:{ text:${JSON.stringify(text)} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:${mode} ${dueAtGraphQL} aiAssisted:true assets:[${assetGraphQL}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10115:   const result=await bufferGraphQL(query,env);
+10116:   const created=result?.data?.createPost;
+10117:   if (!created?.post) {
+10118:     const error=new Error(created?.message || firstGraphQLError(result) || "Buffer did not create R45 static post");
+10119:     error.bufferDiagnostics={...(result?.__bufferDiagnostics || {}),responseType:created?.__typename || null,mutationMessage:created?.message || null};
+10120:     error.bufferPayload=result;
+10121:     throw error;
+10122:   }
+10123:   return {post:created.post,channel,assetValidation:{ok:true,kind:asset.kind,count:urls.length},bufferDiagnostics:{...(result?.__bufferDiagnostics || {}),responseType:created?.__typename || null,postError:created?.post?.error || null}};
+10124: }
+10125: __name(r45CreateBufferInstagramStaticPost, "r45CreateBufferInstagramStaticPost");
+10126: 
+10127: 
+10128: function r452DecodeBase64(value) {
+--- lines 10149-10170 ---
+10149: 
+10150: async function r452CreateInstagramPost(env, kind, text, videoUrl, imageUrls) {
+10151:   const channel=await resolveBufferChannel("instagram",env);
+10152:   const parts=[];
+10153:   if (videoUrl) parts.push(`{ video: { url: ${JSON.stringify(videoUrl)} } }`);
+10154:   for (const u of (Array.isArray(imageUrls)?imageUrls:[])) parts.push(`{ image: { url: ${JSON.stringify(u)} } }`);
+10155:   if (!parts.length) throw new Error("R45.2 assets missing");
+10156:   const story=kind === "story_video";
+10157:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10158:   const query=`mutation { createPost(input:{ text:${JSON.stringify(story ? "" : String(text || ""))} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:shareNow aiAssisted:true assets:[${parts.join(",")}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10159:   const result=await bufferGraphQL(query,env);
+10160:   const created=result?.data?.createPost;
+10161:   if (!created?.post) {
+10162:     const e=new Error(created?.message || firstGraphQLError(result) || "R45.2 Buffer create failed");
+10163:     e.payload=result;
+10164:     throw e;
+10165:   }
+10166:   return {post:created.post,channel};
+10167: }
+10168: __name(r452CreateInstagramPost,"r452CreateInstagramPost");
+10169: 
+10170: 
+--- lines 10150-10171 ---
+10150: async function r452CreateInstagramPost(env, kind, text, videoUrl, imageUrls) {
+10151:   const channel=await resolveBufferChannel("instagram",env);
+10152:   const parts=[];
+10153:   if (videoUrl) parts.push(`{ video: { url: ${JSON.stringify(videoUrl)} } }`);
+10154:   for (const u of (Array.isArray(imageUrls)?imageUrls:[])) parts.push(`{ image: { url: ${JSON.stringify(u)} } }`);
+10155:   if (!parts.length) throw new Error("R45.2 assets missing");
+10156:   const story=kind === "story_video";
+10157:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10158:   const query=`mutation { createPost(input:{ text:${JSON.stringify(story ? "" : String(text || ""))} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:shareNow aiAssisted:true assets:[${parts.join(",")}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10159:   const result=await bufferGraphQL(query,env);
+10160:   const created=result?.data?.createPost;
+10161:   if (!created?.post) {
+10162:     const e=new Error(created?.message || firstGraphQLError(result) || "R45.2 Buffer create failed");
+10163:     e.payload=result;
+10164:     throw e;
+10165:   }
+10166:   return {post:created.post,channel};
+10167: }
+10168: __name(r452CreateInstagramPost,"r452CreateInstagramPost");
+10169: 
+10170: 
+10171: async function r453CreateInstagramPost(env, kind, text, videoUrl, imageUrls, mode, dueAt) {
+--- lines 10151-10172 ---
+10151:   const channel=await resolveBufferChannel("instagram",env);
+10152:   const parts=[];
+10153:   if (videoUrl) parts.push(`{ video: { url: ${JSON.stringify(videoUrl)} } }`);
+10154:   for (const u of (Array.isArray(imageUrls)?imageUrls:[])) parts.push(`{ image: { url: ${JSON.stringify(u)} } }`);
+10155:   if (!parts.length) throw new Error("R45.2 assets missing");
+10156:   const story=kind === "story_video";
+10157:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10158:   const query=`mutation { createPost(input:{ text:${JSON.stringify(story ? "" : String(text || ""))} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:shareNow aiAssisted:true assets:[${parts.join(",")}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10159:   const result=await bufferGraphQL(query,env);
+10160:   const created=result?.data?.createPost;
+10161:   if (!created?.post) {
+10162:     const e=new Error(created?.message || firstGraphQLError(result) || "R45.2 Buffer create failed");
+10163:     e.payload=result;
+10164:     throw e;
+10165:   }
+10166:   return {post:created.post,channel};
+10167: }
+10168: __name(r452CreateInstagramPost,"r452CreateInstagramPost");
+10169: 
+10170: 
+10171: async function r453CreateInstagramPost(env, kind, text, videoUrl, imageUrls, mode, dueAt) {
+10172:   const channel=await resolveBufferChannel("instagram",env);
+--- lines 10179-10200 ---
+10179:     }
+10180:     dueAtGraphQL=`dueAt: ${JSON.stringify(parsed.toISOString())}`;
+10181:   }
+10182:   const parts=[];
+10183:   if (videoUrl) parts.push(`{ video: { url: ${JSON.stringify(videoUrl)} } }`);
+10184:   for (const u of (Array.isArray(imageUrls)?imageUrls:[])) parts.push(`{ image: { url: ${JSON.stringify(u)} } }`);
+10185:   if (!parts.length) throw new Error("R45.3 assets missing");
+10186:   const story=kind === "story_video";
+10187:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10188:   const query=`mutation { createPost(input:{ text:${JSON.stringify(story ? "" : String(text || ""))} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:${publishMode} ${dueAtGraphQL} aiAssisted:true assets:[${parts.join(",")}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10189:   const result=await bufferGraphQL(query,env);
+10190:   const created=result?.data?.createPost;
+10191:   if (!created?.post) {
+10192:     const error=new Error(created?.message || firstGraphQLError(result) || "R45.3 Buffer create failed");
+10193:     error.payload=result;
+10194:     throw error;
+10195:   }
+10196:   return {post:created.post,channel};
+10197: }
+10198: __name(r453CreateInstagramPost,"r453CreateInstagramPost");
+10199: 
+10200: async function r453DeleteBufferPost(env, postId) {
+--- lines 10180-10201 ---
+10180:     dueAtGraphQL=`dueAt: ${JSON.stringify(parsed.toISOString())}`;
+10181:   }
+10182:   const parts=[];
+10183:   if (videoUrl) parts.push(`{ video: { url: ${JSON.stringify(videoUrl)} } }`);
+10184:   for (const u of (Array.isArray(imageUrls)?imageUrls:[])) parts.push(`{ image: { url: ${JSON.stringify(u)} } }`);
+10185:   if (!parts.length) throw new Error("R45.3 assets missing");
+10186:   const story=kind === "story_video";
+10187:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10188:   const query=`mutation { createPost(input:{ text:${JSON.stringify(story ? "" : String(text || ""))} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:${publishMode} ${dueAtGraphQL} aiAssisted:true assets:[${parts.join(",")}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10189:   const result=await bufferGraphQL(query,env);
+10190:   const created=result?.data?.createPost;
+10191:   if (!created?.post) {
+10192:     const error=new Error(created?.message || firstGraphQLError(result) || "R45.3 Buffer create failed");
+10193:     error.payload=result;
+10194:     throw error;
+10195:   }
+10196:   return {post:created.post,channel};
+10197: }
+10198: __name(r453CreateInstagramPost,"r453CreateInstagramPost");
+10199: 
+10200: async function r453DeleteBufferPost(env, postId) {
+10201:   const id=String(postId || "").trim();
+--- lines 10181-10202 ---
+10181:   }
+10182:   const parts=[];
+10183:   if (videoUrl) parts.push(`{ video: { url: ${JSON.stringify(videoUrl)} } }`);
+10184:   for (const u of (Array.isArray(imageUrls)?imageUrls:[])) parts.push(`{ image: { url: ${JSON.stringify(u)} } }`);
+10185:   if (!parts.length) throw new Error("R45.3 assets missing");
+10186:   const story=kind === "story_video";
+10187:   const metadata=`metadata: { instagram: { type: ${story ? "story" : "post"} shouldShareToFeed: ${story ? "false" : "true"} } }`;
+10188:   const query=`mutation { createPost(input:{ text:${JSON.stringify(story ? "" : String(text || ""))} channelId:${JSON.stringify(channel.id)} schedulingType:automatic mode:${publishMode} ${dueAtGraphQL} aiAssisted:true assets:[${parts.join(",")}] ${metadata} }) { __typename ... on PostActionSuccess { post { id text status dueAt sentAt externalLink sharedNow shareMode channelService error { message rawError supportUrl } } } ... on MutationError { message } } }`;
+10189:   const result=await bufferGraphQL(query,env);
+10190:   const created=result?.data?.createPost;
+10191:   if (!created?.post) {
+10192:     const error=new Error(created?.message || firstGraphQLError(result) || "R45.3 Buffer create failed");
+10193:     error.payload=result;
+10194:     throw error;
+10195:   }
+10196:   return {post:created.post,channel};
+10197: }
+10198: __name(r453CreateInstagramPost,"r453CreateInstagramPost");
+10199: 
+10200: async function r453DeleteBufferPost(env, postId) {
+10201:   const id=String(postId || "").trim();
+10202:   if (!id) throw new Error("R45.3 postId required");
+--- lines 10195-10216 ---
+10195:   }
+10196:   return {post:created.post,channel};
+10197: }
+10198: __name(r453CreateInstagramPost,"r453CreateInstagramPost");
+10199: 
+10200: async function r453DeleteBufferPost(env, postId) {
+10201:   const id=String(postId || "").trim();
+10202:   if (!id) throw new Error("R45.3 postId required");
+10203:   const query=`mutation { deletePost(input:{ id:${JSON.stringify(id)} }) { __typename ... on DeletePostSuccess { id } ... on VoidMutationError { message } } }`;
+10204:   const result=await bufferGraphQL(query,env);
+10205:   const deleted=result?.data?.deletePost;
+10206:   if (deleted?.__typename !== "DeletePostSuccess" || !deleted?.id) {
+10207:     const error=new Error(deleted?.message || firstGraphQLError(result) || "R45.3 Buffer delete failed");
+10208:     error.payload=result;
+10209:     throw error;
+10210:   }
+10211:   return deleted;
+10212: }
+10213: __name(r453DeleteBufferPost,"r453DeleteBufferPost");
+10214: 
+10215: async function createBufferPlatformVideoPost(draft, platform, mode, dueAt, env) {
+10216:   const asset = draft?.assets?.[platform];
+--- lines 10196-10217 ---
+10196:   return {post:created.post,channel};
+10197: }
+10198: __name(r453CreateInstagramPost,"r453CreateInstagramPost");
+10199: 
+10200: async function r453DeleteBufferPost(env, postId) {
+10201:   const id=String(postId || "").trim();
+10202:   if (!id) throw new Error("R45.3 postId required");
+10203:   const query=`mutation { deletePost(input:{ id:${JSON.stringify(id)} }) { __typename ... on DeletePostSuccess { id } ... on VoidMutationError { message } } }`;
+10204:   const result=await bufferGraphQL(query,env);
+10205:   const deleted=result?.data?.deletePost;
+10206:   if (deleted?.__typename !== "DeletePostSuccess" || !deleted?.id) {
+10207:     const error=new Error(deleted?.message || firstGraphQLError(result) || "R45.3 Buffer delete failed");
+10208:     error.payload=result;
+10209:     throw error;
+10210:   }
+10211:   return deleted;
+10212: }
+10213: __name(r453DeleteBufferPost,"r453DeleteBufferPost");
+10214: 
+10215: async function createBufferPlatformVideoPost(draft, platform, mode, dueAt, env) {
+10216:   const asset = draft?.assets?.[platform];
+10217:   if (!asset?.videoUrl) {
+--- lines 10224-10245 ---
+10224:   const dueAtGraphQL = mode === "customScheduled" ? `dueAt: ${JSON.stringify(dueAt)}` : "";
+10225:   const metadata = platformMetadataGraphQL(
+10226:     platform,
+10227:     draft
+10228:   );
+10229:   const videoMetadata = platform === "youtube" ? `metadata: { title: ${JSON.stringify(cleanYoutubeTitle(draft))} }` : `metadata: { thumbnailOffset: 1000 }`;
+10230:   const query = `
+10231:     mutation {
+10232:       createPost(
+10233:         input: {
+10234:           text: ${JSON.stringify(permanentCommercePublicationText(draft))}
+10235:           channelId: ${JSON.stringify(channel.id)}
+10236:           schedulingType: automatic
+10237:           mode: ${mode}
+10238:           ${dueAtGraphQL}
+10239:           aiAssisted: true
+10240:           assets: [
+10241:             {
+10242:               video: {
+10243:                 url: ${JSON.stringify(asset.videoUrl)}
+10244:                 ${videoMetadata}
+10245:               }
+--- lines 10268-10289 ---
+10268:           }
+10269:         }
+10270:         ... on MutationError {
+10271:           message
+10272:         }
+10273:       }
+10274:     }
+10275:   `;
+10276:   const result = await bufferGraphQL(query, env);
+10277:   const created = result?.data?.createPost;
+10278:   if (!created?.post) {
+10279:     const error = new Error(
+10280:       created?.message || "Buffer n\xE3o criou a publica\xE7\xE3o."
+10281:     );
+10282:     error.bufferDiagnostics = {
+10283:       ...result?.__bufferDiagnostics || {},
+10284:       responseType: created?.__typename || null,
+10285:       mutationMessage: created?.message || null
+10286:     };
+10287:     error.bufferPayload = result;
+10288:     throw error;
+10289:   }
+--- lines 10319-10340 ---
+10319:         error {
+10320:           message
+10321:           rawError
+10322:           supportUrl
+10323:         }
+10324:       }
+10325:     }
+10326:   `;
+10327:   const result = await bufferGraphQL(query, env);
+10328:   const post = result?.data?.post;
+10329:   if (!post?.id) {
+10330:     const error = new Error(
+10331:       "Buffer n\xE3o retornou o post solicitado."
+10332:     );
+10333:     error.bufferDiagnostics = result?.__bufferDiagnostics || null;
+10334:     error.bufferPayload = result;
+10335:     throw error;
+10336:   }
+10337:   return {
+10338:     post,
+10339:     bufferDiagnostics: {
+10340:       ...result?.__bufferDiagnostics || {},
+--- lines 10686-10707 ---
+10686:   } catch (error) {
+10687:     console.log(
+10688:       "Erro hist\xF3rico:",
+10689:       error
+10690:     );
+10691:   }
+10692: }
+10693: __name(saveHistory, "saveHistory");
+10694: async function bufferCreatePost(draft, env) {
+10695:   return bufferCreateWithAssets(
+10696:     draft,
+10697:     env,
+10698:     [
+10699:       {
+10700:         image: {
+10701:           url: draft.imageUrl
+10702:         }
+10703:       }
+10704:     ],
+10705:     "post"
+10706:   );
+10707: }
+--- lines 10757-10778 ---
+10757:       )}
+10758:               }
+10759:             }
+10760:           `;
+10761:     }
+10762:     return "";
+10763:   }).filter(Boolean).join(",");
+10764:   const query = `mutation {
+10765:       createPost(
+10766:         input: {
+10767:           text: ${JSON.stringify(
+10768:     draft.text
+10769:   )}
+10770: 
+10771:           channelId: "${IG}"
+10772: 
+10773:           schedulingType: automatic
+10774: 
+10775:           mode: addToQueue
+10776: 
+10777:           aiAssisted: true
+10778: 
+--- lines 10778-10799 ---
+10778: 
+10779:           assets: [
+10780:             ${assetGraphQL}
+10781:           ]
+10782: 
+10783:           metadata: {
+10784:             instagram: {
+10785:               type: ${instagramType}
+10786:               shouldShareToFeed: true
+10787:             }
+10788:           }
+10789:         }
+10790:       ) {
+10791:         ... on PostActionSuccess {
+10792:           post {
+10793:             id
+10794:             text
+10795:             status
+10796:             dueAt
+10797:           }
+10798:         }
+10799: 
+--- lines 11771-11792 ---
+11771:         const publicationBox =
+11772:           document.createElement("div");
+11773:         publicationBox.className =
+11774:           "publication-box";
+11775: 
+11776:         const publicationStatus =
+11777:           document.createElement("div");
+11778:         publicationStatus.className =
+11779:           "publication-status";
+11780: 
+11781:         const publication =
+11782:           asset.publication || null;
+11783: 
+11784:         if (publication) {
+11785:           publicationStatus.textContent =
+11786:             "Publica\xE7\xE3o: " +
+11787:             (publication.status || "\u2014") +
+11788:             (
+11789:               publication.dueAt
+11790:                 ? " | " +
+11791:                   new Date(
+11792:                     publication.dueAt
+--- lines 11812-11833 ---
+11812:           publicationStatus
+11813:         );
+11814: 
+11815:         if (
+11816:           approvalStatus === "approved" &&
+11817:           !(
+11818:             publication &&
+11819:             publication.bufferPostId &&
+11820:             !["error", "cancelled"].includes(
+11821:               String(
+11822:                 publication.status || ""
+11823:               ).toLowerCase()
+11824:             )
+11825:           )
+11826:         ) {
+11827:           const publishActions =
+11828:             document.createElement("div");
+11829:           publishActions.className =
+11830:             "publish-actions";
+11831: 
+11832:           publishActions.append(
+11833:             button(
+--- lines 12245-12266 ---
+12245:         () =>
+12246:           adjust(
+12247:             draft,
+12248:             textarea.value
+12249:           )
+12250:       ),
+12251: 
+12252:       button(
+12253:         "CANCELAR",
+12254:         "gray",
+12255:         () =>
+12256:           editBox.style.display =
+12257:             "none"
+12258:       )
+12259:     );
+12260: 
+12261:     card.append(editBox);
+12262: 
+12263:     root.append(card);
+12264:   });
+12265: }
+12266: 
+--- lines 12289-12310 ---
+12289:       " somente em " +
+12290:       label +
+12291:       "?\\n\\nEsta a\xE7\xE3o enviar\xE1 o v\xEDdeo aprovado ao Buffer. As outras plataformas n\xE3o ser\xE3o afetadas."
+12292:     )
+12293:   ) return;
+12294: 
+12295:   const data =
+12296:     await api(
+12297:       "/api/platform-publish",
+12298:       {
+12299:         method: "POST",
+12300:         headers: {
+12301:           "content-type":
+12302:             "application/json"
+12303:         },
+12304:         body:
+12305:           JSON.stringify({
+12306:             id: draft.id,
+12307:             platform,
+12308:             mode,
+12309:             dueAt
+12310:           })
+--- lines 12376-12397 ---
+12376: }
+12377: 
+12378: async function refreshPublication(
+12379:   draft,
+12380:   platform
+12381: ) {
+12382:   const data =
+12383:     await api(
+12384:       "/api/platform-publication-status" +
+12385:       "?id=" +
+12386:       encodeURIComponent(draft.id) +
+12387:       "&platform=" +
+12388:       encodeURIComponent(platform)
+12389:     );
+12390: 
+12391:   if (data.ok) {
+12392:     alert(
+12393:       "Status atualizado: " +
+12394:       (
+12395:         data.publication?.status ||
+12396:         "\u2014"
+12397:       ) +
