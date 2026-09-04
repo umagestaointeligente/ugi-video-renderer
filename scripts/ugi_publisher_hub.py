@@ -8,7 +8,7 @@ The script is intentionally fail-closed:
 - project must be UGI;
 - Buffer must remain the exclusive publisher;
 - Metricool must remain analytics-only;
-- Worker health and Buffer channels must be proven before mutation;
+- Worker health must be proven before mutation; Buffer is proven on the actual per-post create/readback path;
 - content -> render -> draft correlation must be proven before approval;
 - a publication is successful only after Buffer readback returns a post id,
   scheduled state and the exact requested slot.
@@ -336,9 +336,10 @@ def process_manifest(
     if not health.get("ok"):
         raise RuntimeError("WORKER_HEALTH_FAIL")
 
-    channels = client.get("/api/buffer/channels")
-    if not channels.get("ok"):
-        raise RuntimeError("BUFFER_CHANNELS_FAIL")
+    # Buffer channel discovery is not a global hard gate. The Worker owns
+    # canonical channel resolution; the authoritative proof is the actual
+    # per-post /api/platform-publish response followed by scheduled readback.
+    # A real Buffer create/readback failure still fails closed below.
 
     ready, resolved = resolve_ready_drafts(client, rows, wait_seconds)
     if not ready:
