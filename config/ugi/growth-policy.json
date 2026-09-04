@@ -1,17 +1,29 @@
 {
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "policy_id": "ugi-growth-engine",
-  "effective_date": "2026-08-23",
+  "effective_date": "2026-09-04",
   "north_star": {"organic_views_per_content_platform": 10000, "guaranteed": false, "distribution_ladder": [100,500,1000,3000,10000]},
   "optimization_priority": ["retention_choose_to_view","distribution","engagement_save_share","qualified_store_traffic","conversion_revenue"],
   "pre_generation_inputs": ["ugi_recent_telemetry","platform_native_analytics","current_platform_trends","search_signals","market_management_ai_signals","creative_novelty_history","platform_audience_format_behavior","commerce_inventory","dynamic_time_day_signals"],
   "platform_independence": {"enabled": true, "default_cross_platform_replication": false, "require_evidence_for_reuse": true},
+  "distribution": {
+    "state_ref": "config/ugi/distribution-state.json",
+    "active_distribution_channel_count": 3,
+    "active_platforms": ["linkedin","instagram","tiktok"],
+    "priority": ["linkedin","instagram","tiktok"],
+    "youtube_buffer_status": "PAUSED",
+    "youtube_strategy_abandoned": false,
+    "reactivation_requires_new_decision_or_evidence": true
+  },
+  "editorial_trend_policy": "config/ugi/editorial-trend-gate-v2.4.json",
   "integration_roles": {
     "publisher": {
       "primary": "buffer",
       "metricool_allowed": false,
       "required_actions": ["schedule","publish","publication_status","publication_readback"],
-      "hard_rule": "Metricool MUST NOT create, update, schedule, publish or retry UGI social posts. Buffer is the official publishing control plane."
+      "active_platforms": ["linkedin","instagram","tiktok"],
+      "paused_platforms": ["youtube"],
+      "hard_rule": "Metricool MUST NOT create, update, schedule, publish or retry UGI social posts. Buffer is the official publishing control plane for active UGI Buffer channels. YouTube remains paused in Buffer until a new explicit decision or qualifying evidence."
     },
     "analytics": {
       "primary": "metricool",
@@ -24,17 +36,34 @@
       "publishing_default": false
     }
   },
+  "linkedin": {
+    "status": "ACTIVE",
+    "page_name": "UGI — Uma Gestão Inteligente",
+    "page_url": "https://www.linkedin.com/company/uma-gestao-inteligente/",
+    "company_page_only": true,
+    "personal_profile_publication_forbidden": true,
+    "initial_posts_baseline": 0,
+    "maturity": "NEW_CHANNEL",
+    "role": ["authority","management_intelligence","career","leadership","strategy","ai_applied_to_work","b2b_b2c_relationship","future_career360_acquisition"],
+    "content_principle": "A NOTÍCIA É O GANCHO. A INTELIGÊNCIA DE GESTÃO É O PRODUTO.",
+    "management_angle_required": true,
+    "virality_alone_never_sufficient": true,
+    "metrics": ["impressions","reach","engagement_rate","comments","reposts","saves_when_available","followers_generated","clicks","messages","authority_signals"],
+    "baseline_rule": "Evaluate LinkedIn against its own maturity-adjusted baseline; do not kill the channel for low initial audience."
+  },
   "tiktok": {"experimental_duration_seconds":{"min":7,"max":12},"frame_zero_hook":true,"slow_intro":false,"zero_view_action":"diagnose_eligibility_processing_before_delete_or_repost","metrics":["views","for_you_share","avg_watch_time","completion","likes","comments","shares","search_source","profile_source"]},
-  "instagram": {"formats":["reel","carousel","static"],"test_save_share_carousels":true,"avoid_repetitive_visual_templates":true,"metrics":["reach","non_follower_reach","views","watch_retention","saves","shares","comments","profile_store_actions"]},
-  "youtube": {"formats":["short_video"],"optimize":["choose_to_view","average_view_duration","average_percentage_viewed","satisfaction_engagement"],"micro_winner_strategy":"descendants_not_copies","metrics":["shown_in_feed","views","choose_to_view","retention","likes","comments","shares","downstream_traffic"]},
+  "instagram": {"formats":["story","reel","carousel","static"],"test_save_share_carousels":true,"avoid_repetitive_visual_templates":true,"metrics":["reach","non_follower_reach","views","watch_retention","saves","shares","comments","profile_store_actions"]},
+  "youtube": {"buffer_status":"PAUSED","strategy_status":"PRESERVED","formats":["short_video"],"optimize":["choose_to_view","average_view_duration","average_percentage_viewed","satisfaction_engagement"],"micro_winner_strategy":"descendants_not_copies","metrics":["shown_in_feed","views","choose_to_view","retention","likes","comments","shares","downstream_traffic"],"reactivation":"evidence_based_only"},
   "creative_novelty": {"window_days":30,"compact_index_required":true,"fields":["date","platform","content_id","topic","hook","first_line","script_hash","script_summary","visual_concept","scene_summary","cta","product_id","performance"]},
   "commerce_gate": {"required_for_commercial_content":true,"sequence":["topic","matching_material","product_cover","ugi_store","checkout_destination_valid","platform_cta","publication"],"fail_closed":true,"product_topic_semantic_match":true},
-  "publication_evidence": {"distinguish_scheduled_published_verified":true,"verified_requires_readback":true,"no_unproven_pass":true,"publisher_source":"buffer"},
+  "publication_evidence": {"distinguish_scheduled_published_verified":true,"verified_requires_readback":true,"no_unproven_pass":true,"publisher_source":"buffer","active_platforms_only":true},
   "publication_recovery": {
     "enabled": true,
     "policy": "same_asset_same_caption_no_duplicate_retry_only_on_delivery_failure",
     "publisher": "buffer",
     "metricool_retry_forbidden": true,
+    "active_platforms_only": true,
+    "paused_platform_retry_forbidden": true,
     "max_attempts_total": 4,
     "attempts": [
       {"attempt":1,"offset_minutes":0,"label":"primary"},
@@ -43,11 +72,22 @@
       {"attempt":4,"offset_minutes":210,"label":"retry_plus_2h"}
     ],
     "retryable_failure_classes": ["platform_unavailable","publisher_timeout","network_transport_error","provider_5xx","temporary_rate_limit","scheduled_post_not_delivered"],
-    "non_retryable_failure_classes": ["content_policy_rejection","copyright_or_rights_block","account_restriction","invalid_media","invalid_credentials","commerce_gate_fail","novelty_gate_fail","manual_rejection"],
-    "pre_retry_checks": ["verify_not_already_published","verify_no_duplicate_post_exists","verify_asset_unchanged","verify_caption_unchanged","verify_account_connected","verify_media_still_valid"],
+    "non_retryable_failure_classes": ["content_policy_rejection","copyright_or_rights_block","account_restriction","invalid_media","invalid_credentials","commerce_gate_fail","novelty_gate_fail","manual_rejection","platform_distribution_paused"],
+    "pre_retry_checks": ["verify_not_already_published","verify_no_duplicate_post_exists","verify_asset_unchanged","verify_caption_unchanged","verify_account_connected","verify_media_still_valid","verify_platform_is_active_distribution_channel"],
     "success_stop_condition": "published_and_verified_readback",
     "final_failure_action": "record_incident_and_skip_until_next_planned_slot",
     "cross_platform_independent": true
+  },
+  "career_products": {
+    "sales_status": "DO_NOT_SELL_YET",
+    "sequence": ["AUTHORITY","AUDIENCE","LEARNING","BETA","PRODUCT","MONETIZATION"],
+    "future_linkedin_acquisition_products": ["LSI Career 360","Career Agent B2C","Recruiter Agent B2B","LSI Talent Match"],
+    "must_not_dominate_initial_communication": true
+  },
+  "analytics_baseline": {
+    "raw_cross_platform_comparison_forbidden": true,
+    "context_dimensions": ["channel_maturity","audience_size","format","strategic_objective","time_since_activation","reach","retention","interactions","shares","saves","followers_generated","clicks","messages","authority_signals"],
+    "kill_retest_scale_requires_real_data": true
   },
   "experiment_loop":["observe","hypothesize","generate","rights_safety_quality_gates","commerce_gate","publish_via_buffer","buffer_readback","measure_via_metricool_and_native","learn","update_weights"],
   "lifecycle_events":["STUDY_COMPLETE","CONTENT_READY","MATERIAL_READY","GATES_PASS","GATES_FAIL","BUFFER_SCHEDULE_CONFIRMED","T_MINUS_15","PUBLISHING","PUBLISHED","VERIFIED","RETRY_30M","RETRY_90M","RETRY_210M","PERFORMANCE_CHECKPOINT","INCIDENT"]
