@@ -490,6 +490,7 @@ def process_manifest(
             {
                 "id": draft_id,
                 "platform": plat,
+                "format": row.get("format"),
                 "mode": "customScheduled",
                 "dueAt": due,
             },
