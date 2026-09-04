@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T07:23:21.626144+00:00",
+  "checkedAt": "2026-09-04T07:38:49.499904+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 3,
+  "delivered": 2,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -52,28 +52,6 @@
         "ok": true,
         "httpStatus": 200,
         "finalUrl": "https://www.instagram.com/reel/DczegDkoNcC/"
-      }
-    },
-    {
-      "receipt": "control-plane/publisher-hub/receipts/UGI-20260902-PLATFORM-AGENDA-R1.json",
-      "contentId": "UGI-20260902-YT-NATIVE-GTAVI-LAUNCH",
-      "platform": "youtube",
-      "kind": "video",
-      "draftId": "ugi-20260902112432-1fd8ca34846e",
-      "bufferPostId": "6a981d93bd40efcdd2fd9f3b",
-      "dueAt": "2026-09-02T19:30:00+00:00",
-      "readbackHttp": 200,
-      "bufferStatus": "sent",
-      "status": "published",
-      "sentAt": "2026-09-02T19:30:43.771Z",
-      "externalLink": "https://www.youtube.com/shorts/vx9hgO_rqZo",
-      "error": null,
-      "state": "DELIVERED",
-      "externalProof": {
-        "attempted": true,
-        "ok": true,
-        "httpStatus": 200,
-        "finalUrl": "https://www.youtube.com/shorts/vx9hgO_rqZo"
       }
     }
   ]
