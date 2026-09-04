@@ -2,10 +2,10 @@
   "schema": "CENA_CERTA_CERTIFIED_FACTORY_SNAPSHOT_V2",
   "source_repository": "gitlab:umagestaointeligente-group/umagestaointeligente-project",
   "source_branch": "feat/cena-certa-render-factory-v2",
-  "source_sha": "4cebcd93f18b091136c4abcc1eb868ff1cddddb8",
+  "source_sha": "8cd954c4e4bb2a8f0313be9e6622d85bd707fe93",
   "snapshot_policy": "IMMUTABLE_PIN_FAIL_CLOSED",
   "snapshot_complete": false,
-  "certification_state": "PENDING_STORY_CTA_SEAL_AND_SMOKE",
+  "certification_state": "PENDING_STORY_CTA_SEAL_AND_FULL_8_PLUS_2_SMOKE",
   "runtime_visual_assets_required": ["story", "cta"],
   "title_anchor_policy": "DERIVED_FROM_APPROVED_STORY_MASTER",
   "candidate_pool_size": 10,
@@ -16,5 +16,6 @@
   "render_stage_target_seconds": 480,
   "scheduler_target_seconds": 180,
   "end_to_end_target_seconds": 660,
+  "continuity_fault_matrix": "PASS_7_CASES_32_PLACEMENTS_RUN_33913510713",
   "publication_triggered_by_snapshot": false
 }
