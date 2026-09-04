@@ -100,7 +100,7 @@ Deno.serve(async (req) => {
       const { error: removeError } = await service.storage.from(BUCKET).remove([doc.storage_object_path]);
       if (!removeError) {
         rawDeleted = true;
-        await service.from("career_documents").update({ storage_object_path: null, raw_file_retention_until: now }).eq("id", doc.id).eq("user_id", user.id);
+        await service.from("career_documents").update({ storage_object_path: null, raw_file_retention_until: now, file_status: "deleted", deleted_at: now }).eq("id", doc.id).eq("user_id", user.id);
       }
     }
   }
