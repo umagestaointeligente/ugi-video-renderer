@@ -1,0 +1,34 @@
+{
+  "ok": false,
+  "provider": "BUFFER",
+  "platform": "linkedin",
+  "target": "UGI — Uma Gestão Inteligente",
+  "create": {
+    "ok": false,
+    "version": "lola-v8-r45-6-linkedin-buffer-text-2026-09-04",
+    "route": "/api/linkedin-text-publish",
+    "errorClass": "linkedin_buffer_publish_failed",
+    "stage": "channel_discovery",
+    "error": "Buffer HTTP 429: Too many requests from this client. Please try again later.",
+    "bufferDiagnostics": {
+      "httpStatus": 429,
+      "httpOk": false,
+      "requestId": "a35e74fe2ce218ea-IAD",
+      "rateLimitRemaining": "0",
+      "graphqlErrors": [
+        {
+          "message": "Too many requests from this client. Please try again later.",
+          "path": null,
+          "extensions": {
+            "code": "RATE_LIMIT_EXCEEDED",
+            "window": "24h"
+          }
+        }
+      ]
+    },
+    "publicationTriggered": false,
+    "bufferMutationPerformed": false
+  },
+  "readback": null,
+  "timestamp": "2026-09-04T16:44:06.851934+00:00"
+}
