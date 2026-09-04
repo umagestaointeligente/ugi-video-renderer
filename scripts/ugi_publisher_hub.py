@@ -35,6 +35,7 @@ RECEIPTS = ROOT / "control-plane" / "publisher-hub" / "receipts"
 STATUS = ROOT / "control-plane" / "publisher-hub" / "status" / "latest.json"
 GROWTH_POLICY = ROOT / "config" / "ugi" / "growth-policy.json"
 ROUTING_POLICY = ROOT / "config" / "ugi" / "integration-routing.json"
+DISTRIBUTION_STATE = ROOT / "config" / "ugi" / "distribution-state.json"
 
 DEFAULT_WORKER_URL = "https://lola-operacional-ugi.umagestaointeligente.workers.dev"
 STALE_QUEUE_HOURS = int(os.getenv("UGI_QUEUE_STALE_HOURS", "6"))
@@ -327,6 +328,35 @@ def _scheduled_readback_pass(readback: dict[str, Any], requested_due: str) -> tu
     return passed, publication
 
 
+
+def _filter_distribution_rows(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Allow publication only to currently active Buffer distribution platforms.
+
+    Paused platforms are intentionally skipped without blocking active platforms in
+    the same historical manifest. Unknown platforms fail closed by being skipped
+    whenever an explicit active set exists.
+    """
+    if not DISTRIBUTION_STATE.exists():
+        return rows, []
+    state = load_json(DISTRIBUTION_STATE)
+    buffer_state = state.get("buffer") or {}
+    active = {str(x).lower() for x in (buffer_state.get("active_platforms") or [])}
+    paused = {str(x).lower() for x in (buffer_state.get("paused_platforms") or [])}
+    allowed: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    for row in rows:
+        platform = str(row.get("platform") or "").lower()
+        if platform in paused or (active and platform not in active):
+            skipped.append({
+                "contentId": row.get("contentId"),
+                "platform": platform,
+                "dueAt": row.get("dueAt"),
+                "reason": "PLATFORM_DISTRIBUTION_PAUSED_OR_INACTIVE",
+            })
+            continue
+        allowed.append(row)
+    return allowed, skipped
+
 def process_manifest(
     client: WorkerClient,
     manifest: Path,
@@ -338,6 +368,27 @@ def process_manifest(
     rows = validate_manifest(data, manifest)
     mf_hash = canonical_hash(manifest)
     receipt = receipt_path(data, manifest)
+
+    rows, distribution_skipped = _filter_distribution_rows(rows)
+    if not rows:
+        result = {
+            "ok": True,
+            "retryable": False,
+            "state": "SKIPPED_BY_DISTRIBUTION_POLICY",
+            "project": "UGI",
+            "publisher": "BUFFER",
+            "manifest": str(manifest.relative_to(ROOT)),
+            "manifestSha256": mf_hash,
+            "publicationTriggered": False,
+            "paymentTriggered": False,
+            "expectedTargets": 0,
+            "results": [],
+            "distributionSkipped": distribution_skipped,
+            "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(),
+        }
+        receipt.parent.mkdir(parents=True, exist_ok=True)
+        receipt.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return result
 
     if is_terminal_success(receipt, mf_hash):
         previous = load_json(receipt)
