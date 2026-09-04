@@ -1,0 +1,161 @@
+{
+  "project": "UGI",
+  "policyId": "ugi-editorial-trend-gate-v2-4",
+  "effectiveDate": "2026-09-04",
+  "status": "canonical_for_new_content",
+  "predecessor": "config/ugi/editorial-trend-gate-v2.3.json",
+  "nonRegression": true,
+  "distributionStateRef": "config/ugi/distribution-state.json",
+  "purpose": "Require general-market and platform-native demand research before editorial lock for active UGI channels, including a dedicated LinkedIn management-intelligence gate, while preserving factual fit, platform differentiation, per-platform topical novelty and publication safety gates.",
+  "trendWindowsHours": {
+    "platformNativePreferred": 24,
+    "generalPrimary": 72,
+    "generalSecondary": 168
+  },
+  "minimumTopicScore": 70,
+  "linkedin": {
+    "trendScoreThreshold": 70,
+    "managementAngleRequired": true,
+    "viralityAloneNeverSufficient": true,
+    "contentQuestion": "O que isso ensina para quem administra, lidera, trabalha ou toma decisões?",
+    "principle": "A NOTÍCIA É O GANCHO. A INTELIGÊNCIA DE GESTÃO É O PRODUTO.",
+    "intelligenceFlow": ["RESEARCH","DETECT_TRENDS","CLASSIFY","TRANSFORM_TO_INTELLIGENCE","PRODUCE","PUBLISH","MEASURE","LEARN","IMPROVE"]
+  },
+  "topicCooldown": {
+    "days": 15,
+    "scope": "PER_PLATFORM",
+    "formatsShareHistory": true,
+    "instagramFormats": ["story", "reel", "carousel", "static"],
+    "sameTopicOnDifferentPlatformAutomaticallyBlocked": false,
+    "historyRegistry": "control-plane/anti-repeat/platform-topic-history.json",
+    "policy": "control-plane/policies/UGI_ANTI_REPEAT_V1.md",
+    "ambiguousHistory": "FAIL_CLOSED_OR_SELECT_NEXT_CLEAN_TOPIC",
+    "extraordinaryExceptionState": "EDITORIAL_REPEAT_EXCEPTION_BREAKING"
+  },
+  "requiredFlow": [
+    "general_trend_scan",
+    "linkedin_native_or_evidenced_signal_scan",
+    "tiktok_native_scan",
+    "instagram_native_scan_or_evidenced_proxy",
+    "cross_platform_corroboration",
+    "cross_platform_dedup",
+    "normalize_topic_and_entities",
+    "same_platform_15d_topic_history_lookup",
+    "anti_repeat_decision",
+    "topic_score",
+    "management_angle_gate_for_linkedin",
+    "editorial_allocation",
+    "fact_verification",
+    "script",
+    "approved_video_or_native_post_pattern",
+    "frame_or_asset_qa",
+    "publication",
+    "readback",
+    "platform_topic_history_update",
+    "analytics",
+    "platform_native_vs_general_learning",
+    "kill_retest_scale"
+  ],
+  "editorialLockGate": {
+    "generalRadarRequired": true,
+    "platformSignalRequired": ["linkedin", "tiktok", "instagram"],
+    "allowUnavailableState": true,
+    "unavailableStateMustIncludeEvidence": true,
+    "crossPlatformDedupRequired": true,
+    "samePlatform15dTopicHistoryRequired": true,
+    "storiesIncludedInTopicHistory": true,
+    "factVerificationRequired": true,
+    "linkedinManagementAngleRequired": true,
+    "activeDistributionOnly": true
+  },
+  "dailyAllocation": {
+    "principle": "GENERAL_DEMAND_PLUS_PLATFORM_NATIVE_DEMAND",
+    "perPlatformCoreTarget": {
+      "generalOrMarketSlot": 1,
+      "platformNativeTrendSlot": 1
+    },
+    "linkedin": "prioritize authority and management intelligence; do not force volume before baseline evidence",
+    "instagramStories": "supporting_layer_not_required_to_follow_two-core-post split_but_subject_to_same_platform_15d_topic_cooldown",
+    "nativeTrendCrossPostDefault": false,
+    "nativeTrendCrossPostOverride": "allowed only when the same topic independently qualifies as a native signal on the second platform, that platform has clean 15d topic history, and the override is recorded"
+  },
+  "platformSources": {
+    "linkedin": {
+      "primary": ["LinkedIn native feed/topic signals when surfaced", "LinkedIn editorial/news signals when surfaced"],
+      "fallback": ["public professional conversation velocity", "cross-source corroboration", "search and market signals with clear management relevance"],
+      "signalTypes": ["professional_topics", "management_conversation", "career_workplace_signals", "leadership_strategy_ai_work_signals"],
+      "confidence": "DIRECT_NATIVE_OR_EVIDENCED_PROXY",
+      "rule": "never publish a topic only because it is viral; management angle and minimum score are mandatory"
+    },
+    "tiktok": {
+      "primary": ["TikTok Creative Center Trends", "TikTok native inspiration/topic signals"],
+      "signalTypes": ["hashtags", "videos", "songs", "keywords", "regional_popularity"],
+      "confidence": "DIRECT_NATIVE_WHEN_AVAILABLE"
+    },
+    "instagram": {
+      "primary": ["Instagram Reels Trends when surfaced", "trending_audio", "trending_topics", "trending_hashtags"],
+      "fallback": ["Reels/Explore native observations", "public engagement-velocity proxies", "cross-source corroboration"],
+      "confidence": "DIRECT_NATIVE_OR_EVIDENCED_PROXY",
+      "rule": "never fabricate a platform-wide rank when only proxy evidence exists"
+    },
+    "youtube": {
+      "distributionStatus": "BUFFER_PAUSED",
+      "researchStatus": "OPTIONAL_STRATEGIC_RESEARCH_ONLY",
+      "primary": ["YouTube Studio Trends/Research"],
+      "rule": "research may be preserved for future strategy, but no Buffer publication is allowed while paused"
+    }
+  },
+  "scoring": {
+    "platformDemandVelocity": 25,
+    "naturalManagementUGIFit": 20,
+    "factualConfidence": 15,
+    "visualStrength": 10,
+    "freshness": 10,
+    "audienceRelevance": 10,
+    "shareSaveCommentPotential": 5,
+    "novelty30d": 5
+  },
+  "hardGates": [
+    "no_forced_management_angle",
+    "linkedin_management_angle_required",
+    "linkedin_trend_score_must_be_at_least_70",
+    "no_unverified_factual_claims",
+    "contextual_visual_required_for_real_subjects_when_visual_format_is_used",
+    "same_platform_topic_cooldown_15d",
+    "stories_participate_in_same_platform_topic_cooldown",
+    "extraordinary_repeat_requires_durable_exception_record",
+    "no_native_trend_duplication_across_platforms_by_default",
+    "no_trend_selected_only_for_raw_volume",
+    "no_paid_dependency_or_incremental_cost_without_explicit_authorization",
+    "preserve_existing_instagram_tiktok_posts_unless_change_is_required",
+    "youtube_buffer_publication_forbidden_while_paused",
+    "linkedin_personal_profile_publication_forbidden",
+    "scheduled_requires_publisher_id_dueAt_and_scheduled_readback",
+    "published_requires_terminal_delivery_evidence"
+  ],
+  "learning": {
+    "compareCohorts": ["GENERAL", "LINKEDIN_NATIVE_OR_PROXY", "TIKTOK_NATIVE", "INSTAGRAM_NATIVE"],
+    "metrics": [
+      "retention_1_3s_when_applicable",
+      "completion_rate_when_applicable",
+      "rewatch_when_available",
+      "profile_visits_per_100_views_or_impressions",
+      "follows_per_100_views_or_impressions",
+      "comments_per_100_views_or_impressions",
+      "shares_per_100_views_or_impressions",
+      "saves_per_100_views_or_impressions_when_available",
+      "clicks",
+      "messages",
+      "authority_signals",
+      "total_distribution"
+    ],
+    "linkedinBaseline": "own_maturity_adjusted_baseline",
+    "rule": "trend alignment is a demand hypothesis, not a reach guarantee; scale only from measured platform results"
+  },
+  "durableEvidence": {
+    "dailySnapshotPath": "control-plane/trend-intelligence/YYYY-MM-DD.json",
+    "topicHistoryPath": "control-plane/anti-repeat/platform-topic-history.json",
+    "requiredFields": ["capturedAt", "region", "generalSignals", "platformSignals", "sources", "scores", "selectedTopics", "dedupDecision", "samePlatform15dHistoryDecision", "factStatus"]
+  },
+  "preserveExistingScheduledPosts": true
+}
