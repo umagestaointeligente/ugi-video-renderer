@@ -2,7 +2,7 @@
   "project": "UGI",
   "component": "PLATFORM_TOPIC_HISTORY",
   "schemaVersion": "1.0",
-  "updatedAt": "2026-09-04T03:48:46.686366+00:00",
+  "updatedAt": "2026-09-04T03:59:16.739476+00:00",
   "cooldownDays": 15,
   "scope": "PER_PLATFORM",
   "status": "SEEDED_BACKFILL_IN_PROGRESS",
@@ -16,7 +16,7 @@
     "complete": false,
     "reason": "Registry introduced on 2026-09-02. Older durable receipts/manifests must be progressively backfilled. Current editorial selection must also reconcile publisher receipts, manifests and commands before lock.",
     "failClosedOnCredibleMissingHistoryRisk": true,
-    "lastReceiptSyncAt": "2026-09-04T03:48:46.686366+00:00",
+    "lastReceiptSyncAt": "2026-09-04T03:59:16.739476+00:00",
     "receiptSyncActive": true
   },
   "unresolvedRisks": [
@@ -330,6 +330,204 @@
       "commandRef": "control-plane/commands/ugi-20260827-instagram-morning.json",
       "cooldownEligible": true,
       "cooldownUntil": "2026-09-11T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "instagram",
+      "topicKey": "lz dark matter signal decision under uncertainty",
+      "primaryEntities": [],
+      "eventOrCase": "LUX-ZEPLIN dark-matter search result reported 2026-09-01",
+      "managementThesis": "Gestão sob incerteza exige separar sinal, evidência e decisão antes de transformar hipótese em conclusão.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260904-IG-0900-LZ-DARK-MATTER"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T12:00:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a359f82940622ebb35ffb",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-instagram-story-lz-dark-matter.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "instagram",
+      "topicKey": "tyson beef price cost margin elasticity",
+      "primaryEntities": [],
+      "eventOrCase": "Tyson Foods beef pricing and cattle-cost pressure reported 2026-09-03",
+      "managementThesis": "Preço alto só cria resultado quando a estrutura de custo, volume e elasticidade permite capturar margem.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260904-IG-1030-TYSON-MARGIN"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T13:30:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a35a582940622ebb360af",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-instagram-story-tyson-margin.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "tiktok",
+      "topicKey": "tiktok joblife authentic employer brand",
+      "primaryEntities": [],
+      "eventOrCase": "TikTok Next 2026 identifies #joblife as an evolution of #worklife",
+      "managementThesis": "Marca empregadora sustentável nasce da experiência vivida e só depois da comunicação.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260904-TT-1215-JOBLIFE"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T15:15:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a35aacfb379682d06d661",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-tiktok-joblife.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "instagram",
+      "topicKey": "anvisa unilever quality compliance capacity",
+      "primaryEntities": [],
+      "eventOrCase": "Anvisa preventive suspension of cleaning-product manufacturing at Unilever Vinhedo reported 2026-09-02",
+      "managementThesis": "Compliance deixa de ser função de suporte quando uma falha pode limitar a capacidade de produzir.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260904-IG-1245-ANVISA-UNILEVER"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T15:45:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a35b0cfb379682d06d6e9",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-instagram-reel-anvisa-unilever.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "youtube",
+      "topicKey": "state of play launch portfolio attention",
+      "primaryEntities": [],
+      "eventOrCase": "PlayStation State of Play two-show recap with more than 30 games on 2026-09-03",
+      "managementThesis": "Portfólio amplo exige arquitetura de atenção: hierarquia, sequência e memória são tão importantes quanto quantidade de lançamentos.",
+      "formats": [
+        "short"
+      ],
+      "contentIds": [
+        "UGI-20260904-YT-1630-STATE-OF-PLAY"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T19:30:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a35b53134b0c21abe870e",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-youtube-state-of-play.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "instagram",
+      "topicKey": "snowflake ai usage revenue strategy",
+      "primaryEntities": [],
+      "eventOrCase": "Snowflake earnings and AI contribution commentary reported 2026-09-03",
+      "managementThesis": "Tecnologia só vira estratégia quando pode ser conectada a comportamento de uso, receita, custo ou produtividade.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260904-IG-1800-SNOWFLAKE-AI"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T21:00:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a35ba3134b0c21abe877c",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-instagram-story-snowflake-ai.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "instagram",
+      "topicKey": "lululemon premium brand innovation novelty",
+      "primaryEntities": [],
+      "eventOrCase": "Lululemon outlook cut and Americas weakness reported 2026-09-03",
+      "managementThesis": "Marca premium sustenta preço quando entrega novidade e relevância; desconto não substitui inovação de produto.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260904-IG-1915-LULULEMON"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T22:15:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a35c0cfb379682d06d793",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-instagram-reel-lululemon.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "tiktok",
+      "topicKey": "microdrama atwist short video business model",
+      "primaryEntities": [],
+      "eventOrCase": "aTwist microdrama launch reported 2026-09-03",
+      "managementThesis": "Mudança de hábito de consumo pode criar nova unidade econômica, nova cadência de produto e nova lógica de monetização.",
+      "formats": [
+        "video"
+      ],
+      "contentIds": [
+        "UGI-20260904-TT-1945-MICRODRAMAS"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T22:45:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a35c582940622ebb36303",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-tiktok-microdramas.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
+      "repeatException": null
+    },
+    {
+      "platform": "youtube",
+      "topicKey": "gsm vinfast capital heavy growth unit economics",
+      "primaryEntities": [],
+      "eventOrCase": "GSM international expansion plans reported 2026-09-03",
+      "managementThesis": "Modelos intensivos em ativos podem acelerar controle e expansão, mas exigem disciplina maior de capital, utilização e unit economics.",
+      "formats": [
+        "short"
+      ],
+      "contentIds": [
+        "UGI-20260904-YT-2030-VINFAST-GSM"
+      ],
+      "audienceDate": "2026-09-04",
+      "dueAt": "2026-09-04T23:30:00.000Z",
+      "state": "PROVEN_SCHEDULED",
+      "bufferPostId": "6a9a35ca3c6201878512cbc9",
+      "evidenceRef": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "commandRef": "control-plane/commands/ugi-20260904-youtube-vinfast-gsm.json",
+      "cooldownEligible": true,
+      "cooldownUntil": "2026-09-19T23:59:59-03:00",
       "repeatException": null
     }
   ],
