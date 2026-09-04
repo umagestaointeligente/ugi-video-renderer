@@ -1,10 +1,10 @@
 {
   "project": "UGI",
   "component": "DELIVERY-VERIFIER",
-  "checkedAt": "2026-09-04T13:23:18.187796+00:00",
+  "checkedAt": "2026-09-04T13:39:12.953399+00:00",
   "lookbackHours": 36,
   "graceMinutes": 12,
-  "delivered": 1,
+  "delivered": 2,
   "pendingWithinGrace": 0,
   "late": 0,
   "failed": 0,
@@ -30,6 +30,28 @@
         "ok": true,
         "httpStatus": 200,
         "finalUrl": "https://www.instagram.com/reel/Dc3VnBVDIHj/"
+      }
+    },
+    {
+      "receipt": "control-plane/publisher-hub/receipts/UGI-20260904-FULL-AGENDA-R1.json",
+      "contentId": "UGI-20260904-IG-1030-TYSON-MARGIN",
+      "platform": "instagram",
+      "kind": "video",
+      "draftId": "ugi-20260904021439-a82118ed6b7e",
+      "bufferPostId": "6a9ab86e00f893faf312c0b5",
+      "dueAt": "2026-09-04T13:30:00+00:00",
+      "readbackHttp": 200,
+      "bufferStatus": "sent",
+      "status": "published",
+      "sentAt": "2026-09-04T13:31:34.672Z",
+      "externalLink": "https://www.instagram.com/stories/umagestaointeligente/3978789137503099329",
+      "error": null,
+      "state": "DELIVERED",
+      "externalProof": {
+        "attempted": true,
+        "ok": true,
+        "httpStatus": 429,
+        "finalUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fumagestaointeligente%2F3978789137503099329&is_from_rle"
       }
     }
   ]
