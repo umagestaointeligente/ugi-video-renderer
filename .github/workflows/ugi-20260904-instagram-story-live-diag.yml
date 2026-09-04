@@ -1,0 +1,40 @@
+name: UGI 20260904 Instagram Story Live Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-20260904-instagram-story-live-diag.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read-only live status for Instagram Stories
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          for spec in \
+            '0900|ugi-20260904021346-40d5655f05d9' \
+            '1030|ugi-20260904021439-a82118ed6b7e' \
+            '1800|ugi-20260904021739-4fc5c7eb31fe'; do
+            slot="${spec%%|*}"
+            id="${spec#*|}"
+            echo "===== SLOT ${slot} ====="
+            curl --silent --show-error --location --max-time 90 \
+              -H "x-lola-command-key: $UGI_WORKER_COMMAND_KEY" \
+              -H 'accept: application/json' \
+              "$WORKER_URL/api/platform-publication-status?id=$id&platform=instagram" \
+              | jq '{ok,version,platform,publication,post,bufferDiagnostics}'
+          done
