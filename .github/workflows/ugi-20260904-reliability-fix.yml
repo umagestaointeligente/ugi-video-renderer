@@ -23,53 +23,43 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Repair Publisher Hub Buffer readiness gate
+      - name: Preserve native video format in render bridge
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          hub = Path('scripts/ugi_publisher_hub.py')
-          text = hub.read_text(encoding='utf-8')
-
-          old_doc = '- Worker health and Buffer channels must be proven before mutation;'
-          new_doc = '- Worker health must be proven before mutation; Buffer is proven on the actual per-post create/readback path;'
-          if old_doc in text:
-              text = text.replace(old_doc, new_doc, 1)
-          elif new_doc not in text:
-              raise SystemExit('PUBLISHER_HUB_DOCSTRING_ANCHOR_NOT_FOUND')
-
-          old_gate = '''    channels = client.get("/api/buffer/channels")\n    if not channels.get("ok"):\n        raise RuntimeError("BUFFER_CHANNELS_FAIL")\n\n'''
-          new_gate = '''    # Buffer channel discovery is not a global hard gate. The Worker owns\n    # canonical channel resolution; the authoritative proof is the actual\n    # per-post /api/platform-publish response followed by scheduled readback.\n    # A real Buffer create/readback failure still fails closed below.\n\n'''
-          if old_gate in text:
-              text = text.replace(old_gate, new_gate, 1)
-          elif new_gate not in text:
-              raise SystemExit('PUBLISHER_HUB_BUFFER_GATE_ANCHOR_NOT_FOUND')
-
-          hub.write_text(text, encoding='utf-8')
+          p = Path('scripts/ugi_render_reconciler.py')
+          text = p.read_text(encoding='utf-8')
+          old = '''    payload: dict[str, Any] = {\n        "title": command.get("title"),\n        "duration": command.get("duration"),\n        "content_id": content_id,\n'''
+          new = '''    payload: dict[str, Any] = {\n        "title": command.get("title"),\n        "duration": command.get("duration"),\n        "type": command.get("type") or package_meta.get("type") or "reel",\n        "content_id": content_id,\n'''
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif '"type": command.get("type") or package_meta.get("type") or "reel"' not in text:
+              raise SystemExit('RENDER_TYPE_ANCHOR_NOT_FOUND')
+          p.write_text(text, encoding='utf-8')
           PY
 
-      - name: Validate Publisher Hub patch
+      - name: Validate native format patch
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile scripts/ugi_publisher_hub.py
-          grep -q 'per-post /api/platform-publish' scripts/ugi_publisher_hub.py
+          python3 -m py_compile scripts/ugi_render_reconciler.py scripts/ugi_publisher_hub.py
+          grep -q 'command.get("type") or package_meta.get("type") or "reel"' scripts/ugi_render_reconciler.py
           ! grep -q 'raise RuntimeError("BUFFER_CHANNELS_FAIL")' scripts/ugi_publisher_hub.py
-          grep -q 'gate": "BUFFER_CREATE"' scripts/ugi_publisher_hub.py
-          grep -q '_scheduled_readback_pass' scripts/ugi_publisher_hub.py
+          grep -q 'SKIP_STALE' .github/workflows/ugi-instagram-multiformat-hub.yml
 
-      - name: Commit Publisher Hub repair
+      - name: Commit native format repair
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'ugi-reliability-bot'
           git config user.email 'ugi-reliability@users.noreply.github.com'
-          git add scripts/ugi_publisher_hub.py
+          git add scripts/ugi_render_reconciler.py
           if git diff --cached --quiet; then
-            echo 'Publisher Hub repair already applied.'
+            echo 'Native format repair already applied.'
             exit 0
           fi
-          git commit -m 'fix: prove Buffer on create and readback path'
+          git commit -m 'fix: preserve native video format in render bridge'
           git pull --rebase origin main
           git push origin HEAD:main
