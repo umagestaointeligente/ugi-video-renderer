@@ -1,7 +1,7 @@
 {
   "ok": false,
-  "state": "CREATE_FAILED_FAIL_CLOSED",
-  "retryable": false,
+  "state": "BUFFER_CREATED_READBACK_PENDING",
+  "retryable": true,
   "provider": "BUFFER",
   "platform": "linkedin",
   "target": "UGI — Uma Gestão Inteligente",
@@ -9,12 +9,42 @@
   "queueId": "UGI-20260905-LI-EDITORIAL-001",
   "queueFile": "control-plane/publisher-hub/linkedin-queue/UGI-20260905-LI-EDITORIAL-001.json",
   "create": {
-    "ok": false,
-    "error": "mode inválido",
-    "publicationTriggered": false,
-    "bufferMutationPerformed": false
+    "ok": true,
+    "version": "lola-v8-r45-7-linkedin-buffer-rate-limit-safe-2026-09-04",
+    "route": "/api/linkedin-text-publish",
+    "platform": "linkedin",
+    "mode": "shareNow",
+    "target": {
+      "type": "LinkedIn Page",
+      "pageName": "UGI — Uma Gestão Inteligente",
+      "channelId": "6a9acd94065799be46891f24",
+      "channelName": "uma-gestao-inteligente",
+      "channelService": "linkedin",
+      "personalProfileTargetAllowed": false
+    },
+    "publication": {
+      "status": "published",
+      "bufferStatus": "sent",
+      "bufferPostId": "6a9ca3b645a02c85c1c5f153",
+      "dueAt": "2026-09-05T23:20:22.999Z",
+      "sentAt": "2026-09-05T23:20:23.773Z",
+      "externalLink": "https://www.linkedin.com/feed/update/urn:li:share:7502143625611468800",
+      "sharedNow": true,
+      "error": null
+    },
+    "publicationTriggered": true,
+    "bufferMutationPerformed": true
   },
   "readback": null,
-  "publication": null,
-  "timestamp": "2026-09-05T23:19:38.627028+00:00"
+  "publication": {
+    "status": "published",
+    "bufferStatus": "sent",
+    "bufferPostId": "6a9ca3b645a02c85c1c5f153",
+    "dueAt": "2026-09-05T23:20:22.999Z",
+    "sentAt": "2026-09-05T23:20:23.773Z",
+    "externalLink": "https://www.linkedin.com/feed/update/urn:li:share:7502143625611468800",
+    "sharedNow": true,
+    "error": null
+  },
+  "timestamp": "2026-09-05T23:20:22.492240+00:00"
 }

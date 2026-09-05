@@ -1,12 +1,8 @@
 {
   "project": "UGI",
   "provider": "BUFFER",
-  "state": "OPEN",
-  "reason": "BUFFER_RATE_LIMIT_DURING_LINKEDIN_CREATE",
-  "openedAt": "2026-09-05T00:44:39.510770+00:00",
-  "nextProbeAt": "2026-09-05T06:44:39.510770+00:00",
-  "cooldownHours": 6,
-  "rateLimitWindow": "24h",
-  "requestId": "a36134eba936c651-IAD",
-  "mutationAllowed": false
+  "state": "CLOSED",
+  "closedAt": "2026-09-05T23:20:22.492240+00:00",
+  "nextProbeAt": null,
+  "mutationAllowed": true
 }

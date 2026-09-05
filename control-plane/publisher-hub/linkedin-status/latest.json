@@ -1,8 +1,8 @@
 {
   "project": "UGI",
   "component": "LINKEDIN-PUBLISHER-ADAPTER",
-  "checkedAt": "2026-09-05T23:19:38.627028+00:00",
-  "state": "CREATE_FAILED_FAIL_CLOSED",
+  "checkedAt": "2026-09-05T23:20:22.492240+00:00",
+  "state": "BUFFER_CREATED_READBACK_PENDING",
   "provider": "BUFFER",
   "platform": "linkedin",
   "target": "UGI — Uma Gestão Inteligente",
@@ -10,7 +10,6 @@
   "queueId": "UGI-20260905-LI-EDITORIAL-001",
   "detail": {
     "bufferCalls": 1,
-    "http": 400,
-    "error": "mode inválido"
+    "bufferPostId": "6a9ca3b645a02c85c1c5f153"
   }
 }
