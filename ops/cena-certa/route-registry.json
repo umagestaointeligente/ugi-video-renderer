@@ -1,0 +1,67 @@
+{
+  "schema": "CENA_CERTA_ROUTE_REGISTRY_V1",
+  "fail_closed": true,
+  "production_route": {
+    "render_executor": {
+      "id": "github-actions-self-contained",
+      "state": "ACTIVE",
+      "required_for_render": true,
+      "runtime_gitlab_clone": false,
+      "candidate_pool": 10,
+      "final_videos": 8,
+      "hot_reserves": 2
+    },
+    "media_delivery": {
+      "id": "cloudflare-worker-r2",
+      "state": "ACTIVE",
+      "required_for_render": true,
+      "auth_header": "x-ugi-video-upload-key",
+      "blind_post_retry": false,
+      "ambiguous_response_reconciliation": "PUBLIC_HEAD_EXACT_SIZE"
+    },
+    "scheduler_primary": {
+      "id": "metricool",
+      "state": "CONNECTED_EXTERNAL",
+      "brand_id": "6809869",
+      "networks": ["facebook", "instagram", "tiktok", "youtube"],
+      "required_for_render": false,
+      "scheduling_is_separate_from_render": true
+    },
+    "scheduler_secondary": {
+      "id": "post-bridge",
+      "state": "PARTIAL_CONNECTED_EXTERNAL",
+      "networks": ["facebook", "youtube"],
+      "required_for_render": false,
+      "unsupported_networks": ["instagram", "tiktok"],
+      "never_treat_partial_as_full_redundancy": true
+    }
+  },
+  "disabled_routes": [
+    {
+      "id": "gitlab-runtime-clone",
+      "state": "DISABLED_DEAD_ROUTE",
+      "reason": "private GitLab clone from GitHub runner required unavailable credentials and GitLab CI capacity was quota-blocked",
+      "allowed_in_production": false
+    },
+    {
+      "id": "make-social-fallback",
+      "state": "DISABLED_UNCONFIGURED",
+      "reason": "no Cena Certa scenario or authenticated social connections proved",
+      "allowed_in_production": false
+    },
+    {
+      "id": "remote-desktop-fallback",
+      "state": "DISABLED_NO_DEVICE",
+      "reason": "no authorized device was connected during live audit",
+      "allowed_in_production": false
+    }
+  ],
+  "invariants": {
+    "no_inactive_route_in_render_critical_path": true,
+    "no_runtime_gitlab_clone": true,
+    "no_blind_post_retry": true,
+    "no_fake_instagram_tiktok_route_b": true,
+    "future_buffer_never_repairs_missing_current_placement": true,
+    "human_approval_required_before_scheduling": true
+  }
+}
