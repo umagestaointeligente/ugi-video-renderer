@@ -14,18 +14,18 @@ def run():
  c=verify_contract_and_assets(); root=TMP/'selftest'; prepared=root/'prepared'; root.mkdir(parents=True,exist_ok=True)
  now=datetime.now(ZoneInfo(c['scheduler']['timezone']))
  chunks=[
-  'A cena começa calma antes do perigo aparecer',
-  'O personagem percebe um detalhe que muda tudo',
+  'A cena começa calma antes do perigo surgir',
+  'O personagem nota um detalhe que muda tudo',
   'A câmera acompanha a reação sem perder contexto',
-  'O conflito cresce enquanto a saída fica distante',
-  'Cada corte mantém a história visualmente conectada',
-  'A legenda permanece baixa limpa e totalmente legível',
-  'O quadro principal preserva proporção sem cortar informação',
-  'A música continua presente abaixo da voz principal',
-  'A virada acontece sem quebrar o ritmo da montagem',
-  'O rodapé permanece inteiro depois de todas camadas',
-  'A consequência fecha a micro história sem enrolação',
-  'O CTA entra direto mantendo voz música e identidade',
+  'O conflito cresce e a saída fica distante',
+  'Cada corte mantém a história conectada',
+  'A legenda fica baixa limpa e legível',
+  'O quadro preserva a proporção sem cortes',
+  'A música segue presente abaixo da voz',
+  'A virada acontece sem quebrar o ritmo',
+  'O rodapé permanece inteiro em todas as camadas',
+  'A consequência fecha a história sem enrolação',
+  'O CTA entra direto com voz música e identidade',
  ]
  validate_caption_layout(chunks,c)
  item={'id':'CC-FACTORY-V2-SELFTEST','work_type':'film','film_title':'MASCARA CENA CERTA STRESS','film_year':2026,'source_url':'https://example.invalid/selftest.mp4','rights_evidence':'SELFTEST_ONLY','license':'SELFTEST_ONLY','rights_pass':True,'relevance_evidence':['SELFTEST_SIGNAL_1','SELFTEST_SIGNAL_2'],'relevance_pass':True,'anti_repeat_evidence':'SELFTEST_LEDGER','dedup_60d_pass':True,'live_readback_pass':True,'ready_checked_at':now.isoformat(),'source_clean_verified':True,'scene_semantic_verified':True,'caption_chunks':chunks,'script':' '.join(chunks),'scene_plan':[{'start_seconds':float(i*3),'caption_start':i,'caption_end':i,'semantic_reason':f'SELFTEST_SCENE_{i}','semantic_verified':True} for i in range(len(chunks))],'music_profile':'selftest','music_track':{'id':'SELFTEST-MUSIC','url':'https://example.invalid/music.mp3','rights_evidence':'SELFTEST_ONLY','license':'SELFTEST_ONLY','genre':'selftest','instrumental_verified':True,'editorial_match_verified':True},'schedule':{'date':(now+timedelta(days=2)).isoformat(),'text':'Selftest técnico.','youtube_title':'Selftest técnico','made_for_kids':False,'providers':c['scheduler']['networks'],'ai_flags':{'instagram':False,'tiktok':False,'youtube':False},'youtube_tags':[]}}
