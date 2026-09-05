@@ -58,17 +58,30 @@ async function getState(){
   }catch{return null}finally{U.loading=false}
 }
 
+function setNavLabel(el,key,html,title){
+  if(!el||el.dataset.v15Nav===key)return;
+  el.innerHTML=html;
+  el.dataset.v15Nav=key;
+  if(title)el.title=title;
+}
+
 function setNavLabels(){
   const home=document.querySelector('.tabs [data-v="home"]');
   const profile=$('showcaseTab');
   const opp=document.querySelector('.tabs [data-v="opps"]');
   const agent=document.querySelector('.tabs [data-v="agent"]');
   const more=$('moreNav')?.querySelector('summary');
-  if(home){home.innerHTML='<span aria-hidden="true">⌂</span><span>Minha Página</span>';home.title='Minha Página'}
-  if(profile){profile.innerHTML='<span aria-hidden="true">◉</span><span>Meu Perfil</span>';profile.title='Meu Perfil'}
-  if(opp){opp.innerHTML='<span aria-hidden="true">⌕</span><span>Oportunidades</span>';opp.title='Oportunidades'}
-  if(agent){const badge=agent.querySelector('.agent-badge');agent.innerHTML='<span aria-hidden="true">✦</span><span>Meu Agente</span>';if(badge)agent.appendChild(badge);agent.title='Meu Agente'}
-  if(more){more.innerHTML='<span aria-hidden="true">•••</span><span>Mais</span>';}
+  setNavLabel(home,'home','<span aria-hidden="true">⌂</span><span>Minha Página</span>','Minha Página');
+  setNavLabel(profile,'profile','<span aria-hidden="true">◉</span><span>Meu Perfil</span>','Meu Perfil');
+  setNavLabel(opp,'opps','<span aria-hidden="true">⌕</span><span>Oportunidades</span>','Oportunidades');
+  if(agent&&agent.dataset.v15Nav!=='agent'){
+    const badge=agent.querySelector('.agent-badge');
+    agent.innerHTML='<span aria-hidden="true">✦</span><span>Meu Agente</span>';
+    if(badge)agent.appendChild(badge);
+    agent.dataset.v15Nav='agent';
+    agent.title='Meu Agente';
+  }
+  setNavLabel(more,'more','<span aria-hidden="true">•••</span><span>Mais</span>');
 }
 
 function applyState(){
@@ -79,14 +92,20 @@ function applyState(){
   document.documentElement.dataset.mailDelivery=st.capabilities?.mail_delivery?'on':'off';
   setNavLabels();
   const provider=document.querySelector('.photo-provider');
-  if(provider&&st.capabilities?.photo_studio_external_ai===false)provider.textContent='⚡ Ajuste profissional no aparelho';
+  const providerText='⚡ Ajuste profissional no aparelho';
+  if(provider&&st.capabilities?.photo_studio_external_ai===false&&provider.textContent!==providerText)provider.textContent=providerText;
 }
 
 function watch(){
   const root=$('app')||document.body;
   let t;
-  new MutationObserver(()=>{clearTimeout(t);t=setTimeout(()=>{setNavLabels();applyState()},120)}).observe(root,{childList:true,subtree:true});
-  if('ResizeObserver'in window){new ResizeObserver(()=>document.documentElement.style.setProperty('--career-vw',`${window.innerWidth}px`)).observe(document.documentElement)}
+  new MutationObserver(()=>{clearTimeout(t);t=setTimeout(applyState,120)}).observe(root,{childList:true,subtree:true});
+  if('ResizeObserver'in window){
+    new ResizeObserver(()=>{
+      const value=`${window.innerWidth}px`;
+      if(document.documentElement.style.getPropertyValue('--career-vw')!==value)document.documentElement.style.setProperty('--career-vw',value);
+    }).observe(document.documentElement);
+  }
 }
 
 css();watch();
