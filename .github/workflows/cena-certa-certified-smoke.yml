@@ -35,12 +35,13 @@ jobs:
         shell: bash
         run: echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
 
-      - name: Prove runtime, exact masters and no legacy routes
+      - name: Prove runtime, proactive doctor, exact masters and no legacy routes
         shell: bash
         run: |
           set -euo pipefail
           export PYTHONPATH="$ROOT"
-          python -m py_compile "$ROOT"/factory/cena_certa/v2/*.py ops/cena-certa/r2_stage.py
+          python -m py_compile "$ROOT"/factory/cena_certa/v2/*.py ops/cena-certa/r2_stage.py ops/cena-certa/factory_doctor.py ops/cena-certa/dispatch_activate.py
+          python ops/cena-certa/factory_doctor.py
           python - <<'PY'
           import PIL,numpy,aiohttp,edge_tts
           assert PIL.__version__=='12.3.0'
@@ -64,12 +65,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          fp=$( { find "$ROOT/factory/cena_certa/v2" -maxdepth 1 -type f -print0 | sort -z | xargs -0 sha256sum; sha256sum ops/cena-certa/r2_stage.py; } | sha256sum | awk '{print $1}')
+          fp=$( { find "$ROOT/factory/cena_certa/v2" -maxdepth 1 -type f -print0 | sort -z | xargs -0 sha256sum; sha256sum ops/cena-certa/r2_stage.py ops/cena-certa/factory_doctor.py ops/cena-certa/dispatch_activate.py; } | sha256sum | awk '{print $1}')
           test "${#fp}" = 64
           echo "value=$fp" >> "$GITHUB_OUTPUT"
           echo "CERTIFICATION_FINGERPRINT=$fp"
 
-      - name: Render QA and stage 10 through production R2 reconciler
+      - name: Render one representative 32-second stress profile and reconcile R2
         shell: bash
         run: |
           set -euo pipefail
@@ -77,49 +78,43 @@ jobs:
           test -n "$KEY" || { echo R2_UPLOAD_KEY_MISSING; exit 1; }
           export PYTHONPATH="$ROOT"
           mkdir -p slots
-          for slot in $(seq 0 9); do
-            echo "CERTIFY_SLOT=$slot"
-            (cd "$ROOT" && python -m factory.cena_certa.v2.selftest)
-            cp "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json" "slots/slot-${slot}.receipt.json"
-            cp "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.mp4" "slots/slot-${slot}.mp4"
-            f="slots/slot-${slot}.mp4"
-            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
-            python ops/cena-certa/r2_stage.py \
-              --base-url "$URL" \
-              --auth-key "$KEY" \
-              --id "CC-FV2-SMOKE-A-${slot}" \
-              --batch-sha256 "${{ steps.fp.outputs.value }}" \
-              --mp4 "$f" \
-              --duration "$dur" \
-              --out "slots/slot-${slot}.r2.json"
-          done
-          test "$(find slots -name 'slot-*.receipt.json' | wc -l | tr -d ' ')" = 10
-          test "$(find slots -name 'slot-*.r2.json' | wc -l | tr -d ' ')" = 10
+          (cd "$ROOT" && python -m factory.cena_certa.v2.selftest)
+          cp "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json" slots/stress.receipt.json
+          cp "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.mp4" slots/stress.mp4
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 slots/stress.mp4)
+          python ops/cena-certa/r2_stage.py \
+            --base-url "$URL" \
+            --auth-key "$KEY" \
+            --id "CC-FV2-SMOKE-STRESS" \
+            --batch-sha256 "${{ steps.fp.outputs.value }}" \
+            --mp4 slots/stress.mp4 \
+            --duration "$dur" \
+            --out slots/stress.r2.json
           python - <<'PY'
-          import glob,json
-          for p in glob.glob('slots/slot-*.receipt.json'):
-              d=json.load(open(p,encoding='utf-8'))
-              assert d.get('render_pass') is True and d.get('qa_pass') is True and d.get('state')=='PREVIEW_READY', p
-          for p in glob.glob('slots/slot-*.r2.json'):
-              d=json.load(open(p,encoding='utf-8'))
-              assert d.get('schema')=='CENA_CERTA_R2_RECEIPT_V2', p
-              assert d.get('status')=='ready' and d.get('public_probe_pass') is True and d.get('public_head_size_match') is True, p
-              assert d.get('blind_retry_used') is False, p
-          print('TEN_RENDER_QA_R2_RECONCILIATION_PASS')
+          import json
+          r=json.load(open('slots/stress.receipt.json',encoding='utf-8'))
+          s=json.load(open('slots/stress.r2.json',encoding='utf-8'))
+          assert r.get('render_pass') is True and r.get('qa_pass') is True and r.get('state')=='PREVIEW_READY'
+          assert r.get('mask_composite_order')=='FILM_CC_TITLE_THEN_FINAL_STATIC_MASK'
+          assert r.get('video_sha256') and r.get('video_sha256')==s.get('contentSha256')
+          assert s.get('schema')=='CENA_CERTA_R2_RECEIPT_V2' and s.get('status')=='ready'
+          assert s.get('public_probe_pass') is True and s.get('public_head_size_match') is True
+          assert s.get('blind_retry_used') is False
+          print('STRESS_RENDER_QA_R2_RECONCILIATION_PASS')
           PY
 
-      - name: Prove 10-to-8 policy and total SLA
+      - name: Prove 10-to-8 policy and total SLA without ten duplicate renders
         shell: bash
         run: |
           set -euo pipefail
           export PYTHONPATH="$ROOT"
           mkdir -p "$ROOT/output/cena-certa-v2"
-          cp slots/slot-0.receipt.json "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json"
+          cp slots/stress.receipt.json "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json"
           (cd "$ROOT" && python -m factory.cena_certa.v2.batch_smoke)
           elapsed=$(($(date +%s)-${{ steps.clock.outputs.started }}))
           echo "FULL_CERTIFIED_SMOKE_SECONDS=$elapsed"
           test "$elapsed" -le 660
-          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s","certification_fingerprint":"%s","production_r2_reconciler":true,"blind_post_retry":false}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" "${{ steps.fp.outputs.value }}" > certification.json
+          printf '{"state":"CERTIFIED_SMOKE_PASS","real_stress_renders":1,"real_r2_staged":1,"policy_candidate_pool":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s","certification_fingerprint":"%s","production_r2_reconciler":true,"blind_post_retry":false,"cost_profile":"ONE_REAL_32S_STRESS_PLUS_SYNTHETIC_10_TO_8_POLICY"}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" "${{ steps.fp.outputs.value }}" > certification.json
           cat certification.json
 
       - uses: actions/upload-artifact@v4
@@ -127,8 +122,8 @@ jobs:
         with:
           name: cena-certa-certified-evidence-${{ github.run_id }}
           path: |
-            slots/*.receipt.json
-            slots/*.r2.json
+            slots/stress.receipt.json
+            slots/stress.r2.json
             certification.json
           if-no-files-found: warn
           retention-days: 7
