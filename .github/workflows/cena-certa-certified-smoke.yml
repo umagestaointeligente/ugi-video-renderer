@@ -21,10 +21,11 @@ jobs:
     outputs:
       started: ${{ steps.clock.outputs.started }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - id: clock
+        shell: bash
         run: echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: pip
@@ -39,9 +40,9 @@ jobs:
           test ! -e vendor/cena-certa-factory-v2/payload-v2
           test ! -e .github/workflows/cena-certa-gitlab-r2-bridge-20260903.yml
           test ! -e .github/workflows/cena-certa-seal-assets-once.yml
-          ! grep -RInE 'drive\.usercontent|d2ol7oe51mr4n9|mask_last_layer_patch|batch_2026_09_03|sed -i|assets-b64|payload-exact-v1|payload-test' "$ROOT" .github/workflows/cena-certa-certified-smoke.yml
+          ! grep -RInE 'drive\.usercontent|d2ol7oe51mr4n9|mask_last_layer_patch|batch_2026_09_03|sed -i|assets-b64|payload-exact-v1|payload-test|payload-v2' "$ROOT"
           echo LEGACY_ROUTE_SCAN_PASS
-      - name: Runtime and asset gate
+      - name: Runtime and physical asset gate
         shell: bash
         run: |
           set -euo pipefail
@@ -50,11 +51,15 @@ jobs:
           python -m py_compile "$ROOT"/factory/cena_certa/v2/*.py
           python - <<'PY'
           from factory.cena_certa.v2.common import verify_contract_and_assets
-          verify_contract_and_assets(); print('PHYSICAL_ASSET_AND_CONTRACT_PASS')
+          verify_contract_and_assets()
+          print('PHYSICAL_ASSET_AND_CONTRACT_PASS')
           PY
           python -m factory.cena_certa.v2.preflight canary
-      - name: Upload start clock
-        run: mkdir -p timing && echo '${{ steps.clock.outputs.started }}' > timing/start.txt
+      - name: Persist smoke start clock
+        shell: bash
+        run: |
+          mkdir -p timing
+          echo '${{ steps.clock.outputs.started }}' > timing/start.txt
       - uses: actions/upload-artifact@v4
         with:
           name: cena-certa-smoke-start
@@ -70,9 +75,12 @@ jobs:
         slot: [0,1,2,3,4,5,6,7,8,9]
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    env:
+      URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: pip
@@ -85,42 +93,57 @@ jobs:
           export PYTHONPATH="$ROOT"
           cd "$ROOT"
           python -m factory.cena_certa.v2.selftest
-          mkdir -p ../../../../smoke-slot
-          cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json ../../../../smoke-slot/slot-${{ matrix.slot }}.receipt.json
-          cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.mp4 ../../../../smoke-slot/slot-${{ matrix.slot }}.mp4
+          out="$GITHUB_WORKSPACE/smoke-slot"
+          mkdir -p "$out"
+          cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json "$out/slot-${{ matrix.slot }}.receipt.json"
+          cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.mp4 "$out/slot-${{ matrix.slot }}.mp4"
       - name: R2 stage canary per slot
-        if: ${{ secrets.UGI_VIDEO_UPLOAD_URL != '' && secrets.UGI_VIDEO_UPLOAD_KEY != '' }}
-        env:
-          URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
-          KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
         shell: bash
         run: |
           set -euo pipefail
-          f=smoke-slot/slot-${{ matrix.slot }}.mp4
+          test -n "$URL" || { echo R2_UPLOAD_URL_MISSING; exit 1; }
+          test -n "$KEY" || { echo R2_UPLOAD_KEY_MISSING; exit 1; }
+          f="smoke-slot/slot-${{ matrix.slot }}.mp4"
           rid="CC-FV2-SMOKE-${GITHUB_RUN_ID}-${{ matrix.slot }}"
           dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
           response=$(curl --fail-with-body --silent --show-error --connect-timeout 10 --max-time 120 -X POST "${URL%/}/api/video-upload?renderId=${rid}&duration=${dur}" -H "Authorization: Bearer ${KEY}" -H 'Content-Type: video/mp4' --data-binary @"$f")
-          printf '%s' "$response" > smoke-slot/slot-${{ matrix.slot }}.r2.json
+          printf '%s' "$response" > "smoke-slot/slot-${{ matrix.slot }}.r2.json"
           python - <<'PY'
-          import json,glob
-          p=glob.glob('smoke-slot/*.r2.json')[0]; d=json.load(open(p))
+          import json, os
+          slot=os.environ['SLOT']
+          p=f'smoke-slot/slot-{slot}.r2.json'
+          d=json.load(open(p,encoding='utf-8'))
           if d.get('status')!='ready': raise SystemExit('R2_NOT_READY')
-          print('R2_SLOT_PASS')
+          def find(x):
+              if isinstance(x,dict):
+                  if x.get('videoUrl') and x.get('videoKey'): return x['videoUrl'],x['videoKey']
+                  for v in x.values():
+                      r=find(v)
+                      if r: return r
+              if isinstance(x,list):
+                  for v in x:
+                      r=find(v)
+                      if r: return r
+          if not find(d): raise SystemExit('R2_MEDIA_FIELDS_MISSING')
+          print('R2_SLOT_PASS',slot)
           PY
+        env:
+          SLOT: ${{ matrix.slot }}
       - uses: actions/upload-artifact@v4
         with:
           name: cena-certa-smoke-slot-${{ matrix.slot }}
           path: smoke-slot/
+          if-no-files-found: error
           retention-days: 1
 
   certify:
-    needs: [gate,render10]
+    needs: [gate, render10]
     if: always() && needs.gate.result == 'success' && needs.render10.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - uses: actions/download-artifact@v4
@@ -132,23 +155,42 @@ jobs:
         with:
           name: cena-certa-smoke-start
           path: timing
-      - name: Prove 10 renders and 10-to-8 failover policy
+      - name: Prove 10 renders, 10 R2 stages and 10-to-8 failover policy
         shell: bash
         run: |
           set -euo pipefail
+          receipt_count=$(find slots -maxdepth 1 -name 'slot-*.receipt.json' | wc -l | tr -d ' ')
+          r2_count=$(find slots -maxdepth 1 -name 'slot-*.r2.json' | wc -l | tr -d ' ')
+          mp4_count=$(find slots -maxdepth 1 -name 'slot-*.mp4' | wc -l | tr -d ' ')
+          test "$receipt_count" = 10
+          test "$r2_count" = 10
+          test "$mp4_count" = 10
+          python - <<'PY'
+          import glob,json
+          for p in sorted(glob.glob('slots/slot-*.receipt.json')):
+              d=json.load(open(p,encoding='utf-8'))
+              if not (d.get('render_pass') is True and d.get('qa_pass') is True and d.get('state')=='PREVIEW_READY'):
+                  raise SystemExit(f'RENDER_QA_RECEIPT_FAIL {p}')
+          for p in sorted(glob.glob('slots/slot-*.r2.json')):
+              d=json.load(open(p,encoding='utf-8'))
+              if d.get('status')!='ready': raise SystemExit(f'R2_RECEIPT_FAIL {p}')
+          print('TEN_RENDER_QA_AND_R2_RECEIPTS_PASS')
+          PY
           export PYTHONPATH="$ROOT"
+          mkdir -p "$ROOT/output/cena-certa-v2"
+          cp slots/slot-0.receipt.json "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json"
           cd "$ROOT"
-          mkdir -p output/cena-certa-v2
-          cp ../../../../slots/*.receipt.json output/cena-certa-v2/
           python -m factory.cena_certa.v2.batch_smoke
-          count=$(find ../../../../slots -name 'slot-*.receipt.json' | wc -l)
-          test "$count" = 10
-          start=$(cat ../../../../timing/start.txt); end=$(date +%s); elapsed=$((end-start))
+          cd "$GITHUB_WORKSPACE"
+          start=$(cat timing/start.txt)
+          end=$(date +%s)
+          elapsed=$((end-start))
           echo "FULL_SMOKE_ELAPSED_SECONDS=$elapsed"
           test "$elapsed" -le 660
-          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660}\n' "$elapsed" > ../../../../certification.json
+          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"head_sha":"%s"}\n' "$elapsed" "$GITHUB_SHA" > certification.json
       - uses: actions/upload-artifact@v4
         with:
           name: cena-certa-certified-proof-${{ github.run_id }}
           path: certification.json
+          if-no-files-found: error
           retention-days: 7
