@@ -91,7 +91,7 @@ def atomic_download(url,path,kind,max_bytes,expected_sha256=None,timeout=150):
  if path.exists(): path.unlink()
  part=path.with_name(path.name+f'.part-{os.getpid()}-{int(time.time()*1000)}')
  try:
-  cmd=['curl','--fail-with-body','--location','--silent','--show-error','--retry','2','--retry-delay','1','--retry-all-errors','--connect-timeout','10','--max-time',str(int(timeout)),'--max-filesize',str(int(max_bytes)),'-A','OrbitMediaLabs-CenaCertaFactory/2.1','-o',str(part),str(url)]
+  cmd=['curl','--fail-with-body','--location','--silent','--show-error','--retry','2','--retry-delay','1','--retry-max-time','20','--retry-connrefused','--connect-timeout','10','--max-time',str(int(timeout)),'--max-filesize',str(int(max_bytes)),'-A','OrbitMediaLabs-CenaCertaFactory/2.1','-o',str(part),str(url)]
   sh(cmd,timeout=timeout+20)
   if not part.exists() or part.stat().st_size<1024: raise RuntimeError(f'DOWNLOAD_EMPTY {url}')
   if part.stat().st_size>max_bytes: raise RuntimeError(f'DOWNLOAD_TOO_LARGE bytes={part.stat().st_size} max={max_bytes}')
