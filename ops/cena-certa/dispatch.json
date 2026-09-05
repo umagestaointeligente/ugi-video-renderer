@@ -6,5 +6,6 @@
   "batch_sha256": "",
   "prepared_run_id": "",
   "requested_at": "",
+  "request_id": "",
   "note": "IDLE canary after dispatch-gate and R2 reconciler hardening."
 }
