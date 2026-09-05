@@ -1,13 +1,12 @@
 {
   "project": "UGI",
   "provider": "BUFFER",
-  "state": "CLOSED",
-  "reason": "USER_AUTHORIZED_ONE_SHOT_LINKEDIN_LAUNCH_PROBE",
-  "closedAt": "2026-09-05T00:34:00+00:00",
-  "nextProbeAt": null,
+  "state": "OPEN",
+  "reason": "BUFFER_RATE_LIMIT_DURING_LINKEDIN_CREATE",
+  "openedAt": "2026-09-05T00:44:39.510770+00:00",
+  "nextProbeAt": "2026-09-05T06:44:39.510770+00:00",
   "cooldownHours": 6,
   "rateLimitWindow": "24h",
-  "requestId": "a361245aac7c76c8-SEA",
-  "mutationAllowed": true,
-  "oneShotProbe": true
+  "requestId": "a36134eba936c651-IAD",
+  "mutationAllowed": false
 }

@@ -1,11 +1,13 @@
 {
   "ok": false,
-  "state": "WAITING_BUFFER_24H_RATE_LIMIT",
+  "state": "WAITING_BUFFER_RATE_LIMIT",
   "retryable": true,
   "provider": "BUFFER",
   "platform": "linkedin",
   "target": "UGI — Uma Gestão Inteligente",
   "personalProfileTargetAllowed": false,
+  "queueId": "UGI-20260904-LI-EDITORIAL-001",
+  "queueFile": "control-plane/publisher-hub/linkedin-queue/UGI-20260904-LI-EDITORIAL-001.json",
   "create": {
     "ok": false,
     "version": "lola-v8-r45-7-linkedin-buffer-rate-limit-safe-2026-09-04",
@@ -16,7 +18,7 @@
     "bufferDiagnostics": {
       "httpStatus": 429,
       "httpOk": false,
-      "requestId": "a361245aac7c76c8-SEA",
+      "requestId": "a36134eba936c651-IAD",
       "rateLimitRemaining": "0",
       "graphqlErrors": [
         {
@@ -34,5 +36,5 @@
   },
   "readback": null,
   "publication": null,
-  "timestamp": "2026-09-05T00:33:21.466440+00:00"
+  "timestamp": "2026-09-05T00:44:39.510770+00:00"
 }
