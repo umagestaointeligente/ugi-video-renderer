@@ -6,12 +6,15 @@ import hashlib
 import json
 import os
 import pathlib
+import re
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 
 R2_TRANSIENT_HTTP = {404, 408, 425, 429, 500, 502, 503, 504}
+R2_POST_TRANSIENT_HTTP = {408, 425, 429, 500, 502, 503, 504}
+RID_RE = re.compile(r'^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$')
 
 
 def _auth_headers(key: str) -> dict[str, str]:
@@ -62,12 +65,20 @@ def _poll_url(obj):
     return None
 
 
+def _require_https(url: str, label: str) -> str:
+    p = urllib.parse.urlparse(str(url))
+    if p.scheme != 'https' or not p.netloc:
+        raise RuntimeError(f'{label}_HTTPS_REQUIRED')
+    return str(url).rstrip('/')
+
+
 def _public_url(base: str, storage_rid: str) -> tuple[str, str]:
     key = f'geradas/videos/{storage_rid}/instagram.mp4'
     return f"{base.rstrip('/')}/media/{urllib.parse.quote(key, safe='')}", key
 
 
 def _head_exact(url: str, expected_size: int, attempts: int = 8) -> bool:
+    _require_https(url, 'R2_PUBLIC_URL')
     for attempt in range(attempts):
         try:
             req = urllib.request.Request(url, method='HEAD', headers={'User-Agent': 'CenaCertaFactoryV2/2'})
@@ -80,7 +91,7 @@ def _head_exact(url: str, expected_size: int, attempts: int = 8) -> bool:
         except urllib.error.HTTPError as e:
             if int(e.code) not in R2_TRANSIENT_HTTP:
                 return False
-        except urllib.error.URLError:
+        except (urllib.error.URLError, TimeoutError, ConnectionError):
             pass
         if attempt + 1 < attempts:
             time.sleep(2)
@@ -98,14 +109,21 @@ def _http_error_detail(error: urllib.error.HTTPError) -> str:
 
 
 def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, duration: float, out: pathlib.Path) -> dict:
+    base = _require_https(base, 'R2_BASE_URL')
+    if not RID_RE.fullmatch(str(rid)) or '..' in str(rid):
+        raise RuntimeError('R2_RENDER_ID_INVALID')
+    if not str(key):
+        raise RuntimeError('R2_AUTH_KEY_EMPTY')
     if len(batch_sha) != 64 or any(c not in '0123456789abcdef' for c in batch_sha.lower()):
         raise RuntimeError('BATCH_SHA256_INVALID')
+    if float(duration) <= 0.2:
+        raise RuntimeError('R2_DURATION_INVALID')
     if not mp4.is_file() or mp4.stat().st_size <= 1024:
         raise RuntimeError('R2_LOCAL_MEDIA_INVALID')
     storage_rid = f'{rid}-{batch_sha[:12]}'
     deterministic_url, deterministic_key = _public_url(base, storage_rid)
     size = mp4.stat().st_size
-    upload_url = f"{base.rstrip('/')}/api/video-upload?renderId={urllib.parse.quote(storage_rid)}&duration={duration:.3f}"
+    upload_url = f"{base}/api/video-upload?renderId={urllib.parse.quote(storage_rid)}&duration={duration:.3f}"
     data = mp4.read_bytes()
     headers = _auth_headers(key)
     headers.update({
@@ -120,10 +138,17 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
         response = _json_request(req, timeout=120)
         post_state = 'RESPONSE_RECEIVED'
     except urllib.error.HTTPError as e:
-        detail = _http_error_detail(e)
-        raise RuntimeError(f'R2_POST_EXPLICIT_HTTP_FAIL status={e.code} detail={detail!r}') from e
-    except urllib.error.URLError as e:
-        # A POST transport failure is ambiguous: never send the POST again.
+        code = int(e.code); detail = _http_error_detail(e)
+        # A transient HTTP response can still be emitted after the provider has
+        # persisted all bytes. Never resend the POST; reconcile the deterministic
+        # object first. Permanent HTTP failures remain immediate failures.
+        if code in R2_POST_TRANSIENT_HTTP and _head_exact(deterministic_url, size):
+            post_state = f'HTTP_{code}_RECONCILED_BY_HEAD'
+        else:
+            kind = 'TRANSIENT_NOT_RECONCILED' if code in R2_POST_TRANSIENT_HTTP else 'PERMANENT'
+            raise RuntimeError(f'R2_POST_{kind}_HTTP_FAIL status={code} detail={detail!r}') from e
+    except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+        # Transport failure is ambiguous: never send the POST again.
         # Reconcile the deterministic object with an idempotent public HEAD.
         post_state = f'RESPONSE_LOST:{type(e).__name__}'
         if not _head_exact(deterministic_url, size):
@@ -131,6 +156,8 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
 
     media = _walk_media(response) if response is not None else None
     poll = _poll_url(response) if response is not None else None
+    if poll:
+        _require_https(poll, 'R2_POLL_URL')
     if not media and poll:
         for _ in range(12):
             time.sleep(2)
@@ -144,10 +171,11 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
                 if int(e.code) not in R2_TRANSIENT_HTTP:
                     detail = _http_error_detail(e)
                     raise RuntimeError(f'R2_POLL_PERMANENT_HTTP_FAIL status={e.code} detail={detail!r}') from e
-            except urllib.error.URLError:
+            except (urllib.error.URLError, TimeoutError, ConnectionError):
                 pass
 
     video_url, video_key = media if media else (deterministic_url, deterministic_key)
+    _require_https(video_url, 'R2_VIDEO_URL')
     if video_key != deterministic_key:
         raise RuntimeError(f'R2_VIDEO_KEY_MISMATCH got={video_key} want={deterministic_key}')
     if not _head_exact(video_url, size):
@@ -171,9 +199,12 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
         'contentSha256': hashlib.sha256(data).hexdigest(),
     }
     out.parent.mkdir(parents=True, exist_ok=True)
-    tmp = out.with_suffix(out.suffix + '.tmp')
-    tmp.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    os.replace(tmp, out)
+    tmp = out.with_name(out.name + f'.tmp-{os.getpid()}')
+    try:
+        tmp.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        os.replace(tmp, out)
+    finally:
+        tmp.unlink(missing_ok=True)
     print('R2_STAGE_RECONCILED_PASS', rid, storage_rid, post_state, size)
     return receipt
 
