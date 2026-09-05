@@ -15,7 +15,6 @@ for d in (CACHE,OUT,TMP): d.mkdir(parents=True,exist_ok=True)
 GOLD=(244,181,44); WHITE=(245,245,245); BLACK=(4,5,7)
 FONT_B='/usr/share/fonts/truetype/lato/Lato-Heavy.ttf'
 FONT_R='/usr/share/fonts/truetype/lato/Lato-Regular.ttf'
-FALLBACK='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 SAFE_ID_RE=re.compile(r'^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$')
 RUNTIME_VISUAL_KEYS=('story','cta')
 
@@ -57,8 +56,9 @@ def pixel_sha256(path):
 
 def contract(): return json.loads(CONTRACT_PATH.read_text(encoding='utf-8'))
 def font(size,bold=True):
- p=FONT_B if bold else FONT_R
- return ImageFont.truetype(p if Path(p).exists() else FALLBACK,size)
+ p=Path(FONT_B if bold else FONT_R)
+ if not p.is_file(): raise RuntimeError(f'CANONICAL_FONT_MISSING {p}')
+ return ImageFont.truetype(str(p),size)
 def ffprobe(path,timeout=60): return json.loads(sh(['ffprobe','-v','error','-show_streams','-show_format','-of','json',str(path)],timeout=timeout).stdout)
 def duration(path): return float(ffprobe(path)['format']['duration'])
 def fps_value(rate): return float(Fraction(rate))
@@ -116,6 +116,8 @@ def verify_contract_and_assets():
  assert c['story']['scene_min_count']>=10 and 4<=c['cta']['duration_seconds']<=6
  assert c['sla']['daily_batch_size']==8 and c['sla']['network_count']==4 and c['sla']['target_seconds']<=660
  assert c['scheduler']['expected_placements_per_batch']==32
+ for p in (Path(FONT_B),Path(FONT_R)):
+  if not p.is_file(): raise RuntimeError(f'CANONICAL_FONT_MISSING {p}')
  free_disk_guard(c.get('runtime',{}).get('minimum_free_disk_gb',3.0))
  for name in RUNTIME_VISUAL_KEYS:
   spec=c['approved_visual_sources'][name]; p=ROOT/spec['path']
@@ -126,7 +128,7 @@ def verify_contract_and_assets():
   if spec.get('pixel_sha256'):
    actual,size=pixel_sha256(p)
    if size!=spec.get('source_size') or actual!=spec['pixel_sha256']: raise RuntimeError(f'ASSET_VISUAL_ID_FAIL {name}')
- print('FACTORY_V2_CONTRACT_PASS'); print('FACTORY_V2_PHYSICAL_MASTER_LOCK_PASS')
+ print('FACTORY_V2_CONTRACT_PASS'); print('FACTORY_V2_PHYSICAL_MASTER_LOCK_PASS'); print('FACTORY_V2_CANONICAL_FONTS_PASS')
  return c
 
 def scaled_reference(c,key):
@@ -145,11 +147,15 @@ def _physical_film_border(ref,box):
 
 def prepare_static_assets(c):
  ref=scaled_reference(c,'story'); geo=c['geometry_approved_frame_1080x1920']; footer=geo['footer']; logo=geo['story_logo']; film=geo['film_window']
- fp=hashlib.sha256((json.dumps(geo,sort_keys=True)+c['approved_visual_sources']['story'].get('pixel_sha256','')+c['approved_visual_sources']['cta'].get('pixel_sha256','')+'physical-story-border-v1').encode()).hexdigest()
+ fp=hashlib.sha256((json.dumps(geo,sort_keys=True)+c['approved_visual_sources']['story'].get('pixel_sha256','')+c['approved_visual_sources']['cta'].get('pixel_sha256','')+'physical-story-border-v2-cache-sealed').encode()).hexdigest()
  stamp=CACHE/'static-bundle.json'; outputs=[CACHE/'footer-master.png',CACHE/'story-logo-master.png',CACHE/'cta-master.png',CACHE/'story-mask-last.png']
  if stamp.exists() and all(p.exists() for p in outputs):
   try:
-   if json.loads(stamp.read_text())['fingerprint']==fp: return CACHE/'story-mask-last.png'
+   state=json.loads(stamp.read_text(encoding='utf-8')); locked=state.get('output_sha256') or {}
+   if state.get('fingerprint')==fp and all(locked.get(p.name)==sha256(p) for p in outputs):
+    for p in outputs: open_visual(p)
+    print('FACTORY_V2_STATIC_CACHE_VERIFIED_PASS')
+    return CACHE/'story-mask-last.png'
   except Exception: pass
  save_png_atomic(ref.crop((footer[0],footer[1],footer[0]+footer[2],footer[1]+footer[3])),CACHE/'footer-master.png')
  save_png_atomic(ref.crop((logo[0],logo[1],logo[0]+logo[2],logo[1]+logo[3])),CACHE/'story-logo-master.png')
@@ -158,8 +164,13 @@ def prepare_static_assets(c):
  mask.alpha_composite(Image.open(CACHE/'story-logo-master.png').convert('RGBA'),(logo[0],logo[1]))
  mask.alpha_composite(Image.open(CACHE/'footer-master.png').convert('RGBA'),(footer[0],footer[1]))
  save_png_atomic(mask,CACHE/'story-mask-last.png')
- tmp=stamp.with_suffix('.tmp'); tmp.write_text(json.dumps({'fingerprint':fp,'physical_border_pixels':border_pixels}),encoding='utf-8'); os.replace(tmp,stamp)
- print('FACTORY_V2_PHYSICAL_STORY_BORDER_PASS',border_pixels)
+ locked={p.name:sha256(p) for p in outputs}
+ state={'fingerprint':fp,'physical_border_pixels':border_pixels,'output_sha256':locked}
+ tmp=stamp.with_name(stamp.name+f'.tmp-{os.getpid()}')
+ try:
+  tmp.write_text(json.dumps(state,sort_keys=True),encoding='utf-8'); os.replace(tmp,stamp)
+ finally: tmp.unlink(missing_ok=True)
+ print('FACTORY_V2_PHYSICAL_STORY_BORDER_PASS',border_pixels); print('FACTORY_V2_STATIC_CACHE_SEALED_PASS')
  return CACHE/'story-mask-last.png'
 
 def make_title(c,title,year,out):
@@ -196,10 +207,12 @@ def validate_caption_layout(chunks,c):
  return True
 
 def make_ass(c,cues,path):
- header='''[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 2\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: CC,Lato Heavy,52,&H00F7F7F7,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,4,0,2,180,180,443,1\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n'''
+ geo=c['geometry_approved_frame_1080x1920']; safe=geo['cc_safe_zone']; ref=geo['cc_reference_bbox']; width=int(c['canvas']['width']); height=int(c['canvas']['height'])
+ margin_l=int(safe[0])+30; margin_r=width-(int(safe[0])+int(safe[2]))+30; margin_v=height-(int(ref[1])+int(ref[3]))
+ header=f'''[Script Info]\nScriptType: v4.00+\nPlayResX: {width}\nPlayResY: {height}\nWrapStyle: 2\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: CC,Lato Heavy,52,&H00F7F7F7,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,4,0,2,{margin_l},{margin_r},{margin_v},1\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n'''
  def at(sec):
   h=int(sec//3600); sec-=h*3600; m=int(sec//60); sec-=m*60; return f'{h}:{m:02d}:{sec:05.2f}'
- lines=[header]; maxw=int(c['geometry_approved_frame_1080x1920']['cc_safe_zone'][2])-80
+ lines=[header]; maxw=int(safe[2])-80
  for cue in cues:
   wrapped=wrap_caption_pixels(cue['text'],max_width=maxw,max_lines=c['voice']['caption_max_lines'])
   lines.append(f"Dialogue: 0,{at(cue['start'])},{at(cue['end'])},CC,,0,0,0,,{'\\N'.join(wrapped)}\n")
