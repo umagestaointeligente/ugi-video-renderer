@@ -9,6 +9,7 @@ from PIL import Image
 from .common import *
 
 FORBIDDEN=('trailer','teaser','preview','recap','sizzle','promo')
+PRODUCTION_PUBLISHER_PHASE_JOBS={'prepare-10','render-stage-10','finalize-8-plus-2'}
 
 def _https(url,label):
  p=urlparse(str(url))
@@ -22,6 +23,14 @@ def _fresh_iso(value,max_age_hours,label):
  if age<-.25 or age>max_age_hours: raise RuntimeError(f'{label}_STALE age_hours={age:.2f} max={max_age_hours}')
  return dt
 
+def _schedule_phase(explicit=None):
+ if explicit is not None: return str(explicit).strip().lower()
+ configured=os.getenv('ORBIT_SCHEDULE_PHASE')
+ if configured: return str(configured).strip().lower()
+ if os.getenv('GITHUB_WORKFLOW')=='Cena Certa V2 Production' and os.getenv('GITHUB_JOB') in PRODUCTION_PUBLISHER_PHASE_JOBS:
+  return 'publisher'
+ return 'admission'
+
 def schedule_instant(c,value,phase=None):
  try: dt=datetime.fromisoformat(str(value).replace('Z','+00:00'))
  except Exception as e: raise RuntimeError('SCHEDULE_DATE_INVALID') from e
@@ -31,7 +40,7 @@ def schedule_instant(c,value,phase=None):
  publisher_min=float(c['scheduler'].get('publisher_minimum_lead_seconds',900))
  factory_budget=float(c.get('sla',{}).get('target_seconds',660))
  configured=float(c['scheduler'].get('minimum_schedule_lead_seconds',0))
- phase=str(phase or os.getenv('ORBIT_SCHEDULE_PHASE','admission')).strip().lower()
+ phase=_schedule_phase(phase)
  if phase=='admission':
   required=max(configured,publisher_min+factory_budget)
  elif phase=='publisher':
