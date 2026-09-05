@@ -11,6 +11,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+R2_TRANSIENT_HTTP = {404, 408, 425, 429, 500, 502, 503, 504}
+
 
 def _auth_headers(key: str) -> dict[str, str]:
     return {
@@ -61,8 +63,6 @@ def _poll_url(obj):
 
 
 def _public_url(base: str, storage_rid: str) -> tuple[str, str]:
-    # Live Worker canonical storage contract. Keep this deterministic so a lost
-    # POST response can be reconciled with a public HEAD instead of re-sending.
     key = f'geradas/videos/{storage_rid}/instagram.mp4'
     return f"{base.rstrip('/')}/media/{urllib.parse.quote(key, safe='')}", key
 
@@ -76,7 +76,11 @@ def _head_exact(url: str, expected_size: int, attempts: int = 8) -> bool:
                 ctype = (r.headers.get('Content-Type') or '').lower()
                 if 200 <= int(r.status) < 300 and size == expected_size and ('video/mp4' in ctype or ctype == 'application/octet-stream'):
                     return True
-        except Exception:
+                return False
+        except urllib.error.HTTPError as e:
+            if int(e.code) not in R2_TRANSIENT_HTTP:
+                return False
+        except urllib.error.URLError:
             pass
         if attempt + 1 < attempts:
             time.sleep(2)
@@ -118,9 +122,9 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
     except urllib.error.HTTPError as e:
         detail = _http_error_detail(e)
         raise RuntimeError(f'R2_POST_EXPLICIT_HTTP_FAIL status={e.code} detail={detail!r}') from e
-    except Exception as e:
-        # Transport failure may have happened after provider accepted all bytes.
-        # Reconcile by deterministic public object before deciding anything else.
+    except urllib.error.URLError as e:
+        # A POST transport failure is ambiguous: never send the POST again.
+        # Reconcile the deterministic object with an idempotent public HEAD.
         post_state = f'RESPONSE_LOST:{type(e).__name__}'
         if not _head_exact(deterministic_url, size):
             raise RuntimeError(f'R2_POST_AMBIGUOUS_NOT_RECONCILED {post_state}') from e
@@ -136,8 +140,12 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
                 media = _walk_media(p)
                 if media:
                     break
-            except Exception:
-                continue
+            except urllib.error.HTTPError as e:
+                if int(e.code) not in R2_TRANSIENT_HTTP:
+                    detail = _http_error_detail(e)
+                    raise RuntimeError(f'R2_POLL_PERMANENT_HTTP_FAIL status={e.code} detail={detail!r}') from e
+            except urllib.error.URLError:
+                pass
 
     video_url, video_key = media if media else (deterministic_url, deterministic_key)
     if video_key != deterministic_key:
