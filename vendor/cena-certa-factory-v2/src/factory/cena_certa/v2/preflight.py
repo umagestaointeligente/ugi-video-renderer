@@ -10,6 +10,7 @@ from .common import *
 
 FORBIDDEN=('trailer','teaser','preview','recap','sizzle','promo')
 PRODUCTION_PUBLISHER_PHASE_JOBS={'prepare-10','render-stage-10','finalize-8-plus-2'}
+PREMIUM_TYPES={'DEMAND','ACCLAIM','RECOGNITION','PRODUCTION','DISTRIBUTION','CAST'}
 
 def _https(url,label):
  p=urlparse(str(url))
@@ -41,12 +42,9 @@ def schedule_instant(c,value,phase=None):
  factory_budget=float(c.get('sla',{}).get('target_seconds',660))
  configured=float(c['scheduler'].get('minimum_schedule_lead_seconds',0))
  phase=_schedule_phase(phase)
- if phase=='admission':
-  required=max(configured,publisher_min+factory_budget)
- elif phase=='publisher':
-  required=publisher_min
- else:
-  raise RuntimeError(f'SCHEDULE_PHASE_FAIL {phase}')
+ if phase=='admission': required=max(configured,publisher_min+factory_budget)
+ elif phase=='publisher': required=publisher_min
+ else: raise RuntimeError(f'SCHEDULE_PHASE_FAIL {phase}')
  if lead<required: raise RuntimeError(f'SCHEDULE_LEAD_TIME_FAIL phase={phase} seconds={lead:.0f} required={required:.0f}')
  return local
 
@@ -69,8 +67,32 @@ def validate_schedule(c,item):
  if not isinstance(tags,list) or any(not isinstance(x,str) for x in tags): raise RuntimeError('YOUTUBE_TAGS_FAIL')
  return True
 
+def _validate_premium_editorial(c,item):
+ sel=c['selection']
+ if item.get('professional_production_pass') is not True: raise RuntimeError('PROFESSIONAL_PRODUCTION_REQUIRED')
+ if item.get('audience_demand_pass') is not True: raise RuntimeError('AUDIENCE_DEMAND_REQUIRED')
+ if item.get('recognized_or_acclaimed_pass') is not True: raise RuntimeError('RECOGNIZED_OR_ACCLAIMED_REQUIRED')
+ production_class=str(item.get('production_class') or '').upper().strip()
+ if production_class not in set(sel['allowed_production_classes']): raise RuntimeError(f'PRODUCTION_CLASS_FAIL {production_class}')
+ for flag in ('student_film','amateur_production','backyard_production','microbudget_unrecognized','obscure_low_demand'):
+  if item.get(flag) is True: raise RuntimeError(f'PREMIUM_EDITORIAL_BLOCK {flag}')
+ evidence=item.get('premium_evidence')
+ minimum=int(sel['premium_evidence_min_independent_signals'])
+ if not isinstance(evidence,list) or len(evidence)<minimum: raise RuntimeError('PREMIUM_EVIDENCE_COUNT_FAIL')
+ types=set(); sources=set()
+ for i,e in enumerate(evidence):
+  if not isinstance(e,dict): raise RuntimeError(f'PREMIUM_EVIDENCE_SCHEMA_FAIL {i}')
+  typ=str(e.get('type') or '').upper().strip(); source=str(e.get('source') or '').strip(); signal=str(e.get('signal') or '').strip()
+  if typ not in PREMIUM_TYPES or not source or not signal: raise RuntimeError(f'PREMIUM_EVIDENCE_FIELD_FAIL {i}')
+  types.add(typ); sources.add(source.lower())
+ if len(sources)<minimum: raise RuntimeError('PREMIUM_EVIDENCE_INDEPENDENCE_FAIL')
+ if 'DEMAND' not in types: raise RuntimeError('PREMIUM_DEMAND_SIGNAL_REQUIRED')
+ if not types.intersection({'ACCLAIM','RECOGNITION'}): raise RuntimeError('PREMIUM_RECOGNITION_SIGNAL_REQUIRED')
+ if not types.intersection({'PRODUCTION','DISTRIBUTION','CAST'}): raise RuntimeError('PREMIUM_PRODUCTION_SIGNAL_REQUIRED')
+ return True
+
 def validate_item(c,item):
- req=['id','work_type','film_title','film_year','source_url','rights_evidence','license','relevance_evidence','anti_repeat_evidence','caption_chunks','scene_plan','music_track','live_readback_pass','rights_pass','relevance_pass','ready_checked_at','schedule','source_clean_verified','scene_semantic_verified']
+ req=['id','work_type','film_title','film_year','source_url','rights_evidence','license','relevance_evidence','anti_repeat_evidence','caption_chunks','scene_plan','music_track','live_readback_pass','rights_pass','relevance_pass','ready_checked_at','schedule','source_clean_verified','scene_semantic_verified','professional_production_pass','audience_demand_pass','recognized_or_acclaimed_pass','production_class','premium_evidence']
  miss=[k for k in req if k not in item]
  if miss: raise RuntimeError(f"ITEM_REQUIRED_FIELDS_FAIL {item.get('id')} {miss}")
  rid=safe_id(item['id']); _https(item['source_url'],'SOURCE_URL')
@@ -80,6 +102,7 @@ def validate_item(c,item):
  if item['relevance_pass'] is not True: raise RuntimeError('RELEVANCE_FAIL')
  if item['source_clean_verified'] is not True: raise RuntimeError('SOURCE_CLEANLINESS_FAIL')
  if item['scene_semantic_verified'] is not True: raise RuntimeError('SCENE_SEMANTIC_GLOBAL_FAIL')
+ _validate_premium_editorial(c,item)
  y=int(item['film_year']); current=datetime.now().year
  if y>current+1: raise RuntimeError('FUTURE_YEAR_FAIL')
  if item['work_type']=='film':
