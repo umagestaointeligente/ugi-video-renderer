@@ -40,7 +40,7 @@ jobs:
           test ! -e vendor/cena-certa-factory-v2/payload-v2
           test ! -e .github/workflows/cena-certa-gitlab-r2-bridge-20260903.yml
           test ! -e .github/workflows/cena-certa-seal-assets-once.yml
-          ! grep -RInE 'drive\.usercontent|d2ol7oe51mr4n9|mask_last_layer_patch|batch_2026_09_03|sed -i|assets-b64|payload-exact-v1|payload-test|payload-v2' "$ROOT"
+          ! grep -RInE 'base64|\.b64|drive\.usercontent|d2ol7oe51mr4n9|mask_last_layer_patch|batch_2026_09_03|sed -i|assets-b64|payload-exact-v1|payload-test|payload-v2' "$ROOT"
           echo LEGACY_ROUTE_SCAN_PASS
       - name: Runtime and physical asset gate
         shell: bash
