@@ -15,12 +15,13 @@ def _silence_guard(path,total):
  if any(x>0.72 for x in durations): raise RuntimeError(f'AUDIO_SILENCE_FAIL max={max(durations):.3f}')
  return max(durations) if durations else 0.0
 
-def _masked_mae(actual,reference_rgba,box):
+def _masked_luma_mae(actual,reference_rgba,box):
  x,y,w,h=box; a=np.asarray(actual.crop((x,y,x+w,y+h)).convert('RGB'),dtype=np.float32)/255.0
  r=reference_rgba.crop((x,y,x+w,y+h)).convert('RGBA'); rr=np.asarray(r,dtype=np.float32); alpha=rr[:,:,3]>220
  if not alpha.any(): raise RuntimeError('MASKED_REFERENCE_EMPTY')
- rgb=rr[:,:,:3]/255.0
- return float(np.abs(a[alpha]-rgb[alpha]).mean())
+ rgb=rr[:,:,:3]/255.0; weights=np.asarray([0.2126,0.7152,0.0722],dtype=np.float32)
+ ay=(a*weights).sum(axis=2); ry=(rgb*weights).sum(axis=2)
+ return float(np.abs(ay[alpha]-ry[alpha]).mean())
 
 def qa_video(c,item,out,story_duration,cues):
  probe=ffprobe(out); streams=probe.get('streams') or []; v=next((x for x in streams if x['codec_type']=='video'),None); a=next((x for x in streams if x['codec_type']=='audio'),None)
@@ -43,7 +44,7 @@ def qa_video(c,item,out,story_duration,cues):
    if score>c['qa']['static_region_pixel_mae_max']: raise RuntimeError(f'STATIC_REGION_FAIL checkpoint={n} {key} {score:.4f}')
   tx,ty,tw,th=geo['title_panel']; title_score=mae(sf.crop((tx,ty,tx+tw,ty+th)),expected_title_im); row['title_panel']=title_score
   if title_score>c['qa']['title_panel_pixel_mae_max']: raise RuntimeError(f'TITLE_PANEL_PIXEL_FAIL checkpoint={n} score={title_score:.4f}')
-  border_score=_masked_mae(sf,mask,geo['film_window']); row['film_border']=border_score
+  border_score=_masked_luma_mae(sf,mask,geo['film_window']); row['film_border_luma']=border_score
   if border_score>c['qa']['film_border_pixel_mae_max']: raise RuntimeError(f'FILM_BORDER_PIXEL_FAIL checkpoint={n} score={border_score:.4f}')
   black=_black_band_score(sf,geo['film_window']); row['black_edge_score']=black
   if c['qa']['black_padding_forbidden'] and black>0.985: raise RuntimeError(f'BLACK_PADDING_FAIL checkpoint={n} score={black:.4f}')
