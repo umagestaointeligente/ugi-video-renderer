@@ -1,0 +1,63 @@
+name: Career360 V15 Browser Smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'career360/frontend/app-k.js'
+      - 'career360/frontend/app-l.js'
+      - 'career360/frontend/index.html'
+      - 'career360/tests/v15-browser-smoke.mjs'
+      - '.github/workflows/career360-v15-browser-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: career360-v15-browser-smoke
+  cancel-in-progress: true
+
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: JavaScript syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check career360/frontend/app-k.js
+          cp career360/frontend/app-l.js /tmp/app-l.mjs
+          node --check /tmp/app-l.mjs
+
+      - name: Canonical pin gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' career360/frontend/index.html >/dev/null
+          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' career360/frontend/index.html >/dev/null
+          test "$(grep -o 'career360/frontend/app-l.js' career360/frontend/index.html | wc -l | tr -d ' ')" = '1'
+
+      - name: Install isolated Playwright
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/career360-browser
+          cd /tmp/career360-browser
+          npm init -y >/dev/null 2>&1
+          npm install --silent playwright@latest
+          npx playwright install --with-deps chromium
+          cp "$GITHUB_WORKSPACE/career360/tests/v15-browser-smoke.mjs" ./v15-browser-smoke.mjs
+
+      - name: Run responsive and Photo Studio browser regression
+        env:
+          REPO_ROOT: ${{ github.workspace }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/career360-browser
+          node v15-browser-smoke.mjs
