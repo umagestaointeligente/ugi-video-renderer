@@ -50,6 +50,7 @@ jobs:
           set -euo pipefail
           python3 -m py_compile \
             scripts/ugi_publisher_hub.py \
+            scripts/ugi_publisher_hub_low_call.py \
             scripts/ugi_render_reconciler.py \
             scripts/ugi_anti_repeat_gate.py \
             scripts/ugi_topic_history_sync.py \
@@ -117,9 +118,9 @@ jobs:
           MANIFEST="${{ github.event.inputs.manifest || '' }}"
           WAIT="${{ github.event.inputs.wait_seconds || '0' }}"
           if [ -n "$MANIFEST" ]; then
-            python3 scripts/ugi_publisher_hub.py --manifest "$MANIFEST" --wait-seconds "$WAIT"
+            python3 scripts/ugi_publisher_hub_low_call.py --manifest "$MANIFEST" --wait-seconds "$WAIT"
           else
-            python3 scripts/ugi_publisher_hub.py --wait-seconds "$WAIT"
+            python3 scripts/ugi_publisher_hub_low_call.py --wait-seconds "$WAIT"
           fi
 
       - name: Record Buffer cooldown without probing
