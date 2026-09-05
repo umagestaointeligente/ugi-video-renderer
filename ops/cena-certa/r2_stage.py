@@ -4,13 +4,19 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import mimetypes
 import os
 import pathlib
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+
+
+def _auth_headers(key: str) -> dict[str, str]:
+    return {
+        'x-ugi-video-upload-key': key,
+        'User-Agent': 'CenaCertaFactoryV2/2',
+    }
 
 
 def _json_request(req: urllib.request.Request, timeout: float) -> dict:
@@ -62,7 +68,7 @@ def _public_url(base: str, storage_rid: str) -> tuple[str, str]:
 def _head_exact(url: str, expected_size: int, attempts: int = 8) -> bool:
     for attempt in range(attempts):
         try:
-            req = urllib.request.Request(url, method='HEAD')
+            req = urllib.request.Request(url, method='HEAD', headers={'User-Agent': 'CenaCertaFactoryV2/2'})
             with urllib.request.urlopen(req, timeout=15) as r:
                 size = int(r.headers.get('Content-Length') or 0)
                 ctype = (r.headers.get('Content-Type') or '').lower()
@@ -75,6 +81,16 @@ def _head_exact(url: str, expected_size: int, attempts: int = 8) -> bool:
     return False
 
 
+def _http_error_detail(error: urllib.error.HTTPError) -> str:
+    try:
+        body = error.read().decode('utf-8', 'replace').strip()
+    except Exception:
+        body = ''
+    if len(body) > 240:
+        body = body[:240]
+    return body
+
+
 def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, duration: float, out: pathlib.Path) -> dict:
     if len(batch_sha) != 64 or any(c not in '0123456789abcdef' for c in batch_sha.lower()):
         raise RuntimeError('BATCH_SHA256_INVALID')
@@ -85,11 +101,12 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
     size = mp4.stat().st_size
     upload_url = f"{base.rstrip('/')}/api/video-upload?renderId={urllib.parse.quote(storage_rid)}&duration={duration:.3f}"
     data = mp4.read_bytes()
-    req = urllib.request.Request(upload_url, data=data, method='POST', headers={
-        'Authorization': f'Bearer {key}',
+    headers = _auth_headers(key)
+    headers.update({
         'Content-Type': 'video/mp4',
         'Content-Length': str(size),
     })
+    req = urllib.request.Request(upload_url, data=data, method='POST', headers=headers)
 
     response = None
     post_state = 'NOT_SENT'
@@ -97,10 +114,11 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
         response = _json_request(req, timeout=120)
         post_state = 'RESPONSE_RECEIVED'
     except urllib.error.HTTPError as e:
-        # Explicit provider rejection is not ambiguous. Never retry blindly.
-        raise RuntimeError(f'R2_POST_EXPLICIT_HTTP_FAIL status={e.code}') from e
+        detail = _http_error_detail(e)
+        raise RuntimeError(f'R2_POST_EXPLICIT_HTTP_FAIL status={e.code} detail={detail!r}') from e
     except Exception as e:
         # Transport failure may have happened after provider accepted all bytes.
+        # Reconcile by deterministic public object before deciding anything else.
         post_state = f'RESPONSE_LOST:{type(e).__name__}'
         if not _head_exact(deterministic_url, size):
             raise RuntimeError(f'R2_POST_AMBIGUOUS_NOT_RECONCILED {post_state}') from e
@@ -111,7 +129,7 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
         for _ in range(12):
             time.sleep(2)
             try:
-                preq = urllib.request.Request(poll, headers={'Authorization': f'Bearer {key}'})
+                preq = urllib.request.Request(poll, headers=_auth_headers(key))
                 p = _json_request(preq, timeout=10)
                 media = _walk_media(p)
                 if media:
@@ -137,6 +155,7 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
         'videoUrl': video_url,
         'videoKey': video_key,
         'postState': post_state,
+        'authMode': 'x-ugi-video-upload-key',
         'blind_retry_used': False,
         'contentSha256': hashlib.sha256(data).hexdigest(),
     }
