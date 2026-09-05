@@ -5,6 +5,7 @@ on:
     branches: [feat/cena-certa-factory-v2-certified]
     paths:
       - '.github/workflows/cena-certa-private-pilots-v9.yml'
+      - 'ops/cena-certa/pilots/pilot-v9-20260905-two.json'
   workflow_dispatch:
 
 permissions:
