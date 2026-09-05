@@ -1,13 +1,13 @@
 # LSI — RECOVERY CURRENT
 
 Status: CURRENT / AUTORITATIVO PARA HANDOFF
-Atualizado: 2026-09-04 BRT
+Atualizado: 2026-09-05 BRT
 Âncora humana: `Recovery LSI`
 
 ## 0. Estado global
 
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=V11_1_PRODUCTION_V12_PROACTIVE_BACKEND_LIVE_V13_VISUAL_PROFILE_VERSIONED_V14_PHOTO_STUDIO_BACKEND_LIVE`
+`CURRENT_STATUS=V11_1_PRODUCTION_V12_PROACTIVE_BACKEND_LIVE_V13_VISUAL_PROFILE_VERSIONED_V14_PHOTO_STUDIO_LOCAL_POLISH_BACKEND_LIVE`
 `VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
 ## 1. Canônico / runtime
@@ -30,7 +30,7 @@ Vercel continua bundle estático/framework null. Não fazer deploy cego; preserv
 `CAREER_PRIVACY_P0=PASS_MASTER_PILOT_SCOPE`
 `MULTIUSER_ISOLATION=PASS`
 `SAFE_FILE_PIPELINE=PASS_MASTER_PILOT_SCOPE`
-`PROFILE_PHOTO_PRIVATE_BACKEND=LIVE_V2`
+`PROFILE_PHOTO_PRIVATE_BACKEND=LIVE_V5`
 `PARSER_1_0_3=LIVE`
 `PROFESSIONAL_PROFILE_V3=LIVE`
 `CONTE_DO_SEU_JEITO=LIVE`
@@ -43,7 +43,7 @@ Vercel continua bundle estático/framework null. Não fazer deploy cego; preserv
 `PROACTIVE_DIGEST_CRON=LIVE`
 `MAIL_DECISION=LIVE`
 `MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
-`PROFESSIONAL_PHOTO_STUDIO_BACKEND=LIVE`
+`PHOTO_STUDIO_LOCAL_POLISH_BACKEND=LIVE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
 ## 3. Princípios duros
@@ -62,9 +62,9 @@ Vercel continua bundle estático/framework null. Não fazer deploy cego; preserv
 - perfil não é público sem consentimento explícito;
 - foto profissional nunca substitui original sem aceite.
 
-## 4. V12 — Proactive Agent BACKEND LIVE
+## 4. V12 — Proactive Agent
 
-Componentes:
+Backend LIVE:
 - Activity Ledger;
 - Digest 4h/6h/8h/12h;
 - notifications;
@@ -80,7 +80,7 @@ Cron `career-proactive-digest` = ACTIVE.
 UI: `career360/frontend/app-i.js`
 `PROACTIVE_UI_V12=VERSIONED_NOT_YET_PROMOTED`.
 
-## 5. V13 — Meu Perfil VISUAL VERSIONADO
+## 5. V13 — Meu Perfil Visual
 
 Arquivo: `career360/frontend/app-j.js`.
 
@@ -98,7 +98,7 @@ Meu Perfil interno:
 - competências;
 - formação;
 - idiomas/certificações;
-- copiar Headline/Sobre/Experiência/Competências;
+- copiar blocos para LinkedIn;
 - baixar currículo;
 - selo `Só você vê por enquanto`.
 
@@ -108,22 +108,24 @@ Meu Perfil interno:
 
 ### Backend LIVE
 
-Migration:
-`career360/migrations/20260904_professional_photo_studio_v1.sql`
+Migration canônica:
+`career360/migrations/20260905_professional_photo_studio_v1.sql`
 
-Hardening:
-`career360/migrations/20260904_professional_photo_studio_trigger_hardening.sql`
+Tabela:
+`career_professional_photo_jobs`
 
-Tabelas:
-- `career_photo_preferences`;
-- `career_photo_variants`.
+Campos de seleção no perfil:
+- `active_professional_photo_job_id`;
+- `photo_style_preference`.
 
-Edges:
-- `career-photo-studio=ACTIVE / JWT_REQUIRED`;
-- `career-profile-photo=V2 ACTIVE / JWT_REQUIRED`.
+Edges ACTIVE / JWT required:
+- `career-photo-studio`;
+- `career-professional-photo-plan`;
+- `career-professional-photo-decision`;
+- `career-profile-photo` V5.
 
-Fluxo:
-`ORIGINAL -> CONTEXTO DE CARREIRA -> ESTILO -> AJUSTE -> ANTES/DEPOIS -> ACEITAR/MANTER ORIGINAL`.
+Fluxo zero-cash:
+`ORIGINAL -> CONTEXTO DE CARREIRA -> ESTILO -> AJUSTE LOCAL NO NAVEGADOR -> ANTES/DEPOIS -> ACEITAR/MANTER ORIGINAL`.
 
 Contexto permitido:
 - cargo atual;
@@ -131,30 +133,31 @@ Contexto permitido:
 
 Estilos:
 - executive;
-- corporate;
+- commercial;
 - modern;
-- creative.
+- creative;
+- professional.
 
 Regras:
 - preservar identidade;
-- não alterar idade/gênero/corpo/rosto;
-- não inferir atributo sensível;
+- não alterar idade/gênero/raça/corpo/rosto;
 - foto nunca entra no matching/FIT;
 - original preservada;
-- variante aceita passa a ser `photo` de exibição, mas original continua disponível;
-- trocar original invalida variantes antigas.
+- variante aceita passa a ser `photo` de exibição;
+- trocar original remove/invalida derivações antigas.
 
-### Local Professional Polish — pronto no frontend
+### Local Professional Polish
 
-Arquivo: `career360/frontend/app-k.js`.
+Frontend versionado:
+`career360/frontend/app-k.js`.
 
-Processamento zero-cash no navegador:
-- enquadramento 4:5;
+Processamento zero-cash no aparelho:
+- crop 4:5;
 - segmentação pessoa/fundo;
-- fundo neutro conforme estilo profissional;
+- fundo profissional conforme estilo;
 - brilho/contraste/saturação suaves;
 - upload privado da variante;
-- comparação original x profissional;
+- comparação Original x Profissional;
 - aceitar ou voltar para original.
 
 `PHOTO_STUDIO_UI=VERSIONED_NOT_YET_PROMOTED`.
@@ -162,10 +165,7 @@ Processamento zero-cash no navegador:
 ### Generative provider
 
 `GENERATIVE_PHOTO_PROVIDER=NOT_CONFIGURED`.
-Não fingir alteração generativa de roupa/cenário. O modelo de dados já suporta `local_polish | generative` para evolução futura.
-
-Release:
-`career360/releases/MASTER_PILOT_1_0_PROFESSIONAL_PHOTO_STUDIO_V14_2026-09-04.md`
+Não fingir troca generativa de roupa/cenário. A primeira versão funcional é local polish.
 
 ## 7. Radar / Matching
 
@@ -193,7 +193,7 @@ Foto no PDF é opt-in.
 ## 9. Segurança / pré-Beta
 
 Security Advisor após V14:
-- nenhum WARN novo do Estúdio;
+- nenhum WARN novo estrutural de RLS;
 - permanece apenas `auth_leaked_password_protection=DISABLED/WARN`.
 
 Também pendente:
@@ -222,7 +222,7 @@ Gates:
 
 1. promoção controlada V12+V13+V14;
 2. teste Android;
-3. conectar provedor real generativo somente se houver rota sem romper zero-cash/próximo-degrau;
+3. avaliar provider generativo apenas como Próximo Degrau;
 4. conectar e-mail OAuth + receipts;
 5. ligar candidatura real ao funil;
 6. follow-up scheduler;
@@ -250,6 +250,6 @@ Gates:
 Manifesto: `docs/projects/LSI_CAREER360.md`
 V12: `career360/releases/MASTER_PILOT_1_0_PROACTIVE_AGENT_V12_2026-09-04.md`
 V13: `career360/releases/MASTER_PILOT_1_0_VISUAL_PROFILE_V13_2026-09-04.md`
-V14: `career360/releases/MASTER_PILOT_1_0_PROFESSIONAL_PHOTO_STUDIO_V14_2026-09-04.md`
+V14: `career360/releases/MASTER_PILOT_1_0_PROFESSIONAL_PHOTO_STUDIO_V14_2026-09-05.md`
 
-`LAST_VERIFIED_CHANGE=PHOTO_STUDIO_V14_BACKEND_LIVE_PROFILE_PHOTO_V2_ACTIVE_LOCAL_POLISH_UI_VERSIONED_NOT_PROMOTED_GENERATIVE_PROVIDER_NOT_CONFIGURED`
+`LAST_VERIFIED_CHANGE=PHOTO_STUDIO_V14_LOCAL_POLISH_BACKEND_LIVE_APP_K_VERSIONED_NOT_PROMOTED_GENERATIVE_PROVIDER_NOT_CONFIGURED`
