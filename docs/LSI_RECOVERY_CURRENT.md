@@ -10,7 +10,7 @@ Handoff canônico desta transição de chat:
 ## 0. Estado global
 
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=V14_PRODUCTION_WITH_V15_CANONICAL_BUNDLE_WIRED_NOT_VERCEL_DEPLOYED`
+`CURRENT_STATUS=V14_PRODUCTION_STABLE_WITH_V15_CANONICAL_BUNDLE_HARDENED_NOT_VERCEL_DEPLOYED`
 `VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
 ## 1. Canônico / runtime
@@ -33,7 +33,7 @@ Verificado em runtime em 2026-09-05:
 - target `production`;
 - alias oficial presente;
 - HTTP 200;
-- HTML oficial carrega `app-i.js`, `app-j.js` e `app-k.js`;
+- HTML oficial carrega `app-i.js`, `app-j.js` e a versão V14 anterior de `app-k.js`;
 - HTML oficial ainda NÃO carrega `app-l.js`;
 - nenhum runtime error no Vercel no período pós-readback consultado.
 
@@ -55,9 +55,10 @@ Verificado em runtime em 2026-09-05:
 `PROACTIVE_UI_V12=LIVE`
 `VISUAL_PROFILE_V13=LIVE`
 `PHOTO_STUDIO_V14=LIVE_LOCAL_ZERO_CASH`
+`PHOTO_STUDIO_MOBILE_FALLBACK_HARDENING=VERSIONED_NOT_YET_PROMOTED`
 `CAREER_UI_STATE_V15=LIVE`
 `SCALE_DB_HARDENING_V15=LIVE`
-`UI_RESPONSIVE_V15=CANONICAL_BUNDLE_WIRED_VERCEL_NOT_YET_DEPLOYED`
+`UI_RESPONSIVE_V15=CANONICAL_BUNDLE_HARDENED_VERCEL_NOT_YET_DEPLOYED`
 `MAIL_DECISION=LIVE`
 `MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
@@ -121,14 +122,14 @@ Sem URL pública/exposição automática.
 
 ## 6. V14 — Professional Photo Studio LIVE
 
-Backend:
+Backend LIVE, sem alteração neste gate:
 - `career_profile_photo_variants`;
 - `career_profile_photo_settings`;
-- `career-photo-studio`;
-- `career-profile-photo`.
+- `career-photo-studio` V11;
+- `career-profile-photo` V10.
 
-Frontend:
-`career360/frontend/app-k.js`.
+Frontend oficial atualmente LIVE:
+`career360/frontend/app-k.js` na versão já promovida no deployment V14 atual.
 
 Fluxo:
 `ORIGINAL -> CONTEXTO DE CARREIRA -> ESTILO -> POLIMENTO LOCAL -> ANTES/DEPOIS -> ACEITAR OU MANTER ORIGINAL`
@@ -141,6 +142,27 @@ Runtime:
 `AI_GENERATION_EXTERNAL=NOT_CONFIGURED`
 
 Não declarar geração externa LIVE.
+
+### Hardening mobile versionado / ainda não promovido
+
+Durante o gate pré-V15 foi encontrada uma lacuna real no fallback local:
+- se a biblioteca MediaPipe não carregasse, já existia fallback canvas;
+- se a biblioteca carregasse mas falhasse durante segmentação/processamento no dispositivo, o fluxo podia abortar em vez de cair no fallback.
+
+Correção versionada em:
+`career360/frontend/app-k.js`
+
+Commit imutável:
+`6df7b4e63d7e52ce3c3f02247392b98f0393cbe8`
+
+A correção:
+- mantém MediaPipe quando funciona;
+- captura falha de runtime/segmentação;
+- fecha o segmentador quando possível;
+- cai para o polish canvas local seguro;
+- não altera backend, identidade, estilos, aceite, reversão ou uso da foto no FIT.
+
+Esse hardening só se torna produção quando o próximo deployment oficial carregar o novo pin de `app-k.js`.
 
 Gate humano Android ainda pendente:
 `MELHORAR -> GERAR -> COMPARAR -> ACEITAR -> VALIDAR MINHA PÁGINA/MEU PERFIL/PDF -> VOLTAR À ORIGINAL -> CONFIRMAR ROLLBACK`.
@@ -178,24 +200,46 @@ Resultado comprovado no Performance Advisor:
 - `unindexed_foreign_keys` removidos;
 - permanecem apenas `unused_index` INFOs esperados em piloto de baixo tráfego.
 
-### Frontend V15 WIRED NO BUNDLE CANÔNICO / NÃO DEPLOYED NA PRODUÇÃO VERCEL
+### Frontend V15 HARDENED NO BUNDLE CANÔNICO / NÃO DEPLOYED NA PRODUÇÃO VERCEL
 
 Arquivo:
 `career360/frontend/app-l.js`.
 
-Versão imutável do `app-l.js`:
-`0676320297ef6b01bffc7f5fb05c38a0600fc24d`.
+A revisão pré-promoção encontrou e corrigiu dois pontos antes de chegarem à produção:
 
-Bundle canônico atualizado em:
+1. `MutationObserver` podia autoacionar novas mutações ao reescrever repetidamente os próprios rótulos de navegação, criando churn de DOM em intervalos curtos e risco de lentidão mobile.
+2. Antes da resposta de `career-ui-state`, capacidades desconhecidas eram representadas implicitamente como `local/off`, contrariando `A UI NÃO ADIVINHA CAPACIDADES`.
+
+Hardening final do `app-l.js`:
+- escrita de labels idempotente com `dataset.v15Nav`;
+- preservação do badge do agente;
+- provider só é reescrito quando necessário;
+- `ResizeObserver` não regrava a mesma largura;
+- capacidades permanecem `unknown` até `career-ui-state` responder.
+
+Commits do hardening:
+- observer/idempotência: `c60a6e98a30db03a4c6d70f99fd133076618297d`;
+- estado desconhecido fail-closed: `f8e891b44fc69e1ee44505e4f89d69ca7104567c`.
+
+Versão imutável final a promover do `app-l.js`:
+`f8e891b44fc69e1ee44505e4f89d69ca7104567c`.
+
+### Bundle canônico final para próximo deployment
+
+Arquivo:
 `career360/frontend/index.html`.
 
-Commit de wiring:
-`032bdbb8860c940cf3d5ca0d9ad62f72f69b7a81`.
+Commit final do bundle:
+`dbf1913748563d5a3aa51bfa8aa2473fb6ba3fd3`.
 
-Diff comprovado do wiring:
-- 1 adição;
-- 0 remoções;
-- única alteração: inclusão de `app-l.js` após `app-k.js`.
+Pins finais:
+- `app-k.js` -> `6df7b4e63d7e52ce3c3f02247392b98f0393cbe8`;
+- `app-l.js` -> `f8e891b44fc69e1ee44505e4f89d69ca7104567c`.
+
+Diff comprovado do repin final:
+- 2 adições;
+- 2 remoções;
+- únicas alterações: os dois pins acima.
 
 Responsividade alvo para 360 / 412 / 768 / 1180 px:
 - tipografia/spacing com `clamp`;
@@ -209,8 +253,8 @@ Responsividade alvo para 360 / 412 / 768 / 1180 px:
 - densidade reduzida sem esconder informação crítica.
 
 IMPORTANTE:
-A produção oficial atual AINDA NÃO referencia `app-l.js`.
-Não declarar `UI_V15=LIVE` até existir deployment do projeto Vercel oficial carregando `app-l.js` e passar validação responsiva + Android.
+A produção oficial atual AINDA NÃO referencia `app-l.js` e ainda não carrega os pins hardened acima.
+Não declarar `UI_V15=LIVE` nem `PHOTO_STUDIO_MOBILE_FALLBACK_HARDENING=LIVE` até existir deployment do projeto Vercel oficial carregando o bundle `dbf191...` e passar validação responsiva + Android.
 
 ### Guardrail de deployment descoberto no readback
 
@@ -256,9 +300,9 @@ Performance Advisor após V15:
 
 ## 11. Próximos gates
 
-1. criar deployment PREVIEW determinístico do bundle V15 no projeto Vercel oficial `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP` usando rota explicitamente project-scoped;
+1. criar deployment PREVIEW determinístico do bundle `dbf1913748563d5a3aa51bfa8aa2473fb6ba3fd3` no projeto Vercel oficial `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP` usando rota explicitamente project-scoped;
 2. validar preview em 360/412/768/1180 e runtime errors;
-3. promover/criar produção V15 e confirmar alias oficial + HTTP 200 + `app-l.js` no HTML;
+3. promover/criar produção e confirmar alias oficial + HTTP 200 + pins hardened de `app-k.js`/`app-l.js` no HTML;
 4. validar Android real;
 5. validar Photo Studio gerar/comparar/aceitar/reverter no Android;
 6. conectar e-mail OAuth + receipts reais;
@@ -281,7 +325,8 @@ Performance Advisor após V15:
 - não fingir geração externa de imagem;
 - não substituir original silenciosamente;
 - não declarar UI V15 LIVE antes do bundle oficial Vercel carregar `app-l.js` e passar validação;
+- não declarar o hardening mobile do Photo Studio LIVE antes do bundle oficial carregar o novo `app-k.js`;
 - não usar deploy Vercel sem escopo determinístico do projeto oficial;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V15_APP_L_WIRED_IN_CANONICAL_INDEX_COMMIT_032BDBB_ONE_LINE_ONLY_VERCEL_OFFICIAL_STILL_V14_HTTP200_NO_RUNTIME_ERRORS_UI_V15_NOT_LIVE`
+`LAST_VERIFIED_CHANGE=CANONICAL_BUNDLE_DBF191_PINS_APP_K_6DF7B4E_AND_APP_L_F8E891_V15_OBSERVER_AND_CAPABILITY_HARDENED_PHOTO_STUDIO_RUNTIME_FALLBACK_HARDENED_VERCEL_OFFICIAL_STILL_V14_UI_V15_NOT_LIVE`
