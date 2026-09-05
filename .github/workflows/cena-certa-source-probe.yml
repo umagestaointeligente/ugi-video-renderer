@@ -15,43 +15,39 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v7
-      - name: Resolve licensed source candidates without media download
+      - name: Resolve licensed Wikimedia source derivatives without media download
         shell: python
         run: |
-          import html,json,re,urllib.request,urllib.parse
-          targets={
-            'overlord':'https://jibzee.com/movie/scp-overlord/',
-            'dollhouse':'https://jibzee.com/movie/scp-dollhouse/'
+          import json, urllib.parse, urllib.request
+          files={
+            'tears':'Tears of Steel 1080p.webm',
+            'scp_cb':'SCP- Containment Breach - The Movie - SCP-173 Live Action.webm',
+            'antimemetics':'There Is No Antimemetics Division.webm',
+            'pendatang':'PENDATANG (2023) full movie.webm',
           }
-          headers={'User-Agent':'Mozilla/5.0 CenaCertaSourceProbe/1.0'}
-          report={'schema':'CENA_CERTA_SOURCE_PROBE_V1','items':[]}
-          def get(url):
+          headers={'User-Agent':'CenaCertaSourceProbe/2.0 (canonical production preflight)'}
+          rows=[]
+          for rid,title in files.items():
+              params=urllib.parse.urlencode({
+                  'action':'query','format':'json','formatversion':'2','prop':'videoinfo',
+                  'titles':'File:'+title,'viprop':'url|size|mime|derivatives'
+              })
+              url='https://commons.wikimedia.org/w/api.php?'+params
               req=urllib.request.Request(url,headers=headers)
-              with urllib.request.urlopen(req,timeout=20) as r:
-                  return r.geturl(),r.read(5_000_000).decode('utf-8','replace')
-          for name,page in targets.items():
-              final,body=get(page)
-              urls=set(re.findall(r'https?://[^\"\'<>\\s]+',html.unescape(body)))
-              embeds=[u for u in urls if '/embed' in u]
-              embeds += [urllib.parse.urljoin(final,x) for x in re.findall(r'(?:src|href)=[\"\']([^\"\']*?/embed[^\"\']*)',body,re.I)]
-              bodies=[('page',body)]
-              embed_errors=[]
-              for e in sorted(set(embeds))[:5]:
-                  try:
-                      ef,eb=get(e); bodies.append(('embed:'+ef,eb))
-                  except Exception as ex:
-                      embed_errors.append({'url':e,'error':type(ex).__name__+': '+str(ex)[:160]})
-              found=set()
-              for label,text in bodies:
-                  decoded=html.unescape(text).replace('\\/','/')
-                  for u in re.findall(r'https?://[^\"\'<>\\s]+',decoded):
-                      clean=u.rstrip('),;')
-                      if any(x in clean.lower() for x in ('.mp4','.webm','.m3u8','.mpd')):
-                          found.add(clean)
-                  for m in re.findall(r'[\"\']([^\"\']+\.(?:mp4|webm|m3u8|mpd)(?:\?[^\"\']*)?)[\"\']',decoded,re.I):
-                      found.add(urllib.parse.urljoin(page,m))
-              report['items'].append({'id':name,'page':page,'embed_urls':sorted(set(embeds)),'media_candidates':sorted(found),'embed_errors':embed_errors})
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  data=json.load(r)
+              page=data['query']['pages'][0]
+              vi=page['videoinfo'][0]
+              derivatives=[]
+              for d in vi.get('derivatives',[]):
+                  src=d.get('src')
+                  if src and src.startswith('//'): src='https:'+src
+                  derivatives.append({
+                      'src':src,'type':d.get('type'),'transcodekey':d.get('transcodekey'),
+                      'width':d.get('width'),'height':d.get('height'),'bandwidth':d.get('bandwidth')
+                  })
+              rows.append({'id':rid,'title':title,'original_url':vi.get('url'),'size':vi.get('size'),'mime':vi.get('mime'),'derivatives':derivatives})
+          report={'schema':'CENA_CERTA_COMMONS_SOURCE_PROBE_V2','items':rows}
           open('source-probe.json','w',encoding='utf-8').write(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
           print(json.dumps(report,indent=2,ensure_ascii=False))
       - uses: actions/upload-artifact@v4
