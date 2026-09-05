@@ -61,7 +61,9 @@ def _poll_url(obj):
 
 
 def _public_url(base: str, storage_rid: str) -> tuple[str, str]:
-    key = f'videos/{storage_rid}.mp4'
+    # Live Worker canonical storage contract. Keep this deterministic so a lost
+    # POST response can be reconciled with a public HEAD instead of re-sending.
+    key = f'geradas/videos/{storage_rid}/instagram.mp4'
     return f"{base.rstrip('/')}/media/{urllib.parse.quote(key, safe='')}", key
 
 
@@ -156,6 +158,7 @@ def stage(base: str, key: str, rid: str, batch_sha: str, mp4: pathlib.Path, dura
         'videoKey': video_key,
         'postState': post_state,
         'authMode': 'x-ugi-video-upload-key',
+        'storageContract': 'geradas/videos/{storageRenderId}/instagram.mp4',
         'blind_retry_used': False,
         'contentSha256': hashlib.sha256(data).hexdigest(),
     }
