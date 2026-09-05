@@ -5,7 +5,6 @@ on:
     branches: [feat/cena-certa-factory-v2-certified]
     paths:
       - '.github/workflows/cena-certa-source-probe.yml'
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,34 +14,38 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
-      - name: Resolve final Cosmonaut archive item without media download
+      - name: Resolve and HEAD exact four production sources
         shell: python
         run: |
           import json, urllib.parse, urllib.request
-          headers={'User-Agent':'CenaCertaSourceProbe/4.0 (canonical production preflight)'}
-          q='title:("The Cosmonaut" OR "El Cosmonauta") AND mediatype:movies'
-          params=urllib.parse.urlencode({'q':q,'fl[]':['identifier','title','year','date','licenseurl'],'rows':50,'page':1,'output':'json'})
-          req=urllib.request.Request('https://archive.org/advancedsearch.php?'+params,headers=headers)
-          with urllib.request.urlopen(req,timeout=30) as r: data=json.load(r)
-          candidates=[]
-          for doc in data.get('response',{}).get('docs',[]):
-              ident=doc.get('identifier')
-              if not ident: continue
-              mreq=urllib.request.Request('https://archive.org/metadata/'+urllib.parse.quote(str(ident)),headers=headers)
-              try:
-                  with urllib.request.urlopen(mreq,timeout=20) as r: meta=json.load(r)
-              except Exception as e:
-                  candidates.append({'identifier':ident,'metadata_error':type(e).__name__}); continue
-              files=[]
-              for f in meta.get('files',[]):
-                  name=str(f.get('name') or ''); fmt=str(f.get('format') or '')
-                  try: size=int(f.get('size') or 0)
-                  except: size=0
-                  low=(name+' '+fmt).lower()
-                  if size and size<=2147483648 and any(x in low for x in ('.mp4','.mkv','.webm','h.264','mpeg4','matroska')):
-                      files.append({'name':name,'format':fmt,'size':size,'url':'https://archive.org/download/'+urllib.parse.quote(str(ident))+'/'+urllib.parse.quote(name)})
-              candidates.append({'identifier':ident,'search_title':doc.get('title'),'search_year':doc.get('year'),'metadata_title':meta.get('metadata',{}).get('title'),'metadata_date':meta.get('metadata',{}).get('date'),'metadata_licenseurl':meta.get('metadata',{}).get('licenseurl'),'description':str(meta.get('metadata',{}).get('description') or '')[:1000],'files':files})
-          report={'schema':'CENA_CERTA_COSMONAUT_ARCHIVE_RESOLUTION_V1','query':q,'candidates':candidates}
+          headers={'User-Agent':'CenaCertaSourceProbe/5.0 (canonical production preflight)'}
+          files={
+            'tears':'Tears of Steel 1080p.webm',
+            'pendatang':'PENDATANG (2023) full movie.webm',
+            'bodega':'Breakfast at the Bodega.webm',
+            'scp':'SCP- Containment Breach - The Movie - SCP-173 Live Action.webm',
+          }
+          wanted={'tears':'720p.vp9.webm','pendatang':'720p.vp9.webm','bodega':'720p.vp9.webm','scp':'480p.vp9.webm'}
+          rows=[]
+          for rid,title in files.items():
+              params=urllib.parse.urlencode({'action':'query','format':'json','formatversion':'2','prop':'videoinfo','titles':'File:'+title,'viprop':'url|size|mime|derivatives'})
+              req=urllib.request.Request('https://commons.wikimedia.org/w/api.php?'+params,headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: data=json.load(r)
+              page=data['query']['pages'][0]; vi=page['videoinfo'][0]
+              candidates=[]
+              for d in vi.get('derivatives',[]):
+                  src=d.get('src') or ''
+                  if src.startswith('//'): src='https:'+src
+                  if src and wanted[rid] in src:
+                      candidates.append(src)
+              if not candidates: raise SystemExit('DERIVATIVE_NOT_FOUND '+rid+' '+wanted[rid])
+              src=candidates[0]
+              hreq=urllib.request.Request(src,headers=headers,method='HEAD')
+              with urllib.request.urlopen(hreq,timeout=30) as r:
+                  length=int(r.headers.get('Content-Length') or 0); ctype=r.headers.get('Content-Type'); final=r.geturl(); status=r.status
+              if status<200 or status>=400 or not length or length>2147483648: raise SystemExit(f'SOURCE_HEAD_FAIL {rid} {status} {length}')
+              rows.append({'id':rid,'title':title,'url':src,'final_url':final,'status':status,'content_length':length,'content_type':ctype})
+          report={'schema':'CENA_CERTA_EXACT4_SOURCE_PROOF_V1','items':rows}
           open('source-probe.json','w',encoding='utf-8').write(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
           print(json.dumps(report,indent=2,ensure_ascii=False))
       - uses: actions/upload-artifact@v4
