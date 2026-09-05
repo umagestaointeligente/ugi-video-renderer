@@ -10,14 +10,22 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 env:
   ROOT: vendor/cena-certa-factory-v2/src
+  RUNTIME_IMAGE: ghcr.io/umagestaointeligente/cena-certa-runtime
+  RUNTIME_DIGEST: sha256:aaf34c7963bee220ee566ecc65fc697e79e6c549073c4df8d38ad7ebced14ecf
 
 jobs:
   certified-smoke:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:aaf34c7963bee220ee566ecc65fc697e79e6c549073c4df8d38ad7ebced14ecf
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
       KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
@@ -25,37 +33,29 @@ jobs:
       - uses: actions/checkout@v7
 
       - id: clock
-        name: Start SLA clock
+        name: Start Factory SLA clock
         shell: bash
         run: |
-          echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
-          echo "SMOKE_START_EPOCH=$(date +%s)"
+          now=$(date +%s)
+          echo "started=$now" >> "$GITHUB_OUTPUT"
+          echo "FACTORY_SLA_START_EPOCH=$now"
 
-      - uses: actions/setup-python@v7
-        with:
-          python-version: '3.12'
-          cache: pip
-          cache-dependency-path: vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/requirements.render.lock.txt
-
-      - name: Install deterministic media runtime once
+      - name: Prove pinned runtime
         shell: bash
         run: |
           set -euo pipefail
-          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1 || ! fc-match Lato 2>/dev/null | grep -qi 'Lato'; then
-            ok=0
-            for attempt in 1 2; do
-              echo "RUNTIME_INSTALL_ATTEMPT=$attempt"
-              if timeout 240s bash -lc 'sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg fonts-lato fonts-dejavu-core >/dev/null'; then
-                ok=1
-                break
-              fi
-              sleep 3
-            done
-            test "$ok" = 1 || { echo RUNTIME_INSTALL_FAIL; exit 1; }
-          fi
+          bash --version | head -1
+          git --version
           ffmpeg -version | head -1
           ffprobe -version | head -1
           fc-match Lato | head -1
+          python - <<'PY'
+          import PIL,numpy
+          assert PIL.__version__=='12.3.0'
+          assert numpy.__version__=='2.5.2'
+          print('PINNED_RUNTIME_HEALTH_PASS')
+          PY
+          echo "PINNED_RUNTIME=${RUNTIME_IMAGE}@${RUNTIME_DIGEST}"
 
       - name: Negative legacy scan and physical master gate
         shell: bash
@@ -68,7 +68,6 @@ jobs:
           test ! -e .github/workflows/cena-certa-gitlab-r2-bridge-20260903.yml
           test ! -e .github/workflows/cena-certa-seal-assets-once.yml
           ! grep -RInE 'base64|\.b64|drive\.usercontent|d2ol7oe51mr4n9|mask_last_layer_patch|batch_2026_09_03|sed -i|assets-b64|payload-exact-v1|payload-test|payload-v2' "$ROOT"
-          python -m pip install -q -r "$ROOT/factory/cena_certa/v2/requirements.render.lock.txt"
           export PYTHONPATH="$ROOT"
           python -m py_compile "$ROOT"/factory/cena_certa/v2/*.py
           python - <<'PY'
@@ -97,11 +96,15 @@ jobs:
           test "$(find slots -maxdepth 1 -name 'slot-*.mp4' | wc -l | tr -d ' ')" = 10
           python - <<'PY'
           import glob,json
+          elapsed=[]
           for p in sorted(glob.glob('slots/slot-*.receipt.json')):
               d=json.load(open(p,encoding='utf-8'))
               if not (d.get('render_pass') is True and d.get('qa_pass') is True and d.get('state')=='PREVIEW_READY'):
                   raise SystemExit(f'RENDER_QA_RECEIPT_FAIL {p}')
+              elapsed.append(float(d.get('elapsed_seconds',0)))
           print('TEN_RENDER_QA_RECEIPTS_PASS')
+          print('RENDER_ELAPSED_MAX_SECONDS',max(elapsed))
+          print('RENDER_ELAPSED_AVG_SECONDS',round(sum(elapsed)/len(elapsed),2))
           PY
 
       - name: Stage 10 unique R2 objects and prove public MP4 bytes
@@ -248,7 +251,7 @@ jobs:
           elapsed=$((end-start))
           echo "FULL_SMOKE_ELAPSED_SECONDS=$elapsed"
           test "$elapsed" -le 660
-          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"r2_public_probes":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"head_sha":"%s"}\n' "$elapsed" "$GITHUB_SHA" > certification.json
+          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"r2_public_probes":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s"}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" > certification.json
           cat certification.json
 
       - uses: actions/upload-artifact@v4
