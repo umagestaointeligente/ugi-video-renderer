@@ -1,0 +1,20 @@
+{
+  "ok": false,
+  "state": "CREATE_FAILED_FAIL_CLOSED",
+  "retryable": false,
+  "provider": "BUFFER",
+  "platform": "linkedin",
+  "target": "UGI — Uma Gestão Inteligente",
+  "personalProfileTargetAllowed": false,
+  "queueId": "UGI-20260905-LI-EDITORIAL-001",
+  "queueFile": "control-plane/publisher-hub/linkedin-queue/UGI-20260905-LI-EDITORIAL-001.json",
+  "create": {
+    "ok": false,
+    "error": "mode inválido",
+    "publicationTriggered": false,
+    "bufferMutationPerformed": false
+  },
+  "readback": null,
+  "publication": null,
+  "timestamp": "2026-09-05T23:19:38.627028+00:00"
+}
