@@ -78,13 +78,16 @@ def evaluate(operation: str, platform: str | None) -> dict[str, Any]:
             "bufferCallsMade": 0,
         }
 
+    # After the cooldown expires, exactly one recovery canary is allowed.
+    # The caller/workflow already enforces a maximum of one Buffer-backed call
+    # per run, so allowing this branch is what actually performs the canary.
     if next_probe is not None and now >= next_probe:
         return {
-            "allowed": False,
+            "allowed": True,
             "canaryDue": True,
             "operation": operation,
             "platform": plat,
-            "reason": "BUFFER_CIRCUIT_OPEN_CANARY_DUE",
+            "reason": "BUFFER_CIRCUIT_OPEN_CANARY_ALLOWED",
             "nextProbeAt": next_probe.isoformat(),
             "bufferCallsMade": 0,
         }
