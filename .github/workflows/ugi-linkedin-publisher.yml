@@ -1,0 +1,63 @@
+name: UGI LinkedIn Publisher
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/publisher-hub/linkedin-queue/*.json'
+      - 'scripts/ugi_linkedin_publisher.py'
+      - '.github/workflows/ugi-linkedin-publisher.yml'
+      - 'config/ugi/distribution-state.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-linkedin-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install runtime
+        run: python -m pip install --quiet requests
+      - name: Process at most one Buffer call
+        id: publisher
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          python scripts/ugi_linkedin_publisher.py
+      - name: Persist LinkedIn publication evidence and circuit state
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-linkedin-publisher-bot'
+          git config user.email 'ugi-linkedin-publisher@users.noreply.github.com'
+          git add control-plane/publisher-hub/receipts/*.json 2>/dev/null || true
+          git add control-plane/publisher-hub/linkedin-status/latest.json 2>/dev/null || true
+          git add control-plane/observability/buffer-circuit.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No LinkedIn state change'
+            exit 0
+          fi
+          git commit -m 'chore: persist UGI LinkedIn publication state [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Fail closed on publisher error
+        if: steps.publisher.outcome == 'failure'
+        run: exit 1
