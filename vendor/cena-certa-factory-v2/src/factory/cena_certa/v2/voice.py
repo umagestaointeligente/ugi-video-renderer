@@ -4,6 +4,15 @@ from pathlib import Path
 import edge_tts
 from .common import normalize_text,tokens,media_probe
 
+
+def _transient_tts_error(exc: Exception) -> bool:
+    if isinstance(exc, (asyncio.TimeoutError, TimeoutError, ConnectionError, OSError)):
+        return True
+    probe=(type(exc).__name__+' '+str(exc)).lower()
+    markers=('timeout','timed out','connection','websocket','temporar','429','502','503','504','no audio','voice_empty')
+    return any(x in probe for x in markers)
+
+
 async def _stream_once(c,text,part):
  words=[]; sentences=[]
  comm=edge_tts.Communicate(text,c['voice']['voice_id'],rate='+3%',volume='+0%')
@@ -14,11 +23,14 @@ async def _stream_once(c,text,part):
    elif chunk['type']=='SentenceBoundary': sentences.append((chunk['text'],chunk['offset']/1e7,chunk['duration']/1e7))
  return words,sentences
 
+
 async def tts_with_real_boundaries(c,text,caption_chunks,out):
  out=Path(out); out.parent.mkdir(parents=True,exist_ok=True)
  authored=' '.join(caption_chunks)
  if normalize_text(authored)!=normalize_text(text): raise RuntimeError('CAPTION_LITERAL_MISMATCH_BEFORE_TTS')
- timeout=float(c.get('runtime',{}).get('tts_timeout_seconds',50)); attempts=int(c.get('runtime',{}).get('tts_attempts',3))
+ timeout=float(c.get('runtime',{}).get('tts_timeout_seconds',50))
+ configured=max(1,int(c.get('runtime',{}).get('tts_attempts',1)))
+ attempts=min(configured,2)  # one primary call + at most one classified transient retry
  last=None; words=[]; sentences=[]
  for attempt in range(1,attempts+1):
   part=out.with_name(out.name+f'.part-{os.getpid()}-{attempt}')
@@ -28,8 +40,13 @@ async def tts_with_real_boundaries(c,text,caption_chunks,out):
    media_probe(part,'audio'); os.replace(part,out); last=None; break
   except Exception as e:
    last=e; part.unlink(missing_ok=True)
-   if attempt<attempts: await asyncio.sleep(min(1.5*attempt,3.0))
- if last is not None: raise RuntimeError(f'TTS_RETRY_EXHAUSTED {type(last).__name__}: {last}') from last
+   transient=_transient_tts_error(e)
+   if not transient:
+    raise RuntimeError(f'TTS_NON_TRANSIENT_FAIL {type(e).__name__}: {e}') from e
+   if attempt<attempts:
+    print('TTS_TRANSIENT_RETRY',attempt,type(e).__name__)
+    await asyncio.sleep(1.0)
+ if last is not None: raise RuntimeError(f'TTS_TRANSIENT_RETRY_EXHAUSTED {type(last).__name__}: {last}') from last
  cues=[]
  if words:
   if tokens(' '.join(w[0] for w in words))!=tokens(text): raise RuntimeError('WORD_BOUNDARY_TEXT_MISMATCH')
