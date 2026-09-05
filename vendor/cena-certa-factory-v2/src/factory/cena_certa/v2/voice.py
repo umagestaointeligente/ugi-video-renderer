@@ -5,6 +5,13 @@ import edge_tts
 from .common import normalize_text,tokens,media_probe
 
 
+# Calibrated against the canonical pt-BR-AntonioNeural voice on real Cena Certa
+# scripts. The old +3% setting produced ~123-131 WPM, below the V9 contract.
+# +22% puts the observed real scripts inside the canonical 145-165 WPM band;
+# prepare.py still measures the resulting speech and fails closed on drift.
+CANONICAL_SPEECH_RATE='+22%'
+
+
 def _transient_tts_error(exc: Exception) -> bool:
     if isinstance(exc, (asyncio.TimeoutError, TimeoutError, ConnectionError, OSError)):
         return True
@@ -15,7 +22,7 @@ def _transient_tts_error(exc: Exception) -> bool:
 
 async def _stream_once(c,text,part):
  words=[]; sentences=[]
- comm=edge_tts.Communicate(text,c['voice']['voice_id'],rate='+3%',volume='+0%')
+ comm=edge_tts.Communicate(text,c['voice']['voice_id'],rate=CANONICAL_SPEECH_RATE,volume='+0%')
  with open(part,'wb') as f:
   async for chunk in comm.stream():
    if chunk['type']=='audio': f.write(chunk['data'])
