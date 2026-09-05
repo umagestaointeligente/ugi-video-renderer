@@ -15,31 +15,49 @@ env:
   ROOT: vendor/cena-certa-factory-v2/src
 
 jobs:
-  gate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 6
-    outputs:
-      started: ${{ steps.clock.outputs.started }}
+  certified-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
     steps:
       - uses: actions/checkout@v7
+
       - id: clock
+        name: Start SLA clock
         shell: bash
-        run: echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
+          echo "SMOKE_START_EPOCH=$(date +%s)"
+
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/requirements.render.lock.txt
-      - name: Install deterministic media runtime
+
+      - name: Install deterministic media runtime once
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends ffmpeg fonts-lato fonts-dejavu-core >/dev/null
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1 || ! fc-match Lato 2>/dev/null | grep -qi 'Lato'; then
+            ok=0
+            for attempt in 1 2; do
+              echo "RUNTIME_INSTALL_ATTEMPT=$attempt"
+              if timeout 240s bash -lc 'sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg fonts-lato fonts-dejavu-core >/dev/null'; then
+                ok=1
+                break
+              fi
+              sleep 3
+            done
+            test "$ok" = 1 || { echo RUNTIME_INSTALL_FAIL; exit 1; }
+          fi
           ffmpeg -version | head -1
           ffprobe -version | head -1
           fc-match Lato | head -1
-      - name: Negative legacy scan
+
+      - name: Negative legacy scan and physical master gate
         shell: bash
         run: |
           set -euo pipefail
@@ -50,143 +68,154 @@ jobs:
           test ! -e .github/workflows/cena-certa-gitlab-r2-bridge-20260903.yml
           test ! -e .github/workflows/cena-certa-seal-assets-once.yml
           ! grep -RInE 'base64|\.b64|drive\.usercontent|d2ol7oe51mr4n9|mask_last_layer_patch|batch_2026_09_03|sed -i|assets-b64|payload-exact-v1|payload-test|payload-v2' "$ROOT"
-          echo LEGACY_ROUTE_SCAN_PASS
-      - name: Runtime and physical asset gate
-        shell: bash
-        run: |
-          set -euo pipefail
           python -m pip install -q -r "$ROOT/factory/cena_certa/v2/requirements.render.lock.txt"
           export PYTHONPATH="$ROOT"
           python -m py_compile "$ROOT"/factory/cena_certa/v2/*.py
           python - <<'PY'
           from factory.cena_certa.v2.common import verify_contract_and_assets
           verify_contract_and_assets()
+          print('LEGACY_ROUTE_SCAN_PASS')
           print('PHYSICAL_ASSET_AND_CONTRACT_PASS')
           PY
           python -m factory.cena_certa.v2.preflight canary
-      - name: Persist smoke start clock
-        shell: bash
-        run: |
-          mkdir -p timing
-          echo '${{ steps.clock.outputs.started }}' > timing/start.txt
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cena-certa-smoke-start
-          path: timing/start.txt
-          retention-days: 1
 
-  render10:
-    needs: gate
-    strategy:
-      fail-fast: false
-      max-parallel: 10
-      matrix:
-        slot: [0,1,2,3,4,5,6,7,8,9]
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
-      KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: '3.12'
-          cache: pip
-          cache-dependency-path: vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/requirements.render.lock.txt
-      - name: Install deterministic media runtime
+      - name: Render and QA 10 consecutive outputs
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends ffmpeg fonts-lato fonts-dejavu-core >/dev/null
-          command -v ffmpeg >/dev/null
-          command -v ffprobe >/dev/null
-          fc-match Lato >/dev/null
-      - name: Offline real renderer selftest
-        shell: bash
-        run: |
-          set -euo pipefail
-          python -m pip install -q -r "$ROOT/factory/cena_certa/v2/requirements.render.lock.txt"
           export PYTHONPATH="$ROOT"
+          mkdir -p slots
           cd "$ROOT"
-          python -m factory.cena_certa.v2.selftest
-          out="$GITHUB_WORKSPACE/smoke-slot"
-          mkdir -p "$out"
-          cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json "$out/slot-${{ matrix.slot }}.receipt.json"
-          cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.mp4 "$out/slot-${{ matrix.slot }}.mp4"
-      - name: R2 stage canary per slot
+          for slot in $(seq 0 9); do
+            echo "SMOKE_RENDER_SLOT=$slot"
+            python -m factory.cena_certa.v2.selftest
+            cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json "$GITHUB_WORKSPACE/slots/slot-${slot}.receipt.json"
+            cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.mp4 "$GITHUB_WORKSPACE/slots/slot-${slot}.mp4"
+          done
+          cd "$GITHUB_WORKSPACE"
+          test "$(find slots -maxdepth 1 -name 'slot-*.receipt.json' | wc -l | tr -d ' ')" = 10
+          test "$(find slots -maxdepth 1 -name 'slot-*.mp4' | wc -l | tr -d ' ')" = 10
+          python - <<'PY'
+          import glob,json
+          for p in sorted(glob.glob('slots/slot-*.receipt.json')):
+              d=json.load(open(p,encoding='utf-8'))
+              if not (d.get('render_pass') is True and d.get('qa_pass') is True and d.get('state')=='PREVIEW_READY'):
+                  raise SystemExit(f'RENDER_QA_RECEIPT_FAIL {p}')
+          print('TEN_RENDER_QA_RECEIPTS_PASS')
+          PY
+
+      - name: Stage 10 unique R2 objects and prove public MP4 bytes
         shell: bash
-        env:
-          SLOT: ${{ matrix.slot }}
         run: |
           set -euo pipefail
           test -n "$URL" || { echo R2_UPLOAD_URL_MISSING; exit 1; }
           test -n "$KEY" || { echo R2_UPLOAD_KEY_MISSING; exit 1; }
-          f="smoke-slot/slot-${SLOT}.mp4"
-          rid="CC-FV2-SMOKE-${GITHUB_RUN_ID}-${SLOT}"
-          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
-          response=$(curl --fail-with-body --silent --show-error --connect-timeout 10 --max-time 120 -X POST "${URL%/}/api/video-upload?renderId=${rid}&duration=${dur}" -H "Authorization: Bearer ${KEY}" -H 'Content-Type: video/mp4' --data-binary @"$f")
-          printf '%s' "$response" > "smoke-slot/slot-${SLOT}.r2.raw.json"
-          python - <<'PY' > /tmp/r2.env
+          failures=0
+          for slot in $(seq 0 9); do
+            echo "R2_STAGE_SLOT=$slot"
+            f="slots/slot-${slot}.mp4"
+            rid="CC-FV2-SMOKE-${GITHUB_RUN_ID}-${slot}"
+            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
+            raw="slots/slot-${slot}.r2.raw.json"
+            if ! curl --fail-with-body --silent --show-error --connect-timeout 10 --max-time 120 -X POST "${URL%/}/api/video-upload?renderId=${rid}&duration=${dur}" -H "Authorization: Bearer ${KEY}" -H 'Content-Type: video/mp4' --data-binary @"$f" -o "$raw"; then
+              echo "R2_POST_FAIL slot=$slot"
+              failures=$((failures+1))
+              continue
+            fi
+            export SLOT="$slot" RAW="$raw"
+            if ! python - <<'PY' > /tmp/r2-fields.env
           import json,os,shlex
-          slot=os.environ['SLOT']; p=f'smoke-slot/slot-{slot}.r2.raw.json'; d=json.load(open(p,encoding='utf-8'))
-          def find(x):
+          d=json.load(open(os.environ['RAW'],encoding='utf-8'))
+          def walk(x):
               if isinstance(x,dict):
-                  if x.get('videoUrl') and x.get('videoKey'): return x['videoUrl'],x['videoKey']
-                  for v in x.values():
-                      r=find(v)
-                      if r:return r
-              if isinstance(x,list):
-                  for v in x:
-                      r=find(v)
-                      if r:return r
-          r=find(d); status=str(d.get('status') or d.get('state') or 'UNKNOWN')
+                  yield x
+                  for v in x.values(): yield from walk(v)
+              elif isinstance(x,list):
+                  for v in x: yield from walk(v)
+          video_url=video_key=poll_url=''
+          for x in walk(d):
+              if not video_url and x.get('videoUrl'): video_url=str(x['videoUrl'])
+              if not video_key and x.get('videoKey'): video_key=str(x['videoKey'])
+              for k in ('statusUrl','status_url','pollUrl','poll_url'):
+                  if not poll_url and x.get(k): poll_url=str(x[k])
+          status=str(d.get('status') or d.get('state') or 'UNKNOWN')
           print('PROVIDER_STATUS='+shlex.quote(status))
-          if not r:
-              raise SystemExit(f'R2_MEDIA_FIELDS_PENDING provider_status={status} top_keys={sorted(d.keys())}')
-          print('VIDEO_URL='+shlex.quote(r[0])); print('VIDEO_KEY='+shlex.quote(r[1]))
+          print('VIDEO_URL='+shlex.quote(video_url))
+          print('VIDEO_KEY='+shlex.quote(video_key))
+          print('POLL_URL='+shlex.quote(poll_url))
           PY
-          source /tmp/r2.env
-          export PROVIDER_STATUS VIDEO_URL VIDEO_KEY
-          echo "R2_PROVIDER_STATUS=${PROVIDER_STATUS}"
-          curl --fail --location --silent --show-error --connect-timeout 8 --max-time 30 --range 0-4095 "$VIDEO_URL" -o /tmp/r2-public.bin
-          python - <<'PY'
-          import json,os
+            then
+              echo "R2_RESPONSE_PARSE_FAIL slot=$slot"
+              failures=$((failures+1))
+              continue
+            fi
+            source /tmp/r2-fields.env
+            echo "R2_PROVIDER_STATUS=$PROVIDER_STATUS"
+
+            if { test -z "$VIDEO_URL" || test -z "$VIDEO_KEY"; } && test -n "$POLL_URL"; then
+              for poll in $(seq 1 15); do
+                sleep 2
+                if curl --fail --silent --show-error --connect-timeout 5 --max-time 10 -H "Authorization: Bearer ${KEY}" "$POLL_URL" -o /tmp/r2-poll.json; then
+                  export RAW=/tmp/r2-poll.json
+                  python - <<'PY' > /tmp/r2-fields.env
+          import json,os,shlex
+          d=json.load(open(os.environ['RAW'],encoding='utf-8'))
+          def walk(x):
+              if isinstance(x,dict):
+                  yield x
+                  for v in x.values(): yield from walk(v)
+              elif isinstance(x,list):
+                  for v in x: yield from walk(v)
+          vu=vk=''
+          for x in walk(d):
+              if not vu and x.get('videoUrl'): vu=str(x['videoUrl'])
+              if not vk and x.get('videoKey'): vk=str(x['videoKey'])
+          status=str(d.get('status') or d.get('state') or 'UNKNOWN')
+          print('PROVIDER_STATUS='+shlex.quote(status)); print('VIDEO_URL='+shlex.quote(vu)); print('VIDEO_KEY='+shlex.quote(vk)); print('POLL_URL='+shlex.quote(os.environ.get('POLL_URL','')))
+          PY
+                  source /tmp/r2-fields.env
+                  test -n "$VIDEO_URL" && test -n "$VIDEO_KEY" && break
+                fi
+              done
+            fi
+
+            if test -z "$VIDEO_URL" || test -z "$VIDEO_KEY"; then
+              echo "R2_MEDIA_FIELDS_MISSING slot=$slot provider_status=$PROVIDER_STATUS"
+              failures=$((failures+1))
+              continue
+            fi
+
+            public_ok=0
+            for probe in $(seq 1 10); do
+              if curl --fail --location --silent --show-error --connect-timeout 8 --max-time 30 --range 0-4095 "$VIDEO_URL" -o /tmp/r2-public.bin; then
+                if python - <<'PY'
           b=open('/tmp/r2-public.bin','rb').read(32)
-          if len(b)<12 or b[4:8]!=b'ftyp': raise SystemExit('R2_PUBLIC_MP4_PROBE_FAIL')
-          slot=os.environ['SLOT']; receipt={'status':'ready','public_probe_pass':True,'provider_status':os.environ['PROVIDER_STATUS'],'videoUrl':os.environ['VIDEO_URL'],'videoKey':os.environ['VIDEO_KEY']}
-          json.dump(receipt,open(f'smoke-slot/slot-{slot}.r2.json','w',encoding='utf-8'),ensure_ascii=False,indent=2)
+          raise SystemExit(0 if len(b)>=12 and b[4:8]==b'ftyp' else 1)
+          PY
+                then
+                  public_ok=1
+                  break
+                fi
+              fi
+              sleep 2
+            done
+            if test "$public_ok" != 1; then
+              echo "R2_PUBLIC_MP4_PROBE_FAIL slot=$slot"
+              failures=$((failures+1))
+              continue
+            fi
+            export PROVIDER_STATUS VIDEO_URL VIDEO_KEY
+            python - <<'PY'
+          import json,os
+          slot=os.environ['SLOT']
+          receipt={'status':'ready','public_probe_pass':True,'provider_status':os.environ['PROVIDER_STATUS'],'videoUrl':os.environ['VIDEO_URL'],'videoKey':os.environ['VIDEO_KEY']}
+          json.dump(receipt,open(f'slots/slot-{slot}.r2.json','w',encoding='utf-8'),ensure_ascii=False,indent=2)
           print('R2_SLOT_PUBLIC_MEDIA_PASS',slot,receipt['provider_status'])
           PY
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: cena-certa-smoke-slot-${{ matrix.slot }}
-          path: smoke-slot/
-          if-no-files-found: warn
-          retention-days: 1
+          done
+          test "$failures" = 0 || { echo "R2_STAGE_FAILURES=$failures"; exit 1; }
 
-  certify:
-    needs: [gate, render10]
-    if: always() && needs.gate.result == 'success' && needs.render10.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: '3.12'
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: cena-certa-smoke-slot-*
-          path: slots
-          merge-multiple: true
-      - uses: actions/download-artifact@v4
-        with:
-          name: cena-certa-smoke-start
-          path: timing
-      - name: Prove 10 renders, 10 R2 stages and 10-to-8 failover policy
+      - name: Certify 10-to-8 policy and SLA
         shell: bash
         run: |
           set -euo pipefail
@@ -214,15 +243,20 @@ jobs:
           cd "$ROOT"
           python -m factory.cena_certa.v2.batch_smoke
           cd "$GITHUB_WORKSPACE"
-          start=$(cat timing/start.txt)
+          start='${{ steps.clock.outputs.started }}'
           end=$(date +%s)
           elapsed=$((end-start))
           echo "FULL_SMOKE_ELAPSED_SECONDS=$elapsed"
           test "$elapsed" -le 660
           printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"r2_public_probes":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"head_sha":"%s"}\n' "$elapsed" "$GITHUB_SHA" > certification.json
+          cat certification.json
+
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: cena-certa-certified-proof-${{ github.run_id }}
-          path: certification.json
-          if-no-files-found: error
+          name: cena-certa-certified-evidence-${{ github.run_id }}
+          path: |
+            slots/
+            certification.json
+          if-no-files-found: warn
           retention-days: 7
