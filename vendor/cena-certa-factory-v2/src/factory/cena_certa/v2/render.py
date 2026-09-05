@@ -80,21 +80,21 @@ def render_one(batch,index,prepared_root):
  cta_cues=m['cta_voice'].get('cues') or []
  if cta_cues and float(cta_cues[-1]['end'])>cta_seconds-0.10: raise RuntimeError('CTA_BOUNDARY_OVERFLOW_FAIL')
  raw=concat_scenes(root,scenes,story); ass=root/'cc.ass'; make_ass(c,cues,ass); title=root/'title.png'; make_title(c,item['film_title'],item['film_year'],title); cta=CACHE/'cta-master.png'
- esc=str(ass.resolve()).replace('\\','\\\\').replace(':','\\:').replace("'","\\'"); fx,fy,fw,fh=c['geometry_approved_frame_1080x1920']['film_window']; tx,ty,tw,th=c['geometry_approved_frame_1080x1920']['title_panel']
+ esc=str(ass.resolve()).replace('\\','\\\\').replace(':','\\:').replace("'","\\'"); fx,fy,fw,fh=c['geometry_approved_frame_1080x1920']['film_window']; tx,ty,tw,th=c['geometry_approved_frame_1080x1920']['title_panel']; fps=int(c['canvas']['fps'])
  music_gain=float(c['music'].get('final_gain_db',-10.0)); fade=float(c['music'].get('final_fade_seconds',[0.7,0.7])[0] if isinstance(c['music'].get('final_fade_seconds'),list) else 0.7)
  fc=';'.join([
-  f'[0:v]trim=duration={story:.3f},setpts=PTS-STARTPTS,split=2[bg0][fg0]',
-  '[bg0]scale=270:480:force_original_aspect_ratio=increase,crop=270:480,gblur=sigma=5,scale=1080:1920,eq=brightness=-0.25:contrast=0.98:saturation=0.86[bg]',
-  f'[fg0]scale={fw}:{fh}:force_original_aspect_ratio=decrease[fg]',f'[bg][fg]overlay={fx}+({fw}-w)/2:{fy}+({fh}-h)/2[film]',
-  f"[film]subtitles='{esc}'[captioned]",f'[1:v]scale={tw}:{th},format=rgba[ttl]',f'[captioned][ttl]overlay={tx}:{ty}[titled]','[2:v]format=rgba[mask]','[titled][mask]overlay=0:0[storyv]',
-  f'[3:v]scale=1080:1920,trim=duration={cta_seconds:.3f},setpts=PTS-STARTPTS[ctav]',f'[storyv]trim=duration={story:.3f},setpts=PTS-STARTPTS[sv];[sv][ctav]concat=n=2:v=1:a=0,fade=t=out:st={total-fade:.3f}:d={fade:.3f}[vout]',
+  f'[0:v]trim=duration={story:.3f},setpts=PTS-STARTPTS,setsar=1,fps={fps},split=2[bg0][fg0]',
+  '[bg0]scale=270:480:force_original_aspect_ratio=increase,crop=270:480,gblur=sigma=5,scale=1080:1920,setsar=1,eq=brightness=-0.25:contrast=0.98:saturation=0.86[bg]',
+  f'[fg0]scale={fw}:{fh}:force_original_aspect_ratio=decrease,setsar=1[fg]',f'[bg][fg]overlay={fx}+({fw}-w)/2:{fy}+({fh}-h)/2,setsar=1[film]',
+  f"[film]subtitles='{esc}',setsar=1[captioned]",f'[1:v]scale={tw}:{th},setsar=1,fps={fps},format=rgba[ttl]',f'[captioned][ttl]overlay={tx}:{ty},setsar=1[titled]',f'[2:v]setsar=1,fps={fps},format=rgba[mask]',f'[titled][mask]overlay=0:0,setsar=1,fps={fps}[storyv]',
+  f'[3:v]scale=1080:1920,setsar=1,fps={fps},trim=duration={cta_seconds:.3f},setpts=PTS-STARTPTS[ctav]',f'[storyv]trim=duration={story:.3f},setpts=PTS-STARTPTS,setsar=1,fps={fps}[sv];[sv][ctav]concat=n=2:v=1:a=0,setsar=1,fps={fps},fade=t=out:st={total-fade:.3f}:d={fade:.3f}[vout]',
   f'[4:a]atrim=0:{vd:.3f},asetpts=PTS-STARTPTS,loudnorm=I=-16:TP=-2:LRA=7,apad=whole_dur={total:.3f}[voice]',
   f'[5:a]atrim=0:{cvd:.3f},asetpts=PTS-STARTPTS,adelay={int((story+0.05)*1000)}|{int((story+0.05)*1000)},apad=whole_dur={total:.3f}[cta]',
   '[voice][cta]amix=inputs=2:duration=longest:normalize=0[voc0];[voc0]asplit=2[key][voc]',f'[6:a]atrim=0:{total:.3f},volume={music_gain}dB[music0];[music0][key]sidechaincompress=threshold=0.025:ratio=6:attack=15:release=240[music]',
   f'[voc][music]amix=inputs=2:duration=longest:normalize=0,loudnorm=I={c["mix"]["target_lufs"]}:TP=-1.7:LRA=7,afade=t=out:st={total-fade:.3f}:d={fade:.3f}[aout]'])
  out=OUT/f'{rid}.mp4'; tmp=OUT/f'{rid}.part.mp4'; tmp.unlink(missing_ok=True)
  try:
-  sh(['ffmpeg','-loglevel','error','-y','-i',str(raw),'-loop','1','-i',str(title),'-loop','1','-i',str(mask),'-loop','1','-i',str(cta),'-i',str(voice),'-i',str(cta_voice),'-stream_loop','-1','-i',str(music),'-filter_complex',fc,'-map','[vout]','-map','[aout]','-r','30','-c:v','libx264','-threads',str(c['runtime']['final_encoder_threads']),'-preset',os.getenv('ORBIT_X264_PRESET','veryfast'),'-crf',os.getenv('ORBIT_CRF','18'),'-pix_fmt','yuv420p','-c:a','aac','-b:a',c['canvas']['audio_bitrate'],'-ar',str(c['canvas']['sample_rate']),'-movflags','+faststart','-t',f'{total:.3f}',str(tmp)],timeout=360)
+  sh(['ffmpeg','-loglevel','error','-y','-i',str(raw),'-loop','1','-i',str(title),'-loop','1','-i',str(mask),'-loop','1','-i',str(cta),'-i',str(voice),'-i',str(cta_voice),'-stream_loop','-1','-i',str(music),'-filter_complex',fc,'-map','[vout]','-map','[aout]','-r',str(fps),'-fps_mode','cfr','-c:v','libx264','-threads',str(c['runtime']['final_encoder_threads']),'-preset',os.getenv('ORBIT_X264_PRESET','veryfast'),'-crf',os.getenv('ORBIT_CRF','18'),'-pix_fmt','yuv420p','-c:a','aac','-b:a',c['canvas']['audio_bitrate'],'-ar',str(c['canvas']['sample_rate']),'-movflags','+faststart','-t',f'{total:.3f}',str(tmp)],timeout=360)
   media_probe(tmp,'video'); os.replace(tmp,out)
  finally: tmp.unlink(missing_ok=True)
  audio_repair=False
