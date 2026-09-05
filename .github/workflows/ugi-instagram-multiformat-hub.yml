@@ -1,11 +1,15 @@
 name: UGI Instagram MultiFormat Hub R45
 
-# LEGACY MANUAL-ONLY PATH.
-# Canonical production scheduling belongs exclusively to UGI Publisher Hub.
-# This workflow must never wake up on a queue push or cron and consume Buffer
-# capacity outside the shared low-call circuit.
 on:
+  push:
+    branches: [main, ugi-r45-multiformat-20260830]
+    paths:
+      - 'control-plane/instagram-multiformat/queue/*.json'
   workflow_dispatch:
+  # Queue pushes remain immediate. Hourly recovery avoids exhausting Buffer's
+  # 500-request / 24h client window with repeated reconciliation polling.
+  schedule:
+    - cron: '26 * * * *'
 
 permissions:
   contents: write

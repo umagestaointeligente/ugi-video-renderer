@@ -1,10 +1,9 @@
 name: UGI Buffer Publication Observer
 
-# Legacy diagnostic only. It is intentionally manual so observability can never
-# consume Buffer publication capacity. Canonical delivery proof belongs to the
-# low-call Publisher Hub flow.
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '41 */6 * * *'
 
 permissions:
   contents: write

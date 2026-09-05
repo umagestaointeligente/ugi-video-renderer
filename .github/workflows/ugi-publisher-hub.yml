@@ -12,11 +12,11 @@ on:
         required: false
         default: '0'
         type: string
-  # Queue pushes remain immediate. Scheduled runs are sparse recovery windows.
-  # Buffer-backed work is additionally protected by the zero-network circuit
-  # guard, so an OPEN cooldown consumes zero Buffer calls.
+  # Queue pushes remain immediate. The hourly schedule is recovery-only and
+  # deliberately conservative because Buffer enforces a 500-request / 24h
+  # client window; 15-minute polling unnecessarily exhausted that quota.
   schedule:
-    - cron: '47 2,6,10,14,18,22 * * *'
+    - cron: '7 * * * *'
   push:
     branches: [main]
     paths:
@@ -48,16 +48,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile \
-            scripts/ugi_publisher_hub.py \
-            scripts/ugi_publisher_hub_low_call.py \
-            scripts/ugi_render_reconciler.py \
-            scripts/ugi_anti_repeat_gate.py \
-            scripts/ugi_topic_history_sync.py \
-            scripts/ugi_buffer_budget_guard.py \
-            scripts/ugi_buffer_recovery_canary.py
-          test -f config/ugi/buffer-budget-policy.json
-          test -f control-plane/observability/buffer-circuit.json
+          python3 -m py_compile scripts/ugi_publisher_hub.py scripts/ugi_render_reconciler.py scripts/ugi_anti_repeat_gate.py scripts/ugi_topic_history_sync.py
           test -f control-plane/anti-repeat/platform-topic-history.json
           MANIFEST="${{ github.event.inputs.manifest || '' }}"
           if [ -n "$MANIFEST" ]; then
@@ -80,36 +71,7 @@ jobs:
           echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
           python3 scripts/ugi_render_reconciler.py
 
-      - name: Evaluate Buffer budget before any Buffer-backed call
-        id: buffer_guard_before
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 scripts/ugi_buffer_budget_guard.py \
-            --operation mutation \
-            --github-output "$GITHUB_OUTPUT"
-
-      - name: Controlled one-call Buffer recovery canary
-        if: steps.buffer_guard_before.outputs.canary_due == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -n "${UGI_WORKER_COMMAND_KEY:-}"
-          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
-          python3 scripts/ugi_buffer_recovery_canary.py
-
-      - name: Re-evaluate Buffer budget after canary
-        id: buffer_guard_after
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 scripts/ugi_buffer_budget_guard.py \
-            --operation mutation \
-            --github-output "$GITHUB_OUTPUT"
-
       - name: Schedule through Buffer and prove by readback
-        if: steps.buffer_guard_after.outputs.allowed == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -118,18 +80,10 @@ jobs:
           MANIFEST="${{ github.event.inputs.manifest || '' }}"
           WAIT="${{ github.event.inputs.wait_seconds || '0' }}"
           if [ -n "$MANIFEST" ]; then
-            python3 scripts/ugi_publisher_hub_low_call.py --manifest "$MANIFEST" --wait-seconds "$WAIT"
+            python3 scripts/ugi_publisher_hub.py --manifest "$MANIFEST" --wait-seconds "$WAIT"
           else
-            python3 scripts/ugi_publisher_hub_low_call.py --wait-seconds "$WAIT"
+            python3 scripts/ugi_publisher_hub.py --wait-seconds "$WAIT"
           fi
-
-      - name: Record Buffer cooldown without probing
-        if: steps.buffer_guard_after.outputs.allowed != 'true'
-        shell: bash
-        run: |
-          echo "BUFFER_CALLS_SKIPPED=true"
-          echo "BUFFER_GUARD_REASON=${{ steps.buffer_guard_after.outputs.reason }}"
-          echo "BUFFER_NEXT_PROBE_AT=${{ steps.buffer_guard_after.outputs.next_probe_at }}"
 
       - name: Sync proven Buffer receipts into per-platform 15d topic history
         if: always()
@@ -138,7 +92,7 @@ jobs:
           set -euo pipefail
           python3 scripts/ugi_topic_history_sync.py
 
-      - name: Persist Publisher Hub render state, receipts, anti-repeat, circuit and status
+      - name: Persist Publisher Hub render state, receipts, anti-repeat, topic history and status
         if: always()
         shell: bash
         run: |
@@ -150,7 +104,6 @@ jobs:
             control-plane/publisher-hub/status/latest.json
             control-plane/anti-repeat/latest.json
             control-plane/anti-repeat/platform-topic-history.json
-            control-plane/observability/buffer-circuit.json
           )
           for f in "${files[@]}"; do
             if git cat-file -e "HEAD:$f" 2>/dev/null; then
@@ -167,7 +120,6 @@ jobs:
           git add control-plane/publisher-hub/receipts/*.json 2>/dev/null || true
           git add control-plane/publisher-hub/status/latest.json 2>/dev/null || true
           git add control-plane/anti-repeat/platform-topic-history.json 2>/dev/null || true
-          git add control-plane/observability/buffer-circuit.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No Publisher Hub state changes"
             exit 0

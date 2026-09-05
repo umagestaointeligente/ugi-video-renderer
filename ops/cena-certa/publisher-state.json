@@ -1,0 +1,12 @@
+{
+  "schema": "CENA_CERTA_PUBLISHER_STATE_V1",
+  "state": "IDLE",
+  "handoff_sha256": null,
+  "production_run_id": null,
+  "primary_provider": "METRICOOL",
+  "primary_receipts": [],
+  "secondary_receipts": [],
+  "reconciliation": null,
+  "updated_at": null,
+  "blind_retry_forbidden": true
+}

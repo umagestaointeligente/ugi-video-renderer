@@ -1,0 +1,134 @@
+name: Cena Certa V2 Certified Smoke
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - 'vendor/cena-certa-factory-v2/src/**'
+      - 'ops/cena-certa/r2_stage.py'
+      - '.github/workflows/cena-certa-certified-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  ROOT: vendor/cena-certa-factory-v2/src
+  RUNTIME_DIGEST: sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+
+jobs:
+  certified-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: clock
+        shell: bash
+        run: echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Prove runtime, exact masters and no legacy routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          python -m py_compile "$ROOT"/factory/cena_certa/v2/*.py ops/cena-certa/r2_stage.py
+          python - <<'PY'
+          import PIL,numpy,aiohttp,edge_tts
+          assert PIL.__version__=='12.3.0'
+          assert numpy.__version__=='2.5.2'
+          assert aiohttp.__version__=='3.14.3'
+          from factory.cena_certa.v2.common import verify_contract_and_assets
+          from factory.cena_certa.v2.prepare import prepare_one
+          from factory.cena_certa.v2.render import render_one
+          from factory.cena_certa.v2.qa import qa_video
+          verify_contract_and_assets()
+          print('PINNED_RUNTIME_AND_PHYSICAL_MASTERS_PASS')
+          PY
+          test ! -e vendor/cena-certa-factory-v2/assets-b64
+          test ! -e vendor/cena-certa-factory-v2/payload-exact-v1
+          test ! -e .github/workflows/cena-certa-gitlab-r2-bridge-20260903.yml
+          ! grep -RInE 'drive\.usercontent|mask_last_layer_patch|batch_2026_09_03|sed -i|assets-b64|payload-exact-v1|payload-test|payload-v2' "$ROOT"
+          python -m factory.cena_certa.v2.preflight canary
+
+      - name: Build stable certification fingerprint
+        id: fp
+        shell: bash
+        run: |
+          set -euo pipefail
+          fp=$( { find "$ROOT/factory/cena_certa/v2" -maxdepth 1 -type f -print0 | sort -z | xargs -0 sha256sum; sha256sum ops/cena-certa/r2_stage.py; } | sha256sum | awk '{print $1}')
+          test "${#fp}" = 64
+          echo "value=$fp" >> "$GITHUB_OUTPUT"
+          echo "CERTIFICATION_FINGERPRINT=$fp"
+
+      - name: Render QA and stage 10 through production R2 reconciler
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$URL" || { echo R2_UPLOAD_URL_MISSING; exit 1; }
+          test -n "$KEY" || { echo R2_UPLOAD_KEY_MISSING; exit 1; }
+          export PYTHONPATH="$ROOT"
+          mkdir -p slots
+          for slot in $(seq 0 9); do
+            echo "CERTIFY_SLOT=$slot"
+            (cd "$ROOT" && python -m factory.cena_certa.v2.selftest)
+            cp "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json" "slots/slot-${slot}.receipt.json"
+            cp "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.mp4" "slots/slot-${slot}.mp4"
+            f="slots/slot-${slot}.mp4"
+            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
+            python ops/cena-certa/r2_stage.py \
+              --base-url "$URL" \
+              --auth-key "$KEY" \
+              --id "CC-FV2-SMOKE-A-${slot}" \
+              --batch-sha256 "${{ steps.fp.outputs.value }}" \
+              --mp4 "$f" \
+              --duration "$dur" \
+              --out "slots/slot-${slot}.r2.json"
+          done
+          test "$(find slots -name 'slot-*.receipt.json' | wc -l | tr -d ' ')" = 10
+          test "$(find slots -name 'slot-*.r2.json' | wc -l | tr -d ' ')" = 10
+          python - <<'PY'
+          import glob,json
+          for p in glob.glob('slots/slot-*.receipt.json'):
+              d=json.load(open(p,encoding='utf-8'))
+              assert d.get('render_pass') is True and d.get('qa_pass') is True and d.get('state')=='PREVIEW_READY', p
+          for p in glob.glob('slots/slot-*.r2.json'):
+              d=json.load(open(p,encoding='utf-8'))
+              assert d.get('schema')=='CENA_CERTA_R2_RECEIPT_V2', p
+              assert d.get('status')=='ready' and d.get('public_probe_pass') is True and d.get('public_head_size_match') is True, p
+              assert d.get('blind_retry_used') is False, p
+          print('TEN_RENDER_QA_R2_RECONCILIATION_PASS')
+          PY
+
+      - name: Prove 10-to-8 policy and total SLA
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          mkdir -p "$ROOT/output/cena-certa-v2"
+          cp slots/slot-0.receipt.json "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json"
+          (cd "$ROOT" && python -m factory.cena_certa.v2.batch_smoke)
+          elapsed=$(($(date +%s)-${{ steps.clock.outputs.started }}))
+          echo "FULL_CERTIFIED_SMOKE_SECONDS=$elapsed"
+          test "$elapsed" -le 660
+          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s","certification_fingerprint":"%s","production_r2_reconciler":true,"blind_post_retry":false}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" "${{ steps.fp.outputs.value }}" > certification.json
+          cat certification.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-certified-evidence-${{ github.run_id }}
+          path: |
+            slots/*.receipt.json
+            slots/*.r2.json
+            certification.json
+          if-no-files-found: warn
+          retention-days: 7

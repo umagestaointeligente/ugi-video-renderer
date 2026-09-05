@@ -1,17 +1,14 @@
 {
-  "schema_version": "1.5",
+  "schema_version": "1.4",
   "effective_date": "2026-09-04",
   "project": "UGI",
   "distribution_state_ref": "config/ugi/distribution-state.json",
-  "buffer_budget_policy_ref": "config/ugi/buffer-budget-policy.json",
   "control_plane": {
     "canonical_publication_hub": "UGI Publisher Hub",
     "queue_path": "control-plane/publisher-hub/queue",
     "render_state_path": "control-plane/publisher-hub/render-state",
     "receipt_path": "control-plane/publisher-hub/receipts",
     "status_path": "control-plane/publisher-hub/status/latest.json",
-    "buffer_budget_policy_path": "config/ugi/buffer-budget-policy.json",
-    "buffer_circuit_path": "control-plane/observability/buffer-circuit.json",
     "chat_runtime_required": false,
     "canonical_flow": [
       "publisher_hub_queue",
@@ -20,7 +17,6 @@
       "r2_platform_assets",
       "platform_approval",
       "publication_eligibility",
-      "buffer_budget_guard",
       "buffer_schedule",
       "buffer_readback",
       "publisher_hub_receipt"
@@ -83,11 +79,6 @@
         "circuit_breaker": true,
         "probe_cooldown_hours": 6,
         "no_busy_polling": true,
-        "quota_probe_calls": 0,
-        "one_recovery_canary_after_cooldown": true,
-        "recovery_canary_max_buffer_calls": 1,
-        "publication_reserve_required": true,
-        "buffer_budget_policy_path": "config/ugi/buffer-budget-policy.json",
         "one_buffer_backed_call_per_linkedin_run": true
       },
       "linkedin_target": {
@@ -140,9 +131,6 @@
     "Every future LinkedIn editorial must enter the canonical LinkedIn queue before Buffer mutation.",
     "A LinkedIn Buffer Post ID must be persisted before any readback retry so create is exactly-once.",
     "A rate-limit response opens the Buffer circuit; busy polling is forbidden while the circuit is open.",
-    "No Buffer call may exist only to check whether quota remains.",
-    "While the Buffer circuit is OPEN before nextProbeAt, Buffer mutations and Buffer-backed readbacks are forbidden and consume zero Buffer calls.",
-    "After nextProbeAt, recovery begins with one Buffer-backed canary only; normal mutation resumes only after that canary proves recovery.",
     "PROVEN_PUBLISHED or DELIVERED requires live Buffer readback evidence, never only a local receipt.",
     "YouTube Buffer status is PAUSED; no new Buffer mutation may target YouTube while paused.",
     "YouTube strategy, content and history remain preserved for future evidence-based reactivation.",

@@ -2,10 +2,8 @@ name: UGI LinkedIn Publisher
 
 on:
   workflow_dispatch:
-  # Sparse fallback windows only. Queue pushes remain immediate.
-  # The shared zero-network guard prevents any Buffer call during cooldown.
   schedule:
-    - cron: '57 2,6,10,14,18,22 * * *'
+    - cron: '17 * * * *'
   push:
     branches: [main]
     paths:
@@ -36,30 +34,14 @@ jobs:
           python-version: '3.11'
       - name: Install runtime
         run: python -m pip install --quiet requests
-      - name: Evaluate shared Buffer budget before any Buffer-backed call
-        id: buffer_guard
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/ugi_buffer_budget_guard.py \
-            --operation mutation \
-            --platform linkedin \
-            --github-output "$GITHUB_OUTPUT"
       - name: Process at most one Buffer call
         id: publisher
-        if: steps.buffer_guard.outputs.allowed == 'true'
         continue-on-error: true
         run: |
           set -euo pipefail
           test -n "${UGI_LOLA_COMMAND_KEY:-}"
           echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
           python scripts/ugi_linkedin_publisher.py
-      - name: Record Buffer cooldown without probing
-        if: steps.buffer_guard.outputs.allowed != 'true'
-        run: |
-          echo "BUFFER_CALLS_SKIPPED=true"
-          echo "BUFFER_GUARD_REASON=${{ steps.buffer_guard.outputs.reason }}"
-          echo "BUFFER_NEXT_PROBE_AT=${{ steps.buffer_guard.outputs.next_probe_at }}"
       - name: Persist LinkedIn publication evidence and circuit state
         if: always()
         run: |

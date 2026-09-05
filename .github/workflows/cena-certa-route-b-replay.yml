@@ -1,0 +1,276 @@
+name: Cena Certa V2 Route B Portability Replay
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - '.github/workflows/cena-certa-route-b-replay.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  SOURCE_SHA: ee96bd0afaa15c4fea17bfedd85799167a93b6e8
+  SOURCE_TREE_SHA: 2c550b44c4770b9c8a3157f8723de9b96153d001
+  STORY_BLOB_SHA: bebaa2c265733236ab31cd80b24f8f8b46e740bd
+  CTA_BLOB_SHA: 66cdec74979388a3435125a89584fc0a4c5d889a
+  RUNTIME_DIGEST: sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+  ROOT: replay/vendor/cena-certa-factory-v2/src
+  GITLAB_CI: 'true'
+  CI_PROJECT_ID: '85893550'
+  CI_COMMIT_SHA: ee96bd0afaa15c4fea17bfedd85799167a93b6e8
+  CI_PIPELINE_SOURCE: web
+  CI_JOB_NAME: certify_fallback_route_b
+  CI_JOB_STAGE: certify
+
+jobs:
+  route-b-replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      CI_PROJECT_DIR: ${{ github.workspace }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ee96bd0afaa15c4fea17bfedd85799167a93b6e8
+          fetch-depth: 1
+
+      - id: clock
+        name: Start Route B replay SLA clock
+        shell: bash
+        run: |
+          set -euo pipefail
+          now=$(date +%s)
+          echo "started=$now" >> "$GITHUB_OUTPUT"
+          echo "ROUTE_B_REPLAY_SLA_START=$now"
+
+      - name: Prove GitLab-style environment and pinned runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITLAB_CI" = true
+          test "$CI_PROJECT_ID" = 85893550
+          test "$CI_COMMIT_SHA" = "$SOURCE_SHA"
+          ffmpeg -version | head -1
+          ffprobe -version | head -1
+          fc-match Lato | head -1
+          python - <<'PY'
+          import PIL,numpy,aiohttp,edge_tts
+          assert PIL.__version__=='12.3.0'
+          assert numpy.__version__=='2.5.2'
+          assert aiohttp.__version__=='3.14.3'
+          print('ROUTE_B_GITLAB_ENV_SIMULATION_PASS')
+          print('ROUTE_B_PINNED_RUNTIME_PASS')
+          PY
+
+      - name: Build and prove isolated Route B snapshot package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf stage replay route-b-package.tar.gz route-b-package.sha256 b-evidence
+          mkdir -p stage/vendor/cena-certa-factory-v2 b-evidence
+          cp -a vendor/cena-certa-factory-v2/src stage/vendor/cena-certa-factory-v2/src
+          python - <<'PY'
+          import hashlib,json,os,pathlib,shutil,subprocess
+          root=pathlib.Path('stage/vendor/cena-certa-factory-v2/src')
+          subprocess.run(['git','init','-q'],cwd=root,check=True)
+          subprocess.run(['git','add','-A'],cwd=root,check=True)
+          tree=subprocess.check_output(['git','write-tree'],cwd=root,text=True).strip()
+          if tree!=os.environ['SOURCE_TREE_SHA']:
+              raise SystemExit(f'ROUTE_B_SOURCE_TREE_FAIL got={tree} want={os.environ["SOURCE_TREE_SHA"]}')
+          def blob(rel):
+              data=(root/rel).read_bytes()
+              return hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
+          story=blob('canonical/cena_certa/v1/assets/approved_story_source_v1.png')
+          cta=blob('canonical/cena_certa/v1/assets/approved_cta_source_v1.png')
+          assert story==os.environ['STORY_BLOB_SHA'], (story,os.environ['STORY_BLOB_SHA'])
+          assert cta==os.environ['CTA_BLOB_SHA'], (cta,os.environ['CTA_BLOB_SHA'])
+          pathlib.Path('b-evidence/equivalence.json').write_text(json.dumps({
+              'source_sha':os.environ['SOURCE_SHA'],
+              'source_tree_sha':tree,
+              'story_blob_sha':story,
+              'cta_blob_sha':cta,
+              'runtime_digest':os.environ['RUNTIME_DIGEST'],
+              'gitlab_env_simulated':True,
+          },indent=2)+'\n',encoding='utf-8')
+          shutil.rmtree(root/'.git')
+          print('ROUTE_B_FULL_SOURCE_TREE_EQUIVALENCE_PASS',tree)
+          print('ROUTE_B_PHYSICAL_MASTER_EQUIVALENCE_PASS',story,cta)
+          PY
+          ! grep -RInE 'base64|\.b64|drive\.usercontent|d2ol7oe51mr4n9|mask_last_layer_patch|batch_2026_09_03|sed -i|assets-b64|payload-exact-v1|payload-test|payload-v2' stage/vendor/cena-certa-factory-v2/src
+          echo ROUTE_B_LEGACY_ROUTE_SCAN_PASS
+          tar -czf route-b-package.tar.gz -C stage vendor
+          sha256sum route-b-package.tar.gz | tee route-b-package.sha256
+          rm -rf vendor/cena-certa-factory-v2/src stage
+          mkdir -p replay
+          tar -xzf route-b-package.tar.gz -C replay
+          test -d "$ROOT"
+          test ! -d "$ROOT/.git"
+          echo ROUTE_B_PACKAGE_INDEPENDENCE_PASS
+
+      - name: Prove production modules, physical assets and canary from B package only
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          python -m py_compile "$ROOT"/factory/cena_certa/v2/*.py
+          python - <<'PY'
+          from factory.cena_certa.v2.common import verify_contract_and_assets
+          from factory.cena_certa.v2.prepare import prepare_one
+          from factory.cena_certa.v2.voice import tts_with_real_boundaries
+          from factory.cena_certa.v2.render import render_one
+          from factory.cena_certa.v2.qa import qa_video
+          verify_contract_and_assets()
+          print('ROUTE_B_PRODUCTION_PREP_TTS_IMPORT_PASS')
+          print('ROUTE_B_PHYSICAL_ASSET_AND_CONTRACT_PASS')
+          PY
+          python -m factory.cena_certa.v2.preflight canary
+
+      - name: Render and QA 10 outputs from isolated B package
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          mkdir -p b-slots
+          cd "$ROOT"
+          for slot in $(seq 0 9); do
+            echo "ROUTE_B_RENDER_SLOT=$slot"
+            python -m factory.cena_certa.v2.selftest
+            cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json "$GITHUB_WORKSPACE/b-slots/slot-${slot}.receipt.json"
+            cp output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.mp4 "$GITHUB_WORKSPACE/b-slots/slot-${slot}.mp4"
+          done
+          cd "$GITHUB_WORKSPACE"
+          python - <<'PY'
+          import glob,json
+          vals=[]
+          for p in sorted(glob.glob('b-slots/slot-*.receipt.json')):
+              d=json.load(open(p,encoding='utf-8'))
+              if not (d.get('render_pass') is True and d.get('qa_pass') is True and d.get('state')=='PREVIEW_READY'):
+                  raise SystemExit(f'ROUTE_B_RENDER_QA_FAIL {p}')
+              vals.append(float(d.get('elapsed_seconds',0)))
+          if len(vals)!=10: raise SystemExit(f'ROUTE_B_RENDER_COUNT_FAIL {len(vals)}')
+          print('ROUTE_B_TEN_RENDER_QA_PASS')
+          print('ROUTE_B_RENDER_MAX_SECONDS',max(vals))
+          print('ROUTE_B_RENDER_AVG_SECONDS',round(sum(vals)/len(vals),2))
+          PY
+
+      - name: Stage 10 B objects to R2 and prove public MP4 bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$URL" || { echo ROUTE_B_R2_UPLOAD_URL_MISSING; exit 1; }
+          test -n "$KEY" || { echo ROUTE_B_R2_UPLOAD_KEY_MISSING; exit 1; }
+          failures=0
+          for slot in $(seq 0 9); do
+            f="b-slots/slot-${slot}.mp4"
+            rid="CC-FV2-B-REPLAY-${GITHUB_RUN_ID}-${slot}"
+            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
+            raw="b-slots/slot-${slot}.r2.raw.json"
+            if ! curl --fail-with-body --silent --show-error --connect-timeout 10 --max-time 120 -X POST "${URL%/}/api/video-upload?renderId=${rid}&duration=${dur}" -H "Authorization: Bearer ${KEY}" -H 'Content-Type: video/mp4' --data-binary @"$f" -o "$raw"; then
+              echo "ROUTE_B_R2_POST_FAIL slot=$slot"; failures=$((failures+1)); continue
+            fi
+            export SLOT="$slot" RAW="$raw"
+            python - <<'PY' > /tmp/b-r2.env
+          import json,os,shlex
+          d=json.load(open(os.environ['RAW'],encoding='utf-8'))
+          def walk(x):
+              if isinstance(x,dict):
+                  yield x
+                  for v in x.values(): yield from walk(v)
+              elif isinstance(x,list):
+                  for v in x: yield from walk(v)
+          vu=vk=''
+          for x in walk(d):
+              if not vu and x.get('videoUrl'): vu=str(x['videoUrl'])
+              if not vk and x.get('videoKey'): vk=str(x['videoKey'])
+          status=str(d.get('status') or d.get('state') or 'UNKNOWN')
+          print('PROVIDER_STATUS='+shlex.quote(status)); print('VIDEO_URL='+shlex.quote(vu)); print('VIDEO_KEY='+shlex.quote(vk))
+          PY
+            source /tmp/b-r2.env
+            echo "ROUTE_B_R2_PROVIDER_STATUS=$PROVIDER_STATUS"
+            if test -z "$VIDEO_URL" || test -z "$VIDEO_KEY"; then
+              echo "ROUTE_B_R2_MEDIA_FIELDS_MISSING slot=$slot"; failures=$((failures+1)); continue
+            fi
+            public_ok=0
+            for probe in $(seq 1 10); do
+              if curl --fail --location --silent --show-error --connect-timeout 8 --max-time 30 --range 0-4095 "$VIDEO_URL" -o /tmp/b-r2-public.bin; then
+                if python - <<'PY'
+          b=open('/tmp/b-r2-public.bin','rb').read(32)
+          raise SystemExit(0 if len(b)>=12 and b[4:8]==b'ftyp' else 1)
+          PY
+                then public_ok=1; break; fi
+              fi
+              sleep 2
+            done
+            if test "$public_ok" != 1; then echo "ROUTE_B_R2_PUBLIC_PROBE_FAIL slot=$slot"; failures=$((failures+1)); continue; fi
+            export PROVIDER_STATUS VIDEO_URL VIDEO_KEY
+            python - <<'PY'
+          import json,os
+          s=os.environ['SLOT']
+          json.dump({'status':'ready','public_probe_pass':True,'provider_status':os.environ['PROVIDER_STATUS'],'videoUrl':os.environ['VIDEO_URL'],'videoKey':os.environ['VIDEO_KEY']},open(f'b-slots/slot-{s}.r2.json','w'),indent=2)
+          print('ROUTE_B_R2_PUBLIC_MEDIA_PASS',s)
+          PY
+          done
+          test "$failures" = 0 || { echo "ROUTE_B_R2_FAILURES=$failures"; exit 1; }
+
+      - name: Certify B replay 10-to-8, isolation and SLA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find b-slots -maxdepth 1 -name 'slot-*.receipt.json' | wc -l | tr -d ' ')" = 10
+          test "$(find b-slots -maxdepth 1 -name 'slot-*.r2.json' | wc -l | tr -d ' ')" = 10
+          python - <<'PY'
+          import glob,json
+          for p in glob.glob('b-slots/slot-*.r2.json'):
+              d=json.load(open(p))
+              assert d['status']=='ready' and d['public_probe_pass'] is True and d['videoUrl'] and d['videoKey']
+          print('ROUTE_B_TEN_R2_PUBLIC_RECEIPTS_PASS')
+          PY
+          export PYTHONPATH="$ROOT"
+          mkdir -p "$ROOT/output/cena-certa-v2"
+          cp b-slots/slot-0.receipt.json "$ROOT/output/cena-certa-v2/CC-FACTORY-V2-SELFTEST.receipt.json"
+          (cd "$ROOT" && python -m factory.cena_certa.v2.batch_smoke)
+          start='${{ steps.clock.outputs.started }}'
+          elapsed=$(($(date +%s)-start))
+          echo "ROUTE_B_REPLAY_ELAPSED_SECONDS=$elapsed"
+          test "$elapsed" -le 660
+          export ELAPSED="$elapsed"
+          python - <<'PY'
+          import json,os
+          d={
+            'state':'ROUTE_B_REPLAY_CERTIFIED_PASS',
+            'source_sha':os.environ['SOURCE_SHA'],
+            'source_tree_sha':os.environ['SOURCE_TREE_SHA'],
+            'runtime_digest':os.environ['RUNTIME_DIGEST'],
+            'render_slots':10,'r2_staged':10,'r2_public_probes':10,
+            'selected':8,'hot_reserves':2,
+            'elapsed_seconds':int(os.environ['ELAPSED']),'sla_seconds':660,
+            'gitlab_env_simulated':True,
+            'provider_compute':'github_hosted_replay',
+            'gitlab_saas_capacity':'unavailable_ci_quota_exceeded',
+            'package_independence_pass':True,
+          }
+          open('b-evidence/route-b-replay-certification.json','w').write(json.dumps(d,indent=2)+'\n')
+          print(json.dumps(d))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-route-b-replay-${{ github.run_id }}
+          path: |
+            b-evidence/
+            b-slots/*.receipt.json
+            b-slots/*.r2.json
+            route-b-package.sha256
+          if-no-files-found: warn
+          retention-days: 7
