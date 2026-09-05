@@ -8,10 +8,11 @@
   "enabled": true,
   "format": "text",
   "mode": "schedule",
-  "notBefore": "2026-09-05T22:25:00Z",
-  "dueAt": "2026-09-05T23:00:00Z",
+  "notBefore": "2026-09-05T23:18:00Z",
+  "dueAt": "2026-09-05T23:30:00Z",
   "receiptName": "UGI-20260905-LI-EDITORIAL-001.json",
   "editorialTopic": "Meta Project OT — IA, produtividade e desenho organizacional",
+  "recoveryReason": "CANARY_GUARD_FIXED_AFTER_MISSED_20H_SLOT",
   "source": {
     "publisher": "Reuters",
     "publishedAt": "2026-08-26",
