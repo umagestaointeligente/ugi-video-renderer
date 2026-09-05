@@ -4,20 +4,27 @@
   "production_route": {
     "render_executor": {
       "id": "github-actions-self-contained",
-      "state": "ACTIVE",
+      "state": "ACTIVE_LIVE_PROVEN",
       "required_for_render": true,
       "runtime_gitlab_clone": false,
       "candidate_pool": 10,
       "final_videos": 8,
-      "hot_reserves": 2
+      "hot_reserves": 2,
+      "last_live_proof_run_id": "33947653147",
+      "last_live_proof_commit": "317ea15423ba99ba5a806870ef7e354c42df1de2",
+      "last_live_proof_result": "SUCCESS",
+      "last_live_proof_seconds": 203
     },
     "media_delivery": {
       "id": "cloudflare-worker-r2",
-      "state": "ACTIVE",
+      "state": "ACTIVE_LIVE_PROVEN",
       "required_for_render": true,
       "auth_header": "x-ugi-video-upload-key",
+      "storage_contract": "geradas/videos/{storageRenderId}/instagram.mp4",
       "blind_post_retry": false,
-      "ambiguous_response_reconciliation": "PUBLIC_HEAD_EXACT_SIZE"
+      "ambiguous_response_reconciliation": "PUBLIC_HEAD_EXACT_SIZE",
+      "last_live_proof_run_id": "33947653147",
+      "last_live_proof_result": "SUCCESS_10_OF_10"
     },
     "scheduler_primary": {
       "id": "metricool",
@@ -62,6 +69,7 @@
     "no_blind_post_retry": true,
     "no_fake_instagram_tiktok_route_b": true,
     "future_buffer_never_repairs_missing_current_placement": true,
-    "human_approval_required_before_scheduling": true
+    "human_approval_required_before_scheduling": true,
+    "critical_render_route_must_have_live_proof": true
   }
 }
