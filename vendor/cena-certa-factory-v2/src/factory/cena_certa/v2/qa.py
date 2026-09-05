@@ -36,7 +36,15 @@ def qa_video(c,item,out,story_duration,cues):
  if tp>c['mix']['true_peak_max_dbtp']: raise RuntimeError(f'TRUE_PEAK_FAIL {tp}')
  max_silence=_silence_guard(out,total)
  work=TMP/safe_id(item['id']); work.mkdir(parents=True,exist_ok=True); ref=scaled_reference(c,'story'); cta=Image.open(CACHE/'cta-master.png').convert('RGB'); mask=Image.open(CACHE/'story-mask-last.png').convert('RGBA'); geo=c['geometry_approved_frame_1080x1920']; vals={'checkpoints':[]}
+
+ # Continuous final-story guard: sparse checkpoints are not sufficient. Probe the
+ # moving film aperture for the entire narrated story and reject any real blank.
+ fx,fy,fw,fh=geo['film_window']; probe_inset=max(12,int(geo['film_mask_bezel'].get('inset_pixels',6))*2)
+ film_probe=[fx+probe_inset,fy+probe_inset,fw-2*probe_inset,fh-2*probe_inset]
+ blank_intervals=black_intervals(out,c,max_duration=story_duration,crop=film_probe,label='FINAL_STORY')
+
  expected_title=work/'qa-expected-title.png'; make_title(c,item['film_title'],item['film_year'],expected_title); expected_title_im=Image.open(expected_title).convert('RGB')
+ protected_scores=[]
  for n,fraction in enumerate(c['qa']['story_frame_checkpoints']):
   t=max(0.05,min(story_duration-0.05,story_duration*float(fraction))); frame=work/f'qa-story-{n}.png'; extract_frame(out,t,frame); sf=Image.open(frame).convert('RGB'); row={'t':round(t,3)}
   for key in ('footer','story_logo'):
@@ -46,6 +54,8 @@ def qa_video(c,item,out,story_duration,cues):
   if title_score>c['qa']['title_panel_pixel_mae_max']: raise RuntimeError(f'TITLE_PANEL_PIXEL_FAIL checkpoint={n} score={title_score:.4f}')
   border_score=_masked_luma_mae(sf,mask,geo['film_window']); row['film_border_luma']=border_score
   if border_score>c['qa']['film_border_pixel_mae_max']: raise RuntimeError(f'FILM_BORDER_PIXEL_FAIL checkpoint={n} score={border_score:.4f}')
+  protected=mask_protected_mae(sf,ref,mask); row['full_mask_protected_mae']=protected; protected_scores.append(protected)
+  if protected>c['qa']['mask_protected_pixel_mae_max']: raise RuntimeError(f'CANONICAL_MASK_PROTECTED_PIXEL_FAIL checkpoint={n} score={protected:.4f}')
   black=_black_band_score(sf,geo['film_window']); row['black_edge_score']=black
   if c['qa']['black_padding_forbidden'] and black>0.985: raise RuntimeError(f'BLACK_PADDING_FAIL checkpoint={n} score={black:.4f}')
   vals['checkpoints'].append(row)
@@ -55,4 +65,4 @@ def qa_video(c,item,out,story_duration,cues):
  contact=None
  if os.getenv('ORBIT_CONTACT_SHEET','0')=='1':
   contact=OUT/f"{safe_id(item['id'])}-contact.jpg"; sh(['ffmpeg','-loglevel','error','-y','-i',str(out),'-vf','fps=1/5,scale=180:320,tile=4x3:padding=2:margin=2','-frames:v','1',str(contact)],timeout=120)
- return {'tech_pass':True,'geometry_pass':True,'title_pass':True,'film_border_pass':True,'caption_pass':True,'audio_pass':True,'duration_pass':True,'black_padding_pass':True,'lufs':lufs,'true_peak':tp,'max_silence_seconds':max_silence,'pixel_mae':vals,'contact_sheet':str(contact) if contact else None}
+ return {'tech_pass':True,'geometry_pass':True,'canonical_mask_pass':True,'title_pass':True,'film_border_pass':True,'caption_pass':True,'audio_pass':True,'duration_pass':True,'black_padding_pass':True,'no_blank_visual_pass':True,'story_blank_intervals':blank_intervals,'mask_protected_mae_max':max(protected_scores) if protected_scores else 0.0,'lufs':lufs,'true_peak':tp,'max_silence_seconds':max_silence,'pixel_mae':vals,'contact_sheet':str(contact) if contact else None}
