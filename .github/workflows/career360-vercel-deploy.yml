@@ -1,0 +1,132 @@
+name: Career360 Vercel Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/career360-vercel-deploy.trigger'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Deployment target
+        required: true
+        default: preview
+        type: choice
+        options:
+          - preview
+          - production
+
+concurrency:
+  group: career360-vercel-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  VERCEL_ORG_ID: team_ZJys00FTE2kK9yVtsqH5fHyF
+  VERCEL_PROJECT_ID: prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP
+  EXPECTED_APP_K: 6df7b4e63d7e52ce3c3f02247392b98f0393cbe8
+  EXPECTED_APP_L: f8e891b44fc69e1ee44505e4f89d69ca7104567c
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve target and credential gate
+        id: gate
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          MANUAL_TARGET: ${{ github.event.inputs.target }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${VERCEL_TOKEN:-}" ]]; then
+            echo "::error::VERCEL_TOKEN repository secret is not configured. Deployment aborted before any Vercel mutation."
+            exit 2
+          fi
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            target="${MANUAL_TARGET:-preview}"
+          else
+            target="$(tr -d '[:space:]' < .github/career360-vercel-deploy.trigger)"
+          fi
+
+          case "$target" in
+            preview|production) ;;
+            *)
+              echo "::error::Invalid target '$target'. Expected preview or production."
+              exit 3
+              ;;
+          esac
+
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "TARGET=$target" >> "$GITHUB_ENV"
+
+      - name: Verify canonical frontend pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          index='career360/frontend/index.html'
+          grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" "$index" >/dev/null
+          grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" "$index" >/dev/null
+          count_l="$(grep -o 'career360/frontend/app-l.js' "$index" | wc -l | tr -d ' ')"
+          if [[ "$count_l" != "1" ]]; then
+            echo "::error::Expected exactly one app-l.js reference, found $count_l."
+            exit 4
+          fi
+
+      - name: Bind checkout to official Vercel project
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p career360/frontend/.vercel
+          printf '{"orgId":"%s","projectId":"%s"}\n' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > career360/frontend/.vercel/project.json
+
+      - name: Deploy official Career360 project
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd career360/frontend
+          if [[ "$TARGET" == "production" ]]; then
+            args=(deploy --prod --yes)
+          else
+            args=(deploy --yes)
+          fi
+          npx --yes vercel@latest "${args[@]}" --token "$VERCEL_TOKEN" 2>&1 | tee /tmp/vercel-deploy.log
+          deploy_url="$(sed -E 's/\x1B\[[0-9;]*[mK]//g' /tmp/vercel-deploy.log | grep -Eo 'https://[A-Za-z0-9.-]+\.vercel\.app' | tail -n 1 || true)"
+          if [[ -z "$deploy_url" ]]; then
+            echo "::error::Deployment completed without a parseable Vercel URL."
+            exit 5
+          fi
+          echo "url=$deploy_url" >> "$GITHUB_OUTPUT"
+          echo "DEPLOY_URL=$deploy_url" >> "$GITHUB_ENV"
+
+      - name: Static bundle smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          body="$(curl --fail --silent --show-error --location "$DEPLOY_URL/")"
+          grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null
+          grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null
+          echo "HTTP_AND_PIN_SMOKE=PASS"
+
+      - name: Deployment summary
+        shell: bash
+        run: |
+          {
+            echo "### Career360 Vercel deployment"
+            echo "- Target: $TARGET"
+            echo "- Project: $VERCEL_PROJECT_ID"
+            echo "- URL: $DEPLOY_URL"
+            echo "- app-k: $EXPECTED_APP_K"
+            echo "- app-l: $EXPECTED_APP_L"
+            echo "- Static smoke: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
