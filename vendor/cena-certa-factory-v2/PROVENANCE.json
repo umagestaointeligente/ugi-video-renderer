@@ -1,1 +1,45 @@
-{"schema":"CENA_CERTA_FACTORY_V2_CERTIFIED_PROVENANCE","certification_state":"CERTIFIED_A_AND_B_PASS","source_branch":"feat/cena-certa-factory-v2-certified","certified_head_sha":"a89b81f96ebe647954e791e5202290119d2f84b2","certified_source_snapshot_sha":"ee96bd0afaa15c4fea17bfedd85799167a93b6e8","certified_source_tree_sha":"2c550b44c4770b9c8a3157f8723de9b96153d001","physical_assets":{"story":{"git_blob":"bebaa2c265733236ab31cd80b24f8f8b46e740bd","sha256":"256448409d6016598d4a27650bec6c35f8ecc67b4e8d294a87246e1b4c4ae4ce"},"cta":{"git_blob":"66cdec74979388a3435125a89584fc0a4c5d889a","sha256":"b19d5ccb51417c6d71ea7fa672e64a9f34023954e3d76ed9b285b83bcd41745b"}},"runtime_policy":{"base64_in_runtime":false,"gitlab_clone_in_github_runtime":false,"candidate_pool":10,"final_videos":8,"hot_reserves":2,"github_route":"PRIMARY","gitlab_route":"FALLBACK_SAME_SNAPSHOT","r2_canary_ids_reusable":true,"blind_post_retry_forbidden":true,"human_approval_required_before_schedule":true},"certification":{"route_a":"CERTIFIED_SMOKE_PASS","route_b":"ROUTE_B_REPLAY_CERTIFIED_PASS","sla_seconds":660,"runtime_digest":"sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c"}}
+{
+  "schema": "CENA_CERTA_FACTORY_V2_CERTIFIED_PROVENANCE",
+  "source_branch": "feat/cena-certa-factory-v2-certified",
+  "engine_certification": {
+    "state": "CERTIFIED_ENGINE_SNAPSHOT",
+    "source_snapshot_sha": "ee96bd0afaa15c4fea17bfedd85799167a93b6e8",
+    "source_tree_sha": "2c550b44c4770b9c8a3157f8723de9b96153d001",
+    "runtime_digest": "sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c",
+    "sla_seconds": 660
+  },
+  "control_plane": {
+    "state": "LIVE_REMEDIATION_VALIDATION_IN_PROGRESS",
+    "route_integrity_run_id": "33947504091",
+    "route_integrity_result": "SUCCESS",
+    "r2_live_validation_run_id": "33947653147",
+    "r2_live_validation_result": "IN_PROGRESS",
+    "production_route_registry": "ops/cena-certa/route-registry.json",
+    "production_workflow": ".github/workflows/cena-certa-production-v2.yml"
+  },
+  "physical_assets": {
+    "story": {
+      "git_blob": "bebaa2c265733236ab31cd80b24f8f8b46e740bd",
+      "sha256": "256448409d6016598d4a27650bec6c35f8ecc67b4e8d294a87246e1b4c4ae4ce"
+    },
+    "cta": {
+      "git_blob": "66cdec74979388a3435125a89584fc0a4c5d889a",
+      "sha256": "b19d5ccb51417c6d71ea7fa672e64a9f34023954e3d76ed9b285b83bcd41745b"
+    }
+  },
+  "runtime_policy": {
+    "base64_in_runtime": false,
+    "gitlab_clone_in_github_runtime": false,
+    "candidate_pool": 10,
+    "final_videos": 8,
+    "hot_reserves": 2,
+    "render_route": "GITHUB_SELF_CONTAINED_PRIMARY",
+    "gitlab_runtime_route": "DISABLED",
+    "r2_auth_header": "x-ugi-video-upload-key",
+    "r2_storage_contract": "geradas/videos/{storageRenderId}/instagram.mp4",
+    "r2_canary_ids_reusable": true,
+    "blind_post_retry_forbidden": true,
+    "human_approval_required_before_schedule": true,
+    "portability_replay_is_not_production_fallback": true
+  }
+}
