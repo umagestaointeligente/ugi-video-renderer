@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "effective_date": "2026-09-04",
+  "project": "UGI",
+  "provider": "BUFFER",
+  "mode": "LOW_CALL_EXACTLY_ONCE",
+  "principle": "publication calls outrank observability calls",
+  "active_platforms": [
+    "linkedin",
+    "instagram",
+    "tiktok"
+  ],
+  "paused_platforms": [
+    "youtube"
+  ],
+  "call_budget": {
+    "preflight_buffer_calls": 0,
+    "create_max_calls_per_post": 1,
+    "schedule_proof_strategy": "READBACK_ONLY_AFTER_CREATE_OR_EXISTING_POST_ID",
+    "terminal_delivery_strategy": "ONE_DUE_READBACK_THEN_BOUNDED_RETRY_ONLY_IF_UNKNOWN",
+    "quota_probe_calls": 0,
+    "busy_polling": false,
+    "channel_discovery": "CACHE_ONCE_REUSE_UNTIL_INVALIDATED",
+    "publication_reserve": "MANDATORY",
+    "observability_may_consume_publication_reserve": false
+  },
+  "circuit_breaker": {
+    "state_path": "control-plane/observability/buffer-circuit.json",
+    "block_mutations_when_open": true,
+    "block_readbacks_when_open": true,
+    "allow_only_one_canary_after_nextProbeAt": true,
+    "canary_buffer_calls": 1,
+    "on_rate_limit": "FAIL_CLOSED_AND_ADVANCE_COOLDOWN",
+    "no_calls_only_to_check_quota": true
+  },
+  "proof_states": [
+    "READY_LOCAL",
+    "SCHEDULE_PROVEN",
+    "DELIVERY_CONFIRMED",
+    "QUALITY_CONFIRMED",
+    "WAITING_RATE_LIMIT",
+    "NOT_PROVEN"
+  ],
+  "channel_cache": {
+    "source": "config/ugi/distribution-state.json",
+    "refresh_only_on": "MISSING_OR_EXPLICIT_INVALID_CONNECTION",
+    "personal_linkedin_profile_forbidden": true
+  },
+  "quality_gate": {
+    "instagram_audio_codec": "AAC_LC",
+    "instagram_audio_sample_rate_hz": 48000,
+    "instagram_audio_bitrate_target_kbps": 112,
+    "instagram_audio_bitrate_hard_max_kbps": 128,
+    "audio_stream_required": true,
+    "non_silent_required": true
+  },
+  "hard_invariants": [
+    "No Buffer call may be made only to ask whether quota remains.",
+    "When the circuit is OPEN and nextProbeAt has not arrived, Buffer mutation and Buffer-backed readback are forbidden.",
+    "After nextProbeAt, only one Buffer-backed recovery canary is allowed before normal mutations resume.",
+    "Queue validation, editorial work, anti-repeat checks and media preflight must remain Buffer-free.",
+    "YouTube Buffer mutation is forbidden while YouTube is paused.",
+    "LinkedIn publication may target only UGI — Uma Gestão Inteligente Company Page; Paulo Oliveira personal profile is forbidden.",
+    "Metricool is analytics/readback only and must never be used as a publication fallback."
+  ]
+}
