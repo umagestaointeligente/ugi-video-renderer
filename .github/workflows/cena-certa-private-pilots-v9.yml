@@ -1,0 +1,112 @@
+name: Cena Certa V9 Private Pilots
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - '.github/workflows/cena-certa-private-pilots-v9.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  ROOT: vendor/cena-certa-factory-v2/src
+  BATCH: ops/cena-certa/pilots/pilot-v9-20260905-two.json
+
+jobs:
+  private-pilots:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Preflight exact two-pilot batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          test -n "$URL" || { echo R2_UPLOAD_URL_MISSING; exit 1; }
+          test -n "$KEY" || { echo R2_UPLOAD_KEY_MISSING; exit 1; }
+          python -m factory.cena_certa.v2.preflight validate-batch --batch "$BATCH" --expect 2
+
+      - name: Prepare both pilots
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          mkdir -p prepared-pilots
+          python -m factory.cena_certa.v2.prepare --batch "$BATCH" --index 0 --prepared-root prepared-pilots > prepare-0.log 2>&1 & p0=$!
+          python -m factory.cena_certa.v2.prepare --batch "$BATCH" --index 1 --prepared-root prepared-pilots > prepare-1.log 2>&1 & p1=$!
+          fail=0
+          wait "$p0" || fail=1
+          wait "$p1" || fail=1
+          cat prepare-0.log
+          cat prepare-1.log
+          test "$fail" -eq 0
+
+      - name: Render and QA both pilots
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          python -m factory.cena_certa.v2.render --batch "$BATCH" --index 0 --prepared-root prepared-pilots > render-0.log 2>&1 & r0=$!
+          python -m factory.cena_certa.v2.render --batch "$BATCH" --index 1 --prepared-root prepared-pilots > render-1.log 2>&1 & r1=$!
+          fail=0
+          wait "$r0" || fail=1
+          wait "$r1" || fail=1
+          cat render-0.log
+          cat render-1.log
+          test "$fail" -eq 0
+
+      - name: Stage private preview media and prove byte identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          OUT="$ROOT/output/cena-certa-v2"
+          batch_sha=$(sha256sum "$BATCH" | awk '{print $1}')
+          mkdir -p pilot-evidence
+          for id in CC-PILOT-METAMORPOSA-V9-20260905 CC-PILOT-STOP-BULLYING-V9-20260905; do
+            mp4="$OUT/$id.mp4"
+            receipt="$OUT/$id.receipt.json"
+            test "$(jq -r '.qa_pass' "$receipt")" = true
+            test "$(jq -r '.state' "$receipt")" = PREVIEW_READY
+            test "$(jq -r '.batch_sha256' "$receipt")" = "$batch_sha"
+            test "$(jq -r '.video_sha256' "$receipt")" = "$(sha256sum "$mp4" | awk '{print $1}')"
+            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$mp4")
+            python ops/cena-certa/r2_stage.py --base-url "$URL" --auth-key "$KEY" --id "$id" --batch-sha256 "$batch_sha" --mp4 "$mp4" --duration "$dur" --out "pilot-evidence/$id.r2.json"
+            test "$(jq -r '.contentSha256' "pilot-evidence/$id.r2.json")" = "$(jq -r '.video_sha256' "$receipt")"
+            cp "$receipt" "pilot-evidence/$id.render-receipt.json"
+          done
+          python - <<'PY'
+          import json, pathlib
+          ids=['CC-PILOT-METAMORPOSA-V9-20260905','CC-PILOT-STOP-BULLYING-V9-20260905']
+          rows=[]
+          for rid in ids:
+              r=json.loads(pathlib.Path(f'pilot-evidence/{rid}.render-receipt.json').read_text())
+              s=json.loads(pathlib.Path(f'pilot-evidence/{rid}.r2.json').read_text())
+              rows.append({'id':rid,'state':r['state'],'qa_pass':r['qa_pass'],'duration':r['duration'],'lufs':r['qa'].get('lufs'),'true_peak':r['qa'].get('true_peak'),'video_sha256':r['video_sha256'],'url':s['videoUrl'],'r2_content_sha256':s['contentSha256'],'human_approval':False,'scheduled':False,'published':False})
+          pathlib.Path('pilot-evidence/summary.json').write_text(json.dumps({'schema':'CENA_CERTA_V9_PRIVATE_PILOTS','items':rows},indent=2),encoding='utf-8')
+          print(json.dumps(rows,indent=2))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-v9-private-pilots-${{ github.run_id }}
+          path: |
+            pilot-evidence/
+            prepare-*.log
+            render-*.log
+          if-no-files-found: warn
+          retention-days: 7
