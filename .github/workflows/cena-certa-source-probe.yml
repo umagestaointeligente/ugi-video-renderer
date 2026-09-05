@@ -15,45 +15,34 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
-      - name: Resolve licensed source derivatives without media download
+      - name: Resolve final Cosmonaut archive item without media download
         shell: python
         run: |
           import json, urllib.parse, urllib.request
-          headers={'User-Agent':'CenaCertaSourceProbe/3.0 (canonical production preflight)'}
-          rows=[]
-
-          # Official Wikimedia files already selected for three candidates.
-          commons_files={
-            'tears':'Tears of Steel 1080p.webm',
-            'scp_cb':'SCP- Containment Breach - The Movie - SCP-173 Live Action.webm',
-            'pendatang':'PENDATANG (2023) full movie.webm',
-          }
-          for rid,title in commons_files.items():
-              params=urllib.parse.urlencode({'action':'query','format':'json','formatversion':'2','prop':'videoinfo','titles':'File:'+title,'viprop':'url|size|mime|derivatives'})
-              req=urllib.request.Request('https://commons.wikimedia.org/w/api.php?'+params,headers=headers)
-              with urllib.request.urlopen(req,timeout=30) as r: data=json.load(r)
-              vi=data['query']['pages'][0]['videoinfo'][0]
-              deriv=[]
-              for d in vi.get('derivatives',[]):
-                  src=d.get('src')
-                  if src and src.startswith('//'): src='https:'+src
-                  deriv.append({'src':src,'type':d.get('type'),'transcodekey':d.get('transcodekey'),'width':d.get('width'),'height':d.get('height'),'bandwidth':d.get('bandwidth')})
-              rows.append({'id':rid,'source':'wikimedia_commons','title':title,'original_url':vi.get('url'),'size':vi.get('size'),'mime':vi.get('mime'),'derivatives':deriv})
-
-          # The Cosmonaut project officially points its released material to this Internet Archive item.
-          req=urllib.request.Request('https://archive.org/metadata/thecosmonaut',headers=headers)
-          with urllib.request.urlopen(req,timeout=30) as r: meta=json.load(r)
-          files=[]
-          for f in meta.get('files',[]):
-              name=str(f.get('name') or '')
-              fmt=str(f.get('format') or '')
-              try: size=int(f.get('size') or 0)
-              except: size=0
-              low=(name+' '+fmt).lower()
-              if any(x in low for x in ('.mp4','.mkv','.webm','h.264','mpeg4','matroska')):
-                  files.append({'name':name,'format':fmt,'size':size,'url':'https://archive.org/download/thecosmonaut/'+urllib.parse.quote(name)})
-          rows.append({'id':'the_cosmonaut','source':'internet_archive_official_project_archive','metadata_licenseurl':meta.get('metadata',{}).get('licenseurl'),'files':files})
-          report={'schema':'CENA_CERTA_SOURCE_PROBE_V3','items':rows}
+          headers={'User-Agent':'CenaCertaSourceProbe/4.0 (canonical production preflight)'}
+          q='title:("The Cosmonaut" OR "El Cosmonauta") AND mediatype:movies'
+          params=urllib.parse.urlencode({'q':q,'fl[]':['identifier','title','year','date','licenseurl'],'rows':50,'page':1,'output':'json'})
+          req=urllib.request.Request('https://archive.org/advancedsearch.php?'+params,headers=headers)
+          with urllib.request.urlopen(req,timeout=30) as r: data=json.load(r)
+          candidates=[]
+          for doc in data.get('response',{}).get('docs',[]):
+              ident=doc.get('identifier')
+              if not ident: continue
+              mreq=urllib.request.Request('https://archive.org/metadata/'+urllib.parse.quote(str(ident)),headers=headers)
+              try:
+                  with urllib.request.urlopen(mreq,timeout=20) as r: meta=json.load(r)
+              except Exception as e:
+                  candidates.append({'identifier':ident,'metadata_error':type(e).__name__}); continue
+              files=[]
+              for f in meta.get('files',[]):
+                  name=str(f.get('name') or ''); fmt=str(f.get('format') or '')
+                  try: size=int(f.get('size') or 0)
+                  except: size=0
+                  low=(name+' '+fmt).lower()
+                  if size and size<=2147483648 and any(x in low for x in ('.mp4','.mkv','.webm','h.264','mpeg4','matroska')):
+                      files.append({'name':name,'format':fmt,'size':size,'url':'https://archive.org/download/'+urllib.parse.quote(str(ident))+'/'+urllib.parse.quote(name)})
+              candidates.append({'identifier':ident,'search_title':doc.get('title'),'search_year':doc.get('year'),'metadata_title':meta.get('metadata',{}).get('title'),'metadata_date':meta.get('metadata',{}).get('date'),'metadata_licenseurl':meta.get('metadata',{}).get('licenseurl'),'description':str(meta.get('metadata',{}).get('description') or '')[:1000],'files':files})
+          report={'schema':'CENA_CERTA_COSMONAUT_ARCHIVE_RESOLUTION_V1','query':q,'candidates':candidates}
           open('source-probe.json','w',encoding='utf-8').write(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
           print(json.dumps(report,indent=2,ensure_ascii=False))
       - uses: actions/upload-artifact@v4
