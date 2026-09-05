@@ -18,20 +18,20 @@ jobs:
         shell: python
         run: |
           import json, urllib.parse, urllib.request
-          headers={'User-Agent':'CenaCertaSourceProbe/5.0 (canonical production preflight)'}
+          headers={'User-Agent':'CenaCertaSourceProbe/6.0 (canonical production preflight)'}
           files={
             'tears':'Tears of Steel 1080p.webm',
             'pendatang':'PENDATANG (2023) full movie.webm',
             'bodega':'Breakfast at the Bodega.webm',
             'scp':'SCP- Containment Breach - The Movie - SCP-173 Live Action.webm',
           }
-          wanted={'tears':'720p.vp9.webm','pendatang':'720p.vp9.webm','bodega':'720p.vp9.webm','scp':'480p.vp9.webm'}
+          wanted={rid:'480p.vp9.webm' for rid in files}
           rows=[]
           for rid,title in files.items():
               params=urllib.parse.urlencode({'action':'query','format':'json','formatversion':'2','prop':'videoinfo','titles':'File:'+title,'viprop':'url|size|mime|derivatives'})
               req=urllib.request.Request('https://commons.wikimedia.org/w/api.php?'+params,headers=headers)
               with urllib.request.urlopen(req,timeout=30) as r: data=json.load(r)
-              page=data['query']['pages'][0]; vi=page['videoinfo'][0]
+              vi=data['query']['pages'][0]['videoinfo'][0]
               candidates=[]
               for d in vi.get('derivatives',[]):
                   src=d.get('src') or ''
