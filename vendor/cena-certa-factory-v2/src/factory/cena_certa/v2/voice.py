@@ -10,6 +10,7 @@ from .common import normalize_text,tokens,media_probe
 # +22% puts the observed real scripts inside the canonical 145-165 WPM band;
 # prepare.py still measures the resulting speech and fails closed on drift.
 CANONICAL_SPEECH_RATE='+22%'
+MAX_PROVIDER_BOUNDARY_OVERLAP_SECONDS=0.12
 
 
 def _transient_tts_error(exc: Exception) -> bool:
@@ -29,6 +30,19 @@ async def _stream_once(c,text,part):
    elif chunk['type']=='WordBoundary': words.append((chunk['text'],chunk['offset']/1e7,chunk['duration']/1e7))
    elif chunk['type']=='SentenceBoundary': sentences.append((chunk['text'],chunk['offset']/1e7,chunk['duration']/1e7))
  return words,sentences
+
+
+def _clip_provider_boundary_overlap(cues):
+ # Edge WordBoundary durations may extend a few milliseconds beyond the next
+ # word offset. Keep the real next-word start and trim only the previous visual
+ # cue end. Large overlaps still fail closed instead of being hidden.
+ for i in range(len(cues)-1):
+  overlap=float(cues[i]['end'])-float(cues[i+1]['start'])
+  if overlap>0:
+   if overlap>MAX_PROVIDER_BOUNDARY_OVERLAP_SECONDS:
+    raise RuntimeError(f'WORD_BOUNDARY_OVERLAP_FAIL cue={i+1} overlap={overlap:.3f}')
+   cues[i]['end']=float(cues[i+1]['start'])
+ return cues
 
 
 async def tts_with_real_boundaries(c,text,caption_chunks,out):
@@ -66,6 +80,7 @@ async def tts_with_real_boundaries(c,text,caption_chunks,out):
   for chunk,s in zip(caption_chunks,sentences): cues.append({'text':chunk,'start':s[1],'end':s[1]+s[2]})
  else:
   raise RuntimeError(f'REAL_ALIGNMENT_UNAVAILABLE words={len(words)} sentences={len(sentences)} chunks={len(caption_chunks)}')
+ _clip_provider_boundary_overlap(cues)
  for a,b in zip(cues,cues[1:]):
   gap=b['start']-a['end']
   if gap>c['voice']['max_internal_speech_gap_seconds']: raise RuntimeError(f'DEAD_AIR_FAIL {gap:.3f}s')
