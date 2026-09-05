@@ -6,6 +6,8 @@ on:
     paths:
       - 'vendor/cena-certa-factory-v2/src/**'
       - 'ops/cena-certa/r2_stage.py'
+      - 'ops/cena-certa/factory_doctor.py'
+      - 'ops/cena-certa/dispatch_activate.py'
       - '.github/workflows/cena-certa-certified-smoke.yml'
   workflow_dispatch:
 
@@ -47,12 +49,28 @@ jobs:
           assert PIL.__version__=='12.3.0'
           assert numpy.__version__=='2.5.2'
           assert aiohttp.__version__=='3.14.3'
-          from factory.cena_certa.v2.common import verify_contract_and_assets
-          from factory.cena_certa.v2.prepare import prepare_one
+          from factory.cena_certa.v2.common import verify_contract_and_assets,prepare_static_assets,contract,CACHE,sha256
+          from factory.cena_certa.v2.prepare import prepare_one,_validate_source_ranges
           from factory.cena_certa.v2.render import render_one
           from factory.cena_certa.v2.qa import qa_video
           verify_contract_and_assets()
-          print('PINNED_RUNTIME_AND_PHYSICAL_MASTERS_PASS')
+          c=contract()
+          mask=prepare_static_assets(c)
+          expected=sha256(mask)
+          mask.write_bytes(b'INTENTIONAL_SMOKE_CACHE_CORRUPTION')
+          repaired=prepare_static_assets(c)
+          assert sha256(repaired)==expected
+          prepare_static_assets(c)
+          good={'scene_plan':[{'start_seconds':0.0},{'start_seconds':2.2}]}
+          _validate_source_ranges(good,[(0,2,2.0),(2,4,2.0)],10.0)
+          bad={'scene_plan':[{'start_seconds':0.0},{'start_seconds':1.0}]}
+          try:
+              _validate_source_ranges(bad,[(0,2,2.0),(2,4,2.0)],10.0)
+          except RuntimeError as e:
+              assert 'SCENE_SOURCE_OVERLAP_FAIL' in str(e)
+          else:
+              raise AssertionError('SOURCE_OVERLAP_GUARD_DID_NOT_FAIL')
+          print('PINNED_RUNTIME_PHYSICAL_MASTERS_CACHE_REPAIR_AND_SOURCE_OVERLAP_PASS')
           PY
           test ! -e vendor/cena-certa-factory-v2/assets-b64
           test ! -e vendor/cena-certa-factory-v2/payload-exact-v1
@@ -114,7 +132,7 @@ jobs:
           elapsed=$(($(date +%s)-${{ steps.clock.outputs.started }}))
           echo "FULL_CERTIFIED_SMOKE_SECONDS=$elapsed"
           test "$elapsed" -le 660
-          printf '{"state":"CERTIFIED_SMOKE_PASS","real_stress_renders":1,"real_r2_staged":1,"policy_candidate_pool":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s","certification_fingerprint":"%s","production_r2_reconciler":true,"blind_post_retry":false,"cost_profile":"ONE_REAL_32S_STRESS_PLUS_SYNTHETIC_10_TO_8_POLICY"}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" "${{ steps.fp.outputs.value }}" > certification.json
+          printf '{"state":"CERTIFIED_SMOKE_PASS","real_stress_renders":1,"real_r2_staged":1,"policy_candidate_pool":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s","certification_fingerprint":"%s","production_r2_reconciler":true,"blind_post_retry":false,"cache_corruption_recovery_tested":true,"source_overlap_guard_tested":true,"cost_profile":"ONE_REAL_32S_STRESS_PLUS_SYNTHETIC_10_TO_8_POLICY"}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" "${{ steps.fp.outputs.value }}" > certification.json
           cat certification.json
 
       - uses: actions/upload-artifact@v4
