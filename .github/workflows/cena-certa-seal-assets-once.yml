@@ -2,7 +2,7 @@ name: Cena Certa Seal Canonical Assets Once
 
 on:
   push:
-    branches: [feat/cena-certa-factory-v2-bridge]
+    branches: [feat/cena-certa-factory-v2-seal]
     paths: ['.github/workflows/cena-certa-seal-assets-once.yml']
   workflow_dispatch:
 
@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: feat/cena-certa-factory-v2-bridge
+          ref: feat/cena-certa-factory-v2-seal
           fetch-depth: 1
       - name: Bootstrap exact canonical masters from approved Drive objects
         shell: bash
@@ -57,5 +57,5 @@ jobs:
             exit 0
           fi
           git commit -m 'Cena Certa V2: seal exact physical Story and CTA masters in snapshot'
-          git push origin HEAD:feat/cena-certa-factory-v2-bridge
+          git push origin HEAD:feat/cena-certa-factory-v2-seal
           echo 'CANONICAL_STORY_CTA_PHYSICAL_SEAL_PASS'
