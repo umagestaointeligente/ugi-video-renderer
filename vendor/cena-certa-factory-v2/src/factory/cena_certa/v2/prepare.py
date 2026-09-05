@@ -18,15 +18,23 @@ def precut_scene(src,start,dur,out,threads=1):
  return out
 
 def normalize_music(c,src,out):
- target=float(c['music'].get('prepared_master_lufs',-14.0)); tp=float(c['music'].get('prepared_master_true_peak_dbtp',-2.0)); out=Path(out); tmp=out.with_name(out.stem+f'.part-{os.getpid()}'+out.suffix)
+ target=float(c['music'].get('prepared_master_lufs',-14.0)); tp=float(c['music'].get('prepared_master_true_peak_dbtp',-2.0)); out=Path(out); tmp=out.with_name(out.stem+f'.part-{os.getpid()}'+out.suffix); fix=out.with_name(out.stem+f'.peakfix-{os.getpid()}'+out.suffix)
  try:
   sh(['ffmpeg','-loglevel','error','-y','-i',str(src),'-vn','-af',f'loudnorm=I={target}:TP={tp}:LRA=7','-c:a','aac','-b:a','192k','-ar','48000',str(tmp)],timeout=150)
   media_probe(tmp,'audio'); os.replace(tmp,out)
- finally: tmp.unlink(missing_ok=True)
- measured_lufs,measured_tp=loudness(out)
- if abs(measured_lufs-target)>1.5: raise RuntimeError(f'MUSIC_MASTER_LUFS_FAIL actual={measured_lufs:.2f} target={target:.2f}')
- if measured_tp>tp+0.3: raise RuntimeError(f'MUSIC_MASTER_PEAK_FAIL actual={measured_tp:.2f} max={tp:.2f}')
- return measured_lufs,measured_tp
+  measured_lufs,measured_tp=loudness(out)
+  # AAC re-encoding can overshoot a loudnorm true-peak target. Correct only the measured
+  # excess, with a small safety margin, rather than weakening the canonical ceiling.
+  if measured_tp>tp+0.3:
+   correction_db=(tp-0.4)-measured_tp
+   sh(['ffmpeg','-loglevel','error','-y','-i',str(out),'-vn','-af',f'volume={correction_db:.3f}dB','-c:a','aac','-b:a','192k','-ar','48000',str(fix)],timeout=150)
+   media_probe(fix,'audio'); os.replace(fix,out)
+   measured_lufs,measured_tp=loudness(out)
+  if abs(measured_lufs-target)>1.5: raise RuntimeError(f'MUSIC_MASTER_LUFS_FAIL actual={measured_lufs:.2f} target={target:.2f}')
+  if measured_tp>tp+0.3: raise RuntimeError(f'MUSIC_MASTER_PEAK_FAIL actual={measured_tp:.2f} max={tp:.2f}')
+  return measured_lufs,measured_tp
+ finally:
+  tmp.unlink(missing_ok=True); fix.unlink(missing_ok=True)
 
 def _visual_timeline(item,cues,story):
  plan=item['scene_plan']; rows=[]
