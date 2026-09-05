@@ -14,7 +14,8 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 OPS = ROOT / 'ops/cena-certa'
-ENGINE = ROOT / 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2'
+FACTORY_ROOT = ROOT / 'vendor/cena-certa-factory-v2/src'
+ENGINE = FACTORY_ROOT / 'factory/cena_certa/v2'
 WORKFLOWS = ROOT / '.github/workflows'
 
 
@@ -74,12 +75,11 @@ def check_geometry_and_mask() -> None:
         fail('DOCTOR_CC_FOOTER_VERTICAL_ORDER_FAIL')
     if list(geo.get('cta_full') or []) != [0, 0, width, height]:
         fail('DOCTOR_CTA_FULL_FRAME_FAIL')
-    # Latest operational recovery: 1995+ priority, 1985-94 only strong exception.
     if int(c['selection']['film_default_min_year']) != 1995 or int(c['selection']['film_exception_min_year']) != 1985:
         fail('DOCTOR_FILM_YEAR_POLICY_DRIFT')
     for key in ('story','cta'):
         spec = c['approved_visual_sources'][key]
-        p = ROOT / spec['path']
+        p = FACTORY_ROOT / spec['path']
         if not p.is_file() or not spec.get('git_blob_sha1') or not spec.get('library_byte_sha256') or not spec.get('pixel_sha256'):
             fail(f'DOCTOR_PHYSICAL_MASTER_LOCK_FAIL {key}')
     render = (ENGINE / 'render.py').read_text(encoding='utf-8')
