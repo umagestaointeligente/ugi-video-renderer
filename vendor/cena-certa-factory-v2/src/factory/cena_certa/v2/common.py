@@ -1,9 +1,9 @@
 from __future__ import annotations
-import base64, hashlib, io, json, os, re, shutil, subprocess, textwrap, time
+import hashlib, json, os, re, shutil, subprocess, textwrap, time
 from fractions import Fraction
 from pathlib import Path
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
@@ -17,7 +17,7 @@ FONT_B='/usr/share/fonts/truetype/lato/Lato-Heavy.ttf'
 FONT_R='/usr/share/fonts/truetype/lato/Lato-Regular.ttf'
 FALLBACK='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 SAFE_ID_RE=re.compile(r'^[A-Za-z0-9][A-Za-z0-9._-]{2,95}$')
-RUNTIME_VISUAL_KEYS=('story','cta','title_anchor')
+RUNTIME_VISUAL_KEYS=('story','cta')
 
 def sh(cmd,check=True,timeout=None):
  timeout=float(timeout or os.getenv('ORBIT_PROCESS_TIMEOUT_SECONDS','240'))
@@ -45,15 +45,11 @@ def safe_id(value):
 
 def open_visual(path):
  p=Path(path)
+ if not p.is_file(): raise RuntimeError(f'VISUAL_ASSET_MISSING {p}')
  try:
   im=Image.open(p); im.load(); return im
- except (UnidentifiedImageError,OSError):
-  raw=p.read_bytes().strip()
-  try: decoded=base64.b64decode(raw,validate=True)
-  except Exception as e: raise RuntimeError(f'VISUAL_ASSET_DECODE_FAIL {p}: {e}')
-  try:
-   im=Image.open(io.BytesIO(decoded)); im.load(); return im
-  except Exception as e: raise RuntimeError(f'VISUAL_ASSET_IMAGE_FAIL {p}: {e}')
+ except Exception as e:
+  raise RuntimeError(f'VISUAL_ASSET_PHYSICAL_IMAGE_FAIL {p}: {e}') from e
 
 def pixel_sha256(path):
  im=open_visual(path).convert('RGB')
@@ -126,10 +122,11 @@ def verify_contract_and_assets():
   if not p.exists(): raise RuntimeError(f'ASSET_MISSING {name}: {p}')
   open_visual(p)
   if spec.get('git_blob_sha1') and git_blob_sha1(p)!=spec['git_blob_sha1']: raise RuntimeError(f'ASSET_BLOB_LOCK_FAIL {name}')
+  if spec.get('library_byte_sha256') and sha256(p)!=spec['library_byte_sha256']: raise RuntimeError(f'ASSET_BYTE_LOCK_FAIL {name}')
   if spec.get('pixel_sha256'):
    actual,size=pixel_sha256(p)
    if size!=spec.get('source_size') or actual!=spec['pixel_sha256']: raise RuntimeError(f'ASSET_VISUAL_ID_FAIL {name}')
- print('FACTORY_V2_CONTRACT_PASS'); print('FACTORY_V2_ASSET_VISUAL_LOCK_PASS')
+ print('FACTORY_V2_CONTRACT_PASS'); print('FACTORY_V2_PHYSICAL_MASTER_LOCK_PASS')
  return c
 
 def scaled_reference(c,key):
@@ -156,10 +153,11 @@ def prepare_static_assets(c):
  return CACHE/'story-mask-last.png'
 
 def make_title(c,title,year,out):
- x,y,w,h=c['geometry_approved_frame_1080x1920']['title_panel']; anchor_w=c['geometry_approved_frame_1080x1920']['title_static_anchor'][2]
+ x,y,w,h=c['geometry_approved_frame_1080x1920']['title_panel']; ax,ay,anchor_w,anchor_h=c['geometry_approved_frame_1080x1920']['title_static_anchor']
+ if anchor_h!=h: raise RuntimeError(f'TITLE_ANCHOR_GEOMETRY_FAIL {anchor_h}!={h}')
  im=Image.new('RGB',(w,h),BLACK); d=ImageDraw.Draw(im)
  d.rounded_rectangle((0,0,w-1,h-1),radius=30,fill=BLACK,outline=GOLD,width=4); d.rounded_rectangle((7,7,w-8,h-8),radius=23,outline=(88,62,16),width=1)
- anchor=open_visual(ROOT/c['approved_visual_sources']['title_anchor']['path']).convert('RGB'); im.paste(anchor.resize((anchor_w,h),Image.Resampling.LANCZOS),(0,0)); d=ImageDraw.Draw(im)
+ story=scaled_reference(c,'story'); anchor=story.crop((ax,ay,ax+anchor_w,ay+anchor_h)); im.paste(anchor,(0,0)); d=ImageDraw.Draw(im)
  d.line((anchor_w,25,anchor_w,h-25),fill=GOLD,width=3); name=str(title).upper().strip(); maxw=w-anchor_w-50; selected=None
  for sz in range(88,41,-2):
   cand=font(sz); bb=d.textbbox((0,0),name,font=cand,stroke_width=1)
