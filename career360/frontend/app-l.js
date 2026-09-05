@@ -9,7 +9,7 @@ function css(){
 :root{--career-max:1180px;--career-gap:clamp(10px,1.5vw,18px);--career-pad:clamp(12px,2vw,24px);--career-radius:clamp(15px,1.8vw,24px);--career-title:clamp(22px,2.3vw,32px);--career-body:clamp(13px,1.1vw,15px)}
 *{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}body{min-width:320px}.w{width:min(var(--career-max),100%);margin:0 auto;padding-inline:clamp(10px,2vw,22px)}
 #app,#main,.v,.stack{min-width:0}.card{border-radius:var(--career-radius);padding:var(--career-pad)}
-.btn,.tinybtn,button,input,select,textarea{font-size:max(16px,1em)}.btn,.tinybtn,.tabs button,.more-nav>summary{min-height:44px;touch-action:manipulation}
+.btn,.tinybtn,button,input,select,textarea{font-size:max(16px,1em)}button,.btn,.tinybtn,input,select,.more-nav>summary{min-height:44px;touch-action:manipulation}.eye,.photo-studio-close{min-width:44px}
 .top{gap:12px}.tabs{display:flex;gap:8px;align-items:center;max-width:100%;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
 .my-page,.showcase-page,.professional-v8,.radarbox,.proactive-card{min-width:0}.my-main,.showcase-body{min-width:0}
 .my-name h1,.showcase-name h1{font-size:var(--career-title);overflow-wrap:anywhere}.my-headline,.showcase-headline{font-size:clamp(13px,1.3vw,16px)}
