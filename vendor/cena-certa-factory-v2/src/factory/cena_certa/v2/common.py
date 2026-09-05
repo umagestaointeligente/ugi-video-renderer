@@ -133,9 +133,19 @@ def scaled_reference(c,key):
  p=ROOT/c['approved_visual_sources'][key]['path']
  return open_visual(p).convert('RGB').resize((1080,1920),Image.Resampling.LANCZOS)
 
+def _physical_film_border(ref,box):
+ x,y,w,h=box; crop=ref.crop((x,y,x+w,y+h)).convert('RGB'); rgb=np.asarray(crop,dtype=np.uint8); hsv=np.asarray(crop.convert('HSV'),dtype=np.uint8)
+ hh,ss,vv=hsv[:,:,0],hsv[:,:,1],hsv[:,:,2]; edge=np.zeros((h,w),dtype=bool); band=min(36,max(12,min(w,h)//8))
+ edge[:band,:]=True; edge[-band:,:]=True; edge[:,:band]=True; edge[:,-band:]=True
+ gold=edge & (hh>=8) & (hh<=60) & (ss>=65) & (vv>=65)
+ count=int(gold.sum())
+ if count<2500: raise RuntimeError(f'PHYSICAL_FILM_BORDER_EXTRACTION_FAIL pixels={count}')
+ rgba=np.zeros((h,w,4),dtype=np.uint8); rgba[:,:,:3]=rgb; rgba[:,:,3]=gold.astype(np.uint8)*255
+ return Image.fromarray(rgba,'RGBA'),count
+
 def prepare_static_assets(c):
- ref=scaled_reference(c,'story'); geo=c['geometry_approved_frame_1080x1920']; footer=geo['footer']; logo=geo['story_logo']
- fp=hashlib.sha256((json.dumps(geo,sort_keys=True)+c['approved_visual_sources']['story'].get('pixel_sha256','')+c['approved_visual_sources']['cta'].get('pixel_sha256','')).encode()).hexdigest()
+ ref=scaled_reference(c,'story'); geo=c['geometry_approved_frame_1080x1920']; footer=geo['footer']; logo=geo['story_logo']; film=geo['film_window']
+ fp=hashlib.sha256((json.dumps(geo,sort_keys=True)+c['approved_visual_sources']['story'].get('pixel_sha256','')+c['approved_visual_sources']['cta'].get('pixel_sha256','')+'physical-story-border-v1').encode()).hexdigest()
  stamp=CACHE/'static-bundle.json'; outputs=[CACHE/'footer-master.png',CACHE/'story-logo-master.png',CACHE/'cta-master.png',CACHE/'story-mask-last.png']
  if stamp.exists() and all(p.exists() for p in outputs):
   try:
@@ -144,12 +154,12 @@ def prepare_static_assets(c):
  save_png_atomic(ref.crop((footer[0],footer[1],footer[0]+footer[2],footer[1]+footer[3])),CACHE/'footer-master.png')
  save_png_atomic(ref.crop((logo[0],logo[1],logo[0]+logo[2],logo[1]+logo[3])),CACHE/'story-logo-master.png')
  save_png_atomic(scaled_reference(c,'cta'),CACHE/'cta-master.png')
- mask=Image.new('RGBA',(1080,1920),(0,0,0,0)); d=ImageDraw.Draw(mask)
- x,y,w,h=geo['film_window']; d.rounded_rectangle((x,y,x+w,y+h),radius=20,outline=GOLD,width=3)
+ mask=Image.new('RGBA',(1080,1920),(0,0,0,0)); border,border_pixels=_physical_film_border(ref,film); mask.alpha_composite(border,(film[0],film[1]))
  mask.alpha_composite(Image.open(CACHE/'story-logo-master.png').convert('RGBA'),(logo[0],logo[1]))
  mask.alpha_composite(Image.open(CACHE/'footer-master.png').convert('RGBA'),(footer[0],footer[1]))
  save_png_atomic(mask,CACHE/'story-mask-last.png')
- tmp=stamp.with_suffix('.tmp'); tmp.write_text(json.dumps({'fingerprint':fp}),encoding='utf-8'); os.replace(tmp,stamp)
+ tmp=stamp.with_suffix('.tmp'); tmp.write_text(json.dumps({'fingerprint':fp,'physical_border_pixels':border_pixels}),encoding='utf-8'); os.replace(tmp,stamp)
+ print('FACTORY_V2_PHYSICAL_STORY_BORDER_PASS',border_pixels)
  return CACHE/'story-mask-last.png'
 
 def make_title(c,title,year,out):
