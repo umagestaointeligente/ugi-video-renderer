@@ -1,0 +1,9 @@
+{
+  "schema": "CENA_CERTA_HUMAN_APPROVAL_V1",
+  "approved": false,
+  "handoff_sha256": null,
+  "production_run_id": null,
+  "approved_at": null,
+  "approved_by": null,
+  "note": "Must match the exact current publisher outbox before any scheduling write."
+}
