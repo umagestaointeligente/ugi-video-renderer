@@ -18,9 +18,9 @@ def _seed(items,batch):
     r=json.loads(base.read_text()); batch_sha=sha256(batch)
     if not r.get('video_sha256'): raise RuntimeError('SELFTEST_VIDEO_HASH_MISSING')
     for x in items:
-        rid=x['id']; rr=dict(r); rr['id']=rid; rr['state']='PREVIEW_READY'; rr['render_pass']=True; rr['qa_pass']=True
+        rid=x['id']; rr=dict(r); rr['id']=rid; rr['state']='PREVIEW_READY'; rr['render_pass']=True; rr['qa_pass']=True; rr['batch_sha256']=batch_sha
         (OUT/f'{rid}.receipt.json').write_text(json.dumps(rr),encoding='utf-8')
-        r2={'schema':'CENA_CERTA_R2_RECEIPT_V2','id':rid,'batchSha256':batch_sha,'status':'ready','public_probe_pass':True,'public_head_size_match':True,'videoUrl':f'https://example.invalid/{rid}.mp4','videoKey':f'smoke/{rid}.mp4','contentSha256':rr['video_sha256']}
+        r2={'schema':'CENA_CERTA_R2_RECEIPT_V2','id':rid,'batchSha256':batch_sha,'status':'ready','public_probe_pass':True,'public_head_size_match':True,'blind_retry_used':False,'videoUrl':f'https://example.invalid/{rid}.mp4','videoKey':f'smoke/{rid}.mp4','contentSha256':rr['video_sha256']}
         (OUT/f'{rid}.r2.json').write_text(json.dumps(r2),encoding='utf-8')
 
 def _remove(items, count):
