@@ -43,6 +43,92 @@
       "never_treat_partial_as_full_redundancy": true
     }
   },
+  "chat_editorial_support": {
+    "movie_metadata": {
+      "state": "ACTIVE_CHAT_SUPPORT",
+      "providers": ["moviefind", "movie-find-film-lookup-search"],
+      "purpose": ["title_discovery", "release_year_crosscheck", "runtime_crosscheck", "poster_reference"],
+      "authoritative_for_trend_ranking": false,
+      "authoritative_for_rights": false,
+      "authoritative_for_60d_dedup": false,
+      "required_for_render": false
+    },
+    "audio_candidate_discovery": {
+      "state": "ACTIVE_CANDIDATE_DISCOVERY",
+      "provider": "heygen-audio-search",
+      "supports": ["music", "sound_effects"],
+      "rights_evidence_required_before_use": true,
+      "license_evidence_required_before_use": true,
+      "auto_ingest_to_production": false,
+      "required_for_render": false,
+      "notes": "Semantic search is allowed to find candidates only. A returned audio URL is never enough to satisfy the canonical rights gate."
+    },
+    "canonical_asset_authoring": {
+      "state": "LAB_ONLY_NOT_RUNTIME",
+      "provider": "adobe-express",
+      "purpose": ["future_manual_master_asset_authoring", "cover_or_brand_asset_revision"],
+      "allowed_to_modify_live_mask_automatically": false,
+      "required_for_render": false
+    },
+    "local_renderer_labs": [
+      {
+        "id": "instavar-remotion-templates",
+        "state": "LAB_ONLY_NOT_PRODUCTION",
+        "reason": "deterministic and account-free planning is useful, but adding Remotion to the current certified FFmpeg route would create a second renderer and extra failure surface",
+        "allowed_as_runtime_fallback": false
+      },
+      {
+        "id": "hyperframes",
+        "state": "LAB_ONLY_NOT_PRODUCTION",
+        "reason": "useful for advanced HTML motion graphics and layout inspection, but Chrome/HTML rendering would add a second production engine to a factory whose canonical overlay is already deterministic and fast",
+        "allowed_as_runtime_fallback": false
+      }
+    ],
+    "experimental_zero_cost_qa": {
+      "id": "hugging-face-transformers-js",
+      "state": "CANDIDATE_NOT_CERTIFIED",
+      "purpose": "future local semantic frame-to-caption QA without external generation credits",
+      "requirements_before_activation": ["specific_model_lock", "local_latency_benchmark", "false_positive_benchmark", "memory_limit", "factory_smoke_proof"],
+      "required_for_render": false
+    }
+  },
+  "evaluated_not_in_production": [
+    {
+      "id": "runway",
+      "state": "REJECTED_CURRENTLY",
+      "reason": "connected workspace exposes image models but no video models; video use would require paid-plan activation and would not improve the certified real-footage path"
+    },
+    {
+      "id": "veed-video-generator",
+      "state": "REJECTED_CURRENTLY",
+      "reason": "talking-head oriented and current connected workspace reported zero AI Playground credits"
+    },
+    {
+      "id": "visla-video-maker",
+      "state": "REJECTED_FOR_CORE",
+      "reason": "AI/stock-footage narrated assembly can approximate a movie story but cannot guarantee the actual film footage and canonical visual identity required by Cena Certa"
+    },
+    {
+      "id": "heygen-video-generation",
+      "state": "REJECTED_FOR_CORE",
+      "reason": "avatar/video-agent generation is unnecessary for a faceless real-film-footage recap route; only audio candidate search is admitted as support"
+    },
+    {
+      "id": "explain-video-generator",
+      "state": "REJECTED_FOR_CORE",
+      "reason": "strong for narrated diagrams and explainers, but its slide/diagram language does not match Cena Certa's real-film-footage product"
+    },
+    {
+      "id": "ahamotion",
+      "state": "REJECTED_FOR_CORE",
+      "reason": "animation/explainer output is educational rather than a canonical film-recap renderer; retained only as an external experiment, never as production fallback"
+    },
+    {
+      "id": "higgsfield-generation",
+      "state": "REJECTED_CURRENTLY",
+      "reason": "current free workspace has insufficient credits for scale and no unlimited allowance; generated footage must not replace actual movie footage in the canonical route"
+    }
+  ],
   "disabled_routes": [
     {
       "id": "gitlab-runtime-clone",
@@ -70,6 +156,11 @@
     "no_fake_instagram_tiktok_route_b": true,
     "future_buffer_never_repairs_missing_current_placement": true,
     "human_approval_required_before_scheduling": true,
-    "critical_render_route_must_have_live_proof": true
+    "critical_render_route_must_have_live_proof": true,
+    "external_plugin_never_becomes_runtime_fallback_without_live_proof": true,
+    "external_generation_never_replaces_real_film_footage_by_default": true,
+    "cost_bearing_plugin_call_requires_explicit_preflight": true,
+    "audio_candidate_never_bypasses_rights_and_license_gate": true,
+    "canonical_mask_remains_final_visual_layer": true
   }
 }
