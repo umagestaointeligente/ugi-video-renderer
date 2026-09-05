@@ -1,0 +1,33 @@
+name: Cena Certa V2 Route Integrity
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - 'ops/cena-certa/route-registry.json'
+      - 'ops/cena-certa/route_guard.py'
+      - 'ops/cena-certa/r2_stage.py'
+      - '.github/workflows/cena-certa-production-v2.yml'
+      - '.github/workflows/cena-certa-route-integrity.yml'
+      - 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/contract_v9_factory.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  route-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v7
+      - name: Compile route control plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile ops/cena-certa/route_guard.py ops/cena-certa/r2_stage.py
+      - name: Fail closed on any dead or fake route
+        shell: bash
+        run: |
+          set -euo pipefail
+          python ops/cena-certa/route_guard.py
