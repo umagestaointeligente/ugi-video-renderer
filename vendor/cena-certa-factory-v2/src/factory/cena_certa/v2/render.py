@@ -15,6 +15,30 @@ def _asset(root,spec,kind):
  if sha256(p)!=spec['sha256']: raise RuntimeError(f'PREPARED_ASSET_HASH_FAIL {name}')
  media_probe(p,kind); return p
 
+def _validate_prepared_cues(c,item,m,cues,voice_duration,story):
+ if len(cues)!=len(item['caption_chunks']): raise RuntimeError('PREPARED_CUES_COUNT_FAIL')
+ if normalize_text(' '.join(x['text'] for x in cues))!=normalize_text(' '.join(item['caption_chunks'])): raise RuntimeError('PREPARED_CUES_TEXT_FAIL')
+ if not cues: raise RuntimeError('PREPARED_CUES_EMPTY')
+ prev_end=None
+ for i,cue in enumerate(cues):
+  start=float(cue.get('start',-1)); end=float(cue.get('end',-1))
+  if start<0 or end<=start: raise RuntimeError(f'PREPARED_CUE_RANGE_FAIL {i}')
+  if prev_end is not None:
+   gap=start-prev_end
+   if gap>float(c['voice']['max_internal_speech_gap_seconds'])+0.01: raise RuntimeError(f'PREPARED_VOICE_GAP_FAIL cue={i} gap={gap:.3f}')
+   if start+0.02<prev_end: raise RuntimeError(f'PREPARED_CUE_OVERLAP_FAIL cue={i}')
+  prev_end=end
+ if float(cues[0]['start'])>0.35: raise RuntimeError('PREPARED_FIRST_VOICE_LATE_FAIL')
+ last_end=float(cues[-1]['end'])
+ if last_end>voice_duration+0.08: raise RuntimeError('PREPARED_LAST_CUE_AFTER_VOICE_FAIL')
+ target_min,target_max=(float(x) for x in c['story']['default_total_seconds'])
+ if not (target_min<=story<=target_max) and item.get('duration_exception_approved') is not True: raise RuntimeError(f'PREPARED_STORY_DURATION_TARGET_FAIL {story:.3f}')
+ expected_story=last_end+0.12
+ if abs(story-expected_story)>0.08: raise RuntimeError(f'PREPARED_STORY_BOUNDARY_DRIFT actual={story:.3f} expected={expected_story:.3f}')
+ gap=story+0.05-last_end
+ if gap>float(c['voice']['story_to_cta_gap_max_seconds'])+0.001: raise RuntimeError(f'PREPARED_STORY_CTA_GAP_FAIL {gap:.3f}')
+ return gap
+
 def load_prepared(c,item,prepared_root):
  rid=safe_id(item['id']); root=Path(prepared_root)/rid; manifest_path=root/'prepared.json'
  if not manifest_path.exists(): raise RuntimeError(f'PREPARED_MANIFEST_MISSING {rid}')
@@ -28,6 +52,10 @@ def load_prepared(c,item,prepared_root):
  age=(time.time()-float(m.get('created_epoch',0)))/3600; max_age=float(c['prepared_assets'].get('expire_hours',c['ready_queue']['expire_hours']))
  if age<-.25 or age>max_age: raise RuntimeError(f'PREPARED_ASSETS_STALE age_hours={age:.2f} max={max_age:.2f}')
  voice=_asset(root,m['voice'],'audio'); cta_voice=_asset(root,m['cta_voice'],'audio'); music=_asset(root,m['music'],'audio')
+ voice_actual=duration(voice); cta_actual=duration(cta_voice); music_actual=duration(music)
+ if abs(voice_actual-float(m['voice'].get('duration',0)))>0.12: raise RuntimeError('PREPARED_VOICE_DURATION_METADATA_FAIL')
+ if abs(cta_actual-float(m['cta_voice'].get('duration',0)))>0.12: raise RuntimeError('PREPARED_CTA_DURATION_METADATA_FAIL')
+ if abs(music_actual-float(m['music'].get('duration',0)))>0.15: raise RuntimeError('PREPARED_MUSIC_DURATION_METADATA_FAIL')
  if m['music'].get('track_id')!=item['music_track']['id']: raise RuntimeError('PREPARED_MUSIC_ID_FAIL')
  if len(m.get('scenes') or [])!=len(item['scene_plan']): raise RuntimeError('PREPARED_SCENE_COUNT_FAIL')
  scenes=[]; coverage=0.0; previous_end=0.0
@@ -41,8 +69,7 @@ def load_prepared(c,item,prepared_root):
  story=float(m['story_duration'])
  if abs(previous_end-story)>0.15 or abs(coverage-story)>0.15: raise RuntimeError(f'PREPARED_TIMELINE_COVERAGE_FAIL end={previous_end:.3f} coverage={coverage:.3f} story={story:.3f}')
  cues=m.get('cues') or []
- if len(cues)!=len(item['caption_chunks']): raise RuntimeError('PREPARED_CUES_COUNT_FAIL')
- if normalize_text(' '.join(x['text'] for x in cues))!=normalize_text(' '.join(item['caption_chunks'])): raise RuntimeError('PREPARED_CUES_TEXT_FAIL')
+ _validate_prepared_cues(c,item,m,cues,voice_actual,story)
  return root,m,voice,cta_voice,music,scenes,cues,current_engine
 
 def concat_scenes(root,scenes,expected_story):
@@ -72,10 +99,10 @@ def audio_only_repair(c,path):
  finally: repaired.unlink(missing_ok=True)
 
 def render_one(batch,index,prepared_root):
- t0=time.time(); c=verify_contract_and_assets(); mask=prepare_static_assets(c); items=json.loads(Path(batch).read_text(encoding='utf-8'))
+ t0=time.time(); c=verify_contract_and_assets(); mask=prepare_static_assets(c); batch_path=Path(batch); batch_sha=sha256(batch_path); items=json.loads(batch_path.read_text(encoding='utf-8'))
  if index<0 or index>=len(items): raise RuntimeError(f'RENDER_INDEX_FAIL {index}/{len(items)}')
  item=items[index]; validate_item(c,item); rid=safe_id(item['id']); root,m,voice,cta_voice,music,scenes,cues,engine_fp=load_prepared(c,item,prepared_root)
- vd=float(m['voice']['duration']); story=float(m['story_duration']); wpm=float(m['voice_wpm']); cvd=float(m['cta_voice']['duration']); cta_seconds=float(c['cta']['duration_seconds']); total=story+cta_seconds
+ vd=float(m['voice']['duration']); story=float(m['story_duration']); voice_story_dur=min(vd,story); wpm=float(m['voice_wpm']); cvd=float(m['cta_voice']['duration']); cta_seconds=float(c['cta']['duration_seconds']); total=story+cta_seconds
  if cvd>cta_seconds-0.15: raise RuntimeError(f'CTA_VOICE_DURATION_FAIL voice={cvd:.3f} budget={cta_seconds-0.15:.3f}')
  cta_cues=m['cta_voice'].get('cues') or []
  if cta_cues and float(cta_cues[-1]['end'])>cta_seconds-0.10: raise RuntimeError('CTA_BOUNDARY_OVERFLOW_FAIL')
@@ -88,7 +115,7 @@ def render_one(batch,index,prepared_root):
   f'[fg0]scale={fw}:{fh}:force_original_aspect_ratio=decrease,setsar=1[fg]',f'[bg][fg]overlay={fx}+({fw}-w)/2:{fy}+({fh}-h)/2,setsar=1[film]',
   f"[film]subtitles='{esc}',setsar=1[captioned]",f'[1:v]scale={tw}:{th},setsar=1,fps={fps},format=rgba[ttl]',f'[captioned][ttl]overlay={tx}:{ty},setsar=1[titled]',f'[2:v]setsar=1,fps={fps},format=rgba[mask]',f'[titled][mask]overlay=0:0,setsar=1,fps={fps}[storyv]',
   f'[3:v]scale=1080:1920,setsar=1,fps={fps},trim=duration={cta_seconds:.3f},setpts=PTS-STARTPTS[ctav]',f'[storyv]trim=duration={story:.3f},setpts=PTS-STARTPTS,setsar=1,fps={fps}[sv];[sv][ctav]concat=n=2:v=1:a=0,setsar=1,fps={fps},fade=t=out:st={total-fade:.3f}:d={fade:.3f}[vout]',
-  f'[4:a]atrim=0:{vd:.3f},asetpts=PTS-STARTPTS,loudnorm=I=-16:TP=-2:LRA=7,apad=whole_dur={total:.3f}[voice]',
+  f'[4:a]atrim=0:{voice_story_dur:.3f},asetpts=PTS-STARTPTS,loudnorm=I=-16:TP=-2:LRA=7,apad=whole_dur={total:.3f}[voice]',
   f'[5:a]atrim=0:{cvd:.3f},asetpts=PTS-STARTPTS,adelay={int((story+0.05)*1000)}|{int((story+0.05)*1000)},apad=whole_dur={total:.3f}[cta]',
   '[voice][cta]amix=inputs=2:duration=longest:normalize=0[voc0];[voc0]asplit=2[key][voc]',f'[6:a]atrim=0:{total:.3f},volume={music_gain}dB[music0];[music0][key]sidechaincompress=threshold=0.025:ratio=6:attack=15:release=240[music]',
   f'[voc][music]amix=inputs=2:duration=longest:normalize=0,loudnorm=I={c["mix"]["target_lufs"]}:TP=-1.7:LRA=7,afade=t=out:st={total-fade:.3f}:d={fade:.3f}[aout]'])
@@ -106,7 +133,7 @@ def render_one(batch,index,prepared_root):
    audio_only_repair(c,out); audio_repair=True; qa=qa_video(c,item,out,story,cues)
   else:
    raise
- receipt={'schema':'CENA_CERTA_FACTORY_V2_RECEIPT','id':rid,'state':'PREVIEW_READY','ready_assets_pass':True,'render_pass':True,'qa_pass':True,'editorial_pass':False,'private_preview_pass':False,'human_approval':False,'delivered':False,'scheduled':False,'published':False,'duration':duration(out),'video_sha256':sha256(out),'story_duration':story,'cta_duration':cta_seconds,'voice_wpm':round(wpm,1),'music_track_id':item['music_track']['id'],'rights_evidence':item['rights_evidence'],'anti_repeat_evidence':item['anti_repeat_evidence'],'relevance_evidence':item['relevance_evidence'],'scene_plan_count':len(item['scene_plan']),'prepared_manifest_sha256':sha256(root/'prepared.json'),'prepared_asset_fingerprint':prepared_asset_fingerprint(item),'prepared_engine_fingerprint':engine_fp,'dispatch_fingerprint':dispatch_fingerprint(item),'audio_repair_used':audio_repair,'mask_composite_order':'FILM_CC_TITLE_THEN_FINAL_STATIC_MASK','qa':qa,'elapsed_seconds':round(time.time()-t0,2)}
+ receipt={'schema':'CENA_CERTA_FACTORY_V2_RECEIPT','id':rid,'state':'PREVIEW_READY','ready_assets_pass':True,'render_pass':True,'qa_pass':True,'editorial_pass':False,'private_preview_pass':False,'human_approval':False,'delivered':False,'scheduled':False,'published':False,'duration':duration(out),'video_sha256':sha256(out),'batch_sha256':batch_sha,'story_duration':story,'story_to_cta_gap_seconds':round(story+0.05-float(cues[-1]['end']),3),'cta_duration':cta_seconds,'voice_wpm':round(wpm,1),'music_track_id':item['music_track']['id'],'rights_evidence':item['rights_evidence'],'anti_repeat_evidence':item['anti_repeat_evidence'],'relevance_evidence':item['relevance_evidence'],'scene_plan_count':len(item['scene_plan']),'prepared_manifest_sha256':sha256(root/'prepared.json'),'prepared_asset_fingerprint':prepared_asset_fingerprint(item),'prepared_engine_fingerprint':engine_fp,'dispatch_fingerprint':dispatch_fingerprint(item),'audio_repair_used':audio_repair,'mask_composite_order':'FILM_CC_TITLE_THEN_FINAL_STATIC_MASK','qa':qa,'elapsed_seconds':round(time.time()-t0,2)}
  tmpj=OUT/f'{rid}.receipt.json.tmp'; tmpj.write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8'); os.replace(tmpj,OUT/f'{rid}.receipt.json')
  print('FACTORY_V2_RENDER_PASS',rid,receipt['elapsed_seconds'])
 
