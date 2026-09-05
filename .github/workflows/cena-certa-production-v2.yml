@@ -37,12 +37,16 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v7
+      - name: Compile control-plane helpers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile ops/cena-certa/r2_stage.py
       - id: read
         name: Validate single immutable dispatch
         shell: bash
         run: |
           set -euo pipefail
-          export PYTHONPATH="$ROOT"
           python - <<'PY'
           import datetime,hashlib,json,os,pathlib
           p=pathlib.Path('ops/cena-certa/dispatch.json')
@@ -51,8 +55,7 @@ jobs:
           enabled=bool(d.get('enabled'))
           mode=str(d.get('mode') or 'IDLE').upper()
           if not enabled:
-              mode='IDLE'
-              batch_path=''; batch_sha=''; prepared=''
+              mode='IDLE'; batch_path=''; batch_sha=''; prepared=''
           else:
               if mode not in {'PREPARE','RENDER'}: raise SystemExit('DISPATCH_MODE_FAIL')
               batch_path=str(d.get('batch_path') or '')
@@ -74,9 +77,13 @@ jobs:
               f.write(f'enabled={str(enabled).lower()}\nmode={mode}\nbatch_path={batch_path}\nbatch_sha256={batch_sha}\nprepared_run_id={prepared}\n')
           print('DISPATCH_PASS',enabled,mode,batch_path,batch_sha)
           PY
-          if [ "${{ steps.read.outputs.enabled }}" = "true" ]; then
-            python -m factory.cena_certa.v2.preflight validate-batch --batch "${{ steps.read.outputs.batch_path }}" --expect 10
-          fi
+      - name: Validate exact 10-candidate batch
+        if: steps.read.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$ROOT"
+          python -m factory.cena_certa.v2.preflight validate-batch --batch "${{ steps.read.outputs.batch_path }}" --expect 10
 
   prepare-10:
     needs: dispatch
@@ -180,7 +187,7 @@ jobs:
       - id: clock
         shell: bash
         run: echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
-      - name: Offline render, QA, single-write R2 staging
+      - name: Offline render, QA and reconciled R2 staging
         shell: bash
         run: |
           set -euo pipefail
@@ -199,83 +206,17 @@ jobs:
           receipt="$ROOT/output/cena-certa-v2/${RID}.receipt.json"
           test -s "$file"; test -s "$receipt"
           dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$file")
-          raw="$ROOT/output/cena-certa-v2/${RID}.r2.raw.json"
-          set +e
-          curl --fail-with-body --silent --show-error --connect-timeout 10 --max-time 120 -X POST "${URL%/}/api/video-upload?renderId=${RID}&duration=${dur}" -H "Authorization: Bearer ${KEY}" -H 'Content-Type: video/mp4' --data-binary @"$file" -o "$raw"
-          rc=$?
-          set -e
-          if [ "$rc" -ne 0 ]; then
-            echo "R2_SINGLE_POST_FAILED_OR_AMBIGUOUS rid=$RID rc=$rc; blind retry forbidden"
-            exit 1
-          fi
-          export RAW="$raw"
-          python - <<'PY' > /tmp/r2.env
-          import json,os,shlex
-          d=json.load(open(os.environ['RAW'],encoding='utf-8'))
-          def walk(x):
-              if isinstance(x,dict):
-                  yield x
-                  for v in x.values(): yield from walk(v)
-              elif isinstance(x,list):
-                  for v in x: yield from walk(v)
-          vu=vk=poll=''
-          for x in walk(d):
-              if not vu and x.get('videoUrl'): vu=str(x['videoUrl'])
-              if not vk and x.get('videoKey'): vk=str(x['videoKey'])
-              for k in ('statusUrl','status_url','pollUrl','poll_url'):
-                  if not poll and x.get(k): poll=str(x[k])
-          print('VIDEO_URL='+shlex.quote(vu)); print('VIDEO_KEY='+shlex.quote(vk)); print('POLL_URL='+shlex.quote(poll))
-          PY
-          source /tmp/r2.env
-          if { [ -z "$VIDEO_URL" ] || [ -z "$VIDEO_KEY" ]; } && [ -n "$POLL_URL" ]; then
-            for n in $(seq 1 12); do
-              sleep 2
-              if curl --fail --silent --show-error --connect-timeout 5 --max-time 10 -H "Authorization: Bearer ${KEY}" "$POLL_URL" -o /tmp/r2-poll.json; then
-                export RAW=/tmp/r2-poll.json
-                python - <<'PY' > /tmp/r2.env
-          import json,os,shlex
-          d=json.load(open(os.environ['RAW'],encoding='utf-8'))
-          def walk(x):
-              if isinstance(x,dict):
-                  yield x
-                  for v in x.values(): yield from walk(v)
-              elif isinstance(x,list):
-                  for v in x: yield from walk(v)
-          vu=vk=''
-          for x in walk(d):
-              if not vu and x.get('videoUrl'): vu=str(x['videoUrl'])
-              if not vk and x.get('videoKey'): vk=str(x['videoKey'])
-          print('VIDEO_URL='+shlex.quote(vu)); print('VIDEO_KEY='+shlex.quote(vk)); print('POLL_URL='+shlex.quote(''))
-          PY
-                source /tmp/r2.env
-                [ -n "$VIDEO_URL" ] && [ -n "$VIDEO_KEY" ] && break
-              fi
-            done
-          fi
-          [ -n "$VIDEO_URL" ] && [ -n "$VIDEO_KEY" ] || { echo R2_MEDIA_FIELDS_MISSING; exit 1; }
-          public_ok=0
-          for n in $(seq 1 8); do
-            if curl --fail --location --silent --show-error --connect-timeout 8 --max-time 25 --range 0-4095 "$VIDEO_URL" -o /tmp/media.bin; then
-              if python - <<'PY'
-          b=open('/tmp/media.bin','rb').read(32)
-          raise SystemExit(0 if len(b)>=12 and b[4:8]==b'ftyp' else 1)
-          PY
-              then public_ok=1; break; fi
-            fi
-            sleep 2
-          done
-          [ "$public_ok" = 1 ] || { echo R2_PUBLIC_MEDIA_PROBE_FAIL; exit 1; }
-          export RID VIDEO_URL VIDEO_KEY
-          python - <<'PY'
-          import json,os,pathlib
-          root=pathlib.Path(os.environ['ROOT'])/'output/cena-certa-v2'
-          rid=os.environ['RID']
-          r={'schema':'CENA_CERTA_R2_RECEIPT_V1','id':rid,'status':'ready','public_probe_pass':True,'videoUrl':os.environ['VIDEO_URL'],'videoKey':os.environ['VIDEO_KEY'],'blind_retry_used':False}
-          (root/f'{rid}.r2.json').write_text(json.dumps(r,indent=2),encoding='utf-8')
-          PY
+          python ops/cena-certa/r2_stage.py \
+            --base-url "$URL" \
+            --auth-key "$KEY" \
+            --id "$RID" \
+            --batch-sha256 "${{ needs.dispatch.outputs.batch_sha256 }}" \
+            --mp4 "$file" \
+            --duration "$dur" \
+            --out "$ROOT/output/cena-certa-v2/${RID}.r2.json"
           elapsed=$(($(date +%s)-${{ steps.clock.outputs.started }}))
           echo "RENDER_STAGE_SECONDS=$elapsed"
-          [ "$elapsed" -le 480 ] || { echo RENDER_STAGE_SLA_FAIL; exit 1; }
+          test "$elapsed" -le 480 || { echo RENDER_STAGE_SLA_FAIL; exit 1; }
           mkdir -p proof
           cp "$receipt" proof/
           cp "$ROOT/output/cena-certa-v2/${RID}.r2.json" proof/
@@ -306,7 +247,7 @@ jobs:
           pattern: cena-certa-render-slot-*
           path: staged
           merge-multiple: true
-      - name: Select eight, preserve reserves, create exact publisher outbox
+      - name: Select eight, preserve reserves and create exact publisher outbox
         shell: bash
         run: |
           set -euo pipefail
@@ -340,8 +281,7 @@ jobs:
           git add ops/cena-certa/publisher-outbox.json ops/cena-certa/human-approval.json ops/cena-certa/publisher-state.json
           git commit -m "Cena Certa V2: publish exact human-gated outbox run ${{ github.run_id }}"
           git push origin "HEAD:$GITHUB_REF_NAME"
-      - name: Upload compact evidence
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: cena-certa-publisher-outbox-${{ github.run_id }}
           path: |
