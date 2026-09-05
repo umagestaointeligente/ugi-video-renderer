@@ -25,10 +25,9 @@ Verificado:
 - `READY`;
 - target `production`;
 - alias oficial presente;
-- `aliasError=null`;
 - HTTP 200 no domínio oficial;
 - HTML oficial carrega `app-i.js`, `app-j.js` e `app-k.js`;
-- nenhum runtime error/fatal no deployment no período consultado.
+- nenhum runtime error no Vercel no período consultado.
 
 ## 2. Gates de produto
 
@@ -115,8 +114,8 @@ Modelo canônico:
 - `career_profile_photo_settings`.
 
 Edges ACTIVE / JWT required:
-- `career-photo-studio` V9;
-- `career-profile-photo` V9.
+- `career-photo-studio` V11;
+- `career-profile-photo` V10.
 
 Frontend:
 `career360/frontend/app-k.js` = LIVE.
@@ -132,7 +131,6 @@ Estilos:
 - professional.
 
 Contexto usa somente cargo atual + cargos-alvo.
-Perfil piloto atual resolve para `executive` por Gerente de categoria + Head Comercial / Diretor Comercial.
 
 Local Professional Polish:
 - crop 4:5;
@@ -206,4 +204,4 @@ Também pendente:
 - não substituir original silenciosamente;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V14_OFFICIAL_PRODUCTION_V12_V13_V14_UI_LIVE_PHOTO_STUDIO_LOCAL_ZERO_CASH_BACKEND_V9_ACTIVE`
+`LAST_VERIFIED_CHANGE=V14_OFFICIAL_PRODUCTION_V12_V13_V14_UI_LIVE_PHOTO_STUDIO_LOCAL_ZERO_CASH_BACKEND_STUDIO_V11_PROFILE_PHOTO_V10`
