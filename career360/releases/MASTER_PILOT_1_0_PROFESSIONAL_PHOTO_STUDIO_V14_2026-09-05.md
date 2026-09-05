@@ -1,47 +1,34 @@
 # LSI Career 360 — Professional Photo Studio V14
 
 Data: 2026-09-05 BRT
-Status: CANONICAL BACKEND LIVE / LOCAL POLISH READY / IMG2IMG ADAPTER DEPLOYED / PROVIDER INFERENCE NOT YET PROVEN / UI VERSIONED NOT YET PROMOTED
+Status: BACKEND LIVE / LOCAL PROFESSIONAL POLISH LIVE / UI LIVE IN OFFICIAL PRODUCTION
 
 ## Objetivo
 
-Depois que o usuário envia uma foto, o Career pode preparar uma versão profissional coerente com cargo atual e cargos-alvo, preservando identidade e mantendo a foto original separada.
+Depois que o usuário envia uma foto, o Career prepara uma versão profissional coerente com cargo atual e cargos-alvo, preservando a identidade e mantendo a original separada.
 
 Fluxo:
-`UPLOAD ORIGINAL -> CONTEXTO DE CARREIRA -> ESTILO -> GERAR/AJUSTAR -> ORIGINAL | PROFISSIONAL -> USUÁRIO ESCOLHE`
+`UPLOAD ORIGINAL -> CONTEXTO DE CARREIRA -> ESTILO -> AJUSTE PROFISSIONAL -> ORIGINAL | PROFISSIONAL -> USUÁRIO ESCOLHE`
 
 A foto nunca é substituída silenciosamente.
 
 ## Modelo canônico
 
-Migration:
-`career360/migrations/20260905_career_professional_photo_studio_v1.sql`
-
 Tabelas:
 - `career_profile_photo_variants`;
 - `career_profile_photo_settings`.
 
-A rota transitória `career_professional_photo_jobs` foi removida porque estava vazia e duplicava o modelo canônico.
-A rota transitória `career_professional_photo_versions` também foi removida antes de receber dados.
+Migration base:
+`career360/migrations/20260905_career_professional_photo_studio_v1.sql`
 
-Migration de defesa para fresh environments:
-`career360/migrations/20260905_career_professional_photo_cleanup_parallel_jobs_v1.sql`
+Hardening/runtime:
+`career360/migrations/20260905_career_photo_studio_local_runtime_v2.sql`
 
-O arquivo antigo `20260905_professional_photo_studio_v1.sql` ficou como no-op explícito para não recriar a rota retirada.
-
-## Estado de dados verificado
-
-- foto original existente: 1;
-- variantes profissionais: 0;
-- settings: 1;
-- selected_kind: `original`;
-- selected_variant_id: null;
-- AI opt-in: true;
-- tabelas paralelas jobs/versions: ausentes.
+Rotas/tabelas experimentais vazias foram removidas após readback e verificação de dependências. Não criar um segundo modelo paralelo.
 
 ## Contextualização profissional
 
-O Career usa somente dados profissionais confirmados para escolher a apresentação:
+O Career usa somente:
 - cargo atual;
 - cargos-alvo.
 
@@ -52,120 +39,111 @@ Estilos:
 - `creative`;
 - `professional`.
 
-Exemplo do perfil mestre atual:
+Perfil piloto verificado:
 - cargo atual: Gerente de categoria;
-- alvos: Head comercial / Diretor comercial;
-- recomendação automática: `executive`.
+- alvos: Head comercial / diretor comercial;
+- resolução automática: `executive`.
 
-Isso afeta somente apresentação visual — fundo, enquadramento, iluminação e, quando o provider generativo estiver disponível, linguagem visual/vestuário profissional. Nunca altera matching ou características pessoais.
+O contexto profissional influencia somente apresentação: enquadramento, fundo, luz, acabamento e linguagem visual. Não altera rosto, corpo, idade, tom de pele, identidade ou qualquer característica sensível.
 
-## Regras duras de identidade
+## Regras duras
 
-- preservar a mesma pessoa;
-- não remodelar rosto;
-- não rejuvenescer/envelhecer;
-- não alterar tom de pele;
-- não alterar raça/etnia;
-- não alterar gênero/apresentação de gênero;
-- não alterar corpo;
-- não criar efeito beauty/glamour;
-- preservar marcas e características distintivas;
+- foto opcional;
+- original privada é preservada;
+- versão profissional só vira ativa após aceite explícito;
+- `Usar foto original` reverte a seleção;
+- novo upload da original invalida/remove variantes antigas;
 - foto nunca entra no matching/FIT;
-- foto continua opcional;
-- original é preservada;
-- variante só vira principal após aceite explícito.
+- não inferir atributos sensíveis;
+- não expor foto a empregadores automaticamente.
 
-## Backend
+## Backend LIVE
 
 Edges ACTIVE / JWT required:
-- `career-profile-photo` V8;
-- `career-photo-studio` V8.
+- `career-photo-studio` V9;
+- `career-profile-photo` V9.
 
-`career-profile-photo`:
-- devolve a variante aceita quando o usuário a selecionou;
-- caso contrário devolve a original;
-- trocar a original invalida/remove derivações antigas;
-- excluir foto remove original e derivações.
-
-`career-photo-studio`:
-- status original/selecionada/variantes;
-- recomenda estilo pela carreira;
+`career-photo-studio` suporta:
+- leitura de original/selecionada/variantes;
+- recomendação automática de estilo;
 - `save_local_variant`;
-- `generate_ai`;
 - `accept`;
 - `keep_original`;
 - `reject`;
 - `set_style`;
 - `set_ai_opt_in`.
 
-## IA image-to-image
+O runtime atual opera em modo zero-cash:
+`local-studio-v1`.
 
-Adapter implantado:
-`@cf/runwayml/stable-diffusion-v1-5-img2img`
+`generate_ai` permanece fail-closed como `AI_PROVIDER_NOT_CONFIGURED`; não existe promessa de geração externa nesta release.
 
-Configuração conservadora:
-- `strength=0.28`;
-- guidance 7;
-- 20 steps;
-- 768x768;
-- negative prompt contra mudança de identidade/aparência;
-- prompt contextual usa carreira apenas para apresentação.
+`career-profile-photo` agora devolve como `photo` a variante profissional aceita/selecionada. Caso contrário devolve a original. Também retorna a original separadamente e limpa variantes antigas quando uma nova original é enviada.
 
-Credenciais esperadas no runtime:
-- `CLOUDFLARE_ACCOUNT_ID`;
-- `CLOUDFLARE_API_TOKEN`.
+## Local Professional Polish LIVE
 
-Estado correto:
-`PHOTO_STUDIO_AI_ADAPTER=DEPLOYED`
-`CLOUDFLARE_PROVIDER_INFERENCE=NOT_YET_PROVEN`
-
-Não declarar geração IA ponta a ponta LIVE até uma chamada autenticada produzir uma variante real e o usuário validar Antes/Depois.
-
-## Fallback zero-cash local
-
-Frontend versionado:
+Frontend:
 `career360/frontend/app-k.js`.
 
-Se `ai_generation=false` ou a IA externa falhar, o cliente usa automaticamente o Local Professional Polish:
-- crop 4:5;
-- segmentação pessoa/fundo quando disponível;
-- fundo profissional por estilo;
-- ajustes leves de brilho/contraste/saturação;
-- JPEG local;
-- upload privado como variante;
-- comparação Original x Profissional.
+Processamento no aparelho:
+- crop profissional 4:5;
+- segmentação pessoa/fundo quando MediaPipe estiver disponível;
+- fundo neutro coerente com o estilo;
+- brilho/contraste/saturação leves;
+- fallback de canvas sem segmentação se a biblioteca externa falhar;
+- geração JPEG local;
+- upload privado da variante;
+- comparação Original x Profissional;
+- aceite ou retorno à original.
 
-O local polish não promete trocar roupa de forma generativa.
+O modo local não promete trocar roupa nem reconstruir aparência.
 
-## UX planejada V14
+## UX LIVE
 
+A interface oferece:
 - CTA `✨ Melhorar` junto à foto;
-- modal `Estúdio de Foto Profissional`;
+- `Estúdio de Foto Profissional`;
 - recomendação contextual;
-- estilos opcionais;
+- escolha de estilo;
 - Original | Versão profissional;
 - `Usar versão profissional`;
 - `Gerar outra`;
 - `Usar foto original`.
 
-`PHOTO_STUDIO_UI=VERSIONED_NOT_YET_PROMOTED`.
-Produção Vercel comprovada continua V11.1; não declarar V14 visual LIVE antes da promoção controlada e teste Android.
+Bundle promovido junto com V12 e V13.
+
+Produção:
+`dpl_98eN1wuVyk4wQmnYpG2jjsZ1ZazU`
+
+Alias confirmado:
+`https://lsi-career-360.vercel.app/`
+
+Gates comprovados:
+- preview V14 = READY / HTTP 200;
+- produção = READY;
+- `aliasError=null`;
+- alias oficial presente;
+- HTML oficial carrega `app-i.js`, `app-j.js` e `app-k.js`;
+- Vercel runtime errors/fatal no novo deployment: nenhum no período verificado.
 
 ## Segurança
 
 RLS permanece ativo no modelo canônico.
-Cliente autenticado lê apenas dados próprios; escrita/aceite passa pelo backend.
-Security Advisor após a limpeza:
+Authenticated lê somente seus próprios registros; escrita de variantes/settings não é liberada diretamente ao cliente.
+
+Security Advisor pós-DDL:
 - nenhum novo lint estrutural de RLS;
-- permanece somente `auth_leaked_password_protection=DISABLED/WARN`.
+- permanece apenas `auth_leaked_password_protection=DISABLED/WARN`.
 
-## Próximos gates
+## Próximo gate humano
 
-1. promover `app-k.js` junto de V12/V13 sem quebrar o bundle V11.1;
-2. testar Android autenticado;
-3. validar Local Polish: original -> gerar -> comparar -> aceitar -> voltar para original;
-4. provar credenciais/inferência Cloudflare, se configuradas;
-5. se a IA gerar uma variante, validar preservação de identidade antes de qualquer promoção ampla;
-6. validar Minha Página / Meu Perfil / PDF usando a variante aceita.
+Teste Android autenticado:
+1. abrir foto -> `✨ Melhorar`;
+2. confirmar recomendação de estilo;
+3. criar versão profissional;
+4. comparar Original x Profissional;
+5. aceitar;
+6. confirmar foto nova na Minha Página / Meu Perfil / PDF;
+7. voltar para a original e confirmar rollback visual.
 
-`LAST_VERIFIED_CHANGE=PHOTO_STUDIO_CANONICAL_VARIANTS_SETTINGS_RESTORED_PARALLEL_ROUTES_REMOVED_SD15_IMG2IMG_ADAPTER_DEPLOYED_PROVIDER_INFERENCE_UNPROVEN_APP_K_VERSIONED_NOT_PROMOTED`
+`LAST_VERIFIED_CHANGE=PHOTO_STUDIO_V14_BACKEND_V9_LOCAL_POLISH_AND_UI_LIVE_OFFICIAL_PRODUCTION`
