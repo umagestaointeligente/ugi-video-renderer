@@ -82,13 +82,24 @@ jobs:
           for id in CC-PILOT-METAMORPOSA-V9-20260905 CC-PILOT-STOP-BULLYING-V9-20260905; do
             mp4="$OUT/$id.mp4"
             receipt="$OUT/$id.receipt.json"
-            test "$(jq -r '.qa_pass' "$receipt")" = true
-            test "$(jq -r '.state' "$receipt")" = PREVIEW_READY
-            test "$(jq -r '.batch_sha256' "$receipt")" = "$batch_sha"
-            test "$(jq -r '.video_sha256' "$receipt")" = "$(sha256sum "$mp4" | awk '{print $1}')"
+            python - "$receipt" "$mp4" "$batch_sha" <<'PY'
+          import hashlib, json, pathlib, sys
+          receipt_path, mp4_path, batch_sha = sys.argv[1:]
+          r=json.loads(pathlib.Path(receipt_path).read_text())
+          assert r.get('qa_pass') is True, 'QA_PASS_REQUIRED'
+          assert r.get('state') == 'PREVIEW_READY', 'PREVIEW_READY_REQUIRED'
+          assert r.get('batch_sha256') == batch_sha, 'BATCH_SHA_MISMATCH'
+          h=hashlib.sha256(pathlib.Path(mp4_path).read_bytes()).hexdigest()
+          assert r.get('video_sha256') == h, 'VIDEO_SHA_MISMATCH'
+          PY
             dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$mp4")
             python ops/cena-certa/r2_stage.py --base-url "$URL" --auth-key "$KEY" --id "$id" --batch-sha256 "$batch_sha" --mp4 "$mp4" --duration "$dur" --out "pilot-evidence/$id.r2.json"
-            test "$(jq -r '.contentSha256' "pilot-evidence/$id.r2.json")" = "$(jq -r '.video_sha256' "$receipt")"
+            python - "pilot-evidence/$id.r2.json" "$receipt" <<'PY'
+          import json, pathlib, sys
+          s=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          r=json.loads(pathlib.Path(sys.argv[2]).read_text())
+          assert s.get('contentSha256') == r.get('video_sha256'), 'R2_CONTENT_SHA_MISMATCH'
+          PY
             cp "$receipt" "pilot-evidence/$id.render-receipt.json"
           done
           python - <<'PY'
