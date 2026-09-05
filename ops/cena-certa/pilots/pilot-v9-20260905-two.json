@@ -1,0 +1,142 @@
+[
+  {
+    "id": "CC-PILOT-METAMORPOSA-V9-20260905",
+    "work_type": "film",
+    "film_title": "METAMORPOSA",
+    "film_year": 2020,
+    "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Metamorposa_(2020).webm",
+    "rights_evidence": "Wikimedia Commons File:Metamorposa (2020).webm; Sinema Majalengka; CC BY 3.0; full non-promotional source",
+    "license": "CC BY 3.0",
+    "rights_pass": true,
+    "relevance_evidence": [
+      "PRIOR_CENA_CERTA_PILOT_APPROVED_DIRECTION_2026-08-29",
+      "CANONICAL_BENCHMARK_METAMORPOSA_REFERENCE"
+    ],
+    "relevance_pass": true,
+    "anti_repeat_evidence": "Metricool live readback 2026-07-08..2026-09-05 across Instagram/Facebook/TikTok/YouTube: Metamorposa absent",
+    "dedup_60d_pass": true,
+    "live_readback_pass": true,
+    "ready_checked_at": "2026-09-05T18:20:00+00:00",
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "animation": false,
+    "caption_chunks": [
+      "Ele atravessa a ponte sem prever o perigo.",
+      "Perto do rio, um corpo muda tudo.",
+      "O silêncio transforma cada passo em suspeita.",
+      "Então um desconhecido surge e fecha o caminho.",
+      "Os dois se encaram antes da primeira ameaça.",
+      "A conversa endurece e ninguém parece disposto a ceder.",
+      "Um passo aproxima o conflito do ponto sem volta.",
+      "A ameaça vira confronto em poucos segundos.",
+      "Na ponte, cada gesto passa a ter consequência.",
+      "Um movimento rápido decide quem permanece de pé.",
+      "Depois, o rio guarda a consequência daquela escolha.",
+      "A travessia termina, mas ninguém sai igual."
+    ],
+    "script": "Ele atravessa a ponte sem prever o perigo. Perto do rio, um corpo muda tudo. O silêncio transforma cada passo em suspeita. Então um desconhecido surge e fecha o caminho. Os dois se encaram antes da primeira ameaça. A conversa endurece e ninguém parece disposto a ceder. Um passo aproxima o conflito do ponto sem volta. A ameaça vira confronto em poucos segundos. Na ponte, cada gesto passa a ter consequência. Um movimento rápido decide quem permanece de pé. Depois, o rio guarda a consequência daquela escolha. A travessia termina, mas ninguém sai igual.",
+    "scene_plan": [
+      {"start_seconds":25.0,"caption_start":0,"caption_end":0,"semantic_reason":"travessia e aproximação","semantic_verified":true},
+      {"start_seconds":31.0,"caption_start":1,"caption_end":1,"semantic_reason":"rio e descoberta","semantic_verified":true},
+      {"start_seconds":37.0,"caption_start":2,"caption_end":2,"semantic_reason":"silêncio e tensão","semantic_verified":true},
+      {"start_seconds":43.0,"caption_start":3,"caption_end":3,"semantic_reason":"entrada do desconhecido","semantic_verified":true},
+      {"start_seconds":49.0,"caption_start":4,"caption_end":4,"semantic_reason":"confronto visual","semantic_verified":true},
+      {"start_seconds":55.0,"caption_start":5,"caption_end":5,"semantic_reason":"tensão entre personagens","semantic_verified":true},
+      {"start_seconds":61.0,"caption_start":6,"caption_end":6,"semantic_reason":"aproximação física","semantic_verified":true},
+      {"start_seconds":67.0,"caption_start":7,"caption_end":7,"semantic_reason":"escalada do confronto","semantic_verified":true},
+      {"start_seconds":73.0,"caption_start":8,"caption_end":8,"semantic_reason":"ponte como espaço de risco","semantic_verified":true},
+      {"start_seconds":79.0,"caption_start":9,"caption_end":9,"semantic_reason":"movimento decisivo","semantic_verified":true},
+      {"start_seconds":85.0,"caption_start":10,"caption_end":10,"semantic_reason":"consequência junto ao rio","semantic_verified":true},
+      {"start_seconds":91.0,"caption_start":11,"caption_end":11,"semantic_reason":"fechamento da transformação","semantic_verified":true}
+    ],
+    "music_profile": "psychological_suspense",
+    "music_track": {
+      "id": "HITMAN-KEVIN-MACLEOD-CCBY4",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Hitman_by_Kevin_MacLeod.ogg",
+      "rights_evidence": "Wikimedia Commons; Kevin MacLeod; CC BY 4.0",
+      "license": "CC BY 4.0",
+      "genre": "psychological_suspense",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "schedule": {
+      "date": "2026-09-08T12:00:00-03:00",
+      "text": "Piloto privado Cena Certa — Metamorposa (2020).",
+      "youtube_title": "Metamorposa (2020) | Cena Certa",
+      "made_for_kids": false,
+      "providers": ["facebook","instagram","tiktok","youtube"],
+      "ai_flags": {"instagram":false,"tiktok":false,"youtube":false},
+      "youtube_tags": ["Cena Certa","Metamorposa"]
+    }
+  },
+  {
+    "id": "CC-PILOT-STOP-BULLYING-V9-20260905",
+    "work_type": "film",
+    "film_title": "STOP BULLYING",
+    "film_year": 2019,
+    "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Stop_Bullying_(2019).webm",
+    "rights_evidence": "Wikimedia Commons File:Stop Bullying (2019).webm; The Waru Channel; CC BY-SA 4.0; full non-promotional source",
+    "license": "CC BY-SA 4.0",
+    "rights_pass": true,
+    "relevance_evidence": [
+      "PRIOR_CENA_CERTA_PILOT_APPROVED_DIRECTION_2026-08-29",
+      "CANONICAL_BENCHMARK_STOP_BULLYING_REFERENCE"
+    ],
+    "relevance_pass": true,
+    "anti_repeat_evidence": "Metricool live readback 2026-07-08..2026-09-05 across Instagram/Facebook/TikTok/YouTube: Stop Bullying absent",
+    "dedup_60d_pass": true,
+    "live_readback_pass": true,
+    "ready_checked_at": "2026-09-05T18:20:00+00:00",
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "animation": false,
+    "caption_chunks": [
+      "Na escola, uma provocação parece pequena no começo.",
+      "Mas a repetição transforma brincadeira em perseguição.",
+      "Quem é alvo tenta continuar como se nada acontecesse.",
+      "Os outros assistem, e o silêncio deixa tudo pior.",
+      "A agressão cresce porque ninguém interrompe o ciclo.",
+      "Cada gesto empurra a vítima ainda mais para longe.",
+      "Até que alguém percebe que assistir também é escolher.",
+      "Intervir muda a dinâmica e quebra a sensação de impunidade.",
+      "O agressor perde força quando o grupo deixa de apoiar.",
+      "A vítima finalmente encontra espaço para reagir com segurança.",
+      "O que parecia rotina revela o peso da violência.",
+      "Parar o bullying começa quando alguém decide não aceitar."
+    ],
+    "script": "Na escola, uma provocação parece pequena no começo. Mas a repetição transforma brincadeira em perseguição. Quem é alvo tenta continuar como se nada acontecesse. Os outros assistem, e o silêncio deixa tudo pior. A agressão cresce porque ninguém interrompe o ciclo. Cada gesto empurra a vítima ainda mais para longe. Até que alguém percebe que assistir também é escolher. Intervir muda a dinâmica e quebra a sensação de impunidade. O agressor perde força quando o grupo deixa de apoiar. A vítima finalmente encontra espaço para reagir com segurança. O que parecia rotina revela o peso da violência. Parar o bullying começa quando alguém decide não aceitar.",
+    "scene_plan": [
+      {"start_seconds":4.0,"caption_start":0,"caption_end":0,"semantic_reason":"ambiente escolar e início da provocação","semantic_verified":true},
+      {"start_seconds":13.0,"caption_start":1,"caption_end":1,"semantic_reason":"repetição da provocação","semantic_verified":true},
+      {"start_seconds":22.0,"caption_start":2,"caption_end":2,"semantic_reason":"vítima tenta seguir a rotina","semantic_verified":true},
+      {"start_seconds":31.0,"caption_start":3,"caption_end":3,"semantic_reason":"presença de observadores","semantic_verified":true},
+      {"start_seconds":40.0,"caption_start":4,"caption_end":4,"semantic_reason":"escalada da agressão","semantic_verified":true},
+      {"start_seconds":49.0,"caption_start":5,"caption_end":5,"semantic_reason":"isolamento da vítima","semantic_verified":true},
+      {"start_seconds":58.0,"caption_start":6,"caption_end":6,"semantic_reason":"mudança de postura de testemunha","semantic_verified":true},
+      {"start_seconds":67.0,"caption_start":7,"caption_end":7,"semantic_reason":"intervenção quebra o ciclo","semantic_verified":true},
+      {"start_seconds":76.0,"caption_start":8,"caption_end":8,"semantic_reason":"agressor perde apoio","semantic_verified":true},
+      {"start_seconds":85.0,"caption_start":9,"caption_end":9,"semantic_reason":"vítima recupera espaço","semantic_verified":true},
+      {"start_seconds":94.0,"caption_start":10,"caption_end":10,"semantic_reason":"consequência da violência","semantic_verified":true},
+      {"start_seconds":103.0,"caption_start":11,"caption_end":11,"semantic_reason":"fechamento anti-bullying","semantic_verified":true}
+    ],
+    "music_profile": "social_drama",
+    "music_track": {
+      "id": "THE-DESCENT-KEVIN-MACLEOD-CCBY4",
+      "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Descent_by_Kevin_MacLeod.ogg",
+      "rights_evidence": "Wikimedia Commons; Kevin MacLeod; CC BY 4.0",
+      "license": "CC BY 4.0",
+      "genre": "social_drama",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "schedule": {
+      "date": "2026-09-08T12:30:00-03:00",
+      "text": "Piloto privado Cena Certa — Stop Bullying (2019).",
+      "youtube_title": "Stop Bullying (2019) | Cena Certa",
+      "made_for_kids": false,
+      "providers": ["facebook","instagram","tiktok","youtube"],
+      "ai_flags": {"instagram":false,"tiktok":false,"youtube":false},
+      "youtube_tags": ["Cena Certa","Stop Bullying"]
+    }
+  }
+]
