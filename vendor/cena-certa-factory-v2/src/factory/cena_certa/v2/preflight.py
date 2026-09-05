@@ -132,11 +132,21 @@ def validate_batch(path,expect=8):
 def canary():
  t0=time.time(); c=verify_contract_and_assets(); mask=prepare_static_assets(c)
  title=TMP/'canary-title.png'; make_title(c,'CANARY',2026,title); cta=CACHE/'cta-master.png'; out=OUT/'FACTORY-V2-CANARY.mp4'
- tx,ty,tw,th=c['geometry_approved_frame_1080x1920']['title_panel']
- filt=';'.join(['[0:v]scale=1080:1920,eq=brightness=-0.1[base]',f'[2:v]scale={tw}:{th},format=rgba[t]',f'[base][t]overlay={tx}:{ty}[titled]','[1:v]format=rgba[mask]','[titled][mask]overlay=0:0[story]','[3:v]scale=1080:1920,trim=duration=1.5,setpts=PTS-STARTPTS[cta]','[story]trim=duration=1.5,setpts=PTS-STARTPTS[s];[s][cta]concat=n=2:v=1:a=0[v]'])
- sh(['ffmpeg','-loglevel','error','-y','-f','lavfi','-i','testsrc2=size=1080x1920:rate=30:duration=1.5','-loop','1','-i',str(mask),'-loop','1','-i',str(title),'-loop','1','-i',str(cta),'-f','lavfi','-i','anullsrc=r=48000:cl=stereo','-filter_complex',filt,'-map','[v]','-map','4:a','-shortest','-t','3','-c:v','libx264','-threads','2','-preset','ultrafast','-crf','20','-pix_fmt','yuv420p','-c:a','aac','-ar','48000',str(out)],timeout=90)
+ tx,ty,tw,th=c['geometry_approved_frame_1080x1920']['title_panel']; fps=int(c['canvas']['fps'])
+ filt=';'.join([
+  f'[0:v]scale=1080:1920,setsar=1,fps={fps},eq=brightness=-0.1[base]',
+  f'[2:v]scale={tw}:{th},setsar=1,fps={fps},format=rgba[t]',
+  f'[base][t]overlay={tx}:{ty}[titled]',
+  f'[1:v]fps={fps},format=rgba[mask]',
+  '[titled][mask]overlay=0:0,setsar=1[story]',
+  f'[3:v]scale=1080:1920,setsar=1,fps={fps},trim=duration=1.5,setpts=PTS-STARTPTS[cta]',
+  f'[story]trim=duration=1.5,setpts=PTS-STARTPTS,fps={fps}[s];[s][cta]concat=n=2:v=1:a=0,fps={fps},setsar=1[v]'])
+ sh(['ffmpeg','-loglevel','error','-y','-f','lavfi','-i','testsrc2=size=1080x1920:rate=30:duration=1.5','-loop','1','-i',str(mask),'-loop','1','-i',str(title),'-loop','1','-i',str(cta),'-f','lavfi','-i','anullsrc=r=48000:cl=stereo','-filter_complex',filt,'-map','[v]','-map','4:a','-shortest','-t','3','-r',str(fps),'-fps_mode','cfr','-c:v','libx264','-threads','2','-preset','ultrafast','-crf','20','-pix_fmt','yuv420p','-c:a','aac','-ar','48000',str(out)],timeout=90)
  p=ffprobe(out); v=next(x for x in p['streams'] if x['codec_type']=='video')
- if int(v['width'])!=1080 or int(v['height'])!=1920 or abs(fps_value(v['avg_frame_rate'])-30)>.02: raise RuntimeError('CANARY_TECH_FAIL')
+ actual={'width':int(v['width']),'height':int(v['height']),'avg_frame_rate':v['avg_frame_rate'],'fps':fps_value(v['avg_frame_rate']),'sample_aspect_ratio':v.get('sample_aspect_ratio')}
+ print('CANARY_TECH_PROBE',json.dumps(actual,sort_keys=True))
+ if actual['width']!=1080 or actual['height']!=1920 or abs(actual['fps']-fps)>.02 or actual['sample_aspect_ratio'] not in (None,'1:1'):
+  raise RuntimeError(f'CANARY_TECH_FAIL {actual}')
  frame=TMP/'canary-cta.png'; extract_frame(out,2.2,frame); e=mae(Image.open(frame),Image.open(cta))
  if e>c['qa']['cta_pixel_mae_max']: raise RuntimeError(f'CANARY_CTA_FAIL {e}')
  print('FACTORY_V2_CANARY_PASS',round(time.time()-t0,2),'seconds','cta_mae',round(e,5))
