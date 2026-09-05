@@ -1,13 +1,11 @@
 {
   "project": "UGI",
   "component": "UGI-PUBLISHER-HUB",
-  "state": "READY",
-  "manifestsSeen": 1,
-  "proven": 1,
-  "waitingForRender": 0,
-  "degraded": 0,
+  "state": "DEGRADED_BUFFER_RATE_LIMIT",
   "publisher": "BUFFER",
   "metricoolPublicationAllowed": false,
   "chatRuntimeRequired": false,
-  "timestamp": "2026-09-04T05:42:11.855369+00:00"
+  "bufferCircuitBreaker": "OPEN",
+  "reason": "Buffer 24h API rate limit active; canonical delivery requires live readback before any READY/PROVEN_SCHEDULED claim.",
+  "timestamp": "2026-09-05T00:34:00Z"
 }
