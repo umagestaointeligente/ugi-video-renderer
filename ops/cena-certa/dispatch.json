@@ -1,0 +1,10 @@
+{
+  "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
+  "prepared_run_id": "",
+  "requested_at": "",
+  "note": "Single canonical PREPARE/RENDER dispatch. Updated only for a real production batch."
+}
