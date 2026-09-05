@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.3",
+  "schema_version": "1.4",
   "effective_date": "2026-09-04",
   "project": "UGI",
   "distribution_state_ref": "config/ugi/distribution-state.json",
@@ -21,6 +21,23 @@
       "buffer_readback",
       "publisher_hub_receipt"
     ],
+    "linkedin_editorial_adapter": {
+      "status": "ACTIVE",
+      "queue_path": "control-plane/publisher-hub/linkedin-queue",
+      "status_path": "control-plane/publisher-hub/linkedin-status/latest.json",
+      "workflow": ".github/workflows/ugi-linkedin-publisher.yml",
+      "runtime": "scripts/ugi_linkedin_publisher.py",
+      "worker_create_route": "/api/linkedin-text-publish",
+      "worker_readback_route": "/api/linkedin-publication-status",
+      "current_supported_formats": ["text"],
+      "unsupported_format_policy": "FAIL_CLOSED",
+      "exactly_once_create": true,
+      "buffer_post_id_persisted_before_readback": true,
+      "max_buffer_calls_per_run": 1,
+      "rate_limit_circuit_path": "control-plane/observability/buffer-circuit.json",
+      "rate_limit_cooldown_hours": 6,
+      "company_page_only": true
+    },
     "render_bridge": {
       "authority": "UGI Worker /api/video-render",
       "direct_github_renderer_dispatch_allowed": false,
@@ -57,11 +74,19 @@
       ],
       "fallback_provider": null,
       "fail_closed_if_unavailable": true,
+      "rate_limit_policy": {
+        "provider_window": "24h",
+        "circuit_breaker": true,
+        "probe_cooldown_hours": 6,
+        "no_busy_polling": true,
+        "one_buffer_backed_call_per_linkedin_run": true
+      },
       "linkedin_target": {
         "type": "LinkedIn Page",
         "page_name": "UGI — Uma Gestão Inteligente",
         "buffer_name": "uma-gestao-inteligente",
-        "personal_profile_target_allowed": false
+        "personal_profile_target_allowed": false,
+        "queue_required_for_editorials": true
       },
       "youtube": {
         "buffer_status": "PAUSED",
@@ -103,6 +128,10 @@
     "Chat runtimes, including Lola 5.3, are optional command clients and are never required for render, scheduling or publication.",
     "If Buffer publication cannot be proven by readback, status is BLOCKED, WAITING or NOT_PROVEN.",
     "LinkedIn publication must target only UGI — Uma Gestão Inteligente Company Page and never Paulo Oliveira's personal profile.",
+    "Every future LinkedIn editorial must enter the canonical LinkedIn queue before Buffer mutation.",
+    "A LinkedIn Buffer Post ID must be persisted before any readback retry so create is exactly-once.",
+    "A rate-limit response opens the Buffer circuit; busy polling is forbidden while the circuit is open.",
+    "PROVEN_PUBLISHED or DELIVERED requires live Buffer readback evidence, never only a local receipt.",
     "YouTube Buffer status is PAUSED; no new Buffer mutation may target YouTube while paused.",
     "YouTube strategy, content and history remain preserved for future evidence-based reactivation.",
     "Any migration away from Buffer requires an explicit ADR, smoke test, rollback plan and policy update before production use."
