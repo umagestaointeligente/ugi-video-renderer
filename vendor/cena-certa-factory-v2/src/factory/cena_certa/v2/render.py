@@ -90,8 +90,8 @@ def _loudnorm_analysis(path,target,tp):
  return json.loads(blocks[-1])
 
 def audio_only_repair(c,path):
- target=float(c['mix']['target_lufs']); tp=float(c['mix']['true_peak_max_dbtp']); a=_loudnorm_analysis(path,target,tp)
- filt=(f"loudnorm=I={target}:TP={tp}:LRA=7:measured_I={a['input_i']}:measured_LRA={a['input_lra']}:" f"measured_TP={a['input_tp']}:measured_thresh={a['input_thresh']}:offset={a['target_offset']}:linear=true:print_format=summary")
+ target=float(c['mix']['target_lufs']); contract_tp=float(c['mix']['true_peak_max_dbtp']); repair_tp=contract_tp-0.30; a=_loudnorm_analysis(path,target,repair_tp)
+ filt=(f"loudnorm=I={target}:TP={repair_tp}:LRA=7:measured_I={a['input_i']}:measured_LRA={a['input_lra']}:" f"measured_TP={a['input_tp']}:measured_thresh={a['input_thresh']}:offset={a['target_offset']}:linear=true:print_format=summary")
  repaired=path.with_name(path.stem+'.audio-repair.mp4')
  try:
   sh(['ffmpeg','-loglevel','error','-y','-i',str(path),'-map','0:v:0','-map','0:a:0','-c:v','copy','-af',filt,'-c:a','aac','-b:a',c['canvas']['audio_bitrate'],'-ar',str(c['canvas']['sample_rate']),'-movflags','+faststart',str(repaired)],timeout=120)
