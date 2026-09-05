@@ -1,18 +1,18 @@
 # LSI Career 360 — Professional Photo Studio V14
 
 Data: 2026-09-05 BRT
-Status: FOUNDATION LIVE / GENERATION PROVIDER NOT CONNECTED / UI NOT PROMOTED
+Status: LOCAL POLISH BACKEND LIVE / UI VERSIONED NOT YET PROMOTED / GENERATIVE PROVIDER NOT CONNECTED
 
 ## Objetivo
 
-Após o usuário enviar uma foto, o Career pode preparar uma versão profissional coerente com cargo atual, senioridade e cargos-alvo, preservando identidade e mantendo a foto original separada.
+Após o usuário enviar uma foto, o Career prepara uma versão profissional coerente com cargo atual e cargos-alvo, preservando identidade e mantendo a foto original separada.
 
-Fluxo alvo:
-`UPLOAD ORIGINAL -> CONTEXTO DE CARREIRA -> STYLE PLAN -> IMAGE-TO-IMAGE -> ORIGINAL | PROFISSIONAL -> ACEITAR/MANTER ORIGINAL`
+Fluxo funcional zero-cash:
+`UPLOAD ORIGINAL -> CONTEXTO DE CARREIRA -> ESTILO -> AJUSTE LOCAL NO NAVEGADOR -> ORIGINAL | PROFISSIONAL -> ACEITAR/MANTER ORIGINAL`
 
 ## Backend LIVE
 
-Tabela:
+Tabela canônica:
 `career_professional_photo_jobs`
 
 Estados:
@@ -23,28 +23,51 @@ Estados:
 - rejected;
 - failed.
 
-`career_profiles.active_professional_photo_job_id` guarda apenas a seleção aceita.
+`career_profiles.active_professional_photo_job_id` guarda somente a variante aceita.
+`career_profiles.photo_style_preference` guarda auto/executive/commercial/modern/creative/professional.
 
-Edge Functions:
-- `career-professional-photo-plan` = ACTIVE / JWT_REQUIRED;
-- `career-professional-photo-decision` = ACTIVE / JWT_REQUIRED;
-- `career-profile-photo` = ACTIVE V5 / JWT_REQUIRED.
+Edges ACTIVE / JWT required:
+- `career-photo-studio`;
+- `career-professional-photo-plan`;
+- `career-professional-photo-decision`;
+- `career-profile-photo` V5.
+
+## Local Professional Polish — FUNCIONAL NO RUNTIME
+
+O frontend já versionado em `career360/frontend/app-k.js` processa localmente no dispositivo:
+- crop 4:5;
+- segmentação pessoa/fundo;
+- fundo neutro conforme estilo;
+- ajustes suaves de brilho/contraste/saturação;
+- export JPEG;
+- upload privado da variante.
+
+`career-photo-studio` recebe a variante, salva no bucket privado e retorna estado para comparação.
+
+A UI mostra:
+`Original | Versão profissional`
+
+Ações:
+- Usar versão profissional;
+- Gerar outra;
+- Usar foto original.
+
+A original nunca é apagada ao aceitar uma variante.
 
 ## Contextualização
 
-O planner lê somente:
+O contexto permitido usa apenas:
 - cargo atual;
-- cargos-alvo;
-- foto original existente.
+- cargos-alvo.
 
-Estilos determinísticos atuais:
-- executive_contemporary;
-- business_natural;
-- modern_professional;
-- creative_professional;
-- professional_natural.
+Estilos:
+- executive;
+- commercial;
+- modern;
+- creative;
+- professional.
 
-Cargo/senioridade servem somente para apresentação visual: enquadramento, luz, roupa e fundo.
+Cargo/senioridade servem somente para apresentação visual: enquadramento, fundo, luz e linguagem profissional.
 
 ## Regras duras
 
@@ -54,57 +77,55 @@ Cargo/senioridade servem somente para apresentação visual: enquadramento, luz,
 - não rejuvenescer/envelhecer;
 - não remodelar rosto;
 - não alterar corpo;
-- não usar foto para matching/FIT;
-- não tornar foto obrigatória;
-- não substituir original sem aceite explícito;
-- não apagar original ao aceitar uma versão profissional.
+- foto nunca entra no matching/FIT;
+- foto continua opcional;
+- original preservada;
+- nenhuma variante vira principal sem aceite explícito.
 
 ## Seleção / rollback
 
-`career-profile-photo` V5 devolve:
-- original;
-- professional, quando houver accepted;
-- photo = professional aceita; caso contrário, original.
+`career-profile-photo` V5 retorna:
+- `original`;
+- `professional` quando houver accepted;
+- `photo` = professional aceita; caso contrário, original.
 
-Ao trocar a foto original:
-- versões profissionais antigas são invalidadas/removidas;
-- seleção ativa volta para original.
+Trocar a original:
+- remove/invalida derivações antigas;
+- limpa seleção profissional.
 
-Ao excluir a foto:
-- original e derivações profissionais associadas são removidas.
+Excluir a foto:
+- remove original e derivações associadas.
 
-## Generation provider
+## Generative provider
 
-`PROFESSIONAL_PHOTO_GENERATION_PROVIDER=NOT_CONNECTED`
+`GENERATIVE_PHOTO_PROVIDER=NOT_CONFIGURED`
 
-Não existe secret/provider de geração de imagem configurado no runtime atual.
-O Vault contém somente secrets operacionais de cron/pipeline.
+O Vault atual não contém credencial de provedor de imagem.
+A rota `generate_ai` permanece fail-closed.
 
-Portanto:
-- planner = LIVE;
-- versionamento/aceite/rollback = LIVE;
-- geração image-to-image = NOT LIVE;
-- botão de geração não deve ser exposto como funcional até provider real produzir preview.
+Não prometer mudança generativa de roupa/cenário enquanto não houver provider real.
+
+## UI
+
+`career360/frontend/app-k.js` = VERSIONED / NOT YET PROMOTED.
+
+Não declarar `PHOTO_STUDIO_UI=LIVE` até o bundle oficial do Vercel carregar o módulo e o fluxo ser validado autenticado no Android.
 
 ## Segurança
 
-RLS ativo na tabela nova.
-Cliente autenticado pode ler somente os próprios jobs.
-Escrita ocorre somente por backend/service role.
+RLS ativo na tabela canônica.
+Cliente autenticado lê somente os próprios jobs.
+Escrita de variantes/aceite é mediada pelo backend.
 
 Security Advisor pós-DDL:
 - nenhum novo lint estrutural de RLS;
-- permanece apenas WARN conhecido `auth_leaked_password_protection` desativado.
+- permanece apenas `auth_leaked_password_protection` desativado.
 
 ## Próximo passo exato
 
-1. conectar provider image-to-image com custo/limite compatível com o piloto;
-2. geração recebe original privado + prompt contextual;
-3. salvar derivada no bucket privado;
-4. marcar `preview_ready`;
-5. UI mostra Original | Profissional;
-6. usuário escolhe;
-7. `career-professional-photo-decision` aceita/rejeita;
-8. endpoint principal passa a servir a versão aceita automaticamente.
+1. promover `app-k.js` junto com V12/V13 no bundle oficial;
+2. testar no Android: original -> criar -> comparar -> aceitar -> voltar para original;
+3. validar Minha Página / Meu Perfil / PDF usando automaticamente a variante aceita;
+4. só depois avaliar um provider generativo como Próximo Degrau.
 
-`LAST_VERIFIED_CHANGE=PROFESSIONAL_PHOTO_STUDIO_V14_FOUNDATION_LIVE_PLAN_DECISION_VERSIONING_ROLLBACK_READY_GENERATION_PROVIDER_NOT_CONNECTED_UI_NOT_PROMOTED`
+`LAST_VERIFIED_CHANGE=PHOTO_STUDIO_V14_LOCAL_POLISH_BACKEND_LIVE_APP_K_VERSIONED_NOT_PROMOTED_GENERATIVE_PROVIDER_NOT_CONFIGURED`
