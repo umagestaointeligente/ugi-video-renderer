@@ -44,12 +44,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -n '${{ steps.build.outputs.digest }}'
-          echo 'CENA_CERTA_RUNTIME_DIGEST=${{ steps.build.outputs.digest }}'
-          docker pull '${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}'
-          docker run --rm '${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}' bash -lc "ffmpeg -version | head -1; ffprobe -version | head -1; fc-match Lato | head -1; python - <<'PY'
-import PIL,numpy
-assert PIL.__version__=='12.3.0'
-assert numpy.__version__=='2.5.2'
-print('CENA_CERTA_RUNTIME_HEALTH_PASS')
-PY"
+          DIGEST='${{ steps.build.outputs.digest }}'
+          test -n "$DIGEST"
+          echo "CENA_CERTA_RUNTIME_DIGEST=$DIGEST"
+          docker pull "${IMAGE_NAME}@${DIGEST}"
+          docker run --rm "${IMAGE_NAME}@${DIGEST}" ffmpeg -version | head -1
+          docker run --rm "${IMAGE_NAME}@${DIGEST}" ffprobe -version | head -1
+          docker run --rm "${IMAGE_NAME}@${DIGEST}" fc-match Lato | head -1
+          docker run --rm "${IMAGE_NAME}@${DIGEST}" python -c "import PIL,numpy; assert PIL.__version__=='12.3.0'; assert numpy.__version__=='2.5.2'; print('CENA_CERTA_RUNTIME_HEALTH_PASS')"
