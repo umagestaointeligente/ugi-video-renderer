@@ -48,7 +48,9 @@ jobs:
           test -n "$DIGEST"
           echo "CENA_CERTA_RUNTIME_DIGEST=$DIGEST"
           docker pull "${IMAGE_NAME}@${DIGEST}"
+          docker run --rm "${IMAGE_NAME}@${DIGEST}" bash --version | head -1
+          docker run --rm "${IMAGE_NAME}@${DIGEST}" git --version
           docker run --rm "${IMAGE_NAME}@${DIGEST}" ffmpeg -version | head -1
           docker run --rm "${IMAGE_NAME}@${DIGEST}" ffprobe -version | head -1
           docker run --rm "${IMAGE_NAME}@${DIGEST}" fc-match Lato | head -1
-          docker run --rm "${IMAGE_NAME}@${DIGEST}" python -c "import PIL,numpy; assert PIL.__version__=='12.3.0'; assert numpy.__version__=='2.5.2'; print('CENA_CERTA_RUNTIME_HEALTH_PASS')"
+          docker run --rm "${IMAGE_NAME}@${DIGEST}" python -c "import PIL,numpy,aiohttp,edge_tts; assert PIL.__version__=='12.3.0'; assert numpy.__version__=='2.5.2'; assert aiohttp.__version__=='3.14.3'; print('CENA_CERTA_RUNTIME_FULL_DEPENDENCY_HEALTH_PASS')"
