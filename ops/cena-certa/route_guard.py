@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import json
 import pathlib
-import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / 'ops/cena-certa/route-registry.json'
@@ -24,18 +23,28 @@ def main() -> None:
     prod = reg['production_route']
     for key in ('render_executor', 'media_delivery'):
         route = prod[key]
-        if route.get('required_for_render') is not True or route.get('state') != 'ACTIVE':
-            fail(f'REQUIRED_RENDER_ROUTE_NOT_ACTIVE {key}')
+        if route.get('required_for_render') is not True:
+            fail(f'REQUIRED_RENDER_ROUTE_FLAG_FAIL {key}')
+        if route.get('state') != 'ACTIVE_LIVE_PROVEN':
+            fail(f'REQUIRED_RENDER_ROUTE_NOT_LIVE_PROVEN {key}')
+        if str(route.get('last_live_proof_result') or '').upper() not in {'SUCCESS', 'SUCCESS_10_OF_10'}:
+            fail(f'REQUIRED_RENDER_ROUTE_PROOF_FAIL {key}')
+        if not str(route.get('last_live_proof_run_id') or '').isdigit():
+            fail(f'REQUIRED_RENDER_ROUTE_PROOF_ID_FAIL {key}')
 
     render = prod['render_executor']
     if render.get('runtime_gitlab_clone') is not False:
         fail('RUNTIME_GITLAB_CLONE_FORBIDDEN')
     if [render.get('candidate_pool'), render.get('final_videos'), render.get('hot_reserves')] != [10, 8, 2]:
         fail('N_PLUS_2_ROUTE_CONTRACT_FAIL')
+    if int(render.get('last_live_proof_seconds') or 10**9) > 660:
+        fail('LIVE_PROOF_SLA_FAIL')
 
     media = prod['media_delivery']
     if media.get('auth_header') != 'x-ugi-video-upload-key':
         fail('R2_AUTH_HEADER_ROUTE_FAIL')
+    if media.get('storage_contract') != 'geradas/videos/{storageRenderId}/instagram.mp4':
+        fail('R2_STORAGE_CONTRACT_ROUTE_FAIL')
     if media.get('blind_post_retry') is not False:
         fail('R2_BLIND_RETRY_ROUTE_FAIL')
     if media.get('ambiguous_response_reconciliation') != 'PUBLIC_HEAD_EXACT_SIZE':
@@ -65,6 +74,8 @@ def main() -> None:
         fail('R2_DEDICATED_AUTH_HEADER_MISSING')
     if "'Authorization': f'Bearer {key}'" in r2:
         fail('R2_BEARER_AUTH_FORBIDDEN')
+    if "geradas/videos/{storage_rid}/instagram.mp4" not in r2:
+        fail('R2_LIVE_STORAGE_CONTRACT_MISSING')
     if 'blind_retry_used' not in r2 or '_head_exact' not in r2:
         fail('R2_RECONCILIATION_GUARD_MISSING')
 
@@ -95,8 +106,8 @@ def main() -> None:
         fail('DISABLED_ROUTE_ALLOWED_IN_PRODUCTION')
 
     print('CENA_CERTA_ROUTE_GUARD_PASS')
-    print('ACTIVE_RENDER_ROUTE', render['id'])
-    print('ACTIVE_MEDIA_ROUTE', media['id'])
+    print('LIVE_PROVEN_RENDER_ROUTE', render['id'], render['last_live_proof_run_id'], render['last_live_proof_seconds'])
+    print('LIVE_PROVEN_MEDIA_ROUTE', media['id'], media['last_live_proof_run_id'], media['last_live_proof_result'])
     print('SECONDARY_SCHEDULER_SCOPE', ','.join(secondary['networks']))
     print('UNSUPPORTED_SECONDARY_NETWORKS', ','.join(secondary['unsupported_networks']))
 
