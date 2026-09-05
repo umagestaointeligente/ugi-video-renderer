@@ -87,13 +87,13 @@ function setNavLabels(){
 function applyState(){
   document.documentElement.classList.add('career-ui-ready');
   document.documentElement.dataset.careerUi='v15';
-  const st=U.state||{};
-  document.documentElement.dataset.photoAi=st.capabilities?.photo_studio_external_ai?'external':'local';
-  document.documentElement.dataset.mailDelivery=st.capabilities?.mail_delivery?'on':'off';
+  const caps=U.state?.capabilities||null;
+  document.documentElement.dataset.photoAi=!caps?'unknown':caps.photo_studio_external_ai?'external':'local';
+  document.documentElement.dataset.mailDelivery=!caps?'unknown':caps.mail_delivery?'on':'off';
   setNavLabels();
   const provider=document.querySelector('.photo-provider');
   const providerText='⚡ Ajuste profissional no aparelho';
-  if(provider&&st.capabilities?.photo_studio_external_ai===false&&provider.textContent!==providerText)provider.textContent=providerText;
+  if(provider&&caps?.photo_studio_external_ai===false&&provider.textContent!==providerText)provider.textContent=providerText;
 }
 
 function watch(){
