@@ -28,6 +28,7 @@ jobs:
     env:
       URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
       KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      # Private preview only; the production timed-run repair remains disabled by contract.
       ORBIT_PRIVATE_PREVIEW_AUDIO_REPAIR: "1"
     steps:
       - uses: actions/checkout@v7
