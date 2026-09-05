@@ -1,0 +1,9 @@
+{
+  "schema": "CENA_CERTA_PUBLISHER_OUTBOX_V1",
+  "state": "EMPTY",
+  "production_run_id": null,
+  "batch_sha256": null,
+  "handoff_sha256": null,
+  "generated_at": null,
+  "items": []
+}
