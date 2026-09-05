@@ -31,6 +31,10 @@ jobs:
       batch_sha256: ${{ steps.read.outputs.batch_sha256 }}
       request_id: ${{ steps.read.outputs.request_id }}
       deadline_epoch: ${{ steps.read.outputs.deadline_epoch }}
+      candidate_count: ${{ steps.read.outputs.candidate_count }}
+      selected_count: ${{ steps.read.outputs.selected_count }}
+      reserve_count: ${{ steps.read.outputs.reserve_count }}
+      index_matrix: ${{ steps.read.outputs.index_matrix }}
     container:
       image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
       credentials:
@@ -57,7 +61,7 @@ jobs:
               raise SystemExit('DISPATCH_SCHEMA_FAIL')
           enabled=bool(d.get('enabled'))
           mode=str(d.get('mode') or 'IDLE').upper()
-          deadline=''; request_id=''
+          deadline=''; request_id=''; candidate_count=0; selected_count=0; reserve_count=0; index_matrix='[]'
           if not enabled:
               mode='IDLE'; batch_path=''; batch_sha=''
           else:
@@ -66,6 +70,12 @@ jobs:
               if str(d.get('prepared_run_id') or ''):
                   raise SystemExit('DISPATCH_PREPARED_RUN_FORBIDDEN_SINGLE_RUN')
               request_id=str(d.get('request_id') or '')
+              candidate_count=int(d.get('candidate_count') or 10)
+              selected_count=int(d.get('selected_count') or 8)
+              reserve_count=int(d.get('reserve_count') if d.get('reserve_count') is not None else 2)
+              if candidate_count<1 or candidate_count>10 or selected_count<1 or reserve_count<0 or candidate_count!=selected_count+reserve_count:
+                  raise SystemExit('DISPATCH_COUNT_BINDING_FAIL')
+              index_matrix=json.dumps(list(range(candidate_count)),separators=(',',':'))
               if not re.fullmatch(r'[A-Za-z0-9._-]{12,96}',request_id):
                   raise SystemExit('DISPATCH_REQUEST_ID_FAIL')
               batch_path=str(d.get('batch_path') or '')
@@ -89,16 +99,16 @@ jobs:
               if int(now.timestamp())>=int(deadline):
                   raise SystemExit('DISPATCH_DEADLINE_EXPIRED')
           with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
-              f.write(f'enabled={str(enabled).lower()}\nmode={mode}\nbatch_path={batch_path}\nbatch_sha256={batch_sha}\nrequest_id={request_id}\ndeadline_epoch={deadline}\n')
+              f.write(f'enabled={str(enabled).lower()}\nmode={mode}\nbatch_path={batch_path}\nbatch_sha256={batch_sha}\nrequest_id={request_id}\ndeadline_epoch={deadline}\ncandidate_count={candidate_count}\nselected_count={selected_count}\nreserve_count={reserve_count}\nindex_matrix={index_matrix}\n')
           print('DISPATCH_PASS',enabled,mode,batch_path,batch_sha,request_id,'deadline',deadline)
           PY
-      - name: Validate exact 10-candidate batch
+      - name: Validate exact dispatch-bound candidate batch
         if: steps.read.outputs.enabled == 'true'
         shell: bash
         run: |
           set -euo pipefail
           export PYTHONPATH="$ROOT"
-          python -m factory.cena_certa.v2.preflight validate-batch --batch "${{ steps.read.outputs.batch_path }}" --expect 10
+          python -m factory.cena_certa.v2.preflight validate-batch --batch "${{ steps.read.outputs.batch_path }}" --expect "${{ steps.read.outputs.candidate_count }}"
 
   prepare-10:
     needs: dispatch
@@ -107,7 +117,7 @@ jobs:
       fail-fast: false
       max-parallel: 10
       matrix:
-        index: [0,1,2,3,4,5,6,7,8,9]
+        index: ${{ fromJSON(needs.dispatch.outputs.index_matrix) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     container:
@@ -160,15 +170,15 @@ jobs:
         run: |
           set -euo pipefail
           test "$(date +%s)" -lt "${{ needs.dispatch.outputs.deadline_epoch }}" || { echo PRODUCTION_SLA_EXPIRED_BEFORE_READY_PROOF; exit 1; }
-          export BATCH='${{ needs.dispatch.outputs.batch_path }}'
+          export BATCH='${{ needs.dispatch.outputs.batch_path }}' CANDIDATE_COUNT='${{ needs.dispatch.outputs.candidate_count }}' SELECTED_COUNT='${{ needs.dispatch.outputs.selected_count }}' RESERVE_COUNT='${{ needs.dispatch.outputs.reserve_count }}'
           python - <<'PY'
           import glob,json,os
           batch=json.load(open(os.environ['BATCH'],encoding='utf-8'))
           index_by_id={x['id']:i for i,x in enumerate(batch)}
           files=glob.glob('prepared/*/prepared.json')
-          count=len(files)
-          if count<8 or count>10:
-              raise SystemExit(f'READY_COUNT_FAIL {count} expected 8..10')
+          count=len(files); candidate_count=int(os.environ['CANDIDATE_COUNT']); selected_count=int(os.environ['SELECTED_COUNT']); reserve_count=int(os.environ['RESERVE_COUNT'])
+          if candidate_count!=selected_count+reserve_count or count<selected_count or count>candidate_count:
+              raise SystemExit(f'READY_COUNT_FAIL {count} expected {selected_count}..{candidate_count}')
           ids=[]; indices=[]
           for p in files:
               d=json.load(open(p,encoding='utf-8'))
@@ -183,8 +193,8 @@ jobs:
           if len(set(ids))!=count or len(set(indices))!=count:
               raise SystemExit('READY_ID_OR_INDEX_DUPLICATE')
           indices=sorted(indices)
-          state='READY_10' if count==10 else 'READY_DEGRADED_8_PLUS'
-          proof={'schema':'CENA_CERTA_READY_QUEUE_PROOF_V2','state':state,'run_id':'${{ github.run_id }}','batch_sha256':'${{ needs.dispatch.outputs.batch_sha256 }}','ready_count':count,'candidate_ids':sorted(ids),'ready_indices':indices,'minimum_required':8,'max_candidate_failures':2}
+          state='READY_FULL' if count==candidate_count else 'READY_DEGRADED'
+          proof={'schema':'CENA_CERTA_READY_QUEUE_PROOF_V2','state':state,'run_id':'${{ github.run_id }}','batch_sha256':'${{ needs.dispatch.outputs.batch_sha256 }}','ready_count':count,'candidate_ids':sorted(ids),'ready_indices':indices,'minimum_required':selected_count,'max_candidate_failures':candidate_count-selected_count}
           json.dump(proof,open('ready-proof.json','w'),indent=2)
           matrix=json.dumps(indices,separators=(',',':'))
           with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
@@ -304,9 +314,9 @@ jobs:
           export PYTHONPATH="$ROOT"
           mkdir -p "$ROOT/output/cena-certa-v2"
           find staged -maxdepth 1 -type f -name '*.json' -exec cp {} "$ROOT/output/cena-certa-v2/" \; 2>/dev/null || true
-          python -m factory.cena_certa.v2.aggregate --batch "${{ needs.dispatch.outputs.batch_path }}"
-          python -m factory.cena_certa.v2.schedule_manifest --batch "$ROOT/output/cena-certa-v2/selected-batch.json" --staged-root "$ROOT/output/cena-certa-v2" --out "$ROOT/output/cena-certa-v2/schedule-handoff.json"
-          export RUN_ID='${{ github.run_id }}' BATCH_SHA='${{ needs.dispatch.outputs.batch_sha256 }}' BATCH_PATH='${{ needs.dispatch.outputs.batch_path }}' REQUEST_ID='${{ needs.dispatch.outputs.request_id }}'
+          python -m factory.cena_certa.v2.aggregate --batch "${{ needs.dispatch.outputs.batch_path }}" --expect-pool "${{ needs.dispatch.outputs.candidate_count }}" --select "${{ needs.dispatch.outputs.selected_count }}" --reserves "${{ needs.dispatch.outputs.reserve_count }}"
+          python -m factory.cena_certa.v2.schedule_manifest --batch "$ROOT/output/cena-certa-v2/selected-batch.json" --staged-root "$ROOT/output/cena-certa-v2" --out "$ROOT/output/cena-certa-v2/schedule-handoff.json" --expect-posts "${{ needs.dispatch.outputs.selected_count }}"
+          export RUN_ID='${{ github.run_id }}' BATCH_SHA='${{ needs.dispatch.outputs.batch_sha256 }}' BATCH_PATH='${{ needs.dispatch.outputs.batch_path }}' REQUEST_ID='${{ needs.dispatch.outputs.request_id }}' SELECTED_COUNT='${{ needs.dispatch.outputs.selected_count }}' RESERVE_COUNT='${{ needs.dispatch.outputs.reserve_count }}'
           python - <<'PY'
           import datetime,hashlib,json,os,pathlib,time
           deadline=int('${{ needs.dispatch.outputs.deadline_epoch }}')
@@ -314,12 +324,13 @@ jobs:
               raise SystemExit('PRODUCTION_SLA_EXPIRED_DURING_FINALIZE')
           root=pathlib.Path(os.environ['ROOT'])/'output/cena-certa-v2'
           hp=root/'schedule-handoff.json'; h=hp.read_bytes(); hsha=hashlib.sha256(h).hexdigest(); hand=json.loads(h)
-          if hand.get('count')!=8 or hand.get('expectedNetworkPlacements')!=32:
+          selected_count=int(os.environ['SELECTED_COUNT']); reserve_count=int(os.environ['RESERVE_COUNT']); expected_placements=selected_count*4
+          if hand.get('count')!=selected_count or hand.get('expectedNetworkPlacements')!=expected_placements:
               raise SystemExit('OUTBOX_HANDOFF_COUNT_FAIL')
           pool=json.loads((root/'pool-report.json').read_text(encoding='utf-8'))
           if pool.get('batch_sha256')!=os.environ['BATCH_SHA']:
               raise SystemExit('POOL_BATCH_BINDING_FAIL')
-          out={'schema':'CENA_CERTA_PUBLISHER_OUTBOX_V1','state':'PREVIEW_READY_HUMAN_APPROVAL_REQUIRED','production_run_id':int(os.environ['RUN_ID']),'batch_sha256':os.environ['BATCH_SHA'],'handoff_sha256':hsha,'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'selected_ids':pool['selected_ids'],'reserve_ids':pool['reserve_ids'],'expected_schedule_objects':8,'expected_network_placements':32,'schedule_gate':'BLOCKED_UNTIL_PRIVATE_PREVIEW_AND_HUMAN_APPROVAL','items':hand['items']}
+          out={'schema':'CENA_CERTA_PUBLISHER_OUTBOX_V1','state':'PREVIEW_READY_HUMAN_APPROVAL_REQUIRED','production_run_id':int(os.environ['RUN_ID']),'batch_sha256':os.environ['BATCH_SHA'],'handoff_sha256':hsha,'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'selected_ids':pool['selected_ids'],'reserve_ids':pool['reserve_ids'],'expected_schedule_objects':selected_count,'expected_network_placements':expected_placements,'schedule_gate':'BLOCKED_UNTIL_PRIVATE_PREVIEW_AND_HUMAN_APPROVAL','items':hand['items']}
           pathlib.Path('/tmp/publisher-outbox.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           approval={'schema':'CENA_CERTA_HUMAN_APPROVAL_V1','approved':False,'handoff_sha256':hsha,'production_run_id':int(os.environ['RUN_ID']),'approved_at':None,'approved_by':None,'note':'Exact new outbox requires explicit human approval before scheduling.'}
           pathlib.Path('/tmp/human-approval.json').write_text(json.dumps(approval,indent=2)+'\n')

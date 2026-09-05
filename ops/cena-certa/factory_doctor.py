@@ -102,13 +102,16 @@ def check_state():
   if mode!='IDLE' or any(str(dispatch.get(k) or '') for k in ('batch_path','batch_sha256','prepared_run_id','requested_at','request_id')): fail('DOCTOR_IDLE_DISPATCH_DIRTY')
  else:
   if mode!='PREPARE' or str(dispatch.get('prepared_run_id') or ''): fail('DOCTOR_ACTIVE_DISPATCH_MODE_FAIL')
+  candidate_count=int(dispatch.get('candidate_count') or 0); selected_count=int(dispatch.get('selected_count') or 0); reserve_count=int(dispatch.get('reserve_count') or 0)
+  if candidate_count<1 or candidate_count>10 or selected_count<1 or reserve_count<0 or candidate_count!=selected_count+reserve_count: fail('DOCTOR_ACTIVE_DISPATCH_COUNT_FAIL')
   if not re.fullmatch(r'[A-Za-z0-9._-]{12,96}',str(dispatch.get('request_id') or '')): fail('DOCTOR_ACTIVE_DISPATCH_REQUEST_ID_FAIL')
   if not str(dispatch.get('batch_path') or '').startswith('ops/cena-certa/batches/'): fail('DOCTOR_ACTIVE_DISPATCH_BATCH_PATH_FAIL')
   if not re.fullmatch(r'[0-9a-f]{64}',str(dispatch.get('batch_sha256') or '').lower()): fail('DOCTOR_ACTIVE_DISPATCH_BATCH_SHA_FAIL')
  items=outbox.get('items')
  if not isinstance(items,list): fail('DOCTOR_OUTBOX_ITEMS_FAIL')
  if items:
-  if len(items)!=8 or int(outbox.get('expected_network_placements') or 0)!=32: fail('DOCTOR_OUTBOX_COUNT_FAIL')
+  expected_objects=int(outbox.get('expected_schedule_objects') or 0); expected_placements=int(outbox.get('expected_network_placements') or 0)
+  if expected_objects<1 or len(items)!=expected_objects or expected_placements!=expected_objects*4: fail('DOCTOR_OUTBOX_COUNT_FAIL')
   h=outbox.get('handoff_sha256'); run=outbox.get('production_run_id')
   if not h or not run: fail('DOCTOR_OUTBOX_IDENTITY_FAIL')
   if approval.get('handoff_sha256')!=h or approval.get('production_run_id')!=run: fail('DOCTOR_APPROVAL_OUTBOX_MISMATCH')

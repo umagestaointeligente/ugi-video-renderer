@@ -26,6 +26,7 @@ STATE = OPS / 'publisher-state.json'
 APPROVAL = OPS / 'human-approval.json'
 sys.path.insert(0, str(FACTORY_SRC))
 from factory.cena_certa.v2.preflight import validate_batch  # noqa: E402
+from factory.cena_certa.v2.common import contract  # noqa: E402
 
 
 def load(path: pathlib.Path) -> dict:
@@ -39,6 +40,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument('--batch', required=True)
     ap.add_argument('--note', default='Canonical single-run production request.')
+    ap.add_argument('--select-count', type=int, default=None)
+    ap.add_argument('--reserve-count', type=int, default=None)
     args = ap.parse_args()
 
     current = load(DISPATCH)
@@ -70,9 +73,18 @@ def main() -> None:
         raise SystemExit('DISPATCH_BATCH_MISSING')
 
     # Re-run the full zero-network batch gate immediately before activation.
-    # This catches expired ready/readback timestamps, stale schedules, title/CC
-    # overflow and policy drift before a commit can wake any production runner.
-    validate_batch(batch, expect=10)
+    # Daily default remains 10 -> 8 + 2; an explicit smaller profile is bound
+    # to the immutable dispatch only when candidate == selected + reserve.
+    items=json.loads(batch.read_text(encoding='utf-8'))
+    candidate_count=len(items)
+    c=contract()
+    selected_count=int(args.select_count if args.select_count is not None else c['sla']['daily_batch_size'])
+    reserve_count=int(args.reserve_count if args.reserve_count is not None else c['sla']['hot_reserve_count'])
+    if candidate_count < 1 or candidate_count > int(c['sla']['candidate_pool_size']):
+        raise SystemExit('DISPATCH_CANDIDATE_COUNT_RANGE_FAIL')
+    if selected_count < 1 or reserve_count < 0 or candidate_count != selected_count + reserve_count:
+        raise SystemExit('DISPATCH_COUNT_BINDING_FAIL')
+    validate_batch(batch, expect=candidate_count)
 
     digest = hashlib.sha256(batch.read_bytes()).hexdigest()
     request_id = uuid.uuid4().hex
@@ -86,6 +98,9 @@ def main() -> None:
         'prepared_run_id':'',
         'requested_at':now,
         'request_id':request_id,
+        'candidate_count':candidate_count,
+        'selected_count':selected_count,
+        'reserve_count':reserve_count,
         'note':str(args.note).strip() or 'Canonical single-run production request.'
     }
     tmp = DISPATCH.with_name(DISPATCH.name + f'.tmp-{os.getpid()}')
@@ -99,6 +114,7 @@ def main() -> None:
     print('request_id=' + request_id)
     print('batch_path=' + rel.as_posix())
     print('batch_sha256=' + digest)
+    print(f'counts={candidate_count}->{selected_count}+{reserve_count}')
     print('next_action=review_and_commit_dispatch_json')
     print('scheduling=false publication=false')
 

@@ -64,9 +64,11 @@ def _metricool_info(c,item,video_url):
     }
 
 
-def build(batch,staged_root,out):
+def build(batch,staged_root,out,expected_posts=None):
     c=contract()
-    items=validate_batch(batch,expect=int(c['scheduler']['daily_posts']))
+    expected_posts=int(c['scheduler']['daily_posts'] if expected_posts is None else expected_posts)
+    if expected_posts<1 or expected_posts>int(c['scheduler']['daily_posts']): raise RuntimeError('SCHEDULE_POST_COUNT_RANGE_FAIL')
+    items=validate_batch(batch,expect=expected_posts)
     staged=Path(staged_root)
     rows=[]
     instants=set()
@@ -116,8 +118,7 @@ def build(batch,staged_root,out):
         }
         rows.append(row)
         flat_expected.extend({'id':rid,'idempotencyKey':idem,**p} for p in expected)
-    expected_posts=int(c['scheduler']['daily_posts'])
-    expected_placements=int(c['scheduler']['expected_placements_per_batch'])
+    expected_placements=expected_posts*len(networks)
     if len(rows)!=expected_posts or len(flat_expected)!=expected_placements:
         raise RuntimeError('SCHEDULE_EXPECTED_PLACEMENTS_FAIL')
     keys=[x['placementKey'] for x in flat_expected]
@@ -149,8 +150,9 @@ def main():
     ap.add_argument('--batch',required=True)
     ap.add_argument('--staged-root',required=True)
     ap.add_argument('--out',required=True)
+    ap.add_argument('--expect-posts',type=int,default=None)
     a=ap.parse_args()
-    build(a.batch,a.staged_root,a.out)
+    build(a.batch,a.staged_root,a.out,a.expect_posts)
 
 
 if __name__=='__main__':

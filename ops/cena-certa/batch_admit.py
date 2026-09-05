@@ -34,6 +34,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", required=True, help="10-candidate editorial JSON list")
     ap.add_argument("--name", required=True, help="immutable batch basename without .json")
+    ap.add_argument("--expect", type=int, default=10, help="expected candidate count; daily default remains 10")
     args = ap.parse_args()
 
     name = str(args.name).strip()
@@ -45,7 +46,9 @@ def main() -> None:
         raise SystemExit("BATCH_INPUT_MISSING")
 
     # Full certified validation includes editorial/rights/anti-repeat/source/schedule gates.
-    validate_batch(src, expect=10)
+    if args.expect < 1 or args.expect > 10:
+        raise SystemExit("BATCH_EXPECT_RANGE_FAIL")
+    validate_batch(src, expect=args.expect)
     items = json.loads(src.read_text(encoding="utf-8"))
     canonical = (json.dumps(items, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 

@@ -21,9 +21,13 @@ def _find_media(obj):
     return None
 
 
-def aggregate(batch,require_staging=True):
+def aggregate(batch,require_staging=True,pool_expected=None,final_expected=None,reserve_expected=None):
     c=contract(); batch_path=Path(batch); items=json.loads(batch_path.read_text(encoding='utf-8')); batch_sha=sha256(batch_path)
-    pool_expected=int(c['sla']['candidate_pool_size']); final_expected=int(c['sla']['daily_batch_size']); reserve_expected=int(c['sla']['hot_reserve_count'])
+    pool_expected=int(c['sla']['candidate_pool_size'] if pool_expected is None else pool_expected)
+    final_expected=int(c['sla']['daily_batch_size'] if final_expected is None else final_expected)
+    reserve_expected=int(c['sla']['hot_reserve_count'] if reserve_expected is None else reserve_expected)
+    if pool_expected<1 or pool_expected>int(c['sla']['candidate_pool_size']) or final_expected<1 or reserve_expected<0 or pool_expected!=final_expected+reserve_expected:
+        raise RuntimeError(f'POOL_PROFILE_FAIL {pool_expected}->{final_expected}+{reserve_expected}')
     if len(items)!=pool_expected:
         raise RuntimeError(f'CANDIDATE_POOL_COUNT_FAIL {len(items)} != {pool_expected}')
     rows=[]; qualified=[]
@@ -74,5 +78,5 @@ def aggregate(batch,require_staging=True):
 
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--batch',required=True); ap.add_argument('--allow-unstaged',action='store_true'); a=ap.parse_args(); aggregate(a.batch,require_staging=not a.allow_unstaged)
+    ap=argparse.ArgumentParser(); ap.add_argument('--batch',required=True); ap.add_argument('--allow-unstaged',action='store_true'); ap.add_argument('--expect-pool',type=int); ap.add_argument('--select',type=int); ap.add_argument('--reserves',type=int); a=ap.parse_args(); aggregate(a.batch,require_staging=not a.allow_unstaged,pool_expected=a.expect_pool,final_expected=a.select,reserve_expected=a.reserves)
 if __name__=='__main__': main()
