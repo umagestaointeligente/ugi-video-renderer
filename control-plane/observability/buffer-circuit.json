@@ -1,12 +1,13 @@
 {
   "project": "UGI",
   "provider": "BUFFER",
-  "state": "OPEN",
-  "reason": "CONFIRMED_RATE_LIMIT_EXCEEDED_24H",
-  "openedAt": "2026-09-05T00:33:21.466440+00:00",
-  "nextProbeAt": "2026-09-05T06:40:00+00:00",
+  "state": "CLOSED",
+  "reason": "USER_AUTHORIZED_ONE_SHOT_LINKEDIN_LAUNCH_PROBE",
+  "closedAt": "2026-09-05T00:34:00+00:00",
+  "nextProbeAt": null,
   "cooldownHours": 6,
   "rateLimitWindow": "24h",
   "requestId": "a361245aac7c76c8-SEA",
-  "mutationAllowed": false
+  "mutationAllowed": true,
+  "oneShotProbe": true
 }
