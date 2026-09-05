@@ -8,6 +8,8 @@ on:
       - 'ops/cena-certa/route_guard.py'
       - 'ops/cena-certa/r2_stage.py'
       - 'ops/cena-certa/batch_admit.py'
+      - 'ops/cena-certa/dispatch_activate.py'
+      - 'ops/cena-certa/factory_doctor.py'
       - 'ops/cena-certa/batches/**'
       - '.github/workflows/cena-certa-production-v2.yml'
       - '.github/workflows/cena-certa-route-integrity.yml'
@@ -23,13 +25,14 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v7
-      - name: Compile route control plane
+      - name: Compile proactive control plane
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile ops/cena-certa/route_guard.py ops/cena-certa/r2_stage.py ops/cena-certa/batch_admit.py
-      - name: Fail closed on any dead or fake route
+          python -m py_compile ops/cena-certa/route_guard.py ops/cena-certa/r2_stage.py ops/cena-certa/batch_admit.py ops/cena-certa/dispatch_activate.py ops/cena-certa/factory_doctor.py
+      - name: Fail closed on dead routes and latent factory faults
         shell: bash
         run: |
           set -euo pipefail
           python ops/cena-certa/route_guard.py
+          python ops/cena-certa/factory_doctor.py
