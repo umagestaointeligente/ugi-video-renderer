@@ -148,20 +148,17 @@ jobs:
           print('VIDEO_URL='+shlex.quote(r[0])); print('VIDEO_KEY='+shlex.quote(r[1]))
           PY
           source /tmp/r2.env
+          export PROVIDER_STATUS VIDEO_URL VIDEO_KEY
           echo "R2_PROVIDER_STATUS=${PROVIDER_STATUS}"
           curl --fail --location --silent --show-error --connect-timeout 8 --max-time 30 --range 0-4095 "$VIDEO_URL" -o /tmp/r2-public.bin
           python - <<'PY'
           import json,os
           b=open('/tmp/r2-public.bin','rb').read(32)
           if len(b)<12 or b[4:8]!=b'ftyp': raise SystemExit('R2_PUBLIC_MP4_PROBE_FAIL')
-          slot=os.environ['SLOT']; raw=json.load(open(f'smoke-slot/slot-{slot}.r2.raw.json',encoding='utf-8'))
-          receipt={'status':'ready','public_probe_pass':True,'provider_status':os.environ.get('PROVIDER_STATUS','UNKNOWN'),'videoUrl':os.environ['VIDEO_URL'],'videoKey':os.environ['VIDEO_KEY']}
+          slot=os.environ['SLOT']; receipt={'status':'ready','public_probe_pass':True,'provider_status':os.environ['PROVIDER_STATUS'],'videoUrl':os.environ['VIDEO_URL'],'videoKey':os.environ['VIDEO_KEY']}
           json.dump(receipt,open(f'smoke-slot/slot-{slot}.r2.json','w',encoding='utf-8'),ensure_ascii=False,indent=2)
           print('R2_SLOT_PUBLIC_MEDIA_PASS',slot,receipt['provider_status'])
           PY
-        env:
-          SLOT: ${{ matrix.slot }}
-          PROVIDER_STATUS: ${{ env.PROVIDER_STATUS }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
