@@ -6,6 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+      bash \
+      git \
       ffmpeg \
       fonts-lato \
       fonts-dejavu-core \
@@ -18,11 +20,15 @@ RUN python -m pip install --no-cache-dir \
       Pillow==12.3.0 \
       numpy==2.5.2
 
-RUN ffmpeg -version | head -1 \
+RUN bash --version | head -1 \
+ && git --version \
+ && ffmpeg -version | head -1 \
  && ffprobe -version | head -1 \
  && fc-match Lato | head -1 \
  && python - <<'PY'
 import PIL, numpy
+assert PIL.__version__ == '12.3.0'
+assert numpy.__version__ == '2.5.2'
 print('RUNTIME_PILLOW', PIL.__version__)
 print('RUNTIME_NUMPY', numpy.__version__)
 PY
