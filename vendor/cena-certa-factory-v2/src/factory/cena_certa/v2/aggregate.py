@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, json, os, time
+import argparse, json, os, re, time
 from pathlib import Path
 from .common import OUT, contract, safe_id, sha256
+
+SHA256_RE=re.compile(r'^[0-9a-f]{64}$')
 
 
 def _find_media(obj):
@@ -28,7 +30,12 @@ def aggregate(batch,require_staging=True):
     for index,it in enumerate(items):
         rid=safe_id(it['id']); receipt_path=OUT/f'{rid}.receipt.json'; r2_path=OUT/f'{rid}.r2.json'
         receipt=json.loads(receipt_path.read_text(encoding='utf-8')) if receipt_path.exists() else {'id':rid,'state':'MISSING','qa_pass':False}
-        qa_ok=receipt.get('id')==rid and receipt.get('state')=='PREVIEW_READY' and receipt.get('render_pass') is True and receipt.get('qa_pass') is True and bool(receipt.get('video_sha256'))
+        video_sha=str(receipt.get('video_sha256') or '').lower(); receipt_batch=str(receipt.get('batch_sha256') or '').lower()
+        qa_ok=bool(
+            receipt.get('id')==rid and receipt.get('state')=='PREVIEW_READY' and
+            receipt.get('render_pass') is True and receipt.get('qa_pass') is True and
+            SHA256_RE.fullmatch(video_sha) and receipt_batch==batch_sha
+        )
         media=None; staged=False; binding_ok=False
         if r2_path.exists():
             try:
@@ -37,7 +44,8 @@ def aggregate(batch,require_staging=True):
                     r2.get('schema')=='CENA_CERTA_R2_RECEIPT_V2' and
                     r2.get('id')==rid and
                     r2.get('batchSha256')==batch_sha and
-                    r2.get('contentSha256')==receipt.get('video_sha256')
+                    r2.get('contentSha256')==video_sha and
+                    r2.get('blind_retry_used') is False
                 )
                 staged=bool(r2.get('status')=='ready' and r2.get('public_probe_pass') is True and r2.get('public_head_size_match') is True and media and binding_ok)
             except Exception:
@@ -48,7 +56,7 @@ def aggregate(batch,require_staging=True):
         if eligible: qualified.append((index,it,row))
     if len(qualified)<final_expected:
         report={'schema':'CENA_CERTA_FACTORY_V2_POOL_REPORT','state':'INSUFFICIENT_READY_POOL','batch_sha256':batch_sha,'candidate_count':len(items),'qualified_count':len(qualified),'required_final':final_expected,'rows':rows,'fail_closed':True}
-        (OUT/'pool-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+        tmp=OUT/'pool-report.json.tmp'; tmp.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8'); os.replace(tmp,OUT/'pool-report.json')
         print('FACTORY_V2_POOL_FAIL',len(qualified),'/',final_expected)
         raise SystemExit(1)
     selected=qualified[:final_expected]
@@ -57,7 +65,7 @@ def aggregate(batch,require_staging=True):
     (OUT/'selected-batch.json').write_text(json.dumps(selected_items,ensure_ascii=False,indent=2),encoding='utf-8')
     (OUT/'hot-reserve.json').write_text(json.dumps(reserve_items,ensure_ascii=False,indent=2),encoding='utf-8')
     slowest=max((x[2]['elapsed_seconds'] for x in selected),default=0.0)
-    report={'schema':'CENA_CERTA_FACTORY_V2_POOL_REPORT','state':'POOL_SELECTED','generated_epoch':time.time(),'batch_sha256':batch_sha,'candidate_count':len(items),'qualified_count':len(qualified),'selected_count':len(selected_items),'reserve_count':len(reserve_items),'selected_ids':[x['id'] for x in selected_items],'reserve_ids':[x['id'] for x in reserve_items],'failed_or_ineligible_ids':[r['id'] for r in rows if not r['eligible']],'require_staging':bool(require_staging),'expected_network_placements':final_expected*int(c['sla']['network_count']),'slowest_selected_render_qa_seconds':round(slowest,2),'schedule_gate':'BLOCKED_UNTIL_PRIVATE_PREVIEW_AND_HUMAN_APPROVAL','rows':rows,'fail_closed':True}
+    report={'schema':'CENA_CERTA_FACTORY_V2_POOL_REPORT','state':'POOL_SELECTED','generated_epoch':time.time(),'batch_sha256':batch_sha,'candidate_count':len(items),'qualified_count':len(qualified),'selected_count':len(selected_items),'reserve_count':len(reserve_items),'selected_ids':[x['id'] for x in selected_items],'reserve_ids':[x['id'] for x in reserves and reserve_items],'failed_or_ineligible_ids':[r['id'] for r in rows if not r['eligible']],'require_staging':bool(require_staging),'expected_network_placements':final_expected*int(c['sla']['network_count']),'slowest_selected_render_qa_seconds':round(slowest,2),'schedule_gate':'BLOCKED_UNTIL_PRIVATE_PREVIEW_AND_HUMAN_APPROVAL','rows':rows,'fail_closed':True}
     tmp=OUT/'pool-report.json.tmp'; tmp.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8'); os.replace(tmp,OUT/'pool-report.json')
     print('FACTORY_V2_POOL_10_TO_8_PASS selected=',len(selected_items),'reserve=',len(reserve_items),'qualified=',len(qualified))
     if len(reserve_items)<reserve_expected:
