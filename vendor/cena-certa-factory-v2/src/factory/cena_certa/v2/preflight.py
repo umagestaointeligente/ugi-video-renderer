@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, json, time
+import argparse, json, os, time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
@@ -22,7 +22,7 @@ def _fresh_iso(value,max_age_hours,label):
  if age<-.25 or age>max_age_hours: raise RuntimeError(f'{label}_STALE age_hours={age:.2f} max={max_age_hours}')
  return dt
 
-def schedule_instant(c,value):
+def schedule_instant(c,value,phase=None):
  try: dt=datetime.fromisoformat(str(value).replace('Z','+00:00'))
  except Exception as e: raise RuntimeError('SCHEDULE_DATE_INVALID') from e
  if dt.tzinfo is None: raise RuntimeError('SCHEDULE_TIMEZONE_REQUIRED')
@@ -31,8 +31,14 @@ def schedule_instant(c,value):
  publisher_min=float(c['scheduler'].get('publisher_minimum_lead_seconds',900))
  factory_budget=float(c.get('sla',{}).get('target_seconds',660))
  configured=float(c['scheduler'].get('minimum_schedule_lead_seconds',0))
- required=max(configured,publisher_min+factory_budget)
- if lead<required: raise RuntimeError(f'SCHEDULE_LEAD_TIME_FAIL seconds={lead:.0f} required={required:.0f}')
+ phase=str(phase or os.getenv('ORBIT_SCHEDULE_PHASE','admission')).strip().lower()
+ if phase=='admission':
+  required=max(configured,publisher_min+factory_budget)
+ elif phase=='publisher':
+  required=publisher_min
+ else:
+  raise RuntimeError(f'SCHEDULE_PHASE_FAIL {phase}')
+ if lead<required: raise RuntimeError(f'SCHEDULE_LEAD_TIME_FAIL phase={phase} seconds={lead:.0f} required={required:.0f}')
  return local
 
 def validate_schedule(c,item):
