@@ -29,7 +29,7 @@ jobs:
       mode: ${{ steps.read.outputs.mode }}
       batch_path: ${{ steps.read.outputs.batch_path }}
       batch_sha256: ${{ steps.read.outputs.batch_sha256 }}
-      prepared_run_id: ${{ steps.read.outputs.prepared_run_id }}
+      deadline_epoch: ${{ steps.read.outputs.deadline_epoch }}
     container:
       image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
       credentials:
@@ -41,9 +41,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile ops/cena-certa/r2_stage.py
+          python -m py_compile ops/cena-certa/r2_stage.py ops/cena-certa/route_guard.py
       - id: read
-        name: Validate single immutable dispatch
+        name: Validate single immutable dispatch and 12-minute deadline
         shell: bash
         run: |
           set -euo pipefail
@@ -51,31 +51,41 @@ jobs:
           import datetime,hashlib,json,os,pathlib
           p=pathlib.Path('ops/cena-certa/dispatch.json')
           d=json.loads(p.read_text(encoding='utf-8'))
-          if d.get('schema')!='CENA_CERTA_PRODUCTION_DISPATCH_V1': raise SystemExit('DISPATCH_SCHEMA_FAIL')
+          if d.get('schema')!='CENA_CERTA_PRODUCTION_DISPATCH_V1':
+              raise SystemExit('DISPATCH_SCHEMA_FAIL')
           enabled=bool(d.get('enabled'))
           mode=str(d.get('mode') or 'IDLE').upper()
+          deadline=''
           if not enabled:
-              mode='IDLE'; batch_path=''; batch_sha=''; prepared=''
+              mode='IDLE'; batch_path=''; batch_sha=''
           else:
-              if mode not in {'PREPARE','RENDER'}: raise SystemExit('DISPATCH_MODE_FAIL')
+              if mode!='PREPARE':
+                  raise SystemExit('DISPATCH_MODE_FAIL_ONLY_PREPARE_IS_CANONICAL')
+              if str(d.get('prepared_run_id') or ''):
+                  raise SystemExit('DISPATCH_PREPARED_RUN_FORBIDDEN_SINGLE_RUN')
               batch_path=str(d.get('batch_path') or '')
               if not batch_path.startswith('ops/cena-certa/batches/') or not batch_path.endswith('.json'):
                   raise SystemExit('DISPATCH_BATCH_PATH_FAIL')
               bp=pathlib.Path(batch_path)
-              if not bp.is_file(): raise SystemExit('DISPATCH_BATCH_MISSING')
+              if not bp.is_file():
+                  raise SystemExit('DISPATCH_BATCH_MISSING')
               batch_sha=hashlib.sha256(bp.read_bytes()).hexdigest()
-              if batch_sha!=str(d.get('batch_sha256') or ''): raise SystemExit('DISPATCH_BATCH_SHA_FAIL')
+              if batch_sha!=str(d.get('batch_sha256') or ''):
+                  raise SystemExit('DISPATCH_BATCH_SHA_FAIL')
               req=str(d.get('requested_at') or '')
               dt=datetime.datetime.fromisoformat(req.replace('Z','+00:00'))
-              if dt.tzinfo is None: raise SystemExit('DISPATCH_TIMEZONE_FAIL')
-              age=(datetime.datetime.now(datetime.timezone.utc)-dt.astimezone(datetime.timezone.utc)).total_seconds()
-              if age < -60 or age > 7200: raise SystemExit(f'DISPATCH_STALE seconds={age:.0f}')
-              prepared=str(d.get('prepared_run_id') or '')
-              if mode=='RENDER' and (not prepared.isdigit() or int(prepared)<=0): raise SystemExit('DISPATCH_PREPARED_RUN_REQUIRED')
-              if mode=='PREPARE' and prepared: raise SystemExit('DISPATCH_PREPARED_RUN_FORBIDDEN_IN_PREPARE')
+              if dt.tzinfo is None:
+                  raise SystemExit('DISPATCH_TIMEZONE_FAIL')
+              now=datetime.datetime.now(datetime.timezone.utc)
+              age=(now-dt.astimezone(datetime.timezone.utc)).total_seconds()
+              if age < -60 or age > 720:
+                  raise SystemExit(f'DISPATCH_SLA_WINDOW_FAIL seconds={age:.0f}')
+              deadline=str(int(dt.timestamp())+720)
+              if int(now.timestamp())>=int(deadline):
+                  raise SystemExit('DISPATCH_DEADLINE_EXPIRED')
           with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
-              f.write(f'enabled={str(enabled).lower()}\nmode={mode}\nbatch_path={batch_path}\nbatch_sha256={batch_sha}\nprepared_run_id={prepared}\n')
-          print('DISPATCH_PASS',enabled,mode,batch_path,batch_sha)
+              f.write(f'enabled={str(enabled).lower()}\nmode={mode}\nbatch_path={batch_path}\nbatch_sha256={batch_sha}\ndeadline_epoch={deadline}\n')
+          print('DISPATCH_PASS',enabled,mode,batch_path,batch_sha,'deadline',deadline)
           PY
       - name: Validate exact 10-candidate batch
         if: steps.read.outputs.enabled == 'true'
@@ -94,7 +104,7 @@ jobs:
       matrix:
         index: [0,1,2,3,4,5,6,7,8,9]
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 5
     container:
       image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
       credentials:
@@ -102,6 +112,11 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v7
+      - name: Deadline guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(date +%s)" -lt "${{ needs.dispatch.outputs.deadline_epoch }}" || { echo PRODUCTION_SLA_EXPIRED_BEFORE_PREPARE; exit 1; }
       - name: Prepare sealed candidate
         shell: bash
         run: |
@@ -109,6 +124,7 @@ jobs:
           export PYTHONPATH="$ROOT"
           python -m factory.cena_certa.v2.prepare --batch "${{ needs.dispatch.outputs.batch_path }}" --index "${{ matrix.index }}" --prepared-root prepared
           test "$(find prepared -name prepared.json | wc -l | tr -d ' ')" = 1
+          test "$(date +%s)" -lt "${{ needs.dispatch.outputs.deadline_epoch }}" || { echo PRODUCTION_SLA_EXPIRED_AFTER_PREPARE; exit 1; }
       - uses: actions/upload-artifact@v4
         with:
           name: cena-certa-ready-slot-${{ matrix.index }}
@@ -120,31 +136,45 @@ jobs:
     needs: [dispatch, prepare-10]
     if: always() && needs.dispatch.outputs.enabled == 'true' && needs.dispatch.outputs.mode == 'PREPARE'
     runs-on: ubuntu-24.04
-    timeout-minutes: 4
+    timeout-minutes: 3
+    outputs:
+      ready_count: ${{ steps.proof.outputs.ready_count }}
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download every successful prepared slot
+        uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           pattern: cena-certa-ready-slot-*
           path: prepared
           merge-multiple: true
-      - name: Prove complete 10-slot READY queue
+      - id: proof
+        name: Prove resilient 8+2 READY queue
         shell: bash
         run: |
           set -euo pipefail
+          test "$(date +%s)" -lt "${{ needs.dispatch.outputs.deadline_epoch }}" || { echo PRODUCTION_SLA_EXPIRED_BEFORE_READY_PROOF; exit 1; }
           python - <<'PY'
-          import glob,json
+          import glob,json,os
           files=glob.glob('prepared/*/prepared.json')
-          if len(files)!=10: raise SystemExit(f'READY_COUNT_FAIL {len(files)}')
+          count=len(files)
+          if count<8 or count>10:
+              raise SystemExit(f'READY_COUNT_FAIL {count} expected 8..10')
           ids=[]
           for p in files:
               d=json.load(open(p,encoding='utf-8'))
-              if d.get('schema')!='CENA_CERTA_PREPARED_ASSETS_V2' or d.get('prepared_pass') is not True: raise SystemExit(f'READY_MANIFEST_FAIL {p}')
-              if not d.get('prepared_engine_fingerprint'): raise SystemExit(f'READY_ENGINE_FINGERPRINT_MISSING {p}')
+              if d.get('schema')!='CENA_CERTA_PREPARED_ASSETS_V2' or d.get('prepared_pass') is not True:
+                  raise SystemExit(f'READY_MANIFEST_FAIL {p}')
+              if not d.get('prepared_engine_fingerprint'):
+                  raise SystemExit(f'READY_ENGINE_FINGERPRINT_MISSING {p}')
               ids.append(d['id'])
-          if len(set(ids))!=10: raise SystemExit('READY_ID_DUPLICATE')
-          proof={'schema':'CENA_CERTA_READY_QUEUE_PROOF_V1','state':'READY_10','run_id':'${{ github.run_id }}','batch_sha256':'${{ needs.dispatch.outputs.batch_sha256 }}','ready_count':10,'candidate_ids':sorted(ids)}
+          if len(set(ids))!=count:
+              raise SystemExit('READY_ID_DUPLICATE')
+          state='READY_10' if count==10 else 'READY_DEGRADED_8_PLUS'
+          proof={'schema':'CENA_CERTA_READY_QUEUE_PROOF_V2','state':state,'run_id':'${{ github.run_id }}','batch_sha256':'${{ needs.dispatch.outputs.batch_sha256 }}','ready_count':count,'candidate_ids':sorted(ids),'minimum_required':8,'max_candidate_failures':2}
           json.dump(proof,open('ready-proof.json','w'),indent=2)
-          print('READY_QUEUE_10_PASS run_id=${{ github.run_id }}')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write(f'ready_count={count}\n')
+          print('READY_QUEUE_8_PLUS_PASS count=',count,'run_id=${{ github.run_id }}')
           PY
       - uses: actions/upload-artifact@v4
         with:
@@ -154,15 +184,15 @@ jobs:
           retention-days: 4
 
   render-stage-10:
-    needs: dispatch
-    if: needs.dispatch.outputs.enabled == 'true' && needs.dispatch.outputs.mode == 'RENDER'
+    needs: [dispatch, ready-proof]
+    if: needs.dispatch.outputs.enabled == 'true' && needs.dispatch.outputs.mode == 'PREPARE' && needs.ready-proof.result == 'success'
     strategy:
       fail-fast: false
       max-parallel: 10
       matrix:
         index: [0,1,2,3,4,5,6,7,8,9]
     runs-on: ubuntu-24.04
-    timeout-minutes: 9
+    timeout-minutes: 7
     container:
       image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
       credentials:
@@ -177,16 +207,17 @@ jobs:
       ORBIT_ALLOW_AUDIO_REPAIR: '0'
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/download-artifact@v4
+      - name: Download this slot from the current canonical run
+        uses: actions/download-artifact@v4
         with:
           name: cena-certa-ready-slot-${{ matrix.index }}
           path: prepared
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ needs.dispatch.outputs.prepared_run_id }}
       - id: clock
         shell: bash
-        run: echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
+        run: |
+          set -euo pipefail
+          test "$(date +%s)" -lt "${{ needs.dispatch.outputs.deadline_epoch }}" || { echo PRODUCTION_SLA_EXPIRED_BEFORE_RENDER; exit 1; }
+          echo "started=$(date +%s)" >> "$GITHUB_OUTPUT"
       - name: Offline render, QA and reconciled R2 staging
         shell: bash
         run: |
@@ -216,7 +247,8 @@ jobs:
             --out "$ROOT/output/cena-certa-v2/${RID}.r2.json"
           elapsed=$(($(date +%s)-${{ steps.clock.outputs.started }}))
           echo "RENDER_STAGE_SECONDS=$elapsed"
-          test "$elapsed" -le 480 || { echo RENDER_STAGE_SLA_FAIL; exit 1; }
+          test "$elapsed" -le 360 || { echo RENDER_STAGE_SLA_FAIL; exit 1; }
+          test "$(date +%s)" -lt "${{ needs.dispatch.outputs.deadline_epoch }}" || { echo PRODUCTION_SLA_EXPIRED_AFTER_RENDER; exit 1; }
           mkdir -p proof
           cp "$receipt" proof/
           cp "$ROOT/output/cena-certa-v2/${RID}.r2.json" proof/
@@ -229,10 +261,10 @@ jobs:
           retention-days: 4
 
   finalize-8-plus-2:
-    needs: [dispatch, render-stage-10]
-    if: always() && needs.dispatch.outputs.enabled == 'true' && needs.dispatch.outputs.mode == 'RENDER'
+    needs: [dispatch, ready-proof, render-stage-10]
+    if: always() && needs.dispatch.outputs.enabled == 'true' && needs.dispatch.outputs.mode == 'PREPARE' && needs.ready-proof.result == 'success'
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 3
     container:
       image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
       credentials:
@@ -242,26 +274,33 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/download-artifact@v4
+      - name: Download every successful render proof
+        uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           pattern: cena-certa-render-slot-*
           path: staged
           merge-multiple: true
-      - name: Select eight, preserve reserves and create exact publisher outbox
+      - name: Select eight, preserve reserves, close dispatch and create exact publisher outbox
         shell: bash
         run: |
           set -euo pipefail
+          test "$(date +%s)" -lt "${{ needs.dispatch.outputs.deadline_epoch }}" || { echo PRODUCTION_SLA_EXPIRED_BEFORE_FINALIZE; exit 1; }
           export PYTHONPATH="$ROOT"
           mkdir -p "$ROOT/output/cena-certa-v2"
-          find staged -maxdepth 1 -type f -name '*.json' -exec cp {} "$ROOT/output/cena-certa-v2/" \;
+          find staged -maxdepth 1 -type f -name '*.json' -exec cp {} "$ROOT/output/cena-certa-v2/" \; 2>/dev/null || true
           python -m factory.cena_certa.v2.aggregate --batch "${{ needs.dispatch.outputs.batch_path }}"
           python -m factory.cena_certa.v2.schedule_manifest --batch "$ROOT/output/cena-certa-v2/selected-batch.json" --staged-root "$ROOT/output/cena-certa-v2" --out "$ROOT/output/cena-certa-v2/schedule-handoff.json"
-          export RUN_ID='${{ github.run_id }}' BATCH_SHA='${{ needs.dispatch.outputs.batch_sha256 }}'
+          export RUN_ID='${{ github.run_id }}' BATCH_SHA='${{ needs.dispatch.outputs.batch_sha256 }}' BATCH_PATH='${{ needs.dispatch.outputs.batch_path }}'
           python - <<'PY'
-          import datetime,hashlib,json,os,pathlib
+          import datetime,hashlib,json,os,pathlib,time
+          deadline=int('${{ needs.dispatch.outputs.deadline_epoch }}')
+          if int(time.time())>=deadline:
+              raise SystemExit('PRODUCTION_SLA_EXPIRED_DURING_FINALIZE')
           root=pathlib.Path(os.environ['ROOT'])/'output/cena-certa-v2'
           hp=root/'schedule-handoff.json'; h=hp.read_bytes(); hsha=hashlib.sha256(h).hexdigest(); hand=json.loads(h)
-          if hand.get('count')!=8 or hand.get('expectedNetworkPlacements')!=32: raise SystemExit('OUTBOX_HANDOFF_COUNT_FAIL')
+          if hand.get('count')!=8 or hand.get('expectedNetworkPlacements')!=32:
+              raise SystemExit('OUTBOX_HANDOFF_COUNT_FAIL')
           pool=json.loads((root/'pool-report.json').read_text(encoding='utf-8'))
           out={'schema':'CENA_CERTA_PUBLISHER_OUTBOX_V1','state':'PREVIEW_READY_HUMAN_APPROVAL_REQUIRED','production_run_id':int(os.environ['RUN_ID']),'batch_sha256':os.environ['BATCH_SHA'],'handoff_sha256':hsha,'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'selected_ids':pool['selected_ids'],'reserve_ids':pool['reserve_ids'],'expected_schedule_objects':8,'expected_network_placements':32,'schedule_gate':'BLOCKED_UNTIL_PRIVATE_PREVIEW_AND_HUMAN_APPROVAL','items':hand['items']}
           pathlib.Path('/tmp/publisher-outbox.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
@@ -275,11 +314,25 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git fetch origin "$GITHUB_REF_NAME"
           git rebase "origin/$GITHUB_REF_NAME"
+          export CURRENT_DISPATCH=ops/cena-certa/dispatch.json
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['CURRENT_DISPATCH'])
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if d.get('schema')!='CENA_CERTA_PRODUCTION_DISPATCH_V1' or d.get('enabled') is not True or str(d.get('mode') or '').upper()!='PREPARE':
+              raise SystemExit('DISPATCH_CHANGED_DURING_RUN')
+          if str(d.get('batch_path') or '')!=os.environ['BATCH_PATH'] or str(d.get('batch_sha256') or '')!=os.environ['BATCH_SHA']:
+              raise SystemExit('DISPATCH_CAS_FAIL')
+          idle={'schema':'CENA_CERTA_PRODUCTION_DISPATCH_V1','enabled':False,'mode':'IDLE','batch_path':'','batch_sha256':'','prepared_run_id':'','requested_at':'','note':'Automatically closed after one canonical single-run factory execution; human scheduling gate remains closed.'}
+          pathlib.Path('/tmp/dispatch-idle.json').write_text(json.dumps(idle,indent=2)+'\n')
+          PY
           cp /tmp/publisher-outbox.json ops/cena-certa/publisher-outbox.json
           cp /tmp/human-approval.json ops/cena-certa/human-approval.json
           cp /tmp/publisher-state.json ops/cena-certa/publisher-state.json
-          git add ops/cena-certa/publisher-outbox.json ops/cena-certa/human-approval.json ops/cena-certa/publisher-state.json
-          git commit -m "Cena Certa V2: publish exact human-gated outbox run ${{ github.run_id }}"
+          cp /tmp/dispatch-idle.json ops/cena-certa/dispatch.json
+          git add ops/cena-certa/publisher-outbox.json ops/cena-certa/human-approval.json ops/cena-certa/publisher-state.json ops/cena-certa/dispatch.json
+          git commit -m "Cena Certa V2: close single-run dispatch and publish human-gated outbox ${{ github.run_id }}"
+          test "$(date +%s)" -lt "${{ needs.dispatch.outputs.deadline_epoch }}" || { echo PRODUCTION_SLA_EXPIRED_BEFORE_COMMIT; exit 1; }
           git push origin "HEAD:$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
         with:
