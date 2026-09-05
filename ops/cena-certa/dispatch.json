@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-exact4-20260905-evening.json",
-  "batch_sha256": "13a9f5779c2a62b04750f67fce2bc88abe4b27e3d326a5db8cee282f805d968b",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-05T22:37:14.192769+00:00",
-  "request_id": "3084b39677d4453aa2a46c391a0dd5a1",
-  "candidate_count": 4,
-  "selected_count": 4,
-  "reserve_count": 0,
-  "note": "Explicit user-authorized exact4 Cena Certa evening production for four-network scheduling."
+  "requested_at": "",
+  "request_id": "",
+  "note": "Closed after preflight caption-layout rejection in run 33996445909; no render, staging or scheduling occurred."
 }
