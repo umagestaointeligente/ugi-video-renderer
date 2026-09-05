@@ -15,14 +15,14 @@ permissions:
 env:
   ROOT: vendor/cena-certa-factory-v2/src
   RUNTIME_IMAGE: ghcr.io/umagestaointeligente/cena-certa-runtime
-  RUNTIME_DIGEST: sha256:aaf34c7963bee220ee566ecc65fc697e79e6c549073c4df8d38ad7ebced14ecf
+  RUNTIME_DIGEST: sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
 
 jobs:
   certified-smoke:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     container:
-      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:aaf34c7963bee220ee566ecc65fc697e79e6c549073c4df8d38ad7ebced14ecf
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -40,7 +40,7 @@ jobs:
           echo "started=$now" >> "$GITHUB_OUTPUT"
           echo "FACTORY_SLA_START_EPOCH=$now"
 
-      - name: Prove pinned runtime
+      - name: Prove pinned full production runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -49,11 +49,18 @@ jobs:
           ffmpeg -version | head -1
           ffprobe -version | head -1
           fc-match Lato | head -1
+          export PYTHONPATH="$ROOT"
           python - <<'PY'
-          import PIL,numpy
+          import PIL,numpy,aiohttp,edge_tts
           assert PIL.__version__=='12.3.0'
           assert numpy.__version__=='2.5.2'
-          print('PINNED_RUNTIME_HEALTH_PASS')
+          assert aiohttp.__version__=='3.14.3'
+          from factory.cena_certa.v2.prepare import prepare_one
+          from factory.cena_certa.v2.voice import tts_with_real_boundaries
+          from factory.cena_certa.v2.render import render_one
+          from factory.cena_certa.v2.qa import qa_video
+          print('PINNED_FULL_RUNTIME_HEALTH_PASS')
+          print('PRODUCTION_PREP_TTS_IMPORT_PASS')
           PY
           echo "PINNED_RUNTIME=${RUNTIME_IMAGE}@${RUNTIME_DIGEST}"
 
@@ -251,7 +258,7 @@ jobs:
           elapsed=$((end-start))
           echo "FULL_SMOKE_ELAPSED_SECONDS=$elapsed"
           test "$elapsed" -le 660
-          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"r2_public_probes":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s"}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" > certification.json
+          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"r2_public_probes":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s","prep_tts_import_pass":true}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" > certification.json
           cat certification.json
 
       - uses: actions/upload-artifact@v4
