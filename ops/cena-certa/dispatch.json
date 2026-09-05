@@ -6,5 +6,5 @@
   "batch_sha256": "",
   "prepared_run_id": "",
   "requested_at": "",
-  "note": "IDLE syntax-canary after self-contained production executor install."
+  "note": "IDLE canary after dispatch-gate and R2 reconciler hardening."
 }
