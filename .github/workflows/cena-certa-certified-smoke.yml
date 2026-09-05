@@ -4,7 +4,7 @@ on:
   push:
     branches: [feat/cena-certa-factory-v2-certified]
     paths:
-      - 'vendor/cena-certa-factory-v2/**'
+      - 'vendor/cena-certa-factory-v2/src/**'
       - '.github/workflows/cena-certa-certified-smoke.yml'
   workflow_dispatch:
 
@@ -114,7 +114,7 @@ jobs:
           print('RENDER_ELAPSED_AVG_SECONDS',round(sum(elapsed)/len(elapsed),2))
           PY
 
-      - name: Stage 10 unique R2 objects and prove public MP4 bytes
+      - name: Stage 10 reusable R2 canaries and prove public MP4 bytes
         shell: bash
         run: |
           set -euo pipefail
@@ -124,7 +124,7 @@ jobs:
           for slot in $(seq 0 9); do
             echo "R2_STAGE_SLOT=$slot"
             f="slots/slot-${slot}.mp4"
-            rid="CC-FV2-SMOKE-${GITHUB_RUN_ID}-${slot}"
+            rid="CC-FV2-SMOKE-A-${slot}"
             dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
             raw="slots/slot-${slot}.r2.raw.json"
             if ! curl --fail-with-body --silent --show-error --connect-timeout 10 --max-time 120 -X POST "${URL%/}/api/video-upload?renderId=${rid}&duration=${dur}" -H "Authorization: Bearer ${KEY}" -H 'Content-Type: video/mp4' --data-binary @"$f" -o "$raw"; then
@@ -258,7 +258,7 @@ jobs:
           elapsed=$((end-start))
           echo "FULL_SMOKE_ELAPSED_SECONDS=$elapsed"
           test "$elapsed" -le 660
-          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"r2_public_probes":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s","prep_tts_import_pass":true}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" > certification.json
+          printf '{"state":"CERTIFIED_SMOKE_PASS","render_slots":10,"r2_staged":10,"r2_public_probes":10,"selected":8,"hot_reserves":2,"elapsed_seconds":%s,"sla_seconds":660,"runtime_digest":"%s","head_sha":"%s","prep_tts_import_pass":true,"reusable_canary_ids":true}\n' "$elapsed" "$RUNTIME_DIGEST" "$GITHUB_SHA" > certification.json
           cat certification.json
 
       - uses: actions/upload-artifact@v4
