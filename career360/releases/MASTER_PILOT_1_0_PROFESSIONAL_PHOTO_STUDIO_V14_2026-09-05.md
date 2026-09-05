@@ -39,11 +39,6 @@ Estilos:
 - `creative`;
 - `professional`.
 
-Perfil piloto verificado:
-- cargo atual: Gerente de categoria;
-- alvos: Head comercial / diretor comercial;
-- resolução automática: `executive`.
-
 O contexto profissional influencia somente apresentação: enquadramento, fundo, luz, acabamento e linguagem visual. Não altera rosto, corpo, idade, tom de pele, identidade ou qualquer característica sensível.
 
 ## Regras duras
@@ -60,8 +55,8 @@ O contexto profissional influencia somente apresentação: enquadramento, fundo,
 ## Backend LIVE
 
 Edges ACTIVE / JWT required:
-- `career-photo-studio` V9;
-- `career-profile-photo` V9.
+- `career-photo-studio` V11;
+- `career-profile-photo` V10.
 
 `career-photo-studio` suporta:
 - leitura de original/selecionada/variantes;
@@ -78,7 +73,7 @@ O runtime atual opera em modo zero-cash:
 
 `generate_ai` permanece fail-closed como `AI_PROVIDER_NOT_CONFIGURED`; não existe promessa de geração externa nesta release.
 
-`career-profile-photo` agora devolve como `photo` a variante profissional aceita/selecionada. Caso contrário devolve a original. Também retorna a original separadamente e limpa variantes antigas quando uma nova original é enviada.
+`career-profile-photo` devolve como `photo` a variante profissional aceita/selecionada. Caso contrário devolve a original. Também retorna a original separadamente e limpa variantes antigas quando uma nova original é enviada.
 
 ## Local Professional Polish LIVE
 
@@ -119,19 +114,18 @@ Alias confirmado:
 `https://lsi-career-360.vercel.app/`
 
 Gates comprovados:
-- preview V14 = READY / HTTP 200;
 - produção = READY;
-- `aliasError=null`;
-- alias oficial presente;
 - HTML oficial carrega `app-i.js`, `app-j.js` e `app-k.js`;
-- Vercel runtime errors/fatal no novo deployment: nenhum no período verificado.
+- Vercel runtime errors/fatal no novo deployment: nenhum no período verificado;
+- `career-photo-studio` runtime atual = V11;
+- `career-profile-photo` runtime atual = V10.
 
 ## Segurança
 
 RLS permanece ativo no modelo canônico.
 Authenticated lê somente seus próprios registros; escrita de variantes/settings não é liberada diretamente ao cliente.
 
-Security Advisor pós-DDL:
+Security Advisor pós-ajuste:
 - nenhum novo lint estrutural de RLS;
 - permanece apenas `auth_leaked_password_protection=DISABLED/WARN`.
 
@@ -146,4 +140,4 @@ Teste Android autenticado:
 6. confirmar foto nova na Minha Página / Meu Perfil / PDF;
 7. voltar para a original e confirmar rollback visual.
 
-`LAST_VERIFIED_CHANGE=PHOTO_STUDIO_V14_BACKEND_V9_LOCAL_POLISH_AND_UI_LIVE_OFFICIAL_PRODUCTION`
+`LAST_VERIFIED_CHANGE=PHOTO_STUDIO_V14_BACKEND_V11_PROFILE_PHOTO_V10_LOCAL_POLISH_AND_UI_LIVE_OFFICIAL_PRODUCTION`
