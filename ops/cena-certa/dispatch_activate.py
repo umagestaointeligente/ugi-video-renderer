@@ -2,9 +2,9 @@
 """Single sanctioned activation path for Cena Certa production.
 
 It is intentionally local and zero-network. It refuses a second active request,
-refuses to overwrite a pending publisher outbox, binds the exact immutable batch
-SHA and writes a unique request_id for CAS protection in the production workflow.
-It does not commit, schedule or publish anything.
+refuses to overwrite a pending publisher outbox, revalidates the exact immutable
+batch before any dispatch write, binds its SHA and writes a unique request_id for
+CAS protection in the production workflow. It does not commit, schedule or publish.
 """
 from __future__ import annotations
 
@@ -14,14 +14,18 @@ import hashlib
 import json
 import os
 import pathlib
+import sys
 import uuid
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 OPS = ROOT / 'ops/cena-certa'
+FACTORY_SRC = ROOT / 'vendor/cena-certa-factory-v2/src'
 DISPATCH = OPS / 'dispatch.json'
 OUTBOX = OPS / 'publisher-outbox.json'
 STATE = OPS / 'publisher-state.json'
 APPROVAL = OPS / 'human-approval.json'
+sys.path.insert(0, str(FACTORY_SRC))
+from factory.cena_certa.v2.preflight import validate_batch  # noqa: E402
 
 
 def load(path: pathlib.Path) -> dict:
@@ -64,6 +68,12 @@ def main() -> None:
         raise SystemExit('DISPATCH_BATCH_PATH_FAIL') from e
     if not batch.is_file() or batch.suffix != '.json':
         raise SystemExit('DISPATCH_BATCH_MISSING')
+
+    # Re-run the full zero-network batch gate immediately before activation.
+    # This catches expired ready/readback timestamps, stale schedules, title/CC
+    # overflow and policy drift before a commit can wake any production runner.
+    validate_batch(batch, expect=10)
+
     digest = hashlib.sha256(batch.read_bytes()).hexdigest()
     request_id = uuid.uuid4().hex
     now = datetime.datetime.now(datetime.timezone.utc).isoformat()
@@ -85,6 +95,7 @@ def main() -> None:
     finally:
         tmp.unlink(missing_ok=True)
     print('DISPATCH_ACTIVATE_PASS')
+    print('pre_dispatch_batch_revalidation=true')
     print('request_id=' + request_id)
     print('batch_path=' + rel.as_posix())
     print('batch_sha256=' + digest)
