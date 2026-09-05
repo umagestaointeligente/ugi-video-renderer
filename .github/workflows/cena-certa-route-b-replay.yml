@@ -1,10 +1,6 @@
 name: Cena Certa V2 Route B Portability Replay
 
 on:
-  push:
-    branches: [feat/cena-certa-factory-v2-certified]
-    paths:
-      - '.github/workflows/cena-certa-route-b-replay.yml'
   workflow_dispatch:
 
 permissions:
@@ -163,7 +159,7 @@ jobs:
           print('ROUTE_B_RENDER_AVG_SECONDS',round(sum(vals)/len(vals),2))
           PY
 
-      - name: Stage 10 B objects to R2 and prove public MP4 bytes
+      - name: Stage 10 reusable B canaries to R2 and prove public MP4 bytes
         shell: bash
         run: |
           set -euo pipefail
@@ -172,7 +168,7 @@ jobs:
           failures=0
           for slot in $(seq 0 9); do
             f="b-slots/slot-${slot}.mp4"
-            rid="CC-FV2-B-REPLAY-${GITHUB_RUN_ID}-${slot}"
+            rid="CC-FV2-SMOKE-B-${slot}"
             dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
             raw="b-slots/slot-${slot}.r2.raw.json"
             if ! curl --fail-with-body --silent --show-error --connect-timeout 10 --max-time 120 -X POST "${URL%/}/api/video-upload?renderId=${rid}&duration=${dur}" -H "Authorization: Bearer ${KEY}" -H 'Content-Type: video/mp4' --data-binary @"$f" -o "$raw"; then
@@ -258,6 +254,7 @@ jobs:
             'provider_compute':'github_hosted_replay',
             'gitlab_saas_capacity':'unavailable_ci_quota_exceeded',
             'package_independence_pass':True,
+            'reusable_canary_ids':True,
           }
           open('b-evidence/route-b-replay-certification.json','w').write(json.dumps(d,indent=2)+'\n')
           print(json.dumps(d))
