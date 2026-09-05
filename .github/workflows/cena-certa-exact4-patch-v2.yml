@@ -1,0 +1,137 @@
+name: Cena Certa Exact4 Canonical Patch V2
+
+on:
+  push:
+    branches: [tmp/cena-certa-exact4-20260905]
+    paths: ['.github/workflows/cena-certa-exact4-patch-v2.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: tmp/cena-certa-exact4-20260905
+          fetch-depth: 0
+      - name: Apply dispatch-bound exact-size profile
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          def gh(x): return '$' + '{{ ' + x + ' }}'
+          def one(path, pattern, repl, flags=0):
+              p=Path(path); s=p.read_text(encoding='utf-8')
+              ns,n=re.subn(pattern,repl,s,count=1,flags=flags)
+              if n!=1: raise SystemExit(f'PATCH_MATCH_FAIL {path} n={n} pattern={pattern[:100]}')
+              p.write_text(ns,encoding='utf-8')
+          def rep(path, old, new):
+              p=Path(path); s=p.read_text(encoding='utf-8')
+              if s.count(old)!=1: raise SystemExit(f'PATCH_MATCH_FAIL {path} token={old[:100]!r} count={s.count(old)}')
+              p.write_text(s.replace(old,new),encoding='utf-8')
+
+          # batch admission
+          p='ops/cena-certa/batch_admit.py'
+          rep(p,'    ap.add_argument("--name", required=True, help="immutable batch basename without .json")\n', '    ap.add_argument("--name", required=True, help="immutable batch basename without .json")\n    ap.add_argument("--expect", type=int, default=10, help="expected candidate count; daily default remains 10")\n')
+          rep(p,'    validate_batch(src, expect=10)\n', '    if args.expect < 1 or args.expect > 10:\n        raise SystemExit("BATCH_EXPECT_RANGE_FAIL")\n    validate_batch(src, expect=args.expect)\n')
+
+          # dispatch activation
+          p='ops/cena-certa/dispatch_activate.py'
+          rep(p,'from factory.cena_certa.v2.preflight import validate_batch  # noqa: E402\n','from factory.cena_certa.v2.preflight import validate_batch  # noqa: E402\nfrom factory.cena_certa.v2.common import contract  # noqa: E402\n')
+          rep(p,"    ap.add_argument('--note', default='Canonical single-run production request.')\n","    ap.add_argument('--note', default='Canonical single-run production request.')\n    ap.add_argument('--select-count', type=int, default=None)\n    ap.add_argument('--reserve-count', type=int, default=None)\n")
+          old="""    # Re-run the full zero-network batch gate immediately before activation.\n    # This catches expired ready/readback timestamps, stale schedules, title/CC\n    # overflow and policy drift before a commit can wake any production runner.\n    validate_batch(batch, expect=10)\n\n    digest = hashlib.sha256(batch.read_bytes()).hexdigest()\n"""
+          new="""    # Re-run the full zero-network batch gate immediately before activation.\n    # Daily default remains 10 -> 8 + 2; an explicit smaller profile is bound\n    # to the immutable dispatch only when candidate == selected + reserve.\n    items=json.loads(batch.read_text(encoding='utf-8'))\n    candidate_count=len(items)\n    c=contract()\n    selected_count=int(args.select_count if args.select_count is not None else c['sla']['daily_batch_size'])\n    reserve_count=int(args.reserve_count if args.reserve_count is not None else c['sla']['hot_reserve_count'])\n    if candidate_count < 1 or candidate_count > int(c['sla']['candidate_pool_size']):\n        raise SystemExit('DISPATCH_CANDIDATE_COUNT_RANGE_FAIL')\n    if selected_count < 1 or reserve_count < 0 or candidate_count != selected_count + reserve_count:\n        raise SystemExit('DISPATCH_COUNT_BINDING_FAIL')\n    validate_batch(batch, expect=candidate_count)\n\n    digest = hashlib.sha256(batch.read_bytes()).hexdigest()\n"""
+          rep(p,old,new)
+          rep(p,"        'request_id':request_id,\n        'note':str(args.note).strip() or 'Canonical single-run production request.'\n","        'request_id':request_id,\n        'candidate_count':candidate_count,\n        'selected_count':selected_count,\n        'reserve_count':reserve_count,\n        'note':str(args.note).strip() or 'Canonical single-run production request.'\n")
+          rep(p,"    print('batch_sha256=' + digest)\n","    print('batch_sha256=' + digest)\n    print(f'counts={candidate_count}->{selected_count}+{reserve_count}')\n")
+
+          # aggregate
+          p='vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/aggregate.py'
+          rep(p,"def aggregate(batch,require_staging=True):\n    c=contract(); batch_path=Path(batch); items=json.loads(batch_path.read_text(encoding='utf-8')); batch_sha=sha256(batch_path)\n    pool_expected=int(c['sla']['candidate_pool_size']); final_expected=int(c['sla']['daily_batch_size']); reserve_expected=int(c['sla']['hot_reserve_count'])\n","def aggregate(batch,require_staging=True,pool_expected=None,final_expected=None,reserve_expected=None):\n    c=contract(); batch_path=Path(batch); items=json.loads(batch_path.read_text(encoding='utf-8')); batch_sha=sha256(batch_path)\n    pool_expected=int(c['sla']['candidate_pool_size'] if pool_expected is None else pool_expected)\n    final_expected=int(c['sla']['daily_batch_size'] if final_expected is None else final_expected)\n    reserve_expected=int(c['sla']['hot_reserve_count'] if reserve_expected is None else reserve_expected)\n    if pool_expected<1 or pool_expected>int(c['sla']['candidate_pool_size']) or final_expected<1 or reserve_expected<0 or pool_expected!=final_expected+reserve_expected:\n        raise RuntimeError(f'POOL_PROFILE_FAIL {pool_expected}->{final_expected}+{reserve_expected}')\n")
+          rep(p,"def main():\n    ap=argparse.ArgumentParser(); ap.add_argument('--batch',required=True); ap.add_argument('--allow-unstaged',action='store_true'); a=ap.parse_args(); aggregate(a.batch,require_staging=not a.allow_unstaged)\n","def main():\n    ap=argparse.ArgumentParser(); ap.add_argument('--batch',required=True); ap.add_argument('--allow-unstaged',action='store_true'); ap.add_argument('--expect-pool',type=int); ap.add_argument('--select',type=int); ap.add_argument('--reserves',type=int); a=ap.parse_args(); aggregate(a.batch,require_staging=not a.allow_unstaged,pool_expected=a.expect_pool,final_expected=a.select,reserve_expected=a.reserves)\n")
+
+          # schedule handoff
+          p='vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_manifest.py'
+          rep(p,"def build(batch,staged_root,out):\n    c=contract()\n    items=validate_batch(batch,expect=int(c['scheduler']['daily_posts']))\n","def build(batch,staged_root,out,expected_posts=None):\n    c=contract()\n    expected_posts=int(c['scheduler']['daily_posts'] if expected_posts is None else expected_posts)\n    if expected_posts<1 or expected_posts>int(c['scheduler']['daily_posts']): raise RuntimeError('SCHEDULE_POST_COUNT_RANGE_FAIL')\n    items=validate_batch(batch,expect=expected_posts)\n")
+          rep(p,"    expected_posts=int(c['scheduler']['daily_posts'])\n    expected_placements=int(c['scheduler']['expected_placements_per_batch'])\n","    expected_placements=expected_posts*len(networks)\n")
+          rep(p,"    ap.add_argument('--out',required=True)\n    a=ap.parse_args()\n    build(a.batch,a.staged_root,a.out)\n","    ap.add_argument('--out',required=True)\n    ap.add_argument('--expect-posts',type=int,default=None)\n    a=ap.parse_args()\n    build(a.batch,a.staged_root,a.out,a.expect_posts)\n")
+
+          # doctor state counts
+          p='ops/cena-certa/factory_doctor.py'
+          rep(p,"  if mode!='PREPARE' or str(dispatch.get('prepared_run_id') or ''): fail('DOCTOR_ACTIVE_DISPATCH_MODE_FAIL')\n  if not re.fullmatch","  if mode!='PREPARE' or str(dispatch.get('prepared_run_id') or ''): fail('DOCTOR_ACTIVE_DISPATCH_MODE_FAIL')\n  candidate_count=int(dispatch.get('candidate_count') or 0); selected_count=int(dispatch.get('selected_count') or 0); reserve_count=int(dispatch.get('reserve_count') or 0)\n  if candidate_count<1 or candidate_count>10 or selected_count<1 or reserve_count<0 or candidate_count!=selected_count+reserve_count: fail('DOCTOR_ACTIVE_DISPATCH_COUNT_FAIL')\n  if not re.fullmatch")
+          rep(p,"  if len(items)!=8 or int(outbox.get('expected_network_placements') or 0)!=32: fail('DOCTOR_OUTBOX_COUNT_FAIL')\n","  expected_objects=int(outbox.get('expected_schedule_objects') or 0); expected_placements=int(outbox.get('expected_network_placements') or 0)\n  if expected_objects<1 or len(items)!=expected_objects or expected_placements!=expected_objects*4: fail('DOCTOR_OUTBOX_COUNT_FAIL')\n")
+
+          # production workflow
+          p='.github/workflows/cena-certa-production-v2.yml'
+          wf=Path(p).read_text(encoding='utf-8')
+          needle='      deadline_epoch: '+gh('steps.read.outputs.deadline_epoch')+'\n'
+          if wf.count(needle)!=1: raise SystemExit('PATCH_WORKFLOW_OUTPUT_MATCH_FAIL')
+          wf=wf.replace(needle,needle+'      candidate_count: '+gh('steps.read.outputs.candidate_count')+'\n      selected_count: '+gh('steps.read.outputs.selected_count')+'\n      reserve_count: '+gh('steps.read.outputs.reserve_count')+'\n      index_matrix: '+gh('steps.read.outputs.index_matrix')+'\n')
+          wf=wf.replace("          deadline=''; request_id=''\n","          deadline=''; request_id=''; candidate_count=0; selected_count=0; reserve_count=0; index_matrix='[]'\n",1)
+          old="              request_id=str(d.get('request_id') or '')\n              if not re.fullmatch"
+          new="              request_id=str(d.get('request_id') or '')\n              candidate_count=int(d.get('candidate_count') or 10)\n              selected_count=int(d.get('selected_count') or 8)\n              reserve_count=int(d.get('reserve_count') if d.get('reserve_count') is not None else 2)\n              if candidate_count<1 or candidate_count>10 or selected_count<1 or reserve_count<0 or candidate_count!=selected_count+reserve_count:\n                  raise SystemExit('DISPATCH_COUNT_BINDING_FAIL')\n              index_matrix=json.dumps(list(range(candidate_count)),separators=(',',':'))\n              if not re.fullmatch"
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_COUNT_PARSE_FAIL')
+          wf=wf.replace(old,new,1)
+          old="              f.write(f'enabled={str(enabled).lower()}\\nmode={mode}\\nbatch_path={batch_path}\\nbatch_sha256={batch_sha}\\nrequest_id={request_id}\\ndeadline_epoch={deadline}\\n')\n"
+          new="              f.write(f'enabled={str(enabled).lower()}\\nmode={mode}\\nbatch_path={batch_path}\\nbatch_sha256={batch_sha}\\nrequest_id={request_id}\\ndeadline_epoch={deadline}\\ncandidate_count={candidate_count}\\nselected_count={selected_count}\\nreserve_count={reserve_count}\\nindex_matrix={index_matrix}\\n')\n"
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_OUTPUT_WRITE_FAIL')
+          wf=wf.replace(old,new,1)
+          wf=wf.replace('      - name: Validate exact 10-candidate batch\n','      - name: Validate exact dispatch-bound candidate batch\n',1)
+          old='          python -m factory.cena_certa.v2.preflight validate-batch --batch "'+gh('steps.read.outputs.batch_path')+'" --expect 10\n'
+          new='          python -m factory.cena_certa.v2.preflight validate-batch --batch "'+gh('steps.read.outputs.batch_path')+'" --expect "'+gh('steps.read.outputs.candidate_count')+'"\n'
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_PREFLIGHT_FAIL')
+          wf=wf.replace(old,new,1)
+          wf=wf.replace('        index: [0,1,2,3,4,5,6,7,8,9]\n','        index: '+gh('fromJSON(needs.dispatch.outputs.index_matrix)')+'\n',1)
+          old="          export BATCH='"+gh('needs.dispatch.outputs.batch_path')+"'\n"
+          new="          export BATCH='"+gh('needs.dispatch.outputs.batch_path')+"' CANDIDATE_COUNT='"+gh('needs.dispatch.outputs.candidate_count')+"' SELECTED_COUNT='"+gh('needs.dispatch.outputs.selected_count')+"' RESERVE_COUNT='"+gh('needs.dispatch.outputs.reserve_count')+"'\n"
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_READY_ENV_FAIL')
+          wf=wf.replace(old,new,1)
+          old="          count=len(files)\n          if count<8 or count>10:\n              raise SystemExit(f'READY_COUNT_FAIL {count} expected 8..10')\n"
+          new="          count=len(files); candidate_count=int(os.environ['CANDIDATE_COUNT']); selected_count=int(os.environ['SELECTED_COUNT']); reserve_count=int(os.environ['RESERVE_COUNT'])\n          if candidate_count!=selected_count+reserve_count or count<selected_count or count>candidate_count:\n              raise SystemExit(f'READY_COUNT_FAIL {count} expected {selected_count}..{candidate_count}')\n"
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_READY_COUNT_FAIL')
+          wf=wf.replace(old,new,1)
+          old="          state='READY_10' if count==10 else 'READY_DEGRADED_8_PLUS'\n          proof={'schema':'CENA_CERTA_READY_QUEUE_PROOF_V2','state':state,'run_id':'"+gh('github.run_id')+"','batch_sha256':'"+gh('needs.dispatch.outputs.batch_sha256')+"','ready_count':count,'candidate_ids':sorted(ids),'ready_indices':indices,'minimum_required':8,'max_candidate_failures':2}\n"
+          new="          state='READY_FULL' if count==candidate_count else 'READY_DEGRADED'\n          proof={'schema':'CENA_CERTA_READY_QUEUE_PROOF_V2','state':state,'run_id':'"+gh('github.run_id')+"','batch_sha256':'"+gh('needs.dispatch.outputs.batch_sha256')+"','ready_count':count,'candidate_ids':sorted(ids),'ready_indices':indices,'minimum_required':selected_count,'max_candidate_failures':candidate_count-selected_count}\n"
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_READY_PROOF_FAIL')
+          wf=wf.replace(old,new,1)
+          old='          python -m factory.cena_certa.v2.aggregate --batch "'+gh('needs.dispatch.outputs.batch_path')+'"\n          python -m factory.cena_certa.v2.schedule_manifest --batch "$ROOT/output/cena-certa-v2/selected-batch.json" --staged-root "$ROOT/output/cena-certa-v2" --out "$ROOT/output/cena-certa-v2/schedule-handoff.json"\n'
+          new='          python -m factory.cena_certa.v2.aggregate --batch "'+gh('needs.dispatch.outputs.batch_path')+'" --expect-pool "'+gh('needs.dispatch.outputs.candidate_count')+'" --select "'+gh('needs.dispatch.outputs.selected_count')+'" --reserves "'+gh('needs.dispatch.outputs.reserve_count')+'"\n          python -m factory.cena_certa.v2.schedule_manifest --batch "$ROOT/output/cena-certa-v2/selected-batch.json" --staged-root "$ROOT/output/cena-certa-v2" --out "$ROOT/output/cena-certa-v2/schedule-handoff.json" --expect-posts "'+gh('needs.dispatch.outputs.selected_count')+'"\n'
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_FINALIZE_COMMAND_FAIL')
+          wf=wf.replace(old,new,1)
+          old="          export RUN_ID='"+gh('github.run_id')+"' BATCH_SHA='"+gh('needs.dispatch.outputs.batch_sha256')+"' BATCH_PATH='"+gh('needs.dispatch.outputs.batch_path')+"' REQUEST_ID='"+gh('needs.dispatch.outputs.request_id')+"'\n"
+          new=old.rstrip('\n')+" SELECTED_COUNT='"+gh('needs.dispatch.outputs.selected_count')+"' RESERVE_COUNT='"+gh('needs.dispatch.outputs.reserve_count')+"'\n"
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_FINALIZE_ENV_FAIL')
+          wf=wf.replace(old,new,1)
+          old="          if hand.get('count')!=8 or hand.get('expectedNetworkPlacements')!=32:\n              raise SystemExit('OUTBOX_HANDOFF_COUNT_FAIL')\n"
+          new="          selected_count=int(os.environ['SELECTED_COUNT']); reserve_count=int(os.environ['RESERVE_COUNT']); expected_placements=selected_count*4\n          if hand.get('count')!=selected_count or hand.get('expectedNetworkPlacements')!=expected_placements:\n              raise SystemExit('OUTBOX_HANDOFF_COUNT_FAIL')\n"
+          if wf.count(old)!=1: raise SystemExit('PATCH_WORKFLOW_HANDOFF_COUNT_FAIL')
+          wf=wf.replace(old,new,1)
+          if wf.count("'expected_schedule_objects':8,'expected_network_placements':32,")!=1: raise SystemExit('PATCH_WORKFLOW_OUTBOX_COUNT_FAIL')
+          wf=wf.replace("'expected_schedule_objects':8,'expected_network_placements':32,","'expected_schedule_objects':selected_count,'expected_network_placements':expected_placements,",1)
+          Path(p).write_text(wf,encoding='utf-8')
+
+          # No temporary patch/probe workflow survives promotion.
+          for q in ('.github/workflows/cena-certa-exact4-patch.yml','.github/workflows/cena-certa-exact4-patch-v2.yml'):
+              Path(q).unlink(missing_ok=True)
+      - name: Compile and prove patch shape
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile ops/cena-certa/batch_admit.py ops/cena-certa/dispatch_activate.py ops/cena-certa/factory_doctor.py vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/aggregate.py vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/schedule_manifest.py
+          grep -q 'index_matrix' .github/workflows/cena-certa-production-v2.yml
+          grep -q "expected_schedule_objects':selected_count" .github/workflows/cena-certa-production-v2.yml
+          test ! -e .github/workflows/cena-certa-exact4-patch.yml
+          test ! -e .github/workflows/cena-certa-exact4-patch-v2.yml
+      - name: Commit one canonical package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Cena Certa Factory V2'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'Cena Certa: parameterize exact-size canonical production profile [skip ci]'
+          git push origin HEAD:tmp/cena-certa-exact4-20260905
