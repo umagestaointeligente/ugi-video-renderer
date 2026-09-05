@@ -18,7 +18,7 @@ jobs:
         with:
           ref: feat/cena-certa-factory-v2-seal
           fetch-depth: 1
-      - name: Bootstrap exact canonical masters from approved Drive objects
+      - name: Seal exact physical Story and CTA masters
         shell: bash
         run: |
           set -euo pipefail
@@ -28,25 +28,28 @@ jobs:
           STORY="$DEST/approved_story_source_v1.png"
           CTA="$DEST/approved_cta_source_v1.png"
 
-          curl --fail --location --silent --show-error --retry 2 --retry-delay 1 --retry-all-errors --connect-timeout 10 --max-time 60 \
-            'https://drive.usercontent.google.com/download?id=1YhAr-UaldGMsCgLfwAvvnucv-tHZ-ASU&export=download&confirm=t' \
+          curl --fail --location --silent --show-error --retry 2 --retry-delay 1 --connect-timeout 10 --max-time 60 \
+            'https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/3eab7f5e-08f3-43da-84ee-8cd9e07b6cb5.jpg' \
             -o "$STORY"
-          curl --fail --location --silent --show-error --retry 2 --retry-delay 1 --retry-all-errors --connect-timeout 10 --max-time 60 \
-            'https://drive.usercontent.google.com/download?id=1mbrG5F67Sw_50SLV8KkVUEVPExyEAcMt&export=download&confirm=t' \
+          curl --fail --location --silent --show-error --retry 2 --retry-delay 1 --connect-timeout 10 --max-time 60 \
+            'https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/63d10f0b-d5d1-409a-ae23-bd27e1c4d3cc.jpg' \
             -o "$CTA"
 
+          test "$(wc -c < "$STORY")" = '201538'
+          test "$(wc -c < "$CTA")" = '208435'
           echo '256448409d6016598d4a27650bec6c35f8ecc67b4e8d294a87246e1b4c4ae4ce  '"$STORY" | sha256sum -c -
           echo 'b19d5ccb51417c6d71ea7fa672e64a9f34023954e3d76ed9b285b83bcd41745b  '"$CTA" | sha256sum -c -
           test "$(git hash-object "$STORY")" = 'bebaa2c265733236ab31cd80b24f8f8b46e740bd'
           test "$(git hash-object "$CTA")" = '66cdec74979388a3435125a89584fc0a4c5d889a'
 
-          python - <<'PY'
+          python3 -m pip install --quiet --disable-pip-version-check pillow==12.3.0
+          python3 - <<'PY'
           from PIL import Image
           from pathlib import Path
-          for p in [Path('vendor/cena-certa-factory-v2/src/canonical/cena_certa/v1/assets/approved_story_source_v1.png'),Path('vendor/cena-certa-factory-v2/src/canonical/cena_certa/v1/assets/approved_cta_source_v1.png')]:
-              im=Image.open(p); im.load()
-              if im.size!=(864,1536): raise SystemExit(f'CANONICAL_SIZE_FAIL {p} {im.size}')
-              print('CANONICAL_IMAGE_DECODE_PASS',p,im.format,im.size)
+          for p in [Path('vendor/cena-certa-factory-v2/src/canonical/cena_certa/v1/assets/approved_story_source_v1.png'), Path('vendor/cena-certa-factory-v2/src/canonical/cena_certa/v1/assets/approved_cta_source_v1.png')]:
+              im = Image.open(p); im.load()
+              if im.size != (864,1536): raise SystemExit(f'CANONICAL_SIZE_FAIL {p} {im.size}')
+              print('CANONICAL_IMAGE_DECODE_PASS', p, im.format, im.size)
           PY
 
           git config user.name 'Cena Certa Factory Bot'
