@@ -7,6 +7,8 @@ on:
       - 'ops/cena-certa/route-registry.json'
       - 'ops/cena-certa/route_guard.py'
       - 'ops/cena-certa/r2_stage.py'
+      - 'ops/cena-certa/batch_admit.py'
+      - 'ops/cena-certa/batches/**'
       - '.github/workflows/cena-certa-production-v2.yml'
       - '.github/workflows/cena-certa-route-integrity.yml'
       - 'vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/contract_v9_factory.json'
@@ -25,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile ops/cena-certa/route_guard.py ops/cena-certa/r2_stage.py
+          python -m py_compile ops/cena-certa/route_guard.py ops/cena-certa/r2_stage.py ops/cena-certa/batch_admit.py
       - name: Fail closed on any dead or fake route
         shell: bash
         run: |
