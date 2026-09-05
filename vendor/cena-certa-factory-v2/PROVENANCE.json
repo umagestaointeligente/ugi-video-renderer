@@ -9,11 +9,18 @@
     "sla_seconds": 660
   },
   "control_plane": {
-    "state": "LIVE_REMEDIATION_VALIDATION_IN_PROGRESS",
-    "route_integrity_run_id": "33947504091",
+    "state": "CRITICAL_RENDER_AND_R2_ROUTES_LIVE_PROVEN",
+    "route_integrity_run_id": "33947902050",
     "route_integrity_result": "SUCCESS",
     "r2_live_validation_run_id": "33947653147",
-    "r2_live_validation_result": "IN_PROGRESS",
+    "r2_live_validation_result": "SUCCESS",
+    "r2_live_validation_commit": "317ea15423ba99ba5a806870ef7e354c42df1de2",
+    "r2_live_validation_seconds": 203,
+    "render_qa_receipts": 10,
+    "r2_live_receipts": 10,
+    "selected_final": 8,
+    "hot_reserves": 2,
+    "failure_injection": "1_AND_2_RECOVERED_3_FAILS_CLOSED",
     "production_route_registry": "ops/cena-certa/route-registry.json",
     "production_workflow": ".github/workflows/cena-certa-production-v2.yml"
   },
@@ -40,6 +47,9 @@
     "r2_canary_ids_reusable": true,
     "blind_post_retry_forbidden": true,
     "human_approval_required_before_schedule": true,
-    "portability_replay_is_not_production_fallback": true
+    "portability_replay_is_not_production_fallback": true,
+    "scheduler_primary": "METRICOOL_4_NETWORK_CONNECTED_EXTERNAL",
+    "scheduler_secondary": "POST_BRIDGE_FACEBOOK_YOUTUBE_ONLY",
+    "instagram_tiktok_secondary_route": "NOT_AUTHENTICATED_DO_NOT_FAKE"
   }
 }
