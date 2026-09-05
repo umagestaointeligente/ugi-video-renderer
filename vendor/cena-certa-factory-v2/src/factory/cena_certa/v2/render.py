@@ -128,7 +128,9 @@ def render_one(batch,index,prepared_root):
  try:
   qa=qa_video(c,item,out,story,cues)
  except RuntimeError as e:
-  repair_allowed=os.getenv('ORBIT_ALLOW_AUDIO_REPAIR','0')=='1' and c.get('runtime',{}).get('audio_repair_in_timed_run',False) is not False
+  private_preview_repair=os.getenv('ORBIT_PRIVATE_PREVIEW_AUDIO_REPAIR','0')=='1'
+  timed_repair=os.getenv('ORBIT_ALLOW_AUDIO_REPAIR','0')=='1' and c.get('runtime',{}).get('audio_repair_in_timed_run',False) is True
+  repair_allowed=private_preview_repair or timed_repair
   if repair_allowed and str(e).startswith(('LUFS_FAIL','TRUE_PEAK_FAIL')):
    audio_only_repair(c,out); audio_repair=True; qa=qa_video(c,item,out,story,cues)
   else:
