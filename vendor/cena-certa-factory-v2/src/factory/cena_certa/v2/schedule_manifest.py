@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, json, os
+import argparse, json, os, re
 from datetime import timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 from .common import contract, safe_id, sha256
 from .fingerprint import dispatch_fingerprint, schedule_fingerprint
 from .preflight import validate_batch, schedule_instant
+
+SHA256_RE=re.compile(r'^[0-9a-f]{64}$')
 
 
 def _find_media(obj):
@@ -81,7 +83,17 @@ def build(batch,staged_root,out):
             raise RuntimeError(f'SCHEDULE_HANDOFF_QA_FAIL {rid}')
         if receipt.get('dispatch_fingerprint')!=dispatch_fingerprint(item):
             raise RuntimeError(f'SCHEDULE_DISPATCH_FINGERPRINT_FAIL {rid}')
+        video_sha=str(receipt.get('video_sha256') or '').lower(); batch_sha=str(receipt.get('batch_sha256') or '').lower()
+        if not SHA256_RE.fullmatch(video_sha) or not SHA256_RE.fullmatch(batch_sha):
+            raise RuntimeError(f'SCHEDULE_RECEIPT_HASH_IDENTITY_FAIL {rid}')
         r2=json.loads(r2_path.read_text(encoding='utf-8'))
+        if r2.get('schema')!='CENA_CERTA_R2_RECEIPT_V2' or r2.get('status')!='ready':
+            raise RuntimeError(f'SCHEDULE_R2_RECEIPT_STATE_FAIL {rid}')
+        if r2.get('public_probe_pass') is not True or r2.get('public_head_size_match') is not True or r2.get('blind_retry_used') is not False:
+            raise RuntimeError(f'SCHEDULE_R2_RECONCILIATION_FAIL {rid}')
+        r2_batch=str(r2.get('batchSha256') or '').lower(); r2_content=str(r2.get('contentSha256') or '').lower()
+        if r2_batch!=batch_sha or r2_content!=video_sha:
+            raise RuntimeError(f'SCHEDULE_MEDIA_CONTENT_CHAIN_FAIL {rid}')
         media=_find_media(r2)
         if not media:
             raise RuntimeError(f'SCHEDULE_HANDOFF_MEDIA_FAIL {rid}')
@@ -96,7 +108,8 @@ def build(batch,staged_root,out):
         row={
             'id':rid,'brandId':str(c['scheduler']['brand_id']),'brandLabel':c['scheduler']['brand_label'],
             'timezone':c['scheduler']['timezone'],'date':local.isoformat(),'videoUrl':media['videoUrl'],
-            'videoKey':media['videoKey'],'receiptSha256':sha256(receipt_path),'r2ReceiptSha256':sha256(r2_path),
+            'videoKey':media['videoKey'],'batchSha256':batch_sha,'videoSha256':video_sha,'r2ContentSha256':r2_content,
+            'receiptSha256':sha256(receipt_path),'r2ReceiptSha256':sha256(r2_path),
             'dispatchFingerprint':dispatch_fingerprint(item),'scheduleFingerprint':schedule_fingerprint(item),
             'approvalRequired':True,'reconcileBeforeRetry':True,'idempotencyKey':idem,
             'expectedNetworks':networks,'expectedPlacements':expected,'expectedPlacementCount':len(expected),'info':info
@@ -117,13 +130,16 @@ def build(batch,staged_root,out):
         'schedule_gate':'BLOCKED_UNTIL_PRIVATE_PREVIEW_AND_HUMAN_APPROVAL',
         'live_brand_readback_required':True,'reconcile_before_retry':True,
         'scheduled_receipts_required':expected_posts,'network_placement_receipts_required':expected_placements,
-        'items':rows
+        'media_content_chain_required':True,'items':rows
     }
     p=Path(out)
     p.parent.mkdir(parents=True,exist_ok=True)
-    tmp=p.with_suffix(p.suffix+'.tmp')
-    tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
-    os.replace(tmp,p)
+    tmp=p.with_name(p.name+f'.tmp-{os.getpid()}')
+    try:
+        tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+        os.replace(tmp,p)
+    finally:
+        tmp.unlink(missing_ok=True)
     print('FACTORY_V2_SCHEDULE_HANDOFF_PASS',len(rows),'posts',expected_placements,'placements',out)
     return payload
 
