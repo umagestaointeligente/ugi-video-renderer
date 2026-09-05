@@ -1,0 +1,54 @@
+name: Cena Certa Source Probe
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - '.github/workflows/cena-certa-source-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v7
+      - name: Resolve licensed source candidates without media download
+        shell: python
+        run: |
+          import html,re,urllib.request,urllib.parse
+          targets={
+            'overlord':'https://jibzee.com/movie/scp-overlord/',
+            'dollhouse':'https://jibzee.com/movie/scp-dollhouse/'
+          }
+          headers={'User-Agent':'Mozilla/5.0 CenaCertaSourceProbe/1.0'}
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  return r.geturl(),r.read(5_000_000).decode('utf-8','replace')
+          for name,page in targets.items():
+              print('PROBE_BEGIN',name,page)
+              final,body=get(page)
+              urls=set(re.findall(r'https?://[^\"\'<>\\s]+',html.unescape(body)))
+              embeds=[u for u in urls if '/embed' in u]
+              embeds += [urllib.parse.urljoin(final,x) for x in re.findall(r'(?:src|href)=[\"\']([^\"\']*?/embed[^\"\']*)',body,re.I)]
+              bodies=[('page',body)]
+              for e in sorted(set(embeds))[:5]:
+                  try:
+                      ef,eb=get(e); bodies.append(('embed:'+ef,eb))
+                  except Exception as ex:
+                      print('EMBED_FETCH_FAIL',e,type(ex).__name__,str(ex)[:160])
+              found=set()
+              for label,text in bodies:
+                  decoded=html.unescape(text).replace('\\/','/')
+                  for u in re.findall(r'https?://[^\"\'<>\\s]+',decoded):
+                      clean=u.rstrip('),;')
+                      if any(x in clean.lower() for x in ('.mp4','.webm','.m3u8','.mpd')):
+                          found.add(clean)
+                  for m in re.findall(r'[\"\']([^\"\']+\.(?:mp4|webm|m3u8|mpd)(?:\?[^\"\']*)?)[\"\']',decoded,re.I):
+                      found.add(urllib.parse.urljoin(page,m))
+              for u in sorted(found): print('MEDIA_CANDIDATE',name,u)
+              print('PROBE_END',name,'media_count',len(found),'embed_count',len(set(embeds)))
