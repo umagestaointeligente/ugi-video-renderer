@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-exact4-20260906-complement-r5.json",
-  "batch_sha256": "f60d020696195f4a161b371c2677da3d9590160571a20e1adabc00fab96c4cd9",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T16:15:58.462894+00:00",
-  "request_id": "f7b84cefe2384969babb1c0885e91607",
-  "candidate_count": 4,
-  "selected_count": 4,
-  "reserve_count": 0,
-  "note": "Exact4 R5: Bodega, Tears, Pendatang e Abu Rami comprovados em PREPARE; Pasion separada."
+  "requested_at": "",
+  "request_id": "",
+  "note": "IDLE after exact4 R5 render QA: Abu passed; Bodega/Tears/Pendatang failed only final LUFS drift. Applying deterministic audio-only normalization path before re-dispatch."
 }
