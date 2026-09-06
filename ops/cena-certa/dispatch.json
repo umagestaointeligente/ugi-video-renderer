@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave1.json",
-  "batch_sha256": "557ed02d8f88c1a1e3f71e02be11b3324a9434381ab788a50d618fc3f298cc59",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T17:22:57.656079+00:00",
-  "request_id": "ea9b7df7ef2949b8aab41356a1c38fa0",
-  "candidate_count": 4,
-  "selected_count": 4,
-  "reserve_count": 0,
-  "note": "Daily8 07/09/2026 wave1: 4 primários; wave2 seguirá após reconciliação."
+  "requested_at": "",
+  "request_id": "",
+  "note": "IDLE after 07/09 wave1 fail-closed PREPARE duration failures on Mardelpla and Man; audit run 34048448361 retained."
 }
