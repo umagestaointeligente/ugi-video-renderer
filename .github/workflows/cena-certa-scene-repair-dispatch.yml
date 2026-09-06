@@ -1,0 +1,72 @@
+name: Cena Certa Scene Repair Dispatch
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - 'ops/cena-certa/scene-repair-request.json'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feat/cena-certa-factory-v2-certified
+          fetch-depth: 0
+      - name: Create immutable repaired batch and repoint canonical dispatch
+        shell: python
+        run: |
+          import datetime, hashlib, json, pathlib, re
+          root=pathlib.Path('.')
+          req=json.loads((root/'ops/cena-certa/scene-repair-request.json').read_text(encoding='utf-8'))
+          if req.get('schema')!='CENA_CERTA_SCENE_REPAIR_REQUEST_V1' or req.get('authorized') is not True: raise SystemExit('SCENE_REPAIR_REQUEST_FAIL')
+          source=str(req['source_batch']); output=str(req['output_batch']); cid=str(req['candidate_id'])
+          if source==output or not source.startswith('ops/cena-certa/batches/') or not output.startswith('ops/cena-certa/batches/'): raise SystemExit('SCENE_REPAIR_PATH_FAIL')
+          src=root/source; dst=root/output
+          if not src.is_file() or dst.exists(): raise SystemExit('SCENE_REPAIR_IMMUTABILITY_FAIL')
+          dispatchp=root/'ops/cena-certa/dispatch.json'; outboxp=root/'ops/cena-certa/publisher-outbox.json'; approvalp=root/'ops/cena-certa/human-approval.json'; statep=root/'ops/cena-certa/publisher-state.json'
+          dispatch=json.loads(dispatchp.read_text()); outbox=json.loads(outboxp.read_text()); approval=json.loads(approvalp.read_text()); state=json.loads(statep.read_text())
+          if dispatch.get('batch_path')!=source or dispatch.get('enabled') is not True: raise SystemExit('SCENE_REPAIR_SOURCE_NOT_ACTIVE')
+          if outbox.get('state')!='EMPTY' or list(outbox.get('items') or []): raise SystemExit('SCENE_REPAIR_OUTBOX_NOT_EMPTY')
+          if approval.get('approved') is True or state.get('state')!='IDLE': raise SystemExit('SCENE_REPAIR_PUBLISHER_NOT_CLEAN')
+          items=json.loads(src.read_text(encoding='utf-8'))
+          matches=[x for x in items if str(x.get('id'))==cid]
+          if len(matches)!=1: raise SystemExit('SCENE_REPAIR_CANDIDATE_BINDING_FAIL')
+          item=matches[0]; plan=item.get('scene_plan') or []
+          overrides=req.get('scene_start_overrides') or {}
+          if not isinstance(overrides,dict) or not overrides: raise SystemExit('SCENE_REPAIR_OVERRIDES_REQUIRED')
+          evidence=str(req.get('probe_evidence') or '')
+          if not re.fullmatch(r'run=\d+;sha256=[0-9a-f]{64}',evidence): raise SystemExit('SCENE_REPAIR_PROBE_EVIDENCE_FAIL')
+          for raw_idx,raw_start in overrides.items():
+              idx=int(raw_idx); start=float(raw_start)
+              if idx<0 or idx>=len(plan) or start<0: raise SystemExit('SCENE_REPAIR_INDEX_FAIL')
+              plan[idx]['start_seconds']=start
+              plan[idx]['black_probe_verified']=True
+              plan[idx]['black_probe_evidence']=evidence
+          starts=[float(x['start_seconds']) for x in plan]
+          if len(starts)!=len(set(starts)): raise SystemExit('SCENE_REPAIR_DUPLICATE_START_FAIL')
+          item['ready_checked_at']=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
+          item['scene_black_probe_pass']=True
+          item['scene_black_probe_evidence']=evidence
+          payload=json.dumps(items,ensure_ascii=False,separators=(',',':'))+'\n'; dst.write_text(payload,encoding='utf-8')
+          digest=hashlib.sha256(payload.encode()).hexdigest(); now=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
+          request_id=str(req['request_id'])
+          if not re.fullmatch(r'[A-Za-z0-9._-]{12,96}',request_id): raise SystemExit('SCENE_REPAIR_REQUEST_ID_FAIL')
+          dispatch.update({'enabled':True,'mode':'PREPARE','batch_path':output,'batch_sha256':digest,'prepared_run_id':'','requested_at':now,'request_id':request_id,'candidate_count':len(items),'selected_count':len(items),'reserve_count':0,'note':str(req.get('note') or 'Evidence-bound scene repair; canonical Factory V2 route.')})
+          dispatchp.write_text(json.dumps(dispatch,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          print('CENA_CERTA_SCENE_REPAIR_DISPATCH_PASS',output,digest)
+      - name: Commit repaired batch and dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Cena Certa Control Plane'
+          git config user.email 'actions@users.noreply.github.com'
+          OUT=$(python -c "import json; print(json.load(open('ops/cena-certa/scene-repair-request.json'))['output_batch'])")
+          git add "$OUT" ops/cena-certa/dispatch.json
+          git commit -m 'Cena Certa: activate evidence-bound scene repair batch'
+          git push origin HEAD:feat/cena-certa-factory-v2-certified
