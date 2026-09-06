@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Reconstruct only when all 17 parts exist
+      - name: Reconstruct only when all 3 parts exist
         shell: bash
         run: |
           set -euo pipefail
@@ -28,8 +28,8 @@ jobs:
           OUT='public/ugi/editorial/2026-09-06/rock-linkedin-hd-1200x628.jpg'
           COUNT=$(find "$STAGE" -maxdepth 1 -type f -name 'part*.b64' | wc -l | tr -d ' ')
           echo "parts=$COUNT"
-          if [ "$COUNT" != '17' ]; then
-            echo 'Waiting for all 17 parts.'
+          if [ "$COUNT" != '3' ]; then
+            echo 'Waiting for all 3 parts.'
             exit 0
           fi
           mkdir -p "$(dirname "$OUT")"
