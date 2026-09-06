@@ -1,11 +1,14 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": false,
-  "mode": "IDLE",
-  "batch_path": "",
-  "batch_sha256": "",
+  "enabled": true,
+  "mode": "PREPARE",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave2.json",
+  "batch_sha256": "0898e024d6c9ed26edf0745a12dee25e2364de87203132c6d2e083691f952749",
   "prepared_run_id": "",
-  "requested_at": "",
-  "request_id": "",
-  "note": "IDLE after wave1-v4 render+QA success; finalize handoff persistence failed at git container boundary. Audit run 34049699902 retained."
+  "requested_at": "2026-09-06T17:53:00Z",
+  "request_id": "7ec85945bc5d448a88686022df5beacf",
+  "candidate_count": 4,
+  "selected_count": 4,
+  "reserve_count": 0,
+  "note": "Daily8 07/09 wave2: Pendatang, Alien Grounds, Abu Rami, Pasion Oriental; all static gates prevalidated."
 }
