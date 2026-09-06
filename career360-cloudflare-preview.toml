@@ -1,0 +1,8 @@
+name = "career360-preview-20260906"
+compatibility_date = "2026-09-06"
+workers_dev = true
+preview_urls = true
+
+[assets]
+directory = "./career360/frontend"
+not_found_handling = "single-page-application"
