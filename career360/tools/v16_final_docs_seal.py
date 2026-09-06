@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 REC=Path('docs/LSI_RECOVERY_CURRENT.md')
 REL=Path('career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md')
@@ -20,7 +21,6 @@ def req(s,old,new,label):
         raise SystemExit(f'missing {label}: {old}')
     return s.replace(old,new)
 
-# Recovery: global exact ids, then V16 section-specific evidence.
 s=REC.read_text()
 s=req(s,OLD_APP,NEW_APP,'Recovery app-m')
 s=req(s,OLD_BUNDLE,NEW_BUNDLE,'Recovery bundle')
@@ -48,15 +48,13 @@ elif 'status visível derivado apenas de estado verificável' not in sec:
     raise SystemExit('Recovery truthful status description missing')
 s=s[:start]+sec+s[end:]
 
-old_last='`LAST_VERIFIED_CHANGE=V16_TRUTHFUL_UI_BROWSER_PASS_APP_M_541F962_APP_L_428364_APP_K_6DF7B4_BUNDLE_FC1D20B_SMOKE_RUN_34008976104_JOB_101421295169_DEPLOY_GATE_85AFB95_PRODUCTION_STILL_V14_NOT_PROMOTED_AUTH_REQUIRED_REMOTE_DESKTOP_PROHIBITED`'
 new_last='`LAST_VERIFIED_CHANGE=V16_RUNTIME_TRUTH_BROWSER_PASS_APP_M_3CD06D1_APP_L_428364_APP_K_6DF7B4_BUNDLE_AC8A46F_SMOKE_RUN_34009190125_JOB_101421875198_TRUTH_DERIVATION_PASS_DEPLOY_GATE_921FED0_PRODUCTION_STILL_V14_NOT_PROMOTED_AUTH_REQUIRED_REMOTE_DESKTOP_PROHIBITED`'
-if old_last in s:
-    s=s.replace(old_last,new_last,1)
-elif new_last not in s:
-    raise SystemExit('Recovery LAST_VERIFIED_CHANGE missing')
+last_pattern=r'`LAST_VERIFIED_CHANGE=[^`]+`'
+if len(re.findall(last_pattern,s))!=1:
+    raise SystemExit('Recovery LAST_VERIFIED_CHANGE cardinality invalid')
+s=re.sub(last_pattern,new_last,s,count=1)
 REC.write_text(s)
 
-# Release: final runtime-truth source and evidence.
 r=REL.read_text()
 r=req(r,OLD_APP,NEW_APP,'Release app-m')
 r=req(r,OLD_BUNDLE,NEW_BUNDLE,'Release bundle')
