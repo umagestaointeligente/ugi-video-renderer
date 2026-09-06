@@ -84,3 +84,4 @@ jobs:
           queue_one 'UGI-20260907-IG-STORY-PIX-07' instagram image 'story-07-pix.jpg' story '2026-09-07T23:15:00Z' 'IA no fluxo financeiro — Pix e governanca' ''
 
           echo 'UGI_20260907_EDITORIAL_SCHEDULE=CONFIRMED_BY_RECEIPTS'
+          # asset-ready-trigger: reel-tiktok-shop.mp4
