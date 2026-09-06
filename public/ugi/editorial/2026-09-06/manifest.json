@@ -1,0 +1,36 @@
+{
+  "schema": "ugi.editorial.media-pack.v1",
+  "date": "2026-09-06",
+  "items": {
+    "rock-linkedin": {
+      "file": "public/ugi/editorial/2026-09-06/rock-linkedin.jpg",
+      "source": "gshow — https://gshow.globo.com/festivais/rock-in-rio/2026/noticia/e-hoje-roberta-medina-fala-sobre-expectativa-para-o-rock-in-rio-2026.ghtml",
+      "credit": "Imagem: gshow / Rock in Rio | Arte editorial: UGI",
+      "kind": "image"
+    },
+    "rock-instagram": {
+      "file": "public/ugi/editorial/2026-09-06/rock-instagram.mp4",
+      "source": "Expresso Rio — registro do Rock in Rio 2026, 5 set. 2026",
+      "credit": "Imagens: Expresso Rio | Dados: Rock in Rio, COR-Rio, UOL, O Globo",
+      "kind": "video"
+    },
+    "rock-tiktok": {
+      "file": "public/ugi/editorial/2026-09-06/rock-tiktok.mp4",
+      "source": "Expresso Rio — registro do Rock in Rio 2026, 5 set. 2026",
+      "credit": "Imagens: Expresso Rio | Dados: COR-Rio, UOL, O Globo",
+      "kind": "video"
+    },
+    "foxconn-story": {
+      "file": "public/ugi/editorial/2026-09-06/foxconn-story.mp4",
+      "source": "NVIDIA — Foxconn AI factory operations",
+      "credit": "Imagens: NVIDIA / Foxconn | Informação: Reuters",
+      "kind": "video"
+    },
+    "retail-ai-tiktok": {
+      "file": "public/ugi/editorial/2026-09-06/retail-ai-tiktok.mp4",
+      "source": "NVIDIA — AI retail shopping assistant demo",
+      "credit": "Demonstração visual: NVIDIA | Dado John Lewis: Reuters",
+      "kind": "video"
+    }
+  }
+}
