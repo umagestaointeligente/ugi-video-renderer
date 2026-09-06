@@ -1,0 +1,61 @@
+name: Career360 LSI Route Council Llama Fallback
+run-name: Career360 LSI Llama Council ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['lsi-broker-job-*']
+    paths: ['.github/workflows/career360-lsi-route-council-llama.yml']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  council:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      BROKER_URL: https://lsi-zero-cost-broker.umagestaointeligente.workers.dev
+      MISSION_ID: career360-route-council-llama-20260906
+    steps:
+      - uses: actions/checkout@v4
+      - name: Acquire OIDC
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl --fail -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=lsi-zero-cost-broker")"
+          token="$(printf '%s' "$response" | jq -r '.value // empty')"; test -n "$token"
+          echo "::add-mask::$token"; echo "LSI_OIDC_TOKEN=$token" >> "$GITHUB_ENV"
+      - name: Execute encrypted Llama fallback council
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/council.mjs <<'NODE'
+          import fs from 'node:fs'; import { webcrypto } from 'node:crypto';
+          const {subtle}=webcrypto, enc=new TextEncoder(), dec=new TextDecoder(); const b64u=b=>Buffer.from(b).toString('base64url'), from64=s=>Buffer.from(String(s),'base64url');
+          const mission=process.env.MISSION_ID;
+          const c=`Career 360. ZERO/near-zero cash. Absolute IN_APP_AUTONOMOUS_ONLY: no external Make/Vercel/provider dashboard/OAuth/token/device flow or Paulo setup. Usable in-app: GitHub+Actions, Supabase SQL/migrations/Edge/service runtime, Gmail ChatGPT explicit actions, ChatGPT Automations, existing Cloudflare Workers deploy credentials and LSI core. Vercel V14 healthy read-only; V16 validated but mutation unscoped. Supabase email confirmation redirect is proven wrong to localhost and connector cannot write hosted Auth config. Need clean champion route, explicit fallback, receipts, no parallel-gambiarra.`;
+          const tasks=[
+            {id:'frontend',role:'cheap_text',system:'Architecture reviewer. Be concrete and reject external user setup.',user:c+'\nFind the best immediately testable frontend delivery replacement/migration route. Compare existing Cloudflare Workers/static hosting, GitHub Pages, Supabase-hosted frontend, in-app Netlify only if already authorized. Give one champion, one fallback, exact proof.',max_tokens:650},
+            {id:'mail',role:'cheap_text',system:'Email reliability reviewer. Preserve consent and receipt semantics.',user:c+'\nFind the best background mail route. Evaluate ChatGPT Automations plus connected Gmail as an internal recurring operator, and alternatives. Separate transport from consent. Must preserve claim->provider->receipt and no blind retry.',max_tokens:650},
+            {id:'auth',role:'cheap_text',system:'Auth security reviewer. No dashboard setup.',user:c+'\nFind safe self-service ways to eliminate redirect dependency: OTP/code, custom verification through Edge/service role, or another in-app path. Reject insecure account auto-confirm. Give fastest test.',max_tokens:650},
+            {id:'redteam',role:'cheap_text',system:'Red-team. Reject clever dead ends.',user:c+'\nSynthesize the smallest coherent target architecture for all three blockers. List routes to reject and the next 3 tests in order.',max_tokens:650}
+          ];
+          const brokerJwk=JSON.parse(fs.readFileSync('cloudflare/lsi-broker-public.jwk.json','utf8')); const brokerKey=await subtle.importKey('jwk',{...brokerJwk,alg:'RSA-OAEP-256',ext:true},{name:'RSA-OAEP',hash:'SHA-256'},false,['encrypt']);
+          const responseKeys=await subtle.generateKey({name:'RSA-OAEP',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['encrypt','decrypt']); const responsePublic=await subtle.exportKey('jwk',responseKeys.publicKey);
+          const aes=await subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']); const aesRaw=await subtle.exportKey('raw',aes), iv=webcrypto.getRandomValues(new Uint8Array(12)), aad=enc.encode(mission); const ciphertext=await subtle.encrypt({name:'AES-GCM',iv,additionalData:aad,tagLength:128},aes,enc.encode(JSON.stringify({tasks}))); const wrapped=await subtle.encrypt({name:'RSA-OAEP'},brokerKey,aesRaw);
+          const body={mission_id:mission,response_public_jwk:responsePublic,encrypted:{alg:'RSA-OAEP-256+A256GCM',wrapped_key:b64u(wrapped),iv:b64u(iv),aad:b64u(aad),ciphertext:b64u(ciphertext)}};
+          const r=await fetch(process.env.BROKER_URL+'/v1/execute',{method:'POST',headers:{authorization:'Bearer '+process.env.LSI_OIDC_TOKEN,'content-type':'application/json'},body:JSON.stringify(body)}); const outer=await r.json(); if(!r.ok||!outer.ok) throw new Error('broker_'+r.status+':'+JSON.stringify(outer));
+          const env=outer.encrypted, keyRaw=await subtle.decrypt({name:'RSA-OAEP'},responseKeys.privateKey,from64(env.wrapped_key)), responseAes=await subtle.importKey('raw',keyRaw,{name:'AES-GCM'},false,['decrypt']); const plain=await subtle.decrypt({name:'AES-GCM',iv:from64(env.iv),additionalData:from64(env.aad),tagLength:128},responseAes,from64(env.ciphertext)); const result=JSON.parse(dec.decode(plain));
+          if(result.mission_id!==mission||result.zero_cost_route!==true||result.external_paid_provider!==false) throw new Error('result_contract_failed');
+          fs.writeFileSync('/tmp/career360-lsi-llama-council.json',JSON.stringify(result,null,2)); console.log(`LSI_LLAMA_RECEIPT=PASS tasks=${result.task_count} success=${result.success_count} elapsed_ms=${result.elapsed_ms}`);
+          NODE
+          node /tmp/council.mjs | tee /tmp/summary.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: career360-lsi-llama-council-${{ github.run_id }}
+          path: |
+            /tmp/career360-lsi-llama-council.json
+            /tmp/summary.txt
+          retention-days: 7
+          if-no-files-found: error
