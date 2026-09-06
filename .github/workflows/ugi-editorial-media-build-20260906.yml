@@ -32,18 +32,20 @@ jobs:
           set -euo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
-          python -m pip install --disable-pip-version-check --quiet yt-dlp edge-tts
+          python -m pip install --disable-pip-version-check --quiet edge-tts
       - name: Build real-news editorial media pack
         shell: bash
         run: |
           set -euo pipefail
+          # ffmpeg drawbox does not accept w-40 in this runner build; use the equivalent constant.
+          sed -i 's/w=w-40/w=680/g' scripts/ugi_editorial_media_build_20260906.py
           python scripts/ugi_editorial_media_build_20260906.py
-          test -f public/ugi/editorial/2026-09-06/manifest.json
-          test -f public/ugi/editorial/2026-09-06/rock-linkedin.jpg
-          test -f public/ugi/editorial/2026-09-06/rock-instagram.mp4
-          test -f public/ugi/editorial/2026-09-06/rock-tiktok.mp4
-          test -f public/ugi/editorial/2026-09-06/bytedance-story.mp4
-          test -f public/ugi/editorial/2026-09-06/johnlewis-tiktok.mp4
+          test -s public/ugi/editorial/2026-09-06/manifest.json
+          test -s public/ugi/editorial/2026-09-06/rock-linkedin.jpg
+          test -s public/ugi/editorial/2026-09-06/rock-instagram.mp4
+          test -s public/ugi/editorial/2026-09-06/rock-tiktok.mp4
+          test -s public/ugi/editorial/2026-09-06/foxconn-story.mp4
+          test -s public/ugi/editorial/2026-09-06/retail-ai-tiktok.mp4
       - name: Persist media pack
         shell: bash
         run: |
