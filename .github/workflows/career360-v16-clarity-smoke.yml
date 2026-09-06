@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'career360/frontend/app-m.js'
+      - 'career360/frontend/index.html'
       - 'career360/tests/v16-clarity-smoke.mjs'
       - '.github/workflows/career360-v16-clarity-smoke.yml'
   workflow_dispatch:
@@ -31,6 +32,16 @@ jobs:
           cp career360/frontend/app-m.js /tmp/app-m.mjs
           node --check /tmp/app-m.mjs
           node --check career360/tests/v16-clarity-smoke.mjs
+
+      - name: Canonical V16 bundle pin gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' career360/frontend/index.html >/dev/null
+          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' career360/frontend/index.html >/dev/null
+          grep -F '@f597e48006aae69c73c6c0a540b797f0093e4e84/career360/frontend/app-m.js' career360/frontend/index.html >/dev/null
+          test "$(grep -o 'career360/frontend/app-m.js' career360/frontend/index.html | wc -l | tr -d ' ')" = '1'
+          echo 'V16_CANONICAL_BUNDLE_PIN_GATE=PASS'
 
       - name: Install isolated Playwright
         shell: bash
