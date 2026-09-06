@@ -39,7 +39,6 @@ def check_geometry_and_mask():
  width=int(c['canvas']['width']); height=int(c['canvas']['height'])
  if (width,height,int(c['canvas']['fps']))!=(1080,1920,30): fail('DOCTOR_CANVAS_FAIL')
  geo=c['geometry_approved_frame_1080x1920']
- # Later Canonical Mask V1 hard-lock geometry. This must never silently drift.
  hard={'title_panel':[61,94,979,220],'title_static_anchor':[61,94,289,220],'story_logo':[910,371,99,168],'film_window':[16,664,1046,602],'footer':[42,1666,995,201]}
  for k,v in hard.items():
   if list(geo.get(k) or [])!=v: fail(f'DOCTOR_CANONICAL_MASK_GEOMETRY_DRIFT {k} {geo.get(k)} != {v}')
@@ -73,6 +72,8 @@ def check_editorial_and_blank_guards():
  if int(sel.get('premium_evidence_min_independent_signals',0))<3: fail('DOCTOR_PREMIUM_EVIDENCE_TOO_WEAK')
  if float(qa.get('story_black_interval_max_seconds',9))>0.20: fail('DOCTOR_BLANK_VISUAL_TOLERANCE_LOOSENED')
  if runtime.get('scene_black_guard_before_render') is not True or runtime.get('deterministic_failures_must_precede_render') is not True: fail('DOCTOR_PRE_RENDER_GUARD_FAIL')
+ if int(c['sla'].get('candidate_pool_size',0))!=12 or int(c['sla'].get('daily_batch_size',0))!=8 or int(c['sla'].get('hot_reserve_count',-1))!=4: fail('DOCTOR_POOL_PROFILE_DRIFT')
+ if int(c['continuity'].get('ready_pool_size',0))!=12 or int(c['continuity'].get('hot_reserve_count',-1))!=4: fail('DOCTOR_CONTINUITY_POOL_DRIFT')
  pre=(ENGINE/'preflight.py').read_text(encoding='utf-8'); prep=(ENGINE/'prepare.py').read_text(encoding='utf-8'); q=(ENGINE/'qa.py').read_text(encoding='utf-8')
  for token in ('PROFESSIONAL_PRODUCTION_REQUIRED','AUDIENCE_DEMAND_REQUIRED','PREMIUM_EDITORIAL_BLOCK','PREMIUM_DEMAND_SIGNAL_REQUIRED'):
   if token not in pre: fail(f'DOCTOR_PREMIUM_PREFLIGHT_MISSING {token}')
@@ -95,7 +96,7 @@ def check_code_and_routes():
  print('DOCTOR_CODE_ROUTE_PASS')
 
 def check_state():
- dispatch=load_json(OPS/'dispatch.json'); outbox=load_json(OPS/'publisher-outbox.json'); approval=load_json(OPS/'human-approval.json'); state=load_json(OPS/'publisher-state.json')
+ dispatch=load_json(OPS/'dispatch.json'); outbox=load_json(OPS/'publisher-outbox.json'); approval=load_json(OPS/'human-approval.json'); state=load_json(OPS/'publisher-state.json'); contract=load_json(ENGINE/'contract_v9_factory.json')
  if dispatch.get('schema')!='CENA_CERTA_PRODUCTION_DISPATCH_V1': fail('DOCTOR_DISPATCH_SCHEMA_FAIL')
  enabled=dispatch.get('enabled') is True; mode=str(dispatch.get('mode') or '').upper()
  if not enabled:
@@ -103,7 +104,8 @@ def check_state():
  else:
   if mode!='PREPARE' or str(dispatch.get('prepared_run_id') or ''): fail('DOCTOR_ACTIVE_DISPATCH_MODE_FAIL')
   candidate_count=int(dispatch.get('candidate_count') or 0); selected_count=int(dispatch.get('selected_count') or 0); reserve_count=int(dispatch.get('reserve_count') or 0)
-  if candidate_count<1 or candidate_count>10 or selected_count<1 or reserve_count<0 or candidate_count!=selected_count+reserve_count: fail('DOCTOR_ACTIVE_DISPATCH_COUNT_FAIL')
+  max_candidates=int(contract['sla']['candidate_pool_size'])
+  if candidate_count<1 or candidate_count>max_candidates or selected_count<1 or reserve_count<0 or candidate_count!=selected_count+reserve_count: fail('DOCTOR_ACTIVE_DISPATCH_COUNT_FAIL')
   if not re.fullmatch(r'[A-Za-z0-9._-]{12,96}',str(dispatch.get('request_id') or '')): fail('DOCTOR_ACTIVE_DISPATCH_REQUEST_ID_FAIL')
   if not str(dispatch.get('batch_path') or '').startswith('ops/cena-certa/batches/'): fail('DOCTOR_ACTIVE_DISPATCH_BATCH_PATH_FAIL')
   if not re.fullmatch(r'[0-9a-f]{64}',str(dispatch.get('batch_sha256') or '').lower()): fail('DOCTOR_ACTIVE_DISPATCH_BATCH_SHA_FAIL')
