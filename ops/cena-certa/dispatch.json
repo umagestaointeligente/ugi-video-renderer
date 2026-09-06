@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-exact4-20260905-late-v2.json",
   "batch_sha256": "a3c628990dacce82c9885999900bc1c95ddb6b73c6f76382cb3f4990287971d6",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T01:41:15+00:00",
-  "request_id": "exact4-20260905-r2-224115",
+  "requested_at": "2026-09-06T01:47:20+00:00",
+  "request_id": "exact4-20260905-r2-224720",
   "candidate_count": 4,
   "selected_count": 4,
   "reserve_count": 0,
-  "note": "Explicit user authorization to publish four Cena Certa videos; R2 structurally splits captions into 20 short blocks while preserving 10 semantic scenes and canonical mask rules."
+  "note": "Explicit user authorization to publish four Cena Certa videos; R2 structural captions retained; canonical TTS +28 recalibration certified by smoke before this dispatch."
 }
