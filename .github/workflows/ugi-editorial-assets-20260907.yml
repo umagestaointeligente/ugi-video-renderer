@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/ugi_editorial_20260907_assets.py'
+      - '.github/workflows/ugi-editorial-assets-20260907.yml'
 
 permissions:
   contents: write
