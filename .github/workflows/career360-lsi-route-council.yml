@@ -1,0 +1,82 @@
+name: Career360 LSI Route Council
+run-name: Career360 LSI Route Council ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['lsi-broker-job-*']
+    paths: ['.github/workflows/career360-lsi-route-council.yml']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  council:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BROKER_URL: https://lsi-zero-cost-broker.umagestaointeligente.workers.dev
+      MISSION_ID: career360-route-council-r2-20260906
+    steps:
+      - uses: actions/checkout@v4
+      - name: Acquire short-lived LSI OIDC identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl --fail -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=lsi-zero-cost-broker")"
+          token="$(printf '%s' "$response" | jq -r '.value // empty')"
+          test -n "$token"
+          echo "::add-mask::$token"
+          echo "LSI_OIDC_TOKEN=$token" >> "$GITHUB_ENV"
+      - name: Run encrypted parallel specialist council
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/council.mjs <<'NODE'
+          import fs from 'node:fs';
+          import { webcrypto } from 'node:crypto';
+          const {subtle}=webcrypto, enc=new TextEncoder(), dec=new TextDecoder();
+          const b64u=b=>Buffer.from(b).toString('base64url');
+          const from64=s=>Buffer.from(String(s),'base64url');
+          const mission=process.env.MISSION_ID;
+          const constraint=`Career 360: zero/near-zero cash; simple deterministic documented architecture; RUNTIME_COMPROVADO_VENCE_DOCUMENTO. Absolute IN_APP_AUTONOMOUS_ONLY: Paulo cannot open external Make/Vercel/provider dashboards, OAuth pages, device flows, tokens or do provider-side setup. Make/Vercel valid only if already fully operable inside ChatGPT. Already usable: GitHub+Actions, Supabase SQL/migrations/Edge/service-role runtime, connected Gmail inside ChatGPT for explicit actions, ChatGPT Automations, Cloudflare Workers deployment credentials already stored in GitHub Actions and existing LSI Cloudflare/GitHub core. Vercel V14 is healthy read-only; V16 browser-validated but current Vercel mutation is unscoped. Blockers: V16 frontend delivery; background email transport; Supabase Auth confirmation redirect proven wrong (official callback requested, email got localhost:3000), connector has no hosted Auth config write. Prefer clean migration/replacement over permanent parallel layers. Need champion route, fallback, receipt and diagnostic point.`;
+          const tasks=[
+            {id:'frontend',role:'deep_text',system:'Infrastructure architect. Concrete, skeptical, zero-cost. Never require external user setup.',user:constraint+'\nFind and rank the 3 best feasible FRONTEND DELIVERY routes now. Evaluate existing Cloudflare credentials/Workers, GitHub Pages, in-app Netlify if truly connected, Supabase Edge/static, or another route. Give exact path, prerequisites already likely present, migration-vs-parallel risk, rollback and live proof.',max_tokens:850},
+            {id:'mail',role:'deep_text',system:'Reliability architect for email. Never weaken consent or invent receipts.',user:constraint+'\nFind and rank BACKGROUND MAIL routes. Evaluate ChatGPT Automations+connected Gmail, Supabase cron/Edge, Cloudflare relay, Google APIs without new OAuth and other in-app routes. Separate transport feasibility from consent gates. Must fit claim->provider->receipt V2; mark impossible routes.',max_tokens:850},
+            {id:'auth',role:'deep_text',system:'Supabase Auth specialist. No external dashboard/token setup. Preserve security.',user:constraint+'\nSolve or safely bypass AUTH REDIRECT. Evaluate password signup without redirect, OTP/code, Edge service-role admin flows, generateLink/custom verification, DB config, internal Management API, moving auth boundary. Rank only self-service routes with no external Paulo action; give proof and tradeoffs.',max_tokens:850},
+            {id:'cloudflare',role:'fast_text',system:'Cloudflare/GitHub execution specialist. Reuse existing credentials and Workers.',user:constraint+'\nWhat can existing GitHub Actions Cloudflare credentials and LSI Workers solve fastest: static frontend, proxy/redirect, scheduler, mail/provider bridge, admin control-plane? Separate direct solutions from routes still requiring missing provider credentials. Give execution shortlist.',max_tokens:700},
+            {id:'redteam',role:'deep_text',system:'Red-team reviewer. Attack shortcuts, hidden dependencies, security regressions and dead ends.',user:constraint+'\nRed-team all likely alternatives. Give 5 rejection rules and the smallest coherent target architecture that can actually close the project under IN_APP_AUTONOMOUS_ONLY.',max_tokens:750},
+            {id:'matrix',role:'structured_json',system:'Return valid JSON only.',user:constraint+'\nReturn decision matrix for cloudflare_static_migration, github_pages, netlify_in_app, chatgpt_automation_gmail, supabase_auth_otp_or_custom, supabase_management_internal_route, keep_vercel_wait. Per route: blocker, feasible_now true/false/unknown, external_user_action_required, time_to_prove fast/medium/slow, cleanliness 1-5, risk 1-5, recommended_test_next. Include recommended_order. Unknown stays unknown.',max_tokens:800}
+          ];
+          const brokerJwk=JSON.parse(fs.readFileSync('cloudflare/lsi-broker-public.jwk.json','utf8'));
+          const brokerKey=await subtle.importKey('jwk',{...brokerJwk,alg:'RSA-OAEP-256',ext:true},{name:'RSA-OAEP',hash:'SHA-256'},false,['encrypt']);
+          const responseKeys=await subtle.generateKey({name:'RSA-OAEP',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['encrypt','decrypt']);
+          const responsePublic=await subtle.exportKey('jwk',responseKeys.publicKey);
+          const aes=await subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);
+          const aesRaw=await subtle.exportKey('raw',aes), iv=webcrypto.getRandomValues(new Uint8Array(12)), aad=enc.encode(mission);
+          const ciphertext=await subtle.encrypt({name:'AES-GCM',iv,additionalData:aad,tagLength:128},aes,enc.encode(JSON.stringify({tasks})));
+          const wrapped=await subtle.encrypt({name:'RSA-OAEP'},brokerKey,aesRaw);
+          const body={mission_id:mission,response_public_jwk:responsePublic,encrypted:{alg:'RSA-OAEP-256+A256GCM',wrapped_key:b64u(wrapped),iv:b64u(iv),aad:b64u(aad),ciphertext:b64u(ciphertext)}};
+          const r=await fetch(process.env.BROKER_URL+'/v1/execute',{method:'POST',headers:{authorization:'Bearer '+process.env.LSI_OIDC_TOKEN,'content-type':'application/json'},body:JSON.stringify(body)});
+          const outer=await r.json(); if(!r.ok||!outer.ok) throw new Error('broker_'+r.status+':'+JSON.stringify(outer));
+          if(outer.mission_id!==mission||outer.plaintext_returned!==false) throw new Error('outer_contract_failed');
+          const env=outer.encrypted;
+          const keyRaw=await subtle.decrypt({name:'RSA-OAEP'},responseKeys.privateKey,from64(env.wrapped_key));
+          const responseAes=await subtle.importKey('raw',keyRaw,{name:'AES-GCM'},false,['decrypt']);
+          const plain=await subtle.decrypt({name:'AES-GCM',iv:from64(env.iv),additionalData:from64(env.aad),tagLength:128},responseAes,from64(env.ciphertext));
+          const result=JSON.parse(dec.decode(plain));
+          if(result.mission_id!==mission||result.zero_cost_route!==true||result.external_paid_provider!==false) throw new Error('result_contract_failed');
+          fs.writeFileSync('/tmp/career360-lsi-route-council.json',JSON.stringify(result,null,2));
+          console.log(`LSI_COUNCIL_RECEIPT=PASS mission=${mission} tasks=${result.task_count} success=${result.success_count} elapsed_ms=${result.elapsed_ms}`);
+          console.log(`LSI_MODELS=${(result.models_used||[]).join(',')}`);
+          NODE
+          node /tmp/council.mjs | tee /tmp/council-summary.txt
+      - name: Upload sanitized council result
+        uses: actions/upload-artifact@v4
+        with:
+          name: career360-lsi-route-council-${{ github.run_id }}
+          path: |
+            /tmp/career360-lsi-route-council.json
+            /tmp/council-summary.txt
+          retention-days: 7
+          if-no-files-found: error
