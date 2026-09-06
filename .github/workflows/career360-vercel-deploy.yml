@@ -26,13 +26,15 @@ permissions:
 env:
   VERCEL_ORG_ID: team_ZJys00FTE2kK9yVtsqH5fHyF
   VERCEL_PROJECT_ID: prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP
+  VERCEL_CLI_VERSION: 59.11.7
+  OFFICIAL_URL: https://lsi-career-360.vercel.app
   EXPECTED_APP_K: 6df7b4e63d7e52ce3c3f02247392b98f0393cbe8
   EXPECTED_APP_L: 4283646143425e4a3156e44100aabb475df88d27
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -79,6 +81,10 @@ jobs:
             echo "::error::Expected exactly one app-l.js reference, found $count_l."
             exit 4
           fi
+          node --check career360/frontend/app-k.js
+          cp career360/frontend/app-l.js /tmp/app-l.mjs
+          node --check /tmp/app-l.mjs
+          echo 'CANONICAL_SOURCE_GATE=PASS'
 
       - name: Bind checkout to official Vercel project
         shell: bash
@@ -87,7 +93,7 @@ jobs:
           mkdir -p career360/frontend/.vercel
           printf '{"orgId":"%s","projectId":"%s"}\n' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > career360/frontend/.vercel/project.json
 
-      - name: Deploy official Career360 project
+      - name: Create deterministic preview
         id: deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -95,38 +101,74 @@ jobs:
         run: |
           set -euo pipefail
           cd career360/frontend
-          if [[ "$TARGET" == "production" ]]; then
-            args=(deploy --prod --yes)
-          else
-            args=(deploy --yes)
-          fi
-          npx --yes vercel@latest "${args[@]}" --token "$VERCEL_TOKEN" 2>&1 | tee /tmp/vercel-deploy.log
+          npx --yes "vercel@${VERCEL_CLI_VERSION}" deploy --yes \
+            --scope "$VERCEL_ORG_ID" --token "$VERCEL_TOKEN" 2>&1 | tee /tmp/vercel-deploy.log
           deploy_url="$(sed -E 's/\x1B\[[0-9;]*[mK]//g' /tmp/vercel-deploy.log | grep -Eo 'https://[A-Za-z0-9.-]+\.vercel\.app' | tail -n 1 || true)"
           if [[ -z "$deploy_url" ]]; then
-            echo "::error::Deployment completed without a parseable Vercel URL."
+            echo "::error::Preview completed without a parseable Vercel URL."
             exit 5
           fi
           echo "url=$deploy_url" >> "$GITHUB_OUTPUT"
           echo "DEPLOY_URL=$deploy_url" >> "$GITHUB_ENV"
+          echo "PREVIEW_URL=$deploy_url"
 
-      - name: Static bundle smoke
+      - name: Preview HTTP and pin smoke
         shell: bash
         run: |
           set -euo pipefail
           body="$(curl --fail --silent --show-error --location "$DEPLOY_URL/")"
           grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null
           grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null
-          echo "HTTP_AND_PIN_SMOKE=PASS"
+          echo "PREVIEW_HTTP_AND_PIN_SMOKE=PASS"
+
+      - name: Promote exact preview to production
+        if: env.TARGET == 'production'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd career360/frontend
+          npx --yes "vercel@${VERCEL_CLI_VERSION}" promote "$DEPLOY_URL" --yes \
+            --scope "$VERCEL_ORG_ID" --token "$VERCEL_TOKEN"
+          echo 'PREVIEW_PROMOTED_TO_PRODUCTION=PASS'
+
+      - name: Verify official alias after promotion
+        if: env.TARGET == 'production'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=0
+          for attempt in 1 2 3 4 5 6; do
+            body="$(curl --fail --silent --show-error --location "$OFFICIAL_URL/" || true)"
+            if grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null \
+              && grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+          if [[ "$ok" != "1" ]]; then
+            echo '::error::Official alias did not converge to the promoted V15 pins.'
+            exit 6
+          fi
+          echo 'OFFICIAL_ALIAS_HTTP_AND_PIN_SMOKE=PASS'
 
       - name: Deployment summary
         shell: bash
         run: |
           {
             echo "### Career360 Vercel deployment"
-            echo "- Target: $TARGET"
+            echo "- Requested target: $TARGET"
+            echo "- Team: $VERCEL_ORG_ID"
             echo "- Project: $VERCEL_PROJECT_ID"
-            echo "- URL: $DEPLOY_URL"
+            echo "- Preview artifact: $DEPLOY_URL"
             echo "- app-k: $EXPECTED_APP_K"
             echo "- app-l: $EXPECTED_APP_L"
-            echo "- Static smoke: PASS"
+            echo "- Preview smoke: PASS"
+            if [[ "$TARGET" == "production" ]]; then
+              echo "- Promotion strategy: exact preview promoted"
+              echo "- Official alias: $OFFICIAL_URL"
+              echo "- Official alias smoke: PASS"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
