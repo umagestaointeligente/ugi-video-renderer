@@ -1,0 +1,35 @@
+{
+  "project": "UGI",
+  "route": "EDITORIAL_MEDIA_V1",
+  "queuePath": "control-plane/publisher-hub/media-queue/UGI-20260906-LI-ROCK-HDNOW-002.json",
+  "id": "UGI-20260906-LI-ROCK-HDNOW-002",
+  "platform": "linkedin",
+  "format": "image",
+  "mediaType": "image",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-06/rock-linkedin-repost.jpg",
+  "requestedDueAt": null,
+  "ok": true,
+  "bufferMutationPerformed": true,
+  "publication": {
+    "status": "scheduled",
+    "bufferStatus": "sending",
+    "bufferPostId": "6a9db6d92066ff47cc42cc4a",
+    "dueAt": "2026-09-06T18:54:17.055Z",
+    "sentAt": null,
+    "externalLink": null,
+    "sharedNow": true,
+    "error": null
+  },
+  "target": {
+    "channelId": "6a9acd94065799be46891f24",
+    "channelName": "uma-gestao-inteligente",
+    "channelService": "linkedin",
+    "type": "LinkedIn Page",
+    "pageName": "UGI — Uma Gestão Inteligente",
+    "personalProfileTargetAllowed": false
+  },
+  "workerVersion": "lola-v8-r45-7-editorial-media-v1-2026-09-05",
+  "workerRoute": "/api/editorial-media-publish",
+  "error": null,
+  "timestamp": "2026-09-06T18:54:27.353186+00:00"
+}
