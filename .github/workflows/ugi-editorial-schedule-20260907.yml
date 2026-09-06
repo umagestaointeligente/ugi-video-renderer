@@ -1,0 +1,85 @@
+name: UGI Editorial Schedule 2026-09-07
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-editorial-schedule-20260907.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-editorial-schedule-20260907
+  cancel-in-progress: false
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Queue and verify each Buffer schedule sequentially
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-scheduler-bot'
+          git config user.email 'ugi-editorial-scheduler-bot@users.noreply.github.com'
+          Q='control-plane/publisher-hub/media-queue'
+          R='control-plane/publisher-hub/media-receipts'
+          BASE='https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-07'
+          mkdir -p "$Q" "$R"
+
+          queue_one() {
+            id="$1"; platform="$2"; mediaType="$3"; media="$4"; format="$5"; due="$6"; topic="$7"; text="$8"
+            q="$Q/$id.json"; r="$R/$id.json"
+            if [ -f "$r" ]; then
+              python - "$r" <<'PY'
+          import json,sys
+          d=json.load(open(sys.argv[1])); assert d.get('ok') is True and d.get('bufferMutationPerformed') is True
+          PY
+              echo "receipt already valid: $id"; return 0
+            fi
+            python - "$q" "$id" "$platform" "$mediaType" "$BASE/$media" "$format" "$due" "$topic" "$text" <<'PY'
+          import json,sys
+          p,id,platform,mt,url,fmt,due,topic,text=sys.argv[1:]
+          d={'id':id,'project':'UGI','enabled':True,'platform':platform,'mediaType':mt,'mediaUrl':url,'format':fmt,'mode':'customScheduled','dueAt':due,'topic':topic,'text':text}
+          json.dump(d,open(p,'w'),ensure_ascii=False,indent=2)
+          PY
+            git add "$q"
+            git commit -m "schedule: $id"
+            git pull --rebase origin main
+            git push origin HEAD:main
+            ok=0
+            for i in $(seq 1 24); do
+              sleep 5
+              git pull --rebase origin main >/dev/null 2>&1 || true
+              if [ -f "$r" ]; then
+                python - "$r" <<'PY' && ok=1 || ok=0
+          import json,sys
+          d=json.load(open(sys.argv[1])); assert d.get('ok') is True and d.get('bufferMutationPerformed') is True
+          PY
+                [ "$ok" = 1 ] && break
+                cat "$r"
+                exit 1
+              fi
+            done
+            [ "$ok" = 1 ] || { echo "receipt timeout: $id"; exit 1; }
+          }
+
+          queue_one 'UGI-20260907-IG-STORY-CHATGPT-01' instagram image 'story-01-chatgpt.jpg' story '2026-09-07T11:15:00Z' 'ChatGPT Ads — a vitrine mudou de lugar' ''
+          queue_one 'UGI-20260907-IG-STORY-CHATGPT-02' instagram image 'story-02-enquete-ia.jpg' story '2026-09-07T11:17:00Z' 'Enquete — recomendacao por IA' ''
+          queue_one 'UGI-20260907-IG-REEL-CHATGPT-01' instagram video 'reel-chatgpt-ads.mp4' reel '2026-09-07T12:30:00Z' 'A nova prateleira do varejo esta dentro da IA' '🤖 A vitrine do varejo está mudando de lugar. Casas Bahia e Magazine Luiza já aparecem na corrida por anúncios dentro do ChatGPT no Brasil. Em três semanas, respostas com publicidade no país saltaram de pouco mais de 80 para mais de 27,7 mil, segundo dados da Similarweb citados pela EXAME. Para a gestão, a pergunta é maior do que mídia: sua marca está preparada para ser descoberta e escolhida dentro de uma resposta de IA? 💡 #Gestão #InteligênciaArtificial #Varejo #Marketing #UGI'
+          queue_one 'UGI-20260907-TT-CHATGPT-01' tiktok video 'reel-chatgpt-ads.mp4' video '2026-09-07T13:45:00Z' 'ChatGPT Ads e varejo' '🤖 A vitrine do varejo está mudando de lugar. A disputa por descoberta de produtos já começa dentro das respostas de IA. Sua marca está preparada para esse novo ponto de decisão? #Gestão #IA #Varejo #UGI'
+          queue_one 'UGI-20260907-IG-STORY-TIKTOK-03' instagram image 'story-03-tiktok-shop.jpg' story '2026-09-07T14:30:00Z' 'TikTok Shop — moda e beleza' ''
+          queue_one 'UGI-20260907-IG-STORY-TIKTOK-04' instagram image 'story-04-tiktok-insight.jpg' story '2026-09-07T14:32:00Z' 'TikTok Shop — insight discovery commerce' ''
+          queue_one 'UGI-20260907-IG-POST-TIKTOK-01' instagram image 'ig-tiktok-shop.jpg' image '2026-09-07T15:45:00Z' 'TikTok Shop — quando entretenimento vira checkout' '🛍️ O TikTok Shop está deixando claro que conteúdo e comércio não são mais etapas separadas. No primeiro semestre de 2026, as vendas de moda cresceram 154% e as de beleza 151% no Brasil em relação ao semestre anterior. Quando descoberta, influência e checkout acontecem no mesmo ambiente, a estratégia muda: social deixa de ser apenas mídia e passa a participar diretamente da conversão. 📊 Para a gestão, a pergunta é: sua operação está organizada para vender no mesmo lugar em que o desejo nasce? #Gestão #TikTokShop #SocialCommerce #Varejo #UGI'
+          queue_one 'UGI-20260907-IG-STORY-ROI-05' instagram image 'story-05-roi.jpg' story '2026-09-07T18:00:00Z' 'ROI de IA — medir valor' ''
+          queue_one 'UGI-20260907-IG-STORY-ROI-06' instagram image 'story-06-enquete-roi.jpg' story '2026-09-07T18:02:00Z' 'Enquete — ROI de IA' ''
+          queue_one 'UGI-20260907-LI-ROI-01' linkedin image 'linkedin-ai-roi.jpg' image '2026-09-07T20:15:00Z' 'IA sem metrica e custo' '🤖 Adotar IA virou fácil. Provar que ela gera valor ainda não.\n\nUma pesquisa da Strand Partners para a AWS aponta que apenas 33% das empresas brasileiras estão confiantes em medir com precisão o retorno sobre o investimento em inteligência artificial. Ao mesmo tempo, 72% relatam ganhos de produtividade e 54% percebem aumento de receita.\n\n📊 Existe uma diferença importante entre perceber benefício e conseguir administrá-lo. Quando a empresa não define baseline, dono, indicador e rotina de acompanhamento, IA corre o risco de virar uma coleção de ferramentas — e não uma capacidade de gestão.\n\n💡 O próximo salto não é necessariamente comprar mais tecnologia. É conectar tecnologia a processo, decisão e resultado.\n\n👇 Na sua empresa, o ROI de IA já é medido de forma objetiva?\n\n#Gestão #InteligênciaArtificial #Liderança #Produtividade #UGI'
+          queue_one 'UGI-20260907-TT-ROI-01' tiktok video 'tiktok-ai-roi.mp4' video '2026-09-07T21:30:00Z' 'IA sem ROI nao e transformacao' '📊 Usar IA não é o mesmo que gerar valor. Só 33% das empresas brasileiras dizem medir o ROI de IA com confiança. O próximo salto é menos ferramenta solta e mais processo, dono e métrica. #Gestão #IA #ROI #UGI'
+          queue_one 'UGI-20260907-IG-STORY-PIX-07' instagram image 'story-07-pix.jpg' story '2026-09-07T23:15:00Z' 'IA no fluxo financeiro — Pix e governanca' ''
+
+          echo 'UGI_20260907_EDITORIAL_SCHEDULE=CONFIRMED_BY_RECEIPTS'
