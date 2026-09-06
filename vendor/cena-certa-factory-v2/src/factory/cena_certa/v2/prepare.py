@@ -20,7 +20,22 @@ def precut_scene(src,start,dur,out,threads=1):
 def normalize_music(c,src,out):
  target=float(c['music'].get('prepared_master_lufs',-14.0)); tp=float(c['music'].get('prepared_master_true_peak_dbtp',-2.0)); out=Path(out); tmp=out.with_name(out.stem+f'.part-{os.getpid()}'+out.suffix); fix=out.with_name(out.stem+f'.peakfix-{os.getpid()}'+out.suffix)
  try:
-  sh(['ffmpeg','-loglevel','error','-y','-i',str(src),'-vn','-af',f'loudnorm=I={target}:TP={tp}:LRA=7','-c:a','aac','-b:a','192k','-ar','48000',str(tmp)],timeout=150)
+  # Two-pass EBU R128 normalization. The previous one-pass dynamic pass drifted
+  # by ~1.6-2.1 LU on real short-form tracks, making deterministic material fail
+  # only after download. Measure first, then render once with those measurements.
+  probe=sh(['ffmpeg','-hide_banner','-nostats','-i',str(src),'-vn','-af',f'loudnorm=I={target}:TP={tp}:LRA=7:print_format=json','-f','null','-'],timeout=150)
+  raw=(probe.stderr or probe.stdout or '')
+  matches=list(re.finditer(r'\{\s*"input_i".*?\}',raw,re.S))
+  if not matches: raise RuntimeError('MUSIC_LOUDNORM_ANALYSIS_PARSE_FAIL')
+  try: stats=json.loads(matches[-1].group(0))
+  except Exception as e: raise RuntimeError('MUSIC_LOUDNORM_ANALYSIS_JSON_FAIL') from e
+  required=('input_i','input_tp','input_lra','input_thresh','target_offset')
+  if any(k not in stats for k in required): raise RuntimeError('MUSIC_LOUDNORM_ANALYSIS_FIELDS_FAIL')
+  filt=(f'loudnorm=I={target}:TP={tp}:LRA=7:'
+        f'measured_I={stats["input_i"]}:measured_TP={stats["input_tp"]}:'
+        f'measured_LRA={stats["input_lra"]}:measured_thresh={stats["input_thresh"]}:'
+        f'offset={stats["target_offset"]}:linear=true:print_format=summary')
+  sh(['ffmpeg','-loglevel','error','-y','-i',str(src),'-vn','-af',filt,'-c:a','aac','-b:a','192k','-ar','48000',str(tmp)],timeout=150)
   media_probe(tmp,'audio'); os.replace(tmp,out)
   measured_lufs,measured_tp=loudness(out)
   if measured_tp>tp+0.3:
