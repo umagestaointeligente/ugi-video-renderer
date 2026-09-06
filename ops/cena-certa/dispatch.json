@@ -1,11 +1,14 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": false,
-  "mode": "IDLE",
-  "batch_path": "",
-  "batch_sha256": "",
+  "enabled": true,
+  "mode": "PREPARE",
+  "batch_path": "ops/cena-certa/batches/cena-certa-exact5-20260906-complement-v4.json",
+  "batch_sha256": "752d0e3a1b709c472fbd6e8eb8c53f0f36710c3fac46f0744ef129d8907aed60",
   "prepared_run_id": "",
-  "requested_at": "",
-  "request_id": "",
-  "note": "IDLE after v3 exact5: four PREPARE_PASS, Pasion scene09 black diagnosed; audit run 34044093526 retained."
+  "requested_at": "2026-09-06T16:06:24.352742+00:00",
+  "request_id": "50f3c59e0e9b4c239909fe09d4dfb959",
+  "candidate_count": 5,
+  "selected_count": 5,
+  "reserve_count": 0,
+  "note": "Complemento v4 06/09/2026: 13:30 movido para 14:00 sem tocar 16:10/18:30; Pasion scene09 corrigida."
 }
