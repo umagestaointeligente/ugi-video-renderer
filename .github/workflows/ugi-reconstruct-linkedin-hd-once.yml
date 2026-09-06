@@ -1,0 +1,51 @@
+name: UGI Reconstruct LinkedIn HD Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/media-staging/rock-linkedin-hd/part*.b64'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-rock-linkedin-hd-reconstruct
+  cancel-in-progress: false
+
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reconstruct only when all 7 parts exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          STAGE='control-plane/media-staging/rock-linkedin-hd'
+          OUT='public/ugi/editorial/2026-09-06/rock-linkedin-hd-1200x628.jpg'
+          COUNT=$(find "$STAGE" -maxdepth 1 -type f -name 'part*.b64' | wc -l | tr -d ' ')
+          echo "parts=$COUNT"
+          if [ "$COUNT" != '7' ]; then
+            echo 'Waiting for all 7 parts.'
+            exit 0
+          fi
+          mkdir -p "$(dirname "$OUT")"
+          cat "$STAGE"/part*.b64 | base64 --decode > "$OUT"
+          echo '089cb0a5b3c03b017761042e427d5c85668a29f3d5e44ea4233f8e9932a0ed5a  '"$OUT" | sha256sum -c -
+          BYTES=$(stat -c '%s' "$OUT")
+          test "$BYTES" -eq 144413
+          file "$OUT"
+          rm -rf "$STAGE"
+          git config user.name 'ugi-publisher-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$OUT" "$STAGE" || true
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+            exit 0
+          fi
+          git commit -m 'asset: add Rock in Rio LinkedIn HD visual'
+          git pull --rebase origin main
+          git push origin HEAD:main
