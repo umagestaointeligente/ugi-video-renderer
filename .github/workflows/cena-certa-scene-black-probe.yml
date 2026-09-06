@@ -8,11 +8,17 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   probe:
     runs-on: ubuntu-24.04
     timeout-minutes: 3
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v7
       - name: Scan source once for black intervals and safe windows
