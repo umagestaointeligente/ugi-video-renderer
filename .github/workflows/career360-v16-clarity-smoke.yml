@@ -7,6 +7,7 @@ on:
       - 'career360/frontend/app-m.js'
       - 'career360/frontend/index.html'
       - 'career360/tests/v16-clarity-smoke.mjs'
+      - '.github/workflows/career360-vercel-deploy.yml'
       - '.github/workflows/career360-v16-clarity-smoke.yml'
   workflow_dispatch:
 
@@ -33,20 +34,59 @@ jobs:
           node --check /tmp/app-m.mjs
           node --check career360/tests/v16-clarity-smoke.mjs
 
-      - name: Canonical V16 bundle pin gate
+      - name: Canonical V16 bundle pin and static-truth gate
         shell: bash
         run: |
           set -euo pipefail
-          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' career360/frontend/index.html >/dev/null
-          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' career360/frontend/index.html >/dev/null
-          grep -F '@719c15ebfe89d212a19473b70ea6e615174601d9/career360/frontend/app-m.js' career360/frontend/index.html >/dev/null
-          test "$(grep -o 'career360/frontend/app-m.js' career360/frontend/index.html | wc -l | tr -d ' ')" = '1'
-          grep -F 'Você confirma o que importa. O Career 360 organiza sua busca.' career360/frontend/index.html >/dev/null
+          index='career360/frontend/index.html'
+          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' "$index" >/dev/null
+          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' "$index" >/dev/null
+          grep -F '@719c15ebfe89d212a19473b70ea6e615174601d9/career360/frontend/app-m.js' "$index" >/dev/null
+          test "$(grep -o 'career360/frontend/app-k.js' "$index" | wc -l | tr -d ' ')" = '1'
+          test "$(grep -o 'career360/frontend/app-l.js' "$index" | wc -l | tr -d ' ')" = '1'
+          test "$(grep -o 'career360/frontend/app-m.js' "$index" | wc -l | tr -d ' ')" = '1'
+          test "$(grep -F -o 'Você confirma o que importa. O Career 360 organiza sua busca.' "$index" | wc -l | tr -d ' ')" = '1'
+          if grep -F 'Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.' "$index" >/dev/null; then
+            echo '::error::Legacy unverified auth copy is present in canonical static HTML.'
+            exit 1
+          fi
           echo 'V16_CANONICAL_BUNDLE_PIN_GATE=PASS'
           echo 'V16_TOUCH_TARGET_POLICY=44PX'
           echo 'V16_TRUTHFUL_STATUS_POLICY=PASS'
           echo 'V16_AUTH_TRUTHFUL_COPY_POLICY=PASS'
           echo 'V16_STATIC_AUTH_TRUTH_SOURCE=PASS'
+          echo 'V16_LEGACY_AUTH_COPY_ABSENT=PASS'
+
+      - name: Project-scoped Vercel deploy readiness gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          deploy='.github/workflows/career360-vercel-deploy.yml'
+          grep -F 'VERCEL_ORG_ID: team_ZJys00FTE2kK9yVtsqH5fHyF' "$deploy" >/dev/null
+          grep -F 'VERCEL_PROJECT_ID: prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP' "$deploy" >/dev/null
+          grep -F 'EXPECTED_APP_K: 6df7b4e63d7e52ce3c3f02247392b98f0393cbe8' "$deploy" >/dev/null
+          grep -F 'EXPECTED_APP_L: 4283646143425e4a3156e44100aabb475df88d27' "$deploy" >/dev/null
+          grep -F 'EXPECTED_APP_M: 719c15ebfe89d212a19473b70ea6e615174601d9' "$deploy" >/dev/null
+          grep -F 'TRUTHFUL_AUTH_COPY: Você confirma o que importa. O Career 360 organiza sua busca.' "$deploy" >/dev/null
+          grep -F 'LEGACY_UNVERIFIED_AUTH_COPY: Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.' "$deploy" >/dev/null
+          grep -F '          - validate' "$deploy" >/dev/null
+          grep -F 'STATIC_AUTH_TRUTH_SOURCE_GATE=PASS' "$deploy" >/dev/null
+          grep -F 'LEGACY_AUTH_COPY_ABSENT_GATE=PASS' "$deploy" >/dev/null
+          grep -F 'PREVIEW_HTTP_PIN_AND_TRUTH_SMOKE=PASS' "$deploy" >/dev/null
+          grep -F 'OFFICIAL_ALIAS_HTTP_PIN_AND_TRUTH_SMOKE=PASS' "$deploy" >/dev/null
+          grep -F 'promote "$DEPLOY_URL" --yes' "$deploy" >/dev/null
+          if grep -F -- '--prod' "$deploy" >/dev/null; then
+            echo '::error::Deploy workflow must promote the exact tested preview, not create a second production build.'
+            exit 1
+          fi
+          if grep -F 'deploy_to_vercel' "$deploy" >/dev/null; then
+            echo '::error::Unscoped generic Vercel deploy action must not appear in the canonical workflow.'
+            exit 1
+          fi
+          echo 'V16_VERCEL_PROJECT_SCOPE_GATE=PASS'
+          echo 'V16_VERCEL_VALIDATE_ONLY_GATE=PASS'
+          echo 'V16_VERCEL_PREVIEW_TRUTH_SMOKE_POLICY=PASS'
+          echo 'V16_VERCEL_EXACT_PREVIEW_PROMOTION_POLICY=PASS'
 
       - name: Install isolated Playwright
         shell: bash
@@ -68,4 +108,5 @@ jobs:
           cd /tmp/career360-v16
           node v16-clarity-smoke.mjs
 
-# Final retrigger after static auth truth bundle f572b824b49b2cc73d5d8389eae98391bcca63a8.
+# V16 static/runtime truth bundle f572b824b49b2cc73d5d8389eae98391bcca63a8.
+# Deploy-readiness gate bound to canonical project-scoped Vercel workflow.
