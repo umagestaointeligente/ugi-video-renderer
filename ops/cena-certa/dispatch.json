@@ -1,11 +1,14 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": false,
-  "mode": "IDLE",
-  "batch_path": "",
-  "batch_sha256": "",
+  "enabled": true,
+  "mode": "PREPARE",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave2-v2.json",
+  "batch_sha256": "b1c0137f40f1549f25c5cf9ae6d7ba687e9009abd4a9dce03cda9596700dcd46",
   "prepared_run_id": "",
-  "requested_at": "",
-  "request_id": "",
-  "note": "IDLE after 07/09 wave2 fail-closed: Alien Grounds story duration 42.268s > 42.0s; audit run 34050017029 retained."
+  "requested_at": "2026-09-06T17:58:00Z",
+  "request_id": "19f1987a848544b6af54b39e40b10d0d",
+  "candidate_count": 4,
+  "selected_count": 4,
+  "reserve_count": 0,
+  "note": "Daily8 07/09 wave2-v2: Alien Grounds narration shortened after measured 42.268s; no gate relaxed."
 }
