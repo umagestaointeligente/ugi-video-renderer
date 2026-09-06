@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-exact4-20260906-recovery-v2.json",
   "batch_sha256": "7b04749a74ba855820b5ddd9cae0fce5744ea67a35f31eddfd1bc9ba95343889",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T03:27:17+00:00",
+  "requested_at": "2026-09-06T03:27:50+00:00",
   "request_id": "CC-RECOVERY-20260906-0002",
   "candidate_count": 4,
   "selected_count": 4,
   "reserve_count": 0,
-  "note": "Repair only measured source timestamps that intersect black intervals. No script, rights, music, mask or schedule changes. Canonical Factory V2 route remains unchanged."
+  "note": "Evidence-bound Sleeping Field cut repair from probe run 34008903179; canonical Factory V2 wake."
 }
