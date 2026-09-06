@@ -1,0 +1,53 @@
+name: Career360 V16 Clarity Smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'career360/frontend/app-m.js'
+      - 'career360/tests/v16-clarity-smoke.mjs'
+      - '.github/workflows/career360-v16-clarity-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: career360-v16-clarity-smoke
+  cancel-in-progress: true
+
+jobs:
+  clarity-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: JavaScript syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp career360/frontend/app-m.js /tmp/app-m.mjs
+          node --check /tmp/app-m.mjs
+          node --check career360/tests/v16-clarity-smoke.mjs
+
+      - name: Install isolated Playwright
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/career360-v16
+          cd /tmp/career360-v16
+          npm init -y >/dev/null 2>&1
+          npm install --silent playwright@latest
+          npx playwright install --with-deps chromium
+          cp "$GITHUB_WORKSPACE/career360/tests/v16-clarity-smoke.mjs" ./v16-clarity-smoke.mjs
+
+      - name: Run V16 clarity browser regression
+        env:
+          REPO_ROOT: ${{ github.workspace }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/career360-v16
+          node v16-clarity-smoke.mjs
