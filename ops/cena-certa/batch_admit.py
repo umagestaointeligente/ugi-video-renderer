@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Fail-closed admission gate for Cena Certa production batches.
 
-Takes one already-editorially-approved 12-candidate JSON list, validates it against
+Takes one already-editorially-approved candidate JSON list, validates it against
 the certified Factory V2 preflight, writes an immutable canonical batch under
 ops/cena-certa/batches/, and prints the SHA-256 needed by dispatch.json.
 
+The canonical daily default is 10 candidates -> 8 selected + 2 hot reserves.
+Explicit smaller dispatch profiles such as 4 -> 4 + 0 remain supported.
 This helper never enables dispatch and never schedules or publishes anything.
 """
 from __future__ import annotations
@@ -17,7 +19,6 @@ import re
 import sys
 from pathlib import Path
 
-# Canonical daily profile: 12 candidates -> 8 selected + 4 hot reserves.
 REPO = Path(__file__).resolve().parents[2]
 SRC = REPO / "vendor" / "cena-certa-factory-v2" / "src"
 BATCH_DIR = REPO / "ops" / "cena-certa" / "batches"
@@ -33,9 +34,9 @@ def sha256_bytes(data: bytes) -> str:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", required=True, help="12-candidate editorial JSON list")
+    ap.add_argument("--input", required=True, help="editorially approved candidate JSON list")
     ap.add_argument("--name", required=True, help="immutable batch basename without .json")
-    ap.add_argument("--expect", type=int, default=12, help="expected candidate count; daily default is 12")
+    ap.add_argument("--expect", type=int, default=10, help="expected candidate count; canonical daily default is 10")
     args = ap.parse_args()
 
     name = str(args.name).strip()
@@ -47,7 +48,7 @@ def main() -> None:
         raise SystemExit("BATCH_INPUT_MISSING")
 
     # Full certified validation includes editorial/rights/anti-repeat/source/schedule gates.
-    if args.expect < 1 or args.expect > 12:
+    if args.expect < 1 or args.expect > 10:
         raise SystemExit("BATCH_EXPECT_RANGE_FAIL")
     validate_batch(src, expect=args.expect)
     items = json.loads(src.read_text(encoding="utf-8"))
