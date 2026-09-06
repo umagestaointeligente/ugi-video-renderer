@@ -24,6 +24,8 @@ jobs:
           fetch-depth: 0
       - name: Install renderer dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
           python -m pip install --upgrade pip
           python -m pip install pillow
       - name: Build and QA editorial media
