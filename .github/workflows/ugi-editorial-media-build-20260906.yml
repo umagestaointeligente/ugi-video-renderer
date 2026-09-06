@@ -54,5 +54,8 @@ jobs:
           git config user.email 'ugi-editorial-media@users.noreply.github.com'
           git add public/ugi/editorial/2026-09-06
           git commit -m 'media: UGI editorial pack 2026-09-06' || true
+          # The build step patches the tracked renderer only in the runner; restore it
+          # before rebasing so the generated-media commit can be persisted cleanly.
+          git restore scripts/ugi_editorial_media_build_20260906.py
           git pull --rebase origin main
           git push origin HEAD:main
