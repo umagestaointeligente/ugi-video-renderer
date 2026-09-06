@@ -1,0 +1,36 @@
+name: Career360 V31 Runtime Reconciliation Seal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/career360-v31-runtime-reconciliation-seal.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  seal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Seal V3.1 runtime reconciliation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 career360/tools/v31_runtime_reconciliation_seal.py
+          git diff --check
+      - name: Commit canonical docs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-career360-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add docs/LSI_RECOVERY_CURRENT.md career360/releases/MASTER_PILOT_1_0_ROLE_GRAPH_V15_2026-09-05.md career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md
+          git diff --cached --check
+          git commit -m 'career360: reconcile matching v3.1 runtime truth'
+          git push origin HEAD:main
+          echo 'V31_RUNTIME_RECONCILIATION_DOCS_PUSH=PASS'
