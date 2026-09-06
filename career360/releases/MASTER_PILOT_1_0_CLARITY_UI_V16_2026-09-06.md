@@ -217,6 +217,31 @@ Known limitations remain unchanged:
 
 `SUPABASE_SECURITY_READINESS_READ_ONLY_AUDIT=PASS`
 
+## Delivery and application evidence guards
+
+The database was hardened before real mail/application connectors are enabled. Both target tables were empty at migration time, so no legacy state was rewritten.
+
+Canonical migrations:
+- `career360/migrations/20260906_delivery_receipt_guards_v16.sql` (`d21f7cfbca17e2fab2a274ff9f5f154361eb6e7b`);
+- `career360/migrations/20260906_delivery_receipt_identity_v16.sql` (`900398868256dae12faba0df869bd265eb690a45`).
+
+Fail-closed invariants now LIVE:
+- mail `sent` requires outbound direction, `sent_at`, external thread reference, and separate provider-derived `delivery_receipt_hash`;
+- delivery receipt identity cannot be reused for two mail actions by the same user;
+- application `applied` requires `applied_at` and external application reference;
+- external application receipt identity cannot be reused for two applications by the same user;
+- both CHECK constraints are validated in the live catalog.
+
+`career-mail-decision` still records user approval as `approved`, never `sent`, and explicitly reports that a delivery connector is required.
+
+States:
+`DELIVERY_EVIDENCE_GUARDS_V16=LIVE`
+`MAIL_SENT_RECEIPT_GUARD_V16=LIVE`
+`APPLICATION_APPLIED_RECEIPT_GUARD_V16=LIVE`
+`MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
+
+These guards are evidence contracts, not delivery receipts by themselves. No send/application is claimed without an external connector receipt.
+
 ## Deployment state
 
 `CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`

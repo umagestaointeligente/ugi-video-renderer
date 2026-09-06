@@ -69,6 +69,9 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`
 `VERCEL_PROJECT_SCOPED_DEPLOY_ROUTE=PREVIEW_PROMOTE_PIPELINE_READY_CHAT_CONNECTOR_MUTATION_UNSCOPED`
 `MAIL_DECISION=LIVE`
+`DELIVERY_EVIDENCE_GUARDS_V16=LIVE`
+`MAIL_SENT_RECEIPT_GUARD_V16=LIVE`
+`APPLICATION_APPLIED_RECEIPT_GUARD_V16=LIVE`
 `MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
@@ -508,6 +511,32 @@ Limites conhecidos permanecem:
 `LEAKED_PASSWORD_PROTECTION=KNOWN_PLAN_LIMITATION_NOT_UPGRADED`
 `SUPABASE_SERVER_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`
 
+### Delivery/application evidence guards V16 — LIVE
+
+Antes da ativação de qualquer conector real de envio/candidatura, as tabelas estavam vazias e foram endurecidas fail-closed. Nenhum dado legado precisou ser corrigido.
+
+Migrações canônicas:
+- `career360/migrations/20260906_delivery_receipt_guards_v16.sql` — commit `d21f7cfbca17e2fab2a274ff9f5f154361eb6e7b`;
+- `career360/migrations/20260906_delivery_receipt_identity_v16.sql` — commit `900398868256dae12faba0df869bd265eb690a45`.
+
+Banco LIVE:
+- `career_mail_actions.status='sent'` exige `direction='outbound'`, `sent_at`, `external_thread_ref_hash` e `delivery_receipt_hash`;
+- `delivery_receipt_hash` é identidade separada da thread e deve vir de sucesso retornado pelo provider;
+- `(user_id, delivery_receipt_hash)` é único quando o recibo existe;
+- `career_applications.status='applied'` exige `applied_at` + `external_application_ref_hash`;
+- `(user_id, external_application_ref_hash)` é único quando a referência existe;
+- ambos os CHECK constraints foram lidos no catálogo como `convalidated=true`.
+
+A camada atual `career-mail-decision` continua correta: `approve` grava somente `approved` e retorna `delivery_connector_required=true`; aprovação não vira `sent`.
+
+Estados:
+`DELIVERY_EVIDENCE_GUARDS_V16=LIVE`
+`MAIL_SENT_RECEIPT_GUARD_V16=LIVE`
+`APPLICATION_APPLIED_RECEIPT_GUARD_V16=LIVE`
+`MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
+
+Esses guards não provam que e-mail foi enviado ou candidatura foi realizada. Eles impedem que esses estados sejam persistidos sem a evidência mínima contratada.
+
 Redirect de confirmação usado pelo cliente:
 `https://lsi-career-360.vercel.app/?email-confirmado=1`.
 
@@ -580,4 +609,4 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=PROACTIVE_DIGEST_TRUTH_V2_LIVE_SOURCE_96CD425_EDGE_SHA_AA677838_SUPABASE_SECURITY_READINESS_READ_ONLY_PASS_43_OF_43_PUBLIC_TABLES_RLS_SERVICE_ONLY_SECURITY_DEFINER_PRIVATE_STORAGE_V16_FRONTEND_STILL_NOT_PROMOTED_VERCEL_CHAT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14`
+`LAST_VERIFIED_CHANGE=DELIVERY_EVIDENCE_GUARDS_V16_LIVE_MAIL_SENT_REQUIRES_PROVIDER_RECEIPT_HASH_THREAD_AND_SENT_AT_APPLICATION_APPLIED_REQUIRES_EXTERNAL_REF_AND_APPLIED_AT_RECEIPT_REUSE_UNIQUE_PROACTIVE_DIGEST_TRUTH_V2_LIVE_SUPABASE_SECURITY_AUDIT_PASS_V16_FRONTEND_STILL_NOT_PROMOTED_VERCEL_CHAT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14`
