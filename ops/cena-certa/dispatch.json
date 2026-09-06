@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-alien-v3.json",
   "batch_sha256": "279b7bd9191b7a342e8d48bff1853e1436e1489e78962a4dfe414265efe2efe6",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T18:46:10Z",
-  "request_id": "9e5845262ea74529a979ba9ec3c88903",
+  "requested_at": "2026-09-06T18:49:45Z",
+  "request_id": "0f2c61be1cab4b048cc3cc439d955a50",
   "candidate_count": 1,
   "selected_count": 1,
   "reserve_count": 0,
-  "note": "Daily8 07/09 Alien Grounds v3: 19 authored chunks aligned to 19 provider sentence boundaries; final CTA question merged naturally; no gate relaxed."
+  "note": "Daily8 07/09 Alien Grounds v3 after certified real-sentence-envelope alignment hardening; literal token coverage remains fail-closed; no gate relaxed."
 }
