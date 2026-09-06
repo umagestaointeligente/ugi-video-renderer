@@ -1,0 +1,19 @@
+{
+  "project": "UGI",
+  "route": "EDITORIAL_MEDIA_V1",
+  "queuePath": "control-plane/publisher-hub/media-queue/UGI-20260906-LI-ROCK-HDNOW-001.json",
+  "id": "UGI-20260906-LI-ROCK-HDNOW-001",
+  "platform": "linkedin",
+  "format": "image",
+  "mediaType": "image",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-06/rock-linkedin-repost.jpg",
+  "requestedDueAt": null,
+  "ok": false,
+  "bufferMutationPerformed": "unknown",
+  "publication": null,
+  "target": null,
+  "workerVersion": "lola-v8-r45-7-editorial-media-v1-2026-09-05",
+  "workerRoute": "/api/editorial-media-publish",
+  "error": "Invalid post: Whoops, it looks like you've already got this one scheduled or posted around the same time. We're not able to post the same thing twice so close together.",
+  "timestamp": "2026-09-06T18:24:47.019478+00:00"
+}
