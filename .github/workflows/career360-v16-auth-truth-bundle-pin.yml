@@ -1,0 +1,39 @@
+name: Career360 V16 Auth Truth Bundle Pin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/career360-v16-auth-truth-bundle-pin.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Repin canonical bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 career360/tools/v16_auth_truth_bundle_pin.py
+          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' career360/frontend/index.html >/dev/null
+          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' career360/frontend/index.html >/dev/null
+          grep -F '@719c15ebfe89d212a19473b70ea6e615174601d9/career360/frontend/app-m.js' career360/frontend/index.html >/dev/null
+          git diff --check
+      - name: Commit bundle pin
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-career360-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add career360/frontend/index.html
+          git diff --cached --check
+          git commit -m 'career360: repin V16 bundle to truthful auth source'
+          git push origin HEAD:main
+          echo "V16_AUTH_TRUTH_BUNDLE_COMMIT=$(git rev-parse HEAD)"
