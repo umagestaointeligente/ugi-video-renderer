@@ -20,7 +20,7 @@ Deno.serve(async(req:Request)=>{
   const service:any=createClient(url,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
   const uid=u.user.id;
 
-  const [profileR,professionalR,mediaR,photoSetR,photoVariantsR,digestPrefR,digestR,notifR,radarRunR,sourceR,engineR]=await Promise.all([
+  const [profileR,professionalR,mediaR,photoSetR,photoVariantsR,digestPrefR,digestR,notifR,radarRunR,sourceR,matchingCtlR,followupCtlR,mailCtlR]=await Promise.all([
     service.from("career_profiles").select("display_name,current_role_title,city,state_code,onboarding_status,updated_at").eq("user_id",uid).maybeSingle(),
     service.from("career_professional_profile_versions").select("id,version,status,created_at,accepted_at").eq("user_id",uid).order("version",{ascending:false}).limit(1).maybeSingle(),
     service.from("career_profile_media").select("id,updated_at").eq("user_id",uid).eq("media_type","profile_photo").maybeSingle(),
@@ -31,10 +31,12 @@ Deno.serve(async(req:Request)=>{
     service.from("career_notifications").select("id,kind,status,created_at").eq("user_id",uid).neq("status","dismissed").order("created_at",{ascending:false}).limit(50),
     service.from("career_opportunity_research_runs").select("status,finished_at,fetched_count,accepted_count,deduped_count,expired_count").in("status",["success","partial"]).order("finished_at",{ascending:false}).limit(1).maybeSingle(),
     service.from("career_opportunity_sources").select("id").eq("active",true),
-    service.from("career_engine_control").select("champion_engine,rollback_engine,updated_at").eq("id",1).maybeSingle()
+    service.from("career_engine_control").select("champion_version,rollback_version,status,updated_at").eq("component","matching").maybeSingle(),
+    service.from("career_engine_control").select("champion_version,status,updated_at").eq("component","followup_scheduler").maybeSingle(),
+    service.from("career_engine_control").select("champion_version,status,updated_at").eq("component","mail_delivery").maybeSingle()
   ]);
 
-  const criticalErrors=[profileR,professionalR,mediaR,photoSetR,photoVariantsR,digestPrefR,digestR,notifR,radarRunR,sourceR,engineR].filter((x:any)=>x?.error);
+  const criticalErrors=[profileR,professionalR,mediaR,photoSetR,photoVariantsR,digestPrefR,digestR,notifR,radarRunR,sourceR,matchingCtlR,followupCtlR,mailCtlR].filter((x:any)=>x?.error);
   if(criticalErrors.length)return json(503,{error:"UI_STATE_READ_FAILED"});
 
   const variants=photoVariantsR.data||[];
@@ -44,6 +46,9 @@ Deno.serve(async(req:Request)=>{
   const hasAcceptedVariant=variants.some((v:any)=>v.status==="accepted");
   const latestDigest=digestR.data||null;
   const radarRun=radarRunR.data||null;
+  const matchingActive=matchingCtlR.data?.status==="active";
+  const followupActive=followupCtlR.data?.status==="active";
+  const mailDeliveryActive=mailCtlR.data?.status==="active"&&Boolean(mailCtlR.data?.champion_version)&&mailCtlR.data?.champion_version!=="none";
 
   return json(200,{
     status:"CAREER_UI_READY",
@@ -64,8 +69,10 @@ Deno.serve(async(req:Request)=>{
       photo_studio_external_ai:false,
       photo_studio_provider:"local-studio-v1",
       radar_manual_refresh:true,
+      matching:matchingActive,
+      followup_scheduler:followupActive,
       mail_decision:true,
-      mail_delivery:false
+      mail_delivery:mailDeliveryActive
     },
     profile:{
       onboarding_status:profileR.data?.onboarding_status||null,
@@ -93,9 +100,18 @@ Deno.serve(async(req:Request)=>{
       accepted_count:radarRun?.accepted_count||0,
       deduped_count:radarRun?.deduped_count||0,
       expired_count:radarRun?.expired_count||0,
-      champion_engine:engineR.data?.champion_engine||"v2.0",
-      rollback_engine:engineR.data?.rollback_engine||"v1.0"
+      champion_engine:matchingCtlR.data?.champion_version||"v2.0",
+      rollback_engine:matchingCtlR.data?.rollback_version||null
     },
-    incomplete:{external_photo_ai:true,mail_delivery:true}
+    followup:{
+      scheduler_version:followupCtlR.data?.champion_version||null,
+      scheduler_active:followupActive,
+      delivery_connector_version:mailCtlR.data?.champion_version||null,
+      delivery_active:mailDeliveryActive
+    },
+    incomplete:{
+      external_photo_ai:true,
+      mail_delivery:!mailDeliveryActive
+    }
   });
 });
