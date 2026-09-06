@@ -12,19 +12,25 @@ permissions:
 
 concurrency:
   group: ugi-editorial-schedule-20260907
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   schedule:
     runs-on: ubuntu-latest
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_WORKER_COMMAND_KEY }}
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Queue and verify each Buffer schedule sequentially
+      - name: Queue, publish-to-Buffer schedule, verify receipt, persist sequentially
         shell: bash
         run: |
           set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
           git config user.name 'ugi-editorial-scheduler-bot'
           git config user.email 'ugi-editorial-scheduler-bot@users.noreply.github.com'
           Q='control-plane/publisher-hub/media-queue'
@@ -46,27 +52,21 @@ jobs:
           import json,sys
           p,id,platform,mt,url,fmt,due,topic,text=sys.argv[1:]
           d={'id':id,'project':'UGI','enabled':True,'platform':platform,'mediaType':mt,'mediaUrl':url,'format':fmt,'mode':'customScheduled','dueAt':due,'topic':topic,'text':text}
+          if platform == 'linkedin':
+              d['target']='UGI — Uma Gestão Inteligente'
+              d['personalProfileTargetAllowed']=False
           json.dump(d,open(p,'w'),ensure_ascii=False,indent=2)
           PY
-            git add "$q"
-            git commit -m "schedule: $id"
+            python scripts/ugi_editorial_media_publisher.py
+            test -f "$r"
+            python - "$r" <<'PY'
+          import json,sys
+          d=json.load(open(sys.argv[1])); assert d.get('ok') is True; assert d.get('bufferMutationPerformed') is True; assert (d.get('publication') or {}).get('bufferPostId'); assert str((d.get('publication') or {}).get('bufferStatus','')).lower() == 'scheduled'
+          PY
+            git add "$q" "$r"
+            git commit -m "schedule: $id" || true
             git pull --rebase origin main
             git push origin HEAD:main
-            ok=0
-            for i in $(seq 1 24); do
-              sleep 5
-              git pull --rebase origin main >/dev/null 2>&1 || true
-              if [ -f "$r" ]; then
-                python - "$r" <<'PY' && ok=1 || ok=0
-          import json,sys
-          d=json.load(open(sys.argv[1])); assert d.get('ok') is True and d.get('bufferMutationPerformed') is True
-          PY
-                [ "$ok" = 1 ] && break
-                cat "$r"
-                exit 1
-              fi
-            done
-            [ "$ok" = 1 ] || { echo "receipt timeout: $id"; exit 1; }
           }
 
           queue_one 'UGI-20260907-IG-STORY-CHATGPT-01' instagram image 'story-01-chatgpt.jpg' story '2026-09-07T11:15:00Z' 'ChatGPT Ads — a vitrine mudou de lugar' ''
