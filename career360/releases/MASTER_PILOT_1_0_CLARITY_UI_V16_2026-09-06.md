@@ -242,6 +242,40 @@ States:
 
 These guards are evidence contracts, not delivery receipts by themselves. No send/application is claimed without an external connector receipt.
 
+## Mail provider receipt primitives
+
+The external evidence contract was completed before activating a real product mail connector.
+
+Canonical additions:
+- external event receipt guards `9957b2bb2f3650b8062d2fef77f022bfedeb47cd`;
+- service-only outbound delivery receipt RPC `9a2df7b0f55af3248b070941b3110c1862c8c43f`;
+- service-only inbound/milestone RPCs `257ca4257b534a1792330773e31dc961d28579c4`;
+- permanent rollback-safe smoke `01159c2d4dedf7678b3c946d5783b78453a8c25e`;
+- provider contract `career360/docs/MAIL_PROVIDER_RECEIPT_CONTRACT_V16.md` (`51d351664d78f9112e435ff163e29ad99ad06c47`).
+
+Live database primitives:
+- outbound `sent` remains provider-receipt gated;
+- inbound requires provider, received timestamp, thread hash and message hash;
+- external application milestones require provider, event hash and observed timestamp;
+- all receipt RPCs are service-only; raw provider identifiers are hashed before persistence.
+
+A live transactional smoke returned 9/9 PASS and rolled back all test rows. Post-rollback application/mail row counts remained zero.
+
+The Gmail connector inside ChatGPT is readable and its real sent-message shape exposes message id, thread id and timestamp, which is sufficient for the receipt mapping. This is not Career 360 product OAuth. Outlook Email was available in the plugin directory but not installed during this audit.
+
+States:
+`EXTERNAL_EVENT_RECEIPT_GUARDS_V16=LIVE`
+`MAIL_RECEIPT_PRIMITIVES_V16=LIVE`
+`APPLICATION_MILESTONE_RECEIPT_RPC_V16=LIVE`
+`GMAIL_CHATGPT_CONNECTOR_READ=PROVEN`
+`GMAIL_PROVIDER_RECEIPT_SHAPE=PROVEN`
+`CAREER_GMAIL_OAUTH=NOT_LIVE`
+`OUTLOOK_EMAIL_CONNECTOR=AVAILABLE_NOT_INSTALLED`
+`CAREER_OUTLOOK_OAUTH=NOT_LIVE`
+`MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
+
+No actual email/application event is claimed from this infrastructure-only validation.
+
 ## Deployment state
 
 `CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`

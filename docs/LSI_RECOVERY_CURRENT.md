@@ -72,6 +72,14 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `DELIVERY_EVIDENCE_GUARDS_V16=LIVE`
 `MAIL_SENT_RECEIPT_GUARD_V16=LIVE`
 `APPLICATION_APPLIED_RECEIPT_GUARD_V16=LIVE`
+`EXTERNAL_EVENT_RECEIPT_GUARDS_V16=LIVE`
+`MAIL_RECEIPT_PRIMITIVES_V16=LIVE`
+`APPLICATION_MILESTONE_RECEIPT_RPC_V16=LIVE`
+`GMAIL_CHATGPT_CONNECTOR_READ=PROVEN`
+`GMAIL_PROVIDER_RECEIPT_SHAPE=PROVEN`
+`CAREER_GMAIL_OAUTH=NOT_LIVE`
+`OUTLOOK_EMAIL_CONNECTOR=AVAILABLE_NOT_INSTALLED`
+`CAREER_OUTLOOK_OAUTH=NOT_LIVE`
 `MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 
@@ -537,6 +545,57 @@ Estados:
 
 Esses guards não provam que e-mail foi enviado ou candidatura foi realizada. Eles impedem que esses estados sejam persistidos sem a evidência mínima contratada.
 
+### Mail provider receipt primitives V16 — LIVE infrastructure, connector NOT LIVE
+
+A camada de evidência externa foi completada antes da ativação de Gmail/Outlook no produto.
+
+Migrações canônicas novas:
+- `career360/migrations/20260906_external_event_receipt_guards_v16.sql` — commit `9957b2bb2f3650b8062d2fef77f022bfedeb47cd`;
+- `career360/migrations/20260906_mail_delivery_receipt_rpc_v16.sql` — commit `9a2df7b0f55af3248b070941b3110c1862c8c43f`;
+- `career360/migrations/20260906_external_event_receipt_rpcs_v16.sql` — commit `257ca4257b534a1792330773e31dc961d28579c4`;
+- smoke permanente `career360/tests/v16-receipt-contract-smoke.sql` — commit `01159c2d4dedf7678b3c946d5783b78453a8c25e`;
+- contrato `career360/docs/MAIL_PROVIDER_RECEIPT_CONTRACT_V16.md` — commit `51d351664d78f9112e435ff163e29ad99ad06c47`.
+
+Banco LIVE:
+- inbound exige `mail_provider + received_at + external_thread_ref_hash + external_message_ref_hash`;
+- milestones externos (`recruiter_reply`, `interview_pending`, `interview_confirmed`, `finalist`, `offer`, `hired`, `rejected`, `closed`) exigem provider + hash de evento + horário observado;
+- `career_record_mail_delivery_receipt(...)` é service-only, `SECURITY DEFINER`, `search_path=public,extensions`, idempotente e só permite `approved -> sent`;
+- `career_record_inbound_mail_event(...)` é service-only e idempotente;
+- `career_record_application_milestone(...)` é service-only e idempotente;
+- IDs externos brutos entram apenas transitoriamente e os RPCs persistem SHA-256.
+
+Teste vivo transacional com rollback:
+- 9/9 PASS;
+- delivery first + idempotent PASS;
+- inbound first + idempotent PASS;
+- milestone first + idempotent PASS;
+- inbound sem IDs externos = CHECK_REJECTED;
+- sent sem receipt = CHECK_REJECTED;
+- milestone sem ref = CHECK_REJECTED;
+- pós-rollback: `career_applications=0`, `career_mail_actions=0`.
+
+Gmail dentro do ChatGPT:
+- conector legível = PROVEN;
+- mensagem real em SENT expõe `id`, `thread_id` e timestamp, suficientes para o contrato de receipt;
+- isso NÃO equivale a OAuth/background connector do Career 360.
+
+Outlook:
+- conector `Outlook Email` existe no diretório e estava `AVAILABLE_NOT_INSTALLED` na auditoria;
+- não declarar OAuth Outlook do produto.
+
+Estados:
+`EXTERNAL_EVENT_RECEIPT_GUARDS_V16=LIVE`
+`MAIL_RECEIPT_PRIMITIVES_V16=LIVE`
+`APPLICATION_MILESTONE_RECEIPT_RPC_V16=LIVE`
+`GMAIL_CHATGPT_CONNECTOR_READ=PROVEN`
+`GMAIL_PROVIDER_RECEIPT_SHAPE=PROVEN`
+`CAREER_GMAIL_OAUTH=NOT_LIVE`
+`OUTLOOK_EMAIL_CONNECTOR=AVAILABLE_NOT_INSTALLED`
+`CAREER_OUTLOOK_OAUTH=NOT_LIVE`
+`MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
+
+Os estados LIVE acima são infraestrutura de evidência. Nenhum novo envio, inbound, candidatura ou milestone real foi criado durante o smoke.
+
 Redirect de confirmação usado pelo cliente:
 `https://lsi-career-360.vercel.app/?email-confirmado=1`.
 
@@ -609,4 +668,4 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=DELIVERY_EVIDENCE_GUARDS_V16_LIVE_MAIL_SENT_REQUIRES_PROVIDER_RECEIPT_HASH_THREAD_AND_SENT_AT_APPLICATION_APPLIED_REQUIRES_EXTERNAL_REF_AND_APPLIED_AT_RECEIPT_REUSE_UNIQUE_PROACTIVE_DIGEST_TRUTH_V2_LIVE_SUPABASE_SECURITY_AUDIT_PASS_V16_FRONTEND_STILL_NOT_PROMOTED_VERCEL_CHAT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14`
+`LAST_VERIFIED_CHANGE=MAIL_RECEIPT_PRIMITIVES_V16_LIVE_EXTERNAL_EVENT_GUARDS_LIVE_TRANSACTIONAL_SMOKE_9_OF_9_PASS_ROLLBACK_ZERO_ROWS_GMAIL_CHATGPT_READ_AND_RECEIPT_SHAPE_PROVEN_BUT_CAREER_GMAIL_OAUTH_NOT_LIVE_OUTLOOK_AVAILABLE_NOT_INSTALLED_MAIL_DELIVERY_CONNECTOR_NOT_LIVE_V16_FRONTEND_STILL_NOT_PROMOTED_VERCEL_CHAT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14`
