@@ -1,0 +1,32 @@
+{
+  "project": "UGI",
+  "route": "EDITORIAL_MEDIA_V1",
+  "queuePath": "control-plane/publisher-hub/media-queue/UGI-20260906-TT-ROCK-001.json",
+  "id": "UGI-20260906-TT-ROCK-001",
+  "platform": "tiktok",
+  "format": "video",
+  "mediaType": "video",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-06/rock-tiktok.mp4",
+  "requestedDueAt": "2026-09-06T19:15:00Z",
+  "ok": true,
+  "bufferMutationPerformed": true,
+  "publication": {
+    "status": "scheduled",
+    "bufferStatus": "scheduled",
+    "bufferPostId": "6a9cd5d441e2718ea373b37a",
+    "dueAt": "2026-09-06T19:15:00.000Z",
+    "sentAt": null,
+    "externalLink": null,
+    "sharedNow": false,
+    "error": null
+  },
+  "target": {
+    "channelId": "6a789721b2d9d5774345839d",
+    "channelName": null,
+    "channelService": "tiktok"
+  },
+  "workerVersion": "lola-v8-r45-7-editorial-media-v1-2026-09-05",
+  "workerRoute": "/api/editorial-media-publish",
+  "error": null,
+  "timestamp": "2026-09-06T02:54:12.582315+00:00"
+}
