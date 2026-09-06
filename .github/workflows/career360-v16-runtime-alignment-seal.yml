@@ -1,0 +1,39 @@
+name: Career360 V16 Runtime Alignment Seal
+
+on:
+  push:
+    paths:
+      - 'career360/tools/v16_runtime_alignment_seal.py'
+      - '.github/workflows/career360-v16-runtime-alignment-seal.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  seal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Seal current runtime truth
+        run: python career360/tools/v16_runtime_alignment_seal.py
+      - name: Verify canonical states
+        run: |
+          grep -F 'APPLICATION_SUBMISSION_RECEIPT_V1=LIVE' docs/LSI_RECOVERY_CURRENT.md
+          grep -F 'SUPABASE_PUBLIC_TABLE_RLS=44_OF_44' docs/LSI_RECOVERY_CURRENT.md
+          grep -F 'BACKEND_RUNTIME_ALIGNMENT_2026_09_06=PASS' docs/LSI_RECOVERY_CURRENT.md
+          grep -F 'Final backend runtime alignment seal' career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md
+          ! grep -F 'career-ui-state` V1 ACTIVE' docs/LSI_RECOVERY_CURRENT.md
+      - name: Commit canonical seal
+        run: |
+          if git diff --quiet; then
+            echo 'No changes required'
+            exit 0
+          fi
+          git config user.name 'ugi-career360-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add docs/LSI_RECOVERY_CURRENT.md career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md
+          git commit -m 'career360: seal final backend runtime alignment v16'
+          git push
