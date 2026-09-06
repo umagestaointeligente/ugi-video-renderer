@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-exact4-20260905-late-v2.json",
-  "batch_sha256": "a3c628990dacce82c9885999900bc1c95ddb6b73c6f76382cb3f4990287971d6",
+  "batch_path": "ops/cena-certa/batches/cena-certa-exact4-20260905-late-v3.json",
+  "batch_sha256": "50931ef65d465749abda6537c5b189f9b61be37f846473aac68a5c155428b6b7",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T01:47:20+00:00",
-  "request_id": "exact4-20260905-r2-224720",
+  "requested_at": "2026-09-06T01:57:32+00:00",
+  "request_id": "exact4-20260905-r3-225732",
   "candidate_count": 4,
   "selected_count": 4,
   "reserve_count": 0,
-  "note": "Explicit user authorization to publish four Cena Certa videos; R2 structural captions retained; canonical TTS +28 recalibration certified by smoke before this dispatch."
+  "note": "Explicit user authorization to publish four Cena Certa videos; R3 uses certified +28 TTS, deterministic two-pass loudnorm, refreshed schedules, and SCP blackout-safe scene cut."
 }
