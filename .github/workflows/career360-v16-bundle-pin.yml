@@ -1,0 +1,69 @@
+name: Career360 V16 Bundle Pin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/career360-v16-bundle-pin.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: career360-v16-bundle-pin
+  cancel-in-progress: false
+
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Insert immutable V16 layer idempotently
+        shell: bash
+        env:
+          APP_M_SHA: f597e48006aae69c73c6c0a540b797f0093e4e84
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('career360/frontend/index.html')
+          s=p.read_text()
+          app_m='https://cdn.jsdelivr.net/gh/umagestaointeligente/ugi-video-renderer@f597e48006aae69c73c6c0a540b797f0093e4e84/career360/frontend/app-m.js'
+          line=f'<script type="module" src="{app_m}"></script>'
+          if line in s:
+              print('APP_M_PIN_ALREADY_PRESENT=YES')
+          else:
+              anchor='<script type="module" src="https://cdn.jsdelivr.net/gh/umagestaointeligente/ugi-video-renderer@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js"></script>'
+              if s.count(anchor)!=1:
+                  raise SystemExit(f'expected exactly one app-l anchor, found {s.count(anchor)}')
+              s=s.replace(anchor, anchor+'\n'+line, 1)
+              p.write_text(s)
+              print('APP_M_PIN_INSERTED=YES')
+          if p.read_text().count('/career360/frontend/app-m.js')!=1:
+              raise SystemExit('app-m pin count is not exactly one')
+          PY
+          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' career360/frontend/index.html >/dev/null
+          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' career360/frontend/index.html >/dev/null
+          grep -F '@f597e48006aae69c73c6c0a540b797f0093e4e84/career360/frontend/app-m.js' career360/frontend/index.html >/dev/null
+          echo 'V16_BUNDLE_SOURCE_GATE=PASS'
+
+      - name: Commit exact bundle mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- career360/frontend/index.html; then
+            echo 'BUNDLE_ALREADY_PINNED=YES'
+            exit 0
+          fi
+          git config user.name 'ugi-career360-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add career360/frontend/index.html
+          git commit -m 'career360: pin V16 clarity layer in canonical bundle'
+          git push origin HEAD:main
+          echo 'V16_BUNDLE_PIN_PUSH=PASS'
