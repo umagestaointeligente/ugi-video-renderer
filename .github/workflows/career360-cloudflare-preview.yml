@@ -1,0 +1,73 @@
+name: Career360 Cloudflare Static Preview
+run-name: Career360 Cloudflare Preview ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['career360-cloudflare-preview-*']
+    paths:
+      - 'career360/frontend/**'
+      - 'career360-cloudflare-preview.toml'
+      - '.github/workflows/career360-cloudflare-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      PREVIEW_URL: https://career360-preview-20260906.umagestaointeligente.workers.dev
+      EXPECTED_APP_K: 6df7b4e63d7e52ce3c3f02247392b98f0393cbe8
+      EXPECTED_APP_L: 4283646143425e4a3156e44100aabb475df88d27
+      EXPECTED_APP_M: 719c15ebfe89d212a19473b70ea6e615174601d9
+      TRUTHFUL_COPY: Você confirma o que importa. O Career 360 organiza sua busca.
+      LEGACY_COPY: Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail-closed credential and source gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" career360/frontend/index.html >/dev/null
+          grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" career360/frontend/index.html >/dev/null
+          grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" career360/frontend/index.html >/dev/null
+          grep -F "$TRUTHFUL_COPY" career360/frontend/index.html >/dev/null
+          ! grep -F "$LEGACY_COPY" career360/frontend/index.html >/dev/null
+          grep -Fx 'vercel.json' career360/frontend/.assetsignore >/dev/null
+          echo 'SOURCE_AND_ASSET_EXCLUSION_GATE=PASS'
+      - name: Deploy isolated Workers Static Assets preview
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.32.0'
+          command: deploy --config career360-cloudflare-preview.toml
+      - name: Live HTTP V16 pin and truth gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=0
+          for attempt in 1 2 3 4 5 6; do
+            body="$(curl --fail --silent --show-error --location "$PREVIEW_URL/" || true)"
+            if grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null \
+              && grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null \
+              && grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" <<< "$body" >/dev/null \
+              && grep -F "$TRUTHFUL_COPY" <<< "$body" >/dev/null \
+              && ! grep -F "$LEGACY_COPY" <<< "$body" >/dev/null; then
+              ok=1; break
+            fi
+            sleep 3
+          done
+          test "$ok" = '1'
+          code="$(curl -sS -o /dev/null -w '%{http_code}' "$PREVIEW_URL/")"
+          test "$code" = '200'
+          leak_code="$(curl -sS -o /dev/null -w '%{http_code}' "$PREVIEW_URL/vercel.json")"
+          test "$leak_code" != '200'
+          echo 'CLOUDFLARE_PREVIEW_HTTP_V16_GATE=PASS'
+          echo "PREVIEW_URL=$PREVIEW_URL" >> "$GITHUB_STEP_SUMMARY"
+          echo 'PRODUCTION_MUTATION=NONE' >> "$GITHUB_STEP_SUMMARY"
