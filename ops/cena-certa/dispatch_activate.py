@@ -73,7 +73,7 @@ def main() -> None:
         raise SystemExit('DISPATCH_BATCH_MISSING')
 
     # Re-run the full zero-network batch gate immediately before activation.
-    # Daily default remains 10 -> 8 + 2; an explicit smaller profile is bound
+    # Daily default is 12 -> 8 + 4; an explicit smaller profile may be bound
     # to the immutable dispatch only when candidate == selected + reserve.
     items=json.loads(batch.read_text(encoding='utf-8'))
     candidate_count=len(items)
