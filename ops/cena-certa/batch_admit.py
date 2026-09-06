@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fail-closed admission gate for Cena Certa production batches.
 
-Takes one already-editorially-approved 10-candidate JSON list, validates it against
+Takes one already-editorially-approved 12-candidate JSON list, validates it against
 the certified Factory V2 preflight, writes an immutable canonical batch under
 ops/cena-certa/batches/, and prints the SHA-256 needed by dispatch.json.
 
@@ -32,9 +32,9 @@ def sha256_bytes(data: bytes) -> str:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", required=True, help="10-candidate editorial JSON list")
+    ap.add_argument("--input", required=True, help="12-candidate editorial JSON list")
     ap.add_argument("--name", required=True, help="immutable batch basename without .json")
-    ap.add_argument("--expect", type=int, default=10, help="expected candidate count; daily default remains 10")
+    ap.add_argument("--expect", type=int, default=12, help="expected candidate count; daily default is 12")
     args = ap.parse_args()
 
     name = str(args.name).strip()
@@ -46,7 +46,7 @@ def main() -> None:
         raise SystemExit("BATCH_INPUT_MISSING")
 
     # Full certified validation includes editorial/rights/anti-repeat/source/schedule gates.
-    if args.expect < 1 or args.expect > 10:
+    if args.expect < 1 or args.expect > 12:
         raise SystemExit("BATCH_EXPECT_RANGE_FAIL")
     validate_batch(src, expect=args.expect)
     items = json.loads(src.read_text(encoding="utf-8"))
@@ -62,7 +62,7 @@ def main() -> None:
         print("BATCH_ALREADY_ADMITTED", out.relative_to(REPO), digest)
         return
 
-    tmp = out.with_name(out.name + f".tmp-{os.getpid()}")
+    tmp = out.with_name(out.name + f'.tmp-{os.getpid()}')
     try:
         tmp.write_bytes(canonical)
         os.replace(tmp, out)
