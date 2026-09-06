@@ -1,21 +1,20 @@
-name: Career360 V16 Bundle Pin
+name: Career360 V16 Recovery Seal
 
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/career360-v16-bundle-pin.yml'
-  workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: career360-v16-bundle-pin
+  group: career360-v16-recovery-seal
   cancel-in-progress: false
 
 jobs:
-  pin:
+  seal:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -24,46 +23,46 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Insert immutable V16 layer idempotently
+      - name: Update canonical Recovery idempotently
         shell: bash
-        env:
-          APP_M_SHA: f597e48006aae69c73c6c0a540b797f0093e4e84
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          p=Path('career360/frontend/index.html')
+          p=Path('docs/LSI_RECOVERY_CURRENT.md')
           s=p.read_text()
-          app_m='https://cdn.jsdelivr.net/gh/umagestaointeligente/ugi-video-renderer@f597e48006aae69c73c6c0a540b797f0093e4e84/career360/frontend/app-m.js'
-          line=f'<script type="module" src="{app_m}"></script>'
-          if line in s:
-              print('APP_M_PIN_ALREADY_PRESENT=YES')
-          else:
-              anchor='<script type="module" src="https://cdn.jsdelivr.net/gh/umagestaointeligente/ugi-video-renderer@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js"></script>'
-              if s.count(anchor)!=1:
-                  raise SystemExit(f'expected exactly one app-l anchor, found {s.count(anchor)}')
-              s=s.replace(anchor, anchor+'\n'+line, 1)
-              p.write_text(s)
-              print('APP_M_PIN_INSERTED=YES')
-          if p.read_text().count('/career360/frontend/app-m.js')!=1:
-              raise SystemExit('app-m pin count is not exactly one')
-          PY
-          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' career360/frontend/index.html >/dev/null
-          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' career360/frontend/index.html >/dev/null
-          grep -F '@f597e48006aae69c73c6c0a540b797f0093e4e84/career360/frontend/app-m.js' career360/frontend/index.html >/dev/null
-          echo 'V16_BUNDLE_SOURCE_GATE=PASS'
 
-      - name: Commit exact bundle mutation
+          old='`CURRENT_STATUS=V14_PRODUCTION_STABLE_V15_BROWSER_VALIDATED_DEPLOY_PIPELINE_HARDENED_WAITING_VERCEL_AUTH`'
+          new='`CURRENT_STATUS=V14_PRODUCTION_STABLE_V15_V16_BROWSER_VALIDATED_BUNDLE_PINNED_WAITING_VERCEL_AUTH`'
+          if old in s:
+              s=s.replace(old,new,1)
+
+          gate='`CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`'
+          if gate not in s:
+              anchor='`UI_RESPONSIVE_V15=BROWSER_VALIDATED_NOT_YET_PROMOTED`'
+              if anchor not in s: raise SystemExit('V15 UI gate anchor not found')
+              s=s.replace(anchor,anchor+'\n'+gate,1)
+
+          section='''## 9A. V16 — Clarity UI / menos texto / decisão primeiro\n\nEstado:\n`CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`\n\nCamada incremental:\n`career360/frontend/app-m.js`\n\nPin imutável:\n`f597e48006aae69c73c6c0a540b797f0093e4e84`\n\nBundle canônico com `app-k -> app-l -> app-m`:\n`08f100d3c3bf10320e429a47529816b0b674b6f3`\n\nRelease canônica:\n`career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md`\n\nObjetivo da V16:\n- reduzir texto repetitivo na superfície;\n- melhorar hierarquia, respiro, bordas, sombras e densidade;\n- transformar Meu Agente em superfície de decisão;\n- manter métricas e pendências visíveis;\n- esconder detalhe operacional que não precisa competir com a decisão;\n- oferecer ações rápidas de consulta sem criar novas mutações.\n\nValidação final sobre bundle canônico:\n- run `34007073507`;\n- job `101416159331`;\n- `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;\n- `CLARITY_360=PASS mutations=5`;\n- `CLARITY_412=PASS mutations=5`;\n- `CLARITY_768=PASS mutations=5`;\n- `CLARITY_1180=PASS mutations=5`;\n- `V16_AGENT_QUICK_ACTIONS=PASS`;\n- `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`.\n\nIMPORTANTE:\nBrowser PASS + bundle pinado NÃO significa produção LIVE.\nA V16 só vira LIVE após promoção comprovada no domínio oficial e gate móvel autenticado.\n\n'''
+          if '## 9A. V16 — Clarity UI / menos texto / decisão primeiro' not in s:
+              anchor='## 10. Radar / Matching'
+              if anchor not in s: raise SystemExit('Radar section anchor not found')
+              s=s.replace(anchor,section+anchor,1)
+
+          s=s.replace('- Remote Desktop Commander = nenhum dispositivo online;','- Remote Desktop Commander = `PROIBIDO` por decisão do usuário; não sugerir esta rota novamente;')
+          p.write_text(s)
+          print('RECOVERY_V16_SEAL=PASS')
+          PY
+
+      - name: Commit Recovery and remove one-shot workflow
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- career360/frontend/index.html; then
-            echo 'BUNDLE_ALREADY_PINNED=YES'
-            exit 0
-          fi
+          rm .github/workflows/career360-v16-bundle-pin.yml
           git config user.name 'ugi-career360-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add career360/frontend/index.html
-          git commit -m 'career360: pin V16 clarity layer in canonical bundle'
+          git add docs/LSI_RECOVERY_CURRENT.md .github/workflows/career360-v16-bundle-pin.yml
+          git diff --cached --check
+          git commit -m 'career360: seal V16 clarity state in Recovery'
           git push origin HEAD:main
-          echo 'V16_BUNDLE_PIN_PUSH=PASS'
+          echo 'V16_RECOVERY_SEAL_PUSH=PASS'
