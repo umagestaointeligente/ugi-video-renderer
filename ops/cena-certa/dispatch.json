@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-exact5-20260906-complement-v1.json",
-  "batch_sha256": "6b8e65cec4756caeb620a52f50d2f099604fa84046674cafccda39013cfc2e16",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T15:37:37.315404+00:00",
-  "request_id": "f456579dbb124e93bdd88fe0aeedb3d6",
-  "candidate_count": 5,
-  "selected_count": 5,
-  "reserve_count": 0,
-  "note": "Complemento 06/09/2026: produzir 5 vídeos restantes sem alterar os 3 já agendados."
+  "requested_at": "",
+  "request_id": "",
+  "note": "IDLE after fail-closed exact5 complement v1 prepare failures; audit run 34042911807 retained."
 }
