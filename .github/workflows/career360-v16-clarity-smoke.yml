@@ -65,3 +65,5 @@ jobs:
           set -euo pipefail
           cd /tmp/career360-v16
           node v16-clarity-smoke.mjs
+
+# Retriggered after canonical bundle pin 4fae7cd5b57fdf68681ac0875f006f8e158f821e.
