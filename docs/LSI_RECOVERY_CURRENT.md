@@ -299,7 +299,7 @@ Destino explícito:
 ### Pipeline endurecido
 
 Commit do workflow:
-`921fed05010b71d9a49f1a910f8c0a40ec49dc89`
+`7aba73e550410ed111dde30007a0033935c7b0e4`
 
 CLI pinada:
 `vercel@59.11.7`.
@@ -348,6 +348,9 @@ Estado:
 `V16_PREVIEW_DEPLOYED=NO`
 `V16_PRODUCTION_DEPLOYED=NO`
 `DEPLOY_BLOCKER=IN_CHAT_VERCEL_DEPLOY_ACTION_DOES_NOT_EXPOSE_PROJECT_ID`
+`VERCEL_TEAM_PROJECT_COUNT=9`
+`VERCEL_PROJECT_GIT_LINK=null`
+`VERCEL_GIT_INTEGRATION_FOR_CAREER360=NOT_ACTIVE`
 
 Regra operacional absoluta do usuário:
 - Vercel só pode ser acessada/operada pelo conector Vercel dentro deste ChatGPT;
@@ -366,10 +369,10 @@ Camada incremental:
 `career360/frontend/app-m.js`
 
 Pin imutável:
-`3cd06d176f81e07c6f4dba1f7fb962f73be4ce34`
+`719c15ebfe89d212a19473b70ea6e615174601d9`
 
 Bundle canônico com `app-k -> app-l -> app-m`:
-`ac8a46fe5a5d3f28aab15c31c0bafd8e6558f844`
+`4fae7cd5b57fdf68681ac0875f006f8e158f821e`
 
 Release canônica:
 `career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md`
@@ -383,18 +386,20 @@ Objetivo da V16:
 - oferecer ações rápidas de consulta sem criar novas mutações.
 
 Validação final sobre bundle canônico:
-- run `34009190125`;
-- job `101421875198`;
+- run `34010192948`;
+- job `101424535949`;
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;
 - `V16_TOUCH_TARGET_POLICY=44PX`;
 - `V16_TRUTHFUL_STATUS_POLICY=PASS`;
+- `V16_AUTH_TRUTHFUL_COPY_POLICY=PASS`;
 - `CLARITY_360=PASS mutations=6`;
 - `CLARITY_412=PASS mutations=6`;
 - `CLARITY_768=PASS mutations=6`;
 - `CLARITY_1180=PASS mutations=6`;
 - `V16_AGENT_QUICK_ACTIONS=PASS`;
 - `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`;
-- `V16_TRUTHFUL_RUNTIME_DERIVATION=PASS`.
+- `V16_TRUTHFUL_RUNTIME_DERIVATION=PASS`;
+- `V16_AUTH_TRUTHFUL_COPY=PASS`.
 
 Hardening final antes de promoção:
 - atalhos do agente >=44 px;
@@ -405,6 +410,7 @@ Hardening final antes de promoção:
 - o texto legado `Agente trabalhando` da V12 não é tratado como prova de atividade em tempo real;
 - status visível derivado apenas de estado verificável: `Atualizando` quando a atualização está realmente em curso, `Atualizado` quando existe resumo real e `Aguardando` quando ainda não existe resumo;
 - onboarding e suporte com copy reduzida, sem remover guardrails de privacidade/confirmacao;
+- copy pré-login não afirma atividade sem runtime: `Você confirma o que importa. O Career 360 organiza sua busca.`;
 - foco visível para teclado e `prefers-reduced-motion` respeitado.
 
 IMPORTANTE:
@@ -523,4 +529,4 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V16_RUNTIME_TRUTH_BROWSER_PASS_APP_M_3CD06D1_APP_L_428364_APP_K_6DF7B4_BUNDLE_AC8A46F_SMOKE_RUN_34009190125_JOB_101421875198_VERCEL_CHATGPT_ONLY_EXTERNAL_AUTH_PROHIBITED_INTERNAL_DEPLOY_UNSCOPED_PRODUCTION_STILL_V14_NOT_PROMOTED`
+`LAST_VERIFIED_CHANGE=V16_AUTH_RUNTIME_TRUTH_BROWSER_PASS_APP_M_719C15E_APP_L_428364_APP_K_6DF7B4_BUNDLE_4FAE7CD_SMOKE_RUN_34010192948_JOB_101424535949_AUTH_COPY_PASS_VERCEL_CHATGPT_ONLY_INTERNAL_DEPLOY_UNSCOPED_PRODUCTION_STILL_V14_NOT_PROMOTED`

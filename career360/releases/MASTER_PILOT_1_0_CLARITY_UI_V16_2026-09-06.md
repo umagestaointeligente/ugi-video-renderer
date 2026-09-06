@@ -19,10 +19,10 @@ File:
 `career360/frontend/app-m.js`
 
 Final immutable hardened pin:
-`3cd06d176f81e07c6f4dba1f7fb962f73be4ce34`
+`719c15ebfe89d212a19473b70ea6e615174601d9`
 
 Canonical hardened bundle commit:
-`ac8a46fe5a5d3f28aab15c31c0bafd8e6558f844`
+`4fae7cd5b57fdf68681ac0875f006f8e158f821e`
 
 Load order remains additive:
 `... -> app-k -> app-l -> app-m`
@@ -90,6 +90,7 @@ Before promotion, V16 received an additional truthfulness/accessibility pass:
 - keyboard focus visibility was strengthened;
 - `prefers-reduced-motion` is respected;
 - agent question input has an explicit accessible label.
+- pre-login copy avoids claiming live agent activity without runtime evidence: `Você confirma o que importa. O Career 360 organiza sua busca.`
 
 Policy:
 `V16_TRUTHFUL_STATUS_POLICY=PASS`
@@ -108,10 +109,10 @@ Permanent policy:
 `V16_TOUCH_TARGET_POLICY=44PX`
 
 Hardening source commit / immutable app-m pin:
-`3cd06d176f81e07c6f4dba1f7fb962f73be4ce34`
+`719c15ebfe89d212a19473b70ea6e615174601d9`
 
 Hardened canonical bundle:
-`ac8a46fe5a5d3f28aab15c31c0bafd8e6558f844`
+`4fae7cd5b57fdf68681ac0875f006f8e158f821e`
 
 ## Browser validation
 
@@ -122,14 +123,15 @@ Permanent workflow:
 `.github/workflows/career360-v16-clarity-smoke.yml`
 
 Final hardened canonical-bundle validation:
-- run `34009190125`
-- job `101421875198`
+- run `34010192948`
+- job `101424535949`
 - result `SUCCESS`
 
 Evidence:
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`
 - `V16_TOUCH_TARGET_POLICY=44PX`
 - `V16_TRUTHFUL_STATUS_POLICY=PASS`
+- `V16_AUTH_TRUTHFUL_COPY_POLICY=PASS`
 - `CLARITY_360=PASS mutations=6`
 - `CLARITY_412=PASS mutations=6`
 - `CLARITY_768=PASS mutations=6`
@@ -137,8 +139,10 @@ Evidence:
 - `V16_AGENT_QUICK_ACTIONS=PASS`
 - `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`
 - `V16_TRUTHFUL_RUNTIME_DERIVATION=PASS`
+- `V16_AUTH_TRUTHFUL_COPY=PASS`
 
 Earlier evidence retained for audit:
+- previous runtime-truth final run `34009190125`, job `101421875198`, SUCCESS before auth-copy hardening;
 - pre-bundle run `34006941241`, job `101415802373`, SUCCESS;
 - first canonical-bundle run `34007073507`, job `101416159331`, SUCCESS before final 44px hardening;
 - first test attempt `34006874557` failed only because the isolated harness kept the agent view hidden and therefore measured a zero-height send button. It did not mutate production.
@@ -164,7 +168,7 @@ Quick actions remain read-oriented questions and call the existing canonical age
 Do not mark `LIVE` until the official production frontend is proven to load:
 - `app-k@6df7b4e...`
 - `app-l@4283646...`
-- `app-m@3cd06d1...`
+- `app-m@719c15e...`
 
 and the authenticated mobile gate is completed.
 
