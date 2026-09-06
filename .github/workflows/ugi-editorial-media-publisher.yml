@@ -1,0 +1,62 @@
+name: UGI Editorial Media Publisher
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'control-plane/publisher-hub/media-queue/*.json'
+      - 'scripts/ugi_editorial_media_publisher.py'
+      - '.github/workflows/ugi-editorial-media-publisher.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-editorial-media-publisher
+  cancel-in-progress: false
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  publish-one:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate isolated publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/ugi_editorial_media_publisher.py
+          test -f control-plane/observability/buffer-circuit.json
+          test -f config/ugi/distribution-state.json
+      - name: Process at most one editorial media item
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          python scripts/ugi_editorial_media_publisher.py
+      - name: Persist media receipts only
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-plane/publisher-hub/media-receipts
+          git config user.name 'ugi-editorial-media-publisher-bot'
+          git config user.email 'ugi-editorial-media-publisher@users.noreply.github.com'
+          git add control-plane/publisher-hub/media-receipts/*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No editorial media receipt changes'
+            exit 0
+          fi
+          git commit -m 'chore: persist UGI editorial media receipt'
+          git pull --rebase origin main
+          git push origin HEAD:main
