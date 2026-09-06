@@ -1,7 +1,7 @@
 {
-  "ok": false,
-  "state": "BUFFER_CREATED_READBACK_PENDING",
-  "retryable": true,
+  "ok": true,
+  "state": "PROVEN_PUBLISHED",
+  "retryable": false,
   "provider": "BUFFER",
   "platform": "linkedin",
   "target": "UGI — Uma Gestão Inteligente",
@@ -35,7 +35,22 @@
     "publicationTriggered": true,
     "bufferMutationPerformed": true
   },
-  "readback": null,
+  "readback": {
+    "ok": true,
+    "version": "lola-v8-r45-7-editorial-media-v1-2026-09-05",
+    "route": "/api/linkedin-publication-status",
+    "platform": "linkedin",
+    "publication": {
+      "status": "published",
+      "bufferStatus": "sent",
+      "bufferPostId": "6a9ca3b645a02c85c1c5f153",
+      "dueAt": "2026-09-05T23:20:22.999Z",
+      "sentAt": "2026-09-05T23:20:23.773Z",
+      "externalLink": "https://www.linkedin.com/feed/update/urn:li:share:7502143625611468800",
+      "sharedNow": true,
+      "error": null
+    }
+  },
   "publication": {
     "status": "published",
     "bufferStatus": "sent",
@@ -46,5 +61,5 @@
     "sharedNow": true,
     "error": null
   },
-  "timestamp": "2026-09-05T23:20:22.492240+00:00"
+  "timestamp": "2026-09-06T03:01:19.097949+00:00"
 }
