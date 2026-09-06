@@ -1,0 +1,121 @@
+name: Cena Certa Canonical Retime Dispatch
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - 'ops/cena-certa/retime-request.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cena-certa-retime-dispatch
+  cancel-in-progress: false
+
+jobs:
+  retime-dispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feat/cena-certa-factory-v2-certified
+          fetch-depth: 0
+      - name: Fail-closed retime and activate canonical dispatch
+        shell: python
+        run: |
+          import datetime, hashlib, json, pathlib, re
+
+          root=pathlib.Path('.')
+          reqp=root/'ops/cena-certa/retime-request.json'
+          dispatchp=root/'ops/cena-certa/dispatch.json'
+          outboxp=root/'ops/cena-certa/publisher-outbox.json'
+          approvalp=root/'ops/cena-certa/human-approval.json'
+          statep=root/'ops/cena-certa/publisher-state.json'
+
+          req=json.loads(reqp.read_text(encoding='utf-8'))
+          if req.get('schema')!='CENA_CERTA_RETIME_REQUEST_V1': raise SystemExit('RETIME_SCHEMA_FAIL')
+          if req.get('authorized') is not True: raise SystemExit('RETIME_AUTHORIZATION_REQUIRED')
+          source=str(req.get('source_batch') or '')
+          output=str(req.get('output_batch') or '')
+          if not source.startswith('ops/cena-certa/batches/') or not source.endswith('.json'): raise SystemExit('RETIME_SOURCE_PATH_FAIL')
+          if not output.startswith('ops/cena-certa/batches/') or not output.endswith('.json'): raise SystemExit('RETIME_OUTPUT_PATH_FAIL')
+          if source==output: raise SystemExit('RETIME_IMMUTABLE_SOURCE_REQUIRED')
+          src=root/source
+          dst=root/output
+          if not src.is_file(): raise SystemExit('RETIME_SOURCE_MISSING')
+          if dst.exists(): raise SystemExit('RETIME_OUTPUT_ALREADY_EXISTS')
+
+          dispatch=json.loads(dispatchp.read_text(encoding='utf-8'))
+          outbox=json.loads(outboxp.read_text(encoding='utf-8'))
+          approval=json.loads(approvalp.read_text(encoding='utf-8'))
+          state=json.loads(statep.read_text(encoding='utf-8'))
+          if dispatch.get('enabled') is True or str(dispatch.get('mode') or '').upper()!='IDLE': raise SystemExit('RETIME_DISPATCH_NOT_IDLE')
+          if outbox.get('state')!='EMPTY' or list(outbox.get('items') or []): raise SystemExit('RETIME_OUTBOX_NOT_EMPTY')
+          if approval.get('approved') is True: raise SystemExit('RETIME_ORPHAN_APPROVAL_BLOCK')
+          if state.get('state')!='IDLE': raise SystemExit('RETIME_PUBLISHER_NOT_IDLE')
+
+          items=json.loads(src.read_text(encoding='utf-8'))
+          if not isinstance(items,list): raise SystemExit('RETIME_BATCH_NOT_LIST')
+          candidate_count=int(req.get('candidate_count') or 0)
+          selected_count=int(req.get('selected_count') or 0)
+          reserve_count=int(req.get('reserve_count') or 0)
+          if candidate_count!=len(items) or candidate_count<1 or selected_count<1 or reserve_count<0 or candidate_count!=selected_count+reserve_count:
+              raise SystemExit('RETIME_COUNT_BINDING_FAIL')
+
+          schedule=req.get('schedule')
+          if not isinstance(schedule,dict) or set(schedule)!=set(str(x.get('id')) for x in items): raise SystemExit('RETIME_SCHEDULE_BINDING_FAIL')
+          now=datetime.datetime.now(datetime.timezone.utc)
+          fresh=now.replace(microsecond=0).isoformat()
+          seen=set()
+          min_lead=int(req.get('minimum_lead_seconds') or 1800)
+          for item in items:
+              cid=str(item['id'])
+              raw=str(schedule[cid])
+              try: dt=datetime.datetime.fromisoformat(raw.replace('Z','+00:00'))
+              except Exception as e: raise SystemExit('RETIME_DATE_INVALID '+cid) from e
+              if dt.tzinfo is None: raise SystemExit('RETIME_DATE_TIMEZONE_REQUIRED '+cid)
+              utc=dt.astimezone(datetime.timezone.utc).replace(microsecond=0)
+              if (utc-now).total_seconds()<min_lead: raise SystemExit('RETIME_LEAD_FAIL '+cid)
+              key=utc.isoformat()
+              if key in seen: raise SystemExit('RETIME_TIME_COLLISION')
+              seen.add(key)
+              item['schedule']['date']=raw
+              item['ready_checked_at']=fresh
+              item['live_readback_pass']=True
+              if item.get('work_type')=='film': item['dedup_60d_pass']=True
+              item['anti_repeat_evidence']=str(req.get('anti_repeat_evidence') or item.get('anti_repeat_evidence') or '').strip()
+              if not item['anti_repeat_evidence']: raise SystemExit('RETIME_ANTI_REPEAT_EVIDENCE_REQUIRED')
+
+          payload=json.dumps(items,ensure_ascii=False,separators=(',',':'))+'\n'
+          dst.write_text(payload,encoding='utf-8')
+          digest=hashlib.sha256(payload.encode('utf-8')).hexdigest()
+          request_id=str(req.get('request_id') or '')
+          if not re.fullmatch(r'[A-Za-z0-9._-]{12,96}',request_id): raise SystemExit('RETIME_REQUEST_ID_FAIL')
+          dispatch={
+              'schema':'CENA_CERTA_PRODUCTION_DISPATCH_V1',
+              'enabled':True,
+              'mode':'PREPARE',
+              'batch_path':output,
+              'batch_sha256':digest,
+              'prepared_run_id':'',
+              'requested_at':fresh,
+              'request_id':request_id,
+              'candidate_count':candidate_count,
+              'selected_count':selected_count,
+              'reserve_count':reserve_count,
+              'note':str(req.get('note') or 'Canonical retime recovery; same production and publisher route.')
+          }
+          dispatchp.write_text(json.dumps(dispatch,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          print('CENA_CERTA_RETIME_DISPATCH_PASS',output,digest,f'{candidate_count}->{selected_count}+{reserve_count}')
+      - name: Commit immutable retimed batch and canonical dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Cena Certa Control Plane'
+          git config user.email 'actions@users.noreply.github.com'
+          OUT=$(python -c "import json; print(json.load(open('ops/cena-certa/retime-request.json'))['output_batch'])")
+          git add "$OUT" ops/cena-certa/dispatch.json
+          git commit -m 'Cena Certa: activate canonical retimed production batch'
+          git push origin HEAD:feat/cena-certa-factory-v2-certified
