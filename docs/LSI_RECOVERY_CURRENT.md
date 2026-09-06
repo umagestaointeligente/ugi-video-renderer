@@ -1,7 +1,7 @@
 # LSI — RECOVERY CURRENT
 
 Status: CURRENT / AUTORITATIVO PARA HANDOFF
-Atualizado: 2026-09-05 BRT
+Atualizado: 2026-09-06 BRT
 Âncora humana: `Recovery LSI`
 
 Handoff canônico desta transição de chat:
@@ -28,7 +28,7 @@ Vercel team: `team_ZJys00FTE2kK9yVtsqH5fHyF`
 Produção visual oficial atual:
 `dpl_98eN1wuVyk4wQmnYpG2jjsZ1ZazU`
 
-Readback final deste gate em 2026-09-05 BRT:
+Readback oficial mais recente em 2026-09-06 BRT:
 - Supabase = `ACTIVE_HEALTHY`;
 - `career-ui-state` V1 ACTIVE;
 - `career-photo-studio` V11 ACTIVE;
@@ -37,8 +37,10 @@ Readback final deste gate em 2026-09-05 BRT:
 - target `production`;
 - aliases oficiais presentes;
 - produção oficial continua no mesmo deployment V14;
-- produção ainda carrega a versão V14 anterior de `app-k.js`;
+- produção ainda carrega a versão V14 anterior `app-k@ac1ea580667724b49ee1e8b0c8e04dfc153565f3`;
 - produção ainda NÃO carrega `app-l.js`;
+- produção ainda NÃO carrega `app-m.js`;
+- `V16_CURRENT_PRODUCTION_READBACK=V14_ONLY_NOT_PROMOTED`;
 - nenhum runtime error Vercel no período final consultado.
 
 ## 2. Gates de produto
