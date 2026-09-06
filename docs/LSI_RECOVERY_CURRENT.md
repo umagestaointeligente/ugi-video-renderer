@@ -293,7 +293,7 @@ Destino explícito:
 ### Pipeline endurecido
 
 Commit do workflow:
-`85afb95087a706dc8bca5d99555740b4bc5ed0da`
+`921fed05010b71d9a49f1a910f8c0a40ec49dc89`
 
 CLI pinada:
 `vercel@59.11.7`.
@@ -359,10 +359,10 @@ Camada incremental:
 `career360/frontend/app-m.js`
 
 Pin imutável:
-`541f962629ed5c3479972f9192401ce2fdf7c077`
+`3cd06d176f81e07c6f4dba1f7fb962f73be4ce34`
 
 Bundle canônico com `app-k -> app-l -> app-m`:
-`fc1d20bd73bb48ca77e9e1d522baf6196933b961`
+`ac8a46fe5a5d3f28aab15c31c0bafd8e6558f844`
 
 Release canônica:
 `career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md`
@@ -376,17 +376,18 @@ Objetivo da V16:
 - oferecer ações rápidas de consulta sem criar novas mutações.
 
 Validação final sobre bundle canônico:
-- run `34008976104`;
-- job `101421295169`;
+- run `34009190125`;
+- job `101421875198`;
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;
 - `V16_TOUCH_TARGET_POLICY=44PX`;
 - `V16_TRUTHFUL_STATUS_POLICY=PASS`;
-- `CLARITY_360=PASS mutations=5`;
-- `CLARITY_412=PASS mutations=5`;
-- `CLARITY_768=PASS mutations=5`;
-- `CLARITY_1180=PASS mutations=5`;
+- `CLARITY_360=PASS mutations=6`;
+- `CLARITY_412=PASS mutations=6`;
+- `CLARITY_768=PASS mutations=6`;
+- `CLARITY_1180=PASS mutations=6`;
 - `V16_AGENT_QUICK_ACTIONS=PASS`;
-- `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`.
+- `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`;
+- `V16_TRUTHFUL_RUNTIME_DERIVATION=PASS`.
 
 Hardening final antes de promoção:
 - atalhos do agente >=44 px;
@@ -394,7 +395,8 @@ Hardening final antes de promoção:
 - `Ok` >=44 px;
 - padding do alerta ajustado para evitar colisão com a ação;
 - badge sintético `Trabalhando` removido do cabeçalho do agente;
-- status proativo compactado somente a partir do texto de runtime (`Ativo`, `Atualizando`, `Pausado`, `Atenção` ou `Status`);
+- o texto legado `Agente trabalhando` da V12 não é tratado como prova de atividade em tempo real;
+- status visível derivado apenas de estado verificável: `Atualizando` quando a atualização está realmente em curso, `Atualizado` quando existe resumo real e `Aguardando` quando ainda não existe resumo;
 - onboarding e suporte com copy reduzida, sem remover guardrails de privacidade/confirmacao;
 - foco visível para teclado e `prefers-reduced-motion` respeitado.
 
@@ -506,4 +508,4 @@ Assim que uma condição válida existir, a rota canônica já permite executar 
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V16_TRUTHFUL_UI_BROWSER_PASS_APP_M_541F962_APP_L_428364_APP_K_6DF7B4_BUNDLE_FC1D20B_SMOKE_RUN_34008976104_JOB_101421295169_DEPLOY_GATE_85AFB95_PRODUCTION_STILL_V14_NOT_PROMOTED_AUTH_REQUIRED_REMOTE_DESKTOP_PROHIBITED`
+`LAST_VERIFIED_CHANGE=V16_RUNTIME_TRUTH_BROWSER_PASS_APP_M_3CD06D1_APP_L_428364_APP_K_6DF7B4_BUNDLE_AC8A46F_SMOKE_RUN_34009190125_JOB_101421875198_TRUTH_DERIVATION_PASS_DEPLOY_GATE_921FED0_PRODUCTION_STILL_V14_NOT_PROMOTED_AUTH_REQUIRED_REMOTE_DESKTOP_PROHIBITED`

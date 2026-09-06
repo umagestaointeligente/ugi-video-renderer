@@ -19,10 +19,10 @@ File:
 `career360/frontend/app-m.js`
 
 Final immutable hardened pin:
-`541f962629ed5c3479972f9192401ce2fdf7c077`
+`3cd06d176f81e07c6f4dba1f7fb962f73be4ce34`
 
 Canonical hardened bundle commit:
-`fc1d20bd73bb48ca77e9e1d522baf6196933b961`
+`ac8a46fe5a5d3f28aab15c31c0bafd8e6558f844`
 
 Load order remains additive:
 `... -> app-k -> app-l -> app-m`
@@ -62,7 +62,7 @@ Examples:
 
 The proactive card prioritizes outcome over operating detail:
 - title becomes `Seu agente`;
-- status is compacted from runtime-originated text; no fixed `Trabalhando` claim is injected;
+- legacy `Agente trabalhando` text is not accepted as proof of current activity; the surface derives `Atualizando`, `Atualizado` or `Aguardando` from verifiable UI/digest state;
 - cadence / last / next technical subline is removed from the primary visual surface;
 - metrics stay visible;
 - `Atualizar agora` becomes `Atualizar`;
@@ -84,7 +84,7 @@ V16 introduces:
 
 Before promotion, V16 received an additional truthfulness/accessibility pass:
 - removed the fixed `Trabalhando` badge from the My Agent header;
-- proactive status now compacts only runtime-originated state into `Ativo`, `Atualizando`, `Pausado`, `Atenção` or neutral `Status`;
+- legacy V12 `Agente trabalhando` is treated as non-evidence; `Atualizando` appears only while update is in progress, `Atualizado` only when a digest exists, and `Aguardando` when no digest exists yet;
 - onboarding headings and secondary copy were shortened without removing privacy, salary or confirmation guardrails;
 - Support became `Ajuda`, with a shorter problem prompt and action;
 - keyboard focus visibility was strengthened;
@@ -108,10 +108,10 @@ Permanent policy:
 `V16_TOUCH_TARGET_POLICY=44PX`
 
 Hardening source commit / immutable app-m pin:
-`541f962629ed5c3479972f9192401ce2fdf7c077`
+`3cd06d176f81e07c6f4dba1f7fb962f73be4ce34`
 
 Hardened canonical bundle:
-`fc1d20bd73bb48ca77e9e1d522baf6196933b961`
+`ac8a46fe5a5d3f28aab15c31c0bafd8e6558f844`
 
 ## Browser validation
 
@@ -122,20 +122,21 @@ Permanent workflow:
 `.github/workflows/career360-v16-clarity-smoke.yml`
 
 Final hardened canonical-bundle validation:
-- run `34008976104`
-- job `101421295169`
+- run `34009190125`
+- job `101421875198`
 - result `SUCCESS`
 
 Evidence:
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`
 - `V16_TOUCH_TARGET_POLICY=44PX`
 - `V16_TRUTHFUL_STATUS_POLICY=PASS`
-- `CLARITY_360=PASS mutations=5`
-- `CLARITY_412=PASS mutations=5`
-- `CLARITY_768=PASS mutations=5`
-- `CLARITY_1180=PASS mutations=5`
+- `CLARITY_360=PASS mutations=6`
+- `CLARITY_412=PASS mutations=6`
+- `CLARITY_768=PASS mutations=6`
+- `CLARITY_1180=PASS mutations=6`
 - `V16_AGENT_QUICK_ACTIONS=PASS`
 - `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`
+- `V16_TRUTHFUL_RUNTIME_DERIVATION=PASS`
 
 Earlier evidence retained for audit:
 - pre-bundle run `34006941241`, job `101415802373`, SUCCESS;
@@ -163,7 +164,7 @@ Quick actions remain read-oriented questions and call the existing canonical age
 Do not mark `LIVE` until the official production frontend is proven to load:
 - `app-k@6df7b4e...`
 - `app-l@4283646...`
-- `app-m@541f962...`
+- `app-m@3cd06d1...`
 
 and the authenticated mobile gate is completed.
 
