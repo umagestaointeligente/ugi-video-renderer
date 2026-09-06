@@ -1,0 +1,106 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_RADAR_V1",
+  "target_date": "2026-09-08",
+  "timezone": "America/Sao_Paulo",
+  "generated_date": "2026-09-06",
+  "status": "FACT_RESEARCH_COMPLETE_ASSET_GATES_OPEN",
+  "topics": [
+    {
+      "id": "SPIDER_BND_BOXOFFICE",
+      "title": "Spider-Man: Brand New Day — seis semanas no topo",
+      "type": "BOX_OFFICE_CURRENT_FILM",
+      "trend_score": 96,
+      "facts": [
+        "Seis fins de semana consecutivos em primeiro lugar no box office.",
+        "US$ 18 milhões no fim de semana de 06/09.",
+        "Aproximadamente US$ 2,4 bilhões globais segundo AP em 06/09.",
+        "Sony confirma Tom Holland, Zendaya, Sadie Sink, Jon Bernthal, Mark Ruffalo e outros no elenco."
+      ],
+      "fact_sources": [
+        "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
+        "https://www.sonypictures.com/movies/spidermanbrandnewday",
+        "https://www.sony.com/en/SonyInfo/blog/2026/08/04/"
+      ],
+      "social_signal": "Forte volume de discussão pública em comunidades de box office/Marvel e alta repercussão de audiência.",
+      "asset_route": "Sony Pictures Global Asset Hub / material oficial Sony",
+      "asset_status": "OFFICIAL_ASSET_RIGHTS_PENDING",
+      "dynamic_recheck_required": true,
+      "cta": "Seis semanas no topo: sucesso merecido ou o poder do Homem-Aranha falou mais alto?"
+    },
+    {
+      "id": "NETFLIX_SEP08",
+      "title": "Chega hoje na Netflix — 8 de setembro",
+      "type": "STREAMING_PREMIERE_CAROUSEL",
+      "trend_score": 88,
+      "facts": [
+        "DANG! estreia em 08/09.",
+        "Fauda temporada 5 estreia globalmente em 08/09.",
+        "Untold Mr. T: I Pity The Fool estreia em 08/09.",
+        "Stavros Halkias: Uncle Stav estreia em 08/09."
+      ],
+      "fact_sources": [
+        "https://www.netflix.com/tudum/articles/new-on-netflix",
+        "https://www.netflix.com/tudum/articles/fauda-season-five-release-date-cast-photos-news",
+        "https://media.netflix.com/en/only-on-netflix/81666277",
+        "https://media.netflix.com/en/only-on-netflix/80113612"
+      ],
+      "asset_route": "Netflix Media Center downloadable press assets",
+      "asset_status": "PRESS_ACCOUNT_OR_TERMS_REQUIRED",
+      "dynamic_recheck_required": false,
+      "cta": "Qual dessas estreias entra primeiro na sua lista?"
+    },
+    {
+      "id": "THE_DROP_PREMIERE",
+      "title": "The Drop: A Snowfall Saga estreia em 8 de setembro",
+      "type": "STREAMING_PREMIERE_SERIES",
+      "trend_score": 91,
+      "facts": [
+        "Estreia em 08/09 no ecossistema Disney+/Hulu, com página oficial brasileira indicando 8 de setembro.",
+        "Acompanha Wanda Bell e Leon Simmons em Los Angeles dos anos 90 durante a ascensão do rap da Costa Oeste.",
+        "Drama, música e crime."
+      ],
+      "fact_sources": [
+        "https://www.disneyplus.com/pt-br/explore/articles/new-to-disney-plus",
+        "https://www.disneyplus.com/pt-br/browse/entity-8ffc50e5-186b-4c06-8cb3-c9eea097aee5",
+        "https://press.disneyplus.com/news/next-on-disney-plus-september-2026"
+      ],
+      "asset_route": "Disney press / DGE Press editorial-use photography",
+      "asset_status": "EXACT_TITLE_ASSET_PENDING",
+      "rights_note": "Disney press materials commonly state editorial-use-only restrictions; exact asset must carry compatible terms before use.",
+      "dynamic_recheck_required": true,
+      "cta": "Snowfall precisava continuar essa história ou a série original já tinha fechado o ciclo?"
+    },
+    {
+      "id": "VENICE_GUADAGNINO",
+      "title": "Veneza homenageia Luca Guadagnino",
+      "type": "FESTIVAL_CURRENT_EVENT",
+      "trend_score": 86,
+      "facts": [
+        "Luca Guadagnino recebe o Cartier Glory to the Filmmaker Award em 08/09 às 15h em Veneza.",
+        "A cerimônia acontece antes da exibição fora de competição do documentário Joie de vivre.",
+        "A Biennale distribui press releases, fotos oficiais, áudio e vídeo via portal de imprensa."
+      ],
+      "fact_sources": [
+        "https://www.labiennale.org/en/news/luca-guadagnino-receive-cartier-glory-filmmaker-2026-award",
+        "https://www.labiennale.org/en/press",
+        "https://www.labiennale.org/en/cinema/2026/regulations"
+      ],
+      "asset_route": "La Biennale online press material distribution",
+      "asset_status": "PRESS_LOGIN_REQUIRED",
+      "dynamic_recheck_required": true,
+      "cta": "Qual é o melhor filme do Guadagnino para você?"
+    }
+  ],
+  "secondary_radar": [
+    {
+      "topic": "Prime Video Brasil Top 10",
+      "status": "WATCHLIST",
+      "note": "Usar ranking apenas com readback no próprio dia; títulos e posições são dinâmicos."
+    },
+    {
+      "topic": "Apple TV / Emmy 2026",
+      "status": "WATCHLIST",
+      "note": "Bom gancho para a semana pré-Emmy, menos urgente que as quatro pautas principais de 08/09."
+    }
+  ]
+}
