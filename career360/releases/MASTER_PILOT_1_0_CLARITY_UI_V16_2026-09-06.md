@@ -18,11 +18,11 @@ V16 is an incremental frontend layer over V15. It does not rebuild the product, 
 File:
 `career360/frontend/app-m.js`
 
-Immutable pin:
-`f597e48006aae69c73c6c0a540b797f0093e4e84`
+Final immutable hardened pin:
+`d3279ea45b3d3bb9f1686249199d2a46d34eaa2b`
 
-Canonical bundle commit:
-`08f100d3c3bf10320e429a47529816b0b674b6f3`
+Canonical hardened bundle commit:
+`239357f0623683bae362a1dd3f122891cdd2d157`
 
 Load order remains additive:
 `... -> app-k -> app-l -> app-m`
@@ -80,6 +80,25 @@ V16 introduces:
 - mobile horizontal quick-action chips;
 - preserved mobile touch targets.
 
+## Mobile touch hardening
+
+A final hardening pass detected that compact visual overrides could reduce some controls below the established V15 mobile target size.
+
+Corrected before promotion:
+- agent quick actions >= 44 px;
+- proactive `Atualizar` >= 44 px;
+- notification `Ok` >= 44 px;
+- alert padding expanded so the larger action does not collide with text.
+
+Permanent policy:
+`V16_TOUCH_TARGET_POLICY=44PX`
+
+Hardening source commit / immutable app-m pin:
+`d3279ea45b3d3bb9f1686249199d2a46d34eaa2b`
+
+Hardened canonical bundle:
+`239357f0623683bae362a1dd3f122891cdd2d157`
+
 ## Browser validation
 
 Permanent test:
@@ -88,18 +107,14 @@ Permanent test:
 Permanent workflow:
 `.github/workflows/career360-v16-clarity-smoke.yml`
 
-Pre-bundle validated run:
-- run `34006941241`
-- job `101415802373`
+Final hardened canonical-bundle validation:
+- run `34007281162`
+- job `101416713004`
 - result `SUCCESS`
 
-Canonical-bundle validated run:
-- run `34007073507`
-- job `101416159331`
-- result `SUCCESS`
-
-Evidence from canonical-bundle run:
+Evidence:
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`
+- `V16_TOUCH_TARGET_POLICY=44PX`
 - `CLARITY_360=PASS mutations=5`
 - `CLARITY_412=PASS mutations=5`
 - `CLARITY_768=PASS mutations=5`
@@ -107,7 +122,10 @@ Evidence from canonical-bundle run:
 - `V16_AGENT_QUICK_ACTIONS=PASS`
 - `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`
 
-The first V16 test attempt (`34006874557`) failed because the isolated test harness kept the agent view hidden, producing a zero-height measurement. It did not change the canonical bundle or production. The harness was corrected and subsequent runs passed.
+Earlier evidence retained for audit:
+- pre-bundle run `34006941241`, job `101415802373`, SUCCESS;
+- first canonical-bundle run `34007073507`, job `101416159331`, SUCCESS before final 44px hardening;
+- first test attempt `34006874557` failed only because the isolated harness kept the agent view hidden and therefore measured a zero-height send button. It did not mutate production.
 
 ## Safety / product boundaries
 
@@ -130,7 +148,7 @@ Quick actions remain read-oriented questions and call the existing canonical age
 Do not mark `LIVE` until the official production frontend is proven to load:
 - `app-k@6df7b4e...`
 - `app-l@4283646...`
-- `app-m@f597e48...`
+- `app-m@d3279ea...`
 
 and the authenticated mobile gate is completed.
 
