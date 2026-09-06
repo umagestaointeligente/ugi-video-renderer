@@ -1,11 +1,14 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": false,
-  "mode": "IDLE",
-  "batch_path": "",
-  "batch_sha256": "",
+  "enabled": true,
+  "mode": "PREPARE",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave1-v4.json",
+  "batch_sha256": "f60649f525bce0bdc7f70712172309372311eeedbe42e197d41556dca1a35c87",
   "prepared_run_id": "",
-  "requested_at": "",
-  "request_id": "",
-  "note": "IDLE after 07/09 wave1-v3 fail-closed: Behind the Machine REAL_ALIGNMENT_UNAVAILABLE; audit run 34049238242 retained."
+  "requested_at": "2026-09-06T17:47:00Z",
+  "request_id": "0ad25a039a78414abf10b51ee64b184f",
+  "candidate_count": 4,
+  "selected_count": 4,
+  "reserve_count": 0,
+  "note": "Daily8 07/09 wave1-v4: Behind uses TTS-safe 20-sentence script; no gate relaxed."
 }
