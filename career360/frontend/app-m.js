@@ -100,17 +100,11 @@ function compactSecondaryCopy() {
   setText(document.querySelector('#career .card:nth-child(2) > p.muted'), 'O agente organiza sua trajetória para você revisar.');
 }
 
-function compactRuntimePulse(pulse) {
+function setTruthfulProactivePulse(pulse, summary, now) {
   if (!pulse) return;
-  const raw = (pulse.textContent || '').trim();
-  if (!raw) return;
-  const low = raw.toLowerCase();
-  let next = raw;
-  if (low.includes('atualiz') || low.includes('carreg')) next = 'Atualizando';
-  else if (low.includes('paus')) next = 'Pausado';
-  else if (low.includes('erro') || low.includes('falh') || low.includes('aten')) next = 'Atenção';
-  else if (low.includes('trabalh') || low.includes('ativo') || low.includes('rodando')) next = 'Ativo';
-  else if (raw.length > 18) next = 'Status';
+  const summaryText = (summary?.textContent || '').toLowerCase();
+  const hasDigest = !!summary && !summaryText.includes('primeiro');
+  const next = now?.disabled ? 'Atualizando' : (hasDigest ? 'Atualizado' : 'Aguardando');
   setText(pulse, next);
 }
 
@@ -120,13 +114,13 @@ function compactProactive() {
   const h = card.querySelector('.proactive-head h3');
   setText(h, 'Seu agente');
   const pulse = card.querySelector('.proactive-pulse');
-  compactRuntimePulse(pulse);
   const summary = card.querySelector('.proactive-summary > strong');
+  const now = $('proactiveNow');
+  setTruthfulProactivePulse(pulse, summary, now);
   if (summary) {
-    const next = summary.textContent.includes('primeiro') ? 'Primeiro resumo' : 'Resumo';
+    const next = summary.textContent.toLowerCase().includes('primeiro') ? 'Primeiro resumo' : 'Resumo';
     setText(summary, next);
   }
-  const now = $('proactiveNow');
   setText(now, now?.disabled ? 'Atualizando…' : 'Atualizar');
   card.querySelectorAll('.proactive-read').forEach((b) => {
     b.setAttribute('aria-label', 'Marcar como lido');
