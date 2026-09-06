@@ -1,0 +1,42 @@
+name: UGI TikTok Shop Reel Fix 2026-09-07
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-editorial-tiktokshop-reel-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      - name: Build native 9x16 TikTok Shop reel
+        run: |
+          set -euo pipefail
+          cd public/ugi/editorial/2026-09-07
+          printf "file 'story-03-tiktok-shop.jpg'\nduration 5\nfile 'story-04-tiktok-insight.jpg'\nduration 5\nfile 'story-04-tiktok-insight.jpg'\n" > concat.txt
+          ffmpeg -y -f concat -safe 0 -i concat.txt -vf 'fps=30,format=yuv420p' -c:v libx264 -preset medium -crf 18 -movflags +faststart reel-tiktok-shop.mp4
+          rm concat.txt
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 reel-tiktok-shop.mp4)" = "1080"
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 reel-tiktok-shop.mp4)" = "1920"
+          test $(stat -c%s reel-tiktok-shop.mp4) -gt 100000
+      - name: Persist approved reel
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-media-bot'
+          git config user.email 'ugi-editorial-media-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-07/reel-tiktok-shop.mp4
+          git commit -m 'asset: add native TikTok Shop Instagram reel' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
