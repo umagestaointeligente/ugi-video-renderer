@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave2-v2.json",
-  "batch_sha256": "b1c0137f40f1549f25c5cf9ae6d7ba687e9009abd4a9dce03cda9596700dcd46",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave2-three-v1.json",
+  "batch_sha256": "29f0153eb433ab14e1f7cb5d9ad0e7697347182866f2aa3c01e9a63a92af2de2",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T18:35:20Z",
-  "request_id": "7008ad2c298c49adb2e36951a71f21d2",
-  "candidate_count": 4,
+  "requested_at": "2026-09-06T18:41:30Z",
+  "request_id": "33c6d926a2584cc1b107394e47cacc8b",
+  "candidate_count": 3,
   "selected_count": 3,
-  "reserve_count": 1,
-  "note": "Daily8 07/09 wave2 resilient pass: Alien Grounds isolated as reserve after deterministic alignment mismatch; render three already-qualified candidates without relaxing any gate."
+  "reserve_count": 0,
+  "note": "Daily8 07/09 wave2-three-v1: isolated Pendatang, Abu Rami and Pasion Oriental after degraded-matrix skip; no gate relaxed."
 }
