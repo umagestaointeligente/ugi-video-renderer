@@ -76,6 +76,9 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `EXTERNAL_EVENT_RECEIPT_GUARDS_V16=LIVE`
 `MAIL_RECEIPT_PRIMITIVES_V16=LIVE`
 `APPLICATION_MILESTONE_RECEIPT_RPC_V16=LIVE`
+`FOLLOWUP_SCHEDULER_V1=LIVE`
+`FOLLOWUP_DELIVERY_SIDE_EFFECTS=NONE`
+`MAIL_DELIVERY_CONTROL=PAUSED`
 `GMAIL_CHATGPT_CONNECTOR_READ=PROVEN`
 `GMAIL_PROVIDER_RECEIPT_SHAPE=PROVEN`
 `CAREER_GMAIL_OAUTH=NOT_LIVE`
@@ -700,7 +703,7 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 
 1. OAuth de e-mail + receipts reais;
 2. candidaturas reais integradas a `career_applications`;
-3. follow-up scheduler;
+3. follow-up scheduler; — COMPLETED V1 LIVE
 4. reprocessamento/validação humana Parser 1.0.3;
 5. catálogo de empregadores e expansão do Radar mantendo precisão;
 6. redirect auth hosted revalidado;
@@ -724,4 +727,56 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=MATCHING_V31_ROLEGRAPH_CHAMPION_RUNTIME_RECONCILED_PROMOTION_MIGRATION_20260905183743_PROVEN_V2_ROLLBACK_CORPUS_57_OF_57_CLASS_STABLE_AGENT_V3_CHAMPION_ISOLATION_LIVE_RESEARCH_V5_CHAMPION_ALIGNMENT_LIVE_MAIL_RECEIPT_PRIMITIVES_LIVE_V16_FRONTEND_STILL_NOT_PROMOTED_VERCEL_CHAT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14`
+### Follow-up Scheduler V1 — LIVE
+
+Scheduler fail-closed para prazos explícitos de follow-up. Não cria candidatura, não escolhe prazo automaticamente, não cria e-mail e não envia mensagem.
+
+Runtime comprovado:
+- `career_followups` com RLS e SELECT-only da própria linha para authenticated; writes service-only;
+- `career_schedule_followup` e `career_process_due_followups` = SECURITY DEFINER / service_role only;
+- `followup_scheduler = v1.0 / active`;
+- `mail_delivery = none / paused`;
+- cron `career-followup-evaluator`, job 5, schedule `23,53 * * * *`, executor `postgres`;
+- candidatura precisa estar `applied` com receipt externo antes de poder receber follow-up;
+- `allow_followup_draft=false` bloqueia em `due_waiting_permission`;
+- conector de mail não LIVE bloqueia em `due_waiting_connector`;
+- mesmo `due_ready_for_orchestration` não cria `career_mail_actions` nem envia e-mail.
+
+QA transacional:
+- schedule inicial PASS;
+- idempotência PASS;
+- permission gate PASS;
+- connector gate PASS;
+- ready gate PASS;
+- progresso externo cancela follow-up PASS;
+- candidatura não applied rejeitada PASS;
+- mail side effect = 0;
+- rollback confirmado com `career_applications=0`, `career_followups=0`, `career_mail_actions=0`.
+
+Smoke permanente:
+`career360/tests/followup-scheduler-v1-smoke.sql`
+commit `458191d7e36571f9a2f1eebb0506fea36bab1d72`.
+
+Migration base:
+`career360/migrations/20260906_followup_scheduler_v1.sql`
+commit `5c26f83527e372b21ce77950fbdb196ce90fa196`.
+
+Advisor hardening:
+`career360/migrations/20260906_followup_scheduler_v1_advisor_hardening.sql`
+commit `295c21f86b7b89cfb2694465e848030c3634d5be`.
+
+Advisor pós-hardening:
+- Security: somente leaked-password protection WARN conhecido;
+- Performance: somente INFO unused_index; sem WARN estrutural novo.
+
+Documento canônico:
+`career360/docs/FOLLOWUP_SCHEDULER_V1_LIVE_2026-09-06.md`
+commit `2bc76e9f035852446672e86f67d099983889d457`.
+
+Estados:
+`FOLLOWUP_SCHEDULER_V1=LIVE`
+`FOLLOWUP_DELIVERY_SIDE_EFFECTS=NONE`
+`MAIL_DELIVERY_CONTROL=PAUSED`
+`MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
+
+`LAST_VERIFIED_CHANGE=FOLLOWUP_SCHEDULER_V1_LIVE_FAIL_CLOSED_CRON_ACTIVE_SMOKE_PERMANENT_ROLLBACK_ZERO_DATA_ADVISORS_BASELINE_MATCHING_V31_CHAMPION_AGENT_V3_RESEARCH_V5_MAIL_RECEIPT_PRIMITIVES_LIVE_MAIL_DELIVERY_CONNECTOR_NOT_LIVE_V16_FRONTEND_NOT_PROMOTED_VERCEL_CHAT_MUTATION_UNSCOPED_PRODUCTION_V14`
