@@ -1,0 +1,131 @@
+name: Career360 Production Branch Promote
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/career360-production-promote.trigger'
+      - '.github/workflows/career360-production-branch-promote.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: career360-production-branch-promote
+  cancel-in-progress: false
+
+env:
+  PROD_BRANCH: career360-production
+  OFFICIAL_URL: https://lsi-career-360.vercel.app
+  EXPECTED_APP_K: 6df7b4e63d7e52ce3c3f02247392b98f0393cbe8
+  EXPECTED_APP_L: 4283646143425e4a3156e44100aabb475df88d27
+  EXPECTED_APP_M: 719c15ebfe89d212a19473b70ea6e615174601d9
+  TRUTHFUL_AUTH_COPY: Você confirma o que importa. O Career 360 organiza sua busca.
+  LEGACY_AUTH_COPY: Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve promotion request
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          req="$(tr -d '[:space:]' < .github/career360-production-promote.trigger)"
+          if [[ "$req" == "noop" ]]; then
+            echo 'do_promote=false' >> "$GITHUB_OUTPUT"
+            echo 'PROMOTION_REQUEST=NOOP'
+            exit 0
+          fi
+          if [[ "$req" != "promote" ]]; then
+            echo "::error::Invalid promotion request '$req'. Expected noop or promote."
+            exit 2
+          fi
+          echo 'do_promote=true' >> "$GITHUB_OUTPUT"
+          echo 'PROMOTION_REQUEST=VALID'
+
+      - name: Validate canonical frontend before branch mutation
+        if: steps.request.outputs.do_promote == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          index='career360/frontend/index.html'
+          grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" "$index" >/dev/null
+          grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" "$index" >/dev/null
+          grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" "$index" >/dev/null
+          grep -F "$TRUTHFUL_AUTH_COPY" "$index" >/dev/null
+          ! grep -F "$LEGACY_AUTH_COPY" "$index" >/dev/null
+          node --check career360/frontend/app-k.js
+          cp career360/frontend/app-l.js /tmp/app-l.mjs
+          cp career360/frontend/app-m.js /tmp/app-m.mjs
+          node --check /tmp/app-l.mjs
+          node --check /tmp/app-m.mjs
+          python - <<'PY'
+          import json
+          p='career360/frontend/vercel.json'
+          d=json.load(open(p,encoding='utf-8'))
+          rules=d.get('git',{}).get('deploymentEnabled',{})
+          assert rules.get('*') is False
+          assert rules.get('career360-production') is True
+          print('VERCEL_GIT_BRANCH_GUARD=PASS')
+          PY
+          echo 'FRONTEND_PROMOTION_GATE=PASS'
+
+      - name: Move dedicated production branch with lease
+        if: steps.request.outputs.do_promote == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "$PROD_BRANCH"
+          current="$(git rev-parse "origin/$PROD_BRANCH")"
+          git push origin "$GITHUB_SHA:refs/heads/$PROD_BRANCH" \
+            --force-with-lease="refs/heads/$PROD_BRANCH:$current"
+          echo "CAREER360_PRODUCTION_BRANCH_PREVIOUS=$current"
+          echo "CAREER360_PRODUCTION_BRANCH_NEW=$GITHUB_SHA"
+
+      - name: Verify official Vercel alias converged
+        if: steps.request.outputs.do_promote == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=0
+          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            body="$(curl --fail --silent --show-error --location "$OFFICIAL_URL/" || true)"
+            if grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null \
+              && grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null \
+              && grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" <<< "$body" >/dev/null \
+              && grep -F "$TRUTHFUL_AUTH_COPY" <<< "$body" >/dev/null \
+              && ! grep -F "$LEGACY_AUTH_COPY" <<< "$body" >/dev/null; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+          if [[ "$ok" != "1" ]]; then
+            echo '::error::Dedicated branch moved but official Vercel alias did not converge. Check the one-time Vercel Git link, Root Directory and Production Branch settings. Do not create a second deployment route.'
+            exit 6
+          fi
+          echo 'OFFICIAL_VERCEL_V16_CONVERGENCE=PASS'
+
+      - name: Summary
+        shell: bash
+        run: |
+          if [[ "${{ steps.request.outputs.do_promote }}" != "true" ]]; then
+            echo 'Career360 production promotion: NOOP' >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo '### Career360 production promotion'
+              echo "- Source commit: $GITHUB_SHA"
+              echo "- Dedicated branch: $PROD_BRANCH"
+              echo '- Branch update: force-with-lease'
+              echo '- Vercel mutation credential: NONE'
+              echo '- Expected Vercel route: Git integration on existing project'
+              echo '- Official alias V16 pin/copy gate: PASS'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
