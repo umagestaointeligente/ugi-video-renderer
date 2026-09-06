@@ -1,0 +1,19 @@
+{
+  "schema": "CENA_CERTA_RETIME_REQUEST_V1",
+  "authorized": true,
+  "source_batch": "ops/cena-certa/batches/cena-certa-exact4-20260905-late-v3.json",
+  "output_batch": "ops/cena-certa/batches/cena-certa-exact4-20260906-recovery-v1.json",
+  "request_id": "CC-RECOVERY-20260906-0001",
+  "candidate_count": 4,
+  "selected_count": 4,
+  "reserve_count": 0,
+  "minimum_lead_seconds": 1800,
+  "anti_repeat_evidence": "Metricool live readback em 06/09/2026 confirmou ausência de Breakfast at the Bodega, The Sleeping Field, SCP Containment Breach (2025) e Because of Him nas publicações/agendamentos correntes; Payload, 096, Site 22 e Jangan Telat permanecem bloqueados pela janela de 60 dias.",
+  "schedule": {
+    "CC-20260905-BODEGA-R2": "2026-09-06T10:05:00-03:00",
+    "CC-20260905-SLEEPINGFIELD-R2": "2026-09-06T12:15:00-03:00",
+    "CC-20260905-SCPMOVIE-R2": "2026-09-06T18:30:00-03:00",
+    "CC-20260905-BECAUSE-R2": "2026-09-06T16:10:00-03:00"
+  },
+  "note": "Recuperação autorizada por Paulo após confirmação de que o lote de 05/09 não chegou ao publisher. Retime apenas; mesma Factory V2 e mesma rota Metricool 4/4."
+}
