@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave1-v2.json",
-  "batch_sha256": "515533cc4b17beccb041da06490d77542ee5854778135e69fde9af7283ec4452",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T17:30:16.227397+00:00",
-  "request_id": "4a7b1683579947be82046bfd7c0d53b3",
-  "candidate_count": 4,
-  "selected_count": 4,
-  "reserve_count": 0,
-  "note": "Daily8 07/09 wave1-v2: durações corrigidas; wave2 após reconciliação."
+  "requested_at": "",
+  "request_id": "",
+  "note": "IDLE after 07/09 wave1-v2 fail-closed: Behind the Machine VOICE_PACE_FAIL 132.5; audit run 34048818594 retained."
 }
