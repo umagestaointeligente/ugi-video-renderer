@@ -1,0 +1,7 @@
+{
+  "schema": "CENA_CERTA_SCENE_BLACK_PROBE_V1",
+  "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Sleeping_Field_-_Fashion_Film.webm",
+  "existing_starts": [4.0,22.0,40.0,58.0,76.0,94.0,112.0,130.0,148.0,166.0],
+  "minimum_safe_window_seconds": 10.0,
+  "reason": "Single zero-render scan after SCENE_00 blank guard failure in production run 34008629558. No retry until source black map is known."
+}
