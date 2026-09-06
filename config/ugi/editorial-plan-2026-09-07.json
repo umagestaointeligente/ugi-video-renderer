@@ -1,0 +1,41 @@
+{
+  "project": "UGI",
+  "date": "2026-09-07",
+  "timezone": "America/Sao_Paulo",
+  "publisher": "BUFFER",
+  "metricoolRole": "analytics-readback-only",
+  "principle": "A NOTICIA E O GANCHO. A INTELIGENCIA DE GESTAO E O PRODUTO.",
+  "mediaQualityGates": {
+    "nativeDimensionsRequired": true,
+    "stretchForbidden": true,
+    "wrongZoomForbidden": true,
+    "upscaleLowResolutionForbidden": true,
+    "grainyMediaForbidden": true,
+    "storySafeAreaRequired": true,
+    "sourceRelevantVisualRequired": true,
+    "minJpegBytes": 70000,
+    "linkedin": "1200x627",
+    "instagramFeed": "1080x1350",
+    "vertical": "1080x1920"
+  },
+  "items": [
+    {"id":"UGI-20260907-IG-STORY-CHATGPT-01","platform":"instagram","format":"story","time":"08:15","topic":"ChatGPT Ads / varejo","media":"story-01-chatgpt.jpg"},
+    {"id":"UGI-20260907-IG-STORY-CHATGPT-02","platform":"instagram","format":"story","time":"08:17","topic":"Enquete recomendacao por IA","media":"story-02-enquete-ia.jpg"},
+    {"id":"UGI-20260907-IG-REEL-CHATGPT-01","platform":"instagram","format":"reel","time":"09:30","topic":"A nova prateleira do varejo esta dentro da IA","media":"reel-chatgpt-ads.mp4"},
+    {"id":"UGI-20260907-TT-CHATGPT-01","platform":"tiktok","format":"video","time":"10:45","topic":"A nova prateleira do varejo esta dentro da IA","media":"reel-chatgpt-ads.mp4"},
+    {"id":"UGI-20260907-IG-STORY-TIKTOK-03","platform":"instagram","format":"story","time":"11:30","topic":"TikTok Shop moda e beleza","media":"story-03-tiktok-shop.jpg"},
+    {"id":"UGI-20260907-IG-STORY-TIKTOK-04","platform":"instagram","format":"story","time":"11:32","topic":"Insight discovery commerce","media":"story-04-tiktok-insight.jpg"},
+    {"id":"UGI-20260907-IG-POST-TIKTOK-01","platform":"instagram","format":"image","time":"12:45","topic":"TikTok Shop / discovery commerce","media":"ig-tiktok-shop.jpg"},
+    {"id":"UGI-20260907-IG-STORY-ROI-05","platform":"instagram","format":"story","time":"15:00","topic":"ROI de IA","media":"story-05-roi.jpg"},
+    {"id":"UGI-20260907-IG-STORY-ROI-06","platform":"instagram","format":"story","time":"15:02","topic":"Enquete ROI de IA","media":"story-06-enquete-roi.jpg"},
+    {"id":"UGI-20260907-LI-ROI-01","platform":"linkedin","format":"image","time":"17:15","topic":"IA sem metrica e custo","media":"linkedin-ai-roi.jpg"},
+    {"id":"UGI-20260907-TT-ROI-01","platform":"tiktok","format":"video","time":"18:30","topic":"IA sem ROI nao e transformacao","media":"tiktok-ai-roi.mp4"},
+    {"id":"UGI-20260907-IG-STORY-PIX-07","platform":"instagram","format":"story","time":"20:15","topic":"IA no fluxo financeiro / Pix / governanca","media":"story-07-pix.jpg"}
+  ],
+  "sources": [
+    {"topic":"ChatGPT Ads","source":"EXAME / Similarweb","published":"2026-09-06"},
+    {"topic":"TikTok Shop","source":"TikTok Newsroom + Mercado&Consumo","published":"2026-09-06"},
+    {"topic":"ROI de IA","source":"Strand Partners/AWS via Folha","published":"2026-09-05"},
+    {"topic":"IA e Pix","source":"UOL Economia","published":"2026-09-02"}
+  ]
+}
