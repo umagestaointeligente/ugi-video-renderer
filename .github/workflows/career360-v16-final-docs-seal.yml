@@ -40,3 +40,5 @@ jobs:
           git commit -m 'career360: seal final runtime-truth V16 evidence'
           git push origin HEAD:main
           echo 'V16_FINAL_DOCS_PUSH=PASS'
+
+# Triggered again after hardening the LAST_VERIFIED_CHANGE anchor.
