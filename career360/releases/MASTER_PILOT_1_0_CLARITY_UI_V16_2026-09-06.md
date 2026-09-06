@@ -276,6 +276,25 @@ States:
 
 No actual email/application event is claimed from this infrastructure-only validation.
 
+## Matching V3.1 runtime reconciliation
+
+A stale-documentation mismatch was found while continuing V16 readiness work. Live Supabase migration history proves that matching V3.1 was intentionally promoted on `20260905183743` with V2 retained as rollback.
+
+Current matching state:
+`MATCH_ENGINE_V31_ROLEGRAPH=CHAMPION`
+`MATCH_ENGINE_V2=ROLLBACK`
+
+Current-corpus revalidation: 57/57 V2/V3.1 pairs preserve classification; zero class changes.
+
+Consumers hardened after reconciliation:
+- `career-agent` V3 ACTIVE, champion-only match reads;
+- `career-opportunity-research` V5 ACTIVE, one champion router call per changed opportunity + Role Search Plan V2.
+
+Canonical evidence:
+`career360/docs/MATCHING_V31_RUNTIME_RECONCILIATION_2026-09-06.md`.
+
+This backend matching reconciliation does not promote the V16 frontend.
+
 ## Deployment state
 
 `CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`

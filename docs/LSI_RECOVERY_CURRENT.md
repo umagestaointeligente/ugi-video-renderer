@@ -53,8 +53,9 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `PROFESSIONAL_PROFILE_V3=LIVE`
 `CONTE_DO_SEU_JEITO=LIVE`
 `SMART_CV=LIVE`
-`MATCH_ENGINE_V2=CHAMPION`
-`MATCH_ENGINE_V1=ROLLBACK`
+`MATCH_ENGINE_V31_ROLEGRAPH=CHAMPION`
+`MATCH_ENGINE_V2=ROLLBACK`
+`MATCH_ENGINE_V1=LEGACY_NOT_ROLLBACK`
 `REGION_FILTER_V2=LIVE`
 `AUTOMATED_OPPORTUNITY_RESEARCH=LIVE_PILOT_SCOPE`
 `PROACTIVE_AGENT_CORE_V12=LIVE`
@@ -454,13 +455,68 @@ IMPORTANTE:
 Browser PASS + bundle pinado NÃO significa produção LIVE.
 A V16 só vira LIVE após promoção comprovada no domínio oficial e gate móvel autenticado.
 
+## 9B. Matching V3.1 — runtime reconciled
+
+A documentação anterior ficou stale após uma promoção real no Supabase. Pela regra `RUNTIME_COMPROVADO_VENCE_DOCUMENTO`, o histórico vivo foi auditado antes de qualquer rollback.
+
+Migration LIVE comprovada:
+`20260905183743 — career_matching_v31_promote_and_router`
+
+Ela promoveu explicitamente:
+`MATCH_ENGINE_V31_ROLEGRAPH=CHAMPION`
+`MATCH_ENGINE_V2=ROLLBACK`
+
+Control plane atual:
+- `matching = v3.1-rolegraph / rollback v2.0 / active`;
+- `matching_role_graph = v3.1-rolegraph / rollback v2.0 / active`;
+- `matching_rolegraph_challenger = v2.1-rolegraph-challenger / paused`;
+- `role_graph = v1.1 / active`.
+
+Evidência registrada na promoção:
+- 7 synthetic positive cases;
+- 4 synthetic negative hard-gate cases;
+- corpus LIVE de 57;
+- 0 mudanças de classificação pré-promoção;
+- threshold 72;
+- role-fit floor 0.55.
+
+Revalidação viva em 2026-09-06:
+- 57 pares V2/V3.1;
+- 57/57 mesma classificação;
+- 0 mudanças de classe;
+- score: 3 subiram, 11 caíram, 43 iguais;
+- delta médio V3.1 - V2 = -0.69;
+- máximo +6.43; mínimo -7.50;
+- router não persistente confirmou `career_score_opportunity(...) == career_score_opportunity_v3(...)` no caso amostrado.
+
+Fonte espelhada no GitHub:
+`career360/migrations/20260905183743_career_matching_v31_promote_and_router.sql`
+commit `adb9f240b06c2d2ea1093eaf6a145f8836eac911`.
+
+Reconciliação detalhada:
+`career360/docs/MATCHING_V31_RUNTIME_RECONCILIATION_2026-09-06.md`
+commit `98a5c2566fb6c30c49788ea835d50f185162925d`.
+
+Hardening de consumidores após a promoção:
+- `career-agent` V3 ACTIVE — SHA `0877ba595f53f680a2a926440aa0bfba59919460515501913cb1ae405eb36724`; source commit `b12ca88fcb38f5dcf7b3d8ef7e9cb01591f79a48`; lê apenas matches do champion;
+- `career-opportunity-research` V5 ACTIVE — SHA `c77784d8d50d3b861c8b9c61ede2ee385ef053d1d79da06e1305a84ac2bcbc40`; source commit `d2a2665c8823f1bbc10e4ad4d4cd94c8b2ea96a9`; mantém `role-search-v2` e calcula somente o champion via router canônico.
+
+Estados:
+`MATCHING_ROUTER_V31=LIVE`
+`CAREER_AGENT_CHAMPION_ISOLATION_V3=LIVE`
+`OPPORTUNITY_RESEARCH_CHAMPION_ALIGNMENT_V5=LIVE`
+`ROLE_SEARCH_PLAN_V2=LIVE`
+
+Nenhum rollback foi executado: a promoção V3.1 foi comprovada como intencional e revalidada; o erro era documentação/consumidores stale.
+
 ## 10. Radar / Matching
 
-`CHAMPION=v2.0`
-`ROLLBACK=v1.0`
+`CHAMPION=v3.1-rolegraph`
+`ROLLBACK=v2.0`
 Threshold: 72.
 Radar piloto: fontes estruturadas, rotação automática e `Pesquisar agora`.
 `AUTOMATED_OPPORTUNITY_RESEARCH=LIVE_PILOT_SCOPE`.
+`career-opportunity-research` V5 usa o router do champion e mantém Role Search Plan V2; não executa challenger paralelo.
 Zero vaga qualificada é estado válido.
 
 A camada V10 (`app-g.js`) exibe Radar ativo e oculta cards antigos da home; a camada V9 (`app-f.js`) substitui o empty state antigo de oportunidades por um estado coerente com a pesquisa ativa. Textos legados ainda existentes no `app-b.js` pinado não são a superfície final após inicialização das camadas posteriores; não repinar a base apenas por esse texto sem necessidade funcional.
@@ -668,4 +724,4 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=MAIL_RECEIPT_PRIMITIVES_V16_LIVE_EXTERNAL_EVENT_GUARDS_LIVE_TRANSACTIONAL_SMOKE_9_OF_9_PASS_ROLLBACK_ZERO_ROWS_GMAIL_CHATGPT_READ_AND_RECEIPT_SHAPE_PROVEN_BUT_CAREER_GMAIL_OAUTH_NOT_LIVE_OUTLOOK_AVAILABLE_NOT_INSTALLED_MAIL_DELIVERY_CONNECTOR_NOT_LIVE_V16_FRONTEND_STILL_NOT_PROMOTED_VERCEL_CHAT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14`
+`LAST_VERIFIED_CHANGE=MATCHING_V31_ROLEGRAPH_CHAMPION_RUNTIME_RECONCILED_PROMOTION_MIGRATION_20260905183743_PROVEN_V2_ROLLBACK_CORPUS_57_OF_57_CLASS_STABLE_AGENT_V3_CHAMPION_ISOLATION_LIVE_RESEARCH_V5_CHAMPION_ALIGNMENT_LIVE_MAIL_RECEIPT_PRIMITIVES_LIVE_V16_FRONTEND_STILL_NOT_PROMOTED_VERCEL_CHAT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14`

@@ -1,7 +1,7 @@
 # LSI Career 360 — Role Graph / De-Para de Cargos V15
 
 Data: 2026-09-05 BRT
-Status: ROLE GRAPH LIVE FOUNDATION / SEARCH PLAN LIVE / MATCHING V3 CHALLENGER / V2 REMAINS CHAMPION
+Status: ROLE GRAPH V1.1 LIVE / SEARCH PLAN V2 LIVE / MATCHING V3.1 CHAMPION / V2 ROLLBACK
 
 ## Objetivo
 
@@ -115,38 +115,47 @@ QA:
 - `Head of Sales` x `Head Comercial`: `same_concept`;
 - `Talent Lead` x `Diretor Comercial`: título não resolvido + P&L isolado = baixa aderência; escopo não resgata.
 
-## 6. Matching V3 — Challenger
+## 6. Matching V3.1 — Champion
 
-Função:
+Função de engine:
 `career_score_opportunity_v3`
 
-Engine:
-`v3.0-challenger`.
+Router canônico:
+`career_score_opportunity`
 
-O V3 preserva gates do V2 para:
-- privacidade;
-- salário;
-- localização;
-- modelo de trabalho;
-- expiração.
+Engine LIVE:
+`v3.1-rolegraph`.
 
-Depois substitui apenas o componente de cargo por:
-`ROLE GRAPH + SCOPE + SENIORITY`.
+O V3.1 preserva os hard gates do V2 para privacidade, salário, localização, modelo de trabalho e expiração, e usa Role Graph + scope + seniority no componente de cargo.
 
-Governança:
-- `MATCHING CHAMPION = v2.0`;
-- `ROLE GRAPH CHALLENGER = v3.0-challenger`.
+Promoção comprovada no histórico vivo do Supabase:
+`20260905183743 — career_matching_v31_promote_and_router`.
 
-Não promover V3 até comprovar ganho de cobertura com precisão igual ou superior.
+Governança atual:
+- `MATCHING CHAMPION = v3.1-rolegraph`;
+- `ROLLBACK = v2.0`;
+- `ROLE GRAPH = v1.1 active`.
 
-Comparação no corpus atual de 57 oportunidades:
-- V2 qualificadas: 0;
-- V3 qualificadas: 0;
-- nenhuma mudança de classificação após hardening;
-- V3 ficou mais conservador em média;
-- não introduziu falsa oportunidade qualificada.
+Evidência de promoção registrada no runtime:
+- 7 casos sintéticos positivos;
+- 4 casos sintéticos negativos/hard-gate;
+- corpus 57;
+- 0 mudanças de classificação antes da promoção;
+- threshold 72;
+- role-fit floor 0.55.
 
-Todas as 57 oportunidades ativas foram também persistidas no challenger para baseline de comparação.
+Revalidação 2026-09-06:
+- 57/57 pares V2/V3.1 mantiveram classificação;
+- 0 mudanças de classe;
+- scores: 3 subiram, 11 caíram, 43 ficaram iguais;
+- delta médio -0.69;
+- router genérico e V3.1 direto produziram o mesmo resultado no smoke não persistente amostrado.
+
+A migration viva foi espelhada em:
+`career360/migrations/20260905183743_career_matching_v31_promote_and_router.sql`.
+
+Reconciliação detalhada:
+`career360/docs/MATCHING_V31_RUNTIME_RECONCILIATION_2026-09-06.md`.
 
 ## 7. Role Search Plan V2 — LIVE
 
@@ -195,24 +204,27 @@ Exemplos do plano atual incluem:
 - Commercial Manager;
 - Senior Buyer.
 
-## 8. Radar V4
+## 8. Radar V5
 
-`career-opportunity-research` V4 está ACTIVE.
+`career-opportunity-research` V5 está ACTIVE.
 
-Em cada oportunidade nova/alterada:
-1. V2 campeão é calculado e persistido;
-2. V3 challenger é calculado e persistido em paralelo;
-3. usuário continua vendo somente o motor campeão;
-4. Role Search Plan é mantido pronto para o usuário.
+Em cada ciclo:
+1. lê champion/rollback do `career_engine_control`;
+2. mantém o Role Search Plan V2 pronto para usuários `agent_ready`;
+3. cada oportunidade nova/alterada é pontuada uma única vez pelo router canônico `career_score_opportunity`;
+4. telemetria registra `matching_engine`, `rollback_engine` e `champion_match_operations`;
+5. não existe mais execução paralela do antigo `v3.0-challenger` depois da promoção V3.1.
 
-Ciclo real pós-V4:
-- HTTP 200;
-- matching champion informado como `v2.0`;
-- challenger informado como `v3.0-challenger`;
-- Search Plan pronto para 1 agente ativo;
-- nenhuma regressão operacional na fonte testada.
+Source commit:
+`d2a2665c8823f1bbc10e4ad4d4cd94c8b2ea96a9`.
 
-As fontes ATS atuais fornecem boards completos; portanto o Search Plan influencia especialmente o matching hoje. Futuras fontes keyword-based devem consumir os títulos do plano diretamente na descoberta.
+Deployed SHA:
+`c77784d8d50d3b861c8b9c61ede2ee385ef053d1d79da06e1305a84ac2bcbc40`.
+
+O `career-agent` V3 também foi alinhado ao champion para não somar linhas históricas de múltiplos engines.
+Source commit `b12ca88fcb38f5dcf7b3d8ef7e9cb01591f79a48`; deployed SHA `0877ba595f53f680a2a926440aa0bfba59919460515501913cb1ae405eb36724`.
+
+As fontes ATS atuais fornecem boards completos; o Search Plan continua particularmente importante para matching e para futuras fontes keyword-based.
 
 ## 9. Market Learning Queue — LIVE
 
@@ -246,14 +258,14 @@ A fila serve para apontar onde a taxonomia precisa crescer; não converte títul
 4. mapear títulos frequentes da unresolved queue com evidência;
 5. expandir conceitos para outras famílias de carreira;
 6. ligar Search Plan a fontes por palavra-chave;
-7. manter champion/challenger até V3 provar ganho real.
+7. manter V2 como rollback operacional e revalidar V3.1 em corpus crescente antes de qualquer V4.
 
 ## Do not fake
 
 - não chamar adjacência de equivalência;
 - não aumentar score só porque palavras genéricas aparecem na descrição;
-- não promover V3 antes do benchmark;
+- não promover uma nova versão de matching sem benchmark e rollback comprovados;
 - não declarar CBO/O*NET sincronizados enquanto `bulk_pending`;
 - não relaxar salário/localização/privacidade para aumentar volume.
 
-`LAST_VERIFIED_CHANGE=ROLE_GRAPH_V15_SEARCH_PLAN_V2_LIVE_V3_CHALLENGER_RADAR_PARALLEL_SCORING_UNRESOLVED_MARKET_QUEUE_LIVE`
+`LAST_VERIFIED_CHANGE=ROLE_GRAPH_V11_SEARCH_PLAN_V2_LIVE_MATCHING_V31_ROLEGRAPH_CHAMPION_V2_ROLLBACK_CORPUS_57_CLASS_STABLE_AGENT_V3_AND_RESEARCH_V5_ALIGNED`
