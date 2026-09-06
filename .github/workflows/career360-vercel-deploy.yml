@@ -30,6 +30,7 @@ env:
   OFFICIAL_URL: https://lsi-career-360.vercel.app
   EXPECTED_APP_K: 6df7b4e63d7e52ce3c3f02247392b98f0393cbe8
   EXPECTED_APP_L: 4283646143425e4a3156e44100aabb475df88d27
+  EXPECTED_APP_M: d3279ea45b3d3bb9f1686249199d2a46d34eaa2b
 
 jobs:
   deploy:
@@ -76,14 +77,22 @@ jobs:
           index='career360/frontend/index.html'
           grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" "$index" >/dev/null
           grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" "$index" >/dev/null
+          grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" "$index" >/dev/null
           count_l="$(grep -o 'career360/frontend/app-l.js' "$index" | wc -l | tr -d ' ')"
+          count_m="$(grep -o 'career360/frontend/app-m.js' "$index" | wc -l | tr -d ' ')"
           if [[ "$count_l" != "1" ]]; then
             echo "::error::Expected exactly one app-l.js reference, found $count_l."
             exit 4
           fi
+          if [[ "$count_m" != "1" ]]; then
+            echo "::error::Expected exactly one app-m.js reference, found $count_m."
+            exit 4
+          fi
           node --check career360/frontend/app-k.js
           cp career360/frontend/app-l.js /tmp/app-l.mjs
+          cp career360/frontend/app-m.js /tmp/app-m.mjs
           node --check /tmp/app-l.mjs
+          node --check /tmp/app-m.mjs
           echo 'CANONICAL_SOURCE_GATE=PASS'
 
       - name: Bind checkout to official Vercel project
@@ -119,6 +128,7 @@ jobs:
           body="$(curl --fail --silent --show-error --location "$DEPLOY_URL/")"
           grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null
           grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null
+          grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" <<< "$body" >/dev/null
           echo "PREVIEW_HTTP_AND_PIN_SMOKE=PASS"
 
       - name: Promote exact preview to production
@@ -142,14 +152,15 @@ jobs:
           for attempt in 1 2 3 4 5 6; do
             body="$(curl --fail --silent --show-error --location "$OFFICIAL_URL/" || true)"
             if grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null \
-              && grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null; then
+              && grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null \
+              && grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" <<< "$body" >/dev/null; then
               ok=1
               break
             fi
             sleep 5
           done
           if [[ "$ok" != "1" ]]; then
-            echo '::error::Official alias did not converge to the promoted V15 pins.'
+            echo '::error::Official alias did not converge to the promoted V15/V16 pins.'
             exit 6
           fi
           echo 'OFFICIAL_ALIAS_HTTP_AND_PIN_SMOKE=PASS'
@@ -165,6 +176,7 @@ jobs:
             echo "- Preview artifact: $DEPLOY_URL"
             echo "- app-k: $EXPECTED_APP_K"
             echo "- app-l: $EXPECTED_APP_L"
+            echo "- app-m: $EXPECTED_APP_M"
             echo "- Preview smoke: PASS"
             if [[ "$TARGET" == "production" ]]; then
               echo "- Promotion strategy: exact preview promoted"
