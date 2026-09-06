@@ -30,7 +30,7 @@ env:
   OFFICIAL_URL: https://lsi-career-360.vercel.app
   EXPECTED_APP_K: 6df7b4e63d7e52ce3c3f02247392b98f0393cbe8
   EXPECTED_APP_L: 4283646143425e4a3156e44100aabb475df88d27
-  EXPECTED_APP_M: 3cd06d176f81e07c6f4dba1f7fb962f73be4ce34
+  EXPECTED_APP_M: 719c15ebfe89d212a19473b70ea6e615174601d9
 
 jobs:
   deploy:
@@ -95,6 +95,7 @@ jobs:
           node --check /tmp/app-m.mjs
           echo 'CANONICAL_SOURCE_GATE=PASS'
           echo 'TRUTHFUL_UI_PIN_GATE=PASS'
+          echo 'TRUTHFUL_AUTH_COPY_PIN_GATE=PASS'
 
       - name: Bind checkout to official Vercel project
         shell: bash
