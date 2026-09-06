@@ -1,0 +1,39 @@
+name: Career360 V16 Auth Truth Patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/career360-v16-auth-truth-patch.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply auth truth patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 career360/tools/v16_auth_truth_patch.py
+          cp career360/frontend/app-m.js /tmp/app-m.mjs
+          node --check /tmp/app-m.mjs
+          node --check career360/tests/v16-clarity-smoke.mjs
+          git diff --check
+      - name: Commit source and test
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-career360-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add career360/frontend/app-m.js career360/tests/v16-clarity-smoke.mjs
+          git diff --cached --check
+          git commit -m 'career360: make auth copy truthful in V16'
+          git push origin HEAD:main
+          echo "V16_AUTH_TRUTH_SOURCE_COMMIT=$(git rev-parse HEAD)"
