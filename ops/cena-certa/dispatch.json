@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-exact1-tears-20260906.json",
-  "batch_sha256": "b3b6c471c561b0e8f87dcfa0ca8454e04d56c2e5c302b53fe656b37e9f98381f",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T03:53:30+00:00",
-  "request_id": "CC-TEARS-20260906-0001",
-  "candidate_count": 1,
-  "selected_count": 1,
-  "reserve_count": 0,
-  "note": "Tears isolated recovery: exact official 480p derivative plus explicit 42.766s story-driven duration exception; no QA relaxation."
+  "requested_at": "",
+  "request_id": "",
+  "note": "IDLE after fail-closed Tears exact1 prepare failure; audit batch and run retained."
 }
