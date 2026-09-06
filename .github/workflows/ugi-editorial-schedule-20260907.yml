@@ -29,8 +29,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${UGI_WORKER_COMMAND_KEY:-}"
-          echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          test -n "${UGI_WORKER_COMMAND_KEY:-}${UGI_LOLA_COMMAND_KEY:-}"
+          [ -z "${UGI_WORKER_COMMAND_KEY:-}" ] || echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          [ -z "${UGI_LOLA_COMMAND_KEY:-}" ] || echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
           git config user.name 'ugi-editorial-scheduler-bot'
           git config user.email 'ugi-editorial-scheduler-bot@users.noreply.github.com'
           Q='control-plane/publisher-hub/media-queue'
