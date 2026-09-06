@@ -122,9 +122,9 @@ Permanent test:
 Permanent workflow:
 `.github/workflows/career360-v16-clarity-smoke.yml`
 
-Final hardened canonical-bundle validation:
-- run `34010396657`
-- job `101425087473`
+Final hardened canonical-bundle + deploy-readiness validation:
+- run `34010764428`
+- job `101426061763`
 - result `SUCCESS`
 
 Evidence:
@@ -133,6 +133,11 @@ Evidence:
 - `V16_TRUTHFUL_STATUS_POLICY=PASS`
 - `V16_AUTH_TRUTHFUL_COPY_POLICY=PASS`
 - `V16_STATIC_AUTH_TRUTH_SOURCE=PASS`
+- `V16_LEGACY_AUTH_COPY_ABSENT=PASS`
+- `V16_VERCEL_PROJECT_SCOPE_GATE=PASS`
+- `V16_VERCEL_VALIDATE_ONLY_GATE=PASS`
+- `V16_VERCEL_PREVIEW_TRUTH_SMOKE_POLICY=PASS`
+- `V16_VERCEL_EXACT_PREVIEW_PROMOTION_POLICY=PASS`
 - `CLARITY_360=PASS mutations=6`
 - `CLARITY_412=PASS mutations=6`
 - `CLARITY_768=PASS mutations=6`
@@ -143,6 +148,7 @@ Evidence:
 - `V16_AUTH_TRUTHFUL_COPY=PASS`
 
 Earlier evidence retained for audit:
+- static/runtime truth run `34010396657`, job `101425087473`, SUCCESS before deploy-readiness smoke was bound to the permanent V16 workflow;
 - runtime-auth-copy run `34010192948`, job `101424535949`, SUCCESS before static-HTML hardening;
 - previous runtime-truth final run `34009190125`, job `101421875198`, SUCCESS before auth-copy hardening;
 - pre-bundle run `34006941241`, job `101415802373`, SUCCESS;
@@ -162,6 +168,19 @@ V16 does NOT:
 - change backend schema or Edge Functions.
 
 Quick actions remain read-oriented questions and call the existing canonical agent path.
+
+
+### Deployment-readiness hardening
+
+Permanent Vercel workflow:
+`.github/workflows/career360-vercel-deploy.yml`
+
+Current hardened workflow commit:
+`bb344db78e61646926b0259c44552817149c861a`
+
+The permanent V16 smoke now verifies that the deploy workflow is bound to the exact official Team/Project, supports a mutation-free `validate` target, rejects the legacy unverified auth copy, checks the truthful static copy in Preview/official alias, and promotes the exact tested Preview instead of creating a second production build.
+
+This is deployment **readiness evidence only**. It is not evidence that a Preview or Production deployment occurred.
 
 ## Deployment state
 

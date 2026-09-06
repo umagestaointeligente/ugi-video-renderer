@@ -10,7 +10,7 @@ Handoff canônico desta transição de chat:
 ## 0. Estado global
 
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=V14_PRODUCTION_STABLE_V15_V16_BROWSER_VALIDATED_BUNDLE_PINNED_WAITING_VERCEL_AUTH`
+`CURRENT_STATUS=V14_PRODUCTION_STABLE_V15_V16_BROWSER_VALIDATED_BUNDLE_PINNED_WAITING_IN_CHAT_PROJECT_SCOPED_VERCEL_MUTATION`
 `VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
 REGRA:
@@ -66,7 +66,7 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `SCALE_DB_HARDENING_V15=LIVE`
 `UI_RESPONSIVE_V15=BROWSER_VALIDATED_NOT_YET_PROMOTED`
 `CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`
-`VERCEL_PROJECT_SCOPED_DEPLOY_ROUTE=PREVIEW_PROMOTE_PIPELINE_READY_WAITING_AUTH`
+`VERCEL_PROJECT_SCOPED_DEPLOY_ROUTE=PREVIEW_PROMOTE_PIPELINE_READY_CHAT_CONNECTOR_MUTATION_UNSCOPED`
 `MAIL_DECISION=LIVE`
 `MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
@@ -299,26 +299,28 @@ Destino explícito:
 ### Pipeline endurecido
 
 Commit do workflow:
-`7aba73e550410ed111dde30007a0033935c7b0e4`
+`bb344db78e61646926b0259c44552817149c861a`
 
 CLI pinada:
 `vercel@59.11.7`.
 
 Estratégia final:
-`VERIFY SOURCE -> BIND OFFICIAL PROJECT -> CREATE PREVIEW -> HTTP/PIN SMOKE -> PROMOTE EXACT PREVIEW -> VERIFY OFFICIAL ALIAS`.
+`VALIDATE SOURCE/TRUTH -> BIND OFFICIAL PROJECT -> CREATE PREVIEW -> HTTP/PIN/TRUTH SMOKE -> PROMOTE EXACT PREVIEW -> VERIFY OFFICIAL ALIAS`.
 
 Para `target=production`, o workflow NÃO faz um segundo build de produção.
 Ele promove o mesmo Preview validado para evitar divergência entre Preview e Production.
 
 O workflow:
+- oferece `target=validate`, que roda os gates de readiness sem credencial e sem qualquer mutação Vercel;
 - valida `app-k`, `app-l` e `app-m` antes de qualquer mutação;
+- exige a copy estática verdadeira `Você confirma o que importa. O Career 360 organiza sua busca.` e rejeita a copy legada não comprovada;
 - faz syntax gate;
 - cria `.vercel/project.json` em runtime com IDs oficiais;
 - cria Preview no projeto oficial;
-- valida HTTP + pins do Preview;
-- promove exatamente esse Preview quando target=production;
-- valida o domínio oficial em até seis tentativas de convergência;
-- aborta antes de mutar a Vercel se a credencial estiver ausente.
+- valida HTTP + pins + copy verdadeira do Preview e rejeita a copy legada;
+- promove exatamente esse Preview quando target=production, sem segundo build `--prod`;
+- valida o domínio oficial em até seis tentativas de convergência, incluindo pins + copy verdadeira;
+- aborta antes de mutar a Vercel se a credencial estiver ausente em `preview`/`production`.
 
 Trigger controlado:
 `.github/career360-vercel-deploy.trigger`
@@ -386,13 +388,18 @@ Objetivo da V16:
 - oferecer ações rápidas de consulta sem criar novas mutações.
 
 Validação final sobre bundle canônico:
-- run `34010396657`;
-- job `101425087473`;
+- run `34010764428`;
+- job `101426061763`;
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;
 - `V16_TOUCH_TARGET_POLICY=44PX`;
 - `V16_TRUTHFUL_STATUS_POLICY=PASS`;
 - `V16_AUTH_TRUTHFUL_COPY_POLICY=PASS`;
 - `V16_STATIC_AUTH_TRUTH_SOURCE=PASS`;
+- `V16_LEGACY_AUTH_COPY_ABSENT=PASS`;
+- `V16_VERCEL_PROJECT_SCOPE_GATE=PASS`;
+- `V16_VERCEL_VALIDATE_ONLY_GATE=PASS`;
+- `V16_VERCEL_PREVIEW_TRUTH_SMOKE_POLICY=PASS`;
+- `V16_VERCEL_EXACT_PREVIEW_PROMOTION_POLICY=PASS`;
 - `CLARITY_360=PASS mutations=6`;
 - `CLARITY_412=PASS mutations=6`;
 - `CLARITY_768=PASS mutations=6`;
@@ -530,4 +537,4 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V16_STATIC_AND_RUNTIME_TRUTH_BROWSER_PASS_APP_M_719C15E_APP_L_428364_APP_K_6DF7B4_BUNDLE_F572B82_SMOKE_RUN_34010396657_JOB_101425087473_STATIC_AUTH_SOURCE_PASS_VERCEL_CHATGPT_ONLY_INTERNAL_DEPLOY_UNSCOPED_PRODUCTION_STILL_V14_NOT_PROMOTED`
+`LAST_VERIFIED_CHANGE=V16_STATIC_RUNTIME_AND_DEPLOY_READINESS_PASS_APP_M_719C15E_APP_L_428364_APP_K_6DF7B4_BUNDLE_F572B82_SMOKE_RUN_34010764428_JOB_101426061763_VERCEL_WORKFLOW_BB344DB_PROJECT_SCOPE_VALIDATE_ONLY_PREVIEW_TRUTH_EXACT_PROMOTION_PASS_CHATGPT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14_NOT_PROMOTED`
