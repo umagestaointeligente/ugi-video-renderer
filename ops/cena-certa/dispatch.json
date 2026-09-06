@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-exact5-20260906-complement-v3.json",
-  "batch_sha256": "3a25c07eadf23a03836fab4d60a073f8725be1be97bf9fc239c9bdff12d40b05",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T16:00:46.283627+00:00",
-  "request_id": "1233b4e49f8849e1a06585263a3cb90f",
-  "candidate_count": 5,
-  "selected_count": 5,
-  "reserve_count": 0,
-  "note": "Complemento v3 06/09/2026: black windows corrigidos e ritmo Pasion ajustado; preservar agenda existente."
+  "requested_at": "",
+  "request_id": "",
+  "note": "IDLE after v3 exact5: four PREPARE_PASS, Pasion scene09 black diagnosed; audit run 34044093526 retained."
 }
