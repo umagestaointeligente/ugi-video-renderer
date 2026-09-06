@@ -46,6 +46,39 @@ def _clip_provider_boundary_overlap(cues):
  return cues
 
 
+def _cues_from_real_sentence_envelopes(sentences,caption_chunks):
+ # Edge occasionally returns no WordBoundary events and merges adjacent authored
+ # chunks into fewer SentenceBoundary events. Preserve the provider's real
+ # sentence start/end envelope, prove literal token coverage, and subdivide only
+ # inside that measured envelope in proportion to authored token counts. This is
+ # deterministic and fails closed on any text mismatch; it is not a blind timing
+ # fallback and never invents speech outside a provider-measured sentence.
+ if not sentences:
+  raise RuntimeError('SENTENCE_BOUNDARY_EMPTY')
+ authored_tokens=tokens(' '.join(caption_chunks))
+ provider_tokens=tokens(' '.join(s[0] for s in sentences))
+ if provider_tokens!=authored_tokens:
+  raise RuntimeError('SENTENCE_BOUNDARY_TEXT_MISMATCH')
+ cues=[]; ci=0
+ for sent_text,start,duration in sentences:
+  target=tokens(sent_text); consumed=[]; group=[]
+  while ci<len(caption_chunks) and len(consumed)<len(target):
+   chunk=caption_chunks[ci]; ct=tokens(chunk)
+   if not ct or target[len(consumed):len(consumed)+len(ct)]!=ct:
+    raise RuntimeError(f'SENTENCE_CHUNK_PARTITION_FAIL sentence={sent_text!r} chunk={chunk!r}')
+   group.append((chunk,len(ct))); consumed.extend(ct); ci+=1
+  if consumed!=target or not group:
+   raise RuntimeError(f'SENTENCE_CHUNK_COVERAGE_FAIL sentence={sent_text!r}')
+  total=sum(n for _,n in group); cursor=float(start); end=float(start)+float(duration)
+  for idx,(chunk,n) in enumerate(group):
+   chunk_end=end if idx==len(group)-1 else cursor+float(duration)*(n/total)
+   cues.append({'text':chunk,'start':cursor,'end':chunk_end}); cursor=chunk_end
+ if ci!=len(caption_chunks):
+  raise RuntimeError(f'SENTENCE_CHUNK_REMAINDER_FAIL consumed={ci} total={len(caption_chunks)}')
+ print('TTS_REAL_SENTENCE_ENVELOPE_ALIGNMENT',f'sentences={len(sentences)}',f'chunks={len(caption_chunks)}')
+ return cues
+
+
 async def tts_with_real_boundaries(c,text,caption_chunks,out):
  out=Path(out); out.parent.mkdir(parents=True,exist_ok=True)
  authored=' '.join(caption_chunks)
@@ -79,6 +112,8 @@ async def tts_with_real_boundaries(c,text,caption_chunks,out):
    cues.append({'text':chunk,'start':seg[0][1],'end':seg[-1][1]+seg[-1][2]}); pos+=n
  elif len(sentences)==len(caption_chunks):
   for chunk,s in zip(caption_chunks,sentences): cues.append({'text':chunk,'start':s[1],'end':s[1]+s[2]})
+ elif sentences:
+  cues=_cues_from_real_sentence_envelopes(sentences,caption_chunks)
  else:
   raise RuntimeError(f'REAL_ALIGNMENT_UNAVAILABLE words={len(words)} sentences={len(sentences)} chunks={len(caption_chunks)}')
  _clip_provider_boundary_overlap(cues)
