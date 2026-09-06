@@ -66,8 +66,11 @@ jobs:
           test "$ok" = '1'
           code="$(curl -sS -o /dev/null -w '%{http_code}' "$PREVIEW_URL/")"
           test "$code" = '200'
-          leak_code="$(curl -sS -o /dev/null -w '%{http_code}' "$PREVIEW_URL/vercel.json")"
-          test "$leak_code" != '200'
+          probe="$(curl --fail --silent --show-error --location "$PREVIEW_URL/vercel.json")"
+          ! grep -F 'openapi.vercel.sh/vercel.json' <<< "$probe" >/dev/null
+          ! grep -F 'deploymentEnabled' <<< "$probe" >/dev/null
+          grep -F 'LSI Career 360' <<< "$probe" >/dev/null
           echo 'CLOUDFLARE_PREVIEW_HTTP_V16_GATE=PASS'
+          echo 'PROVIDER_CONFIG_NOT_EXPOSED=PASS_SPA_FALLBACK_IS_INDEX' >> "$GITHUB_STEP_SUMMARY"
           echo "PREVIEW_URL=$PREVIEW_URL" >> "$GITHUB_STEP_SUMMARY"
           echo 'PRODUCTION_MUTATION=NONE' >> "$GITHUB_STEP_SUMMARY"
