@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-exact1-sleepingfield-20260906.json",
-  "batch_sha256": "1bdb4ec7340d59d10f337a5a36a321a73e42442483d2fdba013071eecf871203",
+  "batch_path": "ops/cena-certa/batches/cena-certa-exact1-tears-20260906.json",
+  "batch_sha256": "b3b6c471c561b0e8f87dcfa0ca8454e04d56c2e5c302b53fe656b37e9f98381f",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T03:52:00+00:00",
-  "request_id": "CC-SLEEP-20260906-0001",
+  "requested_at": "2026-09-06T03:53:30+00:00",
+  "request_id": "CC-TEARS-20260906-0001",
   "candidate_count": 1,
   "selected_count": 1,
   "reserve_count": 0,
-  "note": "Sleeping Field isolated recovery after exact2 proved corrected preparation; rerun only this candidate for render, QA, R2 and schedule."
+  "note": "Tears isolated recovery: exact official 480p derivative plus explicit 42.766s story-driven duration exception; no QA relaxation."
 }
