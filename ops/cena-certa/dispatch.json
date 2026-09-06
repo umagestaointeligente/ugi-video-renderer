@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-exact4-20260906-recovery-v1.json",
   "batch_sha256": "b9ffe0e422750e54b91eedbeb85f4d3e339bf09ac59a6795fc8baf7e3693e885",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T03:15:54+00:00",
+  "requested_at": "2026-09-06T03:17:26+00:00",
   "request_id": "CC-RECOVERY-20260906-0001",
   "candidate_count": 4,
   "selected_count": 4,
   "reserve_count": 0,
-  "note": "Recuperação autorizada por Paulo após confirmação de que o lote de 05/09 não chegou ao publisher. Retime apenas; mesma Factory V2 e mesma rota Metricool 4/4."
+  "note": "Recuperação 06/09 autorizada por Paulo. Canonical connector wake after fail-closed retime; same Factory V2 and Metricool route."
 }
