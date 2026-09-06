@@ -1,0 +1,13 @@
+{
+  "id": "UGI-20260906-IG-FOXCONN-001",
+  "project": "UGI",
+  "enabled": true,
+  "platform": "instagram",
+  "mediaType": "video",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-06/foxconn-story.mp4",
+  "format": "story_video",
+  "mode": "customScheduled",
+  "dueAt": "2026-09-06T22:00:00Z",
+  "topic": "Foxconn — IA já está mudando a fábrica",
+  "text": "🤖 A demanda por IA já está mudando a escala industrial. A Foxconn voltou a sinalizar força puxada por infraestrutura de IA — e para a gestão o recado é claro: quando a tecnologia muda a demanda, capacidade, cadeia e execução precisam mudar junto. #Gestão #IA #UGI"
+}
