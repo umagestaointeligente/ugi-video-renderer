@@ -1,0 +1,79 @@
+{
+  "project": "UGI",
+  "date": "2026-09-06",
+  "timezone": "America/Sao_Paulo",
+  "state": "EDITORIAL_LOCKED_MEDIA_PENDING",
+  "publicationAuthorized": true,
+  "bufferMutationAllowedOnlyAfterMediaGate": true,
+  "principle": "A NOTÍCIA É O GANCHO. A INTELIGÊNCIA DE GESTÃO É O PRODUTO.",
+  "visualPolicy": {
+    "newsVideoMode": "REAL_EVENT_FOOTAGE_REQUIRED",
+    "staticPhotoForInstagramTikTok": false,
+    "semanticSyncRequired": true,
+    "shortMultiSourceClipsAllowedOnlyWithRightsReview": true,
+    "sourceCreditsRequired": true,
+    "noGenericCorporateIllustration": true,
+    "linkedinImageRequired": true,
+    "linkedinTextOnlyForbiddenForThisEditorial": true
+  },
+  "posts": [
+    {
+      "slot": "11:45",
+      "platform": "linkedin",
+      "format": "image_post",
+      "topic": "Rock in Rio — escala, gestão e IA/dados",
+      "hook": "🎸 O que o Rock in Rio, que movimenta mais de 700 mil pessoas, pode nos ensinar sobre gestão?",
+      "artHeadline": "ROCK IN RIO — O QUE 700 MIL PESSOAS ENSINAM SOBRE GESTÃO?",
+      "visualBrief": "Imagem editorial real do Rock in Rio com Cidade do Rock/público, Roberta Medina quando houver foto licenciada/permitida, e elemento discreto de dados/operação. Identidade UGI sem aparência de banner corporativo.",
+      "textRules": ["emojis funcionais e moderados", "blocos escaneáveis", "pergunta final genuína", "3-5 hashtags"],
+      "status": "MEDIA_PENDING"
+    },
+    {
+      "slot": "14:45",
+      "platform": "instagram",
+      "format": "reel",
+      "topic": "Rock in Rio por trás do palco — operação de centenas de milhares de pessoas",
+      "visualBrief": "Vídeo real da edição 2026: público, entrada, palcos, operação, ativações e bastidores; cortes de 1.5-4s; narração UGI sobre gestão e escala; fontes no fechamento/legenda.",
+      "status": "REAL_FOOTAGE_PENDING"
+    },
+    {
+      "slot": "16:15",
+      "platform": "tiktok",
+      "format": "video",
+      "topic": "Rock in Rio: festival ou operação gigante?",
+      "visualBrief": "Vídeo real do evento, ritmo mais rápido que LinkedIn/Instagram, sincronização fala-imagem; publicação antes do início do pico do Palco Mundo.",
+      "status": "REAL_FOOTAGE_PENDING"
+    },
+    {
+      "slot": "19:00",
+      "platform": "instagram",
+      "format": "story_video",
+      "topic": "ByteDance levanta US$ 29,6 bi em financiamento em meio à corrida por IA",
+      "visualBrief": "Vídeo real relacionado à ByteDance/TikTok/datacenters, com fonte jornalística identificada; text boxes com headline + contexto + conclusão curta; zero overflow.",
+      "status": "REAL_FOOTAGE_PENDING"
+    },
+    {
+      "slot": "22:10",
+      "platform": "tiktok",
+      "format": "video",
+      "topic": "Agentes de IA estão mudando como consumidores encontram produtos",
+      "visualBrief": "Vídeo real de varejo/John Lewis e experiência de compra assistida por IA; cortes curtos, narração UGI e crédito de fontes.",
+      "status": "REAL_FOOTAGE_PENDING"
+    }
+  ],
+  "sourceFacts": {
+    "rockInRioDates": "4, 5, 6, 7, 11, 12 e 13 de setembro de 2026",
+    "rockInRioSep6MainStage": ["Barão Vermelho 16:40", "Nelly 19:00/19:30 conforme grade publicada", "Black Eyed Peas 21:20", "Calvin Harris 00:05"],
+    "rockInRioScale": "cerca de 700 mil pessoas esperadas no festival, mais de 90 empresas e 100 ativações, segundo cobertura UOL/FGV",
+    "byteDance": "Reuters 2026-09-04: financiamento de US$ 29,6 bilhões em meio à expansão de IA",
+    "johnLewis": "Reuters 2026-09-03: buscas originadas por agentes de IA chegaram a 2,5%, ante 0,3% um ano antes"
+  },
+  "hardGates": [
+    "DO_NOT_PUSH_TO_PUBLISHER_HUB_QUEUE_UNTIL_REAL_MEDIA_READY",
+    "DO_NOT_USE_PEXELS_OR_PIXABAY_AS_SUBSTITUTE_FOR_EVENT_OR_NEWS_FOOTAGE",
+    "LINKEDIN_MEDIA_CAPABLE_BUFFER_ROUTE_REQUIRED",
+    "INSTAGRAM_STORY_NATIVE_FORMAT_REQUIRED",
+    "ANTI_REPEAT_15D_PER_PLATFORM_REQUIRED",
+    "BUFFER_RECEIPT_AND_EXACT_DUEAT_READBACK_REQUIRED_BEFORE_SCHEDULED_CLAIM"
+  ]
+}
