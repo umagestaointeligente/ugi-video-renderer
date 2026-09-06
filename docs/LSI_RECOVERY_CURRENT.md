@@ -276,12 +276,18 @@ Cobertura:
 IMPORTANTE:
 Browser regression PASS não substitui Android autenticado real.
 
-## 9. Deploy Vercel — pipeline final pronto / autenticação externa ausente
+## 9. Deploy Vercel — pipeline final pronto / acesso somente pelo ChatGPT
 
 A ação Vercel genérica disponível neste contexto não aceita `projectId` e a conta possui múltiplos projetos.
 
 Guardrail:
 `UNSCOPED_VERCEL_DEPLOY=DO_NOT_USE`.
+`VERCEL_ACCESS_POLICY=CHATGPT_CONNECTOR_ONLY`.
+`EXTERNAL_VERCEL_AUTH=PROHIBITED_BY_USER`.
+`VERCEL_DEVICE_FLOW=PROHIBITED`.
+`VERCEL_MANUAL_TOKEN_ROUTE=PROHIBITED`.
+`PRODUCTOS_VERCEL_AUTH_ROUTE=PROHIBITED`.
+`REMOTE_DESKTOP_COMMANDER=PROHIBITED_BY_USER_FOR_LSI_CAREER360`.
 
 Rota canônica project-scoped:
 `.github/workflows/career360-vercel-deploy.yml`
@@ -336,17 +342,18 @@ A documentação/skill atual da Vercel confirma:
 `VERCEL_OIDC_FEDERATION_DOES_NOT_REPLACE_VERCEL_TOKEN_FOR_CLI_DEPLOYMENTS`.
 
 Estado:
-`VERCEL_DEPLOY_ROUTE=PREVIEW_PROMOTE_PIPELINE_READY_WAITING_AUTH`
-`VERCEL_TOKEN=NOT_CONFIGURED`
+`VERCEL_DEPLOY_ROUTE=PROJECT_SCOPED_PIPELINE_READY_BUT_CHAT_CONNECTOR_MUTATION_UNSCOPED`
 `V15_PREVIEW_DEPLOYED=NO`
 `V15_PRODUCTION_DEPLOYED=NO`
 `V16_PREVIEW_DEPLOYED=NO`
 `V16_PRODUCTION_DEPLOYED=NO`
-`DEPLOY_AUTH_BLOCKER=EXTERNAL_AUTHENTICATED_SESSION_OR_SECRET_REQUIRED`
+`DEPLOY_BLOCKER=IN_CHAT_VERCEL_DEPLOY_ACTION_DOES_NOT_EXPOSE_PROJECT_ID`
 
-Sessões alternativas verificadas neste gate:
-- Remote Desktop Commander = `PROIBIDO` por decisão do usuário; não sugerir esta rota novamente;
-- Opera Browser Connector = browser desconectado.
+Regra operacional absoluta do usuário:
+- Vercel só pode ser acessada/operada pelo conector Vercel dentro deste ChatGPT;
+- não usar login externo, OAuth Device Flow, navegador externo, token manual, ProductOS como ponte de autenticação ou Remote Desktop;
+- o conector interno já prova leitura do projeto `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`, deployments e runtime;
+- a ação interna de deploy atualmente exposta é zero-argument e não permite selecionar `projectId`; como a conta tem múltiplos projetos, `deploy_to_vercel` permanece proibido até existir escopo determinístico dentro do Chat.
 
 Não criar token fictício, não extrair magic link/2FA de e-mail, não expor token em código/repositório/chat e não usar deploy sem escopo.
 
@@ -460,19 +467,27 @@ Performance Advisor após Scale DB V15:
 
 ## 13. Gate único que falta para promoção V15/V16
 
-Uma destas condições precisa existir sem expor credenciais no chat:
+A promoção só pode acontecer **dentro deste ChatGPT**, pelo conector Vercel, com escopo determinístico para:
+- Team `team_ZJys00FTE2kK9yVtsqH5fHyF`;
+- Project `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`.
 
-A. `VERCEL_TOKEN` válido cadastrado como repository secret no GitHub; OU
-B. Browser Connector autenticado na Vercel com acesso suficiente para configurar/autorizar a rota project-scoped; OU
-C. novo OAuth Device Flow em runner efêmero privado, com autorização humana explícita e identidade Vercel validada antes do deploy.
+Estado atual do conector:
+- leitura project-scoped = `PROVEN`;
+- `get_project`, `list_deployments`, `web_fetch_vercel_url` e runtime errors = disponíveis;
+- mutação de deploy exposta = `deploy_to_vercel()` sem argumentos;
+- seleção explícita de `projectId` para a mutação = `NOT_EXPOSED`;
+- portanto `UNSCOPED_VERCEL_DEPLOY=DO_NOT_USE`.
 
-Guardrail absoluto:
-`REMOTE_DESKTOP_COMMANDER=PROHIBITED_BY_USER_FOR_LSI_CAREER360`.
-Não sugerir nem reutilizar Remote Desktop como rota de promoção.
+Rotas proibidas por decisão do usuário:
+`EXTERNAL_BROWSER_AUTH=PROHIBITED`
+`OAUTH_DEVICE_FLOW=PROHIBITED`
+`MANUAL_VERCEL_TOKEN=PROHIBITED`
+`PRODUCTOS_VERCEL_AUTH_BRIDGE=PROHIBITED`
+`REMOTE_DESKTOP_COMMANDER=PROHIBITED`
 
-Assim que uma condição válida existir, a rota canônica já permite executar sem nova arquitetura:
-1. criar Preview project-scoped;
-2. HTTP/pin smoke de `app-k`, `app-l` e `app-m`;
+Quando o conector interno expuser deploy/promoção project-scoped, executar sem nova arquitetura:
+1. criar Preview no projeto oficial;
+2. validar HTTP + pins de `app-k`, `app-l` e `app-m`;
 3. promover o MESMO Preview;
 4. confirmar alias oficial;
 5. checar runtime errors;
@@ -508,4 +523,4 @@ Assim que uma condição válida existir, a rota canônica já permite executar 
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V16_RUNTIME_TRUTH_BROWSER_PASS_APP_M_3CD06D1_APP_L_428364_APP_K_6DF7B4_BUNDLE_AC8A46F_SMOKE_RUN_34009190125_JOB_101421875198_TRUTH_DERIVATION_PASS_DEPLOY_GATE_921FED0_PRODUCTION_STILL_V14_NOT_PROMOTED_AUTH_REQUIRED_REMOTE_DESKTOP_PROHIBITED`
+`LAST_VERIFIED_CHANGE=V16_RUNTIME_TRUTH_BROWSER_PASS_APP_M_3CD06D1_APP_L_428364_APP_K_6DF7B4_BUNDLE_AC8A46F_SMOKE_RUN_34009190125_JOB_101421875198_VERCEL_CHATGPT_ONLY_EXTERNAL_AUTH_PROHIBITED_INTERNAL_DEPLOY_UNSCOPED_PRODUCTION_STILL_V14_NOT_PROMOTED`
