@@ -7,12 +7,14 @@
       "state": "ACTIVE_LIVE_PROVEN",
       "required_for_render": true,
       "runtime_gitlab_clone": false,
-      "candidate_pool": 10,
+      "candidate_pool": 12,
       "final_videos": 8,
-      "hot_reserves": 2,
+      "hot_reserves": 4,
+      "pool_profile": "12_TO_8_PLUS_4",
       "last_live_proof_run_id": "33947653147",
       "last_live_proof_commit": "317ea15423ba99ba5a806870ef7e354c42df1de2",
       "last_live_proof_result": "SUCCESS",
+      "last_live_proof_profile": "10_TO_8_PLUS_2_HISTORICAL_ROUTE_PROOF",
       "last_live_proof_seconds": 203
     },
     "media_delivery": {
