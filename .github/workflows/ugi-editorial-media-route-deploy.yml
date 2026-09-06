@@ -1,0 +1,54 @@
+name: UGI Editorial Media Route Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ugi_editorial_media_route_deploy.py'
+      - '.github/workflows/ugi-editorial-media-route-deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-cloudflare-worker-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate deploy script
+        run: python -m py_compile scripts/ugi_editorial_media_route_deploy.py
+      - name: Deploy additive editorial media route
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${CF_API_TOKEN:-}"
+          test -n "${CF_ACCOUNT_ID:-}"
+          python -m pip install --disable-pip-version-check --quiet requests
+          PYTHONPATH=scripts python scripts/ugi_editorial_media_route_deploy.py
+      - name: Persist deployment evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p cloudflare/status
+          test -f cloudflare/status/ugi-editorial-media-route.txt || printf 'OK=false\nSTATUS_MISSING=true\n' > cloudflare/status/ugi-editorial-media-route.txt
+          git config user.name 'ugi-editorial-media-deploy-bot'
+          git config user.email 'ugi-editorial-media-deploy@users.noreply.github.com'
+          git add cloudflare/status/ugi-editorial-media-route.txt
+          git commit -m 'chore: persist UGI editorial media route deployment' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
