@@ -10,7 +10,7 @@ Handoff canônico desta transição de chat:
 ## 0. Estado global
 
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=V14_PRODUCTION_STABLE_V15_BROWSER_VALIDATED_DEPLOY_PIPELINE_HARDENED_WAITING_VERCEL_AUTH`
+`CURRENT_STATUS=V14_PRODUCTION_STABLE_V15_V16_BROWSER_VALIDATED_BUNDLE_PINNED_WAITING_VERCEL_AUTH`
 `VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
 REGRA:
@@ -63,6 +63,7 @@ Readback final deste gate em 2026-09-05 BRT:
 `CAREER_UI_STATE_V15=LIVE`
 `SCALE_DB_HARDENING_V15=LIVE`
 `UI_RESPONSIVE_V15=BROWSER_VALIDATED_NOT_YET_PROMOTED`
+`CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`
 `VERCEL_PROJECT_SCOPED_DEPLOY_ROUTE=PREVIEW_PROMOTE_PIPELINE_READY_WAITING_AUTH`
 `MAIL_DECISION=LIVE`
 `MAIL_DELIVERY_CONNECTOR=NOT_LIVE`
@@ -340,10 +341,50 @@ Estado:
 `DEPLOY_AUTH_BLOCKER=EXTERNAL_AUTHENTICATED_SESSION_OR_SECRET_REQUIRED`
 
 Sessões alternativas verificadas neste gate:
-- Remote Desktop Commander = nenhum dispositivo online;
+- Remote Desktop Commander = `PROIBIDO` por decisão do usuário; não sugerir esta rota novamente;
 - Opera Browser Connector = browser desconectado.
 
 Não criar token fictício, não extrair magic link/2FA de e-mail, não expor token em código/repositório/chat e não usar deploy sem escopo.
+
+## 9A. V16 — Clarity UI / menos texto / decisão primeiro
+
+Estado:
+`CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`
+
+Camada incremental:
+`career360/frontend/app-m.js`
+
+Pin imutável:
+`f597e48006aae69c73c6c0a540b797f0093e4e84`
+
+Bundle canônico com `app-k -> app-l -> app-m`:
+`08f100d3c3bf10320e429a47529816b0b674b6f3`
+
+Release canônica:
+`career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md`
+
+Objetivo da V16:
+- reduzir texto repetitivo na superfície;
+- melhorar hierarquia, respiro, bordas, sombras e densidade;
+- transformar Meu Agente em superfície de decisão;
+- manter métricas e pendências visíveis;
+- esconder detalhe operacional que não precisa competir com a decisão;
+- oferecer ações rápidas de consulta sem criar novas mutações.
+
+Validação final sobre bundle canônico:
+- run `34007073507`;
+- job `101416159331`;
+- `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;
+- `CLARITY_360=PASS mutations=5`;
+- `CLARITY_412=PASS mutations=5`;
+- `CLARITY_768=PASS mutations=5`;
+- `CLARITY_1180=PASS mutations=5`;
+- `V16_AGENT_QUICK_ACTIONS=PASS`;
+- `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`.
+
+IMPORTANTE:
+Browser PASS + bundle pinado NÃO significa produção LIVE.
+A V16 só vira LIVE após promoção comprovada no domínio oficial e gate móvel autenticado.
 
 ## 10. Radar / Matching
 
