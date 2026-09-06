@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave2-v2.json",
   "batch_sha256": "b1c0137f40f1549f25c5cf9ae6d7ba687e9009abd4a9dce03cda9596700dcd46",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T17:58:00Z",
-  "request_id": "19f1987a848544b6af54b39e40b10d0d",
+  "requested_at": "2026-09-06T18:35:20Z",
+  "request_id": "7008ad2c298c49adb2e36951a71f21d2",
   "candidate_count": 4,
-  "selected_count": 4,
-  "reserve_count": 0,
-  "note": "Daily8 07/09 wave2-v2: Alien Grounds narration shortened after measured 42.268s; no gate relaxed."
+  "selected_count": 3,
+  "reserve_count": 1,
+  "note": "Daily8 07/09 wave2 resilient pass: Alien Grounds isolated as reserve after deterministic alignment mismatch; render three already-qualified candidates without relaxing any gate."
 }
