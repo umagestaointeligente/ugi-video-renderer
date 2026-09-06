@@ -1,0 +1,44 @@
+name: Career360 LSI Workers AI Shape Probe
+run-name: Career360 LSI Workers AI Shape Probe ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['lsi-broker-job-*']
+    paths: ['.github/workflows/career360-lsi-workers-ai-shape-probe.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CF_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Probe current Workers AI synchronous response shapes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_TOKEN" && test -n "$CF_ACCOUNT"
+          echo '::add-mask::'$CF_TOKEN
+          mkdir -p /tmp/lsi-probe
+          for spec in \
+            'llama:@cf/meta/llama-3.1-8b-instruct-fast' \
+            'glm:@cf/zai-org/glm-4.7-flash' \
+            'gemma:@cf/google/gemma-4-26b-a4b-it'; do
+            name="${spec%%:*}"; model="${spec#*:}"
+            code="$(curl -sS -o "/tmp/lsi-probe/$name.json" -w '%{http_code}' \
+              -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/ai/run/$model" \
+              -H "Authorization: Bearer $CF_TOKEN" -H 'Content-Type: application/json' \
+              --data '{"messages":[{"role":"user","content":"Reply with exactly: LSI_OK"}],"max_completion_tokens":40}')"
+            printf '%s %s\n' "$name" "$code" | tee -a /tmp/lsi-probe/status.txt
+          done
+      - name: Upload sanitized model responses
+        uses: actions/upload-artifact@v4
+        with:
+          name: career360-lsi-workers-ai-shape-${{ github.run_id }}
+          path: /tmp/lsi-probe
+          retention-days: 3
+          if-no-files-found: error
