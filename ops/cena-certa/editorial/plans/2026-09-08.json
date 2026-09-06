@@ -1,0 +1,86 @@
+{
+  "schema": "CENA_CERTA_DAY_PLAN_V1",
+  "date": "2026-09-08",
+  "timezone": "America/Sao_Paulo",
+  "status": "PLANNING_ASSETS_AND_VIDEO_BATCH_PENDING",
+  "targets": {
+    "videos": 8,
+    "editorial_posts": 4,
+    "stories_instagram_facebook": 4,
+    "tiktok_story_adaptations": 4
+  },
+  "platform_policy": {
+    "youtube": "8 videos only",
+    "facebook": "8 reels + 4 editorial posts + 4 stories",
+    "instagram": "8 reels + 4 editorial posts + 4 stories",
+    "tiktok": "8 videos + 4 photo/carousel editorial posts + up to 4 vertical micro-content adaptations; do not label as Story until native/publisher route is verified"
+  },
+  "metricool_best_time_snapshot": {
+    "facebook_peaks": ["10:00", "12:00", "11:00", "16:00", "17:00", "18:00"],
+    "instagram_peaks": ["10:00", "18:00", "12:00", "11:00", "17:00", "19:00"],
+    "tiktok_peaks": ["10:00", "18:00", "12:00", "17:00", "19:00", "16:00"],
+    "youtube_peaks": ["16:00", "15:00", "17:00", "14:00", "10:00", "13:00"]
+  },
+  "timeline": [
+    {"time":"07:45","kind":"STORY","topic":"ABERTURA_DO_DIA","platforms":["facebook","instagram"],"concept":"Hoje no Cena Certa: cinema, streaming e Veneza. Enquete: qual assunto você quer ver primeiro?"},
+    {"time":"08:30","kind":"VIDEO","slot":1,"platforms":["facebook","instagram","tiktok","youtube"],"status":"CANDIDATE_PENDING"},
+    {"time":"09:50","kind":"VIDEO","slot":2,"platforms":["facebook","instagram","tiktok","youtube"],"status":"CANDIDATE_PENDING"},
+    {"time":"10:25","kind":"EDITORIAL","topic":"SPIDER_BND_BOXOFFICE","platforms":["facebook","instagram","tiktok"],"format":"CAROUSEL_OR_STATIC","asset_status":"OFFICIAL_ASSET_RIGHTS_PENDING"},
+    {"time":"11:10","kind":"VIDEO","slot":3,"platforms":["facebook","instagram","tiktok","youtube"],"status":"CANDIDATE_PENDING"},
+    {"time":"11:55","kind":"STORY","topic":"SPIDER_BND_POLL","platforms":["facebook","instagram"],"concept":"Já viu Brand New Day? SIM / AINDA NÃO"},
+    {"time":"12:30","kind":"VIDEO","slot":4,"platforms":["facebook","instagram","tiktok","youtube"],"status":"CANDIDATE_PENDING"},
+    {"time":"13:20","kind":"EDITORIAL","topic":"NETFLIX_SEP08","platforms":["facebook","instagram","tiktok"],"format":"CAROUSEL_4_TITLES","asset_status":"PRESS_ACCOUNT_OR_TERMS_REQUIRED"},
+    {"time":"14:20","kind":"STORY","topic":"STREAMING_CHOICE","platforms":["facebook","instagram"],"concept":"Qual estreia de hoje? Fauda / DANG! / The Drop"},
+    {"time":"15:15","kind":"VIDEO","slot":5,"platforms":["facebook","instagram","tiktok","youtube"],"status":"CANDIDATE_PENDING"},
+    {"time":"16:35","kind":"VIDEO","slot":6,"platforms":["facebook","instagram","tiktok","youtube"],"status":"CANDIDATE_PENDING"},
+    {"time":"17:15","kind":"EDITORIAL","topic":"THE_DROP_PREMIERE","platforms":["facebook","instagram","tiktok"],"format":"STATIC_OR_3_SLIDE_CAROUSEL","asset_status":"EXACT_TITLE_ASSET_PENDING"},
+    {"time":"18:05","kind":"VIDEO","slot":7,"platforms":["facebook","instagram","tiktok","youtube"],"status":"CANDIDATE_PENDING"},
+    {"time":"19:30","kind":"VIDEO","slot":8,"platforms":["facebook","instagram","tiktok","youtube"],"status":"CANDIDATE_PENDING"},
+    {"time":"20:15","kind":"EDITORIAL","topic":"VENICE_GUADAGNINO","platforms":["facebook","instagram","tiktok"],"format":"STATIC_OR_CAROUSEL","asset_status":"PRESS_LOGIN_REQUIRED"},
+    {"time":"21:00","kind":"STORY","topic":"GUADAGNINO_POLL","platforms":["facebook","instagram"],"concept":"Qual Guadagnino é seu favorito? Challengers / Call Me by Your Name / Bones and All / Outro"}
+  ],
+  "editorial_creatives": {
+    "SPIDER_BND_BOXOFFICE": {
+      "headline": "6 semanas no topo. US$ 2,4 bilhões. Ainda é hype?",
+      "slides": [
+        "Hero visual oficial do filme + headline",
+        "Bilheteria e seis semanas em #1",
+        "Por que o público continua indo?",
+        "CTA: sucesso merecido ou força da marca?"
+      ],
+      "visual_rule": "usar apenas still/poster/press asset Sony com uso editorial comprovado; sem montagem de frames não autorizados"
+    },
+    "NETFLIX_SEP08": {
+      "headline": "4 estreias que chegam hoje na Netflix",
+      "slides": ["Capa", "DANG!", "Fauda S5", "Untold Mr. T", "Uncle Stav + CTA"],
+      "visual_rule": "assets individuais do Netflix Media Center somente após termos/acesso compatíveis"
+    },
+    "THE_DROP_PREMIERE": {
+      "headline": "O universo de Snowfall continua hoje",
+      "slides": ["Wanda + Leon / asset oficial", "rap da Costa Oeste + contexto", "vale entrar nessa nova saga?"],
+      "visual_rule": "fotografia Disney/FX de press release com uso editorial aplicável; respeitar restrições de alteração e resolução"
+    },
+    "VENICE_GUADAGNINO": {
+      "headline": "Veneza homenageia Luca Guadagnino hoje",
+      "slides": ["Retrato oficial/press", "Cartier Glory to the Filmmaker", "Joie de vivre", "CTA: melhor filme do diretor?"],
+      "visual_rule": "usar distribuição oficial de imprensa da Biennale somente sob termos aplicáveis; não raspar foto comum do site"
+    }
+  },
+  "dynamic_rechecks": [
+    {"topic":"SPIDER_BND_BOXOFFICE","deadline":"2026-09-08T08:30:00-03:00","reason":"bilheteria dinâmica"},
+    {"topic":"THE_DROP_PREMIERE","deadline":"2026-09-08T12:00:00-03:00","reason":"confirmar disponibilidade Brasil/horário e asset"},
+    {"topic":"VENICE_GUADAGNINO","deadline":"2026-09-08T12:00:00-03:00","reason":"evento do próprio dia; não narrar resultado antes de ocorrer"}
+  ],
+  "publish_gate": "NO_EDITORIAL_SCHEDULING_UNTIL_ASSET_RIGHTS_PASS_AND_CREATIVE_QA_PASS",
+  "video_lane": {
+    "canonical_profile": "10 candidates -> 8 selected + 2 reserve",
+    "dedup_window_days": 60,
+    "status": "POOL_SELECTION_PENDING",
+    "do_not_reuse": [
+      "Jangan Telat!", "Site 22", "096", "Payload", "Birthday Girl",
+      "The Sleeping Field", "Because of Him", "SCP: Containment Breach — The Movie",
+      "Breakfast at the Bodega", "El año pasado en Mardelplá", "Tears of Steel",
+      "The Man Behind the Machine", "Pendatang", "Alien Grounds", "Abu Rami", "Pasión Oriental"
+    ]
+  }
+}
