@@ -1,0 +1,15 @@
+{
+  "schema": "CENA_CERTA_SCENE_REPAIR_REQUEST_V1",
+  "authorized": true,
+  "source_batch": "ops/cena-certa/batches/cena-certa-exact4-20260906-recovery-v1.json",
+  "output_batch": "ops/cena-certa/batches/cena-certa-exact4-20260906-recovery-v2.json",
+  "candidate_id": "CC-20260905-SLEEPINGFIELD-R2",
+  "request_id": "CC-RECOVERY-20260906-0002",
+  "probe_evidence": "run=34008903179;sha256=31d5838e637e2c639d2edf06601c7ad3ada0aeb8948dd1d6d54a9bc80ca38a36",
+  "scene_start_overrides": {
+    "0": 7.684,
+    "7": 138.444,
+    "8": 161.324
+  },
+  "note": "Repair only measured source timestamps that intersect black intervals. No script, rights, music, mask or schedule changes. Canonical Factory V2 route remains unchanged."
+}
