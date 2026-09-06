@@ -291,7 +291,7 @@ Destino explícito:
 ### Pipeline endurecido
 
 Commit do workflow:
-`64fe2aa62856632b863a97c4a008e74cdc54b9c6`
+`a60be7807469a42653b9a6668fad1de01071d9e0`
 
 CLI pinada:
 `vercel@59.11.7`.
@@ -303,7 +303,7 @@ Para `target=production`, o workflow NÃO faz um segundo build de produção.
 Ele promove o mesmo Preview validado para evitar divergência entre Preview e Production.
 
 O workflow:
-- valida `app-k` e `app-l` antes de qualquer mutação;
+- valida `app-k`, `app-l` e `app-m` antes de qualquer mutação;
 - faz syntax gate;
 - cria `.vercel/project.json` em runtime com IDs oficiais;
 - cria Preview no projeto oficial;
@@ -338,6 +338,8 @@ Estado:
 `VERCEL_TOKEN=NOT_CONFIGURED`
 `V15_PREVIEW_DEPLOYED=NO`
 `V15_PRODUCTION_DEPLOYED=NO`
+`V16_PREVIEW_DEPLOYED=NO`
+`V16_PRODUCTION_DEPLOYED=NO`
 `DEPLOY_AUTH_BLOCKER=EXTERNAL_AUTHENTICATED_SESSION_OR_SECRET_REQUIRED`
 
 Sessões alternativas verificadas neste gate:
@@ -355,10 +357,10 @@ Camada incremental:
 `career360/frontend/app-m.js`
 
 Pin imutável:
-`f597e48006aae69c73c6c0a540b797f0093e4e84`
+`d3279ea45b3d3bb9f1686249199d2a46d34eaa2b`
 
 Bundle canônico com `app-k -> app-l -> app-m`:
-`08f100d3c3bf10320e429a47529816b0b674b6f3`
+`239357f0623683bae362a1dd3f122891cdd2d157`
 
 Release canônica:
 `career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md`
@@ -372,15 +374,22 @@ Objetivo da V16:
 - oferecer ações rápidas de consulta sem criar novas mutações.
 
 Validação final sobre bundle canônico:
-- run `34007073507`;
-- job `101416159331`;
+- run `34007281162`;
+- job `101416713004`;
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;
+- `V16_TOUCH_TARGET_POLICY=44PX`;
 - `CLARITY_360=PASS mutations=5`;
 - `CLARITY_412=PASS mutations=5`;
 - `CLARITY_768=PASS mutations=5`;
 - `CLARITY_1180=PASS mutations=5`;
 - `V16_AGENT_QUICK_ACTIONS=PASS`;
 - `V16_DYNAMIC_PROACTIVE_RECOMPACT=PASS`.
+
+Hardening final antes de promoção:
+- atalhos do agente >=44 px;
+- `Atualizar` >=44 px;
+- `Ok` >=44 px;
+- padding do alerta ajustado para evitar colisão com a ação.
 
 IMPORTANTE:
 Browser PASS + bundle pinado NÃO significa produção LIVE.
