@@ -372,7 +372,7 @@ Pin imutável:
 `719c15ebfe89d212a19473b70ea6e615174601d9`
 
 Bundle canônico com `app-k -> app-l -> app-m`:
-`4fae7cd5b57fdf68681ac0875f006f8e158f821e`
+`f572b824b49b2cc73d5d8389eae98391bcca63a8`
 
 Release canônica:
 `career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md`
@@ -386,12 +386,13 @@ Objetivo da V16:
 - oferecer ações rápidas de consulta sem criar novas mutações.
 
 Validação final sobre bundle canônico:
-- run `34010192948`;
-- job `101424535949`;
+- run `34010396657`;
+- job `101425087473`;
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;
 - `V16_TOUCH_TARGET_POLICY=44PX`;
 - `V16_TRUTHFUL_STATUS_POLICY=PASS`;
 - `V16_AUTH_TRUTHFUL_COPY_POLICY=PASS`;
+- `V16_STATIC_AUTH_TRUTH_SOURCE=PASS`;
 - `CLARITY_360=PASS mutations=6`;
 - `CLARITY_412=PASS mutations=6`;
 - `CLARITY_768=PASS mutations=6`;
@@ -410,7 +411,7 @@ Hardening final antes de promoção:
 - o texto legado `Agente trabalhando` da V12 não é tratado como prova de atividade em tempo real;
 - status visível derivado apenas de estado verificável: `Atualizando` quando a atualização está realmente em curso, `Atualizado` quando existe resumo real e `Aguardando` quando ainda não existe resumo;
 - onboarding e suporte com copy reduzida, sem remover guardrails de privacidade/confirmacao;
-- copy pré-login não afirma atividade sem runtime: `Você confirma o que importa. O Career 360 organiza sua busca.`;
+- o HTML estático e a camada V16 usam a mesma copy pré-login verdadeira desde o primeiro byte: `Você confirma o que importa. O Career 360 organiza sua busca.`;
 - foco visível para teclado e `prefers-reduced-motion` respeitado.
 
 IMPORTANTE:
@@ -529,4 +530,4 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V16_AUTH_RUNTIME_TRUTH_BROWSER_PASS_APP_M_719C15E_APP_L_428364_APP_K_6DF7B4_BUNDLE_4FAE7CD_SMOKE_RUN_34010192948_JOB_101424535949_AUTH_COPY_PASS_VERCEL_CHATGPT_ONLY_INTERNAL_DEPLOY_UNSCOPED_PRODUCTION_STILL_V14_NOT_PROMOTED`
+`LAST_VERIFIED_CHANGE=V16_STATIC_AND_RUNTIME_TRUTH_BROWSER_PASS_APP_M_719C15E_APP_L_428364_APP_K_6DF7B4_BUNDLE_F572B82_SMOKE_RUN_34010396657_JOB_101425087473_STATIC_AUTH_SOURCE_PASS_VERCEL_CHATGPT_ONLY_INTERNAL_DEPLOY_UNSCOPED_PRODUCTION_STILL_V14_NOT_PROMOTED`

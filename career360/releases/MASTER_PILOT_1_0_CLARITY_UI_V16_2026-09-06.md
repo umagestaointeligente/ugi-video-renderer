@@ -22,7 +22,7 @@ Final immutable hardened pin:
 `719c15ebfe89d212a19473b70ea6e615174601d9`
 
 Canonical hardened bundle commit:
-`4fae7cd5b57fdf68681ac0875f006f8e158f821e`
+`f572b824b49b2cc73d5d8389eae98391bcca63a8`
 
 Load order remains additive:
 `... -> app-k -> app-l -> app-m`
@@ -90,7 +90,7 @@ Before promotion, V16 received an additional truthfulness/accessibility pass:
 - keyboard focus visibility was strengthened;
 - `prefers-reduced-motion` is respected;
 - agent question input has an explicit accessible label.
-- pre-login copy avoids claiming live agent activity without runtime evidence: `Você confirma o que importa. O Career 360 organiza sua busca.`
+- static HTML and V16 runtime use the same truthful pre-login copy from first paint: `Você confirma o que importa. O Career 360 organiza sua busca.`
 
 Policy:
 `V16_TRUTHFUL_STATUS_POLICY=PASS`
@@ -112,7 +112,7 @@ Hardening source commit / immutable app-m pin:
 `719c15ebfe89d212a19473b70ea6e615174601d9`
 
 Hardened canonical bundle:
-`4fae7cd5b57fdf68681ac0875f006f8e158f821e`
+`f572b824b49b2cc73d5d8389eae98391bcca63a8`
 
 ## Browser validation
 
@@ -123,8 +123,8 @@ Permanent workflow:
 `.github/workflows/career360-v16-clarity-smoke.yml`
 
 Final hardened canonical-bundle validation:
-- run `34010192948`
-- job `101424535949`
+- run `34010396657`
+- job `101425087473`
 - result `SUCCESS`
 
 Evidence:
@@ -132,6 +132,7 @@ Evidence:
 - `V16_TOUCH_TARGET_POLICY=44PX`
 - `V16_TRUTHFUL_STATUS_POLICY=PASS`
 - `V16_AUTH_TRUTHFUL_COPY_POLICY=PASS`
+- `V16_STATIC_AUTH_TRUTH_SOURCE=PASS`
 - `CLARITY_360=PASS mutations=6`
 - `CLARITY_412=PASS mutations=6`
 - `CLARITY_768=PASS mutations=6`
@@ -142,6 +143,7 @@ Evidence:
 - `V16_AUTH_TRUTHFUL_COPY=PASS`
 
 Earlier evidence retained for audit:
+- runtime-auth-copy run `34010192948`, job `101424535949`, SUCCESS before static-HTML hardening;
 - previous runtime-truth final run `34009190125`, job `101421875198`, SUCCESS before auth-copy hardening;
 - pre-bundle run `34006941241`, job `101415802373`, SUCCESS;
 - first canonical-bundle run `34007073507`, job `101416159331`, SUCCESS before final 44px hardening;
