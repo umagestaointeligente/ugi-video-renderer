@@ -203,7 +203,7 @@ This backend LIVE state does not promote the V16 frontend.
 ## Supabase security readiness read-only audit
 
 Before promotion, the live project was audited without schema/data mutation:
-- 43/43 ordinary public tables have RLS enabled and at least one policy;
+- 44/44 ordinary public tables have RLS enabled; the final catalog readback showed zero ordinary public tables with RLS disabled;
 - audited user-owned policies bind access to `auth.uid() = user_id`;
 - public `SECURITY DEFINER` functions are not executable by PUBLIC, anon, or authenticated; service_role retains execution;
 - no public views/materialized views were found;
@@ -307,3 +307,49 @@ Do not mark `LIVE` until the official production frontend is proven to load:
 and the authenticated mobile gate is completed.
 
 `RUNTIME_COMPROVADO_VENCE_DOCUMENTO.`
+
+
+## Final backend runtime alignment seal — 2026-09-06
+
+V16 frontend remains not promoted, but the live backend/readiness surfaces were reconciled so historical engine/status assumptions no longer leak into the product.
+
+Final runtime evidence:
+- generic matching router vs V3.1 implementation: 57/57 same classification and zero distinct score mismatch;
+- master metrics = 57 champion matches, exactly matching `v3.1-rolegraph` rather than the previous 367 multi-engine historical rows;
+- public ordinary tables: 44/44 RLS enabled;
+- all audited public SECURITY DEFINER functions service-role-only with fixed search path;
+- all five Career cron jobs active and latest run `succeeded` at final readback;
+- security advisor baseline: only leaked-password protection WARN;
+- performance advisor baseline: INFO-only unused indexes.
+
+Runtime-aligned Edge Functions:
+- `career-ui-state` V2 (`b80ea34e943f...`);
+- `career-master-status` V4 (`68bfdfa93130...`);
+- `career-radar-status` V2 (`977254bf22c6...`);
+- `career-opportunity-refresh-now` V3 (`64713e5b6f77...`);
+- `career-role-intelligence` V2 (`7687e5bd38cd...`);
+- `career-role-search-plan` V3 (`ce4e569c4f6a...`);
+- `career-role-search-scope` V2 (`2d18c9d764ac...`).
+
+Taxonomy runtime truth: CBO `live_bulk` (2,694 occupations / 7,778 synonyms), ESCO `live_api`, LSI curated `live_bulk`, O*NET `bulk_pending`.
+
+### Application Submission Receipt V1
+
+A service-only receipt primitive now closes the internal evidence chain from a prepared application to a factual `applied` state.
+
+Evidence:
+- migration commit `b4a7e2c063c63330bdb2fd3f8ab080a426de02ae`;
+- permanent smoke commit `2b85ed833c340a1d352c742df4be5e6ae2188401`;
+- live transactional smoke 7/7 PASS;
+- independent post-rollback counts: applications=0, followups=0, mail_actions=0;
+- raw external application reference is hashed and never persisted;
+- conflicting receipt fails closed;
+- replay is idempotent;
+- optional follow-up requires an explicit due time;
+- the primitive never submits a real application and never sends mail.
+
+`APPLICATION_SUBMISSION_RECEIPT_V1=LIVE`
+`APPLICATION_SUBMISSION_SIDE_EFFECTS=NONE`
+`BACKEND_RUNTIME_ALIGNMENT_2026_09_06=PASS`
+
+This does not change the frontend deployment state or prove any external connector action.
