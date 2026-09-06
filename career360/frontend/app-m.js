@@ -56,6 +56,7 @@ function setText(el, text) {
 }
 
 function compactStaticCopy() {
+  setText(document.querySelector('#auth > p.muted'), 'Você confirma o que importa. O Career 360 organiza sua busca.');
   setText(document.querySelector('#home .hero .muted'), 'Você confirma. O agente cuida do resto.');
   setText(document.querySelector('#home .profilebox .profilehead .muted'), 'Dados confirmados por você.');
   setText(document.querySelector('#home .radarbox .radarhead .muted'), 'Seu agente pesquisa e filtra.');
