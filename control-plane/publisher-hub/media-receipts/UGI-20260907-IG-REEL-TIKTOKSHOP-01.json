@@ -1,0 +1,32 @@
+{
+  "project": "UGI",
+  "route": "EDITORIAL_MEDIA_V1",
+  "queuePath": "control-plane/publisher-hub/media-queue/UGI-20260907-IG-REEL-TIKTOKSHOP-01.json",
+  "id": "UGI-20260907-IG-REEL-TIKTOKSHOP-01",
+  "platform": "instagram",
+  "format": "reel",
+  "mediaType": "video",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-07/reel-tiktok-shop.mp4",
+  "requestedDueAt": "2026-09-07T15:45:00Z",
+  "ok": true,
+  "bufferMutationPerformed": true,
+  "publication": {
+    "status": "scheduled",
+    "bufferStatus": "scheduled",
+    "bufferPostId": "6a9de3612066ff47cc461637",
+    "dueAt": "2026-09-07T15:45:00.000Z",
+    "sentAt": null,
+    "externalLink": null,
+    "sharedNow": false,
+    "error": null
+  },
+  "target": {
+    "channelId": "6a7896cdb2d9d57743457e33",
+    "channelName": null,
+    "channelService": "instagram"
+  },
+  "workerVersion": "lola-v8-r45-7-editorial-media-v1-2026-09-05",
+  "workerRoute": "/api/editorial-media-publish",
+  "error": null,
+  "timestamp": "2026-09-06T22:04:17.733029+00:00"
+}
