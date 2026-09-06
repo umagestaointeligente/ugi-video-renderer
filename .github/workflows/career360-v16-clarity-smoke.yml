@@ -41,10 +41,12 @@ jobs:
           grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' career360/frontend/index.html >/dev/null
           grep -F '@719c15ebfe89d212a19473b70ea6e615174601d9/career360/frontend/app-m.js' career360/frontend/index.html >/dev/null
           test "$(grep -o 'career360/frontend/app-m.js' career360/frontend/index.html | wc -l | tr -d ' ')" = '1'
+          grep -F 'Você confirma o que importa. O Career 360 organiza sua busca.' career360/frontend/index.html >/dev/null
           echo 'V16_CANONICAL_BUNDLE_PIN_GATE=PASS'
           echo 'V16_TOUCH_TARGET_POLICY=44PX'
           echo 'V16_TRUTHFUL_STATUS_POLICY=PASS'
           echo 'V16_AUTH_TRUTHFUL_COPY_POLICY=PASS'
+          echo 'V16_STATIC_AUTH_TRUTH_SOURCE=PASS'
 
       - name: Install isolated Playwright
         shell: bash
@@ -66,4 +68,4 @@ jobs:
           cd /tmp/career360-v16
           node v16-clarity-smoke.mjs
 
-# Retriggered after canonical bundle pin 4fae7cd5b57fdf68681ac0875f006f8e158f821e.
+# Final retrigger after static auth truth bundle f572b824b49b2cc73d5d8389eae98391bcca63a8.
