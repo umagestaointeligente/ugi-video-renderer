@@ -1,0 +1,88 @@
+name: Career360 V16 Touch Hardening
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/career360-v16-touch-hardening.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enforce 44px touch targets in V16 and extend regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('career360/frontend/app-m.js')
+          s=p.read_text()
+          reps={
+            '.proactive-actions .btn{min-height:40px!important;':'.proactive-actions .btn{min-height:44px!important;',
+            '.proactive-alert{position:relative;padding:12px 44px 12px 13px!important}':'.proactive-alert{position:relative;padding:12px 60px 12px 13px!important}',
+            '.proactive-read{position:absolute;right:8px;top:8px;min-width:34px!important;min-height:34px!important;height:34px!important;':'.proactive-read{position:absolute;right:8px;top:8px;min-width:44px!important;min-height:44px!important;height:44px!important;',
+            '.agent-quick button{flex:0 0 auto;min-height:38px!important;':'.agent-quick button{flex:0 0 auto;min-height:44px!important;'
+          }
+          for a,b in reps.items():
+            if a not in s: raise SystemExit(f'app-m hardening anchor missing: {a}')
+            s=s.replace(a,b,1)
+          p.write_text(s)
+
+          t=Path('career360/tests/v16-clarity-smoke.mjs')
+          q=t.read_text()
+          a="read:document.querySelector('.proactive-read').textContent,askH:document.getElementById('ask').getBoundingClientRect().height,quickH:document.querySelector('.agent-quick button').getBoundingClientRect().height"
+          b="read:document.querySelector('.proactive-read').textContent,askH:document.getElementById('ask').getBoundingClientRect().height,quickH:document.querySelector('.agent-quick button').getBoundingClientRect().height,refreshH:document.getElementById('proactiveNow').getBoundingClientRect().height,readH:document.querySelector('.proactive-read').getBoundingClientRect().height"
+          if a not in q: raise SystemExit('test metric anchor missing')
+          q=q.replace(a,b,1)
+          a2="assert(r.askH>=44,`send touch ${width}: ${r.askH}`);assert(r.quickH>=38,`quick touch ${width}: ${r.quickH}`);"
+          b2="assert(r.askH>=44,`send touch ${width}: ${r.askH}`);assert(r.quickH>=44,`quick touch ${width}: ${r.quickH}`);assert(r.refreshH>=44,`refresh touch ${width}: ${r.refreshH}`);assert(r.readH>=44,`read touch ${width}: ${r.readH}`);"
+          if a2 not in q: raise SystemExit('test assertion anchor missing')
+          q=q.replace(a2,b2,1)
+          t.write_text(q)
+          print('V16_TOUCH_HARDENING_SOURCE=PASS')
+          PY
+          cp career360/frontend/app-m.js /tmp/app-m.mjs
+          node --check /tmp/app-m.mjs
+          node --check career360/tests/v16-clarity-smoke.mjs
+
+      - name: Commit immutable hardening source then repin canonical bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-career360-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add career360/frontend/app-m.js career360/tests/v16-clarity-smoke.mjs
+          git diff --cached --check
+          git commit -m 'career360: harden V16 touch targets to 44px'
+          APP_M_SHA="$(git rev-parse HEAD)"
+          echo "V16_APP_M_IMMUTABLE=$APP_M_SHA"
+          python3 - "$APP_M_SHA" <<'PY'
+          from pathlib import Path
+          import sys,re
+          sha=sys.argv[1]
+          p=Path('career360/frontend/index.html')
+          s=p.read_text()
+          pattern=r'@([0-9a-f]{40})/career360/frontend/app-m\.js'
+          m=re.findall(pattern,s)
+          if len(m)!=1: raise SystemExit(f'expected one app-m pin, got {len(m)}')
+          s=re.sub(pattern,f'@{sha}/career360/frontend/app-m.js',s,count=1)
+          p.write_text(s)
+          PY
+          rm .github/workflows/career360-v16-touch-hardening.yml
+          git add career360/frontend/index.html .github/workflows/career360-v16-touch-hardening.yml
+          git diff --cached --check
+          git commit -m 'career360: repin canonical bundle to hardened V16'
+          BUNDLE_SHA="$(git rev-parse HEAD)"
+          echo "V16_HARDENED_BUNDLE=$BUNDLE_SHA"
+          git push origin HEAD:main
+          echo 'V16_TOUCH_HARDENING_PUSH=PASS'
