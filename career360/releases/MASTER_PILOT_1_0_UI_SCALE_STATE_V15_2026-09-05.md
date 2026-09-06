@@ -1,7 +1,7 @@
 # LSI Career 360 — UI Scale + State API V15
 
 Data: 2026-09-05 BRT
-Status: BACKEND STATE API LIVE / SCALE DB HARDENING LIVE / FRONTEND V15 BROWSER-VALIDATED NOT YET PROMOTED
+Status: BACKEND STATE API LIVE / SCALE DB HARDENING LIVE / FRONTEND V15 BROWSER-VALIDATED / PROMOTION PIPELINE READY / VERCEL AUTH PENDING
 
 ## Objetivo
 
@@ -77,8 +77,6 @@ Pins atuais:
 - `app-k.js` -> `6df7b4e63d7e52ce3c3f02247392b98f0393cbe8`;
 - `app-l.js` -> `4283646143425e4a3156e44100aabb475df88d27`.
 
-Objetivo: responsividade fluida em vez de zoom/transform global.
-
 Breakpoints de produto:
 - 360 px;
 - 412 px;
@@ -98,16 +96,15 @@ Comportamentos:
 - modais/drawers usam `dvh` e safe-area;
 - Radar e Proactive cards reduzem densidade sem esconder informação crítica.
 
-Navegação mobile desejada:
+Navegação mobile:
 `MINHA PÁGINA | MEU PERFIL | OPORTUNIDADES | MEU AGENTE | MAIS`
 
 ### Hardening pré-promoção
 
 Foram corrigidos antes de chegar à produção:
-
-1. loop potencial do `MutationObserver` causado por reescrita contínua dos próprios rótulos de navegação;
-2. capacidades desconhecidas representadas prematuramente como `local/off` antes de `career-ui-state` responder;
-3. touch targets abaixo de 44 px em controles pequenos, incluindo fechamento do Photo Studio e controles equivalentes.
+1. loop potencial do `MutationObserver`;
+2. capacidades desconhecidas inferidas prematuramente antes de `career-ui-state` responder;
+3. touch targets abaixo de 44 px em controles pequenos.
 
 Commits:
 - observer/idempotência: `c60a6e98a30db03a4c6d70f99fd133076618297d`;
@@ -116,15 +113,13 @@ Commits:
 
 ## 4. Photo Studio
 
-V14 continua sendo o provider de foto profissional em produção:
+Provider atual em produção:
 `local-studio-v1`.
 
 O V15 não finge geração externa.
 
-Estado explícito entregue por `career-ui-state`:
+Estado explícito:
 `photo_studio_external_ai=false`.
-
-A UI deve exibir ajuste profissional local quando a geração externa não estiver configurada.
 
 ### Hardening mobile do fallback local
 
@@ -136,11 +131,11 @@ Versão imutável a promover:
 
 Correção:
 - MediaPipe continua sendo usado quando funciona;
-- se a biblioteca carregar mas falhar durante segmentação/processamento no aparelho, o segmentador é fechado quando possível;
-- o fluxo cai para o polish canvas local seguro;
+- falha durante segmentação/processamento cai para canvas local;
+- segmentador é fechado quando possível;
 - original continua preservada;
-- aceite/reversão continuam exigindo ação explícita;
-- nenhuma foto entra no matching/FIT.
+- aceite/reversão continuam explícitos;
+- foto continua fora do matching/FIT.
 
 ## 5. Browser regression — PASS
 
@@ -156,7 +151,7 @@ GitHub Actions run:
 Resultado:
 `PASS`
 
-Provas do run:
+Provas:
 - `RESPONSIVE_360=PASS`;
 - `RESPONSIVE_412=PASS`;
 - `RESPONSIVE_768=PASS`;
@@ -164,7 +159,7 @@ Provas do run:
 - `PHOTO_STUDIO_SEGMENTATION_RUNTIME_FALLBACK=PASS`;
 - JavaScript syntax gate = PASS;
 - canonical pin gate = PASS;
-- Chromium/Playwright browser regression = PASS.
+- Chromium/Playwright regression = PASS.
 
 O teste verifica:
 - ausência de overflow horizontal;
@@ -172,83 +167,108 @@ O teste verifica:
 - Meu Perfil 1 coluna mobile / 2 desktop;
 - Antes/Depois 1 coluna mobile / 2 desktop;
 - alvos de toque >=44 px;
-- capacidade permanece `unknown` até resolução de `career-ui-state`;
+- capacidade `unknown` até resolução de `career-ui-state`;
 - rótulos canônicos de navegação;
 - MutationObserver estabiliza;
-- fallback local do Photo Studio conclui e produz variante mesmo quando a segmentação falha em runtime.
+- fallback local do Photo Studio conclui mesmo quando a segmentação falha em runtime.
 
-Isso é validação automatizada de navegador, NÃO substitui o gate humano Android autenticado.
+Isso é validação automatizada e NÃO substitui Android autenticado real.
 
-## 6. Deploy determinístico — ROTA CRIADA / CREDENCIAL AUSENTE
+## 6. Deploy determinístico — PIPELINE FINAL READY / AUTH PENDING
 
 Produção oficial atual:
 `dpl_98eN1wuVyk4wQmnYpG2jjsZ1ZazU`
 
-Ela continua contendo V12/V13/V14 anterior e ainda NÃO contém a V15.
+Ela continua contendo V12/V13/V14 anterior e ainda NÃO contém V15.
 
-Foi criada uma rota de deploy explicitamente project-scoped:
+Workflow canônico:
 `.github/workflows/career360-vercel-deploy.yml`
 
 Destino hardcoded não secreto:
 - Team: `team_ZJys00FTE2kK9yVtsqH5fHyF`;
 - Project: `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`.
 
-A rota:
-- valida os pins canônicos antes de mutar Vercel;
-- cria `.vercel/project.json` em runtime apontando exclusivamente ao projeto oficial;
-- suporta preview e production;
-- faz smoke HTTP/pins após deploy;
-- aborta antes de qualquer mutação se `VERCEL_TOKEN` não existir.
+Commit do pipeline endurecido:
+`64fe2aa62856632b863a97c4a008e74cdc54b9c6`.
 
-Primeiro preview controlado:
-- trigger: `.github/career360-vercel-deploy.trigger`;
-- run: `33988095559`;
-- resultado: `FAIL_CLOSED_BEFORE_VERCEL_MUTATION`;
-- motivo comprovado: `VERCEL_TOKEN repository secret is not configured`.
+Vercel CLI pinada:
+`59.11.7`.
+
+### Estratégia final de promoção
+
+`VERIFY SOURCE -> BIND OFFICIAL PROJECT -> CREATE PREVIEW -> PREVIEW HTTP/PIN SMOKE -> PROMOTE EXACT PREVIEW -> OFFICIAL ALIAS SMOKE`
+
+Quando `target=production`:
+- o pipeline não cria um segundo build de produção;
+- promove exatamente o Preview que passou no smoke;
+- valida o domínio oficial após a promoção;
+- aguarda convergência por tentativas controladas;
+- falha se o alias oficial não carregar os pins esperados.
+
+Isso elimina a possibilidade de validar um Preview e publicar outro artefato diferente.
+
+### Credential gate
+
+Primeiro preview controlado anterior:
+- run `33988095559`;
+- resultado `FAIL_CLOSED_BEFORE_VERCEL_MUTATION`;
+- motivo: `VERCEL_TOKEN repository secret is not configured`.
+
+### OIDC probe
+
+Foi testada uma rota para eliminar segredo persistente:
+- GitHub OIDC token emitido corretamente;
+- exchange Vercel retornou `HTTP 400`;
+- run `34005662454`;
+- nenhuma mutação Vercel ocorreu;
+- workflow temporário removido no commit `02f7bedb284ae52aef879fc7edb8b88ce8ccf493`.
+
+A documentação/skill atual da Vercel confirma que OIDC federation não substitui `VERCEL_TOKEN` para `vercel deploy`/CLI em CI.
 
 Portanto:
-`VERCEL_DEPLOY_ROUTE=READY_WAITING_CREDENTIAL`
+`VERCEL_DEPLOY_ROUTE=PREVIEW_PROMOTE_PIPELINE_READY_WAITING_AUTH`
 `VERCEL_TOKEN=NOT_CONFIGURED`
 `V15_VERCEL_DEPLOYED=NO`
 
-Não usar a ação Vercel genérica sem `projectId` porque a conta possui múltiplos projetos.
+Não usar a ação Vercel genérica sem `projectId`, pois a conta possui múltiplos projetos.
+Não usar OTP/magic link/e-mail como atalho automatizado de autenticação.
 
 ## 7. Segurança
 
 Security Advisor atual:
 `auth_leaked_password_protection=DISABLED/WARN`.
 
-Projeto Supabase atual:
-- status `ACTIVE_HEALTHY`;
-- organização no plano `free`.
+Projeto Supabase:
+- `ACTIVE_HEALTHY`;
+- plano `free`.
 
-A documentação atual da Supabase informa que Leaked Password Protection está disponível apenas no plano Pro ou superior.
+Leaked Password Protection exige plano Pro ou superior.
 
-Decisão canônica durante incubação de custo zero:
-`LEAKED_PASSWORD_PROTECTION=KNOWN_PLAN_LIMITATION_NOT_UPGRADED`
+Decisão de incubação zero-cash:
+`LEAKED_PASSWORD_PROTECTION=KNOWN_PLAN_LIMITATION_NOT_UPGRADED`.
 
-Não gerar custo apenas para eliminar esse WARN sem decisão de produto/monetização.
-
-O frontend usa como destino de confirmação de e-mail:
+O frontend usa como destino de confirmação:
 `https://lsi-career-360.vercel.app/?email-confirmado=1`.
 
-A configuração server-side da Site URL / Additional Redirect URLs não é exposta pelas ferramentas atuais deste runtime, então:
+Estado:
 `SUPABASE_CLIENT_EMAIL_REDIRECT_TARGET=PROVEN_OFFICIAL_URL`
 `SUPABASE_SERVER_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`
 
-Não inferir a allowlist apenas pelo código do cliente.
+Não inferir allowlist server-side apenas do código cliente.
 
 ## 8. Estado de promoção
 
 `UI_V15=BROWSER_VALIDATED_NOT_YET_PROMOTED`
 `PHOTO_STUDIO_MOBILE_FALLBACK_HARDENING=BROWSER_VALIDATED_NOT_YET_PROMOTED`
 
-Não declarar V15 visual LIVE até:
-1. existir preview Vercel do projeto oficial com os pins atuais;
-2. preview passar HTTP/runtime smoke;
-3. produção oficial carregar `app-l.js@428364...` e `app-k.js@6df7b4...`;
-4. alias oficial permanecer correto;
-5. Android autenticado passar o fluxo real;
-6. Photo Studio passar gerar/comparar/aceitar/reverter no aparelho real.
+Para marcar LIVE ainda é obrigatório:
+1. autenticação válida para o pipeline project-scoped;
+2. Preview oficial com pins atuais;
+3. smoke Preview PASS;
+4. promoção do mesmo artefato;
+5. alias oficial carregando `app-l@428364...` e `app-k@6df7b4...`;
+6. runtime errors limpos;
+7. Android autenticado real;
+8. Photo Studio gerar/comparar/aceitar/reverter no aparelho real.
 
-`LAST_VERIFIED_CHANGE=V15_BROWSER_REGRESSION_PASS_360_412_768_1180_PHOTO_STUDIO_RUNTIME_FALLBACK_PASS_TOUCH_TARGETS_44PX_DEPLOY_ROUTE_PROJECT_SCOPED_READY_BUT_VERCEL_TOKEN_NOT_CONFIGURED_PRODUCTION_STILL_V14`
+`LAST_VERIFIED_CHANGE=V15_BROWSER_REGRESSION_PASS_PHOTO_STUDIO_FALLBACK_PASS_DEPLOY_PIPELINE_64FE2_PREVIEW_THEN_PROMOTE_EXACT_ARTIFACT_VERCEL_CLI_59_11_7_AUTH_REQUIRED_PRODUCTION_STILL_V14`
