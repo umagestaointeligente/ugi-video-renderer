@@ -83,6 +83,33 @@ Deno.serve(async(req)=>{
     return json(200,{status:"ESCO_DISCOVERY_COMPLETE",query:q,results:all.slice(0,16),errors});
   }
 
+  if(action==="discover_onet"){
+    const q=clean(body?.query,180);if(!q)return json(400,{error:"QUERY_REQUIRED"});
+    const limit=Math.max(1,Math.min(25,Number(body?.limit)||12));
+    const {data,error}=await service.rpc("career_onet_search",{p_query:q,p_limit:limit});
+    if(error)return json(503,{error:"ONET_DISCOVERY_FAILED"});
+    const results=(data||[]).map((x:any)=>({
+      onetsoc_code:x.onetsoc_code,
+      occupation_title:x.occupation_title,
+      job_title:x.job_title,
+      short_title:x.short_title,
+      match_score:Number(x.match_score||0),
+      match_type:x.match_type,
+      source_version:x.source_version,
+      evidence_only:true
+    }));
+    for(const x of results.slice(0,16)){
+      const al=[x.occupation_title,x.short_title].map(v=>clean(v,250)).filter(Boolean);
+      await service.from("career_role_external_candidates").upsert({
+        query_text:q,normalized_query:norm(q),source_system:"onet",external_uri:null,external_code:x.onetsoc_code,
+        preferred_label:x.job_title,language:"en",alternative_labels:[...new Set(al)],description_safe:null,status:"suggested",
+        evidence_safe:{source_version:x.source_version,retrieved_via:"career_onet_search",match_score:x.match_score,match_type:x.match_type,occupation_title:x.occupation_title,auto_promote_to_role_graph:false},
+        fetched_at:new Date().toISOString()
+      },{onConflict:"source_system,normalized_query,preferred_label,language"});
+    }
+    return json(200,{status:"ONET_DISCOVERY_COMPLETE",query:q,source:"O*NET",evidence_only:true,auto_promote_to_role_graph:false,results});
+  }
+
   const expandOne=async(title:string)=>{
     const {data,error}=await service.rpc("career_role_expand",{p_title:title,p_min_weight:Number(pref?.min_relation_weight??0.65)});if(error)return{title,error:"LOCAL_EXPANSION_FAILED",results:[]};
     const results=(data||[]).filter((x:any)=>allowed(String(x.relation_type||""),pref,Number(x.weight||0))).slice(0,60);
