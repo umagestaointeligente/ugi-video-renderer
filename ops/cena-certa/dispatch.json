@@ -1,11 +1,14 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": false,
-  "mode": "IDLE",
-  "batch_path": "",
-  "batch_sha256": "",
+  "enabled": true,
+  "mode": "PREPARE",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-wave1-v3.json",
+  "batch_sha256": "35cd0c4f227ff6e57376a7d7acc423a569c5e8ec0720caffd3e04d41fe28644e",
   "prepared_run_id": "",
-  "requested_at": "",
-  "request_id": "",
-  "note": "IDLE after 07/09 wave1-v2 fail-closed: Behind the Machine VOICE_PACE_FAIL 132.5; audit run 34048818594 retained."
+  "requested_at": "2026-09-06T17:38:17.483354+00:00",
+  "request_id": "e045ed42a3c443778bfb49e0aacfc1cb",
+  "candidate_count": 4,
+  "selected_count": 4,
+  "reserve_count": 0,
+  "note": "Daily8 07/09 wave1-v3: Behind pace corrected via sentence continuity; no gate relaxed."
 }
