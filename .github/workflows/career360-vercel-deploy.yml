@@ -13,6 +13,7 @@ on:
         default: preview
         type: choice
         options:
+          - validate
           - preview
           - production
 
@@ -31,6 +32,8 @@ env:
   EXPECTED_APP_K: 6df7b4e63d7e52ce3c3f02247392b98f0393cbe8
   EXPECTED_APP_L: 4283646143425e4a3156e44100aabb475df88d27
   EXPECTED_APP_M: 719c15ebfe89d212a19473b70ea6e615174601d9
+  TRUTHFUL_AUTH_COPY: Você confirma o que importa. O Career 360 organiza sua busca.
+  LEGACY_UNVERIFIED_AUTH_COPY: Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.
 
 jobs:
   deploy:
@@ -48,10 +51,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -z "${VERCEL_TOKEN:-}" ]]; then
-            echo "::error::VERCEL_TOKEN repository secret is not configured. Deployment aborted before any Vercel mutation."
-            exit 2
-          fi
 
           if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
             target="${MANUAL_TARGET:-preview}"
@@ -60,44 +59,67 @@ jobs:
           fi
 
           case "$target" in
-            preview|production) ;;
+            validate|preview|production) ;;
             *)
-              echo "::error::Invalid target '$target'. Expected preview or production."
+              echo "::error::Invalid target '$target'. Expected validate, preview or production."
               exit 3
               ;;
           esac
 
+          if [[ "$target" != "validate" && -z "${VERCEL_TOKEN:-}" ]]; then
+            echo "::error::VERCEL_TOKEN repository secret is not configured. Deployment aborted before any Vercel mutation."
+            exit 2
+          fi
+
           echo "target=$target" >> "$GITHUB_OUTPUT"
           echo "TARGET=$target" >> "$GITHUB_ENV"
 
-      - name: Verify canonical frontend pins
+      - name: Verify canonical frontend truth gates
         shell: bash
         run: |
           set -euo pipefail
           index='career360/frontend/index.html'
+
           grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" "$index" >/dev/null
           grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" "$index" >/dev/null
           grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" "$index" >/dev/null
+
+          count_k="$(grep -o 'career360/frontend/app-k.js' "$index" | wc -l | tr -d ' ')"
           count_l="$(grep -o 'career360/frontend/app-l.js' "$index" | wc -l | tr -d ' ')"
           count_m="$(grep -o 'career360/frontend/app-m.js' "$index" | wc -l | tr -d ' ')"
-          if [[ "$count_l" != "1" ]]; then
-            echo "::error::Expected exactly one app-l.js reference, found $count_l."
+          for pair in "app-k:$count_k" "app-l:$count_l" "app-m:$count_m"; do
+            name="${pair%%:*}"
+            count="${pair##*:}"
+            if [[ "$count" != "1" ]]; then
+              echo "::error::Expected exactly one ${name}.js reference, found $count."
+              exit 4
+            fi
+          done
+
+          truthful_count="$(grep -F -o "$TRUTHFUL_AUTH_COPY" "$index" | wc -l | tr -d ' ')"
+          if [[ "$truthful_count" != "1" ]]; then
+            echo "::error::Expected exactly one truthful static auth copy, found $truthful_count."
             exit 4
           fi
-          if [[ "$count_m" != "1" ]]; then
-            echo "::error::Expected exactly one app-m.js reference, found $count_m."
+          if grep -F "$LEGACY_UNVERIFIED_AUTH_COPY" "$index" >/dev/null; then
+            echo "::error::Legacy unverified auth copy is still present in static HTML."
             exit 4
           fi
+
           node --check career360/frontend/app-k.js
           cp career360/frontend/app-l.js /tmp/app-l.mjs
           cp career360/frontend/app-m.js /tmp/app-m.mjs
           node --check /tmp/app-l.mjs
           node --check /tmp/app-m.mjs
+
           echo 'CANONICAL_SOURCE_GATE=PASS'
           echo 'TRUTHFUL_UI_PIN_GATE=PASS'
           echo 'TRUTHFUL_AUTH_COPY_PIN_GATE=PASS'
+          echo 'STATIC_AUTH_TRUTH_SOURCE_GATE=PASS'
+          echo 'LEGACY_AUTH_COPY_ABSENT_GATE=PASS'
 
       - name: Bind checkout to official Vercel project
+        if: env.TARGET != 'validate'
         shell: bash
         run: |
           set -euo pipefail
@@ -105,6 +127,7 @@ jobs:
           printf '{"orgId":"%s","projectId":"%s"}\n' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > career360/frontend/.vercel/project.json
 
       - name: Create deterministic preview
+        if: env.TARGET != 'validate'
         id: deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -123,7 +146,8 @@ jobs:
           echo "DEPLOY_URL=$deploy_url" >> "$GITHUB_ENV"
           echo "PREVIEW_URL=$deploy_url"
 
-      - name: Preview HTTP and pin smoke
+      - name: Preview HTTP, pin and truth smoke
+        if: env.TARGET != 'validate'
         shell: bash
         run: |
           set -euo pipefail
@@ -131,7 +155,12 @@ jobs:
           grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null
           grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null
           grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" <<< "$body" >/dev/null
-          echo "PREVIEW_HTTP_AND_PIN_SMOKE=PASS"
+          grep -F "$TRUTHFUL_AUTH_COPY" <<< "$body" >/dev/null
+          if grep -F "$LEGACY_UNVERIFIED_AUTH_COPY" <<< "$body" >/dev/null; then
+            echo '::error::Preview still exposes legacy unverified auth copy.'
+            exit 5
+          fi
+          echo 'PREVIEW_HTTP_PIN_AND_TRUTH_SMOKE=PASS'
 
       - name: Promote exact preview to production
         if: env.TARGET == 'production'
@@ -155,23 +184,43 @@ jobs:
             body="$(curl --fail --silent --show-error --location "$OFFICIAL_URL/" || true)"
             if grep -F "@${EXPECTED_APP_K}/career360/frontend/app-k.js" <<< "$body" >/dev/null \
               && grep -F "@${EXPECTED_APP_L}/career360/frontend/app-l.js" <<< "$body" >/dev/null \
-              && grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" <<< "$body" >/dev/null; then
+              && grep -F "@${EXPECTED_APP_M}/career360/frontend/app-m.js" <<< "$body" >/dev/null \
+              && grep -F "$TRUTHFUL_AUTH_COPY" <<< "$body" >/dev/null \
+              && ! grep -F "$LEGACY_UNVERIFIED_AUTH_COPY" <<< "$body" >/dev/null; then
               ok=1
               break
             fi
             sleep 5
           done
           if [[ "$ok" != "1" ]]; then
-            echo '::error::Official alias did not converge to the promoted V15/V16 pins.'
+            echo '::error::Official alias did not converge to the promoted V15/V16 pins and truthful static auth copy.'
             exit 6
           fi
-          echo 'OFFICIAL_ALIAS_HTTP_AND_PIN_SMOKE=PASS'
+          echo 'OFFICIAL_ALIAS_HTTP_PIN_AND_TRUTH_SMOKE=PASS'
 
-      - name: Deployment summary
+      - name: Validation summary
+        if: env.TARGET == 'validate'
         shell: bash
         run: |
           {
-            echo "### Career360 Vercel deployment"
+            echo '### Career360 Vercel deployment readiness validation'
+            echo '- Mutation: NONE'
+            echo "- Team: $VERCEL_ORG_ID"
+            echo "- Project: $VERCEL_PROJECT_ID"
+            echo "- app-k: $EXPECTED_APP_K"
+            echo "- app-l: $EXPECTED_APP_L"
+            echo "- app-m: $EXPECTED_APP_M"
+            echo '- Static auth truth: PASS'
+            echo '- Legacy unverified auth copy absent: PASS'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo 'DEPLOY_READINESS_VALIDATE_ONLY=PASS'
+
+      - name: Deployment summary
+        if: env.TARGET != 'validate'
+        shell: bash
+        run: |
+          {
+            echo '### Career360 Vercel deployment'
             echo "- Requested target: $TARGET"
             echo "- Team: $VERCEL_ORG_ID"
             echo "- Project: $VERCEL_PROJECT_ID"
@@ -179,10 +228,10 @@ jobs:
             echo "- app-k: $EXPECTED_APP_K"
             echo "- app-l: $EXPECTED_APP_L"
             echo "- app-m: $EXPECTED_APP_M"
-            echo "- Preview smoke: PASS"
+            echo '- Preview pin + auth-truth smoke: PASS'
             if [[ "$TARGET" == "production" ]]; then
-              echo "- Promotion strategy: exact preview promoted"
+              echo '- Promotion strategy: exact preview promoted'
               echo "- Official alias: $OFFICIAL_URL"
-              echo "- Official alias smoke: PASS"
+              echo '- Official alias pin + auth-truth smoke: PASS'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
