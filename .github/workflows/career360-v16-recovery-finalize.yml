@@ -1,0 +1,77 @@
+name: Career360 V16 Recovery Finalize
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/career360-v16-recovery-finalize.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Seal final hardened V16 evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('docs/LSI_RECOVERY_CURRENT.md')
+          s=p.read_text()
+
+          replacements={
+            '`64fe2aa62856632b863a97c4a008e74cdc54b9c6`':'`a60be7807469a42653b9a6668fad1de01071d9e0`',
+            '- valida `app-k` e `app-l` antes de qualquer mutação;':'- valida `app-k`, `app-l` e `app-m` antes de qualquer mutação;',
+            '`f597e48006aae69c73c6c0a540b797f0093e4e84`':'`d3279ea45b3d3bb9f1686249199d2a46d34eaa2b`',
+            '`08f100d3c3bf10320e429a47529816b0b674b6f3`':'`239357f0623683bae362a1dd3f122891cdd2d157`',
+            '- run `34007073507`;':'- run `34007281162`;',
+            '- job `101416159331`;':'- job `101416713004`;'
+          }
+          for old,new in replacements.items():
+            if old not in s:
+              raise SystemExit(f'missing Recovery anchor: {old}')
+            s=s.replace(old,new,1)
+
+          evidence='- `V16_TOUCH_TARGET_POLICY=44PX`;'
+          anchor='- `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;'
+          if evidence not in s:
+            if anchor not in s: raise SystemExit('V16 evidence anchor missing')
+            s=s.replace(anchor,anchor+'\n'+evidence,1)
+
+          hardening='''\nHardening final antes de promoção:\n- atalhos do agente >=44 px;\n- `Atualizar` >=44 px;\n- `Ok` >=44 px;\n- padding do alerta ajustado para evitar colisão com a ação.\n'''
+          marker='\nIMPORTANTE:\nBrowser PASS + bundle pinado NÃO significa produção LIVE.'
+          if 'Hardening final antes de promoção:' not in s:
+            if marker not in s: raise SystemExit('V16 important marker missing')
+            s=s.replace(marker,hardening+marker,1)
+
+          if '`V16_PREVIEW_DEPLOYED=NO`' not in s:
+            a='`V15_PREVIEW_DEPLOYED=NO`\n`V15_PRODUCTION_DEPLOYED=NO`'
+            if a not in s: raise SystemExit('deploy state anchor missing')
+            s=s.replace(a,a+'\n`V16_PREVIEW_DEPLOYED=NO`\n`V16_PRODUCTION_DEPLOYED=NO`',1)
+
+          p.write_text(s)
+          print('V16_RECOVERY_FINALIZE_SOURCE=PASS')
+          PY
+          git diff --check
+
+      - name: Commit Recovery and remove one-shot finalizer
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/career360-v16-recovery-finalize.yml
+          git config user.name 'ugi-career360-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add docs/LSI_RECOVERY_CURRENT.md .github/workflows/career360-v16-recovery-finalize.yml
+          git diff --cached --check
+          git commit -m 'career360: finalize hardened V16 Recovery evidence'
+          git push origin HEAD:main
+          echo 'V16_RECOVERY_FINALIZE_PUSH=PASS'
