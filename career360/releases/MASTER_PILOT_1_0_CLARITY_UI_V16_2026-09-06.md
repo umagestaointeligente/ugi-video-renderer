@@ -19,10 +19,10 @@ File:
 `career360/frontend/app-m.js`
 
 Final immutable hardened pin:
-`d3279ea45b3d3bb9f1686249199d2a46d34eaa2b`
+`541f962629ed5c3479972f9192401ce2fdf7c077`
 
 Canonical hardened bundle commit:
-`239357f0623683bae362a1dd3f122891cdd2d157`
+`fc1d20bd73bb48ca77e9e1d522baf6196933b961`
 
 Load order remains additive:
 `... -> app-k -> app-l -> app-m`
@@ -37,7 +37,7 @@ Existing V15 pins are preserved:
 
 The agent surface is changed from a text-heavy chat card to a compact decision-oriented surface:
 - concise header;
-- working-state indicator;
+- no synthetic real-time working badge;
 - short opening message;
 - compact composer;
 - three quick read-only questions that delegate to the existing canonical agent handler:
@@ -62,7 +62,7 @@ Examples:
 
 The proactive card prioritizes outcome over operating detail:
 - title becomes `Seu agente`;
-- active state becomes `Trabalhando`;
+- status is compacted from runtime-originated text; no fixed `Trabalhando` claim is injected;
 - cadence / last / next technical subline is removed from the primary visual surface;
 - metrics stay visible;
 - `Atualizar agora` becomes `Atualizar`;
@@ -80,6 +80,20 @@ V16 introduces:
 - mobile horizontal quick-action chips;
 - preserved mobile touch targets.
 
+## Truthful status + secondary UX hardening
+
+Before promotion, V16 received an additional truthfulness/accessibility pass:
+- removed the fixed `Trabalhando` badge from the My Agent header;
+- proactive status now compacts only runtime-originated state into `Ativo`, `Atualizando`, `Pausado`, `Atenção` or neutral `Status`;
+- onboarding headings and secondary copy were shortened without removing privacy, salary or confirmation guardrails;
+- Support became `Ajuda`, with a shorter problem prompt and action;
+- keyboard focus visibility was strengthened;
+- `prefers-reduced-motion` is respected;
+- agent question input has an explicit accessible label.
+
+Policy:
+`V16_TRUTHFUL_STATUS_POLICY=PASS`
+
 ## Mobile touch hardening
 
 A final hardening pass detected that compact visual overrides could reduce some controls below the established V15 mobile target size.
@@ -94,10 +108,10 @@ Permanent policy:
 `V16_TOUCH_TARGET_POLICY=44PX`
 
 Hardening source commit / immutable app-m pin:
-`d3279ea45b3d3bb9f1686249199d2a46d34eaa2b`
+`541f962629ed5c3479972f9192401ce2fdf7c077`
 
 Hardened canonical bundle:
-`239357f0623683bae362a1dd3f122891cdd2d157`
+`fc1d20bd73bb48ca77e9e1d522baf6196933b961`
 
 ## Browser validation
 
@@ -108,13 +122,14 @@ Permanent workflow:
 `.github/workflows/career360-v16-clarity-smoke.yml`
 
 Final hardened canonical-bundle validation:
-- run `34007281162`
-- job `101416713004`
+- run `34008976104`
+- job `101421295169`
 - result `SUCCESS`
 
 Evidence:
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`
 - `V16_TOUCH_TARGET_POLICY=44PX`
+- `V16_TRUTHFUL_STATUS_POLICY=PASS`
 - `CLARITY_360=PASS mutations=5`
 - `CLARITY_412=PASS mutations=5`
 - `CLARITY_768=PASS mutations=5`
@@ -148,7 +163,7 @@ Quick actions remain read-oriented questions and call the existing canonical age
 Do not mark `LIVE` until the official production frontend is proven to load:
 - `app-k@6df7b4e...`
 - `app-l@4283646...`
-- `app-m@d3279ea...`
+- `app-m@541f962...`
 
 and the authenticated mobile gate is completed.
 

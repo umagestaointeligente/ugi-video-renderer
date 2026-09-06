@@ -293,7 +293,7 @@ Destino explícito:
 ### Pipeline endurecido
 
 Commit do workflow:
-`a60be7807469a42653b9a6668fad1de01071d9e0`
+`85afb95087a706dc8bca5d99555740b4bc5ed0da`
 
 CLI pinada:
 `vercel@59.11.7`.
@@ -359,10 +359,10 @@ Camada incremental:
 `career360/frontend/app-m.js`
 
 Pin imutável:
-`d3279ea45b3d3bb9f1686249199d2a46d34eaa2b`
+`541f962629ed5c3479972f9192401ce2fdf7c077`
 
 Bundle canônico com `app-k -> app-l -> app-m`:
-`239357f0623683bae362a1dd3f122891cdd2d157`
+`fc1d20bd73bb48ca77e9e1d522baf6196933b961`
 
 Release canônica:
 `career360/releases/MASTER_PILOT_1_0_CLARITY_UI_V16_2026-09-06.md`
@@ -376,10 +376,11 @@ Objetivo da V16:
 - oferecer ações rápidas de consulta sem criar novas mutações.
 
 Validação final sobre bundle canônico:
-- run `34007281162`;
-- job `101416713004`;
+- run `34008976104`;
+- job `101421295169`;
 - `V16_CANONICAL_BUNDLE_PIN_GATE=PASS`;
 - `V16_TOUCH_TARGET_POLICY=44PX`;
+- `V16_TRUTHFUL_STATUS_POLICY=PASS`;
 - `CLARITY_360=PASS mutations=5`;
 - `CLARITY_412=PASS mutations=5`;
 - `CLARITY_768=PASS mutations=5`;
@@ -391,7 +392,11 @@ Hardening final antes de promoção:
 - atalhos do agente >=44 px;
 - `Atualizar` >=44 px;
 - `Ok` >=44 px;
-- padding do alerta ajustado para evitar colisão com a ação.
+- padding do alerta ajustado para evitar colisão com a ação;
+- badge sintético `Trabalhando` removido do cabeçalho do agente;
+- status proativo compactado somente a partir do texto de runtime (`Ativo`, `Atualizando`, `Pausado`, `Atenção` ou `Status`);
+- onboarding e suporte com copy reduzida, sem remover guardrails de privacidade/confirmacao;
+- foco visível para teclado e `prefers-reduced-motion` respeitado.
 
 IMPORTANTE:
 Browser PASS + bundle pinado NÃO significa produção LIVE.
@@ -451,23 +456,27 @@ Performance Advisor após Scale DB V15:
 - sem unindexed-FK WARN;
 - somente INFOs de unused indexes.
 
-## 13. Gate único que falta para promoção V15
+## 13. Gate único que falta para promoção V15/V16
 
 Uma destas condições precisa existir sem expor credenciais no chat:
 
 A. `VERCEL_TOKEN` válido cadastrado como repository secret no GitHub; OU
-B. Remote Desktop Commander conectado a um dispositivo já autenticado na Vercel, permitindo configurar o secret/deploy sem revelar credencial; OU
-C. Browser Connector autenticado na Vercel com acesso suficiente para criar/configurar a credencial/política necessária.
+B. Browser Connector autenticado na Vercel com acesso suficiente para configurar/autorizar a rota project-scoped; OU
+C. novo OAuth Device Flow em runner efêmero privado, com autorização humana explícita e identidade Vercel validada antes do deploy.
 
-Assim que uma dessas condições existir, a rota canônica já permite executar sem nova arquitetura:
+Guardrail absoluto:
+`REMOTE_DESKTOP_COMMANDER=PROHIBITED_BY_USER_FOR_LSI_CAREER360`.
+Não sugerir nem reutilizar Remote Desktop como rota de promoção.
+
+Assim que uma condição válida existir, a rota canônica já permite executar sem nova arquitetura:
 1. criar Preview project-scoped;
-2. HTTP/pin smoke;
+2. HTTP/pin smoke de `app-k`, `app-l` e `app-m`;
 3. promover o MESMO Preview;
 4. confirmar alias oficial;
 5. checar runtime errors;
 6. Android autenticado;
 7. Photo Studio gerar/comparar/aceitar/reverter;
-8. marcar `UI_V15=LIVE` e `PHOTO_STUDIO_MOBILE_FALLBACK_HARDENING=LIVE` somente após prova.
+8. marcar V15/V16 e o hardening móvel como LIVE somente após prova.
 
 ## 14. Próximos gates depois da V15 LIVE
 
@@ -497,4 +506,4 @@ Assim que uma dessas condições existir, a rota canônica já permite executar 
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V15_BROWSER_REGRESSION_PASS_APP_L_428364_APP_K_6DF7B4_BUNDLE_ECE158_DEPLOY_PIPELINE_64FE2_PREVIEW_THEN_PROMOTE_EXACT_ARTIFACT_VERCEL_CLI_59_11_7_OIDC_PROBE_HTTP400_REMOVED_PRODUCTION_STILL_V14_READY_NO_RUNTIME_ERRORS_AUTH_HANDOFF_REQUIRED`
+`LAST_VERIFIED_CHANGE=V16_TRUTHFUL_UI_BROWSER_PASS_APP_M_541F962_APP_L_428364_APP_K_6DF7B4_BUNDLE_FC1D20B_SMOKE_RUN_34008976104_JOB_101421295169_DEPLOY_GATE_85AFB95_PRODUCTION_STILL_V14_NOT_PROMOTED_AUTH_REQUIRED_REMOTE_DESKTOP_PROHIBITED`
