@@ -1,0 +1,62 @@
+name: Cena Certa Scene Black Probe
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - 'ops/cena-certa/scene-black-probe-request.json'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v7
+      - name: Scan source once for black intervals and safe windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib, subprocess
+          req=json.loads(pathlib.Path('ops/cena-certa/scene-black-probe-request.json').read_text())
+          if req.get('schema')!='CENA_CERTA_SCENE_BLACK_PROBE_V1': raise SystemExit('PROBE_SCHEMA_FAIL')
+          url=req['source_url']; out='source.webm'
+          subprocess.run(['curl','--fail','--location','--silent','--show-error','--max-time','120','--output',out,url],check=True)
+          cmd=['ffmpeg','-hide_banner','-nostats','-loglevel','info','-i',out,'-an','-vf','blackdetect=d=0.200:pix_th=0.080:pic_th=0.985','-f','null','-']
+          p=subprocess.run(cmd,text=True,capture_output=True,timeout=120)
+          pathlib.Path('blackdetect.log').write_text(p.stderr or '',encoding='utf-8')
+          import re
+          intervals=[]
+          for m in re.finditer(r'black_start:([0-9.]+)\s+black_end:([0-9.]+)\s+black_duration:([0-9.]+)',p.stderr or ''):
+              intervals.append([float(m.group(1)),float(m.group(2)),float(m.group(3))])
+          pr=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',out],text=True,capture_output=True,check=True)
+          duration=float(pr.stdout.strip())
+          min_safe=float(req.get('minimum_safe_window_seconds',10.0))
+          safe=[]; cursor=0.0
+          for a,b,d in intervals:
+              if a-cursor>=min_safe: safe.append([round(cursor,3),round(a,3),round(a-cursor,3)])
+              cursor=max(cursor,b)
+          if duration-cursor>=min_safe: safe.append([round(cursor,3),round(duration,3),round(duration-cursor,3)])
+          starts=[float(x) for x in req.get('existing_starts',[])]
+          recommendations=[]
+          for s in starts:
+              chosen=None
+              for a,b,w in safe:
+                  if a<=s and s+8.0<=b: chosen=s; break
+              if chosen is None:
+                  candidates=[a+0.35 for a,b,w in safe if a+0.35+8.0<=b]
+                  if candidates: chosen=min(candidates,key=lambda x:abs(x-s))
+              recommendations.append({'original':s,'safe_start':None if chosen is None else round(chosen,3)})
+          report={'schema':'CENA_CERTA_SCENE_BLACK_PROBE_RESULT_V1','source_url':url,'duration':duration,'thresholds':{'d':0.2,'pix_th':0.08,'pic_th':0.985},'black_intervals':intervals,'safe_windows_min_10s':safe,'recommendations_for_8s_cut':recommendations}
+          pathlib.Path('scene-black-probe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-scene-black-probe-${{ github.run_id }}
+          path: scene-black-probe.json
+          if-no-files-found: error
+          retention-days: 2
