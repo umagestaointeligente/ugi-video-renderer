@@ -1,0 +1,13 @@
+{
+  "id": "UGI-20260907-TT-ROI-01",
+  "project": "UGI",
+  "enabled": true,
+  "platform": "tiktok",
+  "mediaType": "video",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-07/tiktok-ai-roi.mp4",
+  "format": "video",
+  "mode": "customScheduled",
+  "dueAt": "2026-09-07T21:30:00Z",
+  "topic": "IA sem ROI nao e transformacao",
+  "text": "📊 Usar IA não é o mesmo que gerar valor. Só 33% das empresas brasileiras dizem medir o ROI de IA com confiança. O próximo salto é menos ferramenta solta e mais processo, dono e métrica. #Gestão #IA #ROI #UGI"
+}
