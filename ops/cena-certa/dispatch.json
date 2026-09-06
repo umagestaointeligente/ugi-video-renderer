@@ -1,11 +1,14 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": false,
-  "mode": "IDLE",
-  "batch_path": "",
-  "batch_sha256": "",
+  "enabled": true,
+  "mode": "PREPARE",
+  "batch_path": "ops/cena-certa/batches/cena-certa-exact5-20260906-complement-v2.json",
+  "batch_sha256": "a5470d1f54040b40017b6fc94634d9497eb342848b11ad47346e2a2cd91fa2ad",
   "prepared_run_id": "",
-  "requested_at": "",
-  "request_id": "",
-  "note": "IDLE after fail-closed exact5 complement v1 prepare failures; audit run 34042911807 retained."
+  "requested_at": "2026-09-06T15:50:08.741971+00:00",
+  "request_id": "9dc151f3633d44c7bc349898870199a8",
+  "candidate_count": 5,
+  "selected_count": 5,
+  "reserve_count": 0,
+  "note": "Complemento v2 06/09/2026: causas do PREPARE corrigidas; preservar os 3 agendamentos existentes."
 }
