@@ -39,7 +39,7 @@ jobs:
           set -euo pipefail
           grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' career360/frontend/index.html >/dev/null
           grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' career360/frontend/index.html >/dev/null
-          grep -F '@541f962629ed5c3479972f9192401ce2fdf7c077/career360/frontend/app-m.js' career360/frontend/index.html >/dev/null
+          grep -F '@3cd06d176f81e07c6f4dba1f7fb962f73be4ce34/career360/frontend/app-m.js' career360/frontend/index.html >/dev/null
           test "$(grep -o 'career360/frontend/app-m.js' career360/frontend/index.html | wc -l | tr -d ' ')" = '1'
           echo 'V16_CANONICAL_BUNDLE_PIN_GATE=PASS'
           echo 'V16_TOUCH_TARGET_POLICY=44PX'
