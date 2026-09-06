@@ -72,8 +72,8 @@ def check_editorial_and_blank_guards():
  if int(sel.get('premium_evidence_min_independent_signals',0))<3: fail('DOCTOR_PREMIUM_EVIDENCE_TOO_WEAK')
  if float(qa.get('story_black_interval_max_seconds',9))>0.20: fail('DOCTOR_BLANK_VISUAL_TOLERANCE_LOOSENED')
  if runtime.get('scene_black_guard_before_render') is not True or runtime.get('deterministic_failures_must_precede_render') is not True: fail('DOCTOR_PRE_RENDER_GUARD_FAIL')
- if int(c['sla'].get('candidate_pool_size',0))!=12 or int(c['sla'].get('daily_batch_size',0))!=8 or int(c['sla'].get('hot_reserve_count',-1))!=4: fail('DOCTOR_POOL_PROFILE_DRIFT')
- if int(c['continuity'].get('ready_pool_size',0))!=12 or int(c['continuity'].get('hot_reserve_count',-1))!=4: fail('DOCTOR_CONTINUITY_POOL_DRIFT')
+ if int(c['sla'].get('candidate_pool_size',0))!=10 or int(c['sla'].get('daily_batch_size',0))!=8 or int(c['sla'].get('hot_reserve_count',-1))!=2: fail('DOCTOR_POOL_PROFILE_DRIFT')
+ if int(c['continuity'].get('ready_pool_size',0))!=10 or int(c['continuity'].get('hot_reserve_count',-1))!=2: fail('DOCTOR_CONTINUITY_POOL_DRIFT')
  pre=(ENGINE/'preflight.py').read_text(encoding='utf-8'); prep=(ENGINE/'prepare.py').read_text(encoding='utf-8'); q=(ENGINE/'qa.py').read_text(encoding='utf-8')
  for token in ('PROFESSIONAL_PRODUCTION_REQUIRED','AUDIENCE_DEMAND_REQUIRED','PREMIUM_EDITORIAL_BLOCK','PREMIUM_DEMAND_SIGNAL_REQUIRED'):
   if token not in pre: fail(f'DOCTOR_PREMIUM_PREFLIGHT_MISSING {token}')
