@@ -17,6 +17,7 @@ import re
 import sys
 from pathlib import Path
 
+# Canonical daily profile: 12 candidates -> 8 selected + 4 hot reserves.
 REPO = Path(__file__).resolve().parents[2]
 SRC = REPO / "vendor" / "cena-certa-factory-v2" / "src"
 BATCH_DIR = REPO / "ops" / "cena-certa" / "batches"
