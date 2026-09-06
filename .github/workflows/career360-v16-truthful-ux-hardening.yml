@@ -31,7 +31,7 @@ jobs:
           node --check /tmp/app-m.mjs
           node --check career360/tests/v16-clarity-smoke.mjs
 
-      - name: Commit immutable UI source and repin bundle
+      - name: Commit immutable UI source and repin index only
         shell: bash
         run: |
           set -euo pipefail
@@ -42,19 +42,21 @@ jobs:
           git commit -m 'career360: harden V16 truthful states and compact flows'
           APP_M_SHA="$(git rev-parse HEAD)"
           echo "V16_APP_M_IMMUTABLE=$APP_M_SHA"
-          python3 career360/tools/v16_truthful_hardening.py repin "$APP_M_SHA"
-          git add career360/frontend/index.html .github/workflows/career360-v16-clarity-smoke.yml
+          python3 - "$APP_M_SHA" <<'PY'
+          from pathlib import Path
+          import re,sys
+          sha=sys.argv[1]
+          p=Path('career360/frontend/index.html')
+          s=p.read_text()
+          pat=r'@([0-9a-f]{40})/career360/frontend/app-m\.js'
+          hits=re.findall(pat,s)
+          if len(hits)!=1:
+              raise SystemExit(f'expected one app-m pin, got {len(hits)}')
+          p.write_text(re.sub(pat,f'@{sha}/career360/frontend/app-m.js',s,count=1))
+          PY
+          git add career360/frontend/index.html
           git diff --cached --check
           git commit -m 'career360: repin bundle to truthful V16 hardening'
           echo "V16_TRUTHFUL_BUNDLE=$(git rev-parse HEAD)"
-
-      - name: Remove temporary hardening route and push
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm .github/workflows/career360-v16-truthful-ux-hardening.yml
-          rm career360/tools/v16_truthful_hardening.py
-          git add .github/workflows/career360-v16-truthful-ux-hardening.yml career360/tools/v16_truthful_hardening.py
-          git commit -m 'career360: remove temporary V16 hardening route'
           git push origin HEAD:main
           echo 'V16_TRUTHFUL_UX_PUSH=PASS'
