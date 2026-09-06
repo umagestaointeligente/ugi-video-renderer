@@ -1,0 +1,125 @@
+{
+  "schema": "CENA_CERTA_VIDEO_RESEARCH_POOL_V1",
+  "target_date": "2026-09-08",
+  "canonical_target": "10 candidates -> 8 selected + 2 reserve",
+  "status": "RESEARCH_IN_PROGRESS_NOT_ADMITTED",
+  "rule": "This is NOT a production batch. No candidate is READY until all canonical preflights pass.",
+  "prospects": [
+    {
+      "title": "Patient",
+      "year": 2009,
+      "type": "live_action_short",
+      "status": "STRONG_EDITORIAL_DIRECT_SOURCE_PENDING",
+      "strengths": ["multiple international awards", "Best Actress Los Angeles Movie Awards", "40+ festivals / 25+ awards reported by director"],
+      "rights": "Copyright-owner YouTube upload documented as CC BY 3.0; Commons still records source/owner/license.",
+      "source": "Full owner upload exists on YouTube; direct Factory-consumable master still pending.",
+      "blocker": "Do not use downloader workaround. Need direct full file or official downloadable source."
+    },
+    {
+      "title": "Providence",
+      "year": 2013,
+      "type": "documentary_short",
+      "status": "TECH_RIGHTS_STRONG_EDITORIAL_DEMAND_REVIEW",
+      "strengths": ["Laura Poitras + Jenny Perlin", "Freedom of the Press Foundation source", "exhibited in institutional contexts"],
+      "rights": "CC BY 3.0 reviewed on Wikimedia Commons; remix permitted.",
+      "source": "Full 5m07 file on Wikimedia Commons with completed transcodes.",
+      "blocker": "Need demand/audience fit assessment for Cena Certa before admission."
+    },
+    {
+      "title": "No Way to Say Goodbye",
+      "year": 2013,
+      "type": "documentary",
+      "status": "RESERVE_CANDIDATE_RELEVANCE_REVIEW",
+      "strengths": ["Skirball Cultural Center Documentos Series", "Palm Beach Jewish Film Festival", "Detroit Jewish Film Festival", "Philadelphia Jewish Film Festival", "São Paulo Jewish Film Festival", "permanent Montreal Jewish Public Library collection"],
+      "rights": "CC BY 3.0; external-source license reviewed on Wikimedia Commons.",
+      "source": "Full 40m file on Wikimedia Commons, 286 MB.",
+      "blocker": "Broad audience demand weaker than premium narrative shorts; keep reserve unless stronger signal appears."
+    },
+    {
+      "title": "Naranjito",
+      "year": 2015,
+      "type": "live_action_micro_short",
+      "status": "STRONG_ACCLAIM_RIGHTS_SOURCE_PENDING",
+      "strengths": ["25+ festival selections", "5 awards", "Best Short Cinema Los Angeles", "Best Short Cinemagic London", "Brazil Festival do Minuto selection"],
+      "rights": "Participation in Creative Commons festivals is NOT sufficient proof of license.",
+      "source": "Official Vimeo page found; direct Factory-consumable master not yet closed.",
+      "blocker": "Need explicit adaptation license + direct full source."
+    },
+    {
+      "title": "Missed Call",
+      "year": 2015,
+      "type": "live_action_micro_short",
+      "status": "STRONG_ACCLAIM_RIGHTS_SOURCE_PENDING",
+      "strengths": ["30+ festival selections", "multiple awards", "Best Short Singapore World International Film Festival", "Best Short Love Story LA World IFF"],
+      "rights": "License not yet proven from primary source.",
+      "source": "Official Vimeo page found; direct Factory master pending.",
+      "blocker": "Need explicit adaptation license + direct full source."
+    },
+    {
+      "title": "La Mirada Circular",
+      "year": 2010,
+      "type": "live_action_short",
+      "status": "ACCLAIM_STRONG_RIGHTS_SOURCE_PENDING",
+      "strengths": ["Sitges official competition", "Best Short Festival Cine Animal Bogotá", "international festival circuit"],
+      "rights": "Creative Commons festival presence noted but exact work license not yet primary-verified.",
+      "source": "Official Vimeo page found; direct Factory master pending.",
+      "blocker": "Need explicit adaptation license + direct full source."
+    },
+    {
+      "title": "The Voyagers",
+      "year": 2010,
+      "type": "essay_documentary",
+      "status": "PREMIUM_EDITORIAL_DIRECT_SOURCE_PENDING",
+      "strengths": ["International Film Festival Rotterdam", "AFI FEST honorable mention", "Best Experimental Film New Orleans", "Hammer to Nail winner", "Short of the Week Best Essay"],
+      "rights": "Documented as CC BY-SA in open-video dataset; primary filmmaker page confirms remix-culture positioning but exact current license evidence must be archived before admission.",
+      "source": "Official Vimeo full film; direct downloadable Factory source pending.",
+      "blocker": "Need primary license proof + direct file."
+    },
+    {
+      "title": "PIXIED",
+      "year": 2017,
+      "type": "pixilation_animation",
+      "status": "EXCEPTIONAL_ANIMATION_RESERVE",
+      "strengths": ["Mar del Plata official competition", "Ottawa Salon des Refusés", "Best Short Latin American Stop Motion Lab", "multiple international awards"],
+      "rights": "CC BY 3.0 reviewed on Wikimedia Commons; remix permitted.",
+      "source": "Full file on Wikimedia Commons.",
+      "blocker": "Animation is deprioritized by Cena Certa; use only as exceptional reserve."
+    },
+    {
+      "title": "The Secret Number",
+      "year": 2012,
+      "type": "live_action_short",
+      "status": "BLOCK_NONCOMMERCIAL_LICENSE",
+      "strengths": ["Best Short Charleston IFF", "Best Student Film Savannah Film Festival", "strong filmmaker recognition"],
+      "rights": "Director states film is CC BY-NC; third-party open-video dataset also records CC BY-NC.",
+      "source": "Full film online.",
+      "blocker": "NC condition incompatible with scalable/monetized channel workflow. Do not use."
+    },
+    {
+      "title": "Straight Up",
+      "year": 2011,
+      "type": "ski_film",
+      "status": "BLOCK_EDITORIAL_LOW_DEMAND",
+      "strengths": ["full direct Commons source", "CC BY 3.0 reviewed"],
+      "rights": "CC BY 3.0 reviewed on Wikimedia Commons.",
+      "source": "Full 21m12, Commons transcodes available.",
+      "blocker": "Weak demand/acclaim evidence; production positioned as first team ski movie. Fails premium relevance profile."
+    },
+    {
+      "title": "Valkaama",
+      "year": 2010,
+      "type": "live_action_feature",
+      "status": "BLOCK_PRODUCTION_PROFILE",
+      "strengths": ["open-source full feature", "CC BY-SA 3.0", "official direct downloads"],
+      "rights": "CC BY-SA 3.0.",
+      "source": "Official project downloads available.",
+      "blocker": "Project self-describes as no-budget; conflicts with current Cena Certa production-quality admission rule."
+    }
+  ],
+  "next_search_priority": [
+    "live-action CC BY/CC BY-SA films with direct Commons or official downloadable master",
+    "festival-recognized 1995-2027 works",
+    "Brazil/Latin America relevance where possible",
+    "avoid NC/ND, trailers, animation and no-budget productions"
+  ]
+}
