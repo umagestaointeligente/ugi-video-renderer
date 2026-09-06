@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260907-alien-v3.json",
-  "batch_sha256": "279b7bd9191b7a342e8d48bff1853e1436e1489e78962a4dfe414265efe2efe6",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-06T18:49:45Z",
-  "request_id": "0f2c61be1cab4b048cc3cc439d955a50",
-  "candidate_count": 1,
-  "selected_count": 1,
-  "reserve_count": 0,
-  "note": "Daily8 07/09 Alien Grounds v3 after certified real-sentence-envelope alignment hardening; literal token coverage remains fail-closed; no gate relaxed."
+  "requested_at": "",
+  "request_id": "",
+  "note": "IDLE after reconciliation of 07/09 Alien Grounds run 34052974429: render/QA/staging succeeded; finalize failed administratively; Metricool scheduling was completed and verified separately. Cleared before 08/09 production; no outbox pending, publisher IDLE."
 }
