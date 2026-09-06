@@ -59,6 +59,7 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `AUTOMATED_OPPORTUNITY_RESEARCH=LIVE_PILOT_SCOPE`
 `PROACTIVE_AGENT_CORE_V12=LIVE`
 `PROACTIVE_UI_V12=LIVE`
+`PROACTIVE_DIGEST_TRUTH_V2=LIVE`
 `VISUAL_PROFILE_V13=LIVE`
 `PHOTO_STUDIO_V14=LIVE_LOCAL_ZERO_CASH`
 `PHOTO_STUDIO_MOBILE_FALLBACK_HARDENING=BROWSER_VALIDATED_NOT_YET_PROMOTED`
@@ -107,6 +108,23 @@ Conta piloto: digest 4h.
 Cron `career-proactive-digest` = ACTIVE.
 
 O usuário não deve precisar perguntar o que aconteceu; o Career retorna com analisadas, qualificadas, candidaturas, respostas, entrevistas, pendências e próximos passos conforme capacidades reais.
+
+### V12 truthfulness hardening — digest V2 LIVE
+
+`career-proactive-digest` foi promovida para V2 após readback vivo do código publicado.
+
+Evidência canônica:
+- source commit: `96cd4254eb972e8267e0bf3d39e37cf0da86f72c`;
+- Supabase Edge Function: `career-proactive-digest` V2 `ACTIVE`;
+- deployed `ezbr_sha256`: `aa677838765e62fe683309fee53832a9b36cf0e8d0bd176a773e1eee8300e83f`;
+- empty-state factual: `Nenhuma novidade relevante foi registrada nesta janela.`;
+- frase antiga `seu agente continua ativo` removida do código publicado por não constituir prova de atividade;
+- autenticação preservada: cron exige secret validado por `career_validate_proactive_cron_secret`; ação manual exige `Bearer` validado por `auth.getUser()`.
+
+Estado:
+`PROACTIVE_DIGEST_TRUTH_V2=LIVE`
+
+Esse LIVE é exclusivamente do backend de digest. Não altera o gate de promoção da UI V15/V16.
 
 ## 5. V13 — Meu Perfil Visual LIVE
 
@@ -465,6 +483,31 @@ Decisão durante incubação zero-cash:
 
 Não gerar assinatura/custo apenas para apagar esse WARN sem decisão explícita de produto/monetização.
 
+
+### Supabase security readiness — read-only audit 2026-09-06
+
+Auditoria viva, sem mutação de banco:
+- 43/43 tabelas ordinárias do schema `public` com RLS habilitado e pelo menos uma policy;
+- policies de dados do usuário verificadas com `auth.uid() = user_id`; UPDATEs auditados possuem `USING` + `WITH CHECK` quando aplicável;
+- funções `SECURITY DEFINER` do schema `public`: `EXECUTE=false` para PUBLIC/anon/authenticated e `EXECUTE=true` para service_role;
+- `search_path` explicitamente configurado nas funções privilegiadas auditadas;
+- nenhuma view/materialized view encontrada no schema `public`;
+- buckets `career-profile-private` e `career-resumes-quarantine` permanecem `public=false`;
+- `storage.objects` com RLS habilitado e sem policy direta para cliente, mantendo acesso privilegiado pelas Edge Functions;
+- funções sem `verify_jwt` auditadas usam autenticação interna apropriada (secret validado, sessão/master quando aplicável) ou são redirect-only;
+- media/foto e documentos auditados vinculam operações privilegiadas ao `user_id` autenticado.
+
+Advisor atual:
+- Security: somente `auth_leaked_password_protection=DISABLED/WARN`;
+- Performance: somente INFOs de unused indexes esperados no piloto; sem duplicate-index/unindexed-FK WARN.
+
+Estado:
+`SUPABASE_SECURITY_READINESS_READ_ONLY_AUDIT=PASS`
+
+Limites conhecidos permanecem:
+`LEAKED_PASSWORD_PROTECTION=KNOWN_PLAN_LIMITATION_NOT_UPGRADED`
+`SUPABASE_SERVER_REDIRECT_ALLOWLIST=NOT_YET_PROVEN`
+
 Redirect de confirmação usado pelo cliente:
 `https://lsi-career-360.vercel.app/?email-confirmado=1`.
 
@@ -537,4 +580,4 @@ Quando o conector interno expuser deploy/promoção project-scoped, executar sem
 - não usar e-mail/OTP/magic link como atalho de autenticação automatizada;
 - não abrir Beta automaticamente.
 
-`LAST_VERIFIED_CHANGE=V16_STATIC_RUNTIME_AND_DEPLOY_READINESS_PASS_APP_M_719C15E_APP_L_428364_APP_K_6DF7B4_BUNDLE_F572B82_SMOKE_RUN_34010764428_JOB_101426061763_VERCEL_WORKFLOW_BB344DB_PROJECT_SCOPE_VALIDATE_ONLY_PREVIEW_TRUTH_EXACT_PROMOTION_PASS_CHATGPT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14_NOT_PROMOTED`
+`LAST_VERIFIED_CHANGE=PROACTIVE_DIGEST_TRUTH_V2_LIVE_SOURCE_96CD425_EDGE_SHA_AA677838_SUPABASE_SECURITY_READINESS_READ_ONLY_PASS_43_OF_43_PUBLIC_TABLES_RLS_SERVICE_ONLY_SECURITY_DEFINER_PRIVATE_STORAGE_V16_FRONTEND_STILL_NOT_PROMOTED_VERCEL_CHAT_CONNECTOR_MUTATION_STILL_UNSCOPED_PRODUCTION_STILL_V14`

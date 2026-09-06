@@ -182,6 +182,41 @@ The permanent V16 smoke now verifies that the deploy workflow is bound to the ex
 
 This is deployment **readiness evidence only**. It is not evidence that a Preview or Production deployment occurred.
 
+## Backend truthfulness alignment
+
+The proactive backend was audited against the V16 truthfulness policy before UI promotion.
+
+`career-proactive-digest` V2 is LIVE with a factual no-event state:
+`Nenhuma novidade relevante foi registrada nesta janela.`
+
+Evidence:
+- canonical source commit `96cd4254eb972e8267e0bf3d39e37cf0da86f72c`;
+- deployed Edge Function V2 `ACTIVE`;
+- deployed SHA `aa677838765e62fe683309fee53832a9b36cf0e8d0bd176a773e1eee8300e83f`;
+- legacy claim `seu agente continua ativo` absent from deployed source;
+- cron-secret and authenticated-user authorization paths preserved.
+
+`PROACTIVE_DIGEST_TRUTH_V2=LIVE`
+
+This backend LIVE state does not promote the V16 frontend.
+
+## Supabase security readiness read-only audit
+
+Before promotion, the live project was audited without schema/data mutation:
+- 43/43 ordinary public tables have RLS enabled and at least one policy;
+- audited user-owned policies bind access to `auth.uid() = user_id`;
+- public `SECURITY DEFINER` functions are not executable by PUBLIC, anon, or authenticated; service_role retains execution;
+- no public views/materialized views were found;
+- both Career 360 storage buckets are private and direct storage object access remains RLS-gated;
+- audited unauthenticated-at-edge functions enforce internal secrets/session/master checks as appropriate, except the redirect-only app function;
+- photo/media/document privileged paths were verified to scope ownership by authenticated user id.
+
+Known limitations remain unchanged:
+- leaked-password protection is disabled on the current plan;
+- hosted Supabase Auth redirect allowlist is not exposed by the available connector and remains `NOT_YET_PROVEN`.
+
+`SUPABASE_SECURITY_READINESS_READ_ONLY_AUDIT=PASS`
+
 ## Deployment state
 
 `CLARITY_UI_V16=BROWSER_VALIDATED_BUNDLE_PINNED_NOT_YET_PROMOTED`
