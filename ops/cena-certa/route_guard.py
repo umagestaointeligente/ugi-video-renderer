@@ -35,7 +35,7 @@ def main() -> None:
     render = prod['render_executor']
     if render.get('runtime_gitlab_clone') is not False:
         fail('RUNTIME_GITLAB_CLONE_FORBIDDEN')
-    if [render.get('candidate_pool'), render.get('final_videos'), render.get('hot_reserves')] != [12, 8, 4]:
+    if [render.get('candidate_pool'), render.get('final_videos'), render.get('hot_reserves')] != [10, 8, 2]:
         fail('POOL_ROUTE_CONTRACT_FAIL')
     if int(render.get('last_live_proof_seconds') or 10**9) > 660:
         fail('LIVE_PROOF_SLA_FAIL')
@@ -80,11 +80,11 @@ def main() -> None:
         fail('R2_RECONCILIATION_GUARD_MISSING')
 
     contract = json.loads(CONTRACT.read_text(encoding='utf-8'))
-    if int(contract['sla']['candidate_pool_size']) != 12:
+    if int(contract['sla']['candidate_pool_size']) != 10:
         fail('CONTRACT_CANDIDATE_POOL_FAIL')
-    if int(contract['sla']['daily_batch_size']) != 8 or int(contract['sla']['hot_reserve_count']) != 4:
-        fail('CONTRACT_8_PLUS_4_FAIL')
-    if int(contract['continuity']['ready_pool_size']) != 12 or int(contract['continuity']['hot_reserve_count']) != 4:
+    if int(contract['sla']['daily_batch_size']) != 8 or int(contract['sla']['hot_reserve_count']) != 2:
+        fail('CONTRACT_8_PLUS_2_FAIL')
+    if int(contract['continuity']['ready_pool_size']) != 10 or int(contract['continuity']['hot_reserve_count']) != 2:
         fail('CONTRACT_CONTINUITY_POOL_FAIL')
     if contract['continuity']['secondary_route']['networks'] != ['facebook', 'youtube']:
         fail('CONTRACT_SECONDARY_ROUTE_SCOPE_FAIL')
@@ -108,7 +108,7 @@ def main() -> None:
         fail('DISABLED_ROUTE_ALLOWED_IN_PRODUCTION')
 
     print('CENA_CERTA_ROUTE_GUARD_PASS')
-    print('POOL_PROFILE 12->8+4')
+    print('POOL_PROFILE 10->8+2')
     print('LIVE_PROVEN_RENDER_ROUTE', render['id'], render['last_live_proof_run_id'], render['last_live_proof_seconds'])
     print('LIVE_PROVEN_MEDIA_ROUTE', media['id'], media['last_live_proof_run_id'], media['last_live_proof_result'])
     print('SECONDARY_SCHEDULER_SCOPE', ','.join(secondary['networks']))
