@@ -338,8 +338,11 @@ jobs:
           pathlib.Path('/tmp/publisher-state.json').write_text(json.dumps(state,indent=2)+'\n')
           print('PUBLISHER_OUTBOX_READY',hsha,'selected',len(out['selected_ids']),'reserves',len(out['reserve_ids']))
           PY
-          git config user.name 'Cena Certa Factory V2'
-          git config user.email 'actions@users.noreply.github.com'
+          cd "$GITHUB_WORKSPACE"
+          test -d .git || { echo GIT_WORKTREE_MISSING; pwd; ls -la; exit 1; }
+          test "$(git rev-parse --is-inside-work-tree)" = "true" || { echo GIT_WORKTREE_INVALID; exit 1; }
+          git config --local user.name 'Cena Certa Factory V2'
+          git config --local user.email 'actions@users.noreply.github.com'
           git fetch origin "$GITHUB_REF_NAME"
           git rebase "origin/$GITHUB_REF_NAME"
           export CURRENT_DISPATCH=ops/cena-certa/dispatch.json
