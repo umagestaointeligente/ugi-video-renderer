@@ -100,13 +100,13 @@ Public ordinary tables:
 `47/47 RLS + policy`
 
 Public SECURITY DEFINER functions:
-`54`
+`55`
 
 ACL/readback:
 - PUBLIC execute = 0
 - anon execute = 0
 - authenticated execute = 0
-- fixed `search_path` = 54/54
+- fixed `search_path` = 55/55
 
 Application submission functions:
 - V1 receipt: service role execute = false
@@ -184,3 +184,20 @@ The product may prepare a future application, but actual provider dispatch must 
 - receipt V2 verification.
 
 No provider side effect is LIVE as of this seal.
+
+
+## Per-application confirmation mediator V2
+
+The dispatch contract is now paired with an authenticated confirmation mediator.
+
+Canonical document:
+`career360/docs/APPLICATION_CONFIRMATION_V2_LIVE_2026-09-07.md`
+
+Runtime:
+- `career-application-confirm` V2 ACTIVE;
+- `verify_jwt=true`;
+- SHA-256 `85ce6535ae020696c741d3960979b22ab9e3756a683a17c754a487b089792f44`;
+- atomic service-only RPC `career_set_application_submission_confirmation`;
+- current global `allow_application_submit=false`;
+- provider side effects remain NONE;
+- authenticated frontend E2E remains pending a real user session.
