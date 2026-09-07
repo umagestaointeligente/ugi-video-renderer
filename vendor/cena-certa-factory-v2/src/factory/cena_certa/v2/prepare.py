@@ -79,7 +79,7 @@ def normalize_music(c,src,out):
    if abs(lufs_error)<=1.0 and not peak_fail: break
    gain_db=lufs_error
    if abs(gain_db)>6.0: gain_db=6.0 if gain_db>0 else -6.0
-   filt=f'volume={gain_db:.3f}dB,alimiter=limit={limit_amp:.6f}:attack=5:release=50'
+   filt=f'volume={gain_db:.3f}dB,alimiter=limit={limit_amp:.6f}:level=false:attack=5:release=50'
    sh(['ffmpeg','-loglevel','error','-y','-i',str(out),'-vn','-af',filt,'-c:a','aac','-b:a','192k','-ar','48000',str(fix)],timeout=150)
    media_probe(fix,'audio'); os.replace(fix,out)
    measured_lufs,measured_tp=loudness(out)
