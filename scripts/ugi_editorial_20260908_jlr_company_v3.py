@@ -53,8 +53,8 @@ open_video = dl(OPEN_INNOVATION, 'jlr_open_innovation.mp4')
 naic_video = dl(NAIC, 'jlr_naic.mp4')
 assembly_video = dl(ASSEMBLY, 'jlr_assembly.mp4')
 
-# Company-first sequence. No driving shots and no generic auto-ad B-roll.
-# Each segment is taken from official JLR corporate/innovation/manufacturing material.
+# Company-first sequence: corporate innovation, engineering centre and manufacturing.
+# No driving shots and no generic auto-ad B-roll.
 segments = [
     (open_video, 0, 6.5, 'open0'),
     (naic_video, 6, 6.0, 'naic0'),
@@ -63,6 +63,7 @@ segments = [
     (assembly_video, 3, 6.5, 'assembly0'),
     (open_video, 30, 6.5, 'open2'),
     (naic_video, 42, 6.0, 'naic2'),
+    (open_video, 52, 6.0, 'open3'),
 ]
 
 clips = []
@@ -84,7 +85,8 @@ run(['ffmpeg','-y','-f','concat','-safe','0','-i',concat,'-c','copy',base])
 
 script = (
     'A JLR, Jaguar Land Rover, anunciou uma reestruturação que deve eliminar cerca de quatro mil postos. '
-    'O ponto importante é que a companhia não está simplesmente encolhendo. Ela quer reduzir custos e aproximar a operação do ponto de equilíbrio, enquanto mantém entre quinze e dezoito bilhões de libras em investimentos em eletrificação, digital e manufatura. '
+    'A companhia reúne as marcas Jaguar e Land Rover e opera centros de engenharia, inovação e manufatura. '
+    'O ponto importante é que ela não está simplesmente encolhendo. Quer reduzir custos e aproximar a operação do ponto de equilíbrio, enquanto mantém entre quinze e dezoito bilhões de libras em investimentos em eletrificação, digital e manufatura. '
     'É por isso que este caso é mais sobre alocação de capital do que sobre demissões. '
     'Em gestão, cortar estrutura e proteger capacidade de inovação podem fazer parte da mesma decisão. '
     'A pergunta é: sua empresa sabe diferenciar redução de custo de reposicionamento estratégico?'
@@ -93,15 +95,19 @@ audio = WORK / 'jlr_v3.mp3'
 tts(script, audio)
 audio_dur = dur(audio)
 
-caps = [
-    (0,6.5,'A JLR — Jaguar Land Rover — anunciou uma reestruturação.'),
-    (6.5,13.0,'Cerca de 4.000 postos devem ser eliminados.'),
-    (13.0,20.0,'Mas a companhia não está simplesmente encolhendo.'),
-    (20.0,28.0,'Ela busca reduzir custos e aproximar a operação do equilíbrio.'),
-    (28.0,36.0,'Ao mesmo tempo, mantém £15–18 bi em eletrificação, digital e manufatura.'),
-    (36.0,43.0,'O caso é sobre alocação de capital — não só sobre demissões.'),
-    (43.0,50.0,'Sua empresa diferencia corte de custo de reposicionamento estratégico?'),
+# Caption windows are normalized dynamically to the actual narration duration so the final question is never left without CC.
+caption_texts = [
+    'A JLR — Jaguar Land Rover — anunciou uma reestruturação.',
+    'A companhia reúne Jaguar e Land Rover e opera engenharia, inovação e manufatura.',
+    'Cerca de 4.000 postos devem ser eliminados.',
+    'Mas a companhia não está simplesmente encolhendo.',
+    'Ela busca reduzir custos e aproximar a operação do equilíbrio.',
+    'E mantém £15–18 bi em eletrificação, digital e manufatura.',
+    'O caso é sobre alocação de capital — não só sobre demissões.',
+    'Sua empresa diferencia corte de custo de reposicionamento estratégico?',
 ]
+step = audio_dur / len(caption_texts)
+caps = [(i*step, min((i+1)*step, audio_dur), text) for i,text in enumerate(caption_texts)]
 srt = WORK / 'jlr_v3.srt'
 make_srt(caps, srt)
 
@@ -116,25 +122,24 @@ vf = (
 
 out = ROOT / 'video-jlr-company-preview-v3.mp4'
 run(['ffmpeg','-y','-i',base,'-i',audio,'-vf',vf,'-map','0:v','-map','1:a','-shortest','-c:v','libx264','-preset','medium','-crf','19','-c:a','aac','-b:a','160k','-movflags','+faststart',out])
+final_dur = dur(out)
 
-# Build a QA contact sheet from the final render for frame-sampling review.
+# Build QA contact sheet from seven valid points spread across the actual final render.
 frames = []
-for i,t in enumerate([2,9,16,23,30,37,44]):
+for i,ratio in enumerate([0.05,0.18,0.31,0.44,0.57,0.72,0.90]):
+    t = max(0.2, min(final_dur-0.5, final_dur*ratio))
     p = WORK / f'qa_{i}.jpg'
-    run(['ffmpeg','-y','-ss',t,'-i',out,'-frames:v','1','-q:v','2',p])
+    run(['ffmpeg','-y','-ss',f'{t:.2f}','-i',out,'-frames:v','1','-update','1','-q:v','2',p])
     frames.append(p)
 
-# 4x2 contact sheet, saved beside the preview for QA evidence.
 inputs=[]
 for p in frames:
     inputs += ['-i', p]
-filter_parts=[]
-for i in range(len(frames)):
-    filter_parts.append(f'[{i}:v]scale=270:480[v{i}]')
+filter_parts=[f'[{i}:v]scale=270:480[v{i}]' for i in range(len(frames))]
 layout = '|'.join(['0_0','270_0','540_0','810_0','0_480','270_480','540_480'])
 filter_complex = ';'.join(filter_parts) + ';' + ''.join(f'[v{i}]' for i in range(len(frames))) + f'xstack=inputs={len(frames)}:layout={layout}:fill=black[out]'
 contact = ROOT / 'video-jlr-company-preview-v3-qa.jpg'
-run(['ffmpeg','-y',*inputs,'-filter_complex',filter_complex,'-map','[out]','-frames:v','1',contact])
+run(['ffmpeg','-y',*inputs,'-filter_complex',filter_complex,'-map','[out]','-frames:v','1','-update','1',contact])
 
 (ROOT / 'PREVIEW_ONLY.txt').write_text('PREVIEW ONLY — NVIDIA V2 APPROVED BY USER; JLR V3 AWAITING APPROVAL — DO NOT SCHEDULE UNTIL EDITORIAL PACKAGE IS RELEASED\n', encoding='utf-8')
-print('DONE', out, out.stat().st_size)
+print('DONE', out, out.stat().st_size, 'duration', final_dur)
