@@ -1,0 +1,46 @@
+name: UGI JLR Company Preview V3 2026-09-08
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ugi_editorial_20260908_jlr_company_v3.py'
+      - '.github/workflows/ugi-editorial-jlr-v3-20260908.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-editorial-jlr-v3-20260908
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --upgrade pip
+          python -m pip install edge-tts
+      - name: Build JLR V3 preview
+        run: |
+          set -euo pipefail
+          python scripts/ugi_editorial_20260908_jlr_company_v3.py
+      - name: Persist preview and QA evidence only
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-video-bot'
+          git config user.email 'ugi-editorial-video-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-08/video-jlr-company-preview-v3.mp4 \
+                  public/ugi/editorial/2026-09-08/video-jlr-company-preview-v3-qa.jpg \
+                  public/ugi/editorial/2026-09-08/PREVIEW_ONLY.txt
+          git commit -m 'preview: JLR company-context video v3' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
