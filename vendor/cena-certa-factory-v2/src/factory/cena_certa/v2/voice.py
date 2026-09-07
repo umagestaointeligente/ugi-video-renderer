@@ -22,9 +22,9 @@ def _transient_tts_error(exc: Exception) -> bool:
     return any(x in probe for x in markers)
 
 
-async def _stream_once(c,text,part):
+async def _stream_once(c,text,part,rate=CANONICAL_SPEECH_RATE):
  words=[]; sentences=[]
- comm=edge_tts.Communicate(text,c['voice']['voice_id'],rate=CANONICAL_SPEECH_RATE,volume='+0%')
+ comm=edge_tts.Communicate(text,c['voice']['voice_id'],rate=rate,volume='+0%')
  with open(part,'wb') as f:
   async for chunk in comm.stream():
    if chunk['type']=='audio': f.write(chunk['data'])
@@ -79,8 +79,10 @@ def _cues_from_real_sentence_envelopes(sentences,caption_chunks):
  return cues
 
 
-async def tts_with_real_boundaries(c,text,caption_chunks,out):
+async def tts_with_real_boundaries(c,text,caption_chunks,out,rate_override=None):
  out=Path(out); out.parent.mkdir(parents=True,exist_ok=True)
+ rate=rate_override or CANONICAL_SPEECH_RATE
+ if not isinstance(rate,str) or not rate.endswith('%') or rate[0] not in '+-': raise RuntimeError(f'TTS_RATE_OVERRIDE_INVALID {rate!r}')
  authored=' '.join(caption_chunks)
  if normalize_text(authored)!=normalize_text(text): raise RuntimeError('CAPTION_LITERAL_MISMATCH_BEFORE_TTS')
  timeout=float(c.get('runtime',{}).get('tts_timeout_seconds',50))
@@ -90,7 +92,7 @@ async def tts_with_real_boundaries(c,text,caption_chunks,out):
  for attempt in range(1,attempts+1):
   part=out.with_name(out.name+f'.part-{os.getpid()}-{attempt}')
   try:
-   words,sentences=await asyncio.wait_for(_stream_once(c,text,part),timeout=timeout)
+   words,sentences=await asyncio.wait_for(_stream_once(c,text,part,rate=rate),timeout=timeout)
    if not part.exists() or part.stat().st_size<10000: raise RuntimeError('VOICE_EMPTY')
    media_probe(part,'audio'); os.replace(part,out); last=None; break
   except Exception as e:
