@@ -8,5 +8,6 @@
   "expected_posts": 8,
   "expected_network_placements": 32,
   "approved": false,
-  "note": "Recover exact outbox only; do not schedule or publish."
+  "note": "Recover exact outbox only; do not schedule or publish.",
+  "recovery_revision": 1
 }
