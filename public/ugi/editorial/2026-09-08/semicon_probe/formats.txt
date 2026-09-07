@@ -1,0 +1,36 @@
+[brightcove:new] Extracting URL: https://players.brightcove.net/6282251407001/default_default/index.html?videoId=6404485548112
+[brightcove:new] 6404485548112: Downloading JSON metadata
+[brightcove:new] 6404485548112: Downloading JSON metadata
+[brightcove:new] 6404485548112: Downloading m3u8 information
+[brightcove:new] 6404485548112: Downloading m3u8 information
+[brightcove:new] 6404485548112: Downloading MPD manifest
+[brightcove:new] 6404485548112: Downloading MPD manifest
+[info] Available formats for 6404485548112:
+ID                                          EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC        VBR ACODEC      ABR ASR MORE INFO
+----------------------------------------------------------------------------------------------------------------------------------------------------
+hls-audio-0-en__Main_-0                     mp4 audio only |                 m3u8  | audio only        unknown             [en] en (Main), low
+hls-audio-0-en__Main_-1                     mp4 audio only |                 m3u8  | audio only        unknown             [en] en (Main), low
+hls-audio-1-en__Main_-0                     mp4 audio only |                 m3u8  | audio only        unknown             [en] en (Main), high
+hls-audio-1-en__Main_-1                     mp4 audio only |                 m3u8  | audio only        unknown             [en] en (Main), high
+dash-c7b8830c-9921-4fab-9dea-993bf81bea2f-0 m4a audio only | ~ 1.06MiB   61k dash  | audio only        mp4a.40.2   61k 48k [en] DASH audio, m4a_dash
+dash-c7b8830c-9921-4fab-9dea-993bf81bea2f-1 m4a audio only | ~ 1.06MiB   61k dash  | audio only        mp4a.40.2   61k 48k [en] DASH audio, m4a_dash
+dash-24780169-ea85-448b-9edc-970ee86ac1db-0 m4a audio only | ~ 2.16MiB  125k dash  | audio only        mp4a.40.2  125k 48k [en] DASH audio, m4a_dash
+dash-24780169-ea85-448b-9edc-970ee86ac1db-1 m4a audio only | ~ 2.16MiB  125k dash  | audio only        mp4a.40.2  125k 48k [en] DASH audio, m4a_dash
+dash-efd41398-31bc-4783-a9b7-9e7a015fa2f6-0 mp4 640x360    | ~13.76MiB  795k dash  | avc1.42001f  795k video only          DASH video, mp4_dash
+dash-efd41398-31bc-4783-a9b7-9e7a015fa2f6-1 mp4 640x360    | ~13.76MiB  795k dash  | avc1.42001f  795k video only          DASH video, mp4_dash
+hls-941-0                                   mp4 640x360    | ~16.30MiB  942k m3u8  | avc1.42001f  942k video only
+hls-941-1                                   mp4 640x360    | ~16.30MiB  942k m3u8  | avc1.42001f  942k video only
+dash-2efd5639-bf6b-4001-869e-9967513c4d04-0 mp4 640x360    | ~17.20MiB  994k dash  | avc1.42001f  994k video only          DASH video, mp4_dash
+dash-2efd5639-bf6b-4001-869e-9967513c4d04-1 mp4 640x360    | ~17.20MiB  994k dash  | avc1.42001f  994k video only          DASH video, mp4_dash
+hls-1230-0                                  mp4 640x360    | ~21.30MiB 1231k m3u8  | avc1.42001f 1231k video only
+hls-1230-1                                  mp4 640x360    | ~21.30MiB 1231k m3u8  | avc1.42001f 1231k video only
+dash-cc2dda5a-5954-4e02-baea-b86b696593cd-0 mp4 1280x720   | ~34.44MiB 1990k dash  | avc1.420020 1990k video only          DASH video, mp4_dash
+dash-cc2dda5a-5954-4e02-baea-b86b696593cd-1 mp4 1280x720   | ~34.44MiB 1990k dash  | avc1.420020 1990k video only          DASH video, mp4_dash
+hls-2326-0                                  mp4 1280x720   | ~40.26MiB 2326k m3u8  | avc1.420020 2326k video only
+hls-2326-1                                  mp4 1280x720   | ~40.26MiB 2326k m3u8  | avc1.420020 2326k video only
+dash-ac080e2b-24c3-4457-9467-3577f5e105a4-0 mp4 1920x1080  | ~69.31MiB 4005k dash  | avc1.42002a 4005k video only          DASH video, mp4_dash
+dash-ac080e2b-24c3-4457-9467-3577f5e105a4-1 mp4 1920x1080  | ~69.31MiB 4005k dash  | avc1.42002a 4005k video only          DASH video, mp4_dash
+hls-4543-0                                  mp4 1920x1080  | ~78.62MiB 4543k m3u8  | avc1.42002a 4543k video only
+hls-4543-1                                  mp4 1920x1080  | ~78.62MiB 4543k m3u8  | avc1.42002a 4543k video only
+
+STDERR

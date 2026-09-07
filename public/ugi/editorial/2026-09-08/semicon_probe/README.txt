@@ -1,0 +1,3 @@
+SOURCE=https://players.brightcove.net/6282251407001/default_default/index.html?videoId=6404485548112
+DURATION=145.17
+TIMES=9.68,19.36,29.03,38.71,48.39,58.07,67.75,77.43,87.10,96.78,106.46,116.14,125.82,135.50
