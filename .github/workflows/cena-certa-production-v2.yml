@@ -210,7 +210,7 @@ jobs:
 
   render-stage-10:
     needs: [dispatch, ready-proof]
-    if: needs.dispatch.outputs.enabled == 'true' && needs.dispatch.outputs.mode == 'PREPARE' && needs.ready-proof.result == 'success'
+    if: always() && needs.dispatch.outputs.enabled == 'true' && needs.dispatch.outputs.mode == 'PREPARE' && needs.ready-proof.result == 'success'
     strategy:
       fail-fast: false
       max-parallel: 10
