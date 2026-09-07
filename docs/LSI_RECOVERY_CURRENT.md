@@ -10,7 +10,7 @@ Handoff canônico desta transição de chat:
 ## 0. Estado global
 
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
-`CURRENT_STATUS=V14_OFFICIAL_PRODUCTION_STABLE_V16_CLOUDFLARE_BROWSER_VALIDATED_ALTERNATIVE_DELIVERY_PROVEN_NOT_PROMOTED`
+`CURRENT_STATUS=V14_OFFICIAL_PRODUCTION_STABLE_V16_TESTER_ENTRYPOINT_LIVE_BROWSER_VALIDATED_PUBLIC_BETA_CLOSED`
 `VERIFIED_REVENUE=R$0,00` para lógica de incubação; reconfirmar antes de decisão monetária.
 
 REGRA:
@@ -21,7 +21,8 @@ REGRA:
 Repository: `umagestaointeligente/ugi-video-renderer`
 Branch: `main`
 Supabase: `nxjdnzdxclszqyqrkwdk`
-Frontend oficial: `https://lsi-career-360.vercel.app/`
+Frontend oficial legado: `https://lsi-career-360.vercel.app/`
+Tester entrypoint V16: `https://lsi-career-360.umagestaointeligente.workers.dev/`
 Vercel project: `prj_DQbCLqrEixa8fTbOkOz3ZtjX9IGP`
 Vercel team: `team_ZJys00FTE2kK9yVtsqH5fHyF`
 
@@ -86,6 +87,12 @@ Readback oficial mais recente em 2026-09-07 BRT:
 `APPLICATION_CONFIRMATION_UI_V16=BROWSER_VALIDATED_CANONICAL_BUNDLE_PINNED_NOT_OFFICIAL`
 `APPLICATION_CONFIRMATION_UI_TRUTH_NO_FALSE_SEND=PASS`
 `MASTER_PILOT_DELIVERY=SEALED_CONTROLLABLE_SCOPE`
+`TESTER_ENTRYPOINT_V16=LIVE_BROWSER_VALIDATED`
+`TESTER_ENTRYPOINT_URL=https://lsi-career-360.umagestaointeligente.workers.dev/`
+`TESTER_VISUAL_RESPONSIVE=PASS_360_412_768_1180`
+`TESTER_RUNTIME_ERRORS=ZERO`
+`TESTER_APPLICATION_CONFIRMATION_UI=PASS_TRUTHFUL_NO_FALSE_SEND`
+`TESTER_PHASE=CONTROLLED_READY_PUBLIC_BETA_CLOSED`
 `APPLICATION_SUBMISSION_RECEIPT_V1=RETIRED_SERVICE_EXEC_REVOKED`
 `APPLICATION_PROVIDER_CONNECTOR=NOT_LIVE`
 `QUICKIN_CONNECTOR=INACTIVE_HARD_GATED_SUBMIT_UNCONFIRMED`
@@ -133,6 +140,7 @@ Documento de evidência detalhada:
 `career360/docs/APPLICATION_SUBMISSION_DISPATCH_V2_LIVE_2026-09-07.md`
 `career360/docs/APPLICATION_CONFIRMATION_V2_LIVE_2026-09-07.md`
 `career360/docs/CAREER360_DELIVERY_SEAL_2026-09-07.md`
+`career360/docs/CAREER360_TESTER_ENTRYPOINT_2026-09-07.md`
 
 Últimas provas vivas:
 - LSI Llama fallback: run `34063813926`, 4/4 PASS, 4245 ms;
@@ -140,6 +148,9 @@ Documento de evidência detalhada:
 - Cloudflare browser smoke: run `34084862777`, job `101626832212`, 360/412/768/1180 PASS, runtime errors zero;
 - final clean-tree Cloudflare static preview: run `34157515928`, job `101852301277`, SUCCESS;
 - final clean-tree Cloudflare browser smoke: run `34157515919`, job `101852301179`, 360/412/768/1180 PASS, application confirmation UI PASS, truthful no-false-send PASS, runtime errors zero, production mutation NONE;
+- stable tester Workers deploy: run `34161107108`, job `101862969136`, SUCCESS; Worker `lsi-career-360`; version `6d7f4d9a-c523-423b-9b0b-7f1cc38b3d0a`; URL `https://lsi-career-360.umagestaointeligente.workers.dev/`;
+- stable tester browser smoke: run `34161107086`, job `101862969173`, SUCCESS; 360/412/768/1180 PASS; application confirmation UI PASS; truthful no-false-send PASS; runtime errors zero; Vercel production mutation NONE;
+- tester signup caveat: confirmation redirect source still points to legacy Vercel because hosted Supabase redirect allowlist/Site URL is not currently readable or mutable through the available connector; after confirmation, controlled testers must return to the tester entrypoint;
 - `career-proactive-status` V2 ACTIVE, verify_jwt=true, SHA `49908165f6eb2fa44afa7bcb4515830e0eaade03339f05aff8f2f033924865dd`;
 - canonical `app-i.js` immutable pin `90a795bf1a371be66fd8f907c8a76501f8a5421c`; canonical bundle pin commit `82b49720bcf2e19e75cb44d19f64118c594e1508`;
 - official production promotion: NONE; Vercel V14 continua oficial; live readback on 2026-09-07 returned HTTP 200 with old app-i/app-k pins and old pre-login copy;
