@@ -1,0 +1,19 @@
+name: UGI SEMICON Export Artifact
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-semicon-export-artifact.yml'
+  workflow_dispatch:
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-semicon-source-qa
+          path: |
+            public/ugi/editorial/2026-09-08/semicon_probe/source.mp4
+            public/ugi/editorial/2026-09-08/semicon_probe/contact.jpg
+            public/ugi/editorial/2026-09-08/semicon_probe/README.txt
+          retention-days: 1
