@@ -1,0 +1,122 @@
+name: Cena Certa V2 Outbox Recovery
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - 'ops/cena-certa/outbox-recovery-request.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+  packages: read
+
+concurrency:
+  group: cena-certa-outbox-recovery
+  cancel-in-progress: false
+
+env:
+  ROOT: vendor/cena-certa-factory-v2/src
+  REQUEST: ops/cena-certa/outbox-recovery-request.json
+
+jobs:
+  recover:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: read
+        name: Validate immutable recovery request
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,pathlib,re
+          p=pathlib.Path(os.environ['REQUEST']); d=json.loads(p.read_text(encoding='utf-8'))
+          if d.get('schema')!='CENA_CERTA_OUTBOX_RECOVERY_V1': raise SystemExit('RECOVERY_SCHEMA_FAIL')
+          run_id=int(d.get('production_run_id') or 0)
+          batch_path=str(d.get('batch_path') or ''); batch_sha=str(d.get('batch_sha256') or '')
+          expected=str(d.get('expected_handoff_sha256') or '')
+          if run_id<1: raise SystemExit('RECOVERY_RUN_ID_FAIL')
+          if not batch_path.startswith('ops/cena-certa/batches/') or not batch_path.endswith('.json'): raise SystemExit('RECOVERY_BATCH_PATH_FAIL')
+          bp=pathlib.Path(batch_path)
+          if not bp.is_file() or hashlib.sha256(bp.read_bytes()).hexdigest()!=batch_sha: raise SystemExit('RECOVERY_BATCH_SHA_FAIL')
+          if not re.fullmatch(r'[0-9a-f]{64}',expected): raise SystemExit('RECOVERY_HANDOFF_SHA_FAIL')
+          for k,v in [('run_id',run_id),('batch_path',batch_path),('batch_sha',batch_sha),('expected_handoff',expected)]:
+              with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f: f.write(f'{k}={v}\n')
+          print('OUTBOX_RECOVERY_REQUEST_PASS',run_id,batch_sha,expected)
+          PY
+      - name: Download exact render receipts from original production run
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cena-certa-render-slot-*
+          path: staged
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.read.outputs.run_id }}
+      - name: Rebuild exact handoff, persist guarded outbox, and keep approval closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          test -d .git || { echo GIT_WORKTREE_MISSING; exit 1; }
+          test "$(git rev-parse --is-inside-work-tree)" = true
+          git config --local user.name 'Cena Certa Factory V2'
+          git config --local user.email 'actions@users.noreply.github.com'
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          python - <<'PY'
+          import json,pathlib
+          out=json.loads(pathlib.Path('ops/cena-certa/publisher-outbox.json').read_text(encoding='utf-8'))
+          approval=json.loads(pathlib.Path('ops/cena-certa/human-approval.json').read_text(encoding='utf-8'))
+          if out.get('state')!='EMPTY' or out.get('items') or approval.get('approved') is not False:
+              raise SystemExit('RECOVERY_REFUSES_TO_OVERWRITE_NONEMPTY_STATE')
+          PY
+          mkdir -p "$ROOT/output/cena-certa-v2"
+          find staged -maxdepth 2 -type f -name '*.json' -exec cp {} "$ROOT/output/cena-certa-v2/" \;
+          receipt_count=$(find "$ROOT/output/cena-certa-v2" -maxdepth 1 -type f -name '*.receipt.json' | wc -l | tr -d ' ')
+          r2_count=$(find "$ROOT/output/cena-certa-v2" -maxdepth 1 -type f -name '*.r2.json' | wc -l | tr -d ' ')
+          test "$receipt_count" = 8 || { echo RECOVERY_RECEIPT_COUNT_FAIL=$receipt_count; exit 1; }
+          test "$r2_count" = 8 || { echo RECOVERY_R2_COUNT_FAIL=$r2_count; exit 1; }
+          export PYTHONPATH="$ROOT"
+          python -m factory.cena_certa.v2.aggregate --batch "${{ steps.read.outputs.batch_path }}" --expect-pool 10 --select 8 --reserves 2
+          python -m factory.cena_certa.v2.schedule_manifest --batch "$ROOT/output/cena-certa-v2/selected-batch.json" --staged-root "$ROOT/output/cena-certa-v2" --out "$ROOT/output/cena-certa-v2/schedule-handoff.json" --expect-posts 8
+          export SOURCE_RUN='${{ steps.read.outputs.run_id }}' BATCH_SHA='${{ steps.read.outputs.batch_sha }}' EXPECTED_HANDOFF='${{ steps.read.outputs.expected_handoff }}'
+          python - <<'PY'
+          import datetime,hashlib,json,os,pathlib
+          root=pathlib.Path(os.environ['ROOT'])/'output/cena-certa-v2'
+          hp=root/'schedule-handoff.json'; raw=hp.read_bytes(); actual=hashlib.sha256(raw).hexdigest()
+          if actual!=os.environ['EXPECTED_HANDOFF']: raise SystemExit(f'RECOVERY_HANDOFF_DRIFT expected={os.environ["EXPECTED_HANDOFF"]} actual={actual}')
+          hand=json.loads(raw); pool=json.loads((root/'pool-report.json').read_text(encoding='utf-8'))
+          if hand.get('count')!=8 or hand.get('expectedNetworkPlacements')!=32: raise SystemExit('RECOVERY_HANDOFF_COUNT_FAIL')
+          now=datetime.datetime.now(datetime.timezone.utc).isoformat(); run_id=int(os.environ['SOURCE_RUN'])
+          out={'schema':'CENA_CERTA_PUBLISHER_OUTBOX_V1','state':'PREVIEW_READY_HUMAN_APPROVAL_REQUIRED','production_run_id':run_id,'batch_sha256':os.environ['BATCH_SHA'],'handoff_sha256':actual,'generated_at':now,'selected_ids':pool['selected_ids'],'reserve_ids':pool['reserve_ids'],'expected_schedule_objects':8,'expected_network_placements':32,'schedule_gate':'BLOCKED_UNTIL_PRIVATE_PREVIEW_AND_HUMAN_APPROVAL','recovered_from_run':run_id,'items':hand['items']}
+          approval={'schema':'CENA_CERTA_HUMAN_APPROVAL_V1','approved':False,'handoff_sha256':actual,'production_run_id':run_id,'approved_at':None,'approved_by':None,'note':'Recovered exact outbox; private preview and explicit human approval remain mandatory.'}
+          state={'schema':'CENA_CERTA_PUBLISHER_STATE_V1','state':'AWAITING_HUMAN_APPROVAL','handoff_sha256':actual,'production_run_id':run_id,'primary_provider':'METRICOOL','primary_receipts':[],'secondary_receipts':[],'reconciliation':None,'updated_at':now,'blind_retry_forbidden':True}
+          pathlib.Path('ops/cena-certa/publisher-outbox.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          pathlib.Path('ops/cena-certa/human-approval.json').write_text(json.dumps(approval,indent=2)+'\n',encoding='utf-8')
+          pathlib.Path('ops/cena-certa/publisher-state.json').write_text(json.dumps(state,indent=2)+'\n',encoding='utf-8')
+          print('OUTBOX_RECOVERY_PASS',actual,'posts=8 placements=32 approval=false')
+          PY
+          python ops/cena-certa/factory_doctor.py --state-only
+          git add ops/cena-certa/publisher-outbox.json ops/cena-certa/human-approval.json ops/cena-certa/publisher-state.json
+          git commit -m "Cena Certa V2: recover exact human-gated outbox from run ${{ steps.read.outputs.run_id }} [skip ci]"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-outbox-recovery-${{ steps.read.outputs.run_id }}
+          path: |
+            vendor/cena-certa-factory-v2/src/output/cena-certa-v2/pool-report.json
+            vendor/cena-certa-factory-v2/src/output/cena-certa-v2/selected-batch.json
+            vendor/cena-certa-factory-v2/src/output/cena-certa-v2/schedule-handoff.json
+          if-no-files-found: warn
+          retention-days: 7
