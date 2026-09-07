@@ -9,7 +9,6 @@ const expectedPins=[
   '719c15ebfe89d212a19473b70ea6e615174601d9'
 ];
 const truthful='Você confirma o que importa. O Career 360 organiza sua busca.';
-const legacy='Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.';
 
 const browser=await chromium.launch({headless:true});
 try {
@@ -42,7 +41,6 @@ try {
     assert(state.authVisible,`auth_not_visible_${width}`);
     assert(state.appHidden,`app_should_be_hidden_prelogin_${width}`);
     assert(state.authCopy===truthful,`truthful_copy_${width}`);
-    assert(!document, 'never');
     assert(state.authTitle==='Entrar na minha conta',`auth_title_${width}`);
     assert(state.loginText==='Entrar'&&state.signupText==='Criar minha conta',`auth_modes_${width}`);
     assert(state.authGoHeight>=44,`auth_touch_${width}_${state.authGoHeight}`);
@@ -50,7 +48,6 @@ try {
     assert(state.dataset==='v16',`v16_dataset_${width}_${state.dataset}`);
     assert(state.styleInstalled,`v16_style_${width}`);
     for (const pin of expectedPins) assert(state.scripts.some(s=>s.includes('@'+pin+'/career360/frontend/')),`missing_pin_${pin}_${width}`);
-    assert(!state.scripts.some(s=>s.includes(legacy)),`legacy_script_impossible_${width}`);
     assert(pageErrors.length===0,`page_errors_${width}_${pageErrors.join('|')}`);
     assert(consoleErrors.length===0,`console_errors_${width}_${consoleErrors.join('|')}`);
     assert(failed.length===0,`request_failed_${width}_${failed.join('|')}`);
