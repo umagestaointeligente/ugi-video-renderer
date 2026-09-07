@@ -1,0 +1,38 @@
+name: Career360 Application Confirmation V2 Seal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/career360-application-confirmation-v2-seal.yml'
+      - 'career360/scripts/patch_recovery_application_confirmation_v2.py'
+
+permissions:
+  contents: write
+
+jobs:
+  seal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch canonical docs
+        run: python career360/scripts/patch_recovery_application_confirmation_v2.py
+      - name: Commit canonical docs if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- docs/LSI_RECOVERY_CURRENT.md career360/docs/APPLICATION_SUBMISSION_DISPATCH_V2_LIVE_2026-09-07.md; then
+            echo 'DOCS_ALREADY_CURRENT=1'
+            exit 0
+          fi
+          git config user.name 'career360-recovery-seal-bot'
+          git config user.email 'career360-recovery-seal-bot@users.noreply.github.com'
+          git add docs/LSI_RECOVERY_CURRENT.md career360/docs/APPLICATION_SUBMISSION_DISPATCH_V2_LIVE_2026-09-07.md
+          git commit -m 'career360: seal authenticated application confirmation v2'
+          git push origin HEAD:main
+          echo "SEAL_COMMIT=$(git rev-parse HEAD)"
