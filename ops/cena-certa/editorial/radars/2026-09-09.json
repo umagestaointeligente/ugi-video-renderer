@@ -1,0 +1,129 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_RADAR_V1",
+  "target_date": "2026-09-09",
+  "timezone": "America/Sao_Paulo",
+  "generated_at": "2026-09-07T08:37:47-03:00",
+  "status": "FACT_RESEARCH_COMPLETE_ASSET_GATES_OPEN",
+  "selected_topics": [
+    {
+      "id": "NETFLIX_WHY_MARRIED_AGAIN",
+      "title": "Why Did I Get Married Again? estreia em 09/09",
+      "platform": "Netflix",
+      "type": "STREAMING_PREMIERE_FILM",
+      "trend_score": 93,
+      "facts": [
+        "O filme de Tyler Perry estreia na Netflix em 9 de setembro de 2026.",
+        "A história reúne novamente os casais da franquia durante o casamento da filha de Marcus e Angela.",
+        "Netflix Tudum lista o título entre as estreias de 09/09."
+      ],
+      "fact_sources": [
+        "https://www.netflix.com/tudum/articles/new-on-netflix",
+        "https://media.netflix.com/en/only-on-netflix/82130500"
+      ],
+      "social_signal": "Boa combinação de nostalgia de franquia, elenco reconhecível e pergunta relacional com potencial de comentários.",
+      "asset_route": "Netflix Media Center",
+      "asset_status": "OFFICIAL_MEDIA_CENTER_ASSET_AVAILABLE_RIGHTS_TERMS_REVIEW_REQUIRED",
+      "dynamic_recheck_required": true,
+      "cta": "Você assistiria pela nostalgia da franquia ou acha que essa história já tinha terminado?"
+    },
+    {
+      "id": "APPLE_LAST_SEEN",
+      "title": "Last Seen estreia globalmente em 09/09",
+      "platform": "Apple TV",
+      "type": "STREAMING_PREMIERE_SERIES",
+      "trend_score": 95,
+      "facts": [
+        "Last Seen estreia globalmente na Apple TV em 9 de setembro com dois episódios.",
+        "A série de seis episódios acompanha um ex-detetive que acredita reconhecer a filha desaparecida em uma ligação de emergência.",
+        "A produção foi filmada em Victoria, Austrália, e é baseada no livro The Dispatcher, de Ryan David Jahn."
+      ],
+      "fact_sources": [
+        "https://www.apple.com/br/tv-pr/originals/last-seen/",
+        "https://www.apple.com/tv-pr/news/2026/09/apple-tv-celebrates-australian-thriller-last-seen-at-special-screening-in-sydney/"
+      ],
+      "social_signal": "Selecionada por veículos de streaming como uma das estreias mais fortes da semana; thriller de desaparecimento favorece CTA de curiosidade.",
+      "asset_route": "Apple TV Press — Download Content",
+      "asset_status": "OFFICIAL_PRESS_ASSET_AVAILABLE_RIGHTS_TERMS_REVIEW_REQUIRED",
+      "dynamic_recheck_required": true,
+      "cta": "Você iria atrás dessa voz mesmo sem ter certeza de que é sua filha?"
+    },
+    {
+      "id": "PRIME_DRAWN_TOGETHER",
+      "title": "Drawn Together estreia no Prime Video em 09/09",
+      "platform": "Prime Video",
+      "type": "STREAMING_PREMIERE_FILM",
+      "trend_score": 88,
+      "facts": [
+        "Drawn Together estreia no Prime Video em 9 de setembro de 2026.",
+        "O thriller romântico é baseado em Marfil, primeiro livro da duologia Enfrentados, de Mercedes Ron.",
+        "Ester Expósito e Hugo Diego García estrelam a adaptação."
+      ],
+      "fact_sources": [
+        "https://www.aboutamazon.com/news/entertainment/prime-video-september-films-shows-sports-2026"
+      ],
+      "social_signal": "Adaptação de best-seller + Ester Expósito cria bom potencial com público jovem e de romance/thriller.",
+      "asset_route": "About Amazon / Prime Video official promotional imagery",
+      "asset_status": "OFFICIAL_PROMO_ASSET_VISIBLE_RIGHTS_TERMS_REVIEW_REQUIRED",
+      "dynamic_recheck_required": true,
+      "cta": "Adaptação de livro: você prefere ler antes ou ver o filme primeiro?"
+    },
+    {
+      "id": "BOXOFFICE_SPIDER_ODYSSEY",
+      "title": "Spider-Man e The Odyssey dominam a conversa de bilheteria",
+      "platform": "Cinema",
+      "type": "BOX_OFFICE_CURRENT",
+      "trend_score": 98,
+      "facts": [
+        "Spider-Man: Brand New Day chegou a seis fins de semana consecutivos no topo doméstico e cerca de US$ 2,4 bilhões globais segundo a AP em 06/09.",
+        "The Odyssey ultrapassou US$ 1 bilhão internacionalmente e segue entre os maiores fenômenos do ano.",
+        "O verão de Hollywood de 2026 foi o melhor desde 2013, com forte participação de público jovem."
+      ],
+      "fact_sources": [
+        "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
+        "https://www.reuters.com/business/media-telecom/hollywood-summer-box-office-hits-pre-pandemic-stride-women-younger-audiences-2026-09-04/"
+      ],
+      "social_signal": "Discussão forte em comunidades de box office e fandom; Coyote vs. Acme também gerou posts com milhares de votos no Reddit nos últimos dias.",
+      "asset_route": "Sony/Universal official press assets only",
+      "asset_status": "OFFICIAL_ASSET_ROUTE_IDENTIFIED_EXACT_RIGHTS_PENDING",
+      "dynamic_recheck_required": true,
+      "cta": "Qual foi o verdadeiro filme do verão para você: Spider-Man ou The Odyssey?"
+    }
+  ],
+  "watchlist": [
+    {
+      "topic": "Made in Korea — Season 2",
+      "platform": "Disney+ / Hulu",
+      "status": "HIGH_PRIORITY_STORY",
+      "source": "https://press.disneyplus.com/news/next-on-disney-plus-september-2026",
+      "asset_status": "DISNEY_PRESS_ROUTE_AVAILABLE_EXACT_TERMS_REQUIRED"
+    },
+    {
+      "topic": "Lanterns — episódio 4 / meio da temporada",
+      "platform": "HBO Max",
+      "status": "HIGH_PRIORITY_STORY",
+      "source": "https://press.wbd.com/us/property/lanterns/media-releases",
+      "asset_status": "WBD_PRESS_IMAGES_AVAILABLE_LOGIN_OR_TERMS_MAY_APPLY"
+    },
+    {
+      "topic": "NFL Play Action",
+      "platform": "Paramount+",
+      "status": "LOWER_FIT_FOR_CENA_CERTA",
+      "source": "https://www.paramountpressexpress.com/paramount-plus/shows/nfl-play-action/releases/?view=113173-weekly-original-sports-series-nfl-play-action-to-launch-on-paramount-september-9",
+      "asset_status": "OFFICIAL_KEY_ART_DOWNLOAD_LINK_PRESENT_RIGHTS_TERMS_REVIEW_REQUIRED"
+    },
+    {
+      "topic": "Coyote vs. Acme",
+      "platform": "Cinema",
+      "status": "SOCIAL_SIGNAL_WATCHLIST",
+      "source": "https://www.reddit.com/r/looneytunes/comments/1w6cn2b/coyote_vs_acme_has_surpassed_the_entire_lifetime/",
+      "asset_status": "USE_STUDIO_PRESS_ASSET_ONLY_IF_RIGHTS_PASS"
+    }
+  ],
+  "policy": {
+    "fact_pass_required": true,
+    "asset_rights_pass_required": true,
+    "no_public_image_is_presumed_licensed": true,
+    "recheck_dynamic_rankings_on_target_date": true,
+    "no_schedule_write_in_radar_run": true
+  }
+}
