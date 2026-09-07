@@ -35,7 +35,6 @@ def srt_time(t):
 
 
 def make_srt(lines, out):
-    # lines: [(start,end,text)]
     with open(out,'w',encoding='utf-8') as f:
         for i,(a,b,txt) in enumerate(lines,1):
             f.write(f'{i}\n{srt_time(a)} --> {srt_time(b)}\n{txt}\n\n')
@@ -54,8 +53,6 @@ def build(name, sources, script, captions, headline, accent):
     audio=WORK/f'{name}.mp3'; tts(script,audio)
     dur=duration(audio)
     srt=WORK/f'{name}.srt'; make_srt(captions,srt)
-
-    # concatenate source clips repeatedly until narration length. Preserve full 16:9 frame inside 9:16 canvas with blurred background.
     clips=[]
     per=max(6.0, dur/len(sources))
     for i,src in enumerate(sources):
@@ -69,8 +66,6 @@ def build(name, sources, script, captions, headline, accent):
     concat.write_text(''.join(f"file '{p}'\n" for p in clips),encoding='utf-8')
     base=WORK/f'{name}_base.mp4'
     run(['ffmpeg','-y','-f','concat','-safe','0','-i',str(concat),'-t',str(dur+0.3),'-c','copy',str(base)])
-
-    # headline + captions + UGI footer. Subtitle safe zone around 1400.
     ass_style="FontName=DejaVu Sans,FontSize=23,PrimaryColour=&H00FFFFFF,OutlineColour=&H90000000,BorderStyle=1,Outline=2,Shadow=0,Alignment=2,MarginV=300"
     vf=(f"drawbox=x=0:y=0:w=1080:h=190:color=black@0.58:t=fill,"
         f"drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='{headline}':fontcolor=white:fontsize=43:x=55:y=65,"
@@ -80,7 +75,6 @@ def build(name, sources, script, captions, headline, accent):
     out=ROOT/f'{name}.mp4'
     run(['ffmpeg','-y','-i',str(base),'-i',str(audio),'-vf',vf,'-map','0:v','-map','1:a','-t',str(dur),
          '-c:v','libx264','-preset','medium','-crf','19','-c:a','aac','-b:a','160k','-movflags','+faststart',str(out)])
-    # quick QA
     run(['ffprobe','-v','error','-show_entries','stream=width,height,codec_name','-show_entries','format=duration,size','-of','json',str(out)])
     return out
 
@@ -113,3 +107,5 @@ build('video-jlr-strategy-preview-v1',[jlr1,jlr2],jlr_script,jlr_caps,'JLR: cort
 
 (Path(ROOT/'PREVIEW_ONLY.txt')).write_text('PREVIEW ONLY — NOT APPROVED — DO NOT PUBLISH OR SCHEDULE\n',encoding='utf-8')
 print('DONE', list(ROOT.glob('*.mp4')))
+
+# trigger: 2026-09-07T16:30-03:00
