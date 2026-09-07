@@ -1,0 +1,57 @@
+name: Career360 Cloudflare V16 Browser Smoke
+run-name: Career360 Cloudflare Browser Smoke ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['career360-cloudflare-preview-*']
+    paths:
+      - 'career360/tests/v16-cloudflare-live-smoke.mjs'
+      - '.github/workflows/career360-cloudflare-browser-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  live-browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CAREER360_PREVIEW_URL: https://career360-preview-20260906.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static source and remote HTTP preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check career360/tests/v16-cloudflare-live-smoke.mjs
+          code="$(curl -sS -o /tmp/c360.html -w '%{http_code}' "$CAREER360_PREVIEW_URL/")"
+          test "$code" = '200'
+          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' /tmp/c360.html >/dev/null
+          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' /tmp/c360.html >/dev/null
+          grep -F '@719c15ebfe89d212a19473b70ea6e615174601d9/career360/frontend/app-m.js' /tmp/c360.html >/dev/null
+          grep -F 'Você confirma o que importa. O Career 360 organiza sua busca.' /tmp/c360.html >/dev/null
+          ! grep -F 'Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.' /tmp/c360.html >/dev/null
+          echo 'CLOUDFLARE_REMOTE_STATIC_PREFLIGHT=PASS'
+      - name: Install isolated Playwright
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/career360-cloudflare-smoke
+          cd /tmp/career360-cloudflare-smoke
+          npm init -y >/dev/null 2>&1
+          npm install --silent playwright@1.55.0
+          npx playwright install --with-deps chromium
+          cp "$GITHUB_WORKSPACE/career360/tests/v16-cloudflare-live-smoke.mjs" ./smoke.mjs
+      - name: Run live Cloudflare browser smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/career360-cloudflare-smoke
+          node smoke.mjs | tee /tmp/cloudflare-browser-smoke.txt
+          grep -F 'CLOUDFLARE_BROWSER_360=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
+          grep -F 'CLOUDFLARE_BROWSER_412=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
+          grep -F 'CLOUDFLARE_BROWSER_768=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
+          grep -F 'CLOUDFLARE_BROWSER_1180=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
+          grep -F 'CLOUDFLARE_V16_RUNTIME_ERRORS=ZERO' /tmp/cloudflare-browser-smoke.txt >/dev/null
+          cat /tmp/cloudflare-browser-smoke.txt >> "$GITHUB_STEP_SUMMARY"
+          echo 'OFFICIAL_PRODUCTION_PROMOTION=NONE' >> "$GITHUB_STEP_SUMMARY"
