@@ -28,7 +28,7 @@ Vercel team: `team_ZJys00FTE2kK9yVtsqH5fHyF`
 Produção visual oficial atual:
 `dpl_98eN1wuVyk4wQmnYpG2jjsZ1ZazU`
 
-Readback oficial mais recente em 2026-09-06 BRT:
+Readback oficial mais recente em 2026-09-07 BRT:
 - Supabase = `ACTIVE_HEALTHY`;
 - `career-ui-state` V2 ACTIVE / CONTROL-PLANE ALIGNED;
 - `career-photo-studio` V11 ACTIVE;
@@ -61,6 +61,7 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `PROACTIVE_AGENT_CORE_V12=LIVE`
 `PROACTIVE_UI_V12=LIVE`
 `PROACTIVE_DIGEST_TRUTH_V2=LIVE`
+`CAREER_PROACTIVE_STATUS_V2_CONFIRMABLE_APPLICATIONS=LIVE`
 `VISUAL_PROFILE_V13=LIVE`
 `PHOTO_STUDIO_V14=LIVE_LOCAL_ZERO_CASH`
 `PHOTO_STUDIO_MOBILE_FALLBACK_HARDENING=BROWSER_VALIDATED_NOT_YET_PROMOTED`
@@ -82,6 +83,9 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `APPLICATION_CONFIRMATION_EDGE_V2=ACTIVE_JWT_REQUIRED`
 `APPLICATION_CONFIRMATION_ATOMIC_RPC_V2=LIVE_SERVICE_ONLY`
 `APPLICATION_CONFIRMATION_AUTHENTICATED_E2E=PENDING_REAL_FRONTEND_SESSION`
+`APPLICATION_CONFIRMATION_UI_V16=BROWSER_VALIDATED_CANONICAL_BUNDLE_PINNED_NOT_OFFICIAL`
+`APPLICATION_CONFIRMATION_UI_TRUTH_NO_FALSE_SEND=PASS`
+`MASTER_PILOT_DELIVERY=SEALED_CONTROLLABLE_SCOPE`
 `APPLICATION_SUBMISSION_RECEIPT_V1=RETIRED_SERVICE_EXEC_REVOKED`
 `APPLICATION_PROVIDER_CONNECTOR=NOT_LIVE`
 `QUICKIN_CONNECTOR=INACTIVE_HARD_GATED_SUBMIT_UNCONFIRMED`
@@ -105,6 +109,7 @@ Readback oficial mais recente em 2026-09-06 BRT:
 `PUBLIC_BETA=NOT_OPENED_PRODUCT_DECISION`
 `CLOUDFLARE_V16_STATIC_PREVIEW=LIVE_VALIDATED_NOT_OFFICIAL`
 `CLOUDFLARE_V16_BROWSER_PRELOGIN=PASS`
+`CLOUDFLARE_V16_APPLICATION_CONFIRMATION_UI=PASS`
 `CLOUDFLARE_FRONTEND_DELIVERY_ALTERNATIVE=PROVEN`
 `VERCEL_NO_LONGER_SINGLE_FRONTEND_DELIVERY_PATH=TRUE`
 `AUTH_EMAIL_CONFIRMATION_EXISTING_RUNTIME_USER=PASS`
@@ -127,12 +132,18 @@ Documento de evidência detalhada:
 `career360/docs/RUNTIME_TRUTH_HARDENING_2026-09-07.md`
 `career360/docs/APPLICATION_SUBMISSION_DISPATCH_V2_LIVE_2026-09-07.md`
 `career360/docs/APPLICATION_CONFIRMATION_V2_LIVE_2026-09-07.md`
+`career360/docs/CAREER360_DELIVERY_SEAL_2026-09-07.md`
 
 Últimas provas vivas:
 - LSI Llama fallback: run `34063813926`, 4/4 PASS, 4245 ms;
 - Cloudflare static preview: run `34064086287` SUCCESS;
 - Cloudflare browser smoke: run `34084862777`, job `101626832212`, 360/412/768/1180 PASS, runtime errors zero;
-- official production promotion: NONE; Vercel V14 continua oficial;
+- final clean-tree Cloudflare static preview: run `34157515928`, job `101852301277`, SUCCESS;
+- final clean-tree Cloudflare browser smoke: run `34157515919`, job `101852301179`, 360/412/768/1180 PASS, application confirmation UI PASS, truthful no-false-send PASS, runtime errors zero, production mutation NONE;
+- `career-proactive-status` V2 ACTIVE, verify_jwt=true, SHA `49908165f6eb2fa44afa7bcb4515830e0eaade03339f05aff8f2f033924865dd`;
+- canonical `app-i.js` immutable pin `90a795bf1a371be66fd8f907c8a76501f8a5421c`; canonical bundle pin commit `82b49720bcf2e19e75cb44d19f64118c594e1508`;
+- official production promotion: NONE; Vercel V14 continua oficial; live readback on 2026-09-07 returned HTTP 200 with old app-i/app-k pins and old pre-login copy;
+- Vercel in-chat deploy mutation remains zero-argument `deploy_to_vercel()`; project-scoped production mutation is still unavailable and was not invoked;
 - matching router vs V3.1: 57/57 exact, 0 mismatch;
 - master metrics matches = champion matches = 57;
 - public ordinary tables RLS+policy = 47/47;
@@ -152,7 +163,9 @@ Documento de evidência detalhada:
 - `career-application-confirm` V2 ACTIVE, verify_jwt=true, SHA `85ce6535ae020696c741d3960979b22ab9e3756a683a17c754a487b089792f44`;
 - atomic confirmation RPC smoke = PASS: confirm/revoke/audit/permission-false preservation/post-claim rejection, transactional rollback;
 - Make private + standard spaces: Supabase/Supabase Management/PostgreSQL connections = none; mail connections = none;
-- authenticated browser E2E for application confirmation = pending a real frontend session; no provider side effect.
+- authenticated browser E2E for application confirmation = pending a real frontend session on the official promoted bundle; no provider side effect.
+- browser-level V16 application confirmation UI contract = PASS in Cloudflare preview with synthetic authenticated backend contract; this is not a real ATS submission.
+- delivery seal = `career360/docs/CAREER360_DELIVERY_SEAL_2026-09-07.md`; controllable master-pilot scope SEALED; public Beta remains closed.
 
 Regra: Cloudflare é rota alternativa comprovada; não substituir o frontend oficial nem abrir Beta sem gate explícito de promoção.
 
@@ -207,6 +220,7 @@ Evidência canônica:
 
 Estado:
 `PROACTIVE_DIGEST_TRUTH_V2=LIVE`
+`CAREER_PROACTIVE_STATUS_V2_CONFIRMABLE_APPLICATIONS=LIVE`
 
 Esse LIVE é exclusivamente do backend de digest. Não altera o gate de promoção da UI V15/V16.
 
@@ -628,6 +642,9 @@ Estados:
 `APPLICATION_CONFIRMATION_EDGE_V2=ACTIVE_JWT_REQUIRED`
 `APPLICATION_CONFIRMATION_ATOMIC_RPC_V2=LIVE_SERVICE_ONLY`
 `APPLICATION_CONFIRMATION_AUTHENTICATED_E2E=PENDING_REAL_FRONTEND_SESSION`
+`APPLICATION_CONFIRMATION_UI_V16=BROWSER_VALIDATED_CANONICAL_BUNDLE_PINNED_NOT_OFFICIAL`
+`APPLICATION_CONFIRMATION_UI_TRUTH_NO_FALSE_SEND=PASS`
+`MASTER_PILOT_DELIVERY=SEALED_CONTROLLABLE_SCOPE`
 `APPLICATION_SUBMISSION_RECEIPT_V1=RETIRED_SERVICE_EXEC_REVOKED`
 `APPLICATION_PROVIDER_CONNECTOR=NOT_LIVE`
 `QUICKIN_CONNECTOR=INACTIVE_HARD_GATED_SUBMIT_UNCONFIRMED`
@@ -779,6 +796,9 @@ Estados:
 `APPLICATION_CONFIRMATION_EDGE_V2=ACTIVE_JWT_REQUIRED`
 `APPLICATION_CONFIRMATION_ATOMIC_RPC_V2=LIVE_SERVICE_ONLY`
 `APPLICATION_CONFIRMATION_AUTHENTICATED_E2E=PENDING_REAL_FRONTEND_SESSION`
+`APPLICATION_CONFIRMATION_UI_V16=BROWSER_VALIDATED_CANONICAL_BUNDLE_PINNED_NOT_OFFICIAL`
+`APPLICATION_CONFIRMATION_UI_TRUTH_NO_FALSE_SEND=PASS`
+`MASTER_PILOT_DELIVERY=SEALED_CONTROLLABLE_SCOPE`
 `APPLICATION_SUBMISSION_RECEIPT_V1=RETIRED_SERVICE_EXEC_REVOKED`
 `APPLICATION_PROVIDER_CONNECTOR=NOT_LIVE`
 `QUICKIN_CONNECTOR=INACTIVE_HARD_GATED_SUBMIT_UNCONFIRMED`
