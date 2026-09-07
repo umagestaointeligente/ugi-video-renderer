@@ -1,0 +1,12 @@
+{
+  "schema": "CENA_CERTA_OUTBOX_RECOVERY_V1",
+  "production_run_id": 34152820372,
+  "source_commit": "166f4e752d5245aad0a254987a9a9d5d5400de64",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260908-v1.json",
+  "batch_sha256": "8eab7986e4839975ed55c8324a78a0ced7fdc6b65a8fe19e84f07f24bac747b6",
+  "expected_handoff_sha256": "1019ac5fa51ffb74e40418141229c92804c0ea9f5c55350ce237b58fdc4002b8",
+  "expected_posts": 8,
+  "expected_network_placements": 32,
+  "approved": false,
+  "note": "Recover exact outbox only; do not schedule or publish."
+}
