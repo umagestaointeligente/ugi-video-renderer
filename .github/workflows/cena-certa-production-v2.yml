@@ -340,6 +340,7 @@ jobs:
           PY
           cd "$GITHUB_WORKSPACE"
           test -d .git || { echo GIT_WORKTREE_MISSING; pwd; ls -la; exit 1; }
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           test "$(git rev-parse --is-inside-work-tree)" = "true" || { echo GIT_WORKTREE_INVALID; exit 1; }
           git config --local user.name 'Cena Certa Factory V2'
           git config --local user.email 'actions@users.noreply.github.com'
