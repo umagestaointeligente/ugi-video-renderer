@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260908-v1.json",
   "batch_sha256": "8eab7986e4839975ed55c8324a78a0ced7fdc6b65a8fe19e84f07f24bac747b6",
   "prepared_run_id": "",
-  "requested_at": "2026-09-07T18:05:08+00:00",
-  "request_id": "CCPACEFIX-20260907-180508",
+  "requested_at": "2026-09-07T18:34:40+00:00",
+  "request_id": "CCMUSICFIX-20260907-183440",
   "candidate_count": 10,
   "selected_count": 8,
   "reserve_count": 2,
-  "note": "Cause-corrected rerun after measured TTS pace recovery and black-scene autoshift; canonical 8+2 production for 2026-09-08. No blind retry."
+  "note": "Fresh canonical 8+2 rerun after deterministic encoded-music loudness correction. Same editorial batch; no blind retry; render and QA required before delivery."
 }
