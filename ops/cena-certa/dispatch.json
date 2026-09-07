@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260908-v1.json",
-  "batch_sha256": "8eab7986e4839975ed55c8324a78a0ced7fdc6b65a8fe19e84f07f24bac747b6",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-07T18:44:05+00:00",
-  "request_id": "CCRESILIENT-20260907-184405",
-  "candidate_count": 10,
-  "selected_count": 8,
-  "reserve_count": 2,
-  "note": "Fresh canonical 8+2 run with resilient render continuation when exactly two reserve candidates fail preparation. READY proof remains mandatory; render and QA must pass before delivery."
+  "requested_at": "",
+  "request_id": "",
+  "note": "Closed after production run 34152820372 delivered exactly 8 rendered videos with QA PASS and successful public R2 probes. Two reserve candidates failed preparation; resilient READY gate passed with 8. Final publisher-state git persistence failed only after schedule handoff generation; no scheduling was performed."
 }
