@@ -57,9 +57,6 @@ def _precut_scene_with_black_repair(src,start,dur,out,c,threads,source_dur,block
 def normalize_music(c,src,out):
  target=float(c['music'].get('prepared_master_lufs',-14.0)); tp=float(c['music'].get('prepared_master_true_peak_dbtp',-2.0)); out=Path(out); tmp=out.with_name(out.stem+f'.part-{os.getpid()}'+out.suffix); fix=out.with_name(out.stem+f'.peakfix-{os.getpid()}'+out.suffix)
  try:
-  # Two-pass EBU R128 normalization. The previous one-pass dynamic pass drifted
-  # by ~1.6-2.1 LU on real short-form tracks, making deterministic material fail
-  # only after download. Measure first, then render once with those measurements.
   probe=sh(['ffmpeg','-hide_banner','-nostats','-i',str(src),'-vn','-af',f'loudnorm=I={target}:TP={tp}:LRA=7:print_format=json','-f','null','-'],timeout=150)
   raw=(probe.stderr or probe.stdout or '')
   matches=list(re.finditer(r'\{\s*"input_i".*?\}',raw,re.S))
@@ -75,11 +72,18 @@ def normalize_music(c,src,out):
   sh(['ffmpeg','-loglevel','error','-y','-i',str(src),'-vn','-af',filt,'-c:a','aac','-b:a','192k','-ar','48000',str(tmp)],timeout=150)
   media_probe(tmp,'audio'); os.replace(tmp,out)
   measured_lufs,measured_tp=loudness(out)
-  if measured_tp>tp+0.3:
-   correction_db=(tp-0.4)-measured_tp
-   sh(['ffmpeg','-loglevel','error','-y','-i',str(out),'-vn','-af',f'volume={correction_db:.3f}dB','-c:a','aac','-b:a','192k','-ar','48000',str(fix)],timeout=150)
+  limit_amp=10**((tp-0.40)/20.0)
+  for correction_pass in range(1,4):
+   lufs_error=target-measured_lufs
+   peak_fail=measured_tp>tp+0.3
+   if abs(lufs_error)<=1.0 and not peak_fail: break
+   gain_db=lufs_error
+   if abs(gain_db)>6.0: gain_db=6.0 if gain_db>0 else -6.0
+   filt=f'volume={gain_db:.3f}dB,alimiter=limit={limit_amp:.6f}:attack=5:release=50'
+   sh(['ffmpeg','-loglevel','error','-y','-i',str(out),'-vn','-af',filt,'-c:a','aac','-b:a','192k','-ar','48000',str(fix)],timeout=150)
    media_probe(fix,'audio'); os.replace(fix,out)
    measured_lufs,measured_tp=loudness(out)
+   print('MUSIC_MASTER_MEASURED_CORRECTION_PASS',correction_pass,f'lufs={measured_lufs:.2f}',f'tp={measured_tp:.2f}',f'gain={gain_db:.2f}')
   if abs(measured_lufs-target)>1.5: raise RuntimeError(f'MUSIC_MASTER_LUFS_FAIL actual={measured_lufs:.2f} target={target:.2f}')
   if measured_tp>tp+0.3: raise RuntimeError(f'MUSIC_MASTER_PEAK_FAIL actual={measured_tp:.2f} max={tp:.2f}')
   return measured_lufs,measured_tp
