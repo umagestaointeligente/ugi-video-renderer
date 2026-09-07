@@ -60,7 +60,7 @@ try {
       visible:!document.getElementById('signupBox').classList.contains('hide'),
       pwd2H:document.getElementById('password2')?.getBoundingClientRect().height||0
     }));
-    assert(signup.title==='Criar minha conta'&&signup.go==='Criar conta'&&signup.visible,`signup_toggle_${width}`);
+    assert(signup.title==='Criar minha conta'&&signup.go==='Criar minha conta'&&signup.visible,`signup_toggle_${width}`);
     assert(signup.pwd2H>=44,`signup_touch_${width}_${signup.pwd2H}`);
     await page.click('#loginMode');
     await page.waitForTimeout(80);
