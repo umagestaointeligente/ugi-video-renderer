@@ -4,7 +4,7 @@ import argparse, asyncio, concurrent.futures, hashlib, json, os, shutil, time
 from pathlib import Path
 from .common import *
 from .preflight import validate_item
-from .voice import tts_with_real_boundaries
+from .voice import tts_with_real_boundaries, CANONICAL_SPEECH_RATE
 from .fingerprint import prepared_asset_fingerprint, prepared_contract_fingerprint, engine_fingerprint
 
 def precut_scene(src,start,dur,out,threads=1):
@@ -16,6 +16,43 @@ def precut_scene(src,start,dur,out,threads=1):
   os.replace(tmp,out)
  finally: tmp.unlink(missing_ok=True)
  return out
+
+def _story_voice_with_measured_pace(c,text,caption_chunks,voice):
+ cues=asyncio.run(tts_with_real_boundaries(c,text,caption_chunks,voice)); vd=duration(voice)
+ if not cues or float(cues[0]['start'])>0.35 or float(cues[-1]['end'])>vd+0.08: raise RuntimeError('VOICE_BOUNDARY_RANGE_FAIL')
+ wc=len(tokens(text)); wpm=wc/(vd/60.0)
+ low=float(c['voice']['pace_wpm'][0])-8.0; high=float(c['voice']['pace_wpm'][1])+8.0
+ if low<=wpm<=high: return cues,vd,wpm
+ target_max=float(c['story']['default_total_seconds'][1])
+ desired=max(160.0,wc*60.0/max(1.0,target_max-0.75))
+ desired=min(high-1.5,max(low+1.5,desired))
+ base_pct=float(CANONICAL_SPEECH_RATE.rstrip('%'))
+ new_pct=((1.0+base_pct/100.0)*(desired/wpm)-1.0)*100.0
+ new_pct=max(-20.0,min(60.0,new_pct)); rate=f'{int(round(new_pct)):+d}%'
+ print('VOICE_PACE_MEASURED_CORRECTION',f'initial={wpm:.1f}',f'target={desired:.1f}',f'rate={rate}')
+ voice.unlink(missing_ok=True)
+ cues=asyncio.run(tts_with_real_boundaries(c,text,caption_chunks,voice,rate_override=rate)); vd=duration(voice)
+ if not cues or float(cues[0]['start'])>0.35 or float(cues[-1]['end'])>vd+0.08: raise RuntimeError('VOICE_BOUNDARY_RANGE_FAIL_AFTER_CORRECTION')
+ wpm=wc/(vd/60.0)
+ if not (low<=wpm<=high): raise RuntimeError(f'VOICE_PACE_FAIL_AFTER_MEASURED_CORRECTION {wpm:.1f}')
+ return cues,vd,wpm
+
+def _precut_scene_with_black_repair(src,start,dur,out,c,threads,source_dur,blocked_ranges,label):
+ start=float(start); dur=max(0.8,float(dur)); offsets=[0]
+ for step in range(5,31,5): offsets.extend((-step,step))
+ last=None; tried=[]
+ for off in offsets:
+  cand=max(0.0,min(start+off,max(0.0,float(source_dur)-dur)))
+  if any(min(cand+dur,b)-max(cand,a)>0.20 for a,b in blocked_ranges): continue
+  if any(abs(cand-x)<0.01 for x in tried): continue
+  tried.append(cand); precut_scene(src,cand,dur,out,threads)
+  try: black_intervals(out,c,max_duration=dur,label=label)
+  except RuntimeError as e:
+   if 'BLANK_VISUAL_FAIL' not in str(e): raise
+   last=e; continue
+  if abs(cand-start)>0.01: print('SCENE_BLACK_MEASURED_AUTOSHIFT_PASS',label,f'from={start:.3f}',f'to={cand:.3f}')
+  return cand
+ raise RuntimeError(f'{label}_BLANK_VISUAL_FAIL_AFTER_MEASURED_AUTOSHIFT tried={tried} last={last}')
 
 def normalize_music(c,src,out):
  target=float(c['music'].get('prepared_master_lufs',-14.0)); tp=float(c['music'].get('prepared_master_true_peak_dbtp',-2.0)); out=Path(out); tmp=out.with_name(out.stem+f'.part-{os.getpid()}'+out.suffix); fix=out.with_name(out.stem+f'.peakfix-{os.getpid()}'+out.suffix)
@@ -105,10 +142,7 @@ def prepare_one(batch,index,prepared_root):
  if root.exists(): shutil.rmtree(root)
  root.mkdir(parents=True,exist_ok=True)
 
- voice=root/'voice.mp3'; text=' '.join(item['caption_chunks']); cues=asyncio.run(tts_with_real_boundaries(c,text,item['caption_chunks'],voice)); vd=duration(voice)
- if not cues or float(cues[0]['start'])>0.35 or float(cues[-1]['end'])>vd+0.08: raise RuntimeError('VOICE_BOUNDARY_RANGE_FAIL')
- wpm=len(tokens(text))/(vd/60.0)
- if not (c['voice']['pace_wpm'][0]-8<=wpm<=c['voice']['pace_wpm'][1]+8): raise RuntimeError(f'VOICE_PACE_FAIL {wpm:.1f}')
+ voice=root/'voice.mp3'; text=' '.join(item['caption_chunks']); cues,vd,wpm=_story_voice_with_measured_pace(c,text,item['caption_chunks'],voice)
  story=float(cues[-1]['end'])+0.12
  target_min,target_max=(float(x) for x in c['story']['default_total_seconds'])
  if not (target_min<=story<=target_max) and item.get('duration_exception_approved') is not True: raise RuntimeError(f'STORY_DURATION_TARGET_FAIL actual={story:.3f} target={target_min:.1f}..{target_max:.1f}')
@@ -127,15 +161,16 @@ def prepare_one(batch,index,prepared_root):
  atomic_download(mt['url'],music_raw,'audio',c['runtime']['music_max_bytes'],mt.get('sha256'),90)
  music=root/'music-master.m4a'; music_lufs,music_tp=normalize_music(c,music_raw,music)
 
+ base_ranges=[(float(s['start_seconds']),float(s['start_seconds'])+float(timeline[i][2])) for i,s in enumerate(item['scene_plan'])]
  scene_jobs=[]
  for i,s in enumerate(item['scene_plan']):
-  timeline_start,timeline_end,target=timeline[i]; source_start=float(s['start_seconds'])
-  scene_jobs.append((source,source_start,target,root/f'scene-{i:02d}.mp4',c['runtime']['scene_encoder_threads']))
+  timeline_start,timeline_end,target=timeline[i]; source_start=float(s['start_seconds']); blocked=[r for j,r in enumerate(base_ranges) if j!=i]
+  scene_jobs.append((source,source_start,target,root/f'scene-{i:02d}.mp4',c,c['runtime']['scene_encoder_threads'],source_dur,blocked,f'SCENE_{i:02d}'))
  workers=max(1,min(int(c['runtime']['scene_workers_per_video']),len(scene_jobs)))
- with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex: list(ex.map(lambda a:precut_scene(*a),scene_jobs))
+ with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex: used_starts=list(ex.map(lambda a:_precut_scene_with_black_repair(*a),scene_jobs))
  scenes=[]
- for i,(src,start,target,out,threads) in enumerate(scene_jobs):
-  actual=duration(out); timeline_start,timeline_end,_=timeline[i]
+ for i,(job,start) in enumerate(zip(scene_jobs,used_starts)):
+  src,planned_start,target,out,contract,threads,sdur,blocked,label=job; actual=duration(out); timeline_start,timeline_end,_=timeline[i]
   if actual+0.12<target: raise RuntimeError(f'SCENE_PRECUT_SHORT scene={i} actual={actual:.3f} target={target:.3f}')
   if c['runtime'].get('scene_black_guard_before_render',True): black_intervals(out,c,max_duration=target,label=f'SCENE_{i:02d}')
   scenes.append({'index':i,'file':out.name,'sha256':sha256(out),'duration':actual,'target_duration':target,'timeline_start':timeline_start,'timeline_end':timeline_end,'source_start':start,'caption_start':item['scene_plan'][i]['caption_start'],'caption_end':item['scene_plan'][i]['caption_end'],'semantic_reason':item['scene_plan'][i]['semantic_reason'],'blank_visual_pass':True})
