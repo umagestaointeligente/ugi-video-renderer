@@ -1,0 +1,39 @@
+name: Career360 Supabase Auth Token Probe
+run-name: Career360 Supabase Auth Token Probe ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['career360-supabase-auth-probe-*']
+    paths: ['.github/workflows/career360-supabase-auth-token-probe.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      C1: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      C2: ${{ secrets.SUPABASE_TOKEN }}
+      C3: ${{ secrets.SUPABASE_MANAGEMENT_TOKEN }}
+      C4: ${{ secrets.SB_ACCESS_TOKEN }}
+      C5: ${{ secrets.UGI_SUPABASE_ACCESS_TOKEN }}
+      C6: ${{ secrets.CAREER360_SUPABASE_ACCESS_TOKEN }}
+    steps:
+      - name: Check candidate management-token presence without disclosure
+        shell: bash
+        run: |
+          set -euo pipefail
+          found=0
+          for i in 1 2 3 4 5 6; do
+            v="C$i"
+            if [ -n "${!v:-}" ]; then
+              echo "SUPABASE_MANAGEMENT_TOKEN_CANDIDATE_$i=PRESENT" | tee -a "$GITHUB_STEP_SUMMARY"
+              found=$((found+1))
+            else
+              echo "SUPABASE_MANAGEMENT_TOKEN_CANDIDATE_$i=ABSENT" | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+          echo "SUPABASE_MANAGEMENT_TOKEN_CANDIDATE_COUNT=$found" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "NO_SECRET_VALUE_DISCLOSED=PASS" | tee -a "$GITHUB_STEP_SUMMARY"
