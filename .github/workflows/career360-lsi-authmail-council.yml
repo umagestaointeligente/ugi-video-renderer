@@ -1,0 +1,75 @@
+name: Career360 LSI Auth Mail Council
+run-name: Career360 LSI Auth Mail Council ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['lsi-broker-job-career360-authmail-*']
+    paths: ['.github/workflows/career360-lsi-authmail-council.yml']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  council:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      BROKER_URL: https://lsi-zero-cost-broker.umagestaointeligente.workers.dev
+      MISSION_ID: career360-authmail-council-20260907
+    steps:
+      - uses: actions/checkout@v4
+      - name: Acquire OIDC
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl --fail -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=lsi-zero-cost-broker")"
+          token="$(printf '%s' "$response" | jq -r '.value // empty')"
+          test -n "$token"
+          echo "::add-mask::$token"
+          echo "LSI_OIDC_TOKEN=$token" >> "$GITHUB_ENV"
+      - name: Execute narrowed Llama council
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/council.mjs <<'NODE'
+          import fs from 'node:fs'; import { webcrypto } from 'node:crypto';
+          const {subtle}=webcrypto, enc=new TextEncoder(), dec=new TextDecoder();
+          const b64u=b=>Buffer.from(b).toString('base64url'), from64=s=>Buffer.from(String(s),'base64url');
+          const mission=process.env.MISSION_ID;
+          const known=`Career 360, 2026-09-07. Absolute IN_APP_AUTONOMOUS_ONLY: Paulo must not open provider dashboards, OAuth/device flows, create/copy tokens, or do setup outside ChatGPT. Zero/near-zero cash. Runtime truth: official frontend Vercel V14 stays healthy; V16 is fully browser-validated on Cloudflare Workers Static Assets preview. Supabase project auth.users has 1 user, confirmed and signed in. Signup frontend already requests emailRedirectTo=https://lsi-career-360.vercel.app/?email-confirmado=1, but an observed confirmation flow ended at localhost:3000. Current Supabase connector cannot mutate hosted Auth Site URL/allowlist/templates. Official Management API could PATCH auth config but no management PAT exists in GitHub secrets (0/6 candidate names). auth.audit_log_entries empty. Insecure admin auto-confirm is rejected. Gmail connector inside ChatGPT is connected, but this is not Career product background OAuth. Repo has no GMAIL_, SMTP_, GOOGLE_CLIENT credentials. career_applications/followups/mail_actions are all 0. mail_delivery control is PAUSED, blind_retry false, receipt contract V2 required. Consent currently forbids inbox monitoring, reply/followup draft/send/auto-send. Do not propose changing consent. ChatGPT Automations can schedule future ChatGPT work but only if it can legally invoke connected Gmail at run time; treat that capability as unknown unless grounded. Existing Cloudflare/GitHub/Supabase runtime may be reused. Need simple, canonical, no permanent parallel architecture.`;
+          const tasks=[
+            {id:'auth_redteam',role:'cheap_text',system:'Senior Supabase Auth red-team. Do not repeat known-dead routes. Distinguish security integrity from UX.',user:known+'\nFind any technically valid route that fixes the localhost post-confirmation UX WITHOUT Management API/dashboard/PAT and WITHOUT weakening email ownership proof. Consider frontend-only behavior, Supabase Auth API semantics, confirmation link handling, same-origin proxy/redirect interception, custom domains, Edge Functions, generateLink, OTP/magic link constraints. For each candidate state whether it actually changes where Supabase redirects after verification. If none can, say IMPOSSIBLE_UNDER_CURRENT_CAPABILITIES and give the minimal external capability missing.',max_tokens:750},
+            {id:'mail_redteam',role:'cheap_text',system:'Email transport architect. No fake send, no consent changes, no unproven APIs.',user:known+'\nFind a real background email transport route that could later support claim->provider->receipt without provider dashboard/OAuth setup. Evaluate ChatGPT Automations+connected Gmail, Gmail connector invocation at scheduled runtime, Google Apps Script only if already provisioned, Cloudflare Email Routing/Send Email binding, Supabase built-in SMTP/Auth mail, Resend-like providers only if credentials already exist. Mark each feasible_now/unknown/impossible and why. No sending test because consent forbids it.',max_tokens:750},
+            {id:'architecture',role:'cheap_text',system:'System architect. Prefer smallest coherent architecture and explicit blockers.',user:known+'\nGiven Cloudflare V16 alternative is proven, design the smallest target architecture to finish Career 360 without Vercel dependency. Separate what can be promoted now from what must remain blocked. Decide whether Cloudflare should become official frontend before Auth redirect is fixed. Give rollback and gate order.',max_tokens:700},
+            {id:'rejections',role:'cheap_text',system:'Skeptical reviewer. Return concise rejection ledger.',user:known+'\nList 10 tempting shortcuts that must be rejected because they are insecure, require external user action, create parallel architecture, or falsely claim LIVE. Then identify any one route worth testing next with existing capabilities only.',max_tokens:650}
+          ];
+          const brokerJwk=JSON.parse(fs.readFileSync('cloudflare/lsi-broker-public.jwk.json','utf8'));
+          const brokerKey=await subtle.importKey('jwk',{...brokerJwk,alg:'RSA-OAEP-256',ext:true},{name:'RSA-OAEP',hash:'SHA-256'},false,['encrypt']);
+          const responseKeys=await subtle.generateKey({name:'RSA-OAEP',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['encrypt','decrypt']);
+          const responsePublic=await subtle.exportKey('jwk',responseKeys.publicKey);
+          const aes=await subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);
+          const aesRaw=await subtle.exportKey('raw',aes), iv=webcrypto.getRandomValues(new Uint8Array(12)), aad=enc.encode(mission);
+          const ciphertext=await subtle.encrypt({name:'AES-GCM',iv,additionalData:aad,tagLength:128},aes,enc.encode(JSON.stringify({tasks})));
+          const wrapped=await subtle.encrypt({name:'RSA-OAEP'},brokerKey,aesRaw);
+          const body={mission_id:mission,response_public_jwk:responsePublic,encrypted:{alg:'RSA-OAEP-256+A256GCM',wrapped_key:b64u(wrapped),iv:b64u(iv),aad:b64u(aad),ciphertext:b64u(ciphertext)}};
+          const r=await fetch(process.env.BROKER_URL+'/v1/execute',{method:'POST',headers:{authorization:'Bearer '+process.env.LSI_OIDC_TOKEN,'content-type':'application/json'},body:JSON.stringify(body)});
+          const outer=await r.json(); if(!r.ok||!outer.ok) throw new Error('broker_'+r.status+':'+JSON.stringify(outer));
+          const env=outer.encrypted, keyRaw=await subtle.decrypt({name:'RSA-OAEP'},responseKeys.privateKey,from64(env.wrapped_key));
+          const responseAes=await subtle.importKey('raw',keyRaw,{name:'AES-GCM'},false,['decrypt']);
+          const plain=await subtle.decrypt({name:'AES-GCM',iv:from64(env.iv),additionalData:from64(env.aad),tagLength:128},responseAes,from64(env.ciphertext));
+          const result=JSON.parse(dec.decode(plain));
+          if(result.mission_id!==mission||result.zero_cost_route!==true||result.external_paid_provider!==false) throw new Error('result_contract_failed');
+          if(result.success_count!==tasks.length) throw new Error(`specialist_failure_${result.success_count}_of_${tasks.length}`);
+          fs.writeFileSync('/tmp/career360-lsi-authmail-council.json',JSON.stringify(result,null,2));
+          console.log(`LSI_AUTHMAIL_RECEIPT=PASS tasks=${result.task_count} success=${result.success_count} elapsed_ms=${result.elapsed_ms}`);
+          NODE
+          node /tmp/council.mjs | tee /tmp/summary.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: career360-lsi-authmail-council-${{ github.run_id }}
+          path: |
+            /tmp/career360-lsi-authmail-council.json
+            /tmp/summary.txt
+          retention-days: 7
+          if-no-files-found: error
