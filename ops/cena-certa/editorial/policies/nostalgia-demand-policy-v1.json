@@ -1,0 +1,86 @@
+{
+  "schema": "CENA_CERTA_NOSTALGIA_DEMAND_POLICY_V1",
+  "status": "CANONICAL_POLICY",
+  "effective_from": "2026-09-09",
+  "purpose": "Use one daily nostalgia slot to broaden audience relevance without selecting obscure titles only because rights are easy.",
+  "public_segment_branding": {
+    "preferred_name": "Clássicos da Tarde",
+    "alternate_name": "Sessão Nostalgia",
+    "avoid_exact_third_party_program_brand_as_official_segment_name": true,
+    "note": "The editorial mood may evoke afternoon-TV nostalgia, but the official Cena Certa segment should not imply affiliation with a broadcaster or third-party program brand."
+  },
+  "daily_mix_rule": {
+    "minimum_nostalgia_videos_per_day": 1,
+    "preferred_year_min": 1980,
+    "preferred_year_max": 2010,
+    "outside_range_exception": "Only for exceptionally iconic titles with strong current demand and a legal visual route."
+  },
+  "selection_philosophy": {
+    "rule": "AUDIENCE_DEMAND_FIRST_THEN_LEGAL_VISUAL_ROUTE",
+    "do_not_select_because_rights_are_easy": true,
+    "must_feel_rewatchable": true,
+    "must_have_broad_recognition_or_active_rediscovery": true,
+    "where_to_watch_only_in_written_description": true,
+    "where_to_watch_must_be_revalidated_for_brazil_on_publication_day": true
+  },
+  "nostalgia_demand_gate": {
+    "minimum_positive_signals": 2,
+    "signals": [
+      "SEARCH_INTEREST: meaningful recent or evergreen search demand",
+      "COMMUNITY_CONVERSATION: relevant discussion/rewatch intent in forums or communities such as Reddit, Letterboxd or equivalent public sources",
+      "CULTURAL_RECALL: strong franchise, character, actor or quote recognition",
+      "CURRENT_AVAILABILITY: legally available in Brazil on a mainstream streaming, rental, purchase or theatrical route",
+      "REWATCH_SIGNAL: comments, lists, rankings or audience discussion indicating desire to revisit the title"
+    ],
+    "hard_reject": [
+      "OBSCURE_WITHOUT_DEMAND",
+      "NO_LEGAL_VISUAL_ROUTE",
+      "NO_CURRENT_BRAZIL_AVAILABILITY_AND_NO_STRONG_CULTURAL_RECALL",
+      "ADVERTISING_OR_BRANDED_FILM",
+      "FASHION_FILM",
+      "BLACK_FRAMES_SPONSOR_CARDS_END_CREDITS_POST_CREDITS"
+    ]
+  },
+  "network_strategy": {
+    "rule": "Treat age distribution as a working audience hypothesis and validate with platform analytics rather than assume it as universal fact.",
+    "facebook": "Lean nostalgia slightly heavier when performance supports it.",
+    "instagram": "Mix nostalgia with current major titles and visually strong franchises.",
+    "tiktok": "Use faster hooks and stronger recognizable concepts; nostalgia only when title recognition or rediscovery is evident.",
+    "youtube": "Keep the same core video but optimize title/description for discovery and rewatch intent."
+  },
+  "research_queue_examples": {
+    "1980s": [
+      "Back to the Future",
+      "The Goonies",
+      "The Terminator",
+      "Police Academy",
+      "The Naked Gun"
+    ],
+    "1990s": [
+      "Terminator 2: Judgment Day",
+      "Jurassic Park",
+      "Home Alone",
+      "The Mask",
+      "Men in Black",
+      "The Blair Witch Project",
+      "The Matrix"
+    ],
+    "2000s": [
+      "Harry Potter and the Sorcerer's Stone",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "Pirates of the Caribbean: The Curse of the Black Pearl",
+      "Rush Hour 2",
+      "The Bourne Identity",
+      "The Fast and the Furious"
+    ]
+  },
+  "lane_note": {
+    "John Wick": "Evergreen major franchise lane, not nostalgia lane, because the first film is from 2014."
+  },
+  "public_copy_rules": {
+    "forbidden_public_tokens": ["trailer", "teaser", "preview", "promo", "sizzle"],
+    "rights_provenance_internal_only": true,
+    "narration_focus": "story, conflict, motivation, curiosity and why the film is worth watching or revisiting",
+    "availability_not_in_narration": true
+  }
+}
