@@ -1,12 +1,12 @@
 {
   "schema": "CENA_CERTA_PUBLISHER_STATE_V1",
-  "state": "IDLE",
-  "handoff_sha256": null,
-  "production_run_id": null,
+  "state": "AWAITING_HUMAN_APPROVAL",
+  "handoff_sha256": "1019ac5fa51ffb74e40418141229c92804c0ea9f5c55350ce237b58fdc4002b8",
+  "production_run_id": 34152820372,
   "primary_provider": "METRICOOL",
   "primary_receipts": [],
   "secondary_receipts": [],
   "reconciliation": null,
-  "updated_at": null,
+  "updated_at": "2026-09-07T23:00:40.469322+00:00",
   "blind_retry_forbidden": true
 }

@@ -1,9 +1,9 @@
 {
   "schema": "CENA_CERTA_HUMAN_APPROVAL_V1",
   "approved": false,
-  "handoff_sha256": null,
-  "production_run_id": null,
+  "handoff_sha256": "1019ac5fa51ffb74e40418141229c92804c0ea9f5c55350ce237b58fdc4002b8",
+  "production_run_id": 34152820372,
   "approved_at": null,
   "approved_by": null,
-  "note": "Must match the exact current publisher outbox before any scheduling write."
+  "note": "Recovered exact outbox; private preview and explicit human approval remain mandatory."
 }
