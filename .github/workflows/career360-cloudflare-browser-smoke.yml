@@ -5,6 +5,7 @@ on:
   push:
     branches: ['career360-cloudflare-preview-*']
     paths:
+      - 'career360/frontend/**'
       - 'career360/tests/v16-cloudflare-live-smoke.mjs'
       - '.github/workflows/career360-cloudflare-browser-smoke.yml'
 
@@ -17,6 +18,7 @@ jobs:
     timeout-minutes: 15
     env:
       CAREER360_PREVIEW_URL: https://career360-preview-20260906.umagestaointeligente.workers.dev
+      EXPECTED_APP_I: 90a795bf1a371be66fd8f907c8a76501f8a5421c
     steps:
       - uses: actions/checkout@v4
       - name: Static source and remote HTTP preflight
@@ -24,13 +26,24 @@ jobs:
         run: |
           set -euo pipefail
           node --check career360/tests/v16-cloudflare-live-smoke.mjs
-          code="$(curl -sS -o /tmp/c360.html -w '%{http_code}' "$CAREER360_PREVIEW_URL/")"
-          test "$code" = '200'
-          grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' /tmp/c360.html >/dev/null
-          grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' /tmp/c360.html >/dev/null
-          grep -F '@719c15ebfe89d212a19473b70ea6e615174601d9/career360/frontend/app-m.js' /tmp/c360.html >/dev/null
-          grep -F 'Você confirma o que importa. O Career 360 organiza sua busca.' /tmp/c360.html >/dev/null
-          ! grep -F 'Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.' /tmp/c360.html >/dev/null
+          node --check career360/frontend/app-i.js
+          grep -F "@${EXPECTED_APP_I}/career360/frontend/app-i.js" career360/frontend/index.html >/dev/null
+          ok=0
+          for attempt in $(seq 1 20); do
+            code="$(curl -sS -o /tmp/c360.html -w '%{http_code}' "$CAREER360_PREVIEW_URL/" || true)"
+            if test "$code" = '200' \
+              && grep -F "@${EXPECTED_APP_I}/career360/frontend/app-i.js" /tmp/c360.html >/dev/null \
+              && grep -F '@6df7b4e63d7e52ce3c3f02247392b98f0393cbe8/career360/frontend/app-k.js' /tmp/c360.html >/dev/null \
+              && grep -F '@4283646143425e4a3156e44100aabb475df88d27/career360/frontend/app-l.js' /tmp/c360.html >/dev/null \
+              && grep -F '@719c15ebfe89d212a19473b70ea6e615174601d9/career360/frontend/app-m.js' /tmp/c360.html >/dev/null \
+              && grep -F 'Você confirma o que importa. O Career 360 organiza sua busca.' /tmp/c360.html >/dev/null \
+              && ! grep -F 'Enquanto você trabalha na sua carreira, seu agente trabalha na próxima oportunidade.' /tmp/c360.html >/dev/null; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+          test "$ok" = '1'
           echo 'CLOUDFLARE_REMOTE_STATIC_PREFLIGHT=PASS'
       - name: Install isolated Playwright
         shell: bash
@@ -52,6 +65,8 @@ jobs:
           grep -F 'CLOUDFLARE_BROWSER_412=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
           grep -F 'CLOUDFLARE_BROWSER_768=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
           grep -F 'CLOUDFLARE_BROWSER_1180=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
+          grep -F 'CLOUDFLARE_APPLICATION_CONFIRMATION_UI=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
+          grep -F 'CLOUDFLARE_APPLICATION_CONFIRMATION_TRUTHFUL_NO_FALSE_SEND=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
           grep -F 'CLOUDFLARE_V16_RUNTIME_ERRORS=ZERO' /tmp/cloudflare-browser-smoke.txt >/dev/null
           cat /tmp/cloudflare-browser-smoke.txt >> "$GITHUB_STEP_SUMMARY"
           echo 'OFFICIAL_PRODUCTION_PROMOTION=NONE' >> "$GITHUB_STEP_SUMMARY"
