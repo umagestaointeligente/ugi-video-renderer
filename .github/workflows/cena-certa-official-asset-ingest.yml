@@ -1,0 +1,105 @@
+name: Cena Certa Official Asset Ingest
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - 'ops/cena-certa/official-assets/ingest-request.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  REQUEST: ops/cena-certa/official-assets/ingest-request.json
+
+jobs:
+  manifest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    outputs:
+      matrix: ${{ steps.read.outputs.matrix }}
+      request_sha: ${{ steps.read.outputs.request_sha }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: read
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,pathlib,re
+          p=pathlib.Path(os.environ['REQUEST']); raw=p.read_bytes(); d=json.loads(raw)
+          if d.get('schema')!='CENA_CERTA_OFFICIAL_ASSET_INGEST_V1': raise SystemExit('INGEST_SCHEMA_FAIL')
+          items=d.get('items') or []
+          if not (1 <= len(items) <= 10): raise SystemExit('INGEST_COUNT_FAIL')
+          seen=set()
+          for i,x in enumerate(items):
+              rid=str(x.get('id') or ''); url=str(x.get('source_url') or '')
+              if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{2,95}',rid) or rid in seen: raise SystemExit(f'INGEST_ID_FAIL {i}')
+              seen.add(rid)
+              if not (url.startswith('https://www.youtube.com/') or url.startswith('https://youtu.be/')): raise SystemExit(f'INGEST_URL_FAIL {i}')
+              if x.get('rights_pass') is not True or not str(x.get('rights_evidence') or '').strip(): raise SystemExit(f'INGEST_RIGHTS_FAIL {i}')
+          matrix=json.dumps(list(range(len(items))),separators=(',',':'))
+          sha=hashlib.sha256(raw).hexdigest()
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write(f'matrix={matrix}\nrequest_sha={sha}\n')
+          print('INGEST_MANIFEST_PASS',len(items),sha)
+          PY
+
+  ingest:
+    needs: manifest
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        index: ${{ fromJSON(needs.manifest.outputs.matrix) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    env:
+      URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install resolver
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --no-cache-dir 'yt-dlp==2026.8.19'
+      - id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          export INDEX='${{ matrix.index }}'
+          python - <<'PY'
+          import json,os,shlex
+          x=json.load(open(os.environ['REQUEST'],encoding='utf-8'))["items"][int(os.environ['INDEX'])]
+          for k,v in [('rid',x['id']),('source_url',x['source_url'])]:
+              with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write(f'{k}={v}\n')
+          PY
+      - name: Resolve, inspect and stage official audiovisual source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$URL"; test -n "$KEY"
+          mkdir -p work proof
+          python -m yt_dlp --no-playlist --no-progress --quiet --socket-timeout 20 --retries 3 --fragment-retries 3 \
+            -f 'best[height<=720][ext=mp4]/best[height<=720]/best' --merge-output-format mp4 \
+            -o 'work/source.%(ext)s' '${{ steps.meta.outputs.source_url }}'
+          src=$(find work -maxdepth 1 -type f -name 'source.*' | head -1)
+          test -s "$src"
+          ffmpeg -y -loglevel error -i "$src" -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k -movflags +faststart work/source.mp4
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 work/source.mp4)
+          ffprobe -v error -show_streams -show_format -of json work/source.mp4 > proof/source-probe.json
+          ffmpeg -y -loglevel error -i work/source.mp4 -vf 'fps=1/4,scale=320:-2,tile=5x6' -frames:v 1 proof/contact-sheet.jpg || true
+          python ops/cena-certa/r2_stage.py \
+            --base-url "$URL" --auth-key "$KEY" --id '${{ steps.meta.outputs.rid }}' \
+            --batch-sha256 '${{ needs.manifest.outputs.request_sha }}' --mp4 work/source.mp4 --duration "$dur" \
+            --out proof/source-r2.json
+          echo "INGEST_SOURCE_READY id=${{ steps.meta.outputs.rid }} duration=$dur"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-source-${{ matrix.index }}-${{ steps.meta.outputs.rid }}
+          path: proof/
+          if-no-files-found: warn
+          retention-days: 4
