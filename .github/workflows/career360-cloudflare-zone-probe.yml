@@ -1,0 +1,47 @@
+name: Career360 Cloudflare Zone Probe
+run-name: Career360 Cloudflare Zone Probe ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['career360-cloudflare-zone-probe-*']
+    paths: ['.github/workflows/career360-cloudflare-zone-probe.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CF_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Read Cloudflare zones and workers subdomain without mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CF_TOKEN" && test -n "$CF_ACCOUNT"
+          echo "::add-mask::$CF_TOKEN"
+          mkdir -p /tmp/cfprobe
+          zcode="$(curl -sS -o /tmp/cfprobe/zones-raw.json -w '%{http_code}' \
+            -H "Authorization: Bearer $CF_TOKEN" \
+            'https://api.cloudflare.com/client/v4/zones?per_page=50')"
+          scode="$(curl -sS -o /tmp/cfprobe/subdomain-raw.json -w '%{http_code}' \
+            -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/workers/subdomain")"
+          jq -n \
+            --arg zcode "$zcode" --arg scode "$scode" \
+            --slurpfile zones /tmp/cfprobe/zones-raw.json \
+            --slurpfile sub /tmp/cfprobe/subdomain-raw.json \
+            '{zones_http:($zcode|tonumber),zones_success:($zones[0].success//false),zones:[($zones[0].result//[])[]|{name,status,type,paused}],workers_subdomain_http:($scode|tonumber),workers_subdomain_success:($sub[0].success//false),workers_subdomain:($sub[0].result.subdomain//null),mutations:"NONE"}' \
+            > /tmp/cfprobe/result.json
+          rm -f /tmp/cfprobe/zones-raw.json /tmp/cfprobe/subdomain-raw.json
+          jq . /tmp/cfprobe/result.json
+          echo 'CLOUDFLARE_ZONE_PROBE_MUTATIONS=NONE' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: career360-cloudflare-zone-probe-${{ github.run_id }}
+          path: /tmp/cfprobe/result.json
+          retention-days: 3
+          if-no-files-found: error
