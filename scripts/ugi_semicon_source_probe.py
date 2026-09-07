@@ -11,10 +11,11 @@ def run(cmd):
     print('RUN', ' '.join(str(x) for x in cmd))
     subprocess.run([str(x) for x in cmd], check=True)
 
-run(['yt-dlp','-f','best[height<=720]/best','--merge-output-format','mp4','-o',str(video),VIDEO_URL])
+fmt = subprocess.run(['yt-dlp','-F',VIDEO_URL],capture_output=True,text=True)
+(OUT/'formats.txt').write_text(fmt.stdout+'\nSTDERR\n'+fmt.stderr,encoding='utf-8')
+run(['yt-dlp','-f','bv*+ba/b','--merge-output-format','mp4','-o',str(video),VIDEO_URL])
 probe = subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',str(video)],capture_output=True,text=True,check=True)
 dur = float(probe.stdout.strip())
-# Dense source QA: every ~7% of the package.
 times = [dur*(i+1)/15 for i in range(14)]
 frames=[]
 for i,t in enumerate(times):
