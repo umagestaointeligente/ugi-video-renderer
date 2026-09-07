@@ -1,0 +1,43 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_PLAN_V1",
+  "target_date": "2026-09-09",
+  "timezone": "America/Sao_Paulo",
+  "status": "PROPOSED_NOT_SCHEDULED",
+  "metricool_brand_id": "6809869",
+  "best_time_summary": {
+    "facebook": "picos 10h-12h; 12h é o maior valor do dia",
+    "instagram": "pico 10h; segunda janela relevante 17h-18h",
+    "tiktok": "picos 10h, 12h e 18h",
+    "youtube": "janela mais forte 14h-16h, com pico às 16h"
+  },
+  "slots": [
+    {"time":"07:45","kind":"STORY","topic":"Abertura do dia: qual estreia você quer ver hoje?","providers":["facebook","instagram"],"status":"ASSET_PENDING"},
+    {"time":"08:30","kind":"VIDEO","slot":"V1","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
+    {"time":"09:45","kind":"VIDEO","slot":"V2","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
+    {"time":"10:20","kind":"EDITORIAL_POST","topic":"Last Seen estreia hoje na Apple TV","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_PENDING"},
+    {"time":"11:10","kind":"VIDEO","slot":"V3","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
+    {"time":"11:55","kind":"STORY","topic":"Made in Korea S2: você começa uma série no dia da estreia ou espera acumular episódios?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_PENDING"},
+    {"time":"12:30","kind":"VIDEO","slot":"V4","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
+    {"time":"13:20","kind":"EDITORIAL_CAROUSEL","topic":"Why Did I Get Married Again? — volta da franquia na Netflix","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_PENDING"},
+    {"time":"14:15","kind":"STORY","topic":"Lanterns no meio da temporada: está entregando ou decepcionando?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_PENDING"},
+    {"time":"15:05","kind":"VIDEO","slot":"V5","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
+    {"time":"16:10","kind":"VIDEO","slot":"V6","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
+    {"time":"17:15","kind":"EDITORIAL_POST","topic":"Drawn Together estreia hoje no Prime Video","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_PENDING"},
+    {"time":"18:05","kind":"VIDEO","slot":"V7","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
+    {"time":"19:20","kind":"VIDEO","slot":"V8","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
+    {"time":"20:10","kind":"EDITORIAL_POST","topic":"Spider-Man x The Odyssey: qual foi o filme do verão?","providers":["facebook","instagram","tiktok"],"status":"DYNAMIC_FACT_RECHECK_AND_ASSET_RIGHTS_PENDING"},
+    {"time":"21:00","kind":"STORY","topic":"Coyote vs. Acme: o público salvou o filme?","providers":["facebook","instagram"],"status":"FACT_RECHECK_AND_ASSET_RIGHTS_PENDING"}
+  ],
+  "distribution_rules": {
+    "youtube": "8 videos only",
+    "tiktok": "8 videos + 4 editorial photo/carousel posts; no TikTok Story scheduled because current Metricool connector exposes no Story type for TikTok",
+    "instagram": "8 videos + 4 editorial posts/carousels + 4 stories",
+    "facebook": "8 videos + 4 editorial posts/carousels + 4 stories"
+  },
+  "schedule_write_performed": false,
+  "notes": [
+    "Do not schedule any editorial item before FACT_PASS and ASSET_RIGHTS_PASS.",
+    "Video slots require canonical 60-day anti-repeat, source-rights, render and QA gates before scheduling.",
+    "Dynamic box-office claims must be refreshed on 09/09 before publication."
+  ]
+}
