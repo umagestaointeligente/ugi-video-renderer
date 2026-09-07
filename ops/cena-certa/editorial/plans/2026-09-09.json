@@ -1,43 +1,111 @@
 {
-  "schema": "CENA_CERTA_EDITORIAL_PLAN_V1",
+  "schema": "CENA_CERTA_EDITORIAL_PLAN_V2",
   "target_date": "2026-09-09",
   "timezone": "America/Sao_Paulo",
-  "status": "PROPOSED_NOT_SCHEDULED",
+  "status": "RESEARCH_RIGHTS_AND_ASSETS_IN_PROGRESS_NOT_SCHEDULED",
   "metricool_brand_id": "6809869",
-  "best_time_summary": {
-    "facebook": "picos 10h-12h; 12h é o maior valor do dia",
-    "instagram": "pico 10h; segunda janela relevante 17h-18h",
-    "tiktok": "picos 10h, 12h e 18h",
-    "youtube": "janela mais forte 14h-16h, com pico às 16h"
+  "targets": {
+    "videos": 8,
+    "editorial_posts_or_carousels": 4,
+    "stories_facebook_instagram": 4,
+    "tiktok_vertical_editorial_adaptations": 4
   },
-  "slots": [
-    {"time":"07:45","kind":"STORY","topic":"Abertura do dia: qual estreia você quer ver hoje?","providers":["facebook","instagram"],"status":"ASSET_PENDING"},
-    {"time":"08:30","kind":"VIDEO","slot":"V1","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
-    {"time":"09:45","kind":"VIDEO","slot":"V2","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
-    {"time":"10:20","kind":"EDITORIAL_POST","topic":"Last Seen estreia hoje na Apple TV","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_PENDING"},
-    {"time":"11:10","kind":"VIDEO","slot":"V3","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
-    {"time":"11:55","kind":"STORY","topic":"Made in Korea S2: você começa uma série no dia da estreia ou espera acumular episódios?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_PENDING"},
-    {"time":"12:30","kind":"VIDEO","slot":"V4","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
-    {"time":"13:20","kind":"EDITORIAL_CAROUSEL","topic":"Why Did I Get Married Again? — volta da franquia na Netflix","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_PENDING"},
-    {"time":"14:15","kind":"STORY","topic":"Lanterns no meio da temporada: está entregando ou decepcionando?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_PENDING"},
-    {"time":"15:05","kind":"VIDEO","slot":"V5","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
-    {"time":"16:10","kind":"VIDEO","slot":"V6","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
-    {"time":"17:15","kind":"EDITORIAL_POST","topic":"Drawn Together estreia hoje no Prime Video","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_PENDING"},
-    {"time":"18:05","kind":"VIDEO","slot":"V7","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
-    {"time":"19:20","kind":"VIDEO","slot":"V8","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_AND_QA_PENDING"},
-    {"time":"20:10","kind":"EDITORIAL_POST","topic":"Spider-Man x The Odyssey: qual foi o filme do verão?","providers":["facebook","instagram","tiktok"],"status":"DYNAMIC_FACT_RECHECK_AND_ASSET_RIGHTS_PENDING"},
-    {"time":"21:00","kind":"STORY","topic":"Coyote vs. Acme: o público salvou o filme?","providers":["facebook","instagram"],"status":"FACT_RECHECK_AND_ASSET_RIGHTS_PENDING"}
+  "audience_strategy": {
+    "primary_rule": "SELECT_FOR_AUDIENCE_DEMAND_FIRST_THEN_FIND_LEGAL_VISUAL_ROUTE",
+    "goal": "prioritize films and series people actively want to watch, search for and continue consuming after seeing Cena Certa",
+    "commons_role": "FALLBACK_ONLY_NOT_PRIMARY_SELECTION_DRIVER",
+    "availability_rule": "where-to-watch information belongs only in the written post description, verified for Brazil on publication day; never spend narration time on platform availability"
+  },
+  "public_copy_rules": {
+    "forbidden_public_tokens": ["trailer", "teaser", "preview", "promo", "sizzle"],
+    "forbid_source_label_in_title": true,
+    "forbid_source_label_in_description": true,
+    "forbid_source_label_on_screen": true,
+    "rights_provenance_stays_internal": true,
+    "where_to_watch_in_narration": false,
+    "where_to_watch_in_written_description": true
+  },
+  "visual_qa_hard_reject": [
+    "BLACK_FRAME_OR_LONG_BLACK_INTERVAL",
+    "STUDIO_OR_SPONSOR_CARD_AS_CONTENT",
+    "OPENING_SPONSOR_SEQUENCE",
+    "END_CREDITS",
+    "POST_CREDITS",
+    "PROMOTIONAL_END_CARD",
+    "SOURCE_LABEL_VISIBLE_ON_SCREEN",
+    "COMMERCIAL_ADVERTISING_CONTENT",
+    "FASHION_FILM_OR_BRANDED_COMMERCIAL",
+    "VISUAL_NOT_FROM_THE_ACTUAL_FILM_OR_SERIES_STORY"
   ],
-  "distribution_rules": {
-    "youtube": "8 videos only",
-    "tiktok": "8 videos + 4 editorial photo/carousel posts; no TikTok Story scheduled because current Metricool connector exposes no Story type for TikTok",
-    "instagram": "8 videos + 4 editorial posts/carousels + 4 stories",
-    "facebook": "8 videos + 4 editorial posts/carousels + 4 stories"
+  "metricool_best_time_snapshot_2026_09_09": {
+    "facebook": {"top_hours": [12,10,11,13,16,15,17], "peak": 12},
+    "instagram": {"top_hours": [10,11,12,18,17,16], "peak": 10},
+    "tiktok": {"top_hours": [10,18,12,16,17,19], "peak": 10},
+    "youtube": {"top_hours": [16,15,14,10,17,13], "peak": 16}
   },
+  "timeline": [
+    {"time":"07:45","kind":"STORY","topic":"ABERTURA_ESCOLHA_DO_DIA","providers":["facebook","instagram"],"concept":"Qual universo você quer ver primeiro hoje? Matrix / Batman / Avatar / Spider-Man","asset_plan":"original Cena Certa vertical card plus only rights-cleared official imagery","status":"ASSET_RIGHTS_PENDING"},
+    {"time":"09:10","kind":"VIDEO","slot":"V1","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"10:20","kind":"EDITORIAL_CAROUSEL","topic":"SEP09_STREAMING_PICK","providers":["facebook","instagram","tiktok"],"headline":"Quatro estreias de hoje. Qual entra na sua lista?","slides":["Capa original Cena Certa","Why Did I Get Married Again? — Netflix","Atraídos Pelo Destino — Prime Video","Made in Korea S2 — Disney+/Hulu","Desaparecida — Apple TV+ + CTA"],"discussion":"Qual você começa hoje?","asset_rule":"use only press stills/key art with explicit editorial/media permission; otherwise use original typographic card without copyrighted frame","status":"FACT_PASS_ASSET_RIGHTS_PENDING"},
+    {"time":"10:55","kind":"VIDEO","slot":"V2","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"11:55","kind":"STORY","topic":"MATRIX_PILL_POLL","providers":["facebook","instagram"],"concept":"Se você descobrisse a verdade: pílula vermelha ou azul?","asset_plan":"Matrix press still only after WBD media-rights pass; otherwise original abstract Cena Certa visual","status":"ASSET_RIGHTS_PENDING"},
+    {"time":"12:20","kind":"VIDEO","slot":"V3","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"13:20","kind":"EDITORIAL_CAROUSEL","topic":"MATRIX_REWATCH","providers":["facebook","instagram","tiktok"],"headline":"Matrix ainda é uma das melhores ideias da ficção científica?","slides":["Hook visual","Neo e a realidade simulada","Por que o conceito continua atual","Onde assistir no Brasil — somente na descrição escrita","CTA: envelheceu bem ou virou nostalgia?"],"where_to_watch_snapshot":"HBO Max, Globoplay, HBO Max Amazon Channel e Telecine Amazon Channel — revalidar em 09/09 antes de publicar","asset_rule":"WBD press material only after explicit media-use access/terms pass","status":"ASSET_RIGHTS_PENDING"},
+    {"time":"14:20","kind":"STORY","topic":"STREAMING_CHOICE","providers":["facebook","instagram"],"concept":"Onde você dá play hoje? Netflix / Prime Video / Disney+ / Apple TV+","asset_plan":"original Cena Certa vertical card; no unlicensed poster collage","status":"CREATIVE_PENDING"},
+    {"time":"14:45","kind":"VIDEO","slot":"V4","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"15:55","kind":"VIDEO","slot":"V5","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"17:10","kind":"VIDEO","slot":"V6","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"17:45","kind":"EDITORIAL_CAROUSEL","topic":"PANDORA_VS_STAR_WARS","providers":["facebook","instagram","tiktok"],"headline":"Se você pudesse entrar em um universo hoje: Pandora ou Star Wars?","slides":["Capa duelo","Avatar: Fire and Ash","The Mandalorian and Grogu","Onde assistir — somente na descrição escrita","CTA: Pandora ou galáxia muito, muito distante?"],"availability_snapshot":{"Avatar: Fire and Ash":"Disney+ Brasil","The Mandalorian and Grogu":"Disney+ Brasil"},"asset_rule":"Disney press assets with download/share or editorial-use wording only","status":"GREEN_ASSET_ROUTE_IDENTIFIED_FACT_RECHECK_REQUIRED"},
+    {"time":"18:30","kind":"VIDEO","slot":"V7","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"19:50","kind":"VIDEO","slot":"V8","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"20:20","kind":"EDITORIAL_CAROUSEL","topic":"SPIDER_VS_ODYSSEY_2026","providers":["facebook","instagram","tiktok"],"headline":"Qual filme definiu 2026 até aqui?","slides":["Spider-Man: Brand New Day x The Odyssey","Bilheteria atualizada no próprio dia","Impacto cultural e conversa do público","CTA: qual foi o seu filme do ano?"],"dynamic_fact_rule":"recheck box office on 09/09; do not freeze 07/09 numbers","asset_rule":"Sony/Universal official press assets only after explicit reuse-rights pass; otherwise original data graphic with no film frames","status":"DYNAMIC_FACT_AND_ASSET_RIGHTS_PENDING"},
+    {"time":"21:00","kind":"STORY","topic":"NEXT_DAY_AUDIENCE_SIGNAL","providers":["facebook","instagram"],"concept":"Qual clássico você quer no Cena Certa amanhã? O Poderoso Chefão / Jurassic Park / O Senhor dos Anéis / Harry Potter","asset_plan":"original text-led poll; no unlicensed poster collage","status":"CREATIVE_PENDING"}
+  ],
+  "tiktok_editorial_policy": {
+    "native_story_route_verified": false,
+    "rule": "do not call TikTok adaptations Stories",
+    "adaptation": "reuse the four vertical editorial concepts as regular photo/video posts only when they add value and do not crowd the eight-video schedule"
+  },
+  "video_candidate_pool": [
+    {"priority":1,"title":"Avatar: Fire and Ash","year":2025,"demand":"VERY_HIGH","availability_brazil":"Disney+","rights_lane":"GREEN_CANDIDATE","rights_evidence":"Disney UK Press explicitly states film audiovisual material and stills were available to download and share; editorial-use galleries also exist","public_source_label_forbidden":true,"next_gate":"download clean story-only intervals and run black-frame/end-card/source-label QA"},
+    {"priority":2,"title":"Star Wars: The Mandalorian and Grogu","year":2026,"demand":"VERY_HIGH","availability_brazil":"Disney+","rights_lane":"GREEN_CANDIDATE","rights_evidence":"Disney UK Press explicitly states the audiovisual material and poster were available to download and share; press kit exists","public_source_label_forbidden":true,"next_gate":"extract clean film-story intervals only; no promotional cards"},
+    {"priority":3,"title":"The Matrix","year":1999,"demand":"EVERGREEN_HIGH","availability_brazil":"HBO Max; Globoplay; HBO Max Amazon Channel; Telecine Amazon Channel","rights_lane":"YELLOW_WBD_MEDIA_ACCESS_REQUIRED","rights_evidence":"WBD press infrastructure exists but downloadable publicity content is media-login controlled","public_source_label_forbidden":true,"next_gate":"obtain explicit media-use asset access before any footage enters Factory"},
+    {"priority":4,"title":"The Batman","year":2022,"demand":"EVERGREEN_HIGH","availability_brazil":"HBO Max; HBO Max Amazon Channel; Universal+ Amazon Channel","rights_lane":"YELLOW_WBD_MEDIA_ACCESS_REQUIRED","rights_evidence":"WBD press materials exist; exact audiovisual reuse permission must be proven","public_source_label_forbidden":true,"next_gate":"rights proof then clean scene extraction"},
+    {"priority":5,"title":"Dune: Part Two","year":2024,"demand":"VERY_HIGH","availability_brazil":"HBO Max; HBO Max Amazon Channel; Universal+ Amazon Channel","rights_lane":"YELLOW_WBD_MEDIAPASS_REQUIRED","rights_evidence":"WBD release points press materials to MediaPass; media login required","public_source_label_forbidden":true,"next_gate":"MediaPass rights proof before footage use"},
+    {"priority":6,"title":"Spider-Man: Brand New Day","year":2026,"demand":"EXTREME_CURRENT","availability_brazil":"cinemas; no subscription streaming confirmed as of 07/09","rights_lane":"YELLOW_SONY_ASSET_HUB_REQUIRED","rights_evidence":"official Sony title page has audiovisual material; reuse rights are not inferred from public playback","public_source_label_forbidden":true,"next_gate":"Sony Global Asset Hub or equivalent explicit reuse permission"},
+    {"priority":7,"title":"The Odyssey","year":2026,"demand":"EXTREME_CURRENT","availability_brazil":"cinemas","rights_lane":"YELLOW_UNIVERSAL_PRESS_PERMISSION_REQUIRED","rights_evidence":"Universal official title is in current release; public playback alone is not reuse permission","public_source_label_forbidden":true,"next_gate":"find press-use clip/asset terms compatible with edited social coverage"},
+    {"priority":8,"title":"Why Did I Get Married Again?","year":2026,"demand":"HIGH_CURRENT_RELEASE","availability_brazil":"Netflix from 09/09","rights_lane":"YELLOW_NETFLIX_PRESS_ACCOUNT_REQUIRED","rights_evidence":"Netflix Media Center title page exists; professional Press account provides downloadable assets","public_source_label_forbidden":true,"next_gate":"confirm exact asset-use terms and obtain audiovisual asset if permitted"},
+    {"priority":9,"title":"Scary Movie","year":2026,"demand":"HIGH_CURRENT_STREAMING","availability_brazil":"revalidate Brazil on 09/09","rights_lane":"YELLOW_VIDEO_RIGHTS_KEY_ART_GREEN","rights_evidence":"Paramount Press Express provides downloadable key art; no compatible audiovisual excerpt permission proven yet","public_source_label_forbidden":true,"next_gate":"search title-specific clip/excerpt usage terms"},
+    {"priority":10,"title":"Practical Magic 2","year":2026,"demand":"HIGH_PRE_RELEASE","availability_brazil":"cinemas from 10/09 subject to Brazil recheck","rights_lane":"YELLOW_WBD_MEDIA_ACCESS_REQUIRED","rights_evidence":"use only if WBD publicity asset rights pass","public_source_label_forbidden":true,"next_gate":"rights and Brazil release recheck"}
+  ],
+  "selection_gate": {
+    "required_final_videos": 8,
+    "candidate_pool_target": 10,
+    "must_have_rights_pass": true,
+    "must_have_brazil_availability_or_current_theatrical_path": true,
+    "must_have_actual_story_footage": true,
+    "must_pass_black_frame_credit_sponsor_card_scan": true,
+    "must_pass_60_day_dedup": true,
+    "must_pass_visual_semantic_alignment": true,
+    "must_pass_canonical_mask_audio_caption_qa": true
+  },
+  "dynamic_rechecks": [
+    {"deadline":"2026-09-09T08:00:00-03:00","topic":"SEP09_STREAMING_PICK","reason":"Brazil catalogs and launch-day availability"},
+    {"deadline":"2026-09-09T08:30:00-03:00","topic":"MATRIX_REWATCH","reason":"Brazil where-to-watch line"},
+    {"deadline":"2026-09-09T12:00:00-03:00","topic":"SPIDER_VS_ODYSSEY_2026","reason":"current box office and theatrical status"},
+    {"deadline":"2026-09-09T12:00:00-03:00","topic":"ALL_VIDEO_AVAILABILITY","reason":"written descriptions must list only verified Brazil availability"}
+  ],
+  "research_sources": [
+    "Disney UK Press — Avatar: Fire and Ash material available to download and share",
+    "Disney UK Press — The Mandalorian and Grogu press kit/material available to download and share",
+    "Disney+ Brazil — Avatar: Fire and Ash and The Mandalorian and Grogu availability",
+    "WBD Pressroom/MediaPass — media-only asset route for Warner titles",
+    "Sony official Spider-Man title page / Global Asset Hub route",
+    "Netflix Media Center — Why Did I Get Married Again title page and Press account asset access",
+    "Paramount Press Express — Scary Movie downloadable key art",
+    "JustWatch Brazil — availability snapshots to be revalidated on publication day",
+    "Metricool — 09/09 best-time snapshot"
+  ],
   "schedule_write_performed": false,
-  "notes": [
-    "Do not schedule any editorial item before FACT_PASS and ASSET_RIGHTS_PASS.",
-    "Video slots require canonical 60-day anti-repeat, source-rights, render and QA gates before scheduling.",
-    "Dynamic box-office claims must be refreshed on 09/09 before publication."
-  ]
+  "publish_gate": "NO_SCHEDULING_UNTIL_FACT_PASS_ASSET_RIGHTS_PASS_CREATIVE_QA_PASS_AND_VIDEO_QA_PASS"
 }
