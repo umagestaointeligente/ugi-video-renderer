@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      CAREER360_PREVIEW_URL: https://career360-preview-20260906.umagestaointeligente.workers.dev
+      CAREER360_PREVIEW_URL: https://lsi-career-360.umagestaointeligente.workers.dev
       EXPECTED_APP_I: 90a795bf1a371be66fd8f907c8a76501f8a5421c
     steps:
       - uses: actions/checkout@v4
@@ -69,4 +69,5 @@ jobs:
           grep -F 'CLOUDFLARE_APPLICATION_CONFIRMATION_TRUTHFUL_NO_FALSE_SEND=PASS' /tmp/cloudflare-browser-smoke.txt >/dev/null
           grep -F 'CLOUDFLARE_V16_RUNTIME_ERRORS=ZERO' /tmp/cloudflare-browser-smoke.txt >/dev/null
           cat /tmp/cloudflare-browser-smoke.txt >> "$GITHUB_STEP_SUMMARY"
-          echo 'OFFICIAL_PRODUCTION_PROMOTION=NONE' >> "$GITHUB_STEP_SUMMARY"
+          echo 'TESTER_ENTRYPOINT=YES' >> "$GITHUB_STEP_SUMMARY"
+          echo 'VERCEL_PRODUCTION_MUTATION=NONE' >> "$GITHUB_STEP_SUMMARY"
