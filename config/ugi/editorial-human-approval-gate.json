@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "effective_at": "2026-09-07T14:06:00-03:00",
+  "project": "UGI",
+  "state": "HUMAN_APPROVAL_REQUIRED",
+  "reason": "Temporary mandatory approval gate while the UGI visual/editorial standard is recalibrated after the 2026-09-07 quality incident.",
+  "scope": ["linkedin", "instagram", "tiktok"],
+  "approval_policy": {
+    "required_before_buffer_mutation": true,
+    "approver": "Paulo Oliveira",
+    "approval_channel": "current ChatGPT conversation",
+    "image": {
+      "preview_required": true,
+      "preview_type": "final_asset_preview",
+      "must_show_exact_final_file": true
+    },
+    "video": {
+      "preview_required": true,
+      "preview_type": "review_link_or_final_preview",
+      "closed_caption_visible_in_preview": true,
+      "must_show_exact_final_file": true
+    },
+    "approval_record": {
+      "required_value": "APPROVED",
+      "explicit_user_approval_required": true,
+      "approval_evidence_required": true
+    }
+  },
+  "mandatory_gates_before_approval": [
+    "EDITORIAL_VALUE_PASS",
+    "VISUAL_SEMANTIC_PASS",
+    "FORMAT_PASS",
+    "MEDIA_QUALITY_PASS",
+    "CLOSED_CAPTION_PASS_FOR_VIDEO",
+    "NO_STRETCH_PASS",
+    "NO_BAD_ZOOM_PASS",
+    "SAFE_AREA_PASS"
+  ],
+  "fail_closed": true,
+  "notes": [
+    "No image may be scheduled from a description alone; the exact final asset must be previewed.",
+    "No video may be scheduled from a script or storyboard alone; the final render must be reviewable before scheduling.",
+    "Scheduling receipt is not editorial approval.",
+    "This gate remains active until explicitly retired after the UGI standard is stable again."
+  ]
+}
