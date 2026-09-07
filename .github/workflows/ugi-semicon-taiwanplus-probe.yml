@@ -1,0 +1,23 @@
+name: UGI SEMICON TaiwanPlus Probe
+on:
+  push:
+    paths:
+      - 'scripts/ugi_semicon_taiwanplus_probe.py'
+      - '.github/workflows/ugi-semicon-taiwanplus-probe.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install requests
+      - run: python scripts/ugi_semicon_taiwanplus_probe.py
+      - name: Persist
+        run: |
+          git config user.name 'ugi-editorial-video-bot'
+          git config user.email 'ugi-editorial-video-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-08/semicon_taiwanplus_probe
+          git commit -m 'qa: add TaiwanPlus SEMICON source probe' || exit 0
+          git push
