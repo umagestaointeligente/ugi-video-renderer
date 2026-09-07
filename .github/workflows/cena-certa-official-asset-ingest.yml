@@ -34,11 +34,18 @@ jobs:
           items=d.get('items') or []
           if not (1 <= len(items) <= 10): raise SystemExit('INGEST_COUNT_FAIL')
           seen=set()
+          allowed_hosts=('youtube.com','youtu.be','disney.com','disney.co.uk','disneyusercontent.com','gettyimages.com')
           for i,x in enumerate(items):
-              rid=str(x.get('id') or ''); url=str(x.get('source_url') or '')
+              rid=str(x.get('id') or '')
               if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{2,95}',rid) or rid in seen: raise SystemExit(f'INGEST_ID_FAIL {i}')
               seen.add(rid)
-              if not (url.startswith('https://www.youtube.com/') or url.startswith('https://youtu.be/')): raise SystemExit(f'INGEST_URL_FAIL {i}')
+              urls=[str(x.get('source_url') or '')]+[str(v) for v in (x.get('fallback_urls') or [])]
+              if not 1 <= len(urls) <= 4: raise SystemExit(f'INGEST_URL_COUNT_FAIL {i}')
+              for url in urls:
+                  from urllib.parse import urlparse
+                  u=urlparse(url); host=(u.hostname or '').lower()
+                  if u.scheme!='https' or not any(host==h or host.endswith('.'+h) for h in allowed_hosts):
+                      raise SystemExit(f'INGEST_URL_FAIL {i} host={host}')
               if x.get('rights_pass') is not True or not str(x.get('rights_evidence') or '').strip(): raise SystemExit(f'INGEST_RIGHTS_FAIL {i}')
           matrix=json.dumps(list(range(len(items))),separators=(',',':'))
           sha=hashlib.sha256(raw).hexdigest()
@@ -65,6 +72,8 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check --no-cache-dir 'yt-dlp==2026.8.19'
+          node --version
+          python -m yt_dlp --version
       - id: meta
         shell: bash
         run: |
@@ -82,19 +91,68 @@ jobs:
           set -euo pipefail
           test -n "$URL"; test -n "$KEY"
           mkdir -p work proof
-          python -m yt_dlp --no-playlist --no-progress --quiet --socket-timeout 20 --retries 3 --fragment-retries 3 \
-            -f 'best[height<=720][ext=mp4]/best[height<=720]/best' --merge-output-format mp4 \
-            -o 'work/source.%(ext)s' '${{ steps.meta.outputs.source_url }}'
-          src=$(find work -maxdepth 1 -type f -name 'source.*' | head -1)
-          test -s "$src"
-          ffmpeg -y -loglevel error -i "$src" -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k -movflags +faststart work/source.mp4
+          export INDEX='${{ matrix.index }}'
+          python - <<'PY'
+          import json,os,pathlib
+          item=json.load(open(os.environ['REQUEST'],encoding='utf-8'))['items'][int(os.environ['INDEX'])]
+          urls=[item['source_url']]+list(item.get('fallback_urls') or [])
+          pathlib.Path('work/source-urls.txt').write_text('\n'.join(urls)+'\n',encoding='utf-8')
+          PY
+          resolved=''
+          attempt=0
+          while IFS= read -r candidate; do
+            test -n "$candidate" || continue
+            attempt=$((attempt+1))
+            rm -f work/download.* work/normalized.mp4
+            echo "RESOLVER_ATTEMPT=$attempt url=$candidate" | tee -a proof/resolver.log
+            if [[ "$candidate" =~ \.(mp4|mov|m4v|webm)(\?.*)?$ ]]; then
+              if curl --fail --location --silent --show-error --connect-timeout 20 --max-time 180 --retry 2 --retry-all-errors -o work/download.mp4 "$candidate" 2>&1 | tee -a proof/resolver.log; then
+                resolved=$(find work -maxdepth 1 -type f -name 'download.*' -size +1024c | head -1)
+              fi
+            else
+              if python -m yt_dlp --no-playlist --no-progress --socket-timeout 20 --retries 2 --fragment-retries 2 \
+                --js-runtimes node --remote-components ejs:github \
+                --extractor-args 'youtube:player_client=tv,web_safari,mweb' \
+                -f 'best[height<=720][ext=mp4]/best[height<=720]/best' --merge-output-format mp4 \
+                -o 'work/download.%(ext)s' "$candidate" 2>&1 | tee -a proof/resolver.log; then
+                resolved=$(find work -maxdepth 1 -type f -name 'download.*' -size +1024c | head -1)
+              fi
+            fi
+            if test -n "$resolved" && test -s "$resolved"; then
+              echo "RESOLVER_SOURCE_PASS attempt=$attempt file=$resolved" | tee -a proof/resolver.log
+              break
+            fi
+            resolved=''
+          done < work/source-urls.txt
+          if test -z "$resolved"; then
+            python - <<'PY'
+          import datetime,json,os,pathlib
+          out={'schema':'CENA_CERTA_SOURCE_RESOLUTION_V1','state':'BLOCKED_SOURCE_UNAVAILABLE','id':'${{ steps.meta.outputs.rid }}','run_id':'${{ github.run_id }}','attempted_urls':pathlib.Path('work/source-urls.txt').read_text(encoding='utf-8').splitlines(),'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'blind_retry_forbidden':True}
+          pathlib.Path('proof/source-status.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf-8')
+          PY
+            echo SOURCE_RESOLUTION_EXHAUSTED
+            exit 1
+          fi
+          ffmpeg -y -loglevel error -i "$resolved" -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k -movflags +faststart work/normalized.mp4
+          test -s work/normalized.mp4
+          mv work/normalized.mp4 work/source.mp4
           dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 work/source.mp4)
+          python - "$dur" <<'PY'
+          import sys
+          d=float(sys.argv[1])
+          if not 1.0 <= d <= 1800.0: raise SystemExit(f'INGEST_DURATION_FAIL {d}')
+          PY
           ffprobe -v error -show_streams -show_format -of json work/source.mp4 > proof/source-probe.json
           ffmpeg -y -loglevel error -i work/source.mp4 -vf 'fps=1/4,scale=320:-2,tile=5x6' -frames:v 1 proof/contact-sheet.jpg || true
           python ops/cena-certa/r2_stage.py \
             --base-url "$URL" --auth-key "$KEY" --id '${{ steps.meta.outputs.rid }}' \
             --batch-sha256 '${{ needs.manifest.outputs.request_sha }}' --mp4 work/source.mp4 --duration "$dur" \
             --out proof/source-r2.json
+          python - <<'PY'
+          import datetime,json,pathlib
+          out={'schema':'CENA_CERTA_SOURCE_RESOLUTION_V1','state':'INGEST_SOURCE_READY','id':'${{ steps.meta.outputs.rid }}','run_id':'${{ github.run_id }}','generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          pathlib.Path('proof/source-status.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf-8')
+          PY
           echo "INGEST_SOURCE_READY id=${{ steps.meta.outputs.rid }} duration=$dur"
       - uses: actions/upload-artifact@v4
         if: always()
