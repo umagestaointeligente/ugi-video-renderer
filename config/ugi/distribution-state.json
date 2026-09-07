@@ -1,19 +1,20 @@
 {
   "schema_version": "1.0",
-  "effective_at": "2026-09-04T11:05:00-03:00",
+  "effective_at": "2026-09-07T14:06:00-03:00",
   "project": "UGI",
-  "state": "UPDATED",
+  "state": "EDITORIAL_QA_EMERGENCY_FREEZE",
   "buffer": {
-    "active_channel_count": 3,
-    "active_platforms": ["linkedin", "instagram", "tiktok"],
-    "paused_platforms": ["youtube"],
+    "active_channel_count": 0,
+    "active_platforms": [],
+    "paused_platforms": ["linkedin", "instagram", "tiktok", "youtube"],
     "publisher": "buffer",
     "youtube_buffer_status": "PAUSED",
-    "youtube_strategy": "PRESERVED_FOR_FUTURE_REEVALUATION"
+    "youtube_strategy": "PRESERVED_FOR_FUTURE_REEVALUATION",
+    "emergency_freeze_reason": "Published UGI assets on 2026-09-07 failed visual-semantic and editorial quality gates. No new Buffer mutation is allowed until remaining assets are re-reviewed and explicitly released."
   },
   "channels": {
     "linkedin": {
-      "status": "ACTIVE",
+      "status": "PAUSED_EDITORIAL_QA",
       "role": "authority_management_career_leadership_strategy_ai_applied_b2b_b2c_relationship",
       "page_name": "UGI — Uma Gestão Inteligente",
       "public_url": "https://www.linkedin.com/company/uma-gestao-inteligente/",
@@ -29,11 +30,11 @@
       "mandatory_management_angle": true
     },
     "instagram": {
-      "status": "ACTIVE",
+      "status": "PAUSED_EDITORIAL_QA",
       "role": "brand_identity_reach_visual_education_relationship_community_fast_insights"
     },
     "tiktok": {
-      "status": "ACTIVE",
+      "status": "PAUSED_EDITORIAL_QA",
       "role": "discovery_cold_audience_experimentation_trends_hooks_fast_distribution_audience_acquisition"
     },
     "youtube": {
@@ -71,7 +72,7 @@
     "do_not_kill_linkedin_for_low_initial_audience": true
   },
   "linkedin_intelligence_engine": {
-    "status": "PROGRESSIVE_ACTIVE",
+    "status": "PAUSED_EDITORIAL_QA",
     "flow": [
       "RESEARCH",
       "DETECT_TRENDS",
@@ -98,6 +99,7 @@
     "Do not reactivate YouTube in Buffer without a new explicit decision or qualifying operational evidence.",
     "Do not delete YouTube strategy, content or history because Buffer distribution is paused.",
     "Do not mutate existing Instagram or TikTok publications without necessity.",
-    "Buffer active distribution baseline is exactly three channels: LinkedIn, Instagram and TikTok."
+    "During EDITORIAL_QA_EMERGENCY_FREEZE, no new Buffer mutation is allowed for LinkedIn, Instagram or TikTok.",
+    "Resume only after VISUAL_SEMANTIC_PASS, CLOSED_CAPTION_PASS, FORMAT_PASS and EDITORIAL_VALUE_PASS on the final file."
   ]
 }
