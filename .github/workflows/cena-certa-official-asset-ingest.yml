@@ -137,15 +137,24 @@ jobs:
             echo SOURCE_RESOLUTION_EXHAUSTED
             exit 1
           fi
-          ffmpeg -y -loglevel error -i "$resolved" -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k -movflags +faststart work/normalized.mp4
-          test -s work/normalized.mp4
-          mv work/normalized.mp4 work/source.mp4
-          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 work/source.mp4)
-          python - "$dur" <<'PY'
+          input_dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$resolved")
+          video_kbps=$(python - "$input_dur" <<'PY'
           import sys
           d=float(sys.argv[1])
-          if not 1.0 <= d <= 1800.0: raise SystemExit(f'INGEST_DURATION_FAIL {d}')
+          if not 1.0 <= d <= 600.0: raise SystemExit(f'INGEST_DURATION_FAIL {d}')
+          budget_bytes=48*1024*1024
+          total_bps=int(budget_bytes*8/d)
+          print(max(500,min(2400,(total_bps-128000)//1000)))
           PY
+          )
+          echo "INGEST_TRANSCODE_BUDGET duration=$input_dur video_kbps=$video_kbps max_bytes=50331648"
+          ffmpeg -y -loglevel error -i "$resolved" -map 0:v:0 -map 0:a? -vf "scale='min(1280,iw)':-2" -c:v libx264 -preset veryfast -b:v "${video_kbps}k" -maxrate "${video_kbps}k" -bufsize "$((video_kbps*2))k" -c:a aac -b:a 128k -movflags +faststart work/normalized.mp4
+          test -s work/normalized.mp4
+          size=$(stat -c %s work/normalized.mp4)
+          test "$size" -le 50331648 || { echo INGEST_SIZE_BUDGET_FAIL=$size; exit 1; }
+          mv work/normalized.mp4 work/source.mp4
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 work/source.mp4)
+          echo "INGEST_TRANSCODE_PASS duration=$dur bytes=$size"
           ffprobe -v error -show_streams -show_format -of json work/source.mp4 > proof/source-probe.json
           ffmpeg -y -loglevel error -i work/source.mp4 -vf 'fps=1/4,scale=320:-2,tile=5x6' -frames:v 1 proof/contact-sheet.jpg || true
           python ops/cena-certa/r2_stage.py \
