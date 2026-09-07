@@ -1,11 +1,14 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": false,
-  "mode": "IDLE",
-  "batch_path": "",
-  "batch_sha256": "",
+  "enabled": true,
+  "mode": "PREPARE",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260908-v1.json",
+  "batch_sha256": "8eab7986e4839975ed55c8324a78a0ced7fdc6b65a8fe19e84f07f24bac747b6",
   "prepared_run_id": "",
-  "requested_at": "",
-  "request_id": "",
-  "note": "IDLE after run 34145776001 failed closed at READY_COUNT 3/8. Diagnosed causes: voice pace failures on six candidates and Stopover blank visual on final scene. Render-stage and finalize were skipped; no scheduling occurred. Cleared only for cause-corrected 08/09 V2 batch."
+  "requested_at": "2026-09-07T18:05:08+00:00",
+  "request_id": "CCPACEFIX-20260907-180508",
+  "candidate_count": 10,
+  "selected_count": 8,
+  "reserve_count": 2,
+  "note": "Cause-corrected rerun after measured TTS pace recovery and black-scene autoshift; canonical 8+2 production for 2026-09-08. No blind retry."
 }
