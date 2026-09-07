@@ -1,5 +1,5 @@
 {
-  "schema": "CENA_CERTA_EDITORIAL_PLAN_V2",
+  "schema": "CENA_CERTA_EDITORIAL_PLAN_V3",
   "target_date": "2026-09-09",
   "timezone": "America/Sao_Paulo",
   "status": "RESEARCH_RIGHTS_AND_ASSETS_IN_PROGRESS_NOT_SCHEDULED",
@@ -15,6 +15,26 @@
     "goal": "prioritize films and series people actively want to watch, search for and continue consuming after seeing Cena Certa",
     "commons_role": "FALLBACK_ONLY_NOT_PRIMARY_SELECTION_DRIVER",
     "availability_rule": "where-to-watch information belongs only in the written post description, verified for Brazil on publication day; never spend narration time on platform availability"
+  },
+  "content_mix_strategy": {
+    "daily_video_mix": {
+      "nostalgia_anchor_1990_2010": 1,
+      "current_blockbusters_or_major_releases": 3,
+      "evergreen_major_franchises": 2,
+      "strong_streaming_series": 1,
+      "flex_trend_or_high_demand_title": 1
+    },
+    "nostalgia_rule": "reserve at least one daily video for a culturally remembered film, preferably 1990-2010, with real rewatch appeal and current legal availability to mention in the written description",
+    "nostalgia_1980s_exception": "allow iconic 1980s titles only when cultural recall and audience demand are exceptionally strong",
+    "nostalgia_not_awards_driven": true,
+    "nostalgia_selection_signals": [
+      "broad cultural recall",
+      "rewatch intent",
+      "franchise or star recognition",
+      "search and social conversation",
+      "Brazil availability on publication day"
+    ],
+    "success_signals_to_watch": ["retention", "saves", "comments", "rewatch intent", "profile continuation", "follows after nostalgia slot"]
   },
   "public_copy_rules": {
     "forbidden_public_tokens": ["trailer", "teaser", "preview", "promo", "sizzle"],
@@ -45,21 +65,31 @@
   },
   "timeline": [
     {"time":"07:45","kind":"STORY","topic":"ABERTURA_ESCOLHA_DO_DIA","providers":["facebook","instagram"],"concept":"Qual universo você quer ver primeiro hoje? Matrix / Batman / Avatar / Spider-Man","asset_plan":"original Cena Certa vertical card plus only rights-cleared official imagery","status":"ASSET_RIGHTS_PENDING"},
-    {"time":"09:10","kind":"VIDEO","slot":"V1","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"09:10","kind":"VIDEO","slot":"V1","lane":"CURRENT_MAJOR_RELEASE","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
     {"time":"10:20","kind":"EDITORIAL_CAROUSEL","topic":"SEP09_STREAMING_PICK","providers":["facebook","instagram","tiktok"],"headline":"Quatro estreias de hoje. Qual entra na sua lista?","slides":["Capa original Cena Certa","Why Did I Get Married Again? — Netflix","Atraídos Pelo Destino — Prime Video","Made in Korea S2 — Disney+/Hulu","Desaparecida — Apple TV+ + CTA"],"discussion":"Qual você começa hoje?","asset_rule":"use only press stills/key art with explicit editorial/media permission; otherwise use original typographic card without copyrighted frame","status":"FACT_PASS_ASSET_RIGHTS_PENDING"},
-    {"time":"10:55","kind":"VIDEO","slot":"V2","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"10:55","kind":"VIDEO","slot":"V2","lane":"CURRENT_OR_EVERGREEN_MAJOR","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
     {"time":"11:55","kind":"STORY","topic":"MATRIX_PILL_POLL","providers":["facebook","instagram"],"concept":"Se você descobrisse a verdade: pílula vermelha ou azul?","asset_plan":"Matrix press still only after WBD media-rights pass; otherwise original abstract Cena Certa visual","status":"ASSET_RIGHTS_PENDING"},
-    {"time":"12:20","kind":"VIDEO","slot":"V3","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"12:20","kind":"VIDEO","slot":"V3","lane":"NOSTALGIA_ANCHOR_1990_2010","preferred_title":"The Matrix (1999)","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
     {"time":"13:20","kind":"EDITORIAL_CAROUSEL","topic":"MATRIX_REWATCH","providers":["facebook","instagram","tiktok"],"headline":"Matrix ainda é uma das melhores ideias da ficção científica?","slides":["Hook visual","Neo e a realidade simulada","Por que o conceito continua atual","Onde assistir no Brasil — somente na descrição escrita","CTA: envelheceu bem ou virou nostalgia?"],"where_to_watch_snapshot":"HBO Max, Globoplay, HBO Max Amazon Channel e Telecine Amazon Channel — revalidar em 09/09 antes de publicar","asset_rule":"WBD press material only after explicit media-use access/terms pass","status":"ASSET_RIGHTS_PENDING"},
     {"time":"14:20","kind":"STORY","topic":"STREAMING_CHOICE","providers":["facebook","instagram"],"concept":"Onde você dá play hoje? Netflix / Prime Video / Disney+ / Apple TV+","asset_plan":"original Cena Certa vertical card; no unlicensed poster collage","status":"CREATIVE_PENDING"},
-    {"time":"14:45","kind":"VIDEO","slot":"V4","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
-    {"time":"15:55","kind":"VIDEO","slot":"V5","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
-    {"time":"17:10","kind":"VIDEO","slot":"V6","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"14:45","kind":"VIDEO","slot":"V4","lane":"CURRENT_MAJOR_RELEASE","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"15:55","kind":"VIDEO","slot":"V5","lane":"EVERGREEN_MAJOR_FRANCHISE","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"17:10","kind":"VIDEO","slot":"V6","lane":"STRONG_STREAMING_SERIES","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
     {"time":"17:45","kind":"EDITORIAL_CAROUSEL","topic":"PANDORA_VS_STAR_WARS","providers":["facebook","instagram","tiktok"],"headline":"Se você pudesse entrar em um universo hoje: Pandora ou Star Wars?","slides":["Capa duelo","Avatar: Fire and Ash","The Mandalorian and Grogu","Onde assistir — somente na descrição escrita","CTA: Pandora ou galáxia muito, muito distante?"],"availability_snapshot":{"Avatar: Fire and Ash":"Disney+ Brasil","The Mandalorian and Grogu":"Disney+ Brasil"},"asset_rule":"Disney press assets with download/share or editorial-use wording only","status":"GREEN_ASSET_ROUTE_IDENTIFIED_FACT_RECHECK_REQUIRED"},
-    {"time":"18:30","kind":"VIDEO","slot":"V7","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
-    {"time":"19:50","kind":"VIDEO","slot":"V8","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"18:30","kind":"VIDEO","slot":"V7","lane":"EVERGREEN_MAJOR_FRANCHISE","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"19:50","kind":"VIDEO","slot":"V8","lane":"FLEX_HIGH_DEMAND","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
     {"time":"20:20","kind":"EDITORIAL_CAROUSEL","topic":"SPIDER_VS_ODYSSEY_2026","providers":["facebook","instagram","tiktok"],"headline":"Qual filme definiu 2026 até aqui?","slides":["Spider-Man: Brand New Day x The Odyssey","Bilheteria atualizada no próprio dia","Impacto cultural e conversa do público","CTA: qual foi o seu filme do ano?"],"dynamic_fact_rule":"recheck box office on 09/09; do not freeze 07/09 numbers","asset_rule":"Sony/Universal official press assets only after explicit reuse-rights pass; otherwise original data graphic with no film frames","status":"DYNAMIC_FACT_AND_ASSET_RIGHTS_PENDING"},
-    {"time":"21:00","kind":"STORY","topic":"NEXT_DAY_AUDIENCE_SIGNAL","providers":["facebook","instagram"],"concept":"Qual clássico você quer no Cena Certa amanhã? O Poderoso Chefão / Jurassic Park / O Senhor dos Anéis / Harry Potter","asset_plan":"original text-led poll; no unlicensed poster collage","status":"CREATIVE_PENDING"}
+    {"time":"21:00","kind":"STORY","topic":"NEXT_DAY_AUDIENCE_SIGNAL","providers":["facebook","instagram"],"concept":"Qual nostálgico você quer amanhã? Exterminador do Futuro 2 / Jurassic Park / A Bruxa de Blair / outro clássico 90-2010","asset_plan":"original text-led poll; no unlicensed poster collage","status":"CREATIVE_PENDING"}
+  ],
+  "nostalgia_research_queue": [
+    {"title":"Terminator 2: Judgment Day","year":1991,"fit":"ICONIC_ACTION_NOSTALGIA","rights_lane":"RESEARCH_EXPLICIT_MEDIA_USE","availability_brazil":"REVALIDATE_ON_DAY"},
+    {"title":"The Blair Witch Project","year":1999,"fit":"CULT_HORROR_NOSTALGIA","rights_lane":"RESEARCH_EXPLICIT_MEDIA_USE","availability_brazil":"REVALIDATE_ON_DAY"},
+    {"title":"Jurassic Park","year":1993,"fit":"FAMILY_ADVENTURE_NOSTALGIA","rights_lane":"RESEARCH_EXPLICIT_MEDIA_USE","availability_brazil":"REVALIDATE_ON_DAY"},
+    {"title":"The Mask","year":1994,"fit":"COMEDY_NOSTALGIA","rights_lane":"RESEARCH_EXPLICIT_MEDIA_USE","availability_brazil":"REVALIDATE_ON_DAY"},
+    {"title":"Rush Hour","year":1998,"fit":"ACTION_COMEDY_NOSTALGIA","rights_lane":"RESEARCH_EXPLICIT_MEDIA_USE","availability_brazil":"REVALIDATE_ON_DAY"},
+    {"title":"Men in Black","year":1997,"fit":"SCI_FI_COMEDY_NOSTALGIA","rights_lane":"RESEARCH_EXPLICIT_MEDIA_USE","availability_brazil":"REVALIDATE_ON_DAY"},
+    {"title":"Police Academy","year":1984,"fit":"1980S_ICONIC_COMEDY_EXCEPTION","rights_lane":"RESEARCH_EXPLICIT_MEDIA_USE","availability_brazil":"REVALIDATE_ON_DAY"},
+    {"title":"The Naked Gun","year":1988,"fit":"1980S_ICONIC_COMEDY_EXCEPTION","rights_lane":"RESEARCH_EXPLICIT_MEDIA_USE","availability_brazil":"REVALIDATE_ON_DAY"}
   ],
   "tiktok_editorial_policy": {
     "native_story_route_verified": false,
@@ -69,7 +99,7 @@
   "video_candidate_pool": [
     {"priority":1,"title":"Avatar: Fire and Ash","year":2025,"demand":"VERY_HIGH","availability_brazil":"Disney+","rights_lane":"GREEN_CANDIDATE","rights_evidence":"Disney UK Press explicitly states film audiovisual material and stills were available to download and share; editorial-use galleries also exist","public_source_label_forbidden":true,"next_gate":"download clean story-only intervals and run black-frame/end-card/source-label QA"},
     {"priority":2,"title":"Star Wars: The Mandalorian and Grogu","year":2026,"demand":"VERY_HIGH","availability_brazil":"Disney+","rights_lane":"GREEN_CANDIDATE","rights_evidence":"Disney UK Press explicitly states the audiovisual material and poster were available to download and share; press kit exists","public_source_label_forbidden":true,"next_gate":"extract clean film-story intervals only; no promotional cards"},
-    {"priority":3,"title":"The Matrix","year":1999,"demand":"EVERGREEN_HIGH","availability_brazil":"HBO Max; Globoplay; HBO Max Amazon Channel; Telecine Amazon Channel","rights_lane":"YELLOW_WBD_MEDIA_ACCESS_REQUIRED","rights_evidence":"WBD press infrastructure exists but downloadable publicity content is media-login controlled","public_source_label_forbidden":true,"next_gate":"obtain explicit media-use asset access before any footage enters Factory"},
+    {"priority":3,"title":"The Matrix","year":1999,"demand":"EVERGREEN_HIGH_NOSTALGIA_ANCHOR","availability_brazil":"HBO Max; Globoplay; HBO Max Amazon Channel; Telecine Amazon Channel","rights_lane":"YELLOW_WBD_MEDIA_ACCESS_REQUIRED","rights_evidence":"WBD press infrastructure exists but downloadable publicity content is media-login controlled","public_source_label_forbidden":true,"next_gate":"obtain explicit media-use asset access before any footage enters Factory"},
     {"priority":4,"title":"The Batman","year":2022,"demand":"EVERGREEN_HIGH","availability_brazil":"HBO Max; HBO Max Amazon Channel; Universal+ Amazon Channel","rights_lane":"YELLOW_WBD_MEDIA_ACCESS_REQUIRED","rights_evidence":"WBD press materials exist; exact audiovisual reuse permission must be proven","public_source_label_forbidden":true,"next_gate":"rights proof then clean scene extraction"},
     {"priority":5,"title":"Dune: Part Two","year":2024,"demand":"VERY_HIGH","availability_brazil":"HBO Max; HBO Max Amazon Channel; Universal+ Amazon Channel","rights_lane":"YELLOW_WBD_MEDIAPASS_REQUIRED","rights_evidence":"WBD release points press materials to MediaPass; media login required","public_source_label_forbidden":true,"next_gate":"MediaPass rights proof before footage use"},
     {"priority":6,"title":"Spider-Man: Brand New Day","year":2026,"demand":"EXTREME_CURRENT","availability_brazil":"cinemas; no subscription streaming confirmed as of 07/09","rights_lane":"YELLOW_SONY_ASSET_HUB_REQUIRED","rights_evidence":"official Sony title page has audiovisual material; reuse rights are not inferred from public playback","public_source_label_forbidden":true,"next_gate":"Sony Global Asset Hub or equivalent explicit reuse permission"},
@@ -81,6 +111,10 @@
   "selection_gate": {
     "required_final_videos": 8,
     "candidate_pool_target": 10,
+    "minimum_nostalgia_slots": 1,
+    "nostalgia_preferred_year_min": 1990,
+    "nostalgia_preferred_year_max": 2010,
+    "nostalgia_1980s_exception_allowed": true,
     "must_have_rights_pass": true,
     "must_have_brazil_availability_or_current_theatrical_path": true,
     "must_have_actual_story_footage": true,
