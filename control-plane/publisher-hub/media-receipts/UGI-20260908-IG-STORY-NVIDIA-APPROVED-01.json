@@ -1,0 +1,33 @@
+{
+  "project": "UGI",
+  "route": "EDITORIAL_MEDIA_V1",
+  "queuePath": "control-plane/publisher-hub/media-queue/UGI-20260908-IG-STORY-NVIDIA-APPROVED-01.json",
+  "id": "UGI-20260908-IG-STORY-NVIDIA-APPROVED-01",
+  "platform": "instagram",
+  "format": "story",
+  "mediaType": "image",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-08/story-nvidia-company-approved-v2.png",
+  "requestedDueAt": "2026-09-08T11:15:00Z",
+  "ok": true,
+  "bufferMutationPerformed": true,
+  "publication": {
+    "status": "scheduled",
+    "bufferStatus": "scheduled",
+    "bufferPostId": "6a9f9e411a2650f2ba5a5e57",
+    "dueAt": "2026-09-08T11:15:00.000Z",
+    "sentAt": null,
+    "externalLink": null,
+    "sharedNow": false,
+    "error": null
+  },
+  "target": {
+    "channelId": "6a7896cdb2d9d57743457e33",
+    "channelName": null,
+    "channelService": "instagram"
+  },
+  "workerVersion": "lola-v8-r45-7-editorial-media-v1-2026-09-05",
+  "workerRoute": "/api/editorial-media-publish",
+  "error": null,
+  "timestamp": "2026-09-08T05:33:53.558256+00:00",
+  "evidenceSource": "GitHub Actions run 34191090247 worker response before local assertion failure"
+}
