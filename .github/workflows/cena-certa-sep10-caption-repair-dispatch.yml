@@ -1,0 +1,67 @@
+name: Cena Certa Sep10 Caption Repair Dispatch
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - '.github/workflows/cena-certa-sep10-caption-repair-dispatch.yml'
+
+permissions:
+  contents: write
+  packages: read
+
+jobs:
+  repair-and-dispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feat/cena-certa-factory-v2-certified
+      - name: Repair exact caption chunk
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          old='E continuam reunindo multidões pelo mundo inteiro.'
+          new='E ainda reúnem multidões pelo mundo.'
+          hits=0
+          for item in data:
+              chunks=item.get('caption_chunks') or []
+              for i,v in enumerate(chunks):
+                  if v==old:
+                      chunks[i]=new
+                      hits+=1
+          if hits!=1:
+              raise SystemExit(f'CAPTION_REPAIR_MATCH_FAIL hits={hits}')
+          p.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          print('CAPTION_REPAIR_PASS')
+          PY
+      - name: Full canonical preflight and dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python ops/cena-certa/dispatch_activate.py \
+            --batch ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json \
+            --select-count 8 \
+            --reserve-count 0 \
+            --note 'Paulo authorized final video production and scheduling for 10/09; 08/09 and 09/09 remain frozen.'
+      - name: Commit repaired batch and dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Cena Certa Factory'
+          git config user.email 'actions@users.noreply.github.com'
+          git add ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json ops/cena-certa/dispatch.json
+          git diff --cached --quiet && { echo NO_CONTROL_PLANE_CHANGE; exit 1; }
+          git commit -m 'fix(cena-certa): repair Sep 10 caption and dispatch'
+          git push origin HEAD:feat/cena-certa-factory-v2-certified
