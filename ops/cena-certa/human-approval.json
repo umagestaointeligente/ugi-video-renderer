@@ -5,5 +5,5 @@
   "production_run_id": 34152820372,
   "approved_at": null,
   "approved_by": null,
-  "note": "Recovered exact outbox; private preview and explicit human approval remain mandatory."
+  "note": "08/09 reconciled live in Metricool; old approval gate closed without replay. Ready for a new immutable dispatch."
 }
