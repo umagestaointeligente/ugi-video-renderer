@@ -1,0 +1,31 @@
+{
+  "programs": [],
+  "streams": [
+    {
+      "width": 1080,
+      "height": 1920,
+      "r_frame_rate": "30/1"
+    }
+  ],
+  "format": {
+    "duration": "54.936000",
+    "size": "11688970"
+  },
+  "sources": {
+    "whitehouse": "The White House / U.S. federal government work — public domain via Wikimedia Commons",
+    "japan": "Prime Minister’s Office of Japan — CC BY 3.0 via Wikimedia Commons",
+    "arizona": "White House Communications Agency / DVIDS Video 866988 — public domain"
+  },
+  "shot_labels": [
+    "CEO / investment announcement",
+    "TSMC Japan visit / company context",
+    "TSMC Arizona / company event",
+    "C.C. Wei speaking / TSMC",
+    "TSMC factory visit / wafer & facility context",
+    "TSMC Arizona event / manufacturing expansion",
+    "TSMC Japan / people and operation context",
+    "C.C. Wei / global expansion",
+    "TSMC Arizona / closing company context"
+  ],
+  "status": "PREVIEW_ONLY_AWAITING_HUMAN_APPROVAL"
+}
