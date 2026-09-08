@@ -19,9 +19,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
+          RUN_MARKER: sep10-v4-20260908T2219Z
         shell: bash
         run: |
           set -euo pipefail
+          echo "dispatch_marker=$RUN_MARKER"
           python - <<'PY'
           import json, os, urllib.request
           repo=os.environ['REPO']
