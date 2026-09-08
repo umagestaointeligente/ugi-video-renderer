@@ -1,0 +1,258 @@
+name: VSA YouTube Schedule 2026-09-08
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-youtube-schedule-20260908.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vsa-youtube-schedule-20260908
+  cancel-in-progress: false
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ORBIT_YOUTUBE_CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      ORBIT_YOUTUBE_CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
+      VSA_YOUTUBE_REFRESH_TOKEN: ${{ secrets.VSA_YOUTUBE_REFRESH_TOKEN }}
+      RECEIPT_PATH: receipts/vsa/2026-09-08/youtube-schedule-receipt.json
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate secret bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in ORBIT_YOUTUBE_CLIENT_ID ORBIT_YOUTUBE_CLIENT_SECRET VSA_YOUTUBE_REFRESH_TOKEN; do
+            test -n "${!name:-}" || { echo "${name}_PRESENT=false"; exit 2; }
+            echo "${name}_PRESENT=true"
+          done
+
+      - name: Install YouTube client
+        run: python -m pip install --quiet google-api-python-client google-auth google-auth-httplib2
+
+      - name: Upload, schedule and verify 6 videos
+        id: youtube
+        shell: bash
+        run: |
+          mkdir -p "$(dirname "$RECEIPT_PATH")"
+          python - <<'PY'
+          from __future__ import annotations
+          import datetime as dt
+          import json
+          import os
+          import pathlib
+          import sys
+          import urllib.request
+
+          from google.oauth2.credentials import Credentials
+          from google.auth.transport.requests import Request
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaFileUpload
+
+          receipt_path = pathlib.Path(os.environ['RECEIPT_PATH'])
+          receipt_path.parent.mkdir(parents=True, exist_ok=True)
+
+          batch = [
+            {
+              'key':'VSA-20260908-MOON-JUPITER',
+              'title':'A Lua vai esconder Júpiter em plena luz do dia?',
+              'description':'Como uma Lua muito menor consegue esconder Júpiter inteiro no céu? A resposta está na geometria e na distância.\n\nReferência factual: Space.com, 07/09/2026. Visualizações originais VSA.\n\n#VocêSabia #Astronomia #Ciência\n\nVSA_SCHEDULE_KEY:VSA-20260908-MOON-JUPITER',
+              'url':'https://beta.productos.dev/api/project-storage/public/a4cbb8e8-0282-4eae-8007-0314da27880e/vsa/2026-09-08/VSA_MOON_JUPITER_CANONICAL_FINAL.mp4',
+              'publishAt':'2026-09-08T11:00:00Z'
+            },
+            {
+              'key':'VSA-20260908-KRAKATAU',
+              'title':'Por que a cinza de um vulcão consegue parar milhares de voos?',
+              'description':'Cinza vulcânica não é fumaça comum: ela pode entrar no motor, desgastar superfícies e alterar o fluxo de ar.\n\nEvidência atual: Pemprov Lampung, 05/09/2026. Materiais de arquivo identificados no vídeo.\n\n#VocêSabia #Vulcões #Aviação\n\nVSA_SCHEDULE_KEY:VSA-20260908-KRAKATAU',
+              'url':'https://beta.productos.dev/api/project-storage/public/a4cbb8e8-0282-4eae-8007-0314da27880e/vsa/2026-09-08/VSA_KRAKATAU_CANONICAL_FINAL.mp4',
+              'publishAt':'2026-09-08T14:00:00Z'
+            },
+            {
+              'key':'VSA-20260908-CONTRAIL',
+              'title':'Aquela linha branca do avião pode aquecer o planeta?',
+              'description':'Alguns contrails desaparecem rápido; outros persistem e podem influenciar o balanço térmico da atmosfera.\n\nReferência factual: Reuters, 07/09/2026. Footage CC BY conforme créditos do vídeo.\n\n#VocêSabia #Aviação #Clima\n\nVSA_SCHEDULE_KEY:VSA-20260908-CONTRAIL',
+              'url':'https://beta.productos.dev/api/project-storage/public/a4cbb8e8-0282-4eae-8007-0314da27880e/vsa/2026-09-08/VSA_CONTRAIL_CANONICAL_FINAL.mp4',
+              'publishAt':'2026-09-08T17:00:00Z'
+            },
+            {
+              'key':'VSA-20260908-ROMAN',
+              'title':'Por que o telescópio Roman vai fotografar tanto céu de uma vez?',
+              'description':'O Nancy Grace Roman Space Telescope combina grande detalhe com um campo de visão enorme para mapear vastas regiões do Universo.\n\nFootage e visualizações: NASA, conforme NASA Media Guidelines.\n\n#VocêSabia #NASA #Espaço\n\nVSA_SCHEDULE_KEY:VSA-20260908-ROMAN',
+              'url':'https://beta.productos.dev/api/project-storage/public/a4cbb8e8-0282-4eae-8007-0314da27880e/vsa/2026-09-08/VSA_ROMAN_CANONICAL_FINAL.mp4',
+              'publishAt':'2026-09-08T20:00:00Z'
+            },
+            {
+              'key':'VSA-20260908-RAIOS',
+              'title':'O raio também sobe do chão?',
+              'description':'Nem toda descarga elétrica começa do jeito que a gente imagina. Veja como descargas ascendentes podem se formar.\n\nConteúdo educativo VSA.\n\n#VocêSabia #Raios #Ciência\n\nVSA_SCHEDULE_KEY:VSA-20260908-RAIOS',
+              'url':'https://beta.productos.dev/api/project-storage/public/a4cbb8e8-0282-4eae-8007-0314da27880e/vsa/2026-09-08/VSA_RAIOS_CANONICAL_REFERENCE.mp4',
+              'publishAt':'2026-09-08T22:30:00Z'
+            },
+            {
+              'key':'VSA-20260908-HUMANOID',
+              'title':'Por que exércitos estão de olho em robôs humanoides?',
+              'description':'Escadas, portas, ferramentas e veículos já foram projetados para corpos humanos. Esse detalhe ajuda a explicar o interesse em robôs humanoides.\n\nReferência factual: Reuters, 07/09/2026. Footage CC0/NASA conforme créditos do vídeo.\n\n#VocêSabia #Robótica #Tecnologia\n\nVSA_SCHEDULE_KEY:VSA-20260908-HUMANOID',
+              'url':'https://beta.productos.dev/api/project-storage/public/a4cbb8e8-0282-4eae-8007-0314da27880e/vsa/2026-09-08/VSA_HUMANOID_CANONICAL_FINAL.mp4',
+              'publishAt':'2026-09-09T00:30:00Z'
+            },
+          ]
+
+          def norm_time(v):
+              if not v: return None
+              return dt.datetime.fromisoformat(v.replace('Z','+00:00')).astimezone(dt.timezone.utc)
+
+          receipt = {
+            'task_id':'VSA-YOUTUBE-SCHEDULE-20260908',
+            'project':'ORBIT/VSA',
+            'synthetic':False,
+            'started_at':dt.datetime.now(dt.timezone.utc).isoformat(),
+            'requested_timezone':'America/Sao_Paulo',
+            'result':'RUNNING',
+            'channel':None,
+            'items':[],
+          }
+          receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+'\n')
+
+          try:
+              creds = Credentials(
+                  token=None,
+                  refresh_token=os.environ['VSA_YOUTUBE_REFRESH_TOKEN'],
+                  token_uri='https://oauth2.googleapis.com/token',
+                  client_id=os.environ['ORBIT_YOUTUBE_CLIENT_ID'],
+                  client_secret=os.environ['ORBIT_YOUTUBE_CLIENT_SECRET'],
+                  scopes=['https://www.googleapis.com/auth/youtube.upload','https://www.googleapis.com/auth/youtube.readonly']
+              )
+              creds.refresh(Request())
+              yt = build('youtube','v3',credentials=creds,cache_discovery=False)
+
+              ch = yt.channels().list(part='snippet,contentDetails', mine=True).execute()
+              if not ch.get('items'):
+                  raise RuntimeError('AUTHENTICATED_ACCOUNT_HAS_NO_YOUTUBE_CHANNEL')
+              channel = ch['items'][0]
+              receipt['channel'] = {'id':channel['id'], 'title':channel['snippet']['title']}
+
+              uploads = channel['contentDetails']['relatedPlaylists']['uploads']
+              p = yt.playlistItems().list(part='contentDetails', playlistId=uploads, maxResults=50).execute()
+              ids = [x['contentDetails']['videoId'] for x in p.get('items',[])]
+              existing = []
+              if ids:
+                  vr = yt.videos().list(part='snippet,status', id=','.join(ids)).execute()
+                  existing = vr.get('items',[])
+
+              def find_existing(item):
+                  marker = f"VSA_SCHEDULE_KEY:{item['key']}"
+                  target = norm_time(item['publishAt'])
+                  for v in existing:
+                      desc = (v.get('snippet') or {}).get('description','')
+                      title = (v.get('snippet') or {}).get('title','')
+                      st = v.get('status') or {}
+                      pub = norm_time(st.get('publishAt'))
+                      if marker in desc or (title == item['title'] and pub == target):
+                          return v
+                  return None
+
+              for idx,item in enumerate(batch, start=1):
+                  row = {'key':item['key'],'title':item['title'],'requestedPublishAt':item['publishAt'],'state':'STARTED'}
+                  receipt['items'].append(row)
+                  receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+'\n')
+                  try:
+                      old = find_existing(item)
+                      if old:
+                          video_id = old['id']
+                          row['uploadAction']='REUSED_EXISTING'
+                      else:
+                          local = pathlib.Path('/tmp') / f'vsa-{idx}.mp4'
+                          urllib.request.urlretrieve(item['url'], local)
+                          if local.stat().st_size < 1024:
+                              raise RuntimeError('MEDIA_DOWNLOAD_TOO_SMALL')
+                          body = {
+                            'snippet':{
+                              'title':item['title'],
+                              'description':item['description'],
+                              'categoryId':'27',
+                              'defaultLanguage':'pt-BR'
+                            },
+                            'status':{
+                              'privacyStatus':'private',
+                              'publishAt':item['publishAt'],
+                              'selfDeclaredMadeForKids':False
+                            }
+                          }
+                          media = MediaFileUpload(str(local), mimetype='video/mp4', chunksize=8*1024*1024, resumable=True)
+                          req = yt.videos().insert(part='snippet,status', body=body, media_body=media)
+                          response = None
+                          while response is None:
+                              _, response = req.next_chunk()
+                          video_id = response.get('id')
+                          if not video_id:
+                              raise RuntimeError('UPLOAD_RETURNED_NO_VIDEO_ID')
+                          row['uploadAction']='UPLOADED_NEW'
+                          old = response
+                          existing.append(response)
+
+                      rb = yt.videos().list(part='snippet,status', id=video_id).execute()
+                      if not rb.get('items'):
+                          raise RuntimeError('READBACK_VIDEO_NOT_FOUND')
+                      v = rb['items'][0]
+                      st = v.get('status') or {}
+                      got_time = norm_time(st.get('publishAt'))
+                      want_time = norm_time(item['publishAt'])
+                      if st.get('privacyStatus') != 'private':
+                          raise RuntimeError(f"READBACK_PRIVACY_NOT_PRIVATE:{st.get('privacyStatus')}")
+                      if got_time != want_time:
+                          raise RuntimeError(f"READBACK_PUBLISH_AT_MISMATCH:{st.get('publishAt')}")
+                      row.update({
+                        'videoId':video_id,
+                        'watchUrl':f'https://www.youtube.com/watch?v={video_id}',
+                        'privacyStatus':st.get('privacyStatus'),
+                        'confirmedPublishAt':st.get('publishAt'),
+                        'state':'SCHEDULED_CONFIRMED'
+                      })
+                  except Exception as e:
+                      row['state']='FAILED'
+                      row['error']=f'{type(e).__name__}:{e}'[:1500]
+                  finally:
+                      receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+'\n')
+
+              ok = [x for x in receipt['items'] if x.get('state') == 'SCHEDULED_CONFIRMED']
+              receipt['finished_at']=dt.datetime.now(dt.timezone.utc).isoformat()
+              receipt['scheduledConfirmed']=len(ok)
+              receipt['expected']=len(batch)
+              receipt['result']='SUCCESS' if len(ok)==len(batch) else ('PARTIAL' if ok else 'FAILED')
+              receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+'\n')
+              print(json.dumps({'result':receipt['result'],'scheduledConfirmed':len(ok),'expected':len(batch),'channel':receipt['channel'],'items':[{'key':x['key'],'state':x['state'],'videoId':x.get('videoId'),'confirmedPublishAt':x.get('confirmedPublishAt'),'error':x.get('error')} for x in receipt['items']]}, ensure_ascii=False, indent=2))
+              sys.exit(0 if receipt['result']=='SUCCESS' else 3)
+          except Exception as e:
+              receipt['finished_at']=dt.datetime.now(dt.timezone.utc).isoformat()
+              receipt['result']='FAILED'
+              receipt['fatalError']=f'{type(e).__name__}:{e}'[:2000]
+              receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+'\n')
+              print(json.dumps({'result':'FAILED','fatalError':receipt['fatalError']}, ensure_ascii=False))
+              sys.exit(2)
+          PY
+
+      - name: Persist receipt to repository
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f "$RECEIPT_PATH" ]; then
+            mkdir -p "$(dirname "$RECEIPT_PATH")"
+            printf '%s\n' '{"task_id":"VSA-YOUTUBE-SCHEDULE-20260908","project":"ORBIT/VSA","synthetic":false,"result":"FAILED","fatalError":"WORKFLOW_FAILED_BEFORE_PYTHON_RECEIPT"}' > "$RECEIPT_PATH"
+          fi
+          git config user.name 'vsa-youtube-scheduler-bot'
+          git config user.email 'vsa-youtube-scheduler-bot@users.noreply.github.com'
+          git add "$RECEIPT_PATH"
+          git commit -m 'receipt: VSA YouTube schedule 2026-09-08' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
