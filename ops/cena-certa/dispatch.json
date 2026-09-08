@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v4.json",
-  "batch_sha256": "01b0ca2a2fdb12fc99fe25a24f26fe8f856285a4dcfc407f9024b71750d01ddb",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v5.json",
+  "batch_sha256": "a9830ecf33fa9d9c7a229ac5fc8fdfcbb15bbfd2f889ee7333880701d2865557",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T04:19:56+00:00",
-  "request_id": "CC-20260909-PROD-V4-041956",
+  "requested_at": "2026-09-08T04:43:30+00:00",
+  "request_id": "CC-20260909-TRON-BLACK-REPAIR-V5",
   "candidate_count": 10,
   "selected_count": 8,
   "reserve_count": 2,
-  "note": "Measured-duration repaired Sep 9 batch v4; no gate relaxation; Toy Story 5 remains qualified hot reserve if needed."
+  "note": "Measured black-frame repair for TRON only: scene 0 moved from 1.0s to 4.0s after live source re-probe found no >=0.2s black interval in the 4.0-8.0s window. No gate relaxation. Normalizer true-peak fix already passed certified smoke run 34187139494."
 }
