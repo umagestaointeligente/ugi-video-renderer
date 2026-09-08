@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v3.json",
   "batch_sha256": "628fe09281779b567357198f16257d58a68456220b3ebdea96f3e82d545a63be",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T04:12:15+00:00",
-  "request_id": "CC-20260909-CAPTION-REPAIR-V3B",
+  "requested_at": "2026-09-08T04:13:42+00:00",
+  "request_id": "CC-20260909-PROD-V3-041342",
   "candidate_count": 10,
   "selected_count": 8,
   "reserve_count": 2,
-  "note": "Canonical caption-layout repair only: preserve titles, rights, sources, schedules, music and scene starts; keep 10->8+2 profile and two-line CC safe area."
+  "note": "Caption-safe immutable Sep 9 batch v3; 10 candidates, 8 selected, 2 hot reserves; no blind retry; schedule only after QA PASS."
 }
