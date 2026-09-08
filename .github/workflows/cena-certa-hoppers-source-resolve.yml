@@ -1,0 +1,41 @@
+name: Cena Certa Hoppers Source Resolve
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - '.github/workflows/cena-certa-hoppers-source-resolve.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Resolve Disney Video official page
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://video.disney.com/watch/hoppers-official-trailer-6440bb53167eadeb74551fcd'
+          curl -fsSL -A 'Mozilla/5.0' "$URL" -o page.html
+          python - <<'PY'
+          import html,re
+          s=html.unescape(open('page.html',encoding='utf-8',errors='ignore').read()).replace('\\/','/')
+          urls=[]
+          for pat in [r'https://[^"\s<>]+mh-kaltura[^"\s<>]+',r'https://mh-kaltura[^"\s<>]+',r'https://[^"\s<>]+\.mp4[^"\s<>]*']:
+              urls += re.findall(pat,s)
+          seen=[]
+          for u in urls:
+              u=u.replace('\\u0026','&').replace('\\&','&')
+              if u not in seen: seen.append(u)
+          print('RESOLVED_URL_COUNT',len(seen))
+          for u in seen:
+              if '1080' in u or '4000' in u or 'serveFlavor' in u:
+                  print('HOPPERS_CANDIDATE',u)
+          # Also print Kaltura identifiers if direct URL is assembled client-side.
+          for key in ('entryId','entry_id','partnerId','partner_id'):
+              vals=sorted(set(re.findall(key+r'["\'\s:=]+([A-Za-z0-9_\-]+)',s)))
+              if vals: print('KALTURA_ID',key,vals[:20])
+          PY
