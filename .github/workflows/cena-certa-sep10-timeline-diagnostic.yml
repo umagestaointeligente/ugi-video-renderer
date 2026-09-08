@@ -35,10 +35,9 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import json,pathlib,tempfile
-          from factory.cena_certa.v2.engine import contract,validate_item
-          from factory.cena_certa.v2.prepare import _story_voice_with_measured_pace,_visual_timeline
+          from factory.cena_certa.v2.prepare import verify_contract_and_assets,validate_item,_story_voice_with_measured_pace,_visual_timeline
           idx=${{ matrix.index }}
-          c=contract(); items=json.loads(pathlib.Path('ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json').read_text(encoding='utf-8')); item=items[idx]; validate_item(c,item)
+          c=verify_contract_and_assets(); items=json.loads(pathlib.Path('ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json').read_text(encoding='utf-8')); item=items[idx]; validate_item(c,item)
           with tempfile.TemporaryDirectory() as td:
               voice=pathlib.Path(td)/'voice.mp3'
               cues,vd,wpm=_story_voice_with_measured_pace(c,' '.join(item['caption_chunks']),item['caption_chunks'],voice)
