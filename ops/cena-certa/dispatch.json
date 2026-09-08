@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v5.json",
   "batch_sha256": "a9830ecf33fa9d9c7a229ac5fc8fdfcbb15bbfd2f889ee7333880701d2865557",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T04:43:30+00:00",
-  "request_id": "CC-20260909-TRON-BLACK-REPAIR-V5",
+  "requested_at": "2026-09-08T04:43:50+00:00",
+  "request_id": "CC-20260909-PROD-V5-044350",
   "candidate_count": 10,
   "selected_count": 8,
   "reserve_count": 2,
-  "note": "Measured black-frame repair for TRON only: scene 0 moved from 1.0s to 4.0s after live source re-probe found no >=0.2s black interval in the 4.0-8.0s window. No gate relaxation. Normalizer true-peak fix already passed certified smoke run 34187139494."
+  "note": "Rearmed external dispatch for repaired Sep 9 batch v5 after certified true-peak smoke success and measured TRON black-frame repair; no gate relaxation."
 }
