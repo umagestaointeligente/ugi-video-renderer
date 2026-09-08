@@ -18,10 +18,12 @@
     "desired_datetime_local": "2026-09-08T19:30:00-03:00"
   },
   "attempts": [
-    {"route": "public media URL", "result": "HTTP_500_INTERNAL_SERVER_ERROR"},
-    {"route": "pre-uploaded media_id", "result": "HTTP_500_INTERNAL_SERVER_ERROR"}
+    {"route": "scheduled create with public media URL", "result": "HTTP_500_INTERNAL_SERVER_ERROR"},
+    {"route": "scheduled create with pre-uploaded media_id", "result": "HTTP_500_INTERNAL_SERVER_ERROR"},
+    {"route": "safe draft creation with pre-uploaded media_id", "result": "HTTP_500_INTERNAL_SERVER_ERROR"}
   ],
-  "retry_policy": "STOP_NO_BLIND_RETRY",
+  "media_upload": "PASS",
+  "retry_policy": "STOP_NO_BLIND_RETRY_AFTER_DIAGNOSTIC_DRAFT",
   "metricool": "FORBIDDEN_FOR_VSA: only connected brand is Cena Certa Ofc",
   "truth_rule": "Do not call this scheduled. A real scheduled post ID/state is still required."
 }
