@@ -31,13 +31,8 @@ jobs:
           mkdir -p control-plane/receipts/ugi-buffer
           KEY="${UGI_LOLA_COMMAND_KEY:-}"
           HEADER='x-lola-command-key'
-          if [ -z "$KEY" ]; then
-            KEY="${LOLA_COMMAND_KEY:-}"
-          fi
-          if [ -z "$KEY" ]; then
-            KEY="${LOLA_AUTH_KEY:-}"
-            HEADER='x-lola-key'
-          fi
+          if [ -z "$KEY" ]; then KEY="${LOLA_COMMAND_KEY:-}"; fi
+          if [ -z "$KEY" ]; then KEY="${LOLA_AUTH_KEY:-}"; HEADER='x-lola-key'; fi
           if [ -z "$KEY" ]; then
             printf '{"ok":false,"error":"NO_LOLA_AUTH_SECRET_IN_GITHUB_ACTIONS","publication_provider":"BUFFER","analytics_provider":"METRICOOL","metricool_publication_allowed":false}\n' > control-plane/receipts/ugi-buffer/today.json
             exit 20
@@ -60,39 +55,37 @@ jobs:
                   parsed=datetime.datetime.fromisoformat(str(value).replace('Z','+00:00'))
                   if parsed.tzinfo is None: parsed=parsed.replace(tzinfo=datetime.timezone.utc)
                   return parsed.astimezone(zone).date().isoformat()==today
-              except (TypeError,ValueError):
-                  return str(value).startswith(today)
-          drafts=load('/tmp/drafts.json')
-          channels=load('/tmp/channels.json')
+              except (TypeError,ValueError): return str(value).startswith(today)
+          drafts=load('/tmp/drafts.json') or {}
+          channels=load('/tmp/channels.json') or {}
+          all_drafts=drafts.get('drafts') or []
           items=[]
-          for d in ((drafts or {}).get('drafts') or []):
+          candidates=[]
+          for d in all_drafts:
+              text=' '.join(str(d.get(k) or '') for k in ('contentId','content_id','title','topic','text')).lower()
+              if any(k in text for k in ('nvidia','tsmc','semicon','20260908')):
+                  candidates.append({
+                    'draft_id':d.get('id'),'content_id':d.get('contentId') or d.get('content_id'),
+                    'title':d.get('title') or d.get('topic'),'type':d.get('type'),
+                    'allPlatformsReady':d.get('allPlatformsReady'),'qualityStatus':d.get('qualityStatus'),
+                    'workflowStatus':d.get('workflowStatus'),'approvalStatus':d.get('approvalStatus'),
+                    'assets':{p:{'ready':((d.get('assets') or {}).get(p) or {}).get('ready'),'approvalStatus':((d.get('assets') or {}).get(p) or {}).get('approvalStatus'),'publication':((d.get('assets') or {}).get(p) or {}).get('publication')} for p in ('instagram','tiktok','youtube')}
+                  })
               pubs=d.get('publications') or d.get('platformPublications') or {}
               if isinstance(pubs, dict):
                   for platform,p in pubs.items():
                       if not isinstance(p,dict): continue
-                      due=p.get('dueAt')
-                      sent=p.get('sentAt')
+                      due=p.get('dueAt'); sent=p.get('sentAt')
                       if is_today(due) or is_today(sent):
                           items.append({'draft_id':d.get('id'),'content_id':d.get('contentId') or d.get('content_id'),'platform':platform,'status':p.get('status') or p.get('publicationStatus'),'buffer_status':p.get('bufferStatus'),'dueAt':due,'sentAt':sent,'bufferPostId':p.get('bufferPostId'),'externalLink':p.get('externalLink')})
-              due=d.get('dueAt')
-              sent=d.get('sentAt')
-              if is_today(due) or is_today(sent):
-                  items.append({'draft_id':d.get('id'),'content_id':d.get('contentId') or d.get('content_id'),'platform':'legacy','status':d.get('status'),'dueAt':due,'sentAt':sent,'bufferPostId':d.get('bufferPostId')})
-          out={
-            'ok': int(os.environ.get('DRAFT_CODE','0'))==200 and int(os.environ.get('CHANNEL_CODE','0'))==200,
-            'date':today,
-            'timezone':'America/Sao_Paulo',
-            'publication_provider':'BUFFER',
-            'schedule_provider':'BUFFER',
-            'analytics_provider':'METRICOOL',
-            'metricool_publication_allowed':False,
-            'drafts_http':int(os.environ.get('DRAFT_CODE') or 0),
-            'channels_http':int(os.environ.get('CHANNEL_CODE') or 0),
-            'buffer_channels': (channels or {}).get('channels'),
-            'today_publications':items,
-            'today_count':len(items),
-            'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()
-          }
+              for platform,asset in (d.get('assets') or {}).items():
+                  if not isinstance(asset,dict): continue
+                  p=asset.get('publication') or {}
+                  due=p.get('dueAt'); sent=p.get('sentAt')
+                  if is_today(due) or is_today(sent):
+                      row={'draft_id':d.get('id'),'content_id':d.get('contentId') or d.get('content_id'),'platform':platform,'status':p.get('status'),'buffer_status':p.get('bufferStatus'),'dueAt':due,'sentAt':sent,'bufferPostId':p.get('bufferPostId'),'externalLink':p.get('externalLink')}
+                      if row not in items: items.append(row)
+          out={'ok':int(os.environ.get('DRAFT_CODE','0'))==200 and int(os.environ.get('CHANNEL_CODE','0'))==200,'date':today,'timezone':'America/Sao_Paulo','publication_provider':'BUFFER','schedule_provider':'BUFFER','analytics_provider':'METRICOOL','metricool_publication_allowed':False,'drafts_http':int(os.environ.get('DRAFT_CODE') or 0),'channels_http':int(os.environ.get('CHANNEL_CODE') or 0),'buffer_channels':channels.get('channels'),'candidate_drafts':candidates,'today_publications':items,'today_count':len(items),'timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat()}
           open('control-plane/receipts/ugi-buffer/today.json','w').write(json.dumps(out,indent=2,ensure_ascii=False)+'\n')
           PY
       - name: Persist audit receipt
@@ -104,6 +97,7 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add control-plane/receipts/ugi-buffer/today.json || true
           git commit -m 'UGI: persist Buffer today audit [skip ci]' || true
+          git pull --rebase origin main || true
           git push || true
 
-# Manual live-audit trigger: 2026-09-08T01:42:00-03:00
+# Manual live-audit trigger: 2026-09-08T01:55:00-03:00
