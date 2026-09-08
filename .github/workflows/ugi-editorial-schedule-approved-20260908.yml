@@ -1,0 +1,146 @@
+name: UGI Editorial Approved Schedule 2026-09-08
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ugi-editorial-schedule-approved-20260908.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-editorial-approved-schedule-20260908
+  cancel-in-progress: false
+
+jobs:
+  schedule-approved-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_WORKER_COMMAND_KEY: ${{ secrets.UGI_WORKER_COMMAND_KEY }}
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preflight exact approved assets and publication gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s public/ugi/editorial/2026-09-08/story-nvidia-company-approved-v2.png
+          test -s public/ugi/editorial/2026-09-08/video-nvidia-company-preview-v2.mp4
+          python - <<'PY'
+          import json
+          d=json.load(open('config/ugi/distribution-state.json'))
+          assert d['buffer']['publisher']=='buffer'
+          assert 'instagram' in d['buffer']['active_platforms']
+          assert 'instagram' not in d['buffer']['paused_platforms']
+          c=json.load(open('control-plane/observability/buffer-circuit.json'))
+          assert c['state']=='CLOSED' and c['mutationAllowed'] is True
+          marker=open('public/ugi/editorial/2026-09-08/PREVIEW_ONLY.txt',encoding='utf-8').read()
+          assert 'NVIDIA V2 APPROVED' in marker
+          PY
+
+      - name: Schedule only the exact NVIDIA assets approved by Paulo
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_WORKER_COMMAND_KEY:-}${UGI_LOLA_COMMAND_KEY:-}"
+          [ -z "${UGI_WORKER_COMMAND_KEY:-}" ] || echo "::add-mask::$UGI_WORKER_COMMAND_KEY"
+          [ -z "${UGI_LOLA_COMMAND_KEY:-}" ] || echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          git config user.name 'ugi-editorial-scheduler-bot'
+          git config user.email 'ugi-editorial-scheduler-bot@users.noreply.github.com'
+
+          Q='control-plane/publisher-hub/media-queue'
+          R='control-plane/publisher-hub/media-receipts'
+          BASE='https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-08'
+          mkdir -p "$Q" "$R"
+
+          queue_one() {
+            id="$1"; platform="$2"; mediaType="$3"; media="$4"; format="$5"; due="$6"; topic="$7"; text="$8"
+            q="$Q/$id.json"; r="$R/$id.json"
+
+            if [ -f "$r" ]; then
+              python - "$r" <<'PY'
+          import json,sys
+          d=json.load(open(sys.argv[1])); assert d.get('ok') is True and d.get('bufferMutationPerformed') is True
+          assert str((d.get('publication') or {}).get('bufferStatus','')).lower() == 'scheduled'
+          PY
+              echo "receipt already valid: $id"
+              return 0
+            fi
+
+            python - "$q" "$id" "$platform" "$mediaType" "$BASE/$media" "$format" "$due" "$topic" "$text" <<'PY'
+          import json,sys
+          p,id,platform,mt,url,fmt,due,topic,text=sys.argv[1:]
+          d={
+            'id':id,'project':'UGI','enabled':True,'platform':platform,
+            'mediaType':mt,'mediaUrl':url,'format':fmt,'mode':'customScheduled',
+            'dueAt':due,'topic':topic,'text':text,
+            'approval':{'status':'EXPLICIT_HUMAN_APPROVED','approvedBy':'Paulo','approvedAssetExact':True}
+          }
+          json.dump(d,open(p,'w'),ensure_ascii=False,indent=2)
+          PY
+
+            # Fail-safe against blind retries: hide every older unreceipted queue item
+            # from this runner while the exact approved item is processed.
+            tmp="$(mktemp -d)"
+            for other in "$Q"/*.json; do
+              [ -e "$other" ] || continue
+              [ "$other" = "$q" ] && continue
+              base="$(basename "$other")"
+              [ -f "$R/$base" ] && continue
+              mv "$other" "$tmp/$base"
+            done
+
+            set +e
+            python scripts/ugi_editorial_media_publisher.py
+            rc=$?
+            set -e
+
+            for hidden in "$tmp"/*.json; do
+              [ -e "$hidden" ] || continue
+              mv "$hidden" "$Q/$(basename "$hidden")"
+            done
+            rmdir "$tmp" || true
+            [ "$rc" -eq 0 ]
+
+            test -f "$r"
+            python - "$r" "$due" <<'PY'
+          import json,sys
+          d=json.load(open(sys.argv[1])); due=sys.argv[2]
+          assert d.get('ok') is True
+          assert d.get('bufferMutationPerformed') is True
+          p=d.get('publication') or {}
+          assert p.get('bufferPostId')
+          assert str(p.get('bufferStatus','')).lower() == 'scheduled'
+          assert p.get('dueAt') == due
+          PY
+
+            git add "$q" "$r"
+            git commit -m "schedule: $id"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          }
+
+          # 08:15 BRT — first morning touchpoint, Story.
+          queue_one \
+            'UGI-20260908-IG-STORY-NVIDIA-APPROVED-01' \
+            instagram image 'story-nvidia-company-approved-v2.png' story \
+            '2026-09-08T11:15:00Z' \
+            'NVIDIA — vantagem competitiva sob pressão na China' \
+            ''
+
+          # 12:45 BRT — strongest midday slot used by the UGI editorial cadence for Reels.
+          queue_one \
+            'UGI-20260908-IG-REEL-NVIDIA-APPROVED-01' \
+            instagram video 'video-nvidia-company-preview-v2.mp4' reel \
+            '2026-09-08T15:45:00Z' \
+            'NVIDIA — quando o fornecedor dominante deixa de ser insubstituível' \
+            '⚡ A vantagem da NVIDIA está sendo testada na China. Concorrentes locais aceleram e a participação da companhia no mercado chinês de chips de IA ficou em torno de 55%, segundo análise da Reuters de 07/09. Para a gestão, o ponto vai além da tecnologia: concentração de fornecedor muda poder de negociação, risco e capacidade real de substituição. Sua operação estaria preparada se o fornecedor hoje dominante deixasse de ser insubstituível? #Gestão #NVIDIA #InteligênciaArtificial #Estratégia #SupplyChain #UGI'
+
+          echo 'UGI_20260908_APPROVED_NVIDIA_SCHEDULE=CONFIRMED_BY_RECEIPTS'
