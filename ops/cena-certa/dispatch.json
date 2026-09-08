@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json",
-  "batch_sha256": "2fc599f5f9f29f51c94cdc08e034b3f0b0b3dc868e1c18c6bedd06a9d4d5a074",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260910-v2.json",
+  "batch_sha256": "04a6b22aa5b56f86ca0853faa8cc2b8b35bc54ed3ed36772d3ea9c32a6c701aa",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T19:16:18.844236+00:00",
-  "request_id": "e6a150976e734826aaa4f9c57ee14ac3",
+  "requested_at": "2026-09-08T22:17:08+00:00",
+  "request_id": "CC-20260910-ENDGAME-SCENE-REPAIR-V2",
   "candidate_count": 8,
   "selected_count": 8,
   "reserve_count": 0,
-  "note": "Paulo authorized final video production and scheduling for 10/09; 08/09 and 09/09 are frozen."
+  "note": "Evidence-bound Sep 10 Endgame repair. Starts were moved into clean source windows measured by run 34284499896, preserving separation for the exact target clip durations; no black-frame, overlap, rights, caption, or semantic gate was relaxed. Existing 08/09 and 09/09 schedules remain frozen."
 }
