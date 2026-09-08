@@ -1,0 +1,18 @@
+{
+  "id": "UGI-20260908-IG-REEL-NVIDIA-APPROVED-01",
+  "project": "UGI",
+  "enabled": true,
+  "platform": "instagram",
+  "mediaType": "video",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-08/video-nvidia-company-preview-v2.mp4",
+  "format": "reel",
+  "mode": "customScheduled",
+  "dueAt": "2026-09-08T15:45:00Z",
+  "topic": "NVIDIA — quando o fornecedor dominante deixa de ser insubstituível",
+  "text": "⚡ A vantagem da NVIDIA está sendo testada na China. Concorrentes locais aceleram e a participação da companhia no mercado chinês de chips de IA ficou em torno de 55%, segundo análise da Reuters de 07/09. Para a gestão, o ponto vai além da tecnologia: concentração de fornecedor muda poder de negociação, risco e capacidade real de substituição. Sua operação estaria preparada se o fornecedor hoje dominante deixasse de ser insubstituível? #Gestão #NVIDIA #InteligênciaArtificial #Estratégia #SupplyChain #UGI",
+  "approval": {
+    "status": "EXPLICIT_HUMAN_APPROVED",
+    "approvedBy": "Paulo",
+    "approvedAssetExact": true
+  }
+}
