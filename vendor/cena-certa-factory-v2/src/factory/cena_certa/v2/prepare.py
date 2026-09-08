@@ -84,6 +84,13 @@ def normalize_music(c,src,out):
    media_probe(fix,'audio'); os.replace(fix,out)
    measured_lufs,measured_tp=loudness(out)
    print('MUSIC_MASTER_MEASURED_CORRECTION_PASS',correction_pass,f'lufs={measured_lufs:.2f}',f'tp={measured_tp:.2f}',f'gain={gain_db:.2f}')
+  if measured_tp>tp+0.3:
+   safety_tp=tp-1.0
+   safety=f'loudnorm=I={target}:TP={safety_tp}:LRA=7'
+   sh(['ffmpeg','-loglevel','error','-y','-i',str(src),'-vn','-af',safety,'-c:a','aac','-b:a','192k','-ar','48000',str(fix)],timeout=150)
+   media_probe(fix,'audio'); os.replace(fix,out)
+   measured_lufs,measured_tp=loudness(out)
+   print('MUSIC_MASTER_TRUE_PEAK_SAFETY_PASS',f'lufs={measured_lufs:.2f}',f'tp={measured_tp:.2f}',f'target_tp={safety_tp:.2f}')
   if abs(measured_lufs-target)>1.5: raise RuntimeError(f'MUSIC_MASTER_LUFS_FAIL actual={measured_lufs:.2f} target={target:.2f}')
   if measured_tp>tp+0.3: raise RuntimeError(f'MUSIC_MASTER_PEAK_FAIL actual={measured_tp:.2f} max={tp:.2f}')
   return measured_lufs,measured_tp
