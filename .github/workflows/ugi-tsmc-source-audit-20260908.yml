@@ -32,3 +32,5 @@ jobs:
           git commit -m 'UGI: persist TSMC official source QA [skip ci]' || true
           git pull --rebase origin main || true
           git push || true
+
+# Retry source audit with currently available official TSMC videos: 2026-09-08T08:27:00-03:00
