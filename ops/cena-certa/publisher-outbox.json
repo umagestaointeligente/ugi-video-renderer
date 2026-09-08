@@ -1,10 +1,10 @@
 {
   "schema": "CENA_CERTA_PUBLISHER_OUTBOX_V1",
-  "state": "PUBLISH_RECONCILED",
+  "state": "EMPTY",
   "production_run_id": 34152820372,
   "batch_sha256": "8eab7986e4839975ed55c8324a78a0ced7fdc6b65a8fe19e84f07f24bac747b6",
   "handoff_sha256": "1019ac5fa51ffb74e40418141229c92804c0ea9f5c55350ce237b58fdc4002b8",
-  "generated_at": "2026-09-08T02:50:00+00:00",
+  "generated_at": "2026-09-08T03:56:40+00:00",
   "selected_ids": [
     "CC-20260908-NOWAY-D8-R1",
     "CC-20260908-MUKHTAR-D8-R1",
