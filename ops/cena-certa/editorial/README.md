@@ -5,7 +5,8 @@ Objetivo: transformar o Cena Certa em operação híbrida de vídeo + curadoria 
 ## Cadência alvo
 - 8 vídeos/dia: Facebook Reels + Instagram Reels + TikTok + YouTube Shorts.
 - 4 editoriais/dia: Facebook + Instagram + TikTok (photo/carousel quando suportado).
-- 4 Stories/dia: Instagram + Facebook. TikTok recebe adaptação em photo post ou microvídeo enquanto Story via publisher não estiver comprovado.
+- 4 Stories/dia: Instagram + Facebook, somente onde o formato Story nativo estiver disponível e comprovado pelo publisher.
+- Não criar adaptação, repost ou microvídeo compensatório no TikTok apenas porque Story nativo não está disponível.
 - YouTube permanece vídeo-only por decisão editorial atual.
 
 ## Radar D+2
@@ -55,7 +56,11 @@ Hard rejects específicos de Story:
 - Story estático simples quando a rota automática de microanimação estiver disponível;
 - qualquer Story agendado sem THEME_MATCH_PASS e STORY_QA_PASS.
 
-Enquanto o publisher conectado não oferecer Story nativo no TikTok, a mesma peça deve ser adaptada como microvídeo vertical regular para TikTok quando fizer sentido editorialmente, sem chamá-la de Story nativo.
+Regra de distribuição de Stories:
+- Publicar Story somente nas redes em que o formato Story nativo estiver realmente disponível e validado no publisher.
+- Hoje, a rota comprovada é Facebook Stories + Instagram Stories.
+- Se TikTok Story não estiver disponível, não publicar a mesma peça no TikTok em formato alternativo apenas para compensar a ausência do recurso.
+- TikTok continua recebendo apenas conteúdos que façam sentido como publicação nativa do feed dentro da estratégia editorial própria da rede.
 
 ## Asset policy
 Preferência: press kit oficial / Media Center / Global Asset Hub / festival press distribution.
