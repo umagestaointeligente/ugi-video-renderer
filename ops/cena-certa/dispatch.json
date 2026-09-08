@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v5.json",
-  "batch_sha256": "a9830ecf33fa9d9c7a229ac5fc8fdfcbb15bbfd2f889ee7333880701d2865557",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v6.json",
+  "batch_sha256": "71eab65384ced10161315cd1c8d80a3d77ef5887c554afbe15f82ee36176fd96",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T04:43:50+00:00",
-  "request_id": "CC-20260909-PROD-V5-044350",
+  "requested_at": "2026-09-08T04:50:17+00:00",
+  "request_id": "CC-20260909-TRON-FULL-RANGE-REPAIR-V6",
   "candidate_count": 10,
   "selected_count": 8,
   "reserve_count": 2,
-  "note": "Rearmed external dispatch for repaired Sep 9 batch v5 after certified true-peak smoke success and measured TRON black-frame repair; no gate relaxation."
+  "note": "Evidence-bound TRON source-range repair after run 34188034117 exposed source overlap. All ten replacement windows were re-probed against the exact source SHA and found clean with conservative 5.5s windows for the first four scenes, 5.3s for scene 4, and 3.5s windows for scenes 5-9. No black-frame or overlap gate relaxation."
 }
