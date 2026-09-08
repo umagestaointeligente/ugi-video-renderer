@@ -1,0 +1,31 @@
+{
+  "schema": "VSA_EDITORIAL_GUARDRAILS_V2",
+  "status": "CANONICAL_ACTIVE",
+  "topic_repeat_lock": {
+    "window_days": 60,
+    "match_level": "semantic_topic_core",
+    "required_classification": ["NEW_TOPIC", "REPEAT_BLOCKED", "BREAKING_EXCEPTION"],
+    "default_on_match": "BLOCK",
+    "breaking_exception": {
+      "allowed": true,
+      "requires_material_new_fact": true,
+      "allowed_reasons": ["new_major_event", "new_case", "new_discovery", "new_consequence", "material_update"],
+      "required_manifest_fields": ["previous_topic", "previous_date", "new_fact", "current_source", "exception_reason"],
+      "performance_alone_is_not_exception": true
+    }
+  },
+  "people_biocuriosity": {
+    "enabled": true,
+    "content_class": "PERSON_PROFILE",
+    "real_person_reference_required": true,
+    "prohibited_substitutes": ["journalist_as_subject_proxy", "presenter_as_subject_proxy", "generic_stock_person", "unrelated_broll_person"],
+    "animation_role": "Explain disease, physiology, mechanism, technology, context or cause while keeping the real person visually anchored.",
+    "preferred_sequence": ["REAL_PERSON", "CONTEXT", "EXPLANATION_ANIMATION", "REAL_PERSON_OR_EVIDENCE", "CONSEQUENCE", "PAYOFF"],
+    "health_rule": "Separate documented facts from inference; do not diagnose beyond reliable sources.",
+    "release_gate": "person_visual_reference_gate=PASS"
+  },
+  "job_requirements": {
+    "topic_history_gate": "PASS",
+    "person_visual_reference_gate_when_person_profile": "PASS"
+  }
+}
