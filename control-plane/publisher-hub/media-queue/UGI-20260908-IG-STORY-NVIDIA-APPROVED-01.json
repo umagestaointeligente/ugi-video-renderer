@@ -1,0 +1,18 @@
+{
+  "id": "UGI-20260908-IG-STORY-NVIDIA-APPROVED-01",
+  "project": "UGI",
+  "enabled": true,
+  "platform": "instagram",
+  "mediaType": "image",
+  "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/public/ugi/editorial/2026-09-08/story-nvidia-company-approved-v2.png",
+  "format": "story",
+  "mode": "customScheduled",
+  "dueAt": "2026-09-08T11:15:00Z",
+  "topic": "NVIDIA — vantagem competitiva sob pressão na China",
+  "text": "",
+  "approval": {
+    "status": "EXPLICIT_HUMAN_APPROVED",
+    "approvedBy": "Paulo",
+    "approvedAssetExact": true
+  }
+}
