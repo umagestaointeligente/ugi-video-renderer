@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v6.json",
-  "batch_sha256": "71eab65384ced10161315cd1c8d80a3d77ef5887c554afbe15f82ee36176fd96",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T04:51:24+00:00",
-  "request_id": "CC-20260909-PROD-V6-045124",
-  "candidate_count": 10,
-  "selected_count": 8,
-  "reserve_count": 2,
-  "note": "Rearmed external dispatch for Sep 9 batch v6 after evidence-bound TRON non-overlap source-range repair; certified true-peak fix remains active; no gate relaxation."
+  "requested_at": "",
+  "request_id": "",
+  "note": "Automatically closed after one canonical single-run factory execution; human scheduling gate remains closed."
 }

@@ -1,30 +1,12 @@
 {
   "schema": "CENA_CERTA_PUBLISHER_STATE_V1",
-  "state": "IDLE",
-  "handoff_sha256": "1019ac5fa51ffb74e40418141229c92804c0ea9f5c55350ce237b58fdc4002b8",
-  "production_run_id": 34152820372,
+  "state": "AWAITING_HUMAN_APPROVAL",
+  "handoff_sha256": "05cf8f9c289b00cc069e861856de837b0777dde88be7e51da37ad0780fcb2ba4",
+  "production_run_id": 34188484234,
   "primary_provider": "METRICOOL",
-  "primary_receipts": [
-    {"metricool_id":372341952,"status":"PENDING","autoPublish":true},
-    {"metricool_id":372342028,"status":"PENDING","autoPublish":true},
-    {"metricool_id":372342105,"status":"PENDING","autoPublish":true},
-    {"metricool_id":372342218,"status":"PENDING","autoPublish":true},
-    {"metricool_id":372342293,"status":"PENDING","autoPublish":true},
-    {"metricool_id":372342375,"status":"PENDING","autoPublish":true},
-    {"metricool_id":372342444,"status":"PENDING","autoPublish":true},
-    {"metricool_id":372342531,"status":"PENDING","autoPublish":true}
-  ],
+  "primary_receipts": [],
   "secondary_receipts": [],
-  "reconciliation": {
-    "checked_live": true,
-    "brand_id": "6809869",
-    "target_date": "2026-09-08",
-    "all_expected_objects_found": true,
-    "all_auto_publish_true": true,
-    "all_provider_statuses_pending": true,
-    "no_replay": true,
-    "closed_to_idle_for_next_dispatch": true
-  },
-  "updated_at": "2026-09-08T04:11:00+00:00",
+  "reconciliation": null,
+  "updated_at": "2026-09-08T04:55:54.499331+00:00",
   "blind_retry_forbidden": true
 }

@@ -1,9 +1,9 @@
 {
   "schema": "CENA_CERTA_HUMAN_APPROVAL_V1",
   "approved": false,
-  "handoff_sha256": "1019ac5fa51ffb74e40418141229c92804c0ea9f5c55350ce237b58fdc4002b8",
-  "production_run_id": 34152820372,
+  "handoff_sha256": "05cf8f9c289b00cc069e861856de837b0777dde88be7e51da37ad0780fcb2ba4",
+  "production_run_id": 34188484234,
   "approved_at": null,
   "approved_by": null,
-  "note": "08/09 reconciled live in Metricool; old approval gate closed without replay. Ready for a new immutable dispatch."
+  "note": "Exact new outbox requires explicit human approval before scheduling."
 }
