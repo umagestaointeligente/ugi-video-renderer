@@ -1,0 +1,113 @@
+{
+  "schema": "VSA_PRODUCTION_QUEUE_V1",
+  "project": "ORBIT/VSA",
+  "channel": "Você Sabia Agora?",
+  "date_local": "2026-09-08",
+  "timezone": "America/Sao_Paulo",
+  "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+  "canonical_contract": "canonical/vsa/v1/VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json",
+  "existing_video": {
+    "id": "VSA-20260908-RAIOS",
+    "title": "Por que caem tantos raios?",
+    "status": "VIDEO_EXISTS_SCHEDULER_BLOCKED",
+    "intended_slot_local": "19:30"
+  },
+  "new_videos": [
+    {
+      "id": "VSA-20260908-ANAK-KRAKATAU",
+      "priority": 1,
+      "editorial_score": 95,
+      "working_title": "Por que a cinza de um vulcão consegue parar milhares de voos?",
+      "hook": "Anak Krakatau em erupção + aeroportos fechando enquanto a pergunta entra imediatamente.",
+      "angle": "Usar a erupção atual como gancho e explicar por que cinza vulcânica é tão perigosa para motores a jato.",
+      "fact_base": [
+        "AP, 2026-09-07: a erupção contínua durou cerca de 25 horas e quase 3.000 voos foram interrompidos/cancelados.",
+        "AP: sete aeroportos permaneceram temporariamente fechados e a atividade vulcânica continuava de forma intermitente.",
+        "Anak Krakatau fica no Estreito de Sunda e é o vulcão-filho do Krakatau de 1883."
+      ],
+      "visual_plan": ["REAL_HOOK eruption", "MAP_ZOOM Sunda Strait", "JET_ENGINE_CROSS_SECTION", "ASH_PARTICLE_FLOW", "REAL_AIRPORT_CONSEQUENCE", "PAYOFF", "CTA"],
+      "rights_gate": "PENDING_REUSABLE_CURRENT_ERUPTION_FOOTAGE; do not use AP footage without licence.",
+      "source_urls": ["https://apnews.com/article/indonesia-anak-krakatau-volcano-eruption-airports-schools-e32f06ee8ad761ab78d2d3abc38f83d4"]
+    },
+    {
+      "id": "VSA-20260908-MOON-JUPITER",
+      "priority": 2,
+      "editorial_score": 93,
+      "working_title": "A Lua vai esconder Júpiter em plena luz do dia?",
+      "hook": "Lua crescente e Júpiter no mesmo quadro; Júpiter desaparece atrás da Lua em animação imediatamente.",
+      "angle": "Explicar a ocultação de 8 de setembro e a geometria que faz um planeta parecer desaparecer atrás da Lua.",
+      "fact_base": [
+        "Space.com, 2026-09-07: em 8 de setembro a Lua oculta Júpiter durante o dia para grande parte da América do Norte.",
+        "O desaparecimento leva cerca de um minuto e a reaparição ocorre aproximadamente 50 minutos depois, dependendo do local.",
+        "Antes do amanhecer, a Lua crescente e Júpiter também aparecem próximos no céu."
+      ],
+      "visual_plan": ["REAL_SKY_OR_RIGHTS_SAFE_ASTRONOMY_HOOK", "EARTH_MOON_JUPITER_GEOMETRY", "OCCULTATION_SIMULATION", "SCALE_COMPARE", "PAYOFF", "CTA"],
+      "rights_gate": "PENDING_ASSET_MANIFEST; original simulation preferred; do not imply visibility from Brazil.",
+      "source_urls": ["https://www.space.com/stargazing/the-moon-will-hide-jupiter-in-broad-daylight-on-sept-8-2026-here-is-how-to-see-it"]
+    },
+    {
+      "id": "VSA-20260908-SATURN-DECAGON",
+      "priority": 3,
+      "editorial_score": 89,
+      "working_title": "Saturno ganhou um decágono no polo sul?",
+      "hook": "Imagem de Saturno com o contorno de 10 lados aparecendo no polo sul.",
+      "angle": "Explicar o novo padrão atmosférico de dez lados observado pelo Hubble e por que jatos planetários podem formar polígonos.",
+      "fact_base": [
+        "ESA/Hubble, 2026-09-02: observações revelaram uma onda atmosférica gigante de dez lados no polo sul de Saturno.",
+        "É a primeira vez que um grande padrão regular de jato é observado no hemisfério sul do planeta.",
+        "Dados anteriores desde 2023 mostravam sinais sutis de sua formação."
+      ],
+      "visual_plan": ["HUBBLE_RIGHTS_SAFE_IMAGE_OR_DERIVED_GRAPHIC", "POLYGON_TRACE", "ATMOSPHERIC_JET_FLOW", "COMPARE_NORTH_HEXAGON_SOUTH_DECAGON", "PAYOFF", "CTA"],
+      "rights_gate": "PENDING_ESA_MEDIA_LICENCE_CHECK; original fluid-dynamics animation allowed after fact sourcing.",
+      "source_urls": ["https://www.esa.int/Science_Exploration/Space_Science/Hubble_tracks_new_decagon_encircling_Saturn_s_south_pole"]
+    },
+    {
+      "id": "VSA-20260908-CONTRAIL-AI",
+      "priority": 4,
+      "editorial_score": 88,
+      "working_title": "Aquela linha branca do avião pode aquecer o planeta?",
+      "hook": "Avião formando contrail; câmera entra na trilha e revela cristais de gelo prendendo calor.",
+      "angle": "Explicar como contrails persistentes afetam o clima e por que Google e Cathay estão testando IA para evitá-los.",
+      "fact_base": [
+        "Reuters, 2026-09-07: Google e Cathay expandiram testes de previsão por IA para reduzir contrails.",
+        "Teste inicial em mais de 80 voos teve redução estimada de 40% no impacto de aquecimento dos contrails, segundo as empresas.",
+        "Contrails se formam em ar muito frio e úmido em altitude; o sistema orienta ajustes de altitude para evitar zonas favoráveis."
+      ],
+      "visual_plan": ["REAL_CONTRAIL_HOOK", "ICE_CRYSTAL_MICROSCOPIC_ZOOM", "INFRARED_HEAT_TRAP", "AI_FORECAST_MAP", "ALTITUDE_ROUTE_ANIMATION", "PAYOFF", "CTA"],
+      "rights_gate": "PENDING_REUSABLE_AIRCRAFT_FOOTAGE; Reuters footage is not assumed reusable.",
+      "source_urls": ["https://www.reuters.com/world/asia-pacific/cathay-pacific-google-expand-ai-trials-cut-climate-warming-aircraft-contrails-2026-09-07/"]
+    },
+    {
+      "id": "VSA-20260908-HUMANOID-ROBOTS",
+      "priority": 5,
+      "editorial_score": 87,
+      "working_title": "Por que exércitos estão de olho em robôs humanoides?",
+      "hook": "Robô humanoide correndo/dançando; corte causal para ambiente de resgate/reconhecimento sem mostrar guerra como fato consumado.",
+      "angle": "Explicar por que formato humanoide interessa para ambientes feitos para humanos e separar pesquisa militar de implantação real.",
+      "fact_base": [
+        "Reuters, 2026-09-07: instituições militares chinesas aceleram pesquisa sobre usos de humanoides em reconhecimento, logística e cenários urbanos.",
+        "Reuters não encontrou evidência de humanoide armado já implantado em unidade operacional do PLA.",
+        "Especialistas apontam limitações atuais de energia, confiabilidade e custo fora de ambientes controlados."
+      ],
+      "visual_plan": ["RIGHTS_SAFE_HUMANOID_DEMO", "STAIRS_DOORS_TOOLS_CAUSAL_SEQUENCE", "RECON_LOGISTICS_SIMULATION", "LIMITATIONS_ENERGY_RELIABILITY", "PAYOFF", "CTA"],
+      "rights_gate": "PENDING_RIGHTS_SAFE_ROBOT_FOOTAGE; no Reuters footage reuse without licence; avoid sensational armed-deployment claim.",
+      "source_urls": ["https://www.reuters.com/world/china/dance-floor-war-china-readies-humanoid-robots-combat-2026-09-07/"]
+    }
+  ],
+  "provisional_editorial_slots_local": [
+    {"time": "08:00", "video_id": "VSA-20260908-MOON-JUPITER", "note": "time-sensitive morning event; not claimed as analytics-optimal"},
+    {"time": "11:00", "video_id": "VSA-20260908-ANAK-KRAKATAU", "note": "breaking global event"},
+    {"time": "14:00", "video_id": "VSA-20260908-CONTRAIL-AI", "note": "tech/science"},
+    {"time": "17:00", "video_id": "VSA-20260908-SATURN-DECAGON", "note": "science/curiosity"},
+    {"time": "19:30", "video_id": "VSA-20260908-RAIOS", "note": "existing intended slot"},
+    {"time": "21:30", "video_id": "VSA-20260908-HUMANOID-ROBOTS", "note": "high-interest technology topic"}
+  ],
+  "next_days_reserve": [
+    {"topic": "BepiColombo: por que levou oito anos e 9,9 bilhões de km para chegar a Mercúrio?", "status": "HIGH_PRIORITY_RESERVE"},
+    {"topic": "Primeiro foguete privado a alcançar órbita partindo da Europa continental", "status": "HIGH_PRIORITY_RESERVE"},
+    {"topic": "Corais moles de Jeju estão 'desabando': como isso acontece?", "status": "RESERVE"},
+    {"topic": "Cobertores de lã de ovelha podem retardar o derretimento de geleiras?", "status": "RESERVE"},
+    {"topic": "Roman Space Telescope: por que ele enxerga cerca de 100 vezes mais céu por imagem que o Hubble?", "status": "RESERVE"}
+  ],
+  "release_rule": "No video becomes READY/SCHEDULED/PUBLISHED until factual map, semantic map, rights manifest, base QA and final QA are PASS and a live scheduler receipt exists."
+}
