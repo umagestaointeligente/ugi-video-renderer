@@ -1,0 +1,27 @@
+name: UGI SEMICON TSMC Brand Scan 2026-09-08
+on:
+  push:
+    paths:
+      - 'scripts/ugi_semicon_tsmc_scan_20260908.py'
+      - '.github/workflows/ugi-semicon-tsmc-scan-20260908.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install scan dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg tesseract-ocr
+      - name: Scan source for TSMC branding
+        run: python scripts/ugi_semicon_tsmc_scan_20260908.py
+      - name: Persist scan evidence
+        run: |
+          git config user.name 'ugi-editorial-video-bot'
+          git config user.email 'ugi-editorial-video-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-08/tsmc_semicon_scan
+          git commit -m 'qa: TSMC brand scan from SEMICON footage' || exit 0
+          git push
