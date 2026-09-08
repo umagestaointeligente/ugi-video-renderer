@@ -1,0 +1,48 @@
+{
+  "schema": "CENA_CERTA_STORY_DISTRIBUTION_POLICY_V1",
+  "project": "ORBIT / CENA CERTA",
+  "timezone": "America/Sao_Paulo",
+  "objective": "Expand editorial reach and engagement by distributing story-format derivatives of daily editorial topics wherever a native Story route is actually supported and live-proven.",
+  "daily_targets": {
+    "editorial_feed_posts_minimum": 4,
+    "facebook_stories_minimum": 4,
+    "instagram_stories_minimum": 4,
+    "tiktok_story_target": 4
+  },
+  "platform_policy": {
+    "facebook": {
+      "story_required": true,
+      "native_route_status": "SUPPORTED_BY_CURRENT_PUBLISHER",
+      "format": "STORY"
+    },
+    "instagram": {
+      "story_required": true,
+      "native_route_status": "SUPPORTED_BY_CURRENT_PUBLISHER",
+      "format": "STORY"
+    },
+    "tiktok": {
+      "story_required_when_native_route_live_proven": true,
+      "native_route_status": "NOT_YET_LIVE_PROVEN_IN_CURRENT_PUBLISHERS",
+      "temporary_rule": "Use a vertical editorial adaptation as a normal TikTok photo/video post when useful, but NEVER label or count it as a TikTok Story.",
+      "activation_gate": "A TikTok Story can only be declared scheduled/published after a publisher or native route explicitly supporting TikTok Stories is verified live."
+    }
+  },
+  "asset_rules": [
+    "Story visual must be directly related to the film, series, character, release or discussion topic.",
+    "Allowed assets include rights-cleared official poster, key art, still, scene photo, frame, clip, EPK or other studio/producer press/editorial media.",
+    "No monochrome fallback, blank page, text-only card, generic stock, decorative unrelated visual or unrelated background.",
+    "If the editorial topic lacks a legal and directly relevant visual asset, replace the topic rather than publish a generic fallback.",
+    "The same rights and provenance gates used by feed editorials apply to Story assets."
+  ],
+  "editorial_logic": {
+    "relationship_to_feed": "Stories should derive from or amplify the same daily editorial agenda, but may use a different hook, poll, question or choice format.",
+    "engagement_goal": ["polls", "choices", "expectation", "rewatch intent", "release anticipation", "film-versus-film discussion", "next-day audience signal"],
+    "fake_interactivity_forbidden": true,
+    "rule": "Do not visually simulate a native poll/question sticker unless the publishing route actually supports that interactive element; otherwise use a clear visual CTA/question."
+  },
+  "truth_rules": {
+    "do_not_claim_tiktok_story_without_live_receipt": true,
+    "do_not_claim_scheduled_without_readback": true,
+    "do_not_count_vertical_tiktok_feed_post_as_story": true
+  }
+}
