@@ -1,12 +1,19 @@
 {
   "schema": "CENA_CERTA_PUBLISHER_STATE_V1",
-  "state": "AWAITING_HUMAN_APPROVAL",
+  "state": "IDLE",
   "handoff_sha256": "05cf8f9c289b00cc069e861856de837b0777dde88be7e51da37ad0780fcb2ba4",
   "production_run_id": 34188484234,
   "primary_provider": "METRICOOL",
-  "primary_receipts": [],
+  "primary_receipts": [372509384,372509420,372509463,372509502,372509549,372509819,372509873,372509910],
   "secondary_receipts": [],
-  "reconciliation": null,
-  "updated_at": "2026-09-08T04:55:54.499331+00:00",
+  "reconciliation": {
+    "state": "PUBLISH_RECONCILED",
+    "schedule_gate": "RECONCILED_IN_METRICOOL_NO_REPLAY",
+    "reconciled_metricool_ids": [372509384,372509420,372509463,372509502,372509549,372509819,372509873,372509910],
+    "live_readback_date": "2026-09-09",
+    "closed_to_idle_for_next_dispatch": true,
+    "existing_posts_modified": false
+  },
+  "updated_at": "2026-09-08T12:51:06+00:00",
   "blind_retry_forbidden": true
 }
