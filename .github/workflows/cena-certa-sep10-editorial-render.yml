@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           test -n "$URL"; test -n "$KEY"
-          IDX='${{ matrix.index }}'
+          export IDX='${{ matrix.index }}'
           eval "$(python - <<'PY'
           import importlib.util,os,shlex
           p='ops/cena-certa/editorial/render_sep10.py'
