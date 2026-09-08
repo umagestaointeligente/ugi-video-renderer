@@ -5,92 +5,74 @@
     {
       "id": "SRC-20260910-OASIS-FINAL",
       "title": "Oasis: Don't Look Back In Anger",
-      "source_url": "https://www.youtube.com/watch?v=6z_0B_lyRTo",
+      "source_url": "https://mh-kaltura.akamaized.net/s/p/1068292/sp/106829200/serveFlavor/entryId/1_fyyrxyzw/v/1/pv/1/ev/7/flavorId/1_q5aprfyq/fileName/Oasis:_Don___t_Look_Back_In_Anger___Official_Trailer___In_Theaters_September_11_(DIS-HD_720_-_WEB_(H264_2500)).mp4/forceproxy/true/name/a.mp4?__hdnea__=st=1788875920~exp=1788901120~acl=/s/p/1068292/sp/106829200/serveFlavor/entryId/1_fyyrxyzw/v/1/pv/1/ev/7/flavorId/1*~hmac=4e1b1e997543ef3b1acc017d02fe2a52ca1f40991509633a61cf0db43d0ead23",
       "rights_pass": true,
-      "rights_evidence": "Disney UK Press (26 Aug 2026) identifies the new trailer and poster as official press material and states they are available to view and share; Disney Press is the official media portal.",
+      "rights_evidence": "Disney UK Press, 26 Aug 2026: official studio audiovisual material for the film is published through Disney's press portal for media coverage; source file is the matching Disney Video/Kaltura studio-hosted asset.",
       "fallback_urls": [],
-      "resolver_revision": 6
-    },
-    {
-      "id": "SRC-20260910-DOGSTARS-FINAL",
-      "title": "The Dog Stars",
-      "source_url": "https://youtu.be/Y1C2C8OnpEg",
-      "rights_pass": true,
-      "rights_evidence": "Disney/20th Century UK Press (14 Jul 2026) explicitly states the final trailer is available to download and share; press stills are also supplied.",
-      "fallback_urls": ["https://www.youtube.com/watch?v=nk4DyDsq5PY"],
-      "resolver_revision": 6
-    },
-    {
-      "id": "SRC-20260910-WHALEFALL-FINAL",
-      "title": "Whalefall",
-      "source_url": "https://youtu.be/r9HKvxdajQc",
-      "rights_pass": true,
-      "rights_evidence": "Disney/20th Century UK Press (19 Aug 2026) publishes the new official trailer and poster with press stills for media coverage.",
-      "fallback_urls": ["https://youtu.be/ka1o-bi1hp4"],
-      "resolver_revision": 6
+      "resolver_revision": 7
     },
     {
       "id": "SRC-20260910-PRADA2-FINAL",
       "title": "The Devil Wears Prada 2",
-      "source_url": "https://www.youtube.com/watch?v=gFJIo2aoP24",
+      "source_url": "https://mh-kaltura.akamaized.net/s/p/1068292/sp/106829200/serveFlavor/entryId/1_itnvstz4/v/1/pv/1/ev/7/flavorId/1_ykllmg5n/fileName/The_Devil_Wears_Prada_2___Final_Trailer_(DIS-HD_720_-_WEB_(H264_2500)).mp4/forceproxy/true/name/a.mp4?__hdnea__=st=1788875396~exp=1788900596~acl=/s/p/1068292/sp/106829200/serveFlavor/entryId/1_itnvstz4/v/1/pv/1/ev/7/flavorId/1*~hmac=72d175d5574be0264f4b3ad49bd81881cbe52526cccdab2dd4159bd9f76b0aa4",
       "rights_pass": true,
-      "rights_evidence": "Disney/20th Century UK Press (2 Feb 2026) provides the official trailer plus character posters and stills through the studio press portal for editorial/media coverage.",
+      "rights_evidence": "20th Century Studios / Disney UK Press, 2 Feb and 8 Apr 2026, supplies official audiovisual publicity materials, character posters, stills and B-roll through the studio press portal; source file is the matching Disney Video/Kaltura studio-hosted asset.",
       "fallback_urls": [],
-      "resolver_revision": 6
+      "resolver_revision": 7
     },
     {
-      "id": "SRC-20260910-FURIOUS-FINAL",
-      "title": "Furious",
-      "source_url": "https://www.youtube.com/watch?v=H48JfozTufk",
+      "id": "SRC-20260910-MOANA-FINAL",
+      "title": "Moana",
+      "source_url": "https://mh-kaltura.akamaized.net/s/p/1068292/sp/106829200/serveFlavor/entryId/1_6osmou1u/v/1/pv/1/ev/7/flavorId/1_2s4wapqt/fileName/Moana___Final_Trailer___In_Theaters_July_10_(DIS-HD_720_-_WEB_(H264_2500)).mp4/forceproxy/true/name/a.mp4?__hdnea__=st=1788877405~exp=1788902605~acl=/s/p/1068292/sp/106829200/serveFlavor/entryId/1_6osmou1u/v/1/pv/1/ev/7/flavorId/1*~hmac=1e2df6368e1e0375e14488a728fa4e3d739dfa86fddd1b24625a05eaf9d4b7ba",
       "rights_pass": true,
-      "rights_evidence": "Disney+ UK Press (26 Jun 2026) unveiled the official trailer and downloadable key art for the series; the same official press portal reported its second-season renewal on 28 Aug 2026.",
+      "rights_evidence": "Walt Disney Studios UK Press provides official Moana audiovisual and image press materials; source file is the matching Disney Video/Kaltura studio-hosted asset.",
       "fallback_urls": [],
-      "resolver_revision": 6
-    },
-    {
-      "id": "SRC-20260910-CAMPROCK3-FINAL",
-      "title": "Camp Rock 3",
-      "source_url": "https://www.youtube.com/watch?v=qzvnOf8iatw",
-      "rights_pass": true,
-      "rights_evidence": "Disney+ UK Press (22 Jul 2026) publishes the official trailer and explicitly provides downloadable key art and press materials for media coverage.",
-      "fallback_urls": [],
-      "resolver_revision": 6
-    },
-    {
-      "id": "SRC-20260910-THESHARDS-FINAL",
-      "title": "The Shards",
-      "source_url": "https://www.youtube.com/watch?v=3dbVycaLvvI",
-      "rights_pass": true,
-      "rights_evidence": "Disney+/FX UK Press (14 Jul 2026) unveiled the official trailer and provides downloadable key art via the Disney media portal.",
-      "fallback_urls": [],
-      "resolver_revision": 6
+      "resolver_revision": 7
     },
     {
       "id": "SRC-20260910-HEXED-FINAL",
       "title": "Hexed",
-      "source_url": "https://www.youtube.com/watch?v=UetJsZsuuaw",
+      "source_url": "https://mh-kaltura.akamaized.net/s/p/1068292/sp/106829200/serveFlavor/entryId/1_5egf0d8d/v/1/pv/1/ev/7/flavorId/1_kq4uty2u/fileName/Hexed___Teaser_Trailer_(DIS-HD_720_-_WEB_(H264_2500)).mp4/forceproxy/true/name/a.mp4?__hdnea__=st=1788876219~exp=1788901419~acl=/s/p/1068292/sp/106829200/serveFlavor/entryId/1_5egf0d8d/v/1/pv/1/ev/7/flavorId/1*~hmac=b80848827e0ce5fa0149e04028b140eb3aad1d319835df55730bf8e757fcab06",
       "rights_pass": true,
-      "rights_evidence": "Disney Animation UK Press (16 Jun 2026) makes the first official trailer, poster and image assets available through its press-material links for media/editorial coverage.",
+      "rights_evidence": "Walt Disney Animation Studios UK Press, 16 Jun 2026, links official image assets and audiovisual press material through the Disney media portal; source file is the matching Disney Video/Kaltura studio-hosted asset.",
       "fallback_urls": [],
-      "resolver_revision": 6
+      "resolver_revision": 7
     },
     {
-      "id": "SRC-20260910-HOPPERS-RESERVE",
-      "title": "Hoppers",
-      "source_url": "https://www.youtube.com/watch?v=no_tNaeyjOs",
-      "rights_pass": true,
-      "rights_evidence": "Disney/Pixar UK Press (16 Jul 2025) explicitly states the trailer, poster and trailer stills are available to download and share.",
-      "fallback_urls": [],
-      "resolver_revision": 6
-    },
-    {
-      "id": "SRC-20260910-GATTO-RESERVE",
+      "id": "SRC-20260910-GATTO-FINAL",
       "title": "Gatto",
-      "source_url": "https://www.youtube.com/watch?v=RUgQUzfRYQ0",
+      "source_url": "https://mh-kaltura.akamaized.net/s/p/1068292/sp/106829200/serveFlavor/entryId/1_tf31jraj/v/1/pv/1/ev/5/flavorId/1_xvr3ke6l/fileName/Gatto___Teaser_Trailer___In_Theaters_March_5,_2027_(DIS-HD_1080_-_WEB_(H264_4000)).mp4/forceproxy/true/name/a.mp4?__hdnea__=st=1788877396~exp=1788902596~acl=/s/p/1068292/sp/106829200/serveFlavor/entryId/1_tf31jraj/v/1/pv/1/ev/5/flavorId/1*~hmac=d2fbad3f218a6526aa12cb96628b1f67c9ddd169a2d2571c3c6ea32b3b572fb7",
       "rights_pass": true,
-      "rights_evidence": "Disney/Pixar UK Press (11 Jun 2026) publishes the first official trailer, poster and stills with press-material links through the official media portal.",
+      "rights_evidence": "Disney/Pixar UK Press, 11 Jun 2026, publishes the first official audiovisual material, poster and stills with press-material links through the official media portal; source file is the matching Disney Video/Kaltura studio-hosted asset.",
       "fallback_urls": [],
-      "resolver_revision": 6
+      "resolver_revision": 7
+    },
+    {
+      "id": "SRC-20260910-HOPPERS-FINAL",
+      "title": "Hoppers",
+      "source_url": "https://mh-kaltura.akamaized.net/s/p/1068292/sp/106829200/serveFlavor/entryId/1_i2i2zhsw/v/1/pv/1/ev/7/flavorId/1_uxieqi82/fileName/Hoppers___Coming_to_Disney+_June_3_(DIS-HD_720_-_WEB_(H264_2500)).mp4/forceproxy/true/name/a.mp4?__hdnea__=st=1788877405~exp=1788902605~acl=/s/p/1068292/sp/106829200/serveFlavor/entryId/1_i2i2zhsw/v/1/pv/1/ev/7/flavorId/1*~hmac=ac726fab9d525e29498b11c9bbf3b8e31c790d17911ffa498f2ffb9d30d4f48a",
+      "rights_pass": true,
+      "rights_evidence": "Disney/Pixar UK Press explicitly makes Hoppers audiovisual material, poster and stills available through the studio press/media workflow; source file is the matching Disney Video/Kaltura studio-hosted asset.",
+      "fallback_urls": [],
+      "resolver_revision": 7
+    },
+    {
+      "id": "SRC-20260910-ELIO-FINAL",
+      "title": "Elio",
+      "source_url": "https://mh-kaltura.akamaized.net/s/p/1068292/sp/106829200/serveFlavor/entryId/1_m5kz57dl/v/1/pv/1/ev/5/flavorId/1_4ib3b1l4/fileName/Elio___Official_Trailer_(DIS-HD_1080_-_WEB_(H264_4000)).mp4/forceproxy/true/name/a.mp4?__hdnea__=st=1788877358~exp=1788902558~acl=/s/p/1068292/sp/106829200/serveFlavor/entryId/1_m5kz57dl/v/1/pv/1/ev/5/flavorId/1*~hmac=859835b46cdd748e7d4b4847221fdd7388cd58927204da5c7cdcfadab1c4389c",
+      "rights_pass": true,
+      "rights_evidence": "Disney/Pixar UK Press, 27 May 2025, explicitly states the final audiovisual material is available to download and share; source file is the matching Disney Video/Kaltura studio-hosted asset.",
+      "fallback_urls": [],
+      "resolver_revision": 7
+    },
+    {
+      "id": "SRC-20260910-ICEAGE-FINAL",
+      "title": "Ice Age: Boiling Point",
+      "source_url": "https://mh-kaltura.akamaized.net/s/p/1068292/sp/106829200/serveFlavor/entryId/1_c70kchhh/v/1/pv/1/ev/7/flavorId/1_t5wjs0dm/fileName/Ice_Age:_Boiling_Point___Official_Teaser___In_Theaters_February_5,_2027_(DIS-HD_720_-_WEB_(H264_2500)).mp4/forceproxy/true/name/a.mp4?__hdnea__=st=1788877397~exp=1788902597~acl=/s/p/1068292/sp/106829200/serveFlavor/entryId/1_c70kchhh/v/1/pv/1/ev/7/flavorId/1*~hmac=5034521f1ac5694cc69167fb3d92bf38903861abf4e8aa9c1b1ea6d564cb2ada",
+      "rights_pass": false,
+      "rights_evidence": "Official Disney Video source verified, but a separate press/editorial redistribution grant has not yet been evidenced. This candidate must remain fail-closed and cannot enter production until ASSET_RIGHTS_PASS is independently proven.",
+      "fallback_urls": [],
+      "resolver_revision": 7
     }
   ]
 }
