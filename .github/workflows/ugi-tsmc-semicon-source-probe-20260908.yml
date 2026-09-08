@@ -1,0 +1,32 @@
+name: UGI TSMC SEMICON Source Probe 2026-09-08
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-tsmc-semicon-source-probe-20260908.yml'
+      - 'scripts/ugi_tsmc_semicon_source_probe_20260908.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install media dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          python -m pip install --upgrade yt-dlp
+      - name: Probe official TSMC videos
+        run: python scripts/ugi_tsmc_semicon_source_probe_20260908.py
+      - name: Persist QA probe only
+        run: |
+          git config user.name 'ugi-editorial-video-bot'
+          git config user.email 'ugi-editorial-video-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-08/tsmc-probe/
+          git commit -m 'chore: persist TSMC source probe QA' || exit 0
+          git push
