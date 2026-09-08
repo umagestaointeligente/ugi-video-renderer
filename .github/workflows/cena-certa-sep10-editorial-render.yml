@@ -1,0 +1,68 @@
+name: Cena Certa Sep10 Editorial Render
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - '.github/workflows/cena-certa-sep10-editorial-render.yml'
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  render:
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        index: [0,1,2,3,4,5,6,7]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feat/cena-certa-factory-v2-certified
+      - name: Render motion editorial/story and run QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p editorial-out
+          python ops/cena-certa/editorial/render_sep10.py '${{ matrix.index }}' editorial-out | tee render.jsonl
+      - name: Stage exact final MP4 to R2
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$URL"; test -n "$KEY"
+          IDX='${{ matrix.index }}'
+          eval "$(python - <<'PY'
+          import importlib.util,os,shlex
+          p='ops/cena-certa/editorial/render_sep10.py'
+          spec=importlib.util.spec_from_file_location('ed',p); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          item=m.ITEMS[int(os.environ['IDX'])]
+          print('RID='+shlex.quote(item['id']))
+          print('MSHA='+shlex.quote(m.manifest_sha()))
+          PY
+          )"
+          MP4="editorial-out/${RID}.mp4"
+          DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$MP4")
+          python ops/cena-certa/r2_stage.py --base-url "$URL" --auth-key "$KEY" --id "$RID" --batch-sha256 "$MSHA" --mp4 "$MP4" --duration "$DUR" --out "editorial-out/${RID}.r2.json"
+          test -s "editorial-out/${RID}.qa.json"
+          test -s "editorial-out/${RID}.r2.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-sep10-editorial-${{ matrix.index }}
+          path: |
+            editorial-out/*.qa.json
+            editorial-out/*.r2.json
+          if-no-files-found: warn
+          retention-days: 7
