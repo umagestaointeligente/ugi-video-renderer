@@ -1,0 +1,48 @@
+name: Cena Certa Sep10 Timeline Diagnostic
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - '.github/workflows/cena-certa-sep10-timeline-diagnostic.yml'
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  timeline:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [3,5,6]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      PYTHONPATH: vendor/cena-certa-factory-v2/src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feat/cena-certa-factory-v2-certified
+      - name: Measure exact voice-bound scene targets only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib,tempfile
+          from factory.cena_certa.v2.engine import contract,validate_item
+          from factory.cena_certa.v2.prepare import _story_voice_with_measured_pace,_visual_timeline
+          idx=${{ matrix.index }}
+          c=contract(); items=json.loads(pathlib.Path('ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json').read_text(encoding='utf-8')); item=items[idx]; validate_item(c,item)
+          with tempfile.TemporaryDirectory() as td:
+              voice=pathlib.Path(td)/'voice.mp3'
+              cues,vd,wpm=_story_voice_with_measured_pace(c,' '.join(item['caption_chunks']),item['caption_chunks'],voice)
+              story=float(cues[-1]['end'])+0.12
+              timeline=_visual_timeline(item,cues,story)
+              print('TIMELINE_DIAGNOSTIC',json.dumps({'index':idx,'id':item['id'],'source_starts':[s['start_seconds'] for s in item['scene_plan']],'targets':[round(x[2],3) for x in timeline],'story':round(story,3),'wpm':round(wpm,1)}))
+          PY
