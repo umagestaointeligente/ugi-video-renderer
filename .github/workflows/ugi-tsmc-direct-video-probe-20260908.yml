@@ -1,0 +1,27 @@
+name: UGI TSMC Direct Video Probe 2026-09-08
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-tsmc-direct-video-probe-20260908.yml'
+      - 'scripts/ugi_tsmc_direct_video_probe_20260908.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe TSMC direct-hosted video refs
+        run: python scripts/ugi_tsmc_direct_video_probe_20260908.py
+      - name: Persist probe
+        run: |
+          git config user.name 'ugi-editorial-video-bot'
+          git config user.email 'ugi-editorial-video-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-08/tsmc-direct-probe/
+          git commit -m 'chore: persist TSMC direct video probe' || exit 0
+          git push
