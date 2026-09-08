@@ -1,6 +1,6 @@
 {
   "schema": "CENA_CERTA_PUBLISHER_STATE_V1",
-  "state": "PUBLISH_RECONCILED",
+  "state": "IDLE",
   "handoff_sha256": "1019ac5fa51ffb74e40418141229c92804c0ea9f5c55350ce237b58fdc4002b8",
   "production_run_id": 34152820372,
   "primary_provider": "METRICOOL",
@@ -22,8 +22,9 @@
     "all_expected_objects_found": true,
     "all_auto_publish_true": true,
     "all_provider_statuses_pending": true,
-    "no_replay": true
+    "no_replay": true,
+    "closed_to_idle_for_next_dispatch": true
   },
-  "updated_at": "2026-09-08T02:50:00+00:00",
+  "updated_at": "2026-09-08T04:11:00+00:00",
   "blind_retry_forbidden": true
 }
