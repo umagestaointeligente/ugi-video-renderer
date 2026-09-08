@@ -1,0 +1,27 @@
+{
+  "project": "ORBIT/VSA",
+  "date_local": "2026-09-08",
+  "timezone": "America/Sao_Paulo",
+  "status": "BLOCKED_NOT_SCHEDULED",
+  "verified_target": {
+    "connector": "post_bridge",
+    "platform": "youtube",
+    "account_id": 88527,
+    "username": "Você Sabia Agora?",
+    "needs_reconnect": false
+  },
+  "candidate": {
+    "title": "Por que caem tantos raios? ⚡ Entenda o que acontece dentro da nuvem",
+    "media_url": "https://beta.productos.dev/api/project-storage/public/a4cbb8e8-0282-4eae-8007-0314da27880e/exports/VSA_RAIOS_CANONICAL_FINAL.mp4",
+    "media_id": "877d140a-cf4f-4335-bdab-6d32f1193e8b",
+    "media_size_bytes": 13460954,
+    "desired_datetime_local": "2026-09-08T19:30:00-03:00"
+  },
+  "attempts": [
+    {"route": "public media URL", "result": "HTTP_500_INTERNAL_SERVER_ERROR"},
+    {"route": "pre-uploaded media_id", "result": "HTTP_500_INTERNAL_SERVER_ERROR"}
+  ],
+  "retry_policy": "STOP_NO_BLIND_RETRY",
+  "metricool": "FORBIDDEN_FOR_VSA: only connected brand is Cena Certa Ofc",
+  "truth_rule": "Do not call this scheduled. A real scheduled post ID/state is still required."
+}
