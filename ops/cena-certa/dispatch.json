@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v3.json",
-  "batch_sha256": "628fe09281779b567357198f16257d58a68456220b3ebdea96f3e82d545a63be",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v4.json",
+  "batch_sha256": "01b0ca2a2fdb12fc99fe25a24f26fe8f856285a4dcfc407f9024b71750d01ddb",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T04:13:42+00:00",
-  "request_id": "CC-20260909-PROD-V3-041342",
+  "requested_at": "2026-09-08T04:19:24+00:00",
+  "request_id": "CC-20260909-DURATION-REPAIR-V4",
   "candidate_count": 10,
   "selected_count": 8,
   "reserve_count": 2,
-  "note": "Caption-safe immutable Sep 9 batch v3; 10 candidates, 8 selected, 2 hot reserves; no blind retry; schedule only after QA PASS."
+  "note": "Measured duration repair only for candidates below 32 seconds in run 34186259287; no duration gate relaxation. Mandalorian and Moana remain failed candidates; Toy Story 5 is qualified hot-reserve replacement if it passes."
 }
