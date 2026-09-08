@@ -1,15 +1,24 @@
 {
   "schema": "CENA_CERTA_SCENE_REPAIR_REQUEST_V1",
   "authorized": true,
-  "source_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v4.json",
-  "output_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v5.json",
-  "request_id": "CC-20260909-TRON-BLACK-REPAIR-V5",
+  "source_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v5.json",
+  "output_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v6.json",
+  "request_id": "CC-20260909-TRON-FULL-RANGE-REPAIR-V6",
   "selected_count": 8,
   "reserve_count": 2,
   "candidate_id": "CC-20260909-TRONARES-V4",
   "scene_start_overrides": {
-    "0": 4.0
+    "0": 2.0,
+    "1": 12.0,
+    "2": 18.0,
+    "3": 33.1,
+    "4": 46.7,
+    "5": 53.4,
+    "6": 58.8,
+    "7": 66.7,
+    "8": 70.4,
+    "9": 76.0
   },
-  "probe_evidence": "run=34186625813;sha256=0c9a0f7308598d971b4f2fdd270582c50ad82a0c01ca79bc047079b3b12f9f2a",
-  "note": "Measured black-frame repair for TRON only: scene 0 moved from 1.0s to 4.0s after live source re-probe found no >=0.2s black interval in the 4.0-8.0s window. No gate relaxation. Normalizer true-peak fix already passed certified smoke run 34187139494."
+  "probe_evidence": "run=34188034117;sha256=0c9a0f7308598d971b4f2fdd270582c50ad82a0c01ca79bc047079b3b12f9f2a",
+  "note": "Evidence-bound TRON source-range repair after run 34188034117 exposed source overlap. All ten replacement windows were re-probed against the exact source SHA and found clean with conservative 5.5s windows for the first four scenes, 5.3s for scene 4, and 3.5s windows for scenes 5-9. No black-frame or overlap gate relaxation."
 }
