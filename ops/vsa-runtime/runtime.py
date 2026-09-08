@@ -44,7 +44,10 @@ def assert_account(account_id: int | None, contract):
     lock = contract["project_lock"]
     if account_id in set(lock["forbidden_account_ids"]):
         raise GateError(f"CENA_CERTA_ACCOUNT_BLOCK:{account_id}")
-    approved = lock["approved_post_bridge_account"]["id"]
+    approved_entry = lock.get("approved_post_bridge_account") or lock.get("historical_post_bridge_account")
+    if not approved_entry or "id" not in approved_entry:
+        raise GateError("VSA_ACCOUNT_MAPPING_MISSING")
+    approved = approved_entry["id"]
     if int(account_id) != int(approved):
         raise GateError(f"UNVERIFIED_VSA_ACCOUNT:{account_id}")
 
