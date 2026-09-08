@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "date": "2026-08-24",
+  "date": "2026-09-08",
   "timezone": "America/Sao_Paulo",
   "publication_provider": "BUFFER",
   "schedule_provider": "BUFFER",
@@ -10,10 +10,10 @@
   "channels_http": 200,
   "buffer_channels": [
     {
-      "id": "6a7896cdb2d9d57743457e33",
-      "name": "umagestaointeligente",
-      "displayName": "umagestaointeligente",
-      "service": "instagram",
+      "id": "6a9acd94065799be46891f24",
+      "name": "uma-gestao-inteligente",
+      "displayName": "uma-gestao-inteligente",
+      "service": "linkedin",
       "isQueuePaused": false
     },
     {
@@ -24,14 +24,14 @@
       "isQueuePaused": false
     },
     {
-      "id": "6a78974ab2d9d577434584b7",
-      "name": "Uma Gestão Inteligente ",
-      "displayName": "Uma Gestão Inteligente ",
-      "service": "youtube",
+      "id": "6a7896cdb2d9d57743457e33",
+      "name": "umagestaointeligente",
+      "displayName": "umagestaointeligente",
+      "service": "instagram",
       "isQueuePaused": false
     }
   ],
   "today_publications": [],
   "today_count": 0,
-  "timestamp": "2026-08-24T05:22:21.218928+00:00"
+  "timestamp": "2026-09-08T04:53:02.407157+00:00"
 }
