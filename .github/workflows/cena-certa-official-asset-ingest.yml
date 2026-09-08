@@ -34,7 +34,7 @@ jobs:
           items=d.get('items') or []
           if not (1 <= len(items) <= 10): raise SystemExit('INGEST_COUNT_FAIL')
           seen=set()
-          allowed_hosts=('youtube.com','youtu.be','disney.com','disney.co.uk','disneyusercontent.com','gettyimages.com')
+          allowed_hosts=('youtube.com','youtu.be','disney.com','disney.co.uk','disneyusercontent.com','gettyimages.com','mh-kaltura.akamaized.net')
           for i,x in enumerate(items):
               rid=str(x.get('id') or '')
               if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{2,95}',rid) or rid in seen: raise SystemExit(f'INGEST_ID_FAIL {i}')
@@ -84,7 +84,7 @@ jobs:
           set -euo pipefail
           export INDEX='${{ matrix.index }}'
           python - <<'PY'
-          import json,os,shlex
+          import json,os
           x=json.load(open(os.environ['REQUEST'],encoding='utf-8'))["items"][int(os.environ['INDEX'])]
           for k,v in [('rid',x['id']),('source_url',x['source_url'])]:
               with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write(f'{k}={v}\n')
