@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260910-v3.json",
-  "batch_sha256": "de5fecf28cbc7fe549422cdb626a1b8d4774764e8551026cf8cf3c78cb8bdc75",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260910-v4.json",
+  "batch_sha256": "ab070968cdebd48647a2cae01ee0a36f76241456a4c64f4ada14211c36d04411",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T22:17:49+00:00",
-  "request_id": "CC-20260910-GATTO-SCENE-REPAIR-V3",
+  "requested_at": "2026-09-08T22:19:03+00:00",
+  "request_id": "CC-20260910-HOPPERS-SCENE-REPAIR-V4",
   "candidate_count": 8,
   "selected_count": 8,
   "reserve_count": 0,
-  "note": "Evidence-bound Sep 10 Gatto repair. Exact target clip durations were packed into clean source windows measured by run 34284661288 with separation and no black intervals. No quality, rights, caption, or publication gate relaxation. Existing 08/09 and 09/09 schedules remain frozen."
+  "note": "Evidence-bound Sep 10 Hoppers repair. The source is clean from 1.46s onward per run 34284686914; starts preserve narrative order and include separation for the exact target clip durations. No black-frame, overlap, rights, caption, or publication gate relaxation. Existing 08/09 and 09/09 schedules remain frozen."
 }
