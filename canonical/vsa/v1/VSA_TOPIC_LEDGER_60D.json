@@ -1,0 +1,256 @@
+{
+  "schema": "VSA_TOPIC_LEDGER_60D_V1",
+  "project": "ORBIT/VSA",
+  "channel": "Você Sabia Agora?",
+  "timezone": "America/Sao_Paulo",
+  "window_days": 60,
+  "generated_at_local": "2026-09-08T20:51:00-03:00",
+  "source_of_truth": "Upload-Post live YouTube media readback + live scheduled queue",
+  "match_rule": "Block when semantic_topic_id represents the same central question or mechanism inside 60 days. Shared broad subject alone is not enough. Breaking exception requires a materially new event and evidence manifest.",
+  "entries": [
+    {
+      "content_id": "YT-fPqwR--embI",
+      "date_local": "2026-08-25",
+      "status": "PUBLISHED",
+      "title": "Por que escorpiões brilham sob luz ultravioleta?",
+      "semantic_topic_id": "scorpion_uv_fluorescence",
+      "central_mechanism": "fluorescence of scorpion cuticle under ultraviolet light",
+      "platform_id": "fPqwR--embI"
+    },
+    {
+      "content_id": "YT-XRZ-lYxzIns",
+      "date_local": "2026-08-25",
+      "status": "PUBLISHED",
+      "title": "Como uma camiseta sintética solta fibras invisíveis na lavagem?",
+      "semantic_topic_id": "synthetic_microfiber_shedding_laundry",
+      "central_mechanism": "mechanical shedding of synthetic microfibers during washing",
+      "platform_id": "XRZ-lYxzIns"
+    },
+    {
+      "content_id": "YT-dXm6jMjW5ns",
+      "date_local": "2026-08-25",
+      "status": "PUBLISHED",
+      "title": "Por que foguetes às vezes deixam espirais brilhantes no céu?",
+      "semantic_topic_id": "rocket_exhaust_spiral_sky",
+      "central_mechanism": "upper-atmosphere rocket exhaust expanding into spiral structures",
+      "platform_id": "dXm6jMjW5ns"
+    },
+    {
+      "content_id": "YT-V8mTqBIveHE",
+      "date_local": "2026-08-25",
+      "status": "PUBLISHED",
+      "title": "Por que é tão difícil para um robô andar como um humano?",
+      "semantic_topic_id": "humanoid_robot_bipedal_locomotion",
+      "central_mechanism": "balance, control and bipedal locomotion challenges in humanoid robots",
+      "platform_id": "V8mTqBIveHE"
+    },
+    {
+      "content_id": "YT-pg-50oVGidM",
+      "date_local": "2026-08-25",
+      "status": "PUBLISHED",
+      "title": "Como um controle faz você sentir impactos diferentes nas mãos?",
+      "semantic_topic_id": "controller_haptic_feedback",
+      "central_mechanism": "actuator-generated haptic feedback patterns",
+      "platform_id": "pg-50oVGidM"
+    },
+    {
+      "content_id": "YT-qZu1aIFthKo",
+      "date_local": "2026-08-25",
+      "status": "PUBLISHED",
+      "title": "Como uma camiseta sintética solta fibras invisíveis na lavagem?",
+      "semantic_topic_id": "synthetic_microfiber_shedding_laundry",
+      "central_mechanism": "mechanical shedding of synthetic microfibers during washing",
+      "platform_id": "qZu1aIFthKo",
+      "historical_duplicate": true
+    },
+    {
+      "content_id": "YT-iVPTOvqNS6A",
+      "date_local": "2026-08-25",
+      "status": "PUBLISHED",
+      "title": "Por que foguetes às vezes deixam espirais brilhantes no céu?",
+      "semantic_topic_id": "rocket_exhaust_spiral_sky",
+      "central_mechanism": "upper-atmosphere rocket exhaust expanding into spiral structures",
+      "platform_id": "iVPTOvqNS6A",
+      "historical_duplicate": true
+    },
+    {
+      "content_id": "YT-fg6grt3eLlo",
+      "date_local": "2026-08-26",
+      "status": "PUBLISHED",
+      "title": "Por que enxergamos pela porta do micro-ondas sem as micro-ondas escaparem?",
+      "semantic_topic_id": "microwave_door_mesh_shielding",
+      "central_mechanism": "conductive mesh aperture blocks microwave wavelength while passing visible light",
+      "platform_id": "fg6grt3eLlo"
+    },
+    {
+      "content_id": "YT-lgUFUtkauhI",
+      "date_local": "2026-08-26",
+      "status": "PUBLISHED",
+      "title": "Por que cortar cebola faz seus olhos lacrimejarem?",
+      "semantic_topic_id": "onion_lachrymatory_factor",
+      "central_mechanism": "volatile lachrymatory compound irritates eyes",
+      "platform_id": "lgUFUtkauhI"
+    },
+    {
+      "content_id": "YT-l-aWlKWxtmE",
+      "date_local": "2026-08-26",
+      "status": "PUBLISHED",
+      "title": "Por que pimenta parece queimar sem estar quente?",
+      "semantic_topic_id": "capsaicin_trpv1_heat_sensation",
+      "central_mechanism": "capsaicin activates heat-sensitive TRPV1 receptors",
+      "platform_id": "l-aWlKWxtmE"
+    },
+    {
+      "content_id": "YT-qrglyHwmulY",
+      "date_local": "2026-08-26",
+      "status": "PUBLISHED",
+      "title": "Como o celular detecta coisas que nossos olhos não veem?",
+      "semantic_topic_id": "smartphone_sensor_nonvisible_detection",
+      "central_mechanism": "electronic sensors detect wavelengths/signals outside unaided human perception",
+      "platform_id": "qrglyHwmulY"
+    },
+    {
+      "content_id": "YT-UPo37VF5wrQ",
+      "date_local": "2026-08-27",
+      "status": "PUBLISHED",
+      "title": "Como uma lagartixa gruda na parede sem cola?",
+      "semantic_topic_id": "gecko_setae_adhesion",
+      "central_mechanism": "microscopic toe structures create dry adhesion through intermolecular forces",
+      "platform_id": "UPo37VF5wrQ"
+    },
+    {
+      "content_id": "YT-MmKwgvyul-w",
+      "date_local": "2026-08-27",
+      "status": "PUBLISHED",
+      "title": "O que a pressão do fundo do oceano faria com um objeto oco?",
+      "semantic_topic_id": "deep_ocean_pressure_hollow_object",
+      "central_mechanism": "external hydrostatic pressure creates differential load and collapse risk",
+      "platform_id": "MmKwgvyul-w"
+    },
+    {
+      "content_id": "YT-1wpSxUkgzUQ",
+      "date_local": "2026-08-30",
+      "status": "PUBLISHED",
+      "title": "Um raio pode explodir uma árvore por dentro ⚡🌳",
+      "semantic_topic_id": "lightning_tree_internal_explosion",
+      "central_mechanism": "lightning rapidly heats moisture/sap and can create explosive mechanical damage in a tree",
+      "platform_id": "1wpSxUkgzUQ"
+    },
+    {
+      "content_id": "YT-kXr2CxTCuOE",
+      "date_local": "2026-09-08",
+      "status": "PUBLISHED",
+      "title": "Por que Saturno tem um polígono de 10 lados no polo?",
+      "semantic_topic_id": "saturn_south_pole_decagon_wave",
+      "central_mechanism": "atmospheric jet/wave structure creates polygonal cloud pattern near Saturn south pole",
+      "platform_id": "kXr2CxTCuOE"
+    },
+    {
+      "content_id": "YT-A0lRLcM64Vc",
+      "date_local": "2026-09-08",
+      "status": "PUBLISHED",
+      "title": "Por que corais moles estão desabando no fundo do mar?",
+      "semantic_topic_id": "jeju_soft_coral_slumping",
+      "central_mechanism": "loss of internal support/turgor contributes to soft-coral colony slumping",
+      "platform_id": "A0lRLcM64Vc"
+    },
+    {
+      "content_id": "YT-80DzwMoMClU",
+      "date_local": "2026-09-08",
+      "status": "PUBLISHED",
+      "title": "A matéria escura pode ter deixado seu primeiro sinal direto?",
+      "semantic_topic_id": "lz_dark_matter_candidate_nuclear_recoil_2026",
+      "central_mechanism": "rare nuclear-recoil candidate in LUX-ZEPLIN and statistical significance threshold",
+      "platform_id": "80DzwMoMClU"
+    },
+    {
+      "content_id": "VSA-20260908-SAMBA-REENTRY",
+      "date_local": "2026-09-08",
+      "status": "SCHEDULED_PENDING",
+      "title": "Como cientistas fizeram um satélite cair no lugar exato?",
+      "semantic_topic_id": "samba_controlled_reentry_prediction",
+      "central_mechanism": "predicting and observing spacecraft atmospheric reentry trajectory",
+      "job_id": "2ccb02caa9c9401bb1d2a4b220d16b6c"
+    },
+    {
+      "content_id": "VSA-20260909-MOON-JUPITER",
+      "date_local": "2026-09-09",
+      "status": "SCHEDULED_PENDING",
+      "title": "A Lua vai esconder Júpiter em plena luz do dia?",
+      "semantic_topic_id": "moon_jupiter_occultation_geometry_2026_09_09",
+      "central_mechanism": "observer-dependent lunar occultation geometry hides Jupiter",
+      "job_id": "fd98405ff95448a39e2b3089d9d372f8"
+    },
+    {
+      "content_id": "VSA-20260909-ANAK-KRAKATAU",
+      "date_local": "2026-09-09",
+      "status": "SCHEDULED_PENDING",
+      "title": "Por que a cinza de um vulcão consegue parar milhares de voos?",
+      "semantic_topic_id": "volcanic_ash_jet_engine_hazard",
+      "central_mechanism": "volcanic ash ingestion can damage/disable jet engines and force route closures",
+      "job_id": "00116cec212b474dae11cb75dfbe39b5"
+    },
+    {
+      "content_id": "VSA-20260909-CONTRAIL",
+      "date_local": "2026-09-09",
+      "status": "SCHEDULED_PENDING",
+      "title": "Aquela linha branca do avião pode aquecer o planeta?",
+      "semantic_topic_id": "persistent_contrail_climate_warming",
+      "central_mechanism": "persistent ice-crystal contrails alter radiative balance and can be avoided via route/altitude prediction",
+      "job_id": "d3f30c24dcb7447c80f245e7d67e0869"
+    },
+    {
+      "content_id": "VSA-20260909-ROMAN",
+      "date_local": "2026-09-09",
+      "status": "SCHEDULED_PENDING",
+      "title": "Por que o telescópio Roman vai fotografar tanto céu de uma vez?",
+      "semantic_topic_id": "roman_telescope_wide_field_survey",
+      "central_mechanism": "wide-field infrared imaging increases survey area while retaining high detail",
+      "job_id": "3bfb87ceb29d4f2b9ce232539a322a84"
+    },
+    {
+      "content_id": "VSA-20260909-RAIOS",
+      "date_local": "2026-09-09",
+      "status": "SCHEDULED_PENDING",
+      "title": "Por que caem tantos raios?",
+      "semantic_topic_id": "lightning_cloud_ground_connection_formation",
+      "central_mechanism": "descending leader and upward streamers connect before return stroke",
+      "job_id": "ba08350e384143e5a5f130bbb2c7ac56",
+      "collision_review": {
+        "related_prior_semantic_topic_id": "lightning_tree_internal_explosion",
+        "classification": "NEW_TOPIC_DIFFERENT_CENTRAL_MECHANISM",
+        "reason": "prior video explains damage inside a tree after a strike; this video explains how cloud-ground lightning connection forms"
+      }
+    },
+    {
+      "content_id": "VSA-20260909-HUMANOID-ROBOTS",
+      "date_local": "2026-09-09",
+      "status": "SCHEDULED_PENDING",
+      "title": "Por que exércitos estão de olho em robôs humanoides?",
+      "semantic_topic_id": "humanoid_robot_military_environment_fit",
+      "central_mechanism": "human-shaped robots can navigate human-designed environments/tools for reconnaissance/logistics, subject to power/reliability/cost limits",
+      "job_id": "7ef3ffed1d9b488cb398f89e5b2b7425",
+      "collision_review": {
+        "related_prior_semantic_topic_id": "humanoid_robot_bipedal_locomotion",
+        "classification": "NEW_TOPIC_DIFFERENT_CENTRAL_MECHANISM",
+        "reason": "prior video explains bipedal walking difficulty; this video explains military interest in human-compatible form factor and operational limitations"
+      }
+    }
+  ],
+  "known_historical_duplicates": [
+    {
+      "semantic_topic_id": "synthetic_microfiber_shedding_laundry",
+      "platform_ids": ["XRZ-lYxzIns", "qZu1aIFthKo"]
+    },
+    {
+      "semantic_topic_id": "rocket_exhaust_spiral_sky",
+      "platform_ids": ["dXm6jMjW5ns", "iVPTOvqNS6A"]
+    }
+  ],
+  "release_policy": {
+    "same_semantic_topic_within_window": "BLOCK_TOPIC_REPEAT",
+    "breaking_exception": "ALLOW_ONLY_WITH_MATERIAL_NEW_EVENT",
+    "required_exception_fields": ["repeat_exception", "repeat_exception_reason", "new_event_source", "new_event_date"],
+    "broad_subject_overlap_only": "REVIEW_NOT_AUTOMATIC_BLOCK"
+  }
+}
