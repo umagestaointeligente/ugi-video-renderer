@@ -1,8 +1,8 @@
 {
   "schema": "CENA_CERTA_SCENE_BLACK_PROBE_V1",
-  "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260910-ENDGAME-ENCORE-FINAL-67c29858e7a1%2Finstagram.mp4",
-  "existing_starts": [12,17,22,32,37,44,49,54,59,64],
+  "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260910-GATTO-FINAL-c3952dda8bae%2Finstagram.mp4",
+  "existing_starts": [4,8.5,13,17.5,22,26.5,31,35.5,40,44.5],
   "minimum_safe_window_seconds": 8.0,
   "attempt": 1,
-  "reason": "Evidence-bound Sep 10 Endgame source probe before canonical scene overlap repair."
+  "reason": "Evidence-bound Sep 10 Gatto source probe before canonical scene overlap repair."
 }
