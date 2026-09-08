@@ -105,3 +105,5 @@ jobs:
           git add control-plane/receipts/ugi-buffer/today.json || true
           git commit -m 'UGI: persist Buffer today audit [skip ci]' || true
           git push || true
+
+# Manual live-audit trigger: 2026-09-08T01:42:00-03:00
