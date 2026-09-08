@@ -1,0 +1,32 @@
+name: UGI TSMC Source Sample 2026-09-08
+
+on:
+  push:
+    paths:
+      - 'scripts/ugi_tsmc_source_sample_20260908.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg python3-pip
+          python3 -m pip install --break-system-packages -q yt-dlp
+      - name: Download official TSMC source videos and build contact sheets
+        run: python3 scripts/ugi_tsmc_source_sample_20260908.py
+      - name: Persist QA source sheets
+        run: |
+          git config user.name 'ugi-editorial-video-bot'
+          git config user.email 'umagestaointeligente@gmail.com'
+          git add public/ugi/editorial/2026-09-08/tsmc-source-qa/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'qa: sample official TSMC company footage'
+          git push
