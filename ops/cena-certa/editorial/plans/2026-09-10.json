@@ -1,0 +1,46 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_PLAN_V3",
+  "target_date": "2026-09-10",
+  "timezone": "America/Sao_Paulo",
+  "status": "PROPOSED_NOT_SCHEDULED",
+  "metricool_brand_id": "6809869",
+  "existing_metricool_posts": 0,
+  "metricool_best_time_snapshot": {
+    "facebook": {"peak":10,"secondary":[12,18,11,17]},
+    "instagram": {"peak":10,"secondary":[12,11,18,9]},
+    "tiktok": {"peak":10,"secondary":[18,12,16,17]},
+    "youtube": {"peak":16,"secondary":[10,15,14,17]}
+  },
+  "targets": {"videos":8,"editorial_posts_or_carousels":4,"stories_facebook_instagram":4},
+  "timeline": [
+    {"time":"07:45","kind":"STORY","topic":"ABERTURA_DO_DIA","providers":["facebook","instagram"],"concept":"Hoje tem bruxas, bastidores de cinema, true crime e final de série. Qual você quer primeiro?","status":"CREATIVE_PENDING"},
+    {"time":"09:10","kind":"VIDEO","slot":"V1","lane":"CURRENT_MAJOR_RELEASE","preferred_candidate":"Practical Magic 2","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"10:15","kind":"EDITORIAL_POST","topic":"PRACTICAL_MAGIC_2_RELEASE","providers":["facebook","instagram","tiktok"],"headline":"Sandra Bullock e Nicole Kidman estão de volta. A magia ainda funciona?","discussion":"Você queria essa continuação ou o original deveria ter ficado intocado?","asset_rule":"Warner official asset only after explicit reuse-rights pass; otherwise original Cena Certa typography with no copyrighted frame","status":"FACT_PASS_ASSET_RIGHTS_PENDING"},
+    {"time":"10:50","kind":"VIDEO","slot":"V2","lane":"CURRENT_OR_EVERGREEN_MAJOR","preferred_candidate":"Spider-Man: Brand New Day","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"11:45","kind":"STORY","topic":"PRACTICAL_MAGIC_POLL","providers":["facebook","instagram"],"concept":"Qual irmã Owens é a sua favorita: Sally ou Gillian?","status":"ASSET_RIGHTS_PENDING"},
+    {"time":"12:10","kind":"VIDEO","slot":"V3","lane":"NOSTALGIA_ANCHOR","preferred_candidate":"Practical Magic (1998) or another cleared 1990-2010 title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"13:15","kind":"EDITORIAL_CAROUSEL","topic":"CALL_MY_AGENT_MOVIE","providers":["facebook","instagram","tiktok"],"headline":"A ASK voltou — agora em filme.","slides":["Capa","O reencontro cinco anos depois","Andréa estreia como diretora e tudo começa a desandar","Por que os fãs da série devem prestar atenção","CTA: você queria esse retorno?"],"status":"FACT_PASS_ASSET_RIGHTS_PENDING"},
+    {"time":"14:30","kind":"VIDEO","slot":"V4","lane":"STRONG_STREAMING_SERIES","preferred_candidate":"Last Seen","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"15:10","kind":"STORY","topic":"STREAMING_CHOICE","providers":["facebook","instagram"],"concept":"Hoje você dá play em suspense, romance ou true crime?","status":"CREATIVE_PENDING"},
+    {"time":"16:00","kind":"VIDEO","slot":"V5","lane":"CURRENT_BLOCKBUSTER","preferred_candidate":"The Odyssey","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"17:20","kind":"VIDEO","slot":"V6","lane":"CURRENT_STREAMING","preferred_candidate":"Made in Korea S2 or Drawn Together","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"17:50","kind":"EDITORIAL_POST","topic":"COLIN_FROM_ACCOUNTS_S3","providers":["facebook","instagram","tiktok"],"headline":"O fim de Colin From Accounts chegou: Gordon e Ashley deveriam terminar juntos?","discussion":"Final feliz ou separação seria mais honesta com a série?","asset_rule":"Paramount Press Express key art/imagery route; final file/terms QA before use","status":"GREEN_PRESS_ROUTE_IDENTIFIED_FINAL_QA_PENDING"},
+    {"time":"18:35","kind":"VIDEO","slot":"V7","lane":"EVERGREEN_MAJOR_FRANCHISE","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"20:00","kind":"VIDEO","slot":"V8","lane":"FLEX_HIGH_DEMAND","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_RIGHTS_AND_QA_PENDING"},
+    {"time":"20:40","kind":"EDITORIAL_CAROUSEL","topic":"A_KILLER_STORY_HBO","providers":["facebook","instagram","tiktok"],"headline":"True crime ainda informa — ou já virou entretenimento demais?","slides":["Capa","A Killer Story estreia hoje","O caso como narrativa documental","Por que o gênero continua atraindo público","CTA: você assiste true crime?"],"status":"FACT_PASS_ASSET_RIGHTS_PENDING"},
+    {"time":"21:10","kind":"STORY","topic":"NEXT_DAY_SIGNAL","providers":["facebook","instagram"],"concept":"Qual pauta você quer amanhã: nostalgia 90s / blockbuster / série nova / terror?","status":"CREATIVE_PENDING"}
+  ],
+  "alternate_editorial": [
+    {"topic":"VENICE_SEP10","use_if":"breaking festival signal emerges","hook":"Taika Waititi + Pamela Anderson em Place to be ou Union Town de Barbara Kopple","status":"OFFICIAL_FACT_PASS_ASSET_TERMS_PENDING"},
+    {"topic":"LAST_SEEN_DAY_TWO","use_if":"Apple TV social/critical momentum rises","hook":"Uma ligação pode devolver a filha desaparecida 11 anos atrás?","status":"FACT_PASS_PRESS_KEY_ART_ROUTE_IDENTIFIED"},
+    {"topic":"BOX_OFFICE_RACE","use_if":"new verified grosses publish before slot","hook":"The Odyssey x Spider-Man: qual definiu o verão de 2026?","status":"DYNAMIC_FACT_RECHECK_REQUIRED"}
+  ],
+  "publication_gate": {
+    "must_have_fact_pass": true,
+    "must_have_asset_rights_pass": true,
+    "must_have_media_file_qa": true,
+    "must_recheck_brazil_availability": true,
+    "must_not_modify_existing_metricool_posts": true,
+    "youtube_editorial_static_posts": false
+  }
+}
