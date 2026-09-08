@@ -1,0 +1,125 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_RADAR_V3",
+  "target_date": "2026-09-10",
+  "timezone": "America/Sao_Paulo",
+  "generated_at": "2026-09-08T08:38:37-03:00",
+  "status": "RESEARCH_COMPLETE_ASSET_RIGHTS_PENDING_NOT_SCHEDULED",
+  "metricool_brand_id": "6809869",
+  "scheduled_posts_readback": 0,
+  "primary_topics": [
+    {
+      "priority": 1,
+      "title": "Practical Magic 2 / Da Magia à Sedução: Feitiço de Amor",
+      "type": "THEATRICAL_RELEASE",
+      "why_now": "Warner official site states North America release 2026-09-10 and international rollout beginning 2026-09-09; Brazilian listings show 2026-09-10 theatrical release.",
+      "engagement_hook": "Sandra Bullock + Nicole Kidman reunidas: continuação necessária ou nostalgia demais?",
+      "sources": [
+        "https://www.practicalmagicmovie.com/",
+        "https://www.adorocinema.com/filmes/filme-1000004679/"
+      ],
+      "social_signal": "Active audience discussion and movie-club planning visible on Reddit in the release week.",
+      "asset_route": "Official Warner movie site contains current imagery; no blanket reuse permission inferred.",
+      "asset_status": "YELLOW_OFFICIAL_ASSET_FOUND_EXPLICIT_REUSE_TERMS_PENDING"
+    },
+    {
+      "priority": 2,
+      "title": "Call My Agent! The Movie",
+      "type": "NETFLIX_RELEASE",
+      "why_now": "Netflix Tudum lists release on 2026-09-10; official title and Netflix Media Center pages are live.",
+      "engagement_hook": "Cinco anos depois, a ASK volta em formato de filme: você queria esse reencontro?",
+      "sources": [
+        "https://www.netflix.com/tudum/articles/what-to-watch-on-netflix-september-4-2026",
+        "https://media.netflix.com/en/only-on-netflix/82026389"
+      ],
+      "asset_route": "Netflix Media Center title page provides official imagery; use only after exact press-asset terms/access pass.",
+      "asset_status": "YELLOW_NETFLIX_MEDIA_CENTER_TERMS_CHECK_REQUIRED"
+    },
+    {
+      "priority": 3,
+      "title": "Colin From Accounts — Season 3",
+      "type": "PARAMOUNT_PLUS_RELEASE",
+      "why_now": "Paramount Press Express confirms third and final season premieres 2026-09-10.",
+      "engagement_hook": "Gordon e Ashley: casal que merece final feliz ou melhor separados?",
+      "sources": [
+        "https://www.paramountpressexpress.com/cbs-studios/shows/colin-from-accounts/releases/?view=113097-will-they-or-wont-they-third-and-final-season-of-paramount-original-comedy-series-colin-from-accounts-to-premiere-september-10"
+      ],
+      "social_signal": "Recent Reddit discussion around the season trailer is strongly positive, with viewers calling it a favorite and anticipating the ending.",
+      "asset_route": "Paramount Press Express explicitly offers official key art and imagery downloads from the release page.",
+      "asset_status": "GREEN_PRESS_ROUTE_IDENTIFIED_FINAL_TERMS_AND_FILE_QA_REQUIRED"
+    },
+    {
+      "priority": 4,
+      "title": "A Killer Story",
+      "type": "HBO_MAX_RELEASE",
+      "why_now": "HBO Pressroom confirms the three-part documentary series debuts 2026-09-10.",
+      "engagement_hook": "True crime: investigação necessária ou gênero que já passou do limite?",
+      "sources": [
+        "https://press.wbd.com/us/brands/hbo-0"
+      ],
+      "asset_route": "WBD/HBO Pressroom provides official media infrastructure; image downloads may require media login.",
+      "asset_status": "YELLOW_WBD_PRESS_LOGIN_OR_TERMS_REQUIRED"
+    }
+  ],
+  "secondary_watchlist": [
+    {
+      "title": "Last Seen",
+      "platform": "Apple TV",
+      "signal": "Global debut 2026-09-09; fresh enough for day-two reaction/discovery on 2026-09-10.",
+      "source": "https://www.apple.com/tv-pr/originals/last-seen/",
+      "asset_route": "Apple TV Press offers Download Key Art.",
+      "asset_status": "GREEN_PRESS_ROUTE_IDENTIFIED_FINAL_TERMS_CHECK_REQUIRED"
+    },
+    {
+      "title": "Made in Korea — Season 2",
+      "platform": "Disney+",
+      "signal": "Disney+ Brazil page states Season 2 arrives 2026-09-09.",
+      "source": "https://www.disneyplus.com/en-br/browse/entity-5acf7909-5d2f-494e-91a9-2fe0555c220f",
+      "asset_route": "Official Disney+ page imagery found; no reuse right inferred from public display.",
+      "asset_status": "YELLOW_OFFICIAL_PAGE_ONLY"
+    },
+    {
+      "title": "Drawn Together",
+      "platform": "Prime Video",
+      "signal": "Prime Video release 2026-09-09 in 240+ countries/territories; viable day-two conversation for Brazil.",
+      "source": "https://www.aboutamazon.com/news/entertainment/marfil-drawn-together-prime-video",
+      "asset_route": "About Amazon has official promotional stills; reuse permission still requires verification.",
+      "asset_status": "YELLOW_OFFICIAL_PROMO_IMAGE_TERMS_PENDING"
+    },
+    {
+      "title": "The Odyssey vs Spider-Man: Brand New Day",
+      "platform": "THEATRICAL_BOX_OFFICE",
+      "signal": "The Odyssey retook global weekend lead while Spider-Man remains the larger cumulative hit; latest figures must be rechecked on publication day.",
+      "sources": [
+        "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
+        "https://ew.com/the-odyssey-overtakes-spider-man-brand-new-day-at-global-box-office-12110013"
+      ],
+      "asset_status": "DYNAMIC_FACT_AND_STUDIO_ASSET_RIGHTS_PENDING"
+    },
+    {
+      "title": "Venice Film Festival — Sep 10 programme",
+      "platform": "FESTIVAL",
+      "signal": "83rd Venice Film Festival runs 2026-09-02 through 2026-09-12; Sep 10 programme includes Place to be with Ellen Burstyn, Taika Waititi and Pamela Anderson and Union Town by Barbara Kopple.",
+      "sources": [
+        "https://www.labiennale.org/en/cinema/2026/program-cinema-2026-public/place-be-2026-09-10-09-00",
+        "https://www.labiennale.org/en/cinema/2026/program-cinema-2026-public/union-town-2026-09-10-17-00"
+      ],
+      "asset_status": "OFFICIAL_FESTIVAL_PAGE_VISUAL_PRESENT_REUSE_TERMS_PENDING"
+    }
+  ],
+  "platform_scan": {
+    "netflix": "STRONG_DAY_OF_RELEASE",
+    "prime_video": "STRONG_DAY_TWO_DRAWN_TOGETHER_NO_STRONGER_SEP10_FICTION_FOUND",
+    "disney_plus": "STRONG_DAY_TWO_MADE_IN_KOREA_S2",
+    "hbo_max": "STRONG_DAY_OF_RELEASE_A_KILLER_STORY",
+    "paramount_plus": "STRONG_DAY_OF_RELEASE_COLIN_FROM_ACCOUNTS_S3",
+    "apple_tv": "STRONG_DAY_TWO_LAST_SEEN",
+    "theatrical": "VERY_STRONG_PRACTICAL_MAGIC_2_PLUS_BOX_OFFICE_RACE",
+    "festivals": "STRONG_VENICE_ACTIVE_TIFF_OPENS_SEP10"
+  },
+  "hard_rules": [
+    "NO_PUBLIC_IMAGE_IS_TREATED_AS_LICENSED_WITHOUT_EVIDENCE",
+    "NO_SCHEDULING_OR_PUBLICATION_WHILE_ASSET_RIGHTS_OR_QA_PENDING",
+    "RECHECK_DYNAMIC_BOX_OFFICE_AND_BRAZIL_AVAILABILITY_ON_PUBLICATION_DAY",
+    "YOUTUBE_REMAINS_VIDEO_ONLY"
+  ]
+}
