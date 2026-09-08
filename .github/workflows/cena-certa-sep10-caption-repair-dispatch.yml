@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: feat/cena-certa-factory-v2-certified
-      - name: Repair exact caption chunk
+      - name: Verify repaired caption is present
         shell: bash
         run: |
           set -euo pipefail
@@ -32,19 +32,15 @@ jobs:
           from pathlib import Path
           p=Path('ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json')
           data=json.loads(p.read_text(encoding='utf-8'))
-          old='E continuam reunindo multidões pelo mundo inteiro.'
-          new='E ainda reúnem multidões pelo mundo.'
-          hits=0
-          for item in data:
-              chunks=item.get('caption_chunks') or []
-              for i,v in enumerate(chunks):
-                  if v==old:
-                      chunks[i]=new
-                      hits+=1
-          if hits!=1:
-              raise SystemExit(f'CAPTION_REPAIR_MATCH_FAIL hits={hits}')
-          p.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
-          print('CAPTION_REPAIR_PASS')
+          oasis=next((x for x in data if x.get('id')=='CC-20260910-OASIS-V1'),None)
+          if not oasis:
+              raise SystemExit('OASIS_ITEM_MISSING')
+          chunks=oasis.get('caption_chunks') or []
+          if 'E ainda lotam arenas pelo mundo.' not in chunks:
+              raise SystemExit('REPAIRED_CAPTION_NOT_PRESENT')
+          if 'E continuam reunindo multidões pelo mundo inteiro.' in chunks:
+              raise SystemExit('OLD_CAPTION_STILL_PRESENT')
+          print('REPAIRED_CAPTION_PRESENT_PASS')
           PY
       - name: Full canonical preflight and dispatch
         shell: bash
@@ -55,13 +51,13 @@ jobs:
             --select-count 8 \
             --reserve-count 0 \
             --note 'Paulo authorized final video production and scheduling for 10/09; 08/09 and 09/09 remain frozen.'
-      - name: Commit repaired batch and dispatch
+      - name: Commit dispatch control plane
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'Cena Certa Factory'
           git config user.email 'actions@users.noreply.github.com'
-          git add ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json ops/cena-certa/dispatch.json
-          git diff --cached --quiet && { echo NO_CONTROL_PLANE_CHANGE; exit 1; }
-          git commit -m 'fix(cena-certa): repair Sep 10 caption and dispatch'
+          git add ops/cena-certa/dispatch.json
+          git diff --cached --quiet && { echo DISPATCH_NO_CHANGE; exit 1; }
+          git commit -m 'ops(cena-certa): dispatch Sep 10 primary eight'
           git push origin HEAD:feat/cena-certa-factory-v2-certified
