@@ -1,0 +1,72 @@
+{
+  "task_id": "VSA-UPLOAD-POST-SCHEDULE-2026-09-09",
+  "project": "ORBIT/VSA",
+  "profile": "voce-sabia-agora",
+  "youtube_channel": "Você Sabia Agora?",
+  "youtube_handle": "@vocesabiaagoraoficial",
+  "timezone": "America/Sao_Paulo",
+  "synthetic": false,
+  "result": "SCHEDULED_6_OF_6_IN_UPLOAD_POST",
+  "observed_at_utc": "2026-09-08T05:16:05Z",
+  "posts": [
+    {
+      "slot_brt": "2026-09-09T08:00:00-03:00",
+      "title": "A Lua vai esconder Júpiter em plena luz do dia?",
+      "job_id": "fd98405ff95448a39e2b3089d9d372f8",
+      "request_id": "8eb65426197748b4bdf3afa194fb7750",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    },
+    {
+      "slot_brt": "2026-09-09T11:00:00-03:00",
+      "title": "Por que a cinza de um vulcão consegue parar milhares de voos?",
+      "job_id": "00116cec212b474dae11cb75dfbe39b5",
+      "request_id": "87eede12385b4ddbb0ba1bbba98c6bc8",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    },
+    {
+      "slot_brt": "2026-09-09T14:00:00-03:00",
+      "title": "Aquela linha branca do avião pode aquecer o planeta?",
+      "job_id": "d3f30c24dcb7447c80f245e7d67e0869",
+      "request_id": "3a76fcc43f9140b39cbf05bd0a7658e4",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    },
+    {
+      "slot_brt": "2026-09-09T17:00:00-03:00",
+      "title": "Por que o telescópio Roman vai fotografar tanto céu de uma vez?",
+      "job_id": "3bfb87ceb29d4f2b9ce232539a322a84",
+      "request_id": "df30ba647ca44c20be553b6612b43260",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    },
+    {
+      "slot_brt": "2026-09-09T19:30:00-03:00",
+      "title": "Por que caem tantos raios?",
+      "job_id": "db50860560d94162a8f3cb03a326f547",
+      "request_id": "7adff3fb42d64a51b1945c053515c2e5",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    },
+    {
+      "slot_brt": "2026-09-09T21:30:00-03:00",
+      "title": "Por que exércitos estão de olho em robôs humanoides?",
+      "job_id": "3fc7a8d685c340f99afba04bdb6e66b0",
+      "request_id": "5faf58c33251453e9518d95126424fa1",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    }
+  ],
+  "notes": [
+    "Upload-Post profile is connected to YouTube channel Você Sabia Agora? (@vocesabiaagoraoficial), reauth_required=false.",
+    "All six items appear in list_scheduled with original_timezone=America/Sao_Paulo and original_scheduled_str matching the intended BRT slots.",
+    "YouTube external IDs are not assigned yet because Upload-Post executes the platform upload at worker time; current authoritative scheduler state is queued/pending with failed=0 for all six jobs."
+  ]
+}
