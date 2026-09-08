@@ -69,6 +69,7 @@ jobs:
           import json,sys
           d=json.load(open(sys.argv[1])); assert d.get('ok') is True and d.get('bufferMutationPerformed') is True
           assert str((d.get('publication') or {}).get('bufferStatus','')).lower() == 'scheduled'
+          assert (d.get('publication') or {}).get('bufferPostId')
           PY
               echo "receipt already valid: $id"
               return 0
@@ -111,14 +112,16 @@ jobs:
 
             test -f "$r"
             python - "$r" "$due" <<'PY'
-          import json,sys
+          import datetime as dt,json,sys
           d=json.load(open(sys.argv[1])); due=sys.argv[2]
           assert d.get('ok') is True
           assert d.get('bufferMutationPerformed') is True
           p=d.get('publication') or {}
           assert p.get('bufferPostId')
           assert str(p.get('bufferStatus','')).lower() == 'scheduled'
-          assert p.get('dueAt') == due
+          def parse(x):
+              return dt.datetime.fromisoformat(str(x).replace('Z','+00:00')).astimezone(dt.timezone.utc)
+          assert parse(p.get('dueAt')) == parse(due)
           PY
 
             git add "$q" "$r"
@@ -127,7 +130,7 @@ jobs:
             git push origin HEAD:main
           }
 
-          # 08:15 BRT — first morning touchpoint, Story.
+          # 08:15 BRT — morning Story slot in the current UGI cadence.
           queue_one \
             'UGI-20260908-IG-STORY-NVIDIA-APPROVED-01' \
             instagram image 'story-nvidia-company-approved-v2.png' story \
@@ -135,7 +138,7 @@ jobs:
             'NVIDIA — vantagem competitiva sob pressão na China' \
             ''
 
-          # 12:45 BRT — strongest midday slot used by the UGI editorial cadence for Reels.
+          # 12:45 BRT — midday Reel slot in the current UGI cadence.
           queue_one \
             'UGI-20260908-IG-REEL-NVIDIA-APPROVED-01' \
             instagram video 'video-nvidia-company-preview-v2.mp4' reel \
