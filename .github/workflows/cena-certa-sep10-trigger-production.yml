@@ -19,7 +19,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          RUN_MARKER: sep10-v4-20260908T2219Z
+          RUN_MARKER: sep10-v4-overlap-repair-20260908T2230Z
         shell: bash
         run: |
           set -euo pipefail
