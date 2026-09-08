@@ -5,10 +5,10 @@
   "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v1.json",
   "batch_sha256": "3011041f71b383a4ecb06f38ac349f50b88a67275525708d287b6c66ea1dbd08",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T03:55:51.479211+00:00",
-  "request_id": "64836d6cb9234acb930381a135effc1a",
+  "requested_at": "2026-09-08T03:57:02.699031+00:00",
+  "request_id": "21e533d18157431d9225d531d08c5db6",
   "candidate_count": 10,
   "selected_count": 8,
   "reserve_count": 2,
-  "note": "09/09 canonical production after live Metricool readback; user explicitly authorized production, QA and scheduling. Reconcile before any retry."
+  "note": "09/09 canonical production after live Metricool readback. Prior run 34185209455 stopped pre-validation on reconciled outbox state mismatch; state was reconciled and corrected to EMPTY. User explicitly authorized production, QA and scheduling. Reconcile before any retry."
 }
