@@ -1,0 +1,64 @@
+{
+  "schema": "UGI_EDITORIAL_PLAN_V1",
+  "project": "UGI",
+  "date": "2026-09-08",
+  "timezone": "America/Sao_Paulo",
+  "state": "PREPARED_NOT_BUFFER_SCHEDULED",
+  "quality_mode": "COMPANY_CONTEXT_FIRST",
+  "publisher": "BUFFER",
+  "buffer_mutation_allowed_now": false,
+  "buffer_block_reason": "EDITORIAL_QA_EMERGENCY_FREEZE + exact-final human approval gate",
+  "youtube": "PAUSED",
+  "rules": {
+    "company_topic_visual": "company-identifiable real context: headquarters/facade/signage, official event/booth/stage, factory/office/cleanroom, or executives in branded company context",
+    "product_visual": "product only when the story is specifically about that product",
+    "generic_broll": "FORBIDDEN_AS_PRIMARY_EVIDENCE",
+    "random_commentator_or_influencer": "FORBIDDEN",
+    "video_closed_captions": "MANDATORY_BURNED_IN",
+    "video_semantic_alignment": "MANDATORY_SCENE_BY_SCENE",
+    "final_asset_preview": "MANDATORY",
+    "human_approval_before_buffer": "MANDATORY",
+    "fail_closed": true
+  },
+  "slots": [
+    {
+      "local_time": "09:00",
+      "platform": "instagram_story",
+      "topic": "NVIDIA — China moat / supplier concentration",
+      "asset": "Canva design DAHUisRWQYM — UGI NVIDIA Companhia - Story 08-09-2026 V2",
+      "approval": "APPROVED_BY_PAULO",
+      "buffer_status": "NOT_SCHEDULED_FREEZE"
+    },
+    {
+      "local_time": "12:45",
+      "platform": "linkedin_company",
+      "topic": "TSMC — Arizona expansion / geographic redundancy",
+      "asset": null,
+      "approval": "PENDING_FINAL_ASSET",
+      "buffer_status": "NOT_ELIGIBLE"
+    },
+    {
+      "local_time": "18:30",
+      "platform": "instagram_reel",
+      "topic": "NVIDIA — China moat / supplier concentration",
+      "asset": "public/ugi/editorial/2026-09-08/video-nvidia-company-preview-v2.mp4",
+      "approval": "APPROVED_BY_PAULO",
+      "buffer_status": "NOT_SCHEDULED_FREEZE"
+    },
+    {
+      "local_time": "19:45",
+      "platform": "tiktok",
+      "topic": "TSMC — Arizona expansion / geographic redundancy",
+      "asset": null,
+      "approval": "PENDING_FINAL_VIDEO",
+      "buffer_status": "NOT_ELIGIBLE"
+    }
+  ],
+  "dropped": [
+    {
+      "topic": "JLR restructuring",
+      "reason": "company-context video could not meet the approved NVIDIA semantic/brand-identification standard"
+    }
+  ],
+  "release_condition": "Only schedule an individual slot after its exact final asset is shown to Paulo and explicitly approved. Do not lift the global freeze merely to fill volume."
+}
