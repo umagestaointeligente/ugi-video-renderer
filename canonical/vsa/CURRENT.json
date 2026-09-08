@@ -1,0 +1,13 @@
+{
+  "project": "ORBIT/VSA",
+  "channel": "Você Sabia Agora?",
+  "status": "CANONICAL_ACTIVE",
+  "version": "VSA_CANONICAL_PRODUCTION_V1",
+  "timezone": "America/Sao_Paulo",
+  "contract": "canonical/vsa/v1/VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json",
+  "runbook": "canonical/vsa/v1/README.md",
+  "runtime": "ops/vsa-runtime/runtime.py",
+  "isolation_test": "ops/vsa-runtime/test_isolation.py",
+  "recovery_trigger": "RECOVERY::ORBIT::VSA::CANONICAL_V1",
+  "hard_rule": "Fail closed if target channel is not explicitly VSA. Never write to Cena Certa paths/accounts/schedules."
+}
