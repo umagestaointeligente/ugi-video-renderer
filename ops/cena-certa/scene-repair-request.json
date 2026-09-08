@@ -1,24 +1,24 @@
 {
   "schema": "CENA_CERTA_SCENE_REPAIR_REQUEST_V1",
   "authorized": true,
-  "source_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v5.json",
-  "output_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v6.json",
-  "request_id": "CC-20260909-TRON-FULL-RANGE-REPAIR-V6",
+  "source_batch": "ops/cena-certa/batches/cena-certa-daily8-20260910-v1.json",
+  "output_batch": "ops/cena-certa/batches/cena-certa-daily8-20260910-v2.json",
+  "request_id": "CC-20260910-ENDGAME-SCENE-REPAIR-V2",
   "selected_count": 8,
-  "reserve_count": 2,
-  "candidate_id": "CC-20260909-TRONARES-V4",
+  "reserve_count": 0,
+  "candidate_id": "CC-20260910-ENDGAME-ENCORE-V1",
   "scene_start_overrides": {
-    "0": 2.0,
-    "1": 12.0,
-    "2": 18.0,
-    "3": 33.1,
-    "4": 46.7,
-    "5": 53.4,
-    "6": 58.8,
-    "7": 66.7,
-    "8": 70.4,
-    "9": 76.0
+    "0": 15.7,
+    "1": 21.7,
+    "2": 35.5,
+    "3": 40.7,
+    "4": 64.5,
+    "5": 70.4,
+    "6": 73.3,
+    "7": 80.1,
+    "8": 82.7,
+    "9": 85.4
   },
-  "probe_evidence": "run=34188034117;sha256=0c9a0f7308598d971b4f2fdd270582c50ad82a0c01ca79bc047079b3b12f9f2a",
-  "note": "Evidence-bound TRON source-range repair after run 34188034117 exposed source overlap. All ten replacement windows were re-probed against the exact source SHA and found clean with conservative 5.5s windows for the first four scenes, 5.3s for scene 4, and 3.5s windows for scenes 5-9. No black-frame or overlap gate relaxation."
+  "probe_evidence": "run=34284499896;sha256=d208cdf7b9e64de9c795563b07923bb2ef1e49af52e9ebeee2541bc37a0a3560",
+  "note": "Evidence-bound Sep 10 Endgame repair. Starts were moved into clean source windows measured by run 34284499896, preserving separation for the exact target clip durations; no black-frame, overlap, rights, caption, or semantic gate was relaxed. Existing 08/09 and 09/09 schedules remain frozen."
 }
