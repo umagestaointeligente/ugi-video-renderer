@@ -8,7 +8,8 @@
     "fail_closed_on_ambiguous_target": true,
     "forbidden_write_prefixes": ["canonical/cena-certa/", "ops/cena-certa-runtime/", "Cena Certa", "Cena Certa Ofc"],
     "forbidden_account_ids": [88240, 88242],
-    "approved_post_bridge_account": {"id": 88527, "platform": "youtube", "username": "Você Sabia Agora?"}
+    "approved_upload_post_profile": {"username":"voce-sabia-agora","youtube_channel":"Você Sabia Agora?","handle":"@vocesabiaagoraoficial"},
+    "historical_post_bridge_account": {"id": 88527, "platform": "youtube", "username": "Você Sabia Agora?"}
   },
   "format": {
     "canvas": {"width": 1080, "height": 1920, "aspect": "9:16", "fps": 30},
@@ -27,6 +28,23 @@
     "no_accidental_footage_repeat": true,
     "internal_motion_rule": "An explanatory shot may last several seconds only if it contains continuous meaningful state changes/events.",
     "prohibited": ["slideshow", "static-photo-plus-zoom", "generic-unrelated-stock", "decorative-animation", "gratuitous-flash", "black-screen", "prolonged-freeze", "accidental-repeat", "meaningless-transition", "text-as-visual-substitute", "talking-avatar", "animated-powerpoint"]
+  },
+  "editorial_lock": {
+    "topic_no_repeat_days": 60,
+    "match_basis": ["core_topic", "semantic_cluster", "central_phenomenon_or_mechanism"],
+    "classifications": ["NEW_TOPIC", "REPEAT_BLOCKED", "BREAKING_EXCEPTION"],
+    "breaking_exception_required": true,
+    "breaking_exception_rule": "Only when a materially new strong fact, occurrence, discovery, case or consequence changes the story. Prior performance alone never qualifies.",
+    "breaking_exception_manifest_fields": ["previous_topic", "previous_date", "new_fact", "current_source", "exception_justification"]
+  },
+  "people_bio_curiosity": {
+    "enabled": true,
+    "person_real_visual_required": true,
+    "forbidden_visual_substitutes": ["journalist_as_person_proxy", "presenter_as_person_proxy", "actor_as_person_proxy", "generic_stock_person_as_person_proxy"],
+    "animation_role": "Explain disease, physiology, mechanism, technology, history, context or cause without replacing the real person as the story anchor.",
+    "preferred_sequence": ["REAL_PERSON", "CONTEXT", "ANIMATED_EXPLANATION", "REAL_PERSON_OR_PROOF", "CONSEQUENCE", "PAYOFF"],
+    "health_rule": "Use documented public facts and reliable sources; distinguish fact from inference; do not diagnose beyond evidence.",
+    "rights_rule": "Real-person footage/photo/archive must have provenance and reuse rights before publication."
   },
   "narrative": {
     "suggested_arc": ["ANOMALY_OR_CONSEQUENCE", "QUESTION", "CONTEXT", "CAUSE", "MECHANISM", "SCALE_OR_COMPARISON", "PROOF_OR_CONSEQUENCE", "PAYOFF", "CTA"],
@@ -93,9 +111,10 @@
   },
   "publishing": {
     "allowed_target_requires_exact_channel_resolution": true,
-    "current_verified_route": {"connector": "post_bridge", "youtube_account_id": 88527, "username": "Você Sabia Agora?"},
+    "current_verified_route": {"connector": "Upload-Post", "profile": "voce-sabia-agora", "youtube_channel": "Você Sabia Agora?", "handle": "@vocesabiaagoraoficial"},
+    "historical_post_bridge": {"youtube_account_id": 88527, "status": "fallback only while create_post is HTTP 500"},
     "metricool_status": "Current connected Metricool brand is Cena Certa Ofc only; forbidden for VSA until a VSA brand is verified.",
-    "schedule_evidence_required": ["platform/account identity", "scheduled post ID", "scheduled datetime", "scheduled status"],
+    "schedule_evidence_required": ["platform/account identity", "scheduled job/post ID", "scheduled datetime", "scheduled status"],
     "never_claim_scheduled_without_receipt": true
   },
   "learning": {
