@@ -16,18 +16,15 @@ def duration(path):
 
 d=duration(SRC)
 hits=[]
-# Sample every second. OCR is used only to locate explicit physical/on-screen TSMC branding.
 for sec in range(0, int(d)+1):
     frame=TMP/f'f_{sec:04d}.jpg'
     subprocess.run(['ffmpeg','-loglevel','error','-y','-ss',str(sec),'-i',str(SRC),'-frames:v','1','-vf','scale=1280:-2',str(frame)],check=True)
     p=subprocess.run(['tesseract',str(frame),'stdout','--psm','11'],capture_output=True,text=True)
     text=(p.stdout or '').upper()
     compact=re.sub(r'[^A-Z0-9]+','',text)
-    # tolerate OCR confusions around the 4-letter mark
     if 'TSMC' in compact or 'T5MC' in compact or 'TSM' in compact:
         hits.append((sec, re.sub(r'\s+',' ',text).strip()[:220]))
 
-# Merge nearby seconds into candidate windows.
 windows=[]
 for sec,text in hits:
     if not windows or sec-windows[-1][1]>3:
@@ -43,7 +40,6 @@ with report.open('w',encoding='utf-8') as f:
     for a,b,texts in windows:
         f.write(f'WINDOW {a}-{b}: {" | ".join(texts[:3])}\n')
 
-# Save contact sheet of best hit frames for human QA evidence.
 selected=[]
 for sec,_ in hits[:24]:
     src=TMP/f'f_{sec:04d}.jpg'
@@ -51,7 +47,9 @@ for sec,_ in hits[:24]:
     shutil.copy2(src,dst)
     selected.append(dst)
 
-if selected:
+if len(selected)==1:
+    shutil.copy2(selected[0], OUTDIR/'tsmc_hits_contact.jpg')
+elif len(selected)>1:
     inputs=[]; filters=[]; layout=[]
     cols=4; w=320; h=180
     for i,p in enumerate(selected):
