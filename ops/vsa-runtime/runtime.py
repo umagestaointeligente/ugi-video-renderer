@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CURRENT = ROOT / "canonical" / "vsa" / "CURRENT.json"
 CONTRACT = ROOT / "canonical" / "vsa" / "v1" / "VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json"
+GUARDRAILS = ROOT / "canonical" / "vsa" / "v1" / "VSA_EDITORIAL_GUARDRAILS_V2.json"
 CENA_PREFIXES = ("canonical/cena-certa/", "ops/cena-certa-runtime/")
 VSA_ALIASES = {"vsa", "voce sabia agora", "você sabia agora", "você sabia agora?", "voce sabia agora?"}
 
@@ -53,7 +54,7 @@ def asset_fingerprint(contract):
         "cta": {"library_path": contract["cta"]["library_path"], "sha256": contract["cta"]["sha256"]},
     }
 
-def canonical_plan(contract):
+def canonical_plan(contract, guardrails):
     return {
         "status": "VSA_CANON_RESOLVED",
         "project": contract["project_lock"]["project"],
@@ -63,6 +64,8 @@ def canonical_plan(contract):
         "mask_apply_stage": contract["mask"]["apply_stage"],
         "fixed_assets": asset_fingerprint(contract),
         "qa_workflow": contract["qa"]["workflow"],
+        "topic_repeat_lock_days": guardrails["topic_repeat_lock"]["window_days"],
+        "people_biocuriosity": guardrails["people_biocuriosity"],
         "publishing_target": contract["publishing"]["current_verified_route"],
         "recovery_trigger": contract["recovery_trigger"],
     }
@@ -70,23 +73,29 @@ def canonical_plan(contract):
 def preflight(args):
     current = load_json(CURRENT)
     contract = load_json(CONTRACT)
+    guardrails = load_json(GUARDRAILS)
     assert_channel(args.channel)
     assert_path_isolation(args.write_path)
     assert_account(args.account_id, contract)
     if current.get("contract") != "canonical/vsa/v1/VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json":
         raise GateError("CURRENT_POINTER_MISMATCH")
-    print(json.dumps(canonical_plan(contract), ensure_ascii=False, indent=2))
+    print(json.dumps(canonical_plan(contract, guardrails), ensure_ascii=False, indent=2))
 
 def validate_job(args):
     contract = load_json(CONTRACT)
+    guardrails = load_json(GUARDRAILS)
     job = json.loads(Path(args.job).read_text(encoding="utf-8"))
     assert_channel(job.get("channel", ""))
     assert_path_isolation(job.get("write_paths", []))
     assert_account(job.get("social_account_id"), contract)
-    required = ["title", "script", "semantic_map", "rights_manifest", "base_video_qa", "final_qa"]
+    required = ["title", "script", "semantic_map", "rights_manifest", "base_video_qa", "final_qa", "topic_history_gate"]
     missing = [k for k in required if not job.get(k)]
     if missing:
         raise GateError("JOB_REQUIRED_FIELDS_MISSING:" + ",".join(missing))
+    if job.get("topic_history_gate") != guardrails["job_requirements"]["topic_history_gate"]:
+        raise GateError("TOPIC_HISTORY_GATE_NOT_PASS")
+    if job.get("content_class") == "PERSON_PROFILE" and job.get("person_visual_reference_gate") != "PASS":
+        raise GateError("PERSON_VISUAL_REFERENCE_GATE_NOT_PASS")
     if job.get("base_video_qa") != "PASS" or job.get("final_qa") != "PASS":
         raise GateError("QA_NOT_PASS")
     if job.get("rights_manifest") != "PASS":
