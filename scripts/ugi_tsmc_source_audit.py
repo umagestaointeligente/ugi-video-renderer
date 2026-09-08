@@ -1,16 +1,16 @@
 from pathlib import Path
-import subprocess, json, math
+import subprocess, json
 
 OUT = Path('public/ugi/editorial/2026-09-08')
 WORK = Path('/tmp/ugi_tsmc_sources')
 OUT.mkdir(parents=True, exist_ok=True)
 WORK.mkdir(parents=True, exist_ok=True)
 
+# All sources below are official TSMC YouTube videos currently indexed as available.
 SOURCES = {
-    'arizona_fab': 'https://www.youtube.com/watch?v=MiKIaKgQH9s',
-    'life_at_tsmc': 'https://www.youtube.com/watch?v=hv81XD_86RY',
+    'arizona_fab': 'https://www.youtube.com/watch?v=JO9CkKGbDBs',
     'global_rd': 'https://www.youtube.com/watch?v=-Al6hyXnqVg',
-    'corporate': 'https://www.youtube.com/watch?v=hGdI-u0tyzA',
+    'rd_people': 'https://www.youtube.com/watch?v=CpraaGIoEuY',
 }
 
 def run(cmd):
@@ -25,7 +25,6 @@ def download(name, url):
     tmpl = str(WORK / f'{name}.%(ext)s')
     cmd = [
         'yt-dlp','--no-playlist','--no-warnings','--restrict-filenames',
-        '--extractor-args','youtube:player_client=android,web',
         '-f','bv*[height<=1080]+ba/b[height<=1080]',
         '--merge-output-format','mp4','-o',tmpl,url
     ]
@@ -38,7 +37,6 @@ def download(name, url):
 
 def contact_sheet(name, src):
     d = duration(src)
-    # 12 samples avoiding first/last title slates.
     times = [max(0.5, d * frac) for frac in (0.05,0.13,0.21,0.29,0.37,0.45,0.53,0.61,0.69,0.77,0.85,0.93)]
     frames=[]
     for i,t in enumerate(times):
