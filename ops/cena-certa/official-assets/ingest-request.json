@@ -2,15 +2,23 @@
   "schema": "CENA_CERTA_OFFICIAL_ASSET_INGEST_V1",
   "target_date": "2026-09-09",
   "items": [
-    {"id":"SRC-20260909-AVATAR3","title":"Avatar: Fire and Ash","source_url":"https://video.disney.com/watch/avatar-fire-and-ash-igniting-the-next-chapter-643d0228c87402d90ab5091e","rights_pass":true,"rights_evidence":"Disney UK Press (17 Nov 2025): new Avatar: Fire and Ash featurette is available to download and share.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-FANTASTIC4","title":"The Fantastic Four: First Steps","source_url":"https://video.disney.com/watch/the-fantastic-four-first-steps-official-clip-sunday-dinner-in-theaters-july-25-6395971aedc03deb74851fcd","rights_pass":true,"rights_evidence":"Disney/Marvel UK Press (4 Feb and 16 Apr 2025): audiovisual publicity material, poster and stills are available to download and share; official film press assets distributed for media use.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-MANDOGROGU","title":"Star Wars: The Mandalorian and Grogu","source_url":"https://video.disney.com/watch/official-clip-star-wars-the-mandalorian-and-grogu-6500f46c74ca94870b850a15","rights_pass":true,"rights_evidence":"Disney/Lucasfilm UK Press (22 Sep 2025; 18 Feb 2026): audiovisual publicity material and poster are available to download and share.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-TRONARES","title":"TRON: Ares","source_url":"https://video.disney.com/watch/tron-ares-official-clip-light-skimmer-6410f058788e92da4af5091f","rights_pass":true,"rights_evidence":"Disney UK Press (13 Oct 2025): images and clips are available to download on the Disney Press Site for press/editorial coverage.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-FREAKIER","title":"Freakier Friday","source_url":"https://video.disney.com/watch/freakier-friday-official-clip-what-is-happening-63a38062463e0deacd251fcc","rights_pass":true,"rights_evidence":"Disney UK Press (15 Jul 2025): special look and behind-the-scenes featurette are available to download and share; official title media distributed for publicity/editorial coverage.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-SNOWWHITE","title":"Disney's Snow White","source_url":"https://video.disney.com/watch/disneys-snow-white-waiting-on-a-wish-official-clip-6305f02a1cb1fdeaccd51fcc","rights_pass":true,"rights_evidence":"Disney UK Press (20 Feb 2025): Snow White legacy featurette with film clips is available to download and share; D23 press material also explicitly available to download and share.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-LILOSTITCH","title":"Lilo & Stitch","source_url":"https://video.disney.com/watch/lilo-and-stitch-i-like-you-as-a-mom-too-official-clip-635bca19c6b9ddeaccc51fcc","rights_pass":true,"rights_evidence":"Disney UK Press (26 May and 9 Jun 2025): Lilo & Stitch images and clips are available to download on the Disney Press Site for publicity/editorial coverage.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-MUFASA","title":"Mufasa: The Lion King","source_url":"https://video.disney.com/watch/mufasa-the-lion-king-we-re-trapped-official-clip-in-theaters-december-20-6296a90ed4f1fdea95451fcc","rights_pass":true,"rights_evidence":"Disney UK Press (8 Nov and 23 Dec 2024): film audiovisual material/stills are available to download and share; images and clips available on Disney Press Site.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-ELIO","title":"Elio","source_url":"https://video.disney.com/watch/elio-overwhelmed-official-clip-638034cf2b73ade9f4251fcc","rights_pass":true,"rights_evidence":"Disney/Pixar UK Press (27 May 2025): Elio final audiovisual publicity material is available to download and share; press materials are provided through the title press page.","fallback_urls":[],"resolver_revision":4},
-    {"id":"SRC-20260909-ZOOTOPIA2","title":"Zootopia 2","source_url":"https://video.disney.com/watch/zootopia-2-trailer-63b2807aa1399deb74651fcd","rights_pass":true,"rights_evidence":"Disney Animation UK Press (30 Jul 2025): Zootropolis 2 audiovisual material, poster and stills are available to download and share.","fallback_urls":[],"resolver_revision":4}
+    {
+      "id": "SRC-20260909-MOANA2026",
+      "title": "Moana",
+      "source_url": "https://video.disney.com/watch/moana-official-teaser-643ce28d0139c2d90b75091e",
+      "rights_pass": true,
+      "rights_evidence": "Disney UK Press (13 Jul 2026): Moana live-action images and clips are available to download on the Disney UK Press Site for media/editorial coverage.",
+      "fallback_urls": [],
+      "resolver_revision": 5
+    },
+    {
+      "id": "SRC-20260909-TOYSTORY5",
+      "title": "Toy Story 5",
+      "source_url": "https://video.disney.com/watch/toy-story-5-teaser-trailer-6434248176ed0deb74551fcd",
+      "rights_pass": true,
+      "rights_evidence": "Disney/Pixar UK Press (22 Jun 2026): Toy Story 5 images and clips are available to download on the Disney UK Press Site for media/editorial coverage.",
+      "fallback_urls": [],
+      "resolver_revision": 5
+    }
   ]
 }
