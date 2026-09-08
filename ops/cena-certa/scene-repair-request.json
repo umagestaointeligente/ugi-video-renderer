@@ -1,24 +1,15 @@
 {
   "schema": "CENA_CERTA_SCENE_REPAIR_REQUEST_V1",
   "authorized": true,
-  "source_batch": "ops/cena-certa/batches/cena-certa-daily8-20260910-v3.json",
-  "output_batch": "ops/cena-certa/batches/cena-certa-daily8-20260910-v4.json",
-  "request_id": "CC-20260910-HOPPERS-SCENE-REPAIR-V4",
+  "source_batch": "ops/cena-certa/batches/cena-certa-daily8-20260910-v4.json",
+  "output_batch": "ops/cena-certa/batches/cena-certa-daily8-20260910-v5.json",
+  "request_id": "CC-20260910-ENDGAME-OVERLAP-REPAIR-V5",
   "selected_count": 8,
   "reserve_count": 0,
-  "candidate_id": "CC-20260910-HOPPERS-V1",
+  "candidate_id": "CC-20260910-ENDGAME-ENCORE-V1",
   "scene_start_overrides": {
-    "0": 1.8,
-    "1": 7.353,
-    "2": 13.541,
-    "3": 18.977,
-    "4": 24.383,
-    "5": 29.672,
-    "6": 32.51,
-    "7": 34.752,
-    "8": 37.248,
-    "9": 40.154
+    "9": 86.2
   },
-  "probe_evidence": "run=34284686914;sha256=4e829886d6a218708b71d910020d90041c469256f95d3fedd7fa23ff0736c96e",
-  "note": "Evidence-bound Sep 10 Hoppers repair. The source is clean from 1.46s onward per run 34284686914; starts preserve narrative order and include separation for the exact target clip durations. No black-frame, overlap, rights, caption, or publication gate relaxation. Existing 08/09 and 09/09 schedules remain frozen."
+  "probe_evidence": "run=34284499896;sha256=d208cdf7b9e64de9c795563b07923bb2ef1e49af52e9ebeee2541bc37a0a3560",
+  "note": "Evidence-bound Sep 10 Endgame overlap repair. Scene 9 starts at 86.2s, eliminating the measured 0.562s overlap with scene 8 while preserving verified clean source footage. No visual, rights, caption, scheduling, or publication gate is relaxed."
 }
