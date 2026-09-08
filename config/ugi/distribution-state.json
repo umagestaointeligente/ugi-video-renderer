@@ -1,16 +1,16 @@
 {
   "schema_version": "1.0",
-  "effective_at": "2026-09-07T14:06:00-03:00",
+  "effective_at": "2026-09-07T23:47:00-03:00",
   "project": "UGI",
-  "state": "EDITORIAL_QA_EMERGENCY_FREEZE",
+  "state": "EDITORIAL_QA_PARTIAL_RELEASE",
   "buffer": {
-    "active_channel_count": 0,
-    "active_platforms": [],
-    "paused_platforms": ["linkedin", "instagram", "tiktok", "youtube"],
+    "active_channel_count": 1,
+    "active_platforms": ["instagram"],
+    "paused_platforms": ["linkedin", "tiktok", "youtube"],
     "publisher": "buffer",
     "youtube_buffer_status": "PAUSED",
     "youtube_strategy": "PRESERVED_FOR_FUTURE_REEVALUATION",
-    "emergency_freeze_reason": "Published UGI assets on 2026-09-07 failed visual-semantic and editorial quality gates. No new Buffer mutation is allowed until remaining assets are re-reviewed and explicitly released."
+    "emergency_freeze_reason": "Partial release only for exact Instagram assets already approved by Paulo for 2026-09-08. LinkedIn and TikTok remain blocked until the replacement SEMICON final assets are explicitly approved."
   },
   "channels": {
     "linkedin": {
@@ -30,7 +30,7 @@
       "mandatory_management_angle": true
     },
     "instagram": {
-      "status": "PAUSED_EDITORIAL_QA",
+      "status": "ACTIVE_APPROVED_ASSETS_ONLY",
       "role": "brand_identity_reach_visual_education_relationship_community_fast_insights"
     },
     "tiktok": {
@@ -99,7 +99,8 @@
     "Do not reactivate YouTube in Buffer without a new explicit decision or qualifying operational evidence.",
     "Do not delete YouTube strategy, content or history because Buffer distribution is paused.",
     "Do not mutate existing Instagram or TikTok publications without necessity.",
-    "During EDITORIAL_QA_EMERGENCY_FREEZE, no new Buffer mutation is allowed for LinkedIn, Instagram or TikTok.",
-    "Resume only after VISUAL_SEMANTIC_PASS, CLOSED_CAPTION_PASS, FORMAT_PASS and EDITORIAL_VALUE_PASS on the final file."
+    "During EDITORIAL_QA_PARTIAL_RELEASE, only exact final assets explicitly approved by Paulo may receive a new Buffer mutation.",
+    "LinkedIn and TikTok remain paused until their exact replacement assets receive explicit human approval.",
+    "Resume a platform only after VISUAL_SEMANTIC_PASS, CLOSED_CAPTION_PASS when applicable, FORMAT_PASS and EDITORIAL_VALUE_PASS on the final file."
   ]
 }
