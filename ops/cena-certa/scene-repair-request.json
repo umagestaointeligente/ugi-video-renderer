@@ -1,42 +1,15 @@
 {
   "schema": "CENA_CERTA_SCENE_REPAIR_REQUEST_V1",
   "authorized": true,
-  "source_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v3.json",
-  "output_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v4.json",
-  "request_id": "CC-20260909-DURATION-REPAIR-V4",
+  "source_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v4.json",
+  "output_batch": "ops/cena-certa/batches/cena-certa-daily8-20260909-v5.json",
+  "request_id": "CC-20260909-TRON-BLACK-REPAIR-V5",
   "selected_count": 8,
   "reserve_count": 2,
-  "caption_repairs": [
-    {
-      "candidate_id": "CC-20260909-AVATAR3-V3",
-      "new_id": "CC-20260909-AVATAR3-V4",
-      "caption_chunks": ["Jake protege toda a família em Pandora.","Pandora está mais perigosa do que nunca.","Uma nova tribo domina o fogo.","Ela rejeita antigas alianças.","Nem todo inimigo é humano.","O conflito divide os Na’vi.","Neytiri carrega perdas profundas.","Os filhos entram nessa guerra.","Novas criaturas ampliam o risco.","Velhos acordos começam a ruir.","Jake precisa escolher seu caminho.","A guerra alcança novas regiões.","Pandora parece menos unida.","Sobreviver exige novas alianças.","A ameaça pode nascer por dentro."],
-      "scene_caption_bounds": [[0,1],[2,3],[4,5],[6,7],[8,9],[10,10],[11,11],[12,12],[13,13],[14,14]]
-    },
-    {
-      "candidate_id": "CC-20260909-FREAKIER-V3",
-      "new_id": "CC-20260909-FREAKIER-V4",
-      "caption_chunks": ["Anna já viveu uma troca impossível antes.","Ela achou que tudo tinha acabado.","Só que a família mudou muito.","Uma nova geração entra em cena.","Duas adolescentes vivem o caos.","Outra troca acontece de repente.","A casa inteira perde sua antiga rotina.","Segredos aparecem no caminho.","Tess e Anna buscam uma saída.","Quatro vidas ficam completamente misturadas.","Cada corpo muda as prioridades.","As relações ficam complicadas.","Todos precisam ouvir o outro.","Antes que tudo fique pior.","A família precisa se reencontrar."],
-      "scene_caption_bounds": [[0,1],[2,3],[4,5],[6,7],[8,9],[10,10],[11,11],[12,12],[13,13],[14,14]]
-    },
-    {
-      "candidate_id": "CC-20260909-TRONARES-V3",
-      "new_id": "CC-20260909-TRONARES-V4",
-      "caption_chunks": ["Ares não nasceu no mundo físico real.","Ele veio de uma realidade totalmente digital.","Agora pisa entre seres humanos.","O código ganhou corpo e vontade.","Ares recebe uma missão direta.","Só que começa a questioná-la.","A fronteira digital encolhe.","A cidade vira parte da Grade.","As perseguições cruzam mundos.","Humanos disputam essa nova tecnologia.","Cada avanço aumenta muito o risco.","Ares aprende fora do sistema.","Controlá-lo fica mais difícil.","O conflito ameaça os dois lados.","E a própria missão começa a mudar."],
-      "scene_caption_bounds": [[0,1],[2,3],[4,5],[6,7],[8,9],[10,10],[11,11],[12,12],[13,13],[14,14]]
-    },
-    {
-      "candidate_id": "CC-20260909-SNOWWHITE-V3",
-      "new_id": "CC-20260909-SNOWWHITE-V4",
-      "caption_chunks": ["Branca de Neve vive sob rígido controle.","A Rainha governa sempre com medo.","E usa magia para manter seu poder.","A princesa vira uma ameaça real.","Por isso, precisa fugir depressa.","Na floresta encontra novos aliados.","Mas fugir não resolve tudo.","Ela precisa descobrir sua coragem.","O povo também deseja mudança.","A Rainha sente seu poder ameaçado.","Voltar ao reino vira necessário.","A escolha exige enfrentar o medo.","Branca de Neve precisa liderar.","Sem repetir o ciclo da Rainha.","E decidir que futuro deseja."],
-      "scene_caption_bounds": [[0,1],[2,3],[4,5],[6,7],[8,9],[10,10],[11,11],[12,12],[13,13],[14,14]]
-    },
-    {
-      "candidate_id": "CC-20260909-TOYSTORY5-V3",
-      "new_id": "CC-20260909-TOYSTORY5-V4",
-      "caption_chunks": ["Woody e Buzz já viram muitas mudanças.","Agora surge um rival bem diferente.","Lilypad é um novo tablet inteligente.","Bonnie passa a brincar cada vez menos.","Os brinquedos percebem esse novo risco.","A tecnologia ocupa cada vez mais espaço.","Woody tenta entender o novo momento.","Buzz procura uma saída para todos.","O medo agora é realmente ser trocado.","A rotina muda dentro do quarto.","Velhos hábitos deixam de bastar.","Os brinquedos precisam reagir juntos.","Cada um revê seu próprio papel.","Pertencer ganha outro sentido.","E o grupo enfrenta um novo tempo."],
-      "scene_caption_bounds": [[0,1],[2,3],[4,5],[6,7],[8,9],[10,10],[11,11],[12,12],[13,13],[14,14]]
-    }
-  ],
-  "note": "Measured duration repair only for candidates below 32 seconds in run 34186259287; no duration gate relaxation. Mandalorian and Moana remain failed candidates; Toy Story 5 is qualified hot-reserve replacement if it passes."
+  "candidate_id": "CC-20260909-TRONARES-V4",
+  "scene_start_overrides": {
+    "0": 4.0
+  },
+  "probe_evidence": "run=34186625813;sha256=0c9a0f7308598d971b4f2fdd270582c50ad82a0c01ca79bc047079b3b12f9f2a",
+  "note": "Measured black-frame repair for TRON only: scene 0 moved from 1.0s to 4.0s after live source re-probe found no >=0.2s black interval in the 4.0-8.0s window. No gate relaxation. Normalizer true-peak fix already passed certified smoke run 34187139494."
 }
