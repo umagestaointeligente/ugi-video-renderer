@@ -9,6 +9,7 @@ from PIL import Image
 from .common import *
 
 FORBIDDEN=('trailer','teaser','preview','recap','sizzle','promo')
+PROMOTIONAL_SOURCE_REQUIRED_FIELDS=('asset_name','origin_url','publisher','rights_evidence_url','authorization_text','authorization_scope')
 PRODUCTION_PUBLISHER_PHASE_JOBS={'prepare-10','render-stage-10','finalize-8-plus-2'}
 PREMIUM_TYPES={'DEMAND','ACCLAIM','RECOGNITION','PRODUCTION','DISTRIBUTION','CAST'}
 
@@ -91,6 +92,41 @@ def _validate_premium_editorial(c,item):
  if not types.intersection({'PRODUCTION','DISTRIBUTION','CAST'}): raise RuntimeError('PREMIUM_PRODUCTION_SIGNAL_REQUIRED')
  return True
 
+def _validate_public_promotional_terms(item):
+ s=item.get('schedule') or {}
+ public_values=[
+  item.get('film_title',''), item.get('script',''),
+  *list(item.get('caption_chunks') or []),
+  s.get('text',''), s.get('youtube_title',''), s.get('tiktok_title',''),
+  *list(s.get('youtube_tags') or []),
+ ]
+ public=' '.join(str(x) for x in public_values).lower()
+ hits=sorted({x for x in FORBIDDEN if x in public})
+ if hits: raise RuntimeError(f'PUBLIC_PROMOTIONAL_TERM_FAIL {hits}')
+ return True
+
+def _validate_source_provenance(item):
+ source_url=str(item.get('source_url') or '')
+ provenance=item.get('source_provenance')
+ source_probe=source_url.lower()
+ if isinstance(provenance,dict): source_probe+=' '+str(provenance.get('asset_name') or '').lower()
+ source_is_promotional=any(x in source_probe for x in FORBIDDEN)
+ if not source_is_promotional:
+  return True
+ if item.get('promotional_source_authorized') is not True:
+  raise RuntimeError('PROMOTIONAL_SOURCE_EXPLICIT_AUTHORIZATION_REQUIRED')
+ if not isinstance(provenance,dict):
+  raise RuntimeError('PROMOTIONAL_SOURCE_PROVENANCE_REQUIRED')
+ missing=[k for k in PROMOTIONAL_SOURCE_REQUIRED_FIELDS if not str(provenance.get(k) or '').strip()]
+ if missing: raise RuntimeError(f'PROMOTIONAL_SOURCE_PROVENANCE_FIELD_FAIL {missing}')
+ if provenance.get('official_source') is not True:
+  raise RuntimeError('PROMOTIONAL_SOURCE_OFFICIAL_SOURCE_REQUIRED')
+ if provenance.get('public_terms_removed') is not True:
+  raise RuntimeError('PROMOTIONAL_SOURCE_PUBLIC_CLEAN_REQUIRED')
+ _https(provenance['origin_url'],'SOURCE_PROVENANCE_ORIGIN_URL')
+ _https(provenance['rights_evidence_url'],'SOURCE_PROVENANCE_RIGHTS_URL')
+ return True
+
 def validate_item(c,item):
  req=['id','work_type','film_title','film_year','source_url','rights_evidence','license','relevance_evidence','anti_repeat_evidence','caption_chunks','scene_plan','music_track','live_readback_pass','rights_pass','relevance_pass','ready_checked_at','schedule','source_clean_verified','scene_semantic_verified','professional_production_pass','audience_demand_pass','recognized_or_acclaimed_pass','production_class','premium_evidence']
  miss=[k for k in req if k not in item]
@@ -122,8 +158,8 @@ def validate_item(c,item):
  if item.get('animation') is True and not item.get('animation_exception_approved'): raise RuntimeError('ANIMATION_DEFAULT_BLOCK')
  if not isinstance(item['relevance_evidence'],list) or len(item['relevance_evidence'])<c['selection']['relevance_min_independent_signals'] or any(not str(x).strip() for x in item['relevance_evidence']): raise RuntimeError('RELEVANCE_EVIDENCE_FAIL')
  if not item['rights_evidence'] or not item['license']: raise RuntimeError('RIGHTS_EVIDENCE_FAIL')
- public=(item.get('film_title','')+' '+item.get('source_url','')).lower()
- if any(x in public for x in FORBIDDEN): raise RuntimeError('PROMO_SOURCE_FAIL')
+ _validate_public_promotional_terms(item)
+ _validate_source_provenance(item)
  chunks=item['caption_chunks']
  if not isinstance(chunks,list) or len(chunks)<5 or any(not isinstance(x,str) or not x.strip() for x in chunks): raise RuntimeError('VOICE_PLAN_FAIL')
  validate_caption_layout(chunks,c)
