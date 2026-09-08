@@ -1,8 +1,8 @@
 {
   "schema": "CENA_CERTA_SCENE_BLACK_PROBE_V1",
-  "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Sleeping_Field_-_Fashion_Film.webm",
-  "existing_starts": [4.0,22.0,40.0,58.0,76.0,94.0,112.0,130.0,148.0,166.0],
-  "minimum_safe_window_seconds": 10.0,
-  "attempt": 2,
-  "reason": "Diagnosed rerun only: first probe failed because runner lacked ffmpeg; workflow now uses the same sealed Cena Certa runtime image."
+  "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260910-ENDGAME-ENCORE-FINAL-67c29858e7a1%2Finstagram.mp4",
+  "existing_starts": [12,17,22,32,37,44,49,54,59,64],
+  "minimum_safe_window_seconds": 8.0,
+  "attempt": 1,
+  "reason": "Evidence-bound Sep 10 Endgame source probe before canonical scene overlap repair."
 }
