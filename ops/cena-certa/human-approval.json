@@ -1,9 +1,9 @@
 {
   "schema": "CENA_CERTA_HUMAN_APPROVAL_V1",
-  "approved": false,
+  "approved": true,
   "handoff_sha256": "05cf8f9c289b00cc069e861856de837b0777dde88be7e51da37ad0780fcb2ba4",
   "production_run_id": 34188484234,
-  "approved_at": null,
-  "approved_by": null,
-  "note": "Exact new outbox requires explicit human approval before scheduling."
+  "approved_at": "2026-09-08T05:01:59+00:00",
+  "approved_by": "Paulo — explicit chat authorization",
+  "note": "User explicitly authorized correcting and scheduling the complete 09/09 Cena Certa batch after all eight selected candidates passed canonical PREPARE, render and QA. Approval is bound to this exact handoff SHA and production run; blind retry remains forbidden."
 }
