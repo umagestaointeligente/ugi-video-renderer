@@ -2,13 +2,13 @@
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
   "enabled": true,
   "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v2.json",
-  "batch_sha256": "a5dfd41aed63d3ca5582968ec2bc4de9910fc44f789c72de67762c473490ae4a",
+  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260909-v3.json",
+  "batch_sha256": "628fe09281779b567357198f16257d58a68456220b3ebdea96f3e82d545a63be",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T04:00:35.577286+00:00",
-  "request_id": "912686cde4b34c2f8ad1b69716d97137",
+  "requested_at": "2026-09-08T04:12:15+00:00",
+  "request_id": "CC-20260909-CAPTION-REPAIR-V3B",
   "candidate_count": 10,
   "selected_count": 8,
   "reserve_count": 2,
-  "note": "09/09 canonical production batch v2 after precise TITLE_OVERFLOW remediation. Previous run stopped at preflight before prepare/render. No media or scheduling side effects occurred. User explicitly authorized production, QA and scheduling. Reconcile before any retry."
+  "note": "Canonical caption-layout repair only: preserve titles, rights, sources, schedules, music and scene starts; keep 10->8+2 profile and two-line CC safe area."
 }
