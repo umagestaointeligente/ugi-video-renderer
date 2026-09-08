@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260910-v5.json",
-  "batch_sha256": "c4d41204de4b41f174d36fafacdf5b2b29033ddbcd7baa6eb4b699715d046d2c",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-08T22:31:49+00:00",
-  "request_id": "CC-20260910-ENDGAME-OVERLAP-REPAIR-V5",
-  "candidate_count": 8,
-  "selected_count": 8,
-  "reserve_count": 0,
-  "note": "Evidence-bound Sep 10 Endgame overlap repair. Scene 9 starts at 86.2s, eliminating the measured 0.562s overlap with scene 8 while preserving verified clean source footage. No visual, rights, caption, scheduling, or publication gate is relaxed."
+  "requested_at": "",
+  "request_id": "",
+  "note": "Automatically closed after one canonical single-run factory execution; human scheduling gate remains closed."
 }
