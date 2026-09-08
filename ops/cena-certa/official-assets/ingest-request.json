@@ -3,22 +3,94 @@
   "target_date": "2026-09-09",
   "items": [
     {
-      "id": "SRC-20260909-MOANA2026",
+      "id": "SRC-20260909-AVATAR3-FINAL",
+      "title": "Avatar: Fire and Ash",
+      "source_url": "https://video.disney.com/watch/avatar-fire-and-ash-official-trailer-63afeb99fe777deaccc51fcc",
+      "rights_pass": true,
+      "rights_evidence": "Disney UK Press (28 Jul 2025): the Avatar: Fire and Ash trailer and film stills are available to download and share.",
+      "fallback_urls": [],
+      "resolver_revision": 6
+    },
+    {
+      "id": "SRC-20260909-FANTASTIC4-FINAL",
+      "title": "The Fantastic Four: First Steps",
+      "source_url": "https://video.disney.com/watch/the-fantastic-four-first-steps-final-trailer-only-in-theaters-july-25-6386af1d0c592dea95451fcc",
+      "rights_pass": true,
+      "rights_evidence": "Disney/Marvel UK Press (25 Jun 2025): the final trailer and poster are available to download and share.",
+      "fallback_urls": [],
+      "resolver_revision": 6
+    },
+    {
+      "id": "SRC-20260909-MANDOGROGU-FINAL",
+      "title": "Star Wars: The Mandalorian and Grogu",
+      "source_url": "https://video.disney.com/watch/the-mandalorian-and-grogu-official-trailer-in-theaters-may-22-64b09640da4b0deb74851fcd-64b09640da4b0deb74851fcd",
+      "rights_pass": true,
+      "rights_evidence": "Disney/Lucasfilm UK Press (18 Feb 2026): the new trailer and poster are available to download and share.",
+      "fallback_urls": [],
+      "resolver_revision": 6
+    },
+    {
+      "id": "SRC-20260909-TRONARES-FINAL",
+      "title": "TRON: Ares",
+      "source_url": "https://video.disney.com/watch/tron-ares-official-trailer-632328b72bcefdecb5251fce",
+      "rights_pass": true,
+      "rights_evidence": "Disney UK Press (13 Oct 2025): TRON: Ares images and clips are available to download on the Disney Press Site for editorial/media coverage.",
+      "fallback_urls": [],
+      "resolver_revision": 6
+    },
+    {
+      "id": "SRC-20260909-FREAKIER-FINAL",
+      "title": "Freakier Friday",
+      "source_url": "https://video.disney.com/watch/freakier-friday-official-trailer-in-theaters-august-8-636e9b33e8a9fdea2bf51fcc",
+      "rights_pass": true,
+      "rights_evidence": "Disney UK Press (15 Jul 2025): official audiovisual publicity material for Freakier Friday is available to download and share.",
+      "fallback_urls": [],
+      "resolver_revision": 6
+    },
+    {
+      "id": "SRC-20260909-SNOWWHITE-FINAL",
+      "title": "Disney's Snow White",
+      "source_url": "https://video.disney.com/watch/disneys-snow-white-official-trailer-in-theaters-march-21-62860e3038a21dec84551fce",
+      "rights_pass": true,
+      "rights_evidence": "Disney UK Press (20 Feb and 24 Mar 2025): Snow White audiovisual publicity material with film clips is available to download/share and images/clips are distributed on the Disney Press Site.",
+      "fallback_urls": [],
+      "resolver_revision": 6
+    },
+    {
+      "id": "SRC-20260909-LILOSTITCH-FINAL",
+      "title": "Lilo & Stitch",
+      "source_url": "https://video.disney.com/watch/lilo-and-stitch-official-trailer-in-theaters-may-23-63027c0607614dea2c251fcc",
+      "rights_pass": true,
+      "rights_evidence": "Disney UK Press (26 May and 9 Jun 2025): Lilo & Stitch images and clips are available to download on the Disney Press Site for editorial/media coverage.",
+      "fallback_urls": [],
+      "resolver_revision": 6
+    },
+    {
+      "id": "SRC-20260909-MOANA2026-FINAL",
       "title": "Moana",
       "source_url": "https://video.disney.com/watch/moana-official-teaser-643ce28d0139c2d90b75091e",
       "rights_pass": true,
       "rights_evidence": "Disney UK Press (13 Jul 2026): Moana live-action images and clips are available to download on the Disney UK Press Site for media/editorial coverage.",
       "fallback_urls": [],
-      "resolver_revision": 5
+      "resolver_revision": 6
     },
     {
-      "id": "SRC-20260909-TOYSTORY5",
+      "id": "SRC-20260909-ZOOTOPIA2-FINAL",
+      "title": "Zootopia 2",
+      "source_url": "https://video.disney.com/watch/zootopia-2-trailer-63b2807aa1399deb74651fcd",
+      "rights_pass": true,
+      "rights_evidence": "Disney Animation UK Press (30 Jul 2025): Zootopia 2 audiovisual material, poster and stills are available to download and share.",
+      "fallback_urls": [],
+      "resolver_revision": 6
+    },
+    {
+      "id": "SRC-20260909-TOYSTORY5-FINAL",
       "title": "Toy Story 5",
       "source_url": "https://video.disney.com/watch/toy-story-5-teaser-trailer-6434248176ed0deb74551fcd",
       "rights_pass": true,
       "rights_evidence": "Disney/Pixar UK Press (22 Jun 2026): Toy Story 5 images and clips are available to download on the Disney UK Press Site for media/editorial coverage.",
       "fallback_urls": [],
-      "resolver_revision": 5
+      "resolver_revision": 6
     }
   ]
 }
