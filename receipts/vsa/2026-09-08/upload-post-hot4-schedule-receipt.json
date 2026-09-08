@@ -1,0 +1,71 @@
+{
+  "task_id": "VSA-HOT4-SCHEDULE-2026-09-08",
+  "project": "ORBIT/VSA",
+  "profile": "voce-sabia-agora",
+  "youtube_channel": "Você Sabia Agora?",
+  "youtube_handle": "@vocesabiaagoraoficial",
+  "timezone": "America/Sao_Paulo",
+  "synthetic": false,
+  "result": "SCHEDULED_4_OF_4_IN_UPLOAD_POST",
+  "production": {
+    "rendered": 4,
+    "qa_pass": 4,
+    "format": "1080x1920@30fps",
+    "canonical_mask": "VSA_MASK_CANONICAL_V1",
+    "canonical_cta": true
+  },
+  "posts": [
+    {
+      "slot_brt": "2026-09-08T11:30:00-03:00",
+      "title": "Por que Saturno tem um polígono de 10 lados no polo?",
+      "file": "VSA_SATURN_DECAGON_CANONICAL_FINAL.mp4",
+      "job_id": "39ad759e58b24d52a7162aa7002fe5ab",
+      "request_id": "f73367491b56490b93164a7f419abcd7",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    },
+    {
+      "slot_brt": "2026-09-08T15:30:00-03:00",
+      "title": "Por que corais moles estão desabando no fundo do mar?",
+      "file": "VSA_CORAL_SLUMPING_CANONICAL_FINAL.mp4",
+      "job_id": "6b7ea96b7e4e4793a0d16a492679617f",
+      "request_id": "6795a57cdc4a42ad961390bedf3f9405",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    },
+    {
+      "slot_brt": "2026-09-08T19:00:00-03:00",
+      "title": "A matéria escura pode ter deixado seu primeiro sinal direto?",
+      "file": "VSA_DARK_MATTER_CANONICAL_FINAL.mp4",
+      "job_id": "1770dfa018064db594c7f3e683dadfec",
+      "request_id": "7e9c0c4f9d7a4ce7b9f200dc69c6b069",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    },
+    {
+      "slot_brt": "2026-09-08T21:45:00-03:00",
+      "title": "Como cientistas fizeram um satélite cair no lugar exato?",
+      "file": "VSA_SAMBA_REENTRY_CANONICAL_FINAL.mp4",
+      "job_id": "2ccb02caa9c9401bb1d2a4b220d16b6c",
+      "request_id": "39944a6ae93c4119bf2647b5bd84590a",
+      "status": "queued",
+      "scheduler_status": "pending",
+      "failed": 0
+    }
+  ],
+  "readback": {
+    "total_vsa_jobs_observed": 10,
+    "today_jobs": 4,
+    "tomorrow_jobs": 6,
+    "today_failed_total": 0,
+    "tomorrow_schedule_preserved": true
+  },
+  "notes": [
+    "All four items were rendered with the canonical VSA mask and CTA and passed technical QA before scheduling.",
+    "Each job was read back individually as queued/pending with failed=0.",
+    "YouTube external_id is assigned when the scheduled worker executes the platform upload."
+  ]
+}
