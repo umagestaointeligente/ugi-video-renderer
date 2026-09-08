@@ -24,9 +24,11 @@ jobs:
           import datetime, hashlib, json, pathlib, re
           root=pathlib.Path('.')
           req=json.loads((root/'ops/cena-certa/scene-repair-request.json').read_text(encoding='utf-8'))
-          if req.get('schema')!='CENA_CERTA_SCENE_REPAIR_REQUEST_V1' or req.get('authorized') is not True: raise SystemExit('SCENE_REPAIR_REQUEST_FAIL')
-          source=str(req['source_batch']); output=str(req['output_batch']); cid=str(req['candidate_id'])
-          if source==output or not source.startswith('ops/cena-certa/batches/') or not output.startswith('ops/cena-certa/batches/'): raise SystemExit('SCENE_REPAIR_PATH_FAIL')
+          if req.get('schema')!='CENA_CERTA_SCENE_REPAIR_REQUEST_V1' or req.get('authorized') is not True:
+              raise SystemExit('SCENE_REPAIR_REQUEST_FAIL')
+          source=str(req['source_batch']); output=str(req['output_batch'])
+          if source==output or not source.startswith('ops/cena-certa/batches/') or not output.startswith('ops/cena-certa/batches/'):
+              raise SystemExit('SCENE_REPAIR_PATH_FAIL')
           src=root/source; dst=root/output
           if not src.is_file() or dst.exists(): raise SystemExit('SCENE_REPAIR_IMMUTABILITY_FAIL')
           dispatchp=root/'ops/cena-certa/dispatch.json'; outboxp=root/'ops/cena-certa/publisher-outbox.json'; approvalp=root/'ops/cena-certa/human-approval.json'; statep=root/'ops/cena-certa/publisher-state.json'
@@ -35,31 +37,68 @@ jobs:
           if outbox.get('state')!='EMPTY' or list(outbox.get('items') or []): raise SystemExit('SCENE_REPAIR_OUTBOX_NOT_EMPTY')
           if approval.get('approved') is True or state.get('state')!='IDLE': raise SystemExit('SCENE_REPAIR_PUBLISHER_NOT_CLEAN')
           items=json.loads(src.read_text(encoding='utf-8'))
-          matches=[x for x in items if str(x.get('id'))==cid]
-          if len(matches)!=1: raise SystemExit('SCENE_REPAIR_CANDIDATE_BINDING_FAIL')
-          item=matches[0]; plan=item.get('scene_plan') or []
+          now=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
+
+          caption_repairs=req.get('caption_repairs') or []
+          if caption_repairs:
+              if not isinstance(caption_repairs,list): raise SystemExit('CAPTION_REPAIR_LIST_FAIL')
+              seen=set()
+              for repair in caption_repairs:
+                  cid=str(repair.get('candidate_id') or '')
+                  if not cid or cid in seen: raise SystemExit('CAPTION_REPAIR_CANDIDATE_FAIL')
+                  seen.add(cid)
+                  matches=[x for x in items if str(x.get('id'))==cid]
+                  if len(matches)!=1: raise SystemExit('CAPTION_REPAIR_BINDING_FAIL '+cid)
+                  item=matches[0]; chunks=repair.get('caption_chunks')
+                  if not isinstance(chunks,list) or len(chunks)<5 or any(not isinstance(x,str) or not x.strip() for x in chunks):
+                      raise SystemExit('CAPTION_REPAIR_CHUNKS_FAIL '+cid)
+                  plan=item.get('scene_plan') or []; bounds=repair.get('scene_caption_bounds')
+                  if not isinstance(bounds,list) or len(bounds)!=len(plan): raise SystemExit('CAPTION_REPAIR_BOUNDS_FAIL '+cid)
+                  coverage=[]; expected=0
+                  for scene,pair in zip(plan,bounds):
+                      if not isinstance(pair,list) or len(pair)!=2: raise SystemExit('CAPTION_REPAIR_BOUND_SCHEMA_FAIL '+cid)
+                      a=int(pair[0]); b=int(pair[1])
+                      if a!=expected or b<a or b>=len(chunks): raise SystemExit('CAPTION_REPAIR_PARTITION_FAIL '+cid)
+                      scene['caption_start']=a; scene['caption_end']=b
+                      coverage.extend(range(a,b+1)); expected=b+1
+                  if coverage!=list(range(len(chunks))): raise SystemExit('CAPTION_REPAIR_COVERAGE_FAIL '+cid)
+                  item['caption_chunks']=chunks
+                  if 'script' in item: item['script']=' '.join(chunks)
+                  new_id=str(repair.get('new_id') or '').strip()
+                  if new_id: item['id']=new_id
+                  item['ready_checked_at']=now
+                  item['caption_layout_repair_pass']=True
+
           overrides=req.get('scene_start_overrides') or {}
-          if not isinstance(overrides,dict) or not overrides: raise SystemExit('SCENE_REPAIR_OVERRIDES_REQUIRED')
-          evidence=str(req.get('probe_evidence') or '')
-          if not re.fullmatch(r'run=\d+;sha256=[0-9a-f]{64}',evidence): raise SystemExit('SCENE_REPAIR_PROBE_EVIDENCE_FAIL')
-          for raw_idx,raw_start in overrides.items():
-              idx=int(raw_idx); start=float(raw_start)
-              if idx<0 or idx>=len(plan) or start<0: raise SystemExit('SCENE_REPAIR_INDEX_FAIL')
-              plan[idx]['start_seconds']=start
-              plan[idx]['black_probe_verified']=True
-              plan[idx]['black_probe_evidence']=evidence
-          starts=[float(x['start_seconds']) for x in plan]
-          if len(starts)!=len(set(starts)): raise SystemExit('SCENE_REPAIR_DUPLICATE_START_FAIL')
-          item['ready_checked_at']=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
-          item['scene_black_probe_pass']=True
-          item['scene_black_probe_evidence']=evidence
+          if overrides:
+              cid=str(req.get('candidate_id') or '')
+              matches=[x for x in items if str(x.get('id'))==cid]
+              if len(matches)!=1: raise SystemExit('SCENE_REPAIR_CANDIDATE_BINDING_FAIL')
+              item=matches[0]; plan=item.get('scene_plan') or []
+              if not isinstance(overrides,dict): raise SystemExit('SCENE_REPAIR_OVERRIDES_REQUIRED')
+              evidence=str(req.get('probe_evidence') or '')
+              if not re.fullmatch(r'run=\d+;sha256=[0-9a-f]{64}',evidence): raise SystemExit('SCENE_REPAIR_PROBE_EVIDENCE_FAIL')
+              for raw_idx,raw_start in overrides.items():
+                  idx=int(raw_idx); start=float(raw_start)
+                  if idx<0 or idx>=len(plan) or start<0: raise SystemExit('SCENE_REPAIR_INDEX_FAIL')
+                  plan[idx]['start_seconds']=start; plan[idx]['black_probe_verified']=True; plan[idx]['black_probe_evidence']=evidence
+              starts=[float(x['start_seconds']) for x in plan]
+              if len(starts)!=len(set(starts)): raise SystemExit('SCENE_REPAIR_DUPLICATE_START_FAIL')
+              item['ready_checked_at']=now; item['scene_black_probe_pass']=True; item['scene_black_probe_evidence']=evidence
+
+          if not caption_repairs and not overrides: raise SystemExit('SCENE_REPAIR_NO_CHANGE_FAIL')
+          ids=[str(x.get('id') or '') for x in items]
+          if len(ids)!=len(set(ids)): raise SystemExit('SCENE_REPAIR_DUPLICATE_ID_FAIL')
           payload=json.dumps(items,ensure_ascii=False,separators=(',',':'))+'\n'; dst.write_text(payload,encoding='utf-8')
-          digest=hashlib.sha256(payload.encode()).hexdigest(); now=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
+          digest=hashlib.sha256(payload.encode()).hexdigest()
           request_id=str(req['request_id'])
           if not re.fullmatch(r'[A-Za-z0-9._-]{12,96}',request_id): raise SystemExit('SCENE_REPAIR_REQUEST_ID_FAIL')
-          dispatch.update({'enabled':True,'mode':'PREPARE','batch_path':output,'batch_sha256':digest,'prepared_run_id':'','requested_at':now,'request_id':request_id,'candidate_count':len(items),'selected_count':len(items),'reserve_count':0,'note':str(req.get('note') or 'Evidence-bound scene repair; canonical Factory V2 route.')})
+          selected=int(req.get('selected_count',dispatch.get('selected_count') or len(items)))
+          reserve=int(req.get('reserve_count',dispatch.get('reserve_count') or 0))
+          if selected<1 or reserve<0 or selected+reserve!=len(items): raise SystemExit('SCENE_REPAIR_COUNT_FAIL')
+          dispatch.update({'enabled':True,'mode':'PREPARE','batch_path':output,'batch_sha256':digest,'prepared_run_id':'','requested_at':now,'request_id':request_id,'candidate_count':len(items),'selected_count':selected,'reserve_count':reserve,'note':str(req.get('note') or 'Evidence-bound canonical repair; Factory V2 route unchanged.')})
           dispatchp.write_text(json.dumps(dispatch,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-          print('CENA_CERTA_SCENE_REPAIR_DISPATCH_PASS',output,digest)
+          print('CENA_CERTA_SCENE_REPAIR_DISPATCH_PASS',output,digest,'selected',selected,'reserve',reserve)
       - name: Commit repaired batch and dispatch
         shell: bash
         run: |
@@ -68,5 +107,5 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           OUT=$(python -c "import json; print(json.load(open('ops/cena-certa/scene-repair-request.json'))['output_batch'])")
           git add "$OUT" ops/cena-certa/dispatch.json
-          git commit -m 'Cena Certa: activate evidence-bound scene repair batch'
+          git commit -m 'Cena Certa: activate evidence-bound canonical repair batch'
           git push origin HEAD:feat/cena-certa-factory-v2-certified
