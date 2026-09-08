@@ -33,6 +33,30 @@ Um item só pode ir ao planner quando TODOS passarem:
 - Se uma pauta não possuir material visual legalmente utilizável e diretamente relacionado, TROCAR A PAUTA por outra relevante que possua asset adequado. Não criar fallback genérico ou monocromático.
 - Esta regra prevalece sobre qualquer plano diário anterior que sugira `original typographic card`, `abstract Cena Certa visual`, `text-led poll` ou equivalente como fallback sem imagem/material da obra.
 
+## Story audiovisual automático — padrão canônico
+Todo Story novo do Cena Certa deve ser tratado como peça audiovisual curta, e não como simples imagem estática, salvo quando houver impedimento técnico explícito e aprovação excepcional.
+
+Padrão obrigatório:
+1. ASSET OFICIAL RELACIONADO — usar pôster, key art, still, foto, frame ou clipe diretamente ligado à obra/pauta, com ASSET_RIGHTS_PASS.
+2. MICROANIMAÇÃO ELEGANTE — criar movimento discreto de câmera, parallax leve, recorte dinâmico, transição suave ou animação mínima que preserve a integridade do asset. Proibidos zoom brusco, efeito genérico chamativo, flash, fundo preto prolongado ou movimento sem nexo.
+3. TRILHA LICENCIADA COERENTE — usar faixa instrumental com licença compatível e clima semanticamente aderente à obra. Ex.: ficção científica -> synth/ambient; super-herói -> épico/orquestral; nostalgia automotiva -> rock/upbeat; fantasia -> orquestral/fantasia. Não reutilizar música original do filme/série sem licença específica.
+4. CTA CURTO — pergunta, escolha ou chamada simples de interação, visualmente legível e sem ocupar a peça inteira. O asset continua sendo o protagonista visual.
+5. DURAÇÃO ALVO — 7 a 10 segundos para Story baseado em pôster/still; clipes oficiais podem variar quando o material e a licença exigirem outra duração.
+6. ÁUDIO — trilha incorporada ao arquivo final antes do upload quando o publisher não expuser biblioteca musical nativa. Se houver fala/narração, a música deve permanecer em segundo plano.
+7. THEME_MATCH_PASS — asset, movimento, trilha e CTA precisam falar do mesmo assunto. Qualquer elemento genérico ou desconectado reprova a peça.
+8. STORY_QA_PASS — antes do planner, verificar relevância visual, direitos do asset, licença da música, safe area, ausência de card monocromático/text-only, ausência de distorção e legibilidade do CTA.
+
+Hard rejects específicos de Story:
+- fundo monocromático + texto como conteúdo principal;
+- imagem genérica ou stock não relacionado;
+- asset oficial acompanhado de música sem relação temática;
+- música comercial/original da obra sem licença compatível;
+- CTA maior ou mais dominante que o próprio conteúdo visual;
+- Story estático simples quando a rota automática de microanimação estiver disponível;
+- qualquer Story agendado sem THEME_MATCH_PASS e STORY_QA_PASS.
+
+Enquanto o publisher conectado não oferecer Story nativo no TikTok, a mesma peça deve ser adaptada como microvídeo vertical regular para TikTok quando fizer sentido editorialmente, sem chamá-la de Story nativo.
+
 ## Asset policy
 Preferência: press kit oficial / Media Center / Global Asset Hub / festival press distribution.
 Não assumir que imagem pública, pôster ou frame é reutilizável. `OFFICIAL_ASSET_RIGHTS_PENDING` continua bloqueado.
