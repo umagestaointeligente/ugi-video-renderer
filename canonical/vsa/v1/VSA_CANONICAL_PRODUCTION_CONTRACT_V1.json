@@ -1,0 +1,106 @@
+{
+  "schema": "VSA_CANONICAL_PRODUCTION_CONTRACT_V1",
+  "status": "CANONICAL_ACTIVE",
+  "project_lock": {
+    "project": "ORBIT/VSA",
+    "channel_name": "Você Sabia Agora?",
+    "accepted_aliases": ["VSA", "VOCE SABIA AGORA", "VOCÊ SABIA AGORA"],
+    "fail_closed_on_ambiguous_target": true,
+    "forbidden_write_prefixes": ["canonical/cena-certa/", "ops/cena-certa-runtime/", "Cena Certa", "Cena Certa Ofc"],
+    "forbidden_account_ids": [88240, 88242],
+    "approved_post_bridge_account": {"id": 88527, "platform": "youtube", "username": "Você Sabia Agora?"}
+  },
+  "format": {
+    "canvas": {"width": 1080, "height": 1920, "aspect": "9:16", "fps": 30},
+    "codec": "H.264 High / yuv420p",
+    "duration_seconds": {"preferred_min": 60, "preferred_max": 90, "hard_max": 120},
+    "audio": {"target_lufs": -16, "true_peak_dbTP_max": -1.5, "narration_language": "pt-BR", "voice": "male young-adult natural neutral", "music_vocals": false}
+  },
+  "visual_grammar": {
+    "core_equation": "NARRAÇÃO = IMAGEM = AÇÃO VISUAL = SIGNIFICADO",
+    "real_footage_first": true,
+    "animation_purpose": "Explain invisible, internal, microscopic, electrical, molecular, force, trajectory, spatial, scale, data or abstract mechanisms; decorative animation is FAIL.",
+    "causal_motion_required": true,
+    "preferred_sequence": ["REAL_HOOK", "EXPLANATION", "REAL_EVIDENCE", "EXPLANATION", "CONSEQUENCE_OR_PROOF", "PAYOFF", "CTA"],
+    "first_frame": "Immediate anomaly/action; never logo, static title, still photo, avatar or intro animation.",
+    "hook_deadline_seconds": 1.5,
+    "no_accidental_footage_repeat": true,
+    "internal_motion_rule": "An explanatory shot may last several seconds only if it contains continuous meaningful state changes/events.",
+    "prohibited": ["slideshow", "static-photo-plus-zoom", "generic-unrelated-stock", "decorative-animation", "gratuitous-flash", "black-screen", "prolonged-freeze", "accidental-repeat", "meaningless-transition", "text-as-visual-substitute", "talking-avatar", "animated-powerpoint"]
+  },
+  "narrative": {
+    "suggested_arc": ["ANOMALY_OR_CONSEQUENCE", "QUESTION", "CONTEXT", "CAUSE", "MECHANISM", "SCALE_OR_COMPARISON", "PROOF_OR_CONSEQUENCE", "PAYOFF", "CTA"],
+    "semantic_map_required": true,
+    "unrepresented_spoken_claim_blocks_release": true,
+    "payoff_exact": "Agora você já sabe.",
+    "cta_voice_exact": "Curta, compartilhe e siga o Você Sabia Agora."
+  },
+  "mask": {
+    "fixed_asset": true,
+    "regenerate_per_video": false,
+    "library_path": "/VSA/Canonical Assets/VSA_MASK_CANONICAL_V1.png",
+    "sha256": "9f6ebae6742b007b1e660cd401b610933d0a06c2c3fee240220abf7215e1a4d9",
+    "source_dimensions": [864, 1536],
+    "apply_stage": "AFTER_BASE_VIDEO_QA",
+    "variable_fields_only": ["title", "subtitle", "closed_caption"],
+    "reference_geometry_864x1536": {
+      "video_window": {"x": 42, "y": 352, "w": 780, "h": 676},
+      "caption_zone": {"x": 34, "y": 1084, "w": 796, "h": 145},
+      "footer_branding_zone": {"x": 0, "y": 1245, "w": 864, "h": 291}
+    },
+    "rules": ["No content may overlap mask UI.", "Do not crop important information.", "Do not use aggressive zoom merely to fit the window.", "Prefer contain/blur-background treatment when source aspect differs.", "Closed caption max two lines and must remain inside caption zone."]
+  },
+  "cta": {
+    "fixed_asset": true,
+    "regenerate_per_video": false,
+    "library_path": "/VSA/Canonical Assets/VSA_CTA_VISUAL_CANONICAL_V1.png",
+    "sha256": "6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8",
+    "source_dimensions": [864, 1536],
+    "duration_seconds": {"min": 3.0, "max": 4.5},
+    "narrative_order": ["Agora você já sabe.", "Curta, compartilhe e siga o Você Sabia Agora."]
+  },
+  "captions": {"max_lines": 2, "synced": true, "discreet": true, "must_not_cover_critical_visual": true},
+  "tool_routing": {
+    "real_footage": ["rights-safe real video sources", "source-specific downloader/ingest"],
+    "timeline_compositor": ["Remotion"],
+    "motion_graphics": ["GSAP", "SVG", "Canvas"],
+    "spatial_2_5d_3d": ["Three.js/WebGL"],
+    "premium_3d_templates": ["Blender procedural/PBR"],
+    "finalization": ["FFmpeg"],
+    "qa": ["FFmpeg", "OpenCV", "dense visual sampling"],
+    "ai_video": "Selective only; never replace observable real footage merely because generation is easier.",
+    "paid_tools": "BLOCK unless Paulo explicitly authorizes purchase/credits."
+  },
+  "golden_components": ["MAP_ZOOM", "GLOBE_TO_LOCATION", "OBJECT_EXPLODE", "CROSS_SECTION", "PARTICLE_FLOW", "CAUSE_EFFECT_CHAIN", "SCALE_COMPARE", "TIMELINE", "DATA_COUNTER", "CAMERA_FLYTHROUGH", "MICROSCOPIC_ZOOM", "X_RAY_REVEAL", "ROUTE_ANIMATION", "LABEL_TRACK", "PROGRESSIVE_HIGHLIGHT"],
+  "pacing_guidance": {
+    "principle": "Benchmark dynamism is driven by physical transformation inside shots, not just rapid cutting.",
+    "shot_median_seconds_reference_range": [2.5, 4.7],
+    "target": "Multiple meaningful internal events per explanatory shot; no long visually idle block.",
+    "metrics_are_guidance_not_hard_gates": true
+  },
+  "qa": {
+    "workflow": ["BASE_RENDER", "TECH_QA", "DENSE_VISUAL_QA", "BENCHMARK_COMPARISON", "AUTO_CORRECT", "MASK_APPLICATION", "FINAL_QA", "RELEASE"],
+    "dense_sampling_hz_default": 4,
+    "never_call_4hz_frame_by_frame": true,
+    "checks": ["black frames", "prolonged freezes", "gratuitous flashes", "audio silence/clipping", "semantic narration-image match", "crop/safe-area", "caption collision", "footage repetition", "internal motion", "CTA order", "technical format"],
+    "anti_regression": ["KEEP validated strengths", "CHANGE only current bottleneck", "FORBID reintroduction of rejected defects", "Do not render a change that removes more validated strengths than it adds"],
+    "release_rule": "Only deliver/schedule a version after all applicable gates PASS. Otherwise render V2/V3 internally."
+  },
+  "rights": {
+    "manifest_required_before_publication": true,
+    "official_source_does_not_equal_reuse_permission": true,
+    "unknown_rights_blocks_publication": true
+  },
+  "publishing": {
+    "allowed_target_requires_exact_channel_resolution": true,
+    "current_verified_route": {"connector": "post_bridge", "youtube_account_id": 88527, "username": "Você Sabia Agora?"},
+    "metricool_status": "Current connected Metricool brand is Cena Certa Ofc only; forbidden for VSA until a VSA brand is verified.",
+    "schedule_evidence_required": ["platform/account identity", "scheduled post ID", "scheduled datetime", "scheduled status"],
+    "never_claim_scheduled_without_receipt": true
+  },
+  "learning": {
+    "implementation": "Persistent QA/correction log + deterministic gates + version history; do not misrepresent this as trained ML unless an actual model-training pipeline exists.",
+    "observed_inferred_unknown_labels": true
+  },
+  "recovery_trigger": "RECOVERY::ORBIT::VSA::CANONICAL_V1"
+}
