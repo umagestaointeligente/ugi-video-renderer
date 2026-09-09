@@ -14,6 +14,44 @@
       "performance_alone_is_not_exception": true
     }
   },
+  "daily_editorial_mix": {
+    "status": "CANONICAL_DEFAULT",
+    "daily_target_videos": 8,
+    "default_split": {
+      "WORLD_SCIENCE": 4,
+      "PEOPLE_CURIOSITY": 4
+    },
+    "world_science_scope": [
+      "science",
+      "nature_phenomena",
+      "technology",
+      "space",
+      "climate",
+      "discoveries",
+      "engineering",
+      "human_body_when_explanatory",
+      "relevant_current_events_with_explainable_mechanism"
+    ],
+    "people_curiosity_scope": [
+      "influencers",
+      "public_figures",
+      "human_curiosities",
+      "historical_people",
+      "behavior",
+      "remarkable_human_events",
+      "general_curiosities_not_required_to_be_science_based"
+    ],
+    "editorial_bucket_required": true,
+    "allowed_editorial_buckets": ["WORLD_SCIENCE", "PEOPLE_CURIOSITY"],
+    "temporary_quality_exception": {
+      "allowed": true,
+      "allowed_splits": ["5/3", "3/5"],
+      "only_when_blocked_by": ["rights", "real_footage", "topic_repeat_60d", "quality_gate"],
+      "quality_over_volume": true,
+      "return_to_4_4_next_cycle": true
+    },
+    "identity_rule": "Daily VSA programming should combine explanation of the world with human curiosity; do not let the channel become only science news or only celebrity content."
+  },
   "real_footage_alternation": {
     "status": "HARD_GATE",
     "observable_real_world_topic_requires_real_footage": true,
@@ -40,6 +78,7 @@
   },
   "job_requirements": {
     "topic_history_gate": "PASS",
+    "editorial_bucket": ["WORLD_SCIENCE", "PEOPLE_CURIOSITY"],
     "real_footage_gate_when_required": "PASS",
     "person_visual_reference_gate_when_person_profile": "PASS",
     "person_real_video_segments_gate_when_person_profile": "PASS"
