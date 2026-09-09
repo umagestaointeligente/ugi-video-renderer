@@ -1,0 +1,106 @@
+{
+  "schema": "UGI_EDITORIAL_ASSET_PROVENANCE_V1",
+  "date": "2026-09-09",
+  "state": "FINAL_ASSETS_BUILT_PENDING_EXACT_PREVIEW_APPROVAL",
+  "rules": {
+    "ai_generated_subject_substitution": false,
+    "upscale_low_resolution": false,
+    "rights_manifest_required": true,
+    "story_music": "original UGI four-chord instrumental baked into MP4",
+    "preview_must_match_publish_media": true
+  },
+  "sources": {
+    "apple": {
+      "filename": "Apple Park - October 2018 - 8809.jpg",
+      "width": 3840,
+      "license": "CC BY-SA 4.0",
+      "author": "Gregory Varnum",
+      "page": "https://commons.wikimedia.org/wiki/File:Apple_Park_-_October_2018_-_8809.jpg"
+    },
+    "qualcomm": {
+      "filename": "Qualcomm headquarters.jpg",
+      "width": 2930,
+      "license": "CC BY-SA 3.0 / GFDL",
+      "author": "Coolcaesar",
+      "page": "https://commons.wikimedia.org/wiki/File:Qualcomm_headquarters.jpg"
+    },
+    "datacenter_inside": {
+      "filename": "Hardware interno de servidor data center HostDime.jpg",
+      "width": 3840,
+      "license": "CC BY 4.0",
+      "author": "EditorTech20",
+      "page": "https://commons.wikimedia.org/wiki/File:Hardware_interno_de_servidor_data_center_HostDime.jpg"
+    },
+    "datacenter_energy": {
+      "filename": "Sala de energia Data Center HostDime Brasil.jpg",
+      "width": 1920,
+      "license": "CC BY 4.0",
+      "author": "EditorTech20",
+      "page": "https://commons.wikimedia.org/wiki/File:Sala_de_energia_Data_Center_HostDime_Brasil.jpg"
+    },
+    "mistral": {
+      "filename": "Prime Minister of Bharat, Shri Narendra Damodardas Modi with the Co-Founder and CEO of Mistral AI, Mr. Arthur Mensch.jpg",
+      "width": 2200,
+      "license": "GODL-India",
+      "author": "Prime Minister's Office (India) / Press Information Bureau",
+      "page": "https://commons.wikimedia.org/wiki/File:Prime_Minister_of_Bharat,_Shri_Narendra_Damodardas_Modi_with_the_Co-Founder_and_CEO_of_Mistral_AI,_Mr._Arthur_Mensch.jpg"
+    }
+  },
+  "finals": [
+    {
+      "path": "public/ugi/editorial/2026-09-09/feed-mistral-1915.jpg",
+      "bytes": 448720,
+      "sha256": "a8253dc88f1d772a0e530973e11b929fbbedec2fe661bf449fc30dfa225fe57d"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/feed-qualcomm-amazon-1230.jpg",
+      "bytes": 849916,
+      "sha256": "5640d52a3f31f99ba61c4fea1cf6af2da64591dd4d48700c76bb134aca46b1a6"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/linkedin-digital-resilience-1400.jpg",
+      "bytes": 316824,
+      "sha256": "29ae8c717cc90eb6a5c9c09dc253421e435495f3a1c8611d500f3a63410bd04f"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/story-apple-0900.jpg",
+      "bytes": 866911,
+      "sha256": "bd09ee44087e0e04f4122ac6995ee57508cc774a998ba5ef9b1ccba858c5eaea"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/story-apple-0900.mp4",
+      "bytes": 765557,
+      "sha256": "90cbc670b7dc5ddfaf500d54d7bf1c8164b4d119f99e90cf2b513fcc305e9125"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/story-apple-0907.jpg",
+      "bytes": 865074,
+      "sha256": "0075a36a9f07e6c5b0d90d9592799e024d5046d3ee5b40c49892d737f78fa332"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/story-apple-0907.mp4",
+      "bytes": 765053,
+      "sha256": "2ce272df3011d19101e50cc5abec3026565e6f778041f82f387e60436bbf6160"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/story-resilience-1800.jpg",
+      "bytes": 789799,
+      "sha256": "e3b59db1f4d0586dee6720b8d31ab7c3d3bf6b3af2549025f8c99b4611bbea5a"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/story-resilience-1800.mp4",
+      "bytes": 624036,
+      "sha256": "aa73ddd43d04859bb353322dd4b1ad9de3dcdc93c187a7c344f531e8e7221fa6"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/story-resilience-1812.jpg",
+      "bytes": 931119,
+      "sha256": "e47e906d30e11a892477236fc4521d2cdb9461ab6b750c2405e29cacd26ac570"
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-09/story-resilience-1812.mp4",
+      "bytes": 751867,
+      "sha256": "855b102ce2c4a549a8a3ffd3777dcafb7894e87397ce829cd461f15fc1492b25"
+    }
+  ]
+}
