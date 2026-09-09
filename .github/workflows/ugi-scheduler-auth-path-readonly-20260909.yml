@@ -1,0 +1,40 @@
+name: UGI Scheduler Auth Path Readonly 2026-09-09
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-scheduler-auth-path-readonly-20260909.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    env:
+      UGI_ADMIN_CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Inspect safe booleans only
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error 'https://lola-operacional-ugi.umagestaointeligente.workers.dev/api/health' -o health.json
+          python - <<'PY'
+          import json,os
+          h=json.load(open('health.json'))
+          b=h.get('bindings') or {}
+          out={
+            'version':h.get('version'),
+            'workerBindings':{
+              'LOLA_AUTH_KEY':bool(b.get('LOLA_AUTH_KEY')),
+              'LOLA_COMMAND_KEY':bool(b.get('LOLA_COMMAND_KEY')),
+              'BUFFER_API_KEY':bool(b.get('BUFFER_API_KEY')),
+              'MEDIA_R2':bool(b.get('MEDIA_R2') or b.get('MEDIA')),
+            },
+            'githubSecrets':{
+              'UGI_ADMIN_CLOUDFLARE_API_TOKEN':bool(os.environ.get('UGI_ADMIN_CLOUDFLARE_API_TOKEN')),
+              'UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID':bool(os.environ.get('UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID')),
+            },
+            'editorialMediaPublishing':bool((h.get('capabilities') or {}).get('editorialMediaPublishing')),
+            'linkedinBufferTextPublishing':bool((h.get('capabilities') or {}).get('linkedinBufferTextPublishing')),
+          }
+          print(json.dumps(out,indent=2,ensure_ascii=False))
+          PY
