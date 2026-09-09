@@ -1,0 +1,60 @@
+name: VSA Static Media Host Sep10-11
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-static-media-host-sep10-11-20260909.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  SOURCE_RUN_ID: '34346612128'
+  MEDIA_BRANCH: 'vsa-media-20260909'
+
+jobs:
+  host:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download 15 final media artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vsa-*
+          path: /tmp/vsa-media
+          merge-multiple: false
+          run-id: ${{ env.SOURCE_RUN_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify exact final set
+        shell: bash
+        run: |
+          set -euo pipefail
+          find /tmp/vsa-media -type f -name '*.mp4' -print | sort
+          count="$(find /tmp/vsa-media -type f -name '*.mp4' | wc -l)"
+          test "$count" -eq 15 || { echo "EXPECTED_15_MP4_GOT_$count"; exit 2; }
+
+      - name: Publish isolated static media branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'vsa-static-media-bot'
+          git config user.email 'vsa-static-media-bot@users.noreply.github.com'
+          git checkout --orphan "$MEDIA_BRANCH"
+          git rm -rf . >/dev/null 2>&1 || true
+          mkdir -p media
+          find /tmp/vsa-media -type f -name '*.mp4' -exec cp {} media/ \;
+          printf '%s\n' '# VSA static delivery media' > README.md
+          printf '%s\n' 'Generated only to provide correct video/mp4 delivery MIME for scheduling.' >> README.md
+          git add README.md media/*.mp4
+          git commit -m 'media(vsa): Sep10-11 scheduling masters'
+          git push --force origin HEAD:"$MEDIA_BRANCH"
+          test "$(find media -maxdepth 1 -name '*.mp4' | wc -l)" -eq 15
+          echo "MEDIA_BRANCH=$MEDIA_BRANCH"
+          echo "MEDIA_COUNT=15"
