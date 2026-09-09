@@ -1,0 +1,42 @@
+name: UGI R45.7 Live Script Inspect 2026-09-09
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-live-script-inspect-20260909.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Fetch deployed Worker source and print only relevant route blocks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          echo "::add-mask::$CLOUDFLARE_API_TOKEN"
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/lola-operacional-ugi" \
+            -o /tmp/worker.out
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/worker.out')
+          raw=p.read_bytes()
+          # Multipart responses still contain the script text; decode lossily for inspection.
+          text=raw.decode('utf-8','ignore')
+          needles=['/api/editorial-media','/api/editorial-media-publish','/api/media-draft','/api/linkedin-publish','editorialMediaPublishing','function isAdminAuthorized','function isLolaUGIAuthorized','LOLA_AUTH_KEY']
+          print('LIVE_BYTES=',len(raw))
+          for needle in needles:
+              print('\n===== '+needle+' =====')
+              idx=text.find(needle)
+              if idx < 0:
+                  print('NOT_FOUND')
+                  continue
+              lo=max(0,idx-4500); hi=min(len(text),idx+12000)
+              print(text[lo:hi])
+          PY
