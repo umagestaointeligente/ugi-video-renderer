@@ -1,0 +1,120 @@
+{
+  "schema": "UGI_BUFFER_SCHEDULE_PROOF_V1",
+  "project": "UGI",
+  "date": "2026-09-09",
+  "timezone": "America/Sao_Paulo",
+  "state": "BUFFER_SCHEDULED_7_OF_7",
+  "assetCommit": "f280ea288421267727d6beedde1e2936716e5391",
+  "humanApproval": true,
+  "publisher": "BUFFER",
+  "schedulerRunId": 34310876773,
+  "schedulerRunConclusion": "success",
+  "proofArtifactId": 10088303933,
+  "proofArtifactName": "ugi-sep09-buffer-schedule-proof-34310876773",
+  "preflight": {
+    "exactAssetSha256": "7/7_PASS"
+  },
+  "channels": {
+    "instagram": {
+      "name": "umagestaointeligente",
+      "channelId": "6a7896cdb2d9d57743457e33"
+    },
+    "linkedin": {
+      "name": "uma-gestao-inteligente",
+      "channelId": "6a9acd94065799be46891f24",
+      "targetType": "LinkedIn Page",
+      "personalProfileTargetAllowed": false
+    }
+  },
+  "items": [
+    {
+      "id": "UGI-20260909-IG-STORY-APPLE-0900",
+      "platform": "instagram",
+      "format": "story",
+      "topic": "Apple — teste de execução: hardware, IA e liderança sob expectativa",
+      "dueAtBrt": "2026-09-09T09:00:00-03:00",
+      "dueAtUtc": "2026-09-09T12:00:00.000Z",
+      "bufferPostId": "6aa0df9d8630939526030045",
+      "readbackStatus": "scheduled",
+      "dueAtMatch": true,
+      "scheduleConfirmed": true
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-APPLE-0907",
+      "platform": "instagram",
+      "format": "story",
+      "topic": "Apple — liderança, expectativa e execução",
+      "dueAtBrt": "2026-09-09T09:07:00-03:00",
+      "dueAtUtc": "2026-09-09T12:07:00.000Z",
+      "bufferPostId": "6aa0df9e7b66b49ec6f5e46f",
+      "readbackStatus": "scheduled",
+      "dueAtMatch": true,
+      "scheduleConfirmed": true
+    },
+    {
+      "id": "UGI-20260909-IG-FEED-QUALCOMM-1230",
+      "platform": "instagram",
+      "format": "post",
+      "topic": "Qualcomm + Amazon — diversificação para infraestrutura de IA",
+      "dueAtBrt": "2026-09-09T12:30:00-03:00",
+      "dueAtUtc": "2026-09-09T15:30:00.000Z",
+      "bufferPostId": "6aa0df9f8630939526030451",
+      "readbackStatus": "scheduled",
+      "dueAtMatch": true,
+      "scheduleConfirmed": true
+    },
+    {
+      "id": "UGI-20260909-LI-RESILIENCE-1400",
+      "platform": "linkedin",
+      "format": "post",
+      "topic": "Infraestrutura digital virou risco de gestão",
+      "dueAtBrt": "2026-09-09T14:00:00-03:00",
+      "dueAtUtc": "2026-09-09T17:00:00.000Z",
+      "bufferPostId": "6aa0dfa07b66b49ec6f5e4ac",
+      "readbackStatus": "scheduled",
+      "dueAtMatch": true,
+      "scheduleConfirmed": true,
+      "targetType": "LinkedIn Page",
+      "personalProfileTargetAllowed": false
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-RESILIENCE-1800",
+      "platform": "instagram",
+      "format": "story",
+      "topic": "Dependência tecnológica virou risco de gestão",
+      "dueAtBrt": "2026-09-09T18:00:00-03:00",
+      "dueAtUtc": "2026-09-09T21:00:00.000Z",
+      "bufferPostId": "6aa0dfa13bd0dd9ef32463d2",
+      "readbackStatus": "scheduled",
+      "dueAtMatch": true,
+      "scheduleConfirmed": true
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-RESILIENCE-1812",
+      "platform": "instagram",
+      "format": "story",
+      "topic": "Eficiência x resiliência: segundo caminho quando o primeiro falha",
+      "dueAtBrt": "2026-09-09T18:12:00-03:00",
+      "dueAtUtc": "2026-09-09T21:12:00.000Z",
+      "bufferPostId": "6aa0dfa1493bbf8c282a1f8e",
+      "readbackStatus": "scheduled",
+      "dueAtMatch": true,
+      "scheduleConfirmed": true
+    },
+    {
+      "id": "UGI-20260909-IG-FEED-MISTRAL-1915",
+      "platform": "instagram",
+      "format": "post",
+      "topic": "Mistral AI — valuation de cerca de US$ 24 bi e posicionamento estratégico",
+      "dueAtBrt": "2026-09-09T19:15:00-03:00",
+      "dueAtUtc": "2026-09-09T22:15:00.000Z",
+      "bufferPostId": "6aa0dfa27b66b49ec6f5e4d9",
+      "readbackStatus": "scheduled",
+      "dueAtMatch": true,
+      "scheduleConfirmed": true
+    }
+  ],
+  "confirmedCount": 7,
+  "deliveryConfirmedCount": 0,
+  "deliveryNote": "BUFFER_SCHEDULED confirms scheduler state only. DELIVERY_CONFIRMED must be checked after each dueAt with terminal platform/Buffer delivery evidence."
+}
