@@ -1,0 +1,80 @@
+name: VSA Sep10-11 Finalize Repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-sep10-11-finalize-repair-20260909.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vsa-sep10-11-finalize-repair-20260909
+  cancel-in-progress: false
+
+jobs:
+  build_release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --quiet edge-tts pyyaml
+      - name: Recover original batch and repair audio graph
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib, re, yaml, os
+          p=pathlib.Path('.github/workflows/vsa-sep10-11-finalize-20260909.yml')
+          text=p.read_text(encoding='utf-8')
+          doc=yaml.safe_load(text)
+          topics=doc['jobs']['build_release']['env']['TOPICS_JSON']
+          pathlib.Path('/tmp/topics.json').write_text(topics,encoding='utf-8')
+          m=re.search(r"cat > /tmp/build_vsa\.py <<'PY'\n(.*?)\n\s*PY\n\s*python /tmp/build_vsa\.py", text, re.S)
+          if not m:
+              raise SystemExit('BUILD_SCRIPT_NOT_FOUND')
+          script=m.group(1)
+          # YAML block indentation is 10 spaces in the source workflow.
+          lines=script.splitlines()
+          indent=min((len(x)-len(x.lstrip()) for x in lines if x.strip()), default=0)
+          script='\n'.join(x[indent:] if len(x)>=indent else x for x in lines)+'\n'
+          replacements={
+            'f"[0:a]aresample=48000,volume=1.0[n];"':'f"[0:a]aresample=48000,volume=1.0,asplit=2[n1][n2];"',
+            '"[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"':'"[m][n1]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"',
+            '"[n][duck]amix=inputs=2:duration=first:normalize=0,"':'"[n2][duck]amix=inputs=2:duration=first:normalize=0,"',
+            'f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len}[n];"':'f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len},asplit=2[n1][n2];"',
+            '"[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"':'"[m][n1]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"',
+            '"[n][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"':'"[n2][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"'
+          }
+          for old,new in replacements.items():
+              if old not in script:
+                  raise SystemExit('EXPECTED_AUDIO_SNIPPET_NOT_FOUND: '+old)
+              script=script.replace(old,new,1)
+          pathlib.Path('/tmp/build_vsa.py').write_text(script,encoding='utf-8')
+          print('AUDIO_GRAPH_REPAIR=PASS')
+          PY
+          export TOPICS_JSON="$(cat /tmp/topics.json)"
+          python /tmp/build_vsa.py
+      - name: Publish temporary media release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="vsa-sep10-11-final-${{ github.run_id }}"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          gh release create "$TAG" --title "VSA Sep10-11 Final ${{ github.run_id }}" --notes "Temporary public media bridge for canonical VSA scheduling."
+          gh release upload "$TAG" /tmp/vsa_sep10_11/out/*.mp4 /tmp/vsa_sep10_11/out/manifest.json --clobber
+          printf '{"tag":"%s","release":"https://github.com/${{ github.repository }}/releases/tag/%s"}\n' "$TAG" "$TAG" > release_receipt.json
+      - name: Upload receipts artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep10-11-repair-receipts
+          path: |
+            /tmp/vsa_sep10_11/out/manifest.json
+            release_receipt.json
