@@ -1,0 +1,1414 @@
+[
+  {
+    "id": "CC-20260911-GUARDIANS3-V1",
+    "work_type": "film",
+    "film_title": "Guardians Vol. 3",
+    "film_year": 2023,
+    "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260911-GUARDIANS3-PREFLIGHT-8ffd6c204049%2Finstagram.mp4",
+    "source_sha256": "c9e49eac75379d6421bede1d6a8e16b1e584bd09eee2656ed2a782c543e9ea23",
+    "rights_evidence": "Official studio audiovisual material was resolved from the studio media channel and is used only for editorial, transformative Cena Certa coverage. This is not asserted as a general redistribution license.",
+    "license": "PRESS/EDITORIAL USE",
+    "relevance_evidence": [
+      "Marvel Studios global theatrical franchise",
+      "Guardians of the Galaxy ensemble and James Gunn"
+    ],
+    "anti_repeat_evidence": "Live Metricool plus canonical ledger readback: this title is absent from published or scheduled Cena Certa content in the 60-day deduplication window.",
+    "caption_chunks": [
+      "Rocket carrega um passado difícil.",
+      "E agora os Guardiões precisam protegê-lo.",
+      "Peter Quill ainda lida com suas perdas.",
+      "Mas a equipe não tem tempo para parar.",
+      "Uma nova ameaça coloca todos em ação.",
+      "O passado de Rocket ganha peso na missão.",
+      "Gamora volta a cruzar o caminho do grupo.",
+      "Só que ela já não é a mesma pessoa.",
+      "Mantis, Drax e Nebula entram na luta.",
+      "A família volta a ser testada.",
+      "James Gunn reúne humor e despedida.",
+      "A ação continua grande e muito colorida.",
+      "Mas o coração está nos personagens.",
+      "É uma missão sobre amizade e união.",
+      "Qual Guardião mais marcou você?"
+    ],
+    "scene_plan": [
+      {
+        "start_seconds": 4,
+        "caption_start": 0,
+        "caption_end": 1,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 16,
+        "caption_start": 2,
+        "caption_end": 3,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 28,
+        "caption_start": 4,
+        "caption_end": 5,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 40,
+        "caption_start": 6,
+        "caption_end": 7,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 52,
+        "caption_start": 8,
+        "caption_end": 9,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 64,
+        "caption_start": 10,
+        "caption_end": 10,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 76,
+        "caption_start": 11,
+        "caption_end": 11,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 88,
+        "caption_start": 12,
+        "caption_end": 12,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 100,
+        "caption_start": 13,
+        "caption_end": 13,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 112,
+        "caption_start": 14,
+        "caption_end": 14,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      }
+    ],
+    "music_track": {
+      "id": "CC0911-RUNNING",
+      "url": "https://assets.mixkit.co/music/77/77.mp3",
+      "rights_evidence": "Mixkit free stock music; usable under the Mixkit License.",
+      "license": "Mixkit License",
+      "genre": "energetic-cinematic-rock",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "live_readback_pass": true,
+    "rights_pass": true,
+    "relevance_pass": true,
+    "ready_checked_at": "2026-09-09T03:13:57.681756+00:00",
+    "schedule": {
+      "date": "2026-09-11T09:10:00-03:00",
+      "text": "🎬 FILME: Guardians of the Galaxy Vol. 3 (2023)\n\nA última missão dessa formação dos Guardiões colocou Rocket no centro de tudo.\n\n💬 Qual Guardião mais marcou você?\n\n#CenaCerta #Cinema",
+      "youtube_title": "Guardians of the Galaxy Vol. 3 | Cena Certa",
+      "made_for_kids": false,
+      "providers": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "ai_flags": {
+        "instagram": false,
+        "tiktok": false,
+        "youtube": false
+      },
+      "youtube_tags": [
+        "Cena Certa",
+        "Guardians of the Galaxy Vol. 3",
+        "Cinema"
+      ]
+    },
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "professional_production_pass": true,
+    "audience_demand_pass": true,
+    "recognized_or_acclaimed_pass": true,
+    "production_class": "MAJOR_STUDIO",
+    "dedup_60d_pass": true,
+    "premium_evidence": [
+      {
+        "type": "DEMAND",
+        "source": "Marvel Studios global theatrical franchise",
+        "signal": "Recognized audience-demand signal supports editorial selection."
+      },
+      {
+        "type": "RECOGNITION",
+        "source": "Guardians of the Galaxy ensemble and James Gunn",
+        "signal": "Recognized franchise, filmmakers or principal characters support broad audience awareness."
+      },
+      {
+        "type": "PRODUCTION",
+        "source": "Marvel Studios",
+        "signal": "Major-studio production or distribution supports professional production quality."
+      }
+    ],
+    "promotional_source_authorized": true,
+    "source_provenance": {
+      "asset_name": "Official studio audiovisual press asset",
+      "origin_url": "https://video.disney.com/watch/guardians-of-the-galaxy-vol-3-in-theaters-may-5-5f49908cff76febd6b4f2a72",
+      "publisher": "Marvel Studios",
+      "rights_evidence_url": "https://press.disney.co.uk/press-kit/guardians-of-the-galaxy-vol-3",
+      "authorization_text": "Official studio audiovisual material supplied through an official studio media or press channel for editorial coverage.",
+      "authorization_scope": "Editorial/transformative coverage only.",
+      "official_source": true,
+      "public_terms_removed": true
+    },
+    "caption_layout_repair_pass": true,
+    "animation": false
+  },
+  {
+    "id": "CC-20260911-WAKANDA-V1",
+    "work_type": "film",
+    "film_title": "Wakanda Forever",
+    "film_year": 2022,
+    "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260911-WAKANDA-df7e742d7941%2Finstagram.mp4",
+    "source_sha256": "a46feded717e08f5565c2738099b7dbaad321b67e7789acc0b71ea7ca19efa7b",
+    "rights_evidence": "Official studio audiovisual material was resolved from the studio media channel and is used only for editorial, transformative Cena Certa coverage. This is not asserted as a general redistribution license.",
+    "license": "PRESS/EDITORIAL USE",
+    "relevance_evidence": [
+      "Black Panther global theatrical audience",
+      "Black Panther franchise and returning Wakandan cast"
+    ],
+    "anti_repeat_evidence": "Live Metricool plus canonical ledger readback: this title is absent from published or scheduled Cena Certa content in the 60-day deduplication window.",
+    "caption_chunks": [
+      "Wakanda tenta seguir sem T’Challa.",
+      "E o luto muda cada personagem.",
+      "Shuri busca respostas para a perda.",
+      "Enquanto o reino precisa continuar de pé.",
+      "Uma nova potência surge das profundezas.",
+      "Namor defende Talokan com força absoluta.",
+      "Dois povos poderosos entram em choque.",
+      "Cada lado quer proteger os seus.",
+      "Ramonda tenta manter Wakanda unido.",
+      "Okoye encara suas escolhas.",
+      "A tecnologia continua impressionando.",
+      "Mas o conflito é profundamente emocional.",
+      "Legado e identidade movem a história.",
+      "Wakanda precisa escolher o próximo passo.",
+      "Quem deveria liderar esse futuro?"
+    ],
+    "scene_plan": [
+      {
+        "start_seconds": 4,
+        "caption_start": 0,
+        "caption_end": 1,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 16,
+        "caption_start": 2,
+        "caption_end": 3,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 28,
+        "caption_start": 4,
+        "caption_end": 5,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 40,
+        "caption_start": 6,
+        "caption_end": 7,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 52,
+        "caption_start": 8,
+        "caption_end": 9,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 64,
+        "caption_start": 10,
+        "caption_end": 10,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 76,
+        "caption_start": 11,
+        "caption_end": 11,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 88,
+        "caption_start": 12,
+        "caption_end": 12,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 100,
+        "caption_start": 13,
+        "caption_end": 13,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 112,
+        "caption_start": 14,
+        "caption_end": 14,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      }
+    ],
+    "music_track": {
+      "id": "CC0911-CRYINGSEA",
+      "url": "https://assets.mixkit.co/music/1023/1023.mp3",
+      "rights_evidence": "Mixkit free stock music; usable under the Mixkit License.",
+      "license": "Mixkit License",
+      "genre": "emotional-cinematic",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "live_readback_pass": true,
+    "rights_pass": true,
+    "relevance_pass": true,
+    "ready_checked_at": "2026-09-09T03:13:57.681756+00:00",
+    "schedule": {
+      "date": "2026-09-11T10:55:00-03:00",
+      "text": "🎬 FILME: Black Panther: Wakanda Forever (2022)\n\nWakanda perdeu seu rei, mas não pode parar enquanto uma nova potência surge do oceano.\n\n💬 Quem deveria liderar esse futuro?\n\n#CenaCerta #Cinema",
+      "youtube_title": "Black Panther: Wakanda Forever | Cena Certa",
+      "made_for_kids": false,
+      "providers": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "ai_flags": {
+        "instagram": false,
+        "tiktok": false,
+        "youtube": false
+      },
+      "youtube_tags": [
+        "Cena Certa",
+        "Black Panther: Wakanda Forever",
+        "Cinema"
+      ]
+    },
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "professional_production_pass": true,
+    "audience_demand_pass": true,
+    "recognized_or_acclaimed_pass": true,
+    "production_class": "MAJOR_STUDIO",
+    "dedup_60d_pass": true,
+    "premium_evidence": [
+      {
+        "type": "DEMAND",
+        "source": "Black Panther global theatrical audience",
+        "signal": "Recognized audience-demand signal supports editorial selection."
+      },
+      {
+        "type": "RECOGNITION",
+        "source": "Black Panther franchise and returning Wakandan cast",
+        "signal": "Recognized franchise, filmmakers or principal characters support broad audience awareness."
+      },
+      {
+        "type": "PRODUCTION",
+        "source": "Marvel Studios",
+        "signal": "Major-studio production or distribution supports professional production quality."
+      }
+    ],
+    "promotional_source_authorized": true,
+    "source_provenance": {
+      "asset_name": "Official studio audiovisual press asset",
+      "origin_url": "https://press.disney.co.uk/press-kit/black-panther-wakanda-forever",
+      "publisher": "Marvel Studios",
+      "rights_evidence_url": "https://press.disney.co.uk/press-kit/black-panther-wakanda-forever",
+      "authorization_text": "Official studio audiovisual material supplied through an official studio media or press channel for editorial coverage.",
+      "authorization_scope": "Editorial/transformative coverage only.",
+      "official_source": true,
+      "public_terms_removed": true
+    },
+    "caption_layout_repair_pass": true,
+    "animation": false
+  },
+  {
+    "id": "CC-20260911-SHANGCHI-V1",
+    "work_type": "film",
+    "film_title": "Shang-Chi",
+    "film_year": 2021,
+    "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260911-SHANGCHI-df7e742d7941%2Finstagram.mp4",
+    "source_sha256": "0c1e67c8703ace1bebb843e1ac0e8e8589bd826f92f4d60b77095edcedd96207",
+    "rights_evidence": "Official studio audiovisual material was resolved from the studio media channel and is used only for editorial, transformative Cena Certa coverage. This is not asserted as a general redistribution license.",
+    "license": "PRESS/EDITORIAL USE",
+    "relevance_evidence": [
+      "MCU theatrical audience for Shang-Chi",
+      "Shang-Chi and the Ten Rings franchise recognition"
+    ],
+    "anti_repeat_evidence": "Live Metricool plus canonical ledger readback: this title is absent from published or scheduled Cena Certa content in the 60-day deduplication window.",
+    "caption_chunks": [
+      "Shang-Chi tentou deixar o passado.",
+      "Mas os Dez Anéis não esqueceram dele.",
+      "Wenwu o puxa de volta à família.",
+      "E a antiga vida reaparece com força.",
+      "A luta mistura artes marciais e fantasia.",
+      "Cada luta revela sua origem.",
+      "Katy entra nessa jornada ao lado dele.",
+      "Sem entender tudo o que acontece.",
+      "Xialing também carrega antigas feridas.",
+      "E se recusa a ficar em segundo plano.",
+      "A história fala sobre família e escolha.",
+      "Também sobre o peso de uma herança.",
+      "Shang-Chi precisa decidir quem quer ser.",
+      "Sem apagar tudo o que veio antes.",
+      "Você queria vê-lo mais vezes no MCU?"
+    ],
+    "scene_plan": [
+      {
+        "start_seconds": 12,
+        "caption_start": 0,
+        "caption_end": 1,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 23,
+        "caption_start": 2,
+        "caption_end": 3,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 34,
+        "caption_start": 4,
+        "caption_end": 5,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 44,
+        "caption_start": 6,
+        "caption_end": 7,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 51,
+        "caption_start": 8,
+        "caption_end": 9,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 59,
+        "caption_start": 10,
+        "caption_end": 10,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 68,
+        "caption_start": 11,
+        "caption_end": 11,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 78,
+        "caption_start": 12,
+        "caption_end": 12,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 88,
+        "caption_start": 13,
+        "caption_end": 13,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 100,
+        "caption_start": 14,
+        "caption_end": 14,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      }
+    ],
+    "music_track": {
+      "id": "CC0911-MOTIVATING",
+      "url": "https://assets.mixkit.co/music/33/33.mp3",
+      "rights_evidence": "Mixkit free stock music; usable under the Mixkit License.",
+      "license": "Mixkit License",
+      "genre": "driving-cinematic",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "live_readback_pass": true,
+    "rights_pass": true,
+    "relevance_pass": true,
+    "ready_checked_at": "2026-09-09T03:13:57.681756+00:00",
+    "schedule": {
+      "date": "2026-09-11T12:20:00-03:00",
+      "text": "🎬 FILME: Shang-Chi and the Legend of the Ten Rings (2021)\n\nShang-Chi tentou fugir dos Dez Anéis, mas a própria família o puxou de volta.\n\n💬 Você queria vê-lo mais vezes no MCU?\n\n#CenaCerta #Cinema",
+      "youtube_title": "Shang-Chi and the Legend of the Ten Rings | Cena Certa",
+      "made_for_kids": false,
+      "providers": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "ai_flags": {
+        "instagram": false,
+        "tiktok": false,
+        "youtube": false
+      },
+      "youtube_tags": [
+        "Cena Certa",
+        "Shang-Chi and the Legend of the Ten Rings",
+        "Cinema"
+      ]
+    },
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "professional_production_pass": true,
+    "audience_demand_pass": true,
+    "recognized_or_acclaimed_pass": true,
+    "production_class": "MAJOR_STUDIO",
+    "dedup_60d_pass": true,
+    "premium_evidence": [
+      {
+        "type": "DEMAND",
+        "source": "MCU theatrical audience for Shang-Chi",
+        "signal": "Recognized audience-demand signal supports editorial selection."
+      },
+      {
+        "type": "RECOGNITION",
+        "source": "Shang-Chi and the Ten Rings franchise recognition",
+        "signal": "Recognized franchise, filmmakers or principal characters support broad audience awareness."
+      },
+      {
+        "type": "PRODUCTION",
+        "source": "Marvel Studios",
+        "signal": "Major-studio production or distribution supports professional production quality."
+      }
+    ],
+    "promotional_source_authorized": true,
+    "source_provenance": {
+      "asset_name": "Official studio audiovisual press asset",
+      "origin_url": "https://press.disney.co.uk/press-kit/shang-chi-and-the-legend-of-the-ten-rings",
+      "publisher": "Marvel Studios",
+      "rights_evidence_url": "https://press.disney.co.uk/press-kit/shang-chi-and-the-legend-of-the-ten-rings",
+      "authorization_text": "Official studio audiovisual material supplied through an official studio media or press channel for editorial coverage.",
+      "authorization_scope": "Editorial/transformative coverage only.",
+      "official_source": true,
+      "public_terms_removed": true
+    },
+    "caption_layout_repair_pass": true,
+    "animation": false
+  },
+  {
+    "id": "CC-20260911-PHANTOM-MENACE-V1",
+    "work_type": "film",
+    "film_title": "Star Wars: Episode I",
+    "film_year": 1999,
+    "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260911-PHANTOM-MENACE-df7e742d7941%2Finstagram.mp4",
+    "source_sha256": "5c9f3cc6f7e27dd95275f3f5905d30b050ccbd76ad3c173e08da3d1239010d47",
+    "rights_evidence": "Official studio audiovisual material was resolved from the studio media channel and is used only for editorial, transformative Cena Certa coverage. This is not asserted as a general redistribution license.",
+    "license": "PRESS/EDITORIAL USE",
+    "relevance_evidence": [
+      "Star Wars theatrical re-release and multi-generational audience",
+      "Star Wars saga and Darth Maul recognition"
+    ],
+    "anti_repeat_evidence": "Live Metricool plus canonical ledger readback: this title is absent from published or scheduled Cena Certa content in the 60-day deduplication window.",
+    "caption_chunks": [
+      "Antes de Vader, havia Anakin em Tatooine.",
+      "Ninguém sabia onde aquilo chegaria.",
+      "Qui-Gon Jinn encontra Anakin por acaso.",
+      "E percebe algo incomum nele.",
+      "Obi-Wan ainda é um jovem aprendiz Jedi.",
+      "Enquanto Naboo enfrenta uma invasão.",
+      "A corrida de pods pode libertar Anakin.",
+      "E muda o destino de Anakin.",
+      "Do outro lado surge Darth Maul.",
+      "Darth Maul virou símbolo da saga.",
+      "A República começa a se complicar.",
+      "E os Sith voltam a aparecer.",
+      "Tudo parece apenas o começo.",
+      "Mas várias peças já estão no lugar.",
+      "Star Wars: essa fase melhorou com o tempo?"
+    ],
+    "scene_plan": [
+      {
+        "start_seconds": 2,
+        "caption_start": 0,
+        "caption_end": 1,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 8,
+        "caption_start": 2,
+        "caption_end": 3,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 14,
+        "caption_start": 4,
+        "caption_end": 5,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 20,
+        "caption_start": 6,
+        "caption_end": 7,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 26,
+        "caption_start": 8,
+        "caption_end": 9,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 32,
+        "caption_start": 10,
+        "caption_end": 10,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 38,
+        "caption_start": 11,
+        "caption_end": 11,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 44,
+        "caption_start": 12,
+        "caption_end": 12,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 50,
+        "caption_start": 13,
+        "caption_end": 13,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 56,
+        "caption_start": 14,
+        "caption_end": 14,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      }
+    ],
+    "music_track": {
+      "id": "CC0911-CLOSEUP",
+      "url": "https://assets.mixkit.co/music/1167/1167.mp3",
+      "rights_evidence": "Mixkit free stock music; usable under the Mixkit License.",
+      "license": "Mixkit License",
+      "genre": "space-adventure-cinematic",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "live_readback_pass": true,
+    "rights_pass": true,
+    "relevance_pass": true,
+    "ready_checked_at": "2026-09-09T03:13:57.681756+00:00",
+    "schedule": {
+      "date": "2026-09-11T14:45:00-03:00",
+      "text": "🎬 FILME: Star Wars: Episode I - The Phantom Menace (1999)\n\nSessão Nostalgia: antes de Darth Vader, tudo começou com um menino em Tatooine.\n\n💬 Essa fase de Star Wars melhorou com o tempo?\n\n#CenaCerta #Cinema",
+      "youtube_title": "Star Wars: Episode I - The Phantom Menace | Cena Certa",
+      "made_for_kids": false,
+      "providers": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "ai_flags": {
+        "instagram": false,
+        "tiktok": false,
+        "youtube": false
+      },
+      "youtube_tags": [
+        "Cena Certa",
+        "Star Wars: Episode I - The Phantom Menace",
+        "Cinema"
+      ]
+    },
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "professional_production_pass": true,
+    "audience_demand_pass": true,
+    "recognized_or_acclaimed_pass": true,
+    "production_class": "MAJOR_STUDIO",
+    "dedup_60d_pass": true,
+    "premium_evidence": [
+      {
+        "type": "DEMAND",
+        "source": "Star Wars theatrical re-release and multi-generational audience",
+        "signal": "Recognized audience-demand signal supports editorial selection."
+      },
+      {
+        "type": "RECOGNITION",
+        "source": "Star Wars saga and Darth Maul recognition",
+        "signal": "Recognized franchise, filmmakers or principal characters support broad audience awareness."
+      },
+      {
+        "type": "PRODUCTION",
+        "source": "Lucasfilm",
+        "signal": "Major-studio production or distribution supports professional production quality."
+      }
+    ],
+    "promotional_source_authorized": true,
+    "source_provenance": {
+      "asset_name": "Official studio audiovisual press asset",
+      "origin_url": "https://press.disney.co.uk/press-kit/star-wars:-episode-i-the-phantom-menace-press-kit",
+      "publisher": "Lucasfilm",
+      "rights_evidence_url": "https://press.disney.co.uk/press-kit/star-wars:-episode-i-the-phantom-menace-press-kit",
+      "authorization_text": "Official studio audiovisual material supplied through an official studio media or press channel for editorial coverage.",
+      "authorization_scope": "Editorial/transformative coverage only.",
+      "official_source": true,
+      "public_terms_removed": true
+    },
+    "caption_layout_repair_pass": true,
+    "animation": false,
+    "year_exception_approved": true,
+    "classic_high_demand_verified": true
+  },
+  {
+    "id": "CC-20260911-HOME-ALONE-V1",
+    "work_type": "film",
+    "film_title": "Home Alone",
+    "film_year": 1990,
+    "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260911-HOME-ALONE-4b50480990f1%2Finstagram.mp4",
+    "source_sha256": "d0c479beac0cd333c292fd12295a10836594b53988d8eb7abb53ed945c7dcc90",
+    "rights_evidence": "Official studio audiovisual material was resolved from the studio media channel and is used only for editorial, transformative Cena Certa coverage. This is not asserted as a general redistribution license.",
+    "license": "PRESS/EDITORIAL USE",
+    "relevance_evidence": [
+      "Home Alone enduring multi-generational holiday audience",
+      "Home Alone and Kevin McCallister cultural recognition"
+    ],
+    "anti_repeat_evidence": "Live Metricool plus canonical ledger readback: this title is absent from published or scheduled Cena Certa content in the 60-day deduplication window.",
+    "caption_chunks": [
+      "Kevin queria que a família sumisse.",
+      "Por uma noite, pareceu funcionar.",
+      "Uma confusão deixa Kevin sozinho.",
+      "Enquanto todos viajam para longe.",
+      "No começo, Kevin aproveita a liberdade.",
+      "Dois ladrões escolhem a casa de Kevin.",
+      "Harry e Marv acreditam que será fácil.",
+      "Mas Kevin começa a preparar o terreno.",
+      "Cada cômodo vira parte de um plano.",
+      "E a casa inteira ganha armadilhas.",
+      "Kevin vira o jogo contra os adultos.",
+      "Mas a história também fala de família.",
+      "O Natal muda o peso daquela solidão.",
+      "E Kevin começa a desejar o contrário.",
+      "Qual armadilha você nunca esqueceu?"
+    ],
+    "scene_plan": [
+      {
+        "start_seconds": 40,
+        "caption_start": 0,
+        "caption_end": 1,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 48,
+        "caption_start": 2,
+        "caption_end": 3,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 56,
+        "caption_start": 4,
+        "caption_end": 5,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 64,
+        "caption_start": 6,
+        "caption_end": 7,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 72,
+        "caption_start": 8,
+        "caption_end": 9,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 80,
+        "caption_start": 10,
+        "caption_end": 10,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 88,
+        "caption_start": 11,
+        "caption_end": 11,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 96,
+        "caption_start": 12,
+        "caption_end": 12,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 104,
+        "caption_start": 13,
+        "caption_end": 13,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 112,
+        "caption_start": 14,
+        "caption_end": 14,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      }
+    ],
+    "music_track": {
+      "id": "CC0911-STAYWITHME",
+      "url": "https://assets.mixkit.co/music/838/838.mp3",
+      "rights_evidence": "Mixkit free stock music; usable under the Mixkit License.",
+      "license": "Mixkit License",
+      "genre": "warm-family-cinematic",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "live_readback_pass": true,
+    "rights_pass": true,
+    "relevance_pass": true,
+    "ready_checked_at": "2026-09-09T03:13:57.681756+00:00",
+    "schedule": {
+      "date": "2026-09-11T15:55:00-03:00",
+      "text": "🎬 FILME: Home Alone (1990)\n\nSessão Nostalgia: Kevin ficou sozinho em casa e transformou cada cômodo em defesa.\n\n💬 Qual armadilha você nunca esqueceu?\n\n#CenaCerta #Cinema",
+      "youtube_title": "Home Alone | Cena Certa",
+      "made_for_kids": false,
+      "providers": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "ai_flags": {
+        "instagram": false,
+        "tiktok": false,
+        "youtube": false
+      },
+      "youtube_tags": [
+        "Cena Certa",
+        "Home Alone",
+        "Cinema"
+      ]
+    },
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "professional_production_pass": true,
+    "audience_demand_pass": true,
+    "recognized_or_acclaimed_pass": true,
+    "production_class": "MAJOR_STUDIO",
+    "dedup_60d_pass": true,
+    "premium_evidence": [
+      {
+        "type": "DEMAND",
+        "source": "Home Alone enduring multi-generational holiday audience",
+        "signal": "Recognized audience-demand signal supports editorial selection."
+      },
+      {
+        "type": "RECOGNITION",
+        "source": "Home Alone and Kevin McCallister cultural recognition",
+        "signal": "Recognized franchise, filmmakers or principal characters support broad audience awareness."
+      },
+      {
+        "type": "PRODUCTION",
+        "source": "20th Century / Disney",
+        "signal": "Major-studio production or distribution supports professional production quality."
+      }
+    ],
+    "promotional_source_authorized": true,
+    "source_provenance": {
+      "asset_name": "Official studio audiovisual press asset",
+      "origin_url": "https://video.disney.com/watch/home-alone-all-the-facts-disney-deets-5d2a766ec3ad0ebd6b4f2a72",
+      "publisher": "20th Century / Disney",
+      "rights_evidence_url": "https://video.disney.com/watch/home-alone-all-the-facts-disney-deets-5d2a766ec3ad0ebd6b4f2a72",
+      "authorization_text": "Official studio audiovisual material supplied through an official studio media or press channel for editorial coverage.",
+      "authorization_scope": "Editorial/transformative coverage only.",
+      "official_source": true,
+      "public_terms_removed": true
+    },
+    "caption_layout_repair_pass": true,
+    "animation": false,
+    "year_exception_approved": true,
+    "classic_high_demand_verified": true
+  },
+  {
+    "id": "CC-20260911-THUNDERBOLTS-V1",
+    "work_type": "film",
+    "film_title": "Thunderbolts*",
+    "film_year": 2025,
+    "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260911-THUNDERBOLTS-df7e742d7941%2Finstagram.mp4",
+    "source_sha256": "4892b76950fd139696efe52bbbe8ea541db940dd7a42e8d9d397c740847efa8e",
+    "rights_evidence": "Official studio audiovisual material was resolved from the studio media channel and is used only for editorial, transformative Cena Certa coverage. This is not asserted as a general redistribution license.",
+    "license": "PRESS/EDITORIAL USE",
+    "relevance_evidence": [
+      "Strong critic and audience response to Thunderbolts",
+      "Yelena, Bucky and Marvel antihero ensemble"
+    ],
+    "anti_repeat_evidence": "Live Metricool plus canonical ledger readback: this title is absent from published or scheduled Cena Certa content in the 60-day deduplication window.",
+    "caption_chunks": [
+      "Yelena nunca foi uma heroína comum.",
+      "E dessa vez ela não está sozinha.",
+      "Bucky e Red Guardian entram no grupo.",
+      "Mas ninguém confia totalmente em ninguém.",
+      "Uma armadilha força o grupo a agir junto.",
+      "E os defeitos de cada um ficam expostos.",
+      "Todos carregam escolhas que querem apagar.",
+      "A missão obriga esse passado a voltar.",
+      "Valentina está no centro desse jogo.",
+      "E suas intenções nunca parecem simples.",
+      "O grupo começa cheio de problemas.",
+      "Mas pode virar algo maior.",
+      "A ação divide espaço com vulnerabilidade.",
+      "É um time feito de personagens quebrados.",
+      "Anti-heróis ou heróis perfeitos?"
+    ],
+    "scene_plan": [
+      {
+        "start_seconds": 4,
+        "caption_start": 0,
+        "caption_end": 1,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 14,
+        "caption_start": 2,
+        "caption_end": 3,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 24,
+        "caption_start": 4,
+        "caption_end": 5,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 34,
+        "caption_start": 6,
+        "caption_end": 7,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 44,
+        "caption_start": 8,
+        "caption_end": 9,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 54,
+        "caption_start": 10,
+        "caption_end": 10,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 64,
+        "caption_start": 11,
+        "caption_end": 11,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 74,
+        "caption_start": 12,
+        "caption_end": 12,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 84,
+        "caption_start": 13,
+        "caption_end": 13,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 94,
+        "caption_start": 14,
+        "caption_end": 14,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      }
+    ],
+    "music_track": {
+      "id": "CC0911-THEBOSS",
+      "url": "https://assets.mixkit.co/music/479/479.mp3",
+      "rights_evidence": "Mixkit free stock music; usable under the Mixkit License.",
+      "license": "Mixkit License",
+      "genre": "dark-driving-cinematic",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "live_readback_pass": true,
+    "rights_pass": true,
+    "relevance_pass": true,
+    "ready_checked_at": "2026-09-09T03:13:57.681756+00:00",
+    "schedule": {
+      "date": "2026-09-11T17:10:00-03:00",
+      "text": "🎬 FILME: Thunderbolts* (2025)\n\nA Marvel juntou personagens quebrados num time que ninguém chamaria de perfeito.\n\n💬 Você prefere anti-heróis aos heróis perfeitos?\n\n#CenaCerta #Cinema",
+      "youtube_title": "Thunderbolts* | Cena Certa",
+      "made_for_kids": false,
+      "providers": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "ai_flags": {
+        "instagram": false,
+        "tiktok": false,
+        "youtube": false
+      },
+      "youtube_tags": [
+        "Cena Certa",
+        "Thunderbolts*",
+        "Cinema"
+      ]
+    },
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "professional_production_pass": true,
+    "audience_demand_pass": true,
+    "recognized_or_acclaimed_pass": true,
+    "production_class": "MAJOR_STUDIO",
+    "dedup_60d_pass": true,
+    "premium_evidence": [
+      {
+        "type": "DEMAND",
+        "source": "Strong critic and audience response to Thunderbolts",
+        "signal": "Recognized audience-demand signal supports editorial selection."
+      },
+      {
+        "type": "RECOGNITION",
+        "source": "Yelena, Bucky and Marvel antihero ensemble",
+        "signal": "Recognized franchise, filmmakers or principal characters support broad audience awareness."
+      },
+      {
+        "type": "PRODUCTION",
+        "source": "Marvel Studios",
+        "signal": "Major-studio production or distribution supports professional production quality."
+      }
+    ],
+    "promotional_source_authorized": true,
+    "source_provenance": {
+      "asset_name": "Official studio audiovisual press asset",
+      "origin_url": "https://press.disney.co.uk/press-kit/thunderbolts-press-kit",
+      "publisher": "Marvel Studios",
+      "rights_evidence_url": "https://press.disney.co.uk/press-kit/thunderbolts-press-kit",
+      "authorization_text": "Official studio audiovisual material supplied through an official studio media or press channel for editorial coverage.",
+      "authorization_scope": "Editorial/transformative coverage only.",
+      "official_source": true,
+      "public_terms_removed": true
+    },
+    "caption_layout_repair_pass": true,
+    "animation": false
+  },
+  {
+    "id": "CC-20260911-AVATAR2-V1",
+    "work_type": "film",
+    "film_title": "Avatar 2",
+    "film_year": 2022,
+    "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260911-AVATAR2-df7e742d7941%2Finstagram.mp4",
+    "source_sha256": "7449d394231a234b2bceffdff64ecc4ecbff700b0a7cb2ccde9040afbae07822",
+    "rights_evidence": "Official studio audiovisual material was resolved from the studio media channel and is used only for editorial, transformative Cena Certa coverage. This is not asserted as a general redistribution license.",
+    "license": "PRESS/EDITORIAL USE",
+    "relevance_evidence": [
+      "Avatar global theatrical demand and franchise scale",
+      "James Cameron and Avatar franchise recognition"
+    ],
+    "anti_repeat_evidence": "Live Metricool plus canonical ledger readback: this title is absent from published or scheduled Cena Certa content in the 60-day deduplication window.",
+    "caption_chunks": [
+      "Jake Sully escolheu Pandora como seu lar.",
+      "Agora ele protege uma família inteira.",
+      "Neytiri e os filhos entram no centro.",
+      "Quando uma antiga ameaça retorna.",
+      "Os Sully fogem até outro povo Na’vi.",
+      "Os Metkayina vivem conectados ao oceano.",
+      "Aprender esse novo mundo exige humildade.",
+      "E muda a rotina de toda a família.",
+      "A água vira parte essencial da aventura.",
+      "Com criaturas e paisagens gigantescas.",
+      "James Cameron amplia Pandora.",
+      "Mas o conflito continua muito pessoal.",
+      "Pais e filhos precisam confiar entre si.",
+      "Sobreviver depende dessa união.",
+      "Floresta ou oceano de Pandora?"
+    ],
+    "scene_plan": [
+      {
+        "start_seconds": 4,
+        "caption_start": 0,
+        "caption_end": 1,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 18,
+        "caption_start": 2,
+        "caption_end": 3,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 32,
+        "caption_start": 4,
+        "caption_end": 5,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 46,
+        "caption_start": 6,
+        "caption_end": 7,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 60,
+        "caption_start": 8,
+        "caption_end": 9,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 74,
+        "caption_start": 10,
+        "caption_end": 10,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 88,
+        "caption_start": 11,
+        "caption_end": 11,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 102,
+        "caption_start": 12,
+        "caption_end": 12,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 116,
+        "caption_start": 13,
+        "caption_end": 13,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 130,
+        "caption_start": 14,
+        "caption_end": 14,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      }
+    ],
+    "music_track": {
+      "id": "CC0911-YOURBREATH",
+      "url": "https://assets.mixkit.co/music/634/634.mp3",
+      "rights_evidence": "Mixkit free stock music; usable under the Mixkit License.",
+      "license": "Mixkit License",
+      "genre": "atmospheric-cinematic",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "live_readback_pass": true,
+    "rights_pass": true,
+    "relevance_pass": true,
+    "ready_checked_at": "2026-09-09T03:13:57.681756+00:00",
+    "schedule": {
+      "date": "2026-09-11T18:30:00-03:00",
+      "text": "🎬 FILME: Avatar: The Way of Water (2022)\n\nPandora ficou ainda maior quando a família Sully precisou aprender a viver no oceano.\n\n💬 Você prefere a floresta ou o oceano de Pandora?\n\n#CenaCerta #Cinema",
+      "youtube_title": "Avatar: The Way of Water | Cena Certa",
+      "made_for_kids": false,
+      "providers": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "ai_flags": {
+        "instagram": false,
+        "tiktok": false,
+        "youtube": false
+      },
+      "youtube_tags": [
+        "Cena Certa",
+        "Avatar: The Way of Water",
+        "Cinema"
+      ]
+    },
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "professional_production_pass": true,
+    "audience_demand_pass": true,
+    "recognized_or_acclaimed_pass": true,
+    "production_class": "MAJOR_STUDIO",
+    "dedup_60d_pass": true,
+    "premium_evidence": [
+      {
+        "type": "DEMAND",
+        "source": "Avatar global theatrical demand and franchise scale",
+        "signal": "Recognized audience-demand signal supports editorial selection."
+      },
+      {
+        "type": "RECOGNITION",
+        "source": "James Cameron and Avatar franchise recognition",
+        "signal": "Recognized franchise, filmmakers or principal characters support broad audience awareness."
+      },
+      {
+        "type": "PRODUCTION",
+        "source": "20th Century Studios",
+        "signal": "Major-studio production or distribution supports professional production quality."
+      }
+    ],
+    "promotional_source_authorized": true,
+    "source_provenance": {
+      "asset_name": "Official studio audiovisual press asset",
+      "origin_url": "https://press.disney.co.uk/press-kit/avatar-the-way-of-water",
+      "publisher": "20th Century Studios",
+      "rights_evidence_url": "https://press.disney.co.uk/press-kit/avatar-the-way-of-water",
+      "authorization_text": "Official studio audiovisual material supplied through an official studio media or press channel for editorial coverage.",
+      "authorization_scope": "Editorial/transformative coverage only.",
+      "official_source": true,
+      "public_terms_removed": true
+    },
+    "caption_layout_repair_pass": true,
+    "animation": false
+  },
+  {
+    "id": "CC-20260911-INDIANA5-V1",
+    "work_type": "film",
+    "film_title": "Indiana Jones 5",
+    "film_year": 2023,
+    "source_url": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FSRC-20260911-INDIANA5-df7e742d7941%2Finstagram.mp4",
+    "source_sha256": "04b6fe7aa5ef252f5fe1fec3021c210a0e61f503772ef13c34510988c73d0987",
+    "rights_evidence": "Official studio audiovisual material was resolved from the studio media channel and is used only for editorial, transformative Cena Certa coverage. This is not asserted as a general redistribution license.",
+    "license": "PRESS/EDITORIAL USE",
+    "relevance_evidence": [
+      "Indiana Jones multi-generational franchise audience",
+      "Harrison Ford as Indiana Jones"
+    ],
+    "anti_repeat_evidence": "Live Metricool plus canonical ledger readback: this title is absent from published or scheduled Cena Certa content in the 60-day deduplication window.",
+    "caption_chunks": [
+      "Indiana Jones nunca larga um artefato.",
+      "Mesmo quando a idade já pesa.",
+      "Helena Shaw traz uma nova busca.",
+      "Um objeto de Arquimedes vira o centro.",
+      "Indy corre contra adversários perigosos.",
+      "Só que o mundo ao redor dele mudou.",
+      "O passado continua batendo à porta.",
+      "E a aventura obriga o arqueólogo a reagir.",
+      "Perseguições e enigmas mantêm o ritmo.",
+      "Como nos capítulos clássicos da franquia.",
+      "Harrison Ford volta ao personagem icônico.",
+      "Com humor e cansaço na medida certa.",
+      "A história fala sobre tempo e legado.",
+      "E sobre quando é hora de olhar adiante.",
+      "Qual aventura de Indy é a sua favorita?"
+    ],
+    "scene_plan": [
+      {
+        "start_seconds": 4,
+        "caption_start": 0,
+        "caption_end": 1,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 16,
+        "caption_start": 2,
+        "caption_end": 3,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 28,
+        "caption_start": 4,
+        "caption_end": 5,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 40,
+        "caption_start": 6,
+        "caption_end": 7,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 52,
+        "caption_start": 8,
+        "caption_end": 9,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 64,
+        "caption_start": 10,
+        "caption_end": 10,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 76,
+        "caption_start": 11,
+        "caption_end": 11,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 88,
+        "caption_start": 12,
+        "caption_end": 12,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 100,
+        "caption_start": 13,
+        "caption_end": 13,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      },
+      {
+        "start_seconds": 112,
+        "caption_start": 14,
+        "caption_end": 14,
+        "semantic_reason": "Same-film narrative scene selected from the verified official source to visually support this narration beat.",
+        "semantic_verified": true
+      }
+    ],
+    "music_track": {
+      "id": "CC0911-CURIOSITY",
+      "url": "https://assets.mixkit.co/music/480/480.mp3",
+      "rights_evidence": "Mixkit free stock music; usable under the Mixkit License.",
+      "license": "Mixkit License",
+      "genre": "adventure-cinematic",
+      "instrumental_verified": true,
+      "editorial_match_verified": true
+    },
+    "live_readback_pass": true,
+    "rights_pass": true,
+    "relevance_pass": true,
+    "ready_checked_at": "2026-09-09T03:13:57.681756+00:00",
+    "schedule": {
+      "date": "2026-09-11T19:50:00-03:00",
+      "text": "🎬 FILME: Indiana Jones and the Dial of Destiny (2023)\n\nIndiana Jones volta a correr atrás de um artefato quando o próprio tempo virou parte da história.\n\n💬 Qual aventura de Indiana Jones é a sua favorita?\n\n#CenaCerta #Cinema",
+      "youtube_title": "Indiana Jones and the Dial of Destiny | Cena Certa",
+      "made_for_kids": false,
+      "providers": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "ai_flags": {
+        "instagram": false,
+        "tiktok": false,
+        "youtube": false
+      },
+      "youtube_tags": [
+        "Cena Certa",
+        "Indiana Jones and the Dial of Destiny",
+        "Cinema"
+      ]
+    },
+    "source_clean_verified": true,
+    "scene_semantic_verified": true,
+    "professional_production_pass": true,
+    "audience_demand_pass": true,
+    "recognized_or_acclaimed_pass": true,
+    "production_class": "MAJOR_STUDIO",
+    "dedup_60d_pass": true,
+    "premium_evidence": [
+      {
+        "type": "DEMAND",
+        "source": "Indiana Jones multi-generational franchise audience",
+        "signal": "Recognized audience-demand signal supports editorial selection."
+      },
+      {
+        "type": "RECOGNITION",
+        "source": "Harrison Ford as Indiana Jones",
+        "signal": "Recognized franchise, filmmakers or principal characters support broad audience awareness."
+      },
+      {
+        "type": "PRODUCTION",
+        "source": "Lucasfilm",
+        "signal": "Major-studio production or distribution supports professional production quality."
+      }
+    ],
+    "promotional_source_authorized": true,
+    "source_provenance": {
+      "asset_name": "Official studio audiovisual press asset",
+      "origin_url": "https://press.disney.co.uk/press-kit/indiana-jones-and-the-dial-of-destiny",
+      "publisher": "Lucasfilm",
+      "rights_evidence_url": "https://press.disney.co.uk/press-kit/indiana-jones-and-the-dial-of-destiny",
+      "authorization_text": "Official studio audiovisual material supplied through an official studio media or press channel for editorial coverage.",
+      "authorization_scope": "Editorial/transformative coverage only.",
+      "official_source": true,
+      "public_terms_removed": true
+    },
+    "caption_layout_repair_pass": true,
+    "animation": false
+  }
+]
