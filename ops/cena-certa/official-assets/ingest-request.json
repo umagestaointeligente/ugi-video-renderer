@@ -3,31 +3,13 @@
   "target_date": "2026-09-11",
   "items": [
     {
-      "id": "SRC-20260911-A-NEW-HOPE",
-      "title": "Star Wars: Episode IV - A New Hope",
-      "source_url": "https://video.disney.com/watch/a-new-hope-star-wars-the-digital-movie-collection-512da74c219284c3cb2e7a69",
+      "id": "SRC-20260911-HOME-ALONE",
+      "title": "Home Alone",
+      "source_url": "https://video.disney.com/watch/home-alone-all-the-facts-disney-deets-5d2a766ec3ad0ebd6b4f2a72",
       "rights_pass": true,
-      "rights_evidence": "Lucasfilm / Disney UK Press has current 2026 editorial coverage for Star Wars: A New Hope ahead of its 50th anniversary, and the audiovisual source is the matching official Disney Video studio page. Use is restricted to the Cena Certa editorial/transformative coverage context; this does not assert a general redistribution license.",
+      "rights_evidence": "Disney publishes the Home Alone audiovisual feature through its official Disney Video / Disney+ editorial channel and includes Home Alone in its official cross-generational Disney+ storytelling campaign. Use is restricted to the Cena Certa editorial/transformative coverage context; this does not assert a general redistribution license.",
       "fallback_urls": [],
-      "resolver_revision": 11
-    },
-    {
-      "id": "SRC-20260911-ALIEN-ROMULUS-RESERVE",
-      "title": "Alien: Romulus",
-      "source_url": "https://youtu.be/TSWXIzu51so",
-      "rights_pass": true,
-      "rights_evidence": "20th Century Studios / Disney UK Press publishes the official film press kit and states the new audiovisual material and poster are available now, linking this studio trailer for press/editorial coverage; official image gallery is marked Editorial use only.",
-      "fallback_urls": [],
-      "resolver_revision": 11
-    },
-    {
-      "id": "SRC-20260911-THE-CREATOR-RESERVE",
-      "title": "The Creator",
-      "source_url": "https://youtu.be/go4dkOkze6U",
-      "rights_pass": true,
-      "rights_evidence": "20th Century Studios / Disney UK Press states that the new audiovisual material and stills for The Creator are available now and links this official studio source for press/editorial coverage.",
-      "fallback_urls": [],
-      "resolver_revision": 11
+      "resolver_revision": 12
     }
   ]
 }
