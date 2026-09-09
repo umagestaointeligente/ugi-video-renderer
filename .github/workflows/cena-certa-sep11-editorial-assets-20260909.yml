@@ -107,6 +107,8 @@ jobs:
           test -n "$UGI_VIDEO_UPLOAD_KEY"
           command -v ffmpeg >/dev/null
           command -v ffprobe >/dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends fonts-dejavu-core >/dev/null
           test -f /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
       - name: Render original vertical discussion card
         run: |
@@ -115,8 +117,11 @@ jobs:
           printf '%s\n' "$EYEBROW" > txt/eyebrow.txt
           printf '%s\n%s\n' "$TITLE1" "$TITLE2" > txt/title.txt
           printf '%s\n%s\n' "$BODY1" "$BODY2" > txt/body.txt
-          printf '%s\n' "$QUESTION" > txt/question.txt
-          printf '%s\n' "$SOURCE" > txt/source.txt
+          python - <<'PY'
+          import os,textwrap,pathlib
+          pathlib.Path('txt/question.txt').write_text('\n'.join(textwrap.wrap(os.environ['QUESTION'],38)),encoding='utf-8')
+          pathlib.Path('txt/source.txt').write_text(os.environ['SOURCE']+'\n',encoding='utf-8')
+          PY
           case "$THEME" in
             stars) BG='0x07111f'; ACCENT='0xd7b55b';;
             water) BG='0x061b29'; ACCENT='0x78c7df';;
@@ -126,7 +131,7 @@ jobs:
           esac
           FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
           REG=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
-          FILTER="noise=alls=7:allf=t+u,drawbox=x=70:y=110:w=940:h=5:color=${ACCENT}:t=fill,drawbox=x=70:y=1490:w=940:h=260:color=black@0.28:t=fill,drawtext=fontfile=${FONT}:textfile=txt/eyebrow.txt:fontcolor=${ACCENT}:fontsize=34:x=70:y=155,drawtext=fontfile=${FONT}:textfile=txt/title.txt:fontcolor=white:fontsize=64:line_spacing=18:x=70:y=310,drawtext=fontfile=${REG}:textfile=txt/body.txt:fontcolor=white@0.92:fontsize=38:line_spacing=18:x=70:y=700,drawtext=fontfile=${FONT}:textfile=txt/question.txt:fontcolor=white:fontsize=38:x=70:y=1535,drawtext=fontfile=${REG}:textfile=txt/source.txt:fontcolor=white@0.60:fontsize=23:x=70:y=1810,drawtext=fontfile=${FONT}:text='CENA CERTA':fontcolor=white@0.88:fontsize=28:x=w-tw-70:y=155"
+          FILTER="noise=alls=7:allf=t+u,drawbox=x=70:y=110:w=940:h=5:color=${ACCENT}:t=fill,drawbox=x=70:y=1460:w=940:h=300:color=black@0.28:t=fill,drawtext=fontfile=${FONT}:textfile=txt/eyebrow.txt:fontcolor=${ACCENT}:fontsize=34:x=70:y=155,drawtext=fontfile=${FONT}:textfile=txt/title.txt:fontcolor=white:fontsize=64:line_spacing=18:x=70:y=310,drawtext=fontfile=${REG}:textfile=txt/body.txt:fontcolor=white@0.92:fontsize=38:line_spacing=18:x=70:y=700,drawtext=fontfile=${FONT}:textfile=txt/question.txt:fontcolor=white:fontsize=34:line_spacing=12:x=70:y=1510,drawtext=fontfile=${REG}:textfile=txt/source.txt:fontcolor=white@0.60:fontsize=23:x=70:y=1810,drawtext=fontfile=${FONT}:text='CENA CERTA':fontcolor=white@0.88:fontsize=28:x=w-tw-70:y=155"
           ffmpeg -hide_banner -loglevel error -y \
             -f lavfi -i "color=c=${BG}:s=1080x1920:r=30:d=8" \
             -vf "$FILTER,fade=t=in:st=0:d=0.35,fade=t=out:st=7.55:d=0.45,format=yuv420p" \
