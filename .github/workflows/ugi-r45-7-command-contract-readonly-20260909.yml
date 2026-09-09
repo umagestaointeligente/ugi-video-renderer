@@ -1,0 +1,50 @@
+name: UGI R45.7 Command Contract Probe 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-7-command-contract-readonly-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Probe POST command validation with empty payload only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          code=$(curl --silent --show-error --location --max-time 30 \
+            -A 'UGI-GitHub-Actions/1.0' \
+            -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" \
+            -H 'accept: application/json' \
+            -H 'content-type: application/json' \
+            --data-binary '{}' \
+            --output command-contract.json --write-out '%{http_code}' \
+            "$WORKER_URL/api/command")
+          echo "HTTP=$code"
+          python - <<'PY'
+          import json
+          p=json.load(open('command-contract.json'))
+          safe={k:p.get(k) for k in ('ok','error','version','allowedTypes','required','message') if k in p}
+          safe['topKeys']=sorted(p.keys())
+          print(json.dumps(safe,ensure_ascii=False,indent=2))
+          if p.get('ok') is True:
+            raise SystemExit('UNEXPECTED_COMMAND_CREATION_ON_EMPTY_PAYLOAD')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-r45-7-command-contract-${{ github.run_id }}
+          path: command-contract.json
+          retention-days: 3
