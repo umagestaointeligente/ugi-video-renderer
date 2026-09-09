@@ -3,8 +3,8 @@
 
 This module does not replace the renderer. It is the mandatory policy gate that
 resolves VSA canon, validates channel/account isolation, enforces the 60-day
-semantic topic ledger and emits a canonical render/publish plan before
-downstream production or scheduling.
+semantic topic ledger, validates the thematic instrumental-music contract and
+emits a canonical render/publish plan before downstream production or scheduling.
 """
 from __future__ import annotations
 import argparse, json, sys
@@ -66,6 +66,7 @@ def canonical_plan(contract, guardrails):
         "project": contract["project_lock"]["project"],
         "channel": contract["project_lock"]["channel_name"],
         "format": contract["format"],
+        "music_policy": contract["music_policy"],
         "visual_sequence": contract["visual_grammar"]["preferred_sequence"],
         "mask_apply_stage": contract["mask"]["apply_stage"],
         "fixed_assets": asset_fingerprint(contract),
@@ -134,6 +135,41 @@ def assert_topic_history(job, guardrails):
     _parse_local_date(str(job["new_event_date"]), "new_event_date")
     return {"classification": "BREAKING_EXCEPTION", "collisions": collisions}
 
+def assert_music_policy(job, contract):
+    policy = contract.get("music_policy") or {}
+    if policy.get("status") != "HARD_GATE" or policy.get("required") is not True:
+        raise GateError("CANONICAL_MUSIC_POLICY_MISSING_OR_DISABLED")
+
+    metadata_fields = ["music_track_title", "music_artist_or_composer", "music_source", "music_license_or_usage_basis", "music_editorial_class"]
+    missing_metadata = [k for k in metadata_fields if not str(job.get(k) or "").strip()]
+    if missing_metadata:
+        raise GateError("MUSIC_METADATA_MISSING:" + ",".join(missing_metadata))
+
+    required_gates = [
+        "music_composition_gate",
+        "music_theme_match_gate",
+        "music_audibility_gate",
+        "music_no_tone_or_game_style_gate",
+        "music_rights_gate",
+    ]
+    failed = [k for k in required_gates if job.get(k) != "PASS"]
+    if failed:
+        raise GateError("MUSIC_GATE_NOT_PASS:" + ",".join(failed))
+
+    forbidden_form = str(job.get("music_form") or "").strip().lower()
+    forbidden = {str(x).strip().lower() for x in policy.get("forbidden_music_forms", [])}
+    if forbidden_form and forbidden_form in forbidden:
+        raise GateError(f"FORBIDDEN_MUSIC_FORM:{forbidden_form}")
+
+    if job.get("music_has_vocals") is True:
+        raise GateError("MUSIC_VOCALS_FORBIDDEN")
+
+    return {
+        "track_title": job["music_track_title"],
+        "artist_or_composer": job["music_artist_or_composer"],
+        "editorial_class": job["music_editorial_class"],
+    }
+
 def preflight(args):
     current = load_json(CURRENT)
     contract = load_json(CONTRACT)
@@ -169,12 +205,16 @@ def validate_job(args):
     required = [
         "content_id", "title", "script", "semantic_map", "semantic_topic_id",
         "publish_date_local", "rights_manifest", "base_video_qa", "final_qa",
-        "topic_history_gate"
+        "topic_history_gate", "music_track_title", "music_artist_or_composer",
+        "music_source", "music_license_or_usage_basis", "music_editorial_class",
+        "music_composition_gate", "music_theme_match_gate", "music_audibility_gate",
+        "music_no_tone_or_game_style_gate", "music_rights_gate"
     ]
     missing = [k for k in required if not job.get(k)]
     if missing:
         raise GateError("JOB_REQUIRED_FIELDS_MISSING:" + ",".join(missing))
     topic_result = assert_topic_history(job, guardrails)
+    music_result = assert_music_policy(job, contract)
     if job.get("topic_history_gate") != guardrails["job_requirements"]["topic_history_gate"]:
         raise GateError("TOPIC_HISTORY_GATE_NOT_PASS")
     if job.get("content_class") == "PERSON_PROFILE" and job.get("person_visual_reference_gate") != "PASS":
@@ -186,7 +226,8 @@ def validate_job(args):
     print(json.dumps({
         "status": "VSA_JOB_RELEASE_ELIGIBLE",
         "title": job["title"],
-        "topic_classification": topic_result["classification"]
+        "topic_classification": topic_result["classification"],
+        "music": music_result,
     }, ensure_ascii=False))
 
 def main():
