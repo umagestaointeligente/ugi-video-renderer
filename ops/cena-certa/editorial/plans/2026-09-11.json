@@ -1,0 +1,45 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_PLAN_V1",
+  "date": "2026-09-11",
+  "timezone": "America/Sao_Paulo",
+  "status": "PROPOSED_NOT_SCHEDULED",
+  "metricool_brand_id": "6809869",
+  "metricool_best_time_summary": {
+    "facebook": {"peak_hours": [10,12,11,13]},
+    "instagram": {"peak_hours": [10,11,12,17]},
+    "tiktok": {"peak_hours": [10,12,18,16]},
+    "youtube": {"peak_hours": [16,10,14,13]}
+  },
+  "schedule": [
+    {"time":"07:45","type":"story","topic":"Abertura: o que assistir hoje?","providers":["instagram","facebook"],"status":"ASSET_PENDING"},
+    {"time":"08:35","type":"video","slot":"V1","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"09:35","type":"video","slot":"V2","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"10:15","type":"editorial_post","topic":"Go Team! estreia hoje na Netflix","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"11:05","type":"video","slot":"V3","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"11:45","type":"story","topic":"Enquete: team building funciona?","providers":["instagram","facebook"],"status":"ASSET_PENDING"},
+    {"time":"12:20","type":"video","slot":"V4","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"13:10","type":"editorial_carousel","topic":"Semana do Cinema: o que vale ver por R$10/R$12","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"14:20","type":"video","slot":"V5","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"15:10","type":"story","topic":"Qual filme voce escolheria hoje?","providers":["instagram","facebook"],"status":"ASSET_PENDING"},
+    {"time":"16:05","type":"video","slot":"V6","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"17:15","type":"editorial_post","topic":"Practical Magic 2: nostalgia vs critica","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"18:05","type":"video","slot":"V7","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"19:20","type":"video","slot":"V8","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"20:10","type":"editorial_post","topic":"Spider-Man e o verao recorde de Hollywood","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"21:00","type":"story","topic":"Melhor Homem-Aranha da era Tom Holland?","providers":["instagram","facebook"],"status":"ASSET_PENDING"}
+  ],
+  "video_slot_editorial_lanes": [
+    {"slot":"V1","lane":"high-demand licensed/open film, no repeat 60d"},
+    {"slot":"V2","lane":"recognised independent/acclaimed short, rights-cleared"},
+    {"slot":"V3","lane":"thriller/horror high-retention title, rights-cleared"},
+    {"slot":"V4","lane":"drama/emotional title, rights-cleared"},
+    {"slot":"V5","lane":"sci-fi/fantasy recognisable title, rights-cleared"},
+    {"slot":"V6","lane":"international award/festival title, rights-cleared"},
+    {"slot":"V7","lane":"high-demand reserve converted after QA"},
+    {"slot":"V8","lane":"late-evening strongest retention candidate"}
+  ],
+  "hard_gates": ["FACT_PASS","ASSET_RIGHTS_PASS","VIDEO_RIGHTS_PASS","DEDUP_60D_PASS","CANONICAL_MASK_PASS","QA_PASS"],
+  "youtube_policy": "8 videos only; no static posts",
+  "publication_allowed": false,
+  "note": "No Metricool schedules were created or modified by this radar run."
+}
