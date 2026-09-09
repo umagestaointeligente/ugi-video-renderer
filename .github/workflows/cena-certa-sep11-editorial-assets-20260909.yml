@@ -13,78 +13,78 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - id: CC-20260911-STORY-STARWARS
-            eyebrow: CENA CERTA • CURIOSIDADE
-            title1: STAR WARS EP. I
-            title2: A MULTIDAO ERA... COTONETE?
-            body1: Na corrida de pods, parte da arquibancada
-            body2: foi feita com hastes de algodao coloridas.
-            question: EFEITO PRATICO OU CGI: QUAL TE IMPRESSIONA MAIS?
-            source: Fonte factual: StarWars.com / Lucasfilm
-            theme: stars
-          - id: CC-20260911-POST-STARWARS
-            eyebrow: CENA CERTA • BASTIDOR
-            title1: UM TRUQUE MINUSCULO
-            title2: PARA UMA CENA GIGANTE
-            body1: A equipe usou hastes de algodao coloridas
-            body2: para simular parte da plateia da corrida de pods.
-            question: SABER O TRUQUE AUMENTA OU QUEBRA A MAGIA DO FILME?
-            source: Fonte factual: StarWars.com / Lucasfilm
-            theme: stars
-          - id: CC-20260911-STORY-AVATAR2
-            eyebrow: CENA CERTA • CURIOSIDADE
-            title1: AVATAR 2
-            title2: MERGULHO DE VERDADE
-            body1: O elenco treinou mergulho livre para as cenas
-            body2: e a captura subaquatica exigiu uma estrutura enorme.
-            question: ATORES DEVEM IR TAO LONGE PELO REALISMO?
-            source: Fonte factual: Avatar.com
-            theme: water
-          - id: CC-20260911-POST-AVATAR2
-            eyebrow: CENA CERTA • BASTIDOR
-            title1: 680 MIL GALOES
-            title2: PARA CAPTURAR OCEANO
-            body1: A producao aperfeicoou performance capture
-            body2: subaquatica em um tanque de 680 mil galoes.
-            question: TECNOLOGIA OU INTERPRETACAO: O QUE VENDE MAIS A CENA?
-            source: Fonte factual: Avatar.com
-            theme: water
-          - id: CC-20260911-STORY-FRANQUIAS
-            eyebrow: CENA CERTA • DEBATE
-            title1: FRANQUIAS
-            title2: OU HISTORIAS NOVAS?
-            body1: Sequencias entregam personagens conhecidos.
-            body2: Originais entregam risco e surpresa.
-            question: HOJE, QUAL VOCE ESCOLHE PARA IR AO CINEMA?
-            source: Discussao editorial
-            theme: split
-          - id: CC-20260911-POST-FRANQUIAS
-            eyebrow: CENA CERTA • DISCUSSAO
-            title1: MAIS UMA SEQUENCIA?
-            title2: OU ALGO QUE NINGUEM VIU?
-            body1: Nostalgia reduz o risco. Ideias novas podem criar
-            body2: o proximo classico — mas precisam conquistar do zero.
-            question: HOLLYWOOD ESTA EXAGERANDO NAS FRANQUIAS?
-            source: Discussao editorial
-            theme: split
-          - id: CC-20260911-STORY-SUPERESTIMADO
-            eyebrow: CENA CERTA • SEM MEDO
-            title1: TODO MUNDO AMA...
-            title2: MAS VOCE NAO?
-            body1: Tem filme premiado, cultuado e chamado de classico
-            body2: que simplesmente nao funciona para todo mundo.
-            question: QUAL FILME VOCE ACHA SUPERESTIMADO?
-            source: Pergunta para a comunidade
-            theme: cinema
-          - id: CC-20260911-POST-SUPERESTIMADO
-            eyebrow: CENA CERTA • DEBATE ABERTO
-            title1: A OPINIAO IMPOPULAR
-            title2: VALE MAIS QUE A NOTA?
-            body1: Critica, bilheteria e premios ajudam a construir fama.
-            body2: Mas gosto pessoal nao precisa seguir consenso.
-            question: CITE UM FILME ACLAMADO QUE NAO TE CONVENCEU.
-            source: Pergunta para a comunidade
-            theme: cinema
+          - id: "CC-20260911-STORY-STARWARS"
+            eyebrow: "CENA CERTA • CURIOSIDADE"
+            title1: "STAR WARS EP. I"
+            title2: "A MULTIDAO ERA... COTONETE?"
+            body1: "Na corrida de pods, parte da arquibancada"
+            body2: "foi feita com hastes de algodao coloridas."
+            question: "EFEITO PRATICO OU CGI: QUAL TE IMPRESSIONA MAIS?"
+            source: "Fonte factual: StarWars.com / Lucasfilm"
+            theme: "stars"
+          - id: "CC-20260911-POST-STARWARS"
+            eyebrow: "CENA CERTA • BASTIDOR"
+            title1: "UM TRUQUE MINUSCULO"
+            title2: "PARA UMA CENA GIGANTE"
+            body1: "A equipe usou hastes de algodao coloridas"
+            body2: "para simular parte da plateia da corrida de pods."
+            question: "SABER O TRUQUE AUMENTA OU QUEBRA A MAGIA DO FILME?"
+            source: "Fonte factual: StarWars.com / Lucasfilm"
+            theme: "stars"
+          - id: "CC-20260911-STORY-AVATAR2"
+            eyebrow: "CENA CERTA • CURIOSIDADE"
+            title1: "AVATAR 2"
+            title2: "MERGULHO DE VERDADE"
+            body1: "O elenco treinou mergulho livre para as cenas"
+            body2: "e a captura subaquatica exigiu uma estrutura enorme."
+            question: "ATORES DEVEM IR TAO LONGE PELO REALISMO?"
+            source: "Fonte factual: Avatar.com"
+            theme: "water"
+          - id: "CC-20260911-POST-AVATAR2"
+            eyebrow: "CENA CERTA • BASTIDOR"
+            title1: "680 MIL GALOES"
+            title2: "PARA CAPTURAR OCEANO"
+            body1: "A producao aperfeicoou performance capture"
+            body2: "subaquatica em um tanque de 680 mil galoes."
+            question: "TECNOLOGIA OU INTERPRETACAO: O QUE VENDE MAIS A CENA?"
+            source: "Fonte factual: Avatar.com"
+            theme: "water"
+          - id: "CC-20260911-STORY-FRANQUIAS"
+            eyebrow: "CENA CERTA • DEBATE"
+            title1: "FRANQUIAS"
+            title2: "OU HISTORIAS NOVAS?"
+            body1: "Sequencias entregam personagens conhecidos."
+            body2: "Originais entregam risco e surpresa."
+            question: "HOJE, QUAL VOCE ESCOLHE PARA IR AO CINEMA?"
+            source: "Discussao editorial"
+            theme: "split"
+          - id: "CC-20260911-POST-FRANQUIAS"
+            eyebrow: "CENA CERTA • DISCUSSAO"
+            title1: "MAIS UMA SEQUENCIA?"
+            title2: "OU ALGO QUE NINGUEM VIU?"
+            body1: "Nostalgia reduz o risco. Ideias novas podem criar"
+            body2: "o proximo classico — mas precisam conquistar do zero."
+            question: "HOLLYWOOD ESTA EXAGERANDO NAS FRANQUIAS?"
+            source: "Discussao editorial"
+            theme: "split"
+          - id: "CC-20260911-STORY-SUPERESTIMADO"
+            eyebrow: "CENA CERTA • SEM MEDO"
+            title1: "TODO MUNDO AMA..."
+            title2: "MAS VOCE NAO?"
+            body1: "Tem filme premiado, cultuado e chamado de classico"
+            body2: "que simplesmente nao funciona para todo mundo."
+            question: "QUAL FILME VOCE ACHA SUPERESTIMADO?"
+            source: "Pergunta para a comunidade"
+            theme: "cinema"
+          - id: "CC-20260911-POST-SUPERESTIMADO"
+            eyebrow: "CENA CERTA • DEBATE ABERTO"
+            title1: "A OPINIAO IMPOPULAR"
+            title2: "VALE MAIS QUE A NOTA?"
+            body1: "Critica, bilheteria e premios ajudam a construir fama."
+            body2: "Mas gosto pessoal nao precisa seguir consenso."
+            question: "CITE UM FILME ACLAMADO QUE NAO TE CONVENCEU."
+            source: "Pergunta para a comunidade"
+            theme: "cinema"
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
