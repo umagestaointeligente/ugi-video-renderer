@@ -12,7 +12,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
     steps:
-      - name: Inspect editorial-media-publish route only
+      - name: Inspect editorial and media route contracts only
         shell: bash
         run: |
           set -euo pipefail
@@ -20,11 +20,23 @@ jobs:
           curl --fail --silent --show-error -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
             "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/lola-operacional-ugi" -o /tmp/w
           python - <<'PY'
+          import re
           s=open('/tmp/w','rb').read().decode('utf-8','ignore')
-          n='if (path === "/api/editorial-media-publish"'
-          i=s.find(n)
-          if i<0:
-              print('NOT_FOUND')
-          else:
-              print(s[i:min(len(s),i+36000)])
+          print('=== API ROUTES RELEVANT TO EDITORIAL/MEDIA ===')
+          routes=sorted(set(re.findall(r'path\s*(?:===|\.startsWith\()\s*["\']([^"\']+)',s)))
+          for r in routes:
+              if any(k in r.lower() for k in ('editorial','media','image','render','upload','asset','draft','propose','command')):
+                  print(r)
+          print('=== RELEVANT FUNCTION NAMES ===')
+          funcs=sorted(set(re.findall(r'function\s+([A-Za-z0-9_$]+)\s*\(',s)))
+          for f in funcs:
+              if any(k in f.lower() for k in ('editorial','media','image','render','upload','asset','background','draft','proposal')):
+                  print(f)
+          print('=== ROUTE CONTEXTS ===')
+          needles=['/api/editorial-media-publish','/api/video-render','/api/propose','/api/command','/api/media','/api/image','/api/upload']
+          for n in needles:
+              i=s.find(n)
+              if i>=0:
+                  print('\n---',n,'---')
+                  print(s[max(0,i-1200):min(len(s),i+8000)])
           PY
