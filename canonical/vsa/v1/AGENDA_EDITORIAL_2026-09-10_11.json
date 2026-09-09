@@ -1,0 +1,206 @@
+{
+  "schema": "VSA_EDITORIAL_AGENDA_V1",
+  "generated_at_local": "2026-09-08T23:56:45-03:00",
+  "timezone": "America/Sao_Paulo",
+  "daily_target": 8,
+  "default_mix": {"WORLD_SCIENCE": 4, "PEOPLE_CURIOSITY": 4},
+  "truth_order": ["scheduler_live", "platform_readback", "latest_receipt", "editorial_manifest"],
+  "release_gates": ["TOPIC_60D_PASS", "RIGHTS_PASS", "REAL_FOOTAGE_PASS", "MUSIC_PASS", "DENSE_VISUAL_QA_PASS", "FINAL_QA_PASS"],
+  "days": {
+    "2026-09-10": [
+      {
+        "time_brt": "08:00",
+        "editorial_bucket": "WORLD_SCIENCE",
+        "content_id": "VSA-20260910-SAMBA-REENTRY",
+        "semantic_topic_id": "samba_controlled_reentry_prediction",
+        "title": "Como cientistas fizeram um satélite cair no lugar exato?",
+        "status": "SCHEDULED_CONFIRMED",
+        "scheduler": "Upload-Post/voce-sabia-agora",
+        "job_id": "678b8633e3f9495192e4433b7563ffb2",
+        "request_id": "127b57abd3de4212962fd02a55487c1e",
+        "source_filename": "VSA_SAMBA_REENTRY_CANONICAL_MUSIC_FINAL.mp4"
+      },
+      {
+        "time_brt": "10:30",
+        "editorial_bucket": "PEOPLE_CURIOSITY",
+        "content_id": "VSA-20260910-LITO-CJD",
+        "semantic_topic_id": "lito_cjd_prion_misfolding_2026",
+        "title": "O que a doença de Lito Sousa faz no cérebro — e por que um príon não é um vírus?",
+        "status": "PRODUCTION_ACTIVE",
+        "topic_gate": "NEW_TOPIC",
+        "real_footage_plan": "Lito real video -> prion mechanism -> different Lito segment -> protein chain mechanism -> Lito/consequence -> payoff",
+        "rights_status": "PARTIAL_PASS_NEEDS_FINAL_ASSET_MANIFEST",
+        "music_class": "human_emotional/science_documentary",
+        "scheduler": null,
+        "job_id": null
+      },
+      {
+        "time_brt": "13:00",
+        "editorial_bucket": "WORLD_SCIENCE",
+        "content_id": "VSA-20260910-TNO",
+        "semantic_topic_id": "hubble_webb_tno_small_body_distribution_2026",
+        "title": "O que Hubble e Webb encontraram além de Netuno?",
+        "status": "HOLD_REAL_FOOTAGE_REBUILD",
+        "topic_gate": "NEW_TOPIC",
+        "fact_source": "https://svs.gsfc.nasa.gov/15092",
+        "real_footage_plan": "NASA Hubble/Webb/TNO real visuals in >=3 blocks with >=2 distinct moments",
+        "music_status": "PASS_EXISTING_REAL_INSTRUMENTAL_MASTER",
+        "scheduler": null,
+        "job_id": null
+      },
+      {
+        "time_brt": "15:30",
+        "editorial_bucket": "PEOPLE_CURIOSITY",
+        "content_id": "VSA-20260910-HAWKING",
+        "semantic_topic_id": "stephen_hawking_motor_neuron_disease_progression",
+        "title": "Por que Stephen Hawking perdeu os movimentos sem perder a capacidade de pensar?",
+        "status": "PRODUCTION_ACTIVE",
+        "topic_gate": "NEW_TOPIC",
+        "real_footage_plan": "NASA public-domain Hawking video in >=2 distinct segments + causal motor-neuron animation",
+        "rights_status": "PUBLIC_DOMAIN_NASA_ASSET_IDENTIFIED",
+        "music_class": "human_emotional/science_documentary",
+        "scheduler": null,
+        "job_id": null
+      },
+      {
+        "time_brt": "18:00",
+        "editorial_bucket": "WORLD_SCIENCE",
+        "content_id": "VSA-20260910-KILAUEA55",
+        "semantic_topic_id": "kilauea_episode55_inflation_lava_fountain_cycle",
+        "title": "Como um vulcão avisa que uma fonte de lava está prestes a explodir?",
+        "status": "PRODUCTION_ACTIVE",
+        "topic_gate": "NEW_TOPIC",
+        "fact_source": "https://www.usgs.gov/volcanoes/kilauea/multimedia/videos",
+        "real_footage_plan": "USGS Kilauea real eruption/webcam blocks + pressure/inflation causal explanation",
+        "rights_status": "USGS_GOV_ASSETS_TO_BE_MANIFESTED",
+        "music_class": "danger_catastrophe",
+        "scheduler": null,
+        "job_id": null
+      },
+      {
+        "time_brt": "19:30",
+        "editorial_bucket": "PEOPLE_CURIOSITY",
+        "content_id": "VSA-20260910-HELEN-KELLER",
+        "semantic_topic_id": "helen_keller_tactile_language_speech_learning",
+        "title": "Como Helen Keller aprendeu a falar sem enxergar nem ouvir?",
+        "status": "PRODUCTION_ACTIVE",
+        "topic_gate": "NEW_TOPIC",
+        "real_footage_plan": "1929 public-domain Helen Keller footage in >=2 distinct moments + tactile-language mechanism",
+        "rights_status": "PUBLIC_DOMAIN_ASSET_IDENTIFIED",
+        "music_class": "human_emotional",
+        "scheduler": null,
+        "job_id": null
+      },
+      {
+        "time_brt": "21:00",
+        "editorial_bucket": "WORLD_SCIENCE",
+        "content_id": "VSA-20260910-AURORA",
+        "semantic_topic_id": "aurora_charged_particles_atmosphere_emission",
+        "title": "Por que o céu acende em cores durante uma aurora?",
+        "status": "HOLD_REAL_FOOTAGE_REBUILD",
+        "topic_gate": "NEW_TOPIC",
+        "real_footage_plan": "real aurora footage in >=3 blocks + charged-particle/atmosphere causal animation",
+        "music_status": "PASS_EXISTING_REAL_INSTRUMENTAL_MASTER",
+        "scheduler": null,
+        "job_id": null
+      },
+      {
+        "time_brt": "22:30",
+        "editorial_bucket": "PEOPLE_CURIOSITY",
+        "content_id": "VSA-20260910-WINDOW-SHADES",
+        "semantic_topic_id": "airplane_window_shades_safety_takeoff_landing",
+        "title": "Por que pedem para abrir a janela do avião na decolagem e no pouso?",
+        "status": "PRODUCTION_ACTIVE",
+        "topic_gate": "NEW_TOPIC",
+        "fact_source": "https://www.easa.europa.eu/en/light/topics/hows-and-whys-flying",
+        "real_footage_plan": "real aircraft cabin/window/takeoff footage + visibility/eye-adaptation explanation",
+        "rights_status": "ASSET_SEARCH_ACTIVE",
+        "music_class": "adventure_discovery",
+        "scheduler": null,
+        "job_id": null
+      }
+    ],
+    "2026-09-11": [
+      {
+        "time_brt": "08:00",
+        "editorial_bucket": "WORLD_SCIENCE",
+        "content_id": "VSA-20260911-ALPHAGENOME",
+        "semantic_topic_id": "alphagenome_variant_effect_prediction_2026",
+        "title": "Como uma IA tenta prever o efeito de bilhões de mutações?",
+        "status": "EDITORIAL_APPROVED_ASSET_INGEST_PENDING",
+        "topic_gate": "NEW_TOPIC",
+        "music_class": "science_documentary"
+      },
+      {
+        "time_brt": "10:30",
+        "editorial_bucket": "PEOPLE_CURIOSITY",
+        "content_id": "VSA-20260911-ARMSTRONG",
+        "semantic_topic_id": "neil_armstrong_manual_apollo11_landing_boulder_avoidance",
+        "title": "Por que Neil Armstrong assumiu o controle manual no pouso da Apollo 11?",
+        "status": "EDITORIAL_APPROVED_ASSET_INGEST_PENDING",
+        "topic_gate": "NEW_TOPIC",
+        "music_class": "adventure_discovery"
+      },
+      {
+        "time_brt": "13:00",
+        "editorial_bucket": "WORLD_SCIENCE",
+        "content_id": "VSA-20260911-GUARDIAN",
+        "semantic_topic_id": "guardian_tsunami_ionosphere_early_detection",
+        "title": "Como um tsunami consegue mexer na ionosfera antes de chegar à costa?",
+        "status": "EDITORIAL_APPROVED_ASSET_INGEST_PENDING",
+        "topic_gate": "NEW_TOPIC",
+        "music_class": "science_documentary/mystery_investigation"
+      },
+      {
+        "time_brt": "15:30",
+        "editorial_bucket": "PEOPLE_CURIOSITY",
+        "content_id": "VSA-20260911-SALLY-RIDE",
+        "semantic_topic_id": "sally_ride_robotic_arm_sts7_satellite_deploy_retrieve",
+        "title": "Por que Sally Ride precisou dominar um braço robótico no espaço?",
+        "status": "EDITORIAL_APPROVED_ASSET_INGEST_PENDING",
+        "topic_gate": "NEW_TOPIC",
+        "music_class": "adventure_discovery"
+      },
+      {
+        "time_brt": "18:00",
+        "editorial_bucket": "WORLD_SCIENCE",
+        "content_id": "VSA-20260911-STARBURST",
+        "semantic_topic_id": "starburst_galaxy_rapid_star_formation_m82",
+        "title": "Como uma galáxia consegue fabricar estrelas em ritmo absurdo?",
+        "status": "EDITORIAL_APPROVED_ASSET_INGEST_PENDING",
+        "topic_gate": "NEW_TOPIC",
+        "music_class": "space_astronomy"
+      },
+      {
+        "time_brt": "19:30",
+        "editorial_bucket": "PEOPLE_CURIOSITY",
+        "content_id": "VSA-20260911-AMELIA",
+        "semantic_topic_id": "amelia_earhart_1932_solo_atlantic_survival_challenges",
+        "title": "Como Amelia Earhart sobreviveu a gelo, fogo no motor e horas sozinha no Atlântico?",
+        "status": "EDITORIAL_APPROVED_ASSET_INGEST_PENDING",
+        "topic_gate": "NEW_TOPIC",
+        "music_class": "adventure_discovery"
+      },
+      {
+        "time_brt": "21:00",
+        "editorial_bucket": "WORLD_SCIENCE",
+        "content_id": "VSA-20260911-EMIT-MINE-WASTE",
+        "semantic_topic_id": "emit_spectral_signature_mine_waste_detection",
+        "title": "Como a NASA identifica resíduos de minas pela cor da luz?",
+        "status": "EDITORIAL_APPROVED_ASSET_INGEST_PENDING",
+        "topic_gate": "NEW_TOPIC",
+        "music_class": "science_documentary/technology_future"
+      },
+      {
+        "time_brt": "22:30",
+        "editorial_bucket": "PEOPLE_CURIOSITY",
+        "content_id": "VSA-20260911-JEANS-WATCH-POCKET",
+        "semantic_topic_id": "jeans_small_watch_pocket_origin",
+        "title": "Por que existe um bolsinho minúsculo dentro do jeans?",
+        "status": "EDITORIAL_APPROVED_ASSET_INGEST_PENDING",
+        "topic_gate": "NEW_TOPIC",
+        "music_class": "human_emotional/documentary"
+      }
+    ]
+  }
+}
