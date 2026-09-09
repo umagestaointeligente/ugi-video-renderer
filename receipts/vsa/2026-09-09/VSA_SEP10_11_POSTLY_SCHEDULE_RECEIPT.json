@@ -1,0 +1,36 @@
+{
+  "task_id": "VSA-SEP10-11-SCHEDULE-CONFIRM-20260909",
+  "project": "ORBIT/VSA",
+  "synthetic": false,
+  "verified_at_utc": "2026-09-09T12:52:31Z",
+  "timezone": "America/Sao_Paulo",
+  "channel": {
+    "platform": "youtube",
+    "name": "Você Sabia Agora?",
+    "channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ"
+  },
+  "result": "SUCCESS",
+  "summary": {
+    "2026-09-10": {"expected": 8, "confirmed_in_scheduler": 8, "postly_scheduled": 7, "upload_post_scheduled": 1},
+    "2026-09-11": {"expected": 8, "confirmed_in_scheduler": 8, "postly_scheduled": 8}
+  },
+  "items": [
+    {"date":"2026-09-10","time_local":"08:00","title":"Como cientistas fizeram um satélite cair no lugar exato?","scheduler":"Upload-Post","id":"678b8633e3f9495192e4433b7563ffb2","status":"queued","scheduler_status":"pending","failed":0},
+    {"date":"2026-09-10","time_local":"10:30","title":"O que a doença de Lito Sousa faz no cérebro?","scheduler":"Postly","id":"6aa154bf811578ed6f000000","status":"scheduled"},
+    {"date":"2026-09-10","time_local":"13:00","title":"O que Hubble e Webb encontraram além de Netuno?","scheduler":"Postly","id":"6aa1551e81158aed6f000000","status":"scheduled"},
+    {"date":"2026-09-10","time_local":"15:30","title":"Por que Stephen Hawking perdeu os movimentos?","scheduler":"Postly","id":"6aa1554081158ded6f000000","status":"scheduled"},
+    {"date":"2026-09-10","time_local":"18:00","title":"Como o Kīlauea dá sinais antes de uma fonte de lava?","scheduler":"Postly","id":"6aa1555b81250016f6000000","status":"scheduled"},
+    {"date":"2026-09-10","time_local":"19:30","title":"Como Helen Keller aprendeu a falar?","scheduler":"Postly","id":"6aa1557381250916f6000000","status":"scheduled"},
+    {"date":"2026-09-10","time_local":"21:00","title":"Por que a aurora acende o céu em cores?","scheduler":"Postly","id":"6aa1559081159fed6f000000","status":"scheduled"},
+    {"date":"2026-09-10","time_local":"22:30","title":"Por que a pipoca explode?","scheduler":"Postly","id":"6aa155ac689d19c95f000000","status":"scheduled"},
+    {"date":"2026-09-11","time_local":"08:00","title":"Como um gêiser consegue lançar água para o alto?","scheduler":"Postly","id":"6aa155d081251216f6000000","status":"scheduled"},
+    {"date":"2026-09-11","time_local":"10:30","title":"Por que Neil Armstrong assumiu o controle manual?","scheduler":"Postly","id":"6aa155e981251416f6000000","status":"scheduled"},
+    {"date":"2026-09-11","time_local":"13:00","title":"Por que algumas ondas do mar brilham à noite?","scheduler":"Postly","id":"6aa1560381251716f6000000","status":"scheduled"},
+    {"date":"2026-09-11","time_local":"15:30","title":"Por que Sally Ride precisou dominar um braço robótico?","scheduler":"Postly","id":"6aa1562081251c16f6000000","status":"scheduled"},
+    {"date":"2026-09-11","time_local":"18:00","title":"Como nasce uma onda que parece um muro de água?","scheduler":"Postly","id":"6aa1563d8115a9ed6f000000","status":"scheduled"},
+    {"date":"2026-09-11","time_local":"19:30","title":"Como Amelia Earhart enfrentou o Atlântico?","scheduler":"Postly","id":"6aa15659689d2ac95f000000","status":"scheduled"},
+    {"date":"2026-09-11","time_local":"21:00","title":"Por que uma geleira se parte de repente?","scheduler":"Postly","id":"6aa156758115b0ed6f000000","status":"scheduled"},
+    {"date":"2026-09-11","time_local":"22:30","title":"Como Charlie Chaplin criou uma linguagem sem palavras?","scheduler":"Postly","id":"6aa1568e689d33c95f000000","status":"scheduled"}
+  ],
+  "isolation": {"cena_certa_touched": false}
+}
