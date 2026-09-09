@@ -3,8 +3,8 @@
 
 This module does not replace the renderer. It is the mandatory policy gate that
 resolves VSA canon, validates channel/account isolation, enforces the 60-day
-semantic topic ledger, validates the thematic instrumental-music contract and
-emits a canonical render/publish plan before downstream production or scheduling.
+semantic topic ledger, validates thematic instrumental music and real-footage
+alternation, and emits a canonical render/publish plan before production.
 """
 from __future__ import annotations
 import argparse, json, sys
@@ -68,6 +68,7 @@ def canonical_plan(contract, guardrails):
         "format": contract["format"],
         "music_policy": contract["music_policy"],
         "visual_sequence": contract["visual_grammar"]["preferred_sequence"],
+        "real_footage_alternation": guardrails["real_footage_alternation"],
         "mask_apply_stage": contract["mask"]["apply_stage"],
         "fixed_assets": asset_fingerprint(contract),
         "qa_workflow": contract["qa"]["workflow"],
@@ -146,11 +147,8 @@ def assert_music_policy(job, contract):
         raise GateError("MUSIC_METADATA_MISSING:" + ",".join(missing_metadata))
 
     required_gates = [
-        "music_composition_gate",
-        "music_theme_match_gate",
-        "music_audibility_gate",
-        "music_no_tone_or_game_style_gate",
-        "music_rights_gate",
+        "music_composition_gate", "music_theme_match_gate", "music_audibility_gate",
+        "music_no_tone_or_game_style_gate", "music_rights_gate",
     ]
     failed = [k for k in required_gates if job.get(k) != "PASS"]
     if failed:
@@ -160,7 +158,6 @@ def assert_music_policy(job, contract):
     forbidden = {str(x).strip().lower() for x in policy.get("forbidden_music_forms", [])}
     if forbidden_form and forbidden_form in forbidden:
         raise GateError(f"FORBIDDEN_MUSIC_FORM:{forbidden_form}")
-
     if job.get("music_has_vocals") is True:
         raise GateError("MUSIC_VOCALS_FORBIDDEN")
 
@@ -169,6 +166,53 @@ def assert_music_policy(job, contract):
         "artist_or_composer": job["music_artist_or_composer"],
         "editorial_class": job["music_editorial_class"],
     }
+
+def _as_int(value, field):
+    try:
+        return int(value)
+    except Exception as exc:
+        raise GateError(f"INVALID_INTEGER_FIELD:{field}") from exc
+
+def assert_real_footage_policy(job, guardrails):
+    policy = guardrails.get("real_footage_alternation") or {}
+    if policy.get("status") != "HARD_GATE":
+        raise GateError("CANONICAL_REAL_FOOTAGE_POLICY_MISSING_OR_DISABLED")
+
+    applicability = str(job.get("real_footage_applicability") or "").strip().upper()
+    if applicability not in {"REQUIRED", "NOT_APPLICABLE"}:
+        raise GateError("REAL_FOOTAGE_APPLICABILITY_MISSING_OR_INVALID")
+
+    is_person = job.get("content_class") == "PERSON_PROFILE"
+    if is_person and applicability != "REQUIRED":
+        raise GateError("PERSON_PROFILE_REAL_FOOTAGE_REQUIRED")
+
+    if applicability == "NOT_APPLICABLE":
+        if not str(job.get("real_footage_not_applicable_reason") or "").strip():
+            raise GateError("REAL_FOOTAGE_NOT_APPLICABLE_REASON_MISSING")
+        return {"applicability": applicability}
+
+    if job.get("real_footage_gate") != "PASS":
+        raise GateError("REAL_FOOTAGE_GATE_NOT_PASS")
+    blocks = _as_int(job.get("real_footage_block_count"), "real_footage_block_count")
+    distinct = _as_int(job.get("distinct_real_clip_count"), "distinct_real_clip_count")
+    if blocks < int(policy.get("minimum_real_footage_blocks", 3)):
+        raise GateError(f"REAL_FOOTAGE_BLOCKS_TOO_FEW:{blocks}")
+    if distinct < int(policy.get("minimum_distinct_real_clips_or_angles", 2)):
+        raise GateError(f"DISTINCT_REAL_CLIPS_TOO_FEW:{distinct}")
+
+    result = {"applicability": applicability, "blocks": blocks, "distinct_clips": distinct}
+    if is_person:
+        people = guardrails.get("people_biocuriosity") or {}
+        if job.get("person_visual_reference_gate") != "PASS":
+            raise GateError("PERSON_VISUAL_REFERENCE_GATE_NOT_PASS")
+        if job.get("person_real_video_segments_gate") != "PASS":
+            raise GateError("PERSON_REAL_VIDEO_SEGMENTS_GATE_NOT_PASS")
+        person_segments = _as_int(job.get("person_real_video_segment_count"), "person_real_video_segment_count")
+        minimum_person_segments = int(people.get("minimum_distinct_real_person_video_segments", 2))
+        if person_segments < minimum_person_segments:
+            raise GateError(f"PERSON_REAL_VIDEO_SEGMENTS_TOO_FEW:{person_segments}")
+        result["person_real_video_segments"] = person_segments
+    return result
 
 def preflight(args):
     current = load_json(CURRENT)
@@ -208,17 +252,17 @@ def validate_job(args):
         "topic_history_gate", "music_track_title", "music_artist_or_composer",
         "music_source", "music_license_or_usage_basis", "music_editorial_class",
         "music_composition_gate", "music_theme_match_gate", "music_audibility_gate",
-        "music_no_tone_or_game_style_gate", "music_rights_gate"
+        "music_no_tone_or_game_style_gate", "music_rights_gate",
+        "real_footage_applicability"
     ]
     missing = [k for k in required if not job.get(k)]
     if missing:
         raise GateError("JOB_REQUIRED_FIELDS_MISSING:" + ",".join(missing))
     topic_result = assert_topic_history(job, guardrails)
     music_result = assert_music_policy(job, contract)
+    footage_result = assert_real_footage_policy(job, guardrails)
     if job.get("topic_history_gate") != guardrails["job_requirements"]["topic_history_gate"]:
         raise GateError("TOPIC_HISTORY_GATE_NOT_PASS")
-    if job.get("content_class") == "PERSON_PROFILE" and job.get("person_visual_reference_gate") != "PASS":
-        raise GateError("PERSON_VISUAL_REFERENCE_GATE_NOT_PASS")
     if job.get("base_video_qa") != "PASS" or job.get("final_qa") != "PASS":
         raise GateError("QA_NOT_PASS")
     if job.get("rights_manifest") != "PASS":
@@ -228,6 +272,7 @@ def validate_job(args):
         "title": job["title"],
         "topic_classification": topic_result["classification"],
         "music": music_result,
+        "real_footage": footage_result,
     }, ensure_ascii=False))
 
 def main():
