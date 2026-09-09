@@ -1,0 +1,87 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_RADAR_V1",
+  "date": "2026-09-11",
+  "timezone": "America/Sao_Paulo",
+  "status": "RESEARCH_COMPLETE_ASSETS_PENDING_RIGHTS_QA",
+  "platform_scope": ["facebook", "instagram", "tiktok", "youtube"],
+  "youtube_policy": "video_only",
+  "primary_topics": [
+    {
+      "slug": "go-team-netflix",
+      "title": "Go Team!",
+      "platform": "Netflix",
+      "hook": "Comedia espanhola estreia globalmente em 11/09 e transforma um retiro corporativo em guerra por sobrevivencia profissional.",
+      "fact_status": "PASS",
+      "source": "https://about.netflix.com/en/news/netflix-premieres-go-team-on-september-11",
+      "asset_route": "Netflix About/Media route includes first-look images; later official trailer page explicitly offers new pictures and key art download.",
+      "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_REUSE_TERMS_TO_VERIFY",
+      "engagement_prompt": "Team building aproxima pessoas ou so mascara problemas da empresa?"
+    },
+    {
+      "slug": "practical-magic-2",
+      "title": "Da Magia a Seducao 2: Feitico do Amor",
+      "platform": "Cinema",
+      "hook": "Estreia brasileira em 10/09, nostalgia forte e recepcao critica dividida criam pauta ideal para debate no dia seguinte.",
+      "fact_status": "PASS",
+      "source": "https://guia.folha.uol.com.br/cinema/2026/09/semana-do-cinema-tem-filmes-por-r-10-incluindo-sessoes-imax-em-redes-de-sao-paulo.shtml",
+      "social_signal": "Reddit mostra divisao entre critica baixa e fanbase muito fiel ao original.",
+      "asset_route": "Warner/press material to be used only after explicit editorial reuse validation.",
+      "asset_rights_status": "PENDING",
+      "engagement_prompt": "A continuacao precisava existir ou o original deveria ter ficado intocado?"
+    },
+    {
+      "slug": "semana-do-cinema",
+      "title": "Semana do Cinema",
+      "platform": "Cinema Brasil",
+      "hook": "Ingressos promocionais de 10 a 16/09 criam utilidade imediata para o publico brasileiro e permitem recomendar filmes em cartaz.",
+      "fact_status": "PASS",
+      "source": "https://guia.folha.uol.com.br/cinema/2026/09/semana-do-cinema-tem-filmes-por-r-10-incluindo-sessoes-imax-em-redes-de-sao-paulo.shtml",
+      "asset_route": "Use cards autorais + logos/arte promocional de exibidores apenas se houver permissao; filmes citados exigem assets individualmente aprovados.",
+      "asset_rights_status": "MIXED_PENDING",
+      "engagement_prompt": "Com ingresso a R$10, qual filme voce escolheria ver no cinema?"
+    },
+    {
+      "slug": "spider-man-summer-record",
+      "title": "Spider-Man: Brand New Day e o verao recorde",
+      "platform": "Bilheteria",
+      "hook": "O filme chegou a seis semanas seguidas no topo e cerca de US$2,4 bi globais, ajudando Hollywood a fechar o maior verao de bilheteria nominal da historia nos EUA.",
+      "fact_status": "PASS",
+      "source": "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
+      "asset_route": "Sony Pictures official stills/press assets only after reuse terms validation.",
+      "asset_rights_status": "PENDING",
+      "engagement_prompt": "Foi o melhor Homem-Aranha da era Tom Holland ou o hype carregou a bilheteria?"
+    }
+  ],
+  "secondary_watchlist": [
+    {
+      "title": "Desaparecida / Last Seen",
+      "platform": "Apple TV",
+      "signal": "Estreou em 09/09; Apple TV Press Brasil oferece baixar conteudo/key art e trailer oficial.",
+      "source": "https://www.apple.com/br/tv-pr/originals/last-seen/",
+      "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_TERMS_TO_VERIFY"
+    },
+    {
+      "title": "Colin From Accounts S3",
+      "platform": "Paramount+",
+      "signal": "Temporada final estreou em 10/09; Paramount Press Express oferece key art e imagery para download.",
+      "source": "https://www.paramountpressexpress.com/paramount-plus/shows/colin-from-accounts/releases/",
+      "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_TERMS_TO_VERIFY"
+    },
+    {
+      "title": "The Whisper Man",
+      "platform": "Netflix",
+      "signal": "Lidera o Top 10 global de filmes em ingles da Netflix com 33,4M de views na semana de 31/08.",
+      "source": "https://www.netflix.com/tudum/articles/top-10-august-31-2026",
+      "asset_rights_status": "NETFLIX_MEDIA_ROUTE_TO_VERIFY"
+    },
+    {
+      "title": "Drawn Together / Neagley",
+      "platform": "Prime Video",
+      "signal": "Prime Video mantem setembro forte em adaptacoes literarias e expansao do universo Reacher; Neagley estreia 16/09.",
+      "source": "https://www.aboutamazon.com/news/entertainment/prime-video-september-films-shows-sports-2026",
+      "asset_rights_status": "ABOUT_AMAZON_IMAGES_NOT_AUTOMATICALLY_LICENSED"
+    }
+  ],
+  "rights_rule": "Public availability is not treated as a license. Every final asset requires explicit press/editorial reuse evidence or a separately cleared license before scheduling.",
+  "publication_allowed": false
+}
