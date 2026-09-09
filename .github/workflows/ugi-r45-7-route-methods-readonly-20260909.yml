@@ -1,0 +1,50 @@
+name: UGI R45.7 Route Methods Readonly 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-7-route-methods-readonly-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Inspect methods only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          python - <<'PY'
+          import os, subprocess, json
+          base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
+          routes=['/api/command','/api/drafts','/api/editorial-media','/api/editorial-media-publish','/api/media-draft','/api/platform-publish','/api/linkedin-publish']
+          out=[]
+          for route in routes:
+            for method in ('OPTIONS','GET'):
+              p=subprocess.run(['curl','--silent','--show-error','--max-time','20','-X',method,'-A','UGI-GitHub-Actions/1.0','-H',f'x-lola-command-key: {key}','-H','accept: application/json','-D','-','-o','/tmp/body',base+route],text=True,capture_output=True)
+              body=open('/tmp/body').read()[:1200]
+              status=''
+              for line in p.stdout.splitlines():
+                if line.startswith('HTTP/'):
+                  status=line
+              allow=[line for line in p.stdout.splitlines() if line.lower().startswith(('allow:','access-control-allow-methods:'))]
+              out.append({'route':route,'method':method,'status':status,'allow':allow,'body':body})
+          open('route-methods.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-r45-7-route-methods-${{ github.run_id }}
+          path: route-methods.json
+          retention-days: 3
