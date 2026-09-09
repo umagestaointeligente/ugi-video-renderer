@@ -1,12 +1,31 @@
 {
   "schema": "CENA_CERTA_PUBLISHER_STATE_V1",
-  "state": "AWAITING_HUMAN_APPROVAL",
+  "state": "PUBLISH_RECONCILED",
   "handoff_sha256": "2ad41078e35ff025b6775efd8b15c35596b1865bd75518b3ec7500b64d5ffbb3",
   "production_run_id": 34313779808,
   "primary_provider": "METRICOOL",
-  "primary_receipts": [],
+  "primary_receipts": [
+    {"item_id":"CC-20260911-GUARDIANS3-V1","metricool_id":373250023,"uuid":"8208462733649921515","date":"2026-09-11T09:10:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260911-WAKANDA-V1","metricool_id":373250129,"uuid":"4754324115743787237","date":"2026-09-11T10:55:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260911-SHANGCHI-V1","metricool_id":373250272,"uuid":"683601007578991174","date":"2026-09-11T12:20:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260911-PHANTOM-MENACE-V1","metricool_id":373250394,"uuid":"4267346618761891331","date":"2026-09-11T14:45:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260911-HOME-ALONE-V1","metricool_id":373250509,"uuid":"4932867260509343060","date":"2026-09-11T15:55:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260911-THUNDERBOLTS-V1","metricool_id":373250608,"uuid":"-7660206146938515882","date":"2026-09-11T17:10:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260911-AVATAR2-V1","metricool_id":373250738,"uuid":"8036647520708870442","date":"2026-09-11T18:30:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260911-INDIANA5-V1","metricool_id":373250866,"uuid":"-6746362582538237584","date":"2026-09-11T19:50:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"}
+  ],
   "secondary_receipts": [],
-  "reconciliation": null,
-  "updated_at": "2026-09-09T05:15:03.661814+00:00",
+  "reconciliation": {
+    "result": "PASS",
+    "schedule_objects_expected": 8,
+    "schedule_objects_observed": 8,
+    "network_placements_expected": 32,
+    "network_placements_observed": 32,
+    "duplicate_objects": 0,
+    "missing_objects": 0,
+    "source": "Metricool live readback after writes",
+    "reconcile_before_retry": true
+  },
+  "updated_at": "2026-09-09T11:30:00+00:00",
   "blind_retry_forbidden": true
 }
