@@ -1,12 +1,31 @@
 {
   "schema": "CENA_CERTA_PUBLISHER_STATE_V1",
-  "state": "AWAITING_HUMAN_APPROVAL",
+  "state": "PUBLISH_RECONCILED",
   "handoff_sha256": "c55262f23ed20fb818f0e1618fde38c1024c7f629d5f35b4c242c8c9f5dc5b3b",
   "production_run_id": 34286440489,
   "primary_provider": "METRICOOL",
-  "primary_receipts": [],
+  "primary_receipts": [
+    {"item_id":"CC-20260910-OASIS-V1","metricool_id":373045999,"uuid":"-8675463010074079941","date":"2026-09-10T09:10:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260910-PRADA2-V1","metricool_id":373046050,"uuid":"6214496831490770319","date":"2026-09-10T10:55:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260910-MOANA-V1","metricool_id":373046099,"uuid":"-6653788524283016118","date":"2026-09-10T12:20:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260910-ENDGAME-ENCORE-V1","metricool_id":373046157,"uuid":"8098069213603709275","date":"2026-09-10T14:45:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260910-HEXED-V1","metricool_id":373046208,"uuid":"7644223733541586961","date":"2026-09-10T15:55:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260910-GATTO-V1","metricool_id":373046240,"uuid":"8366642733998424680","date":"2026-09-10T17:10:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260910-HOPPERS-V1","metricool_id":373046287,"uuid":"-8081929060921160842","date":"2026-09-10T18:30:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"},
+    {"item_id":"CC-20260910-ELIO-V1","metricool_id":373046350,"uuid":"-6777561722620460782","date":"2026-09-10T19:50:00-03:00","networks":["facebook","instagram","tiktok","youtube"],"autoPublish":true,"status":"PENDING"}
+  ],
   "secondary_receipts": [],
-  "reconciliation": null,
-  "updated_at": "2026-09-08T22:37:06.787142+00:00",
+  "reconciliation": {
+    "result": "PASS",
+    "schedule_objects_expected": 8,
+    "schedule_objects_observed": 8,
+    "network_placements_expected": 32,
+    "network_placements_observed": 32,
+    "duplicate_objects": 0,
+    "missing_objects": 0,
+    "source": "Metricool live readback after writes",
+    "reconcile_before_retry": true
+  },
+  "updated_at": "2026-09-09T01:46:00+00:00",
   "blind_retry_forbidden": true
 }
