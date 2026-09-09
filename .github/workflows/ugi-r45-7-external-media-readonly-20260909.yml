@@ -1,0 +1,59 @@
+name: UGI R45.7 External Media Readonly 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-7-external-media-readonly-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Search live records for external media fields only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          H=(-A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" -H 'accept: application/json')
+          curl --fail --silent --show-error "${H[@]}" "$WORKER_URL/api/drafts" > drafts.json
+          curl --fail --silent --show-error "${H[@]}" "$WORKER_URL/api/commands" > commands.json
+          python - <<'PY'
+          import json,re
+          ds=json.load(open('drafts.json')).get('drafts') or []
+          cs=json.load(open('commands.json')).get('commands') or []
+          needles=('editorialmedia','mediaurl','external','asseturl','sourceurl','inputurl','providedmedia','imageurl','videourl')
+          def interesting(x):
+            s=json.dumps(x,ensure_ascii=False).lower()
+            # Prefer externally hosted sources; worker-generated URLs alone are not precedents.
+            external=('raw.githubusercontent.com' in s or 'githubusercontent.com' in s or 'http' in s and 'lola-operacional-ugi' not in s)
+            named=any(n in s for n in needles)
+            return external or named
+          def compact(x):
+            # retain all scalar/url-like fields and the assets branch
+            out={}
+            for k,v in x.items():
+              kl=k.lower()
+              if isinstance(v,(str,int,float,bool)) or v is None or k in ('assets','editorialMedia','media','inputMedia','publication'):
+                if any(n in kl for n in ('url','media','asset','source','type','id','status','version','content','text','caption','approval')) or k in ('assets','publication'):
+                  out[k]=v
+            return out
+          out={'draft_matches':[compact(x) for x in ds if interesting(x)][:30], 'command_matches':[compact(x) for x in cs if interesting(x)][:30]}
+          open('external-media-precedents.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-r45-7-external-media-${{ github.run_id }}
+          path: external-media-precedents.json
+          retention-days: 3
