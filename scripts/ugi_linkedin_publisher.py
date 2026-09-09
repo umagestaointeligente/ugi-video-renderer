@@ -44,16 +44,35 @@ def parse_time(value: Any) -> dt.datetime | None:
         return None
 
 
-def validate_distribution() -> None:
+def validate_distribution() -> bool:
     state = load(DISTRIBUTION)
-    active = {str(x).lower() for x in ((state.get("buffer") or {}).get("active_platforms") or [])}
+    buffer = state.get("buffer") or {}
+    active = {str(x).lower() for x in (buffer.get("active_platforms") or [])}
+    paused = {str(x).lower() for x in (buffer.get("paused_platforms") or [])}
     li = (state.get("channels") or {}).get("linkedin") or {}
-    if "linkedin" not in active or str(li.get("status", "")).upper() != "ACTIVE":
-        raise SystemExit("LINKEDIN_DISTRIBUTION_NOT_ACTIVE")
+    status = str(li.get("status", "")).upper()
+
     if li.get("company_page_only") is not True or li.get("personal_profile_publication_forbidden") is not True:
         raise SystemExit("LINKEDIN_COMPANY_PAGE_ISOLATION_NOT_PROVEN")
     if li.get("page_name") != TARGET_PAGE:
         raise SystemExit("LINKEDIN_TARGET_PAGE_MISMATCH")
+
+    if "linkedin" in active and status == "ACTIVE":
+        return True
+
+    # An explicit, internally consistent policy pause is an expected no-op.
+    # It must not consume Buffer budget or create a failed scheduled run.
+    if "linkedin" not in active and "linkedin" in paused and status.startswith("PAUSED"):
+        print(json.dumps({
+            "state": "SKIPPED_BY_DISTRIBUTION_POLICY",
+            "platform": "linkedin",
+            "distributionStatus": status,
+            "bufferCalls": 0,
+        }, ensure_ascii=False))
+        return False
+
+    # Any partial activation or malformed policy remains fail-closed.
+    raise SystemExit("LINKEDIN_DISTRIBUTION_STATE_INCONSISTENT")
 
 
 def worker_call(method: str, path: str, key: str, payload: dict[str, Any] | None = None) -> tuple[int, dict[str, Any]]:
@@ -182,7 +201,9 @@ def persist_status(now: dt.datetime, state: str, item: dict[str, Any] | None, de
 
 
 def main() -> int:
-    validate_distribution()
+    if not validate_distribution():
+        return 0
+
     key = os.getenv("UGI_LOLA_COMMAND_KEY") or os.getenv("UGI_WORKER_COMMAND_KEY") or ""
     if not key:
         raise SystemExit("UGI_LOLA_COMMAND_KEY_MISSING")
