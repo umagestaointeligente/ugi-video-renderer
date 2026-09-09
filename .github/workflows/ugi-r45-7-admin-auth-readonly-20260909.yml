@@ -1,0 +1,75 @@
+name: UGI R45.7 Admin Auth Readonly 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-7-admin-auth-readonly-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      LOLA_AUTH_KEY: ${{ secrets.LOLA_AUTH_KEY }}
+      UGI_LOLA_AUTH_KEY: ${{ secrets.UGI_LOLA_AUTH_KEY }}
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Probe admin authentication on GET only
+        shell: bash
+        run: |
+          set -euo pipefail
+          for s in "${LOLA_AUTH_KEY:-}" "${UGI_LOLA_AUTH_KEY:-}" "${UGI_LOLA_COMMAND_KEY:-}"; do
+            [ -n "$s" ] && echo "::add-mask::$s" || true
+          done
+          python - <<'PY'
+          import os, subprocess, json
+          base=os.environ['WORKER_URL']
+          vals={
+            'LOLA_AUTH_KEY':os.environ.get('LOLA_AUTH_KEY',''),
+            'UGI_LOLA_AUTH_KEY':os.environ.get('UGI_LOLA_AUTH_KEY',''),
+            'UGI_LOLA_COMMAND_KEY':os.environ.get('UGI_LOLA_COMMAND_KEY',''),
+          }
+          routes=['/api/editorial-media','/api/editorial-media-publish','/api/media-draft','/api/linkedin-publish']
+          modes=[]
+          for secret_name,val in vals.items():
+            if not val: continue
+            modes += [
+              (secret_name,'x-lola-auth-key',['-H',f'x-lola-auth-key: {val}']),
+              (secret_name,'x-lola-auth',['-H',f'x-lola-auth: {val}']),
+              (secret_name,'x-lola-key',['-H',f'x-lola-key: {val}']),
+              (secret_name,'bearer',['-H',f'authorization: Bearer {val}']),
+              (secret_name,'command-header',['-H',f'x-lola-command-key: {val}']),
+            ]
+          out=[]
+          for route in routes:
+            for secret_name,mode,h in modes:
+              p=subprocess.run(['curl','--silent','--show-error','--max-time','20','-A','UGI-GitHub-Actions/1.0','-H','accept: application/json',*h,'-w','\nHTTP:%{http_code}',base+route],text=True,capture_output=True)
+              body,_,code=p.stdout.rpartition('\nHTTP:')
+              # Never print returned private data on auth success; only status and top-level safe keys.
+              safe={'route':route,'secret':secret_name,'mode':mode,'http':code}
+              try:
+                j=json.loads(body)
+                safe['ok']=j.get('ok')
+                safe['error']=j.get('error')
+                safe['version']=j.get('version')
+                safe['topKeys']=sorted(j.keys())[:20]
+              except Exception:
+                safe['bodyClass']='non_json'
+              out.append(safe)
+          open('auth-probe.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          # Print only successful/non-401 candidates plus secret-presence booleans.
+          summary={'secretPresent':{k:bool(v) for k,v in vals.items()},'candidates':[x for x in out if x['http'] not in ('401','403')]}
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-r45-7-admin-auth-${{ github.run_id }}
+          path: auth-probe.json
+          retention-days: 3
