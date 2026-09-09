@@ -104,9 +104,10 @@ jobs:
           PY
       - name: Upload final scheduling evidence
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: ugi-today-final-schedule-${{ github.run_id }}
           path: control-plane/receipts/ugi-today/final-schedule.json
-          retention-days: 7
+          retention-days: 1
           if-no-files-found: error
