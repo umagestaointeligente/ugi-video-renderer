@@ -1,0 +1,9 @@
+{
+  "schema": "CENA_CERTA_FAILED_DISPATCH_V1",
+  "request_id": "52b6e6b4e3c64a1caa4a3464aa2f3192",
+  "batch_sha256": "feb61a67f2b561eccde3466bee029fa910fcd9b7f0295a39dba04195fee30c60",
+  "failed_run_id": 34306344156,
+  "recovered_at": "2026-09-09T05:07:06.660681+00:00",
+  "publication_attempted": false,
+  "blind_retry_forbidden": true
+}

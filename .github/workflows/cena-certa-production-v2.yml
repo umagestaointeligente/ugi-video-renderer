@@ -377,3 +377,35 @@ jobs:
             vendor/cena-certa-factory-v2/src/output/cena-certa-v2/schedule-handoff.json
           if-no-files-found: error
           retention-days: 7
+
+  recover-failed-dispatch:
+    needs: [dispatch, prepare-10, ready-proof, render-stage-10, finalize-8-plus-2]
+    if: always() && needs.dispatch.result == 'success' && needs.dispatch.outputs.enabled == 'true' && needs.finalize-8-plus-2.result != 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: CAS-close only the failed unpublished dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --local user.name 'Cena Certa Factory V2'
+          git config --local user.email 'actions@users.noreply.github.com'
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          python ops/cena-certa/dispatch_fail_recover.py \
+            --request-id '${{ needs.dispatch.outputs.request_id }}' \
+            --batch-sha256 '${{ needs.dispatch.outputs.batch_sha256 }}' \
+            --failed-run-id '${{ github.run_id }}'
+          python ops/cena-certa/factory_doctor.py --state-only
+          git add ops/cena-certa/dispatch.json ops/cena-certa/incidents/
+          git commit -m "Cena Certa V2: close failed unpublished dispatch ${{ github.run_id }} [skip ci]"
+          git push origin "HEAD:$GITHUB_REF_NAME"

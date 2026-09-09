@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260911-v1.json",
-  "batch_sha256": "feb61a67f2b561eccde3466bee029fa910fcd9b7f0295a39dba04195fee30c60",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-09T03:13:59.089116+00:00",
-  "request_id": "52b6e6b4e3c64a1caa4a3464aa2f3192",
-  "candidate_count": 8,
-  "selected_count": 8,
-  "reserve_count": 0,
-  "note": "Paulo authorized 11/09 production and scheduling; title and caption safe-area repairs applied after measured canonical gate failures."
+  "requested_at": "",
+  "request_id": "",
+  "note": "CAS-closed after failed production run 34306344156; no publisher outbox existed."
 }
