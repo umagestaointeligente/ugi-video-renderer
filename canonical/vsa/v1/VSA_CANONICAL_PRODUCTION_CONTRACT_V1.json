@@ -17,6 +17,31 @@
     "duration_seconds": {"preferred_min": 60, "preferred_max": 90, "hard_max": 120},
     "audio": {"target_lufs": -16, "true_peak_dbTP_max": -1.5, "narration_language": "pt-BR", "voice": "male young-adult natural neutral", "music_vocals": false}
   },
+  "music_policy": {
+    "status": "HARD_GATE",
+    "required": true,
+    "definition": "Every VSA video must contain a real complete instrumental music composition, audibly present beneath narration, selected for the editorial mood and subject. A tone, drone, oscillator, notification sound, ringtone, game-like loop, chiptune, polyphonic-phone style cue, isolated pulse, isolated synth note, sound effect or generated hum does not qualify as music.",
+    "composition_required": true,
+    "instrumental_only": true,
+    "vocals_forbidden": true,
+    "audible_under_narration": true,
+    "theme_match_required": true,
+    "rights_provenance_required": true,
+    "music_source_must_identify": ["track_title", "artist_or_composer", "source", "license_or_usage_basis"],
+    "forbidden_music_forms": ["single_tone", "dual_tone", "continuous_test_tone", "sine_wave_bed", "oscillator_bed", "ringtone", "notification_tone", "polyphonic_phone_style", "chiptune", "8bit_game_style", "videogame_like_loop", "isolated_pulse", "isolated_drone_without_musical_development", "sound_effect_as_music", "generic_hum", "beep_sequence"],
+    "editorial_mood_map": {
+      "science_documentary": ["documentary film score", "cinematic ambient composition", "piano and strings", "subtle orchestral", "measured atmospheric instrumental"],
+      "space_astronomy": ["cinematic atmospheric", "documentary space score", "piano/strings with ambient texture", "ethereal instrumental with musical development"],
+      "mystery_investigation": ["mysterious film score", "suspense composition", "piano/percussion tension", "documentary investigation score"],
+      "adventure_discovery": ["cinematic adventure score", "orchestral hybrid", "percussion and strings", "uplifting discovery film score"],
+      "technology_future": ["futuristic documentary score", "cinematic electronic composition with rhythm and harmony", "technology underscore with drums/bass/melodic structure"],
+      "danger_catastrophe": ["serious cinematic tension", "dramatic documentary score", "percussion/strings tension composition"],
+      "human_emotional": ["warm documentary instrumental", "piano/strings", "reflective cinematic score"]
+    },
+    "selection_rule": "Select music from the story's dominant emotional/editorial class. Do not choose merely because a catalog tag contains science, technology, space, mystery or adventure; the actual musical language must fit the finished video.",
+    "mix_rule": "Music must be clearly perceptible on normal phone speakers/headphones without competing with narration. Use ducking under speech; do not bury music until it is effectively inaudible.",
+    "qa_required": ["MUSIC_COMPOSITION_PASS", "MUSIC_THEME_MATCH_PASS", "MUSIC_AUDIBILITY_PASS", "MUSIC_NO_TONE_OR_GAME_STYLE_PASS", "MUSIC_RIGHTS_PASS"]
+  },
   "visual_grammar": {
     "core_equation": "NARRAÇÃO = IMAGEM = AÇÃO VISUAL = SIGNIFICADO",
     "real_footage_first": true,
@@ -97,10 +122,10 @@
     "metrics_are_guidance_not_hard_gates": true
   },
   "qa": {
-    "workflow": ["BASE_RENDER", "TECH_QA", "DENSE_VISUAL_QA", "BENCHMARK_COMPARISON", "AUTO_CORRECT", "MASK_APPLICATION", "FINAL_QA", "RELEASE"],
+    "workflow": ["BASE_RENDER", "TECH_QA", "MUSIC_QA", "DENSE_VISUAL_QA", "BENCHMARK_COMPARISON", "AUTO_CORRECT", "MASK_APPLICATION", "FINAL_QA", "RELEASE"],
     "dense_sampling_hz_default": 4,
     "never_call_4hz_frame_by_frame": true,
-    "checks": ["black frames", "prolonged freezes", "gratuitous flashes", "audio silence/clipping", "semantic narration-image match", "crop/safe-area", "caption collision", "footage repetition", "internal motion", "CTA order", "technical format"],
+    "checks": ["black frames", "prolonged freezes", "gratuitous flashes", "audio silence/clipping", "real instrumental music composition present", "music audible under narration", "music theme/mood matches editorial subject", "no tone/ringtone/chiptune/game-like loop or sound-effect substitute", "music provenance/rights", "semantic narration-image match", "crop/safe-area", "caption collision", "footage repetition", "internal motion", "CTA order", "technical format"],
     "anti_regression": ["KEEP validated strengths", "CHANGE only current bottleneck", "FORBID reintroduction of rejected defects", "Do not render a change that removes more validated strengths than it adds"],
     "release_rule": "Only deliver/schedule a version after all applicable gates PASS. Otherwise render V2/V3 internally."
   },
