@@ -1,0 +1,46 @@
+name: UGI Buffer Channel Readonly 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-buffer-channel-readonly-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Read Buffer channels only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          curl --fail --silent --show-error \
+            -A 'UGI-GitHub-Actions/1.0' \
+            -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" \
+            -H 'accept: application/json' \
+            "$WORKER_URL/api/buffer/channels" > buffer-channels.json
+          python - <<'PY'
+          import json
+          p=json.load(open('buffer-channels.json'))
+          if not p.get('ok'):
+              raise SystemExit('BUFFER_CHANNEL_DISCOVERY_FAILED')
+          print(json.dumps(p, ensure_ascii=False, indent=2))
+          PY
+      - name: Upload read-only evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-buffer-channels-${{ github.run_id }}
+          path: buffer-channels.json
+          retention-days: 3
+          if-no-files-found: error
