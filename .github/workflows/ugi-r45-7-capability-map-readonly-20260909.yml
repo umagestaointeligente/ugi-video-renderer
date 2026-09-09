@@ -1,0 +1,57 @@
+name: UGI R45.7 Capability Map Readonly 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-7-capability-map-readonly-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Read filtered live capability map
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          curl --fail --silent --show-error \
+            -A 'UGI-GitHub-Actions/1.0' \
+            -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" \
+            -H 'accept: application/json' \
+            "$WORKER_URL/api/health" > health.json
+          python - <<'PY'
+          import json
+          h=json.load(open('health.json'))
+          needles=('editorial','media','linkedin','route','publish','draft','approval','buffer','command')
+          def walk(x,path=''):
+            out=[]
+            if isinstance(x,dict):
+              for k,v in x.items():
+                p=f'{path}.{k}' if path else k
+                if any(n in k.lower() for n in needles) or (isinstance(v,str) and any(n in v.lower() for n in needles)):
+                  if isinstance(v,(str,int,float,bool)) or v is None:
+                    out.append((p,v))
+                out += walk(v,p)
+            elif isinstance(x,list):
+              for i,v in enumerate(x): out += walk(v,f'{path}[{i}]')
+            return out
+          out={'version':h.get('version'),'matches':walk(h)}
+          open('capability-map.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-r45-7-capability-map-${{ github.run_id }}
+          path: capability-map.json
+          retention-days: 3
