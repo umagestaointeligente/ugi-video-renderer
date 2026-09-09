@@ -1,0 +1,40 @@
+name: UGI Worker R45.7 Health Readonly 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-worker-r45-7-health-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Read live health only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          curl --fail --silent --show-error \
+            -A 'UGI-GitHub-Actions/1.0' \
+            -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" \
+            -H 'accept: application/json' \
+            "$WORKER_URL/api/health" > worker-health.json
+          python -m json.tool worker-health.json
+      - name: Upload read-only evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-worker-r45-7-health-${{ github.run_id }}
+          path: worker-health.json
+          retention-days: 3
+          if-no-files-found: error
