@@ -1,0 +1,182 @@
+name: VSA YouTube Schedule Sep10-11 2026-09-09
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-youtube-schedule-sep10-11-20260909.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vsa-youtube-schedule-sep10-11-20260909
+  cancel-in-progress: false
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      ORBIT_YOUTUBE_CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      ORBIT_YOUTUBE_CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
+      VSA_YOUTUBE_REFRESH_TOKEN: ${{ secrets.VSA_YOUTUBE_REFRESH_TOKEN }}
+      RECEIPT_PATH: receipts/vsa/2026-09-09/youtube-schedule-sep10-11-receipt.json
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate VSA YouTube secret bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in ORBIT_YOUTUBE_CLIENT_ID ORBIT_YOUTUBE_CLIENT_SECRET VSA_YOUTUBE_REFRESH_TOKEN; do
+            test -n "${!name:-}" || { echo "${name}_PRESENT=false"; exit 2; }
+            echo "${name}_PRESENT=true"
+          done
+
+      - name: Install YouTube client
+        run: python -m pip install --quiet google-api-python-client google-auth google-auth-httplib2
+
+      - name: Upload schedule and verify 15 missing VSA videos
+        id: youtube
+        shell: bash
+        run: |
+          mkdir -p "$(dirname "$RECEIPT_PATH")"
+          python - <<'PY'
+          from __future__ import annotations
+          import datetime as dt
+          import json
+          import os
+          import pathlib
+          import sys
+          import urllib.request
+
+          from google.oauth2.credentials import Credentials
+          from google.auth.transport.requests import Request
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaFileUpload
+
+          TAG='vsa-sep10-11-parallel-34346612128'
+          BASE=f'https://github.com/umagestaointeligente/ugi-video-renderer/releases/download/{TAG}/'
+          batch = [
+            {'key':'VSA-20260910-LITO-DCJ','title':'O que a doença de Lito Sousa faz no cérebro?','file':'VSA_20260910_1030_LITO_DCJ_FINAL.mp4','publishAt':'2026-09-10T13:30:00Z'},
+            {'key':'VSA-20260910-TNO','title':'O que existe além de Netuno?','file':'VSA_20260910_1300_TNO_FINAL.mp4','publishAt':'2026-09-10T16:00:00Z'},
+            {'key':'VSA-20260910-HAWKING','title':'Por que Stephen Hawking perdeu os movimentos?','file':'VSA_20260910_1530_HAWKING_FINAL.mp4','publishAt':'2026-09-10T18:30:00Z'},
+            {'key':'VSA-20260910-KILAUEA','title':'Como o Kīlauea avisa antes de uma fonte de lava?','file':'VSA_20260910_1800_KILAUEA_FINAL.mp4','publishAt':'2026-09-10T21:00:00Z'},
+            {'key':'VSA-20260910-HELEN-KELLER','title':'Como Helen Keller aprendeu a falar?','file':'VSA_20260910_1930_HELEN_KELLER_FINAL.mp4','publishAt':'2026-09-10T22:30:00Z'},
+            {'key':'VSA-20260910-AURORA','title':'Por que a aurora acende o céu em cores?','file':'VSA_20260910_2100_AURORA_FINAL.mp4','publishAt':'2026-09-11T00:00:00Z'},
+            {'key':'VSA-20260910-POPCORN','title':'Por que a pipoca explode?','file':'VSA_20260910_2230_POPCORN_FINAL.mp4','publishAt':'2026-09-11T01:30:00Z'},
+            {'key':'VSA-20260911-GEYSER','title':'Como um gêiser consegue lançar água para o alto?','file':'VSA_20260911_0800_GEYSER_FINAL.mp4','publishAt':'2026-09-11T11:00:00Z'},
+            {'key':'VSA-20260911-ARMSTRONG','title':'Por que Neil Armstrong assumiu o controle da Apollo 11?','file':'VSA_20260911_1030_ARMSTRONG_FINAL.mp4','publishAt':'2026-09-11T13:30:00Z'},
+            {'key':'VSA-20260911-BIOLUM','title':'Por que algumas ondas brilham no escuro?','file':'VSA_20260911_1300_BIOLUM_FINAL.mp4','publishAt':'2026-09-11T16:00:00Z'},
+            {'key':'VSA-20260911-SALLY-RIDE','title':'Por que Sally Ride treinou um braço robótico no espaço?','file':'VSA_20260911_1530_SALLY_RIDE_FINAL.mp4','publishAt':'2026-09-11T18:30:00Z'},
+            {'key':'VSA-20260911-TIDAL-BORE','title':'Como nasce uma onda de maré que parece uma parede?','file':'VSA_20260911_1800_TIDAL_BORE_FINAL.mp4','publishAt':'2026-09-11T21:00:00Z'},
+            {'key':'VSA-20260911-AMELIA','title':'Como Amelia Earhart cruzou o Atlântico sozinha?','file':'VSA_20260911_1930_AMELIA_FINAL.mp4','publishAt':'2026-09-11T22:30:00Z'},
+            {'key':'VSA-20260911-GLACIER','title':'Por que uma geleira se parte de repente?','file':'VSA_20260911_2100_GLACIER_FINAL.mp4','publishAt':'2026-09-12T00:00:00Z'},
+            {'key':'VSA-20260911-CHAPLIN','title':'Como Chaplin fazia rir quase sem palavras?','file':'VSA_20260911_2230_CHAPLIN_FINAL.mp4','publishAt':'2026-09-12T01:30:00Z'},
+          ]
+          for x in batch:
+              x['url']=BASE+x['file']
+              x['description']=f"{x['title']}\n\n#VocêSabiaAgora #Curiosidades #Shorts\n\nVSA_SCHEDULE_KEY:{x['key']}"
+
+          receipt_path=pathlib.Path(os.environ['RECEIPT_PATH'])
+          receipt_path.parent.mkdir(parents=True,exist_ok=True)
+          def norm_time(v):
+              if not v: return None
+              return dt.datetime.fromisoformat(v.replace('Z','+00:00')).astimezone(dt.timezone.utc)
+          receipt={'task_id':'VSA-YOUTUBE-SCHEDULE-SEP10-11-20260909','project':'ORBIT/VSA','synthetic':False,'started_at':dt.datetime.now(dt.timezone.utc).isoformat(),'requested_timezone':'America/Sao_Paulo','result':'RUNNING','channel':None,'items':[]}
+          receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+
+          try:
+              creds=Credentials(token=None,refresh_token=os.environ['VSA_YOUTUBE_REFRESH_TOKEN'],token_uri='https://oauth2.googleapis.com/token',client_id=os.environ['ORBIT_YOUTUBE_CLIENT_ID'],client_secret=os.environ['ORBIT_YOUTUBE_CLIENT_SECRET'],scopes=['https://www.googleapis.com/auth/youtube.upload','https://www.googleapis.com/auth/youtube.readonly'])
+              creds.refresh(Request())
+              yt=build('youtube','v3',credentials=creds,cache_discovery=False)
+              ch=yt.channels().list(part='snippet,contentDetails',mine=True).execute()
+              if not ch.get('items'): raise RuntimeError('AUTHENTICATED_ACCOUNT_HAS_NO_YOUTUBE_CHANNEL')
+              channel=ch['items'][0]
+              channel_title=channel['snippet']['title']
+              if 'Você Sabia Agora' not in channel_title:
+                  raise RuntimeError(f'CHANNEL_LOCK_MISMATCH:{channel_title}')
+              receipt['channel']={'id':channel['id'],'title':channel_title}
+
+              uploads=channel['contentDetails']['relatedPlaylists']['uploads']
+              existing=[]
+              token=None
+              for _ in range(4):
+                  p=yt.playlistItems().list(part='contentDetails',playlistId=uploads,maxResults=50,pageToken=token).execute()
+                  ids=[x['contentDetails']['videoId'] for x in p.get('items',[])]
+                  if ids:
+                      vr=yt.videos().list(part='snippet,status',id=','.join(ids)).execute()
+                      existing.extend(vr.get('items',[]))
+                  token=p.get('nextPageToken')
+                  if not token: break
+
+              def find_existing(item):
+                  marker=f"VSA_SCHEDULE_KEY:{item['key']}"
+                  target=norm_time(item['publishAt'])
+                  for v in existing:
+                      sn=v.get('snippet') or {}; st=v.get('status') or {}
+                      desc=sn.get('description',''); title=sn.get('title',''); pub=norm_time(st.get('publishAt'))
+                      if marker in desc or (title==item['title'] and pub==target): return v
+                  return None
+
+              for idx,item in enumerate(batch,start=1):
+                  row={'key':item['key'],'title':item['title'],'requestedPublishAt':item['publishAt'],'state':'STARTED'}
+                  receipt['items'].append(row); receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+                  try:
+                      old=find_existing(item)
+                      if old:
+                          video_id=old['id']; row['uploadAction']='REUSED_EXISTING'
+                      else:
+                          local=pathlib.Path('/tmp')/f'vsa-sep10-11-{idx}.mp4'
+                          urllib.request.urlretrieve(item['url'],local)
+                          if local.stat().st_size<1024: raise RuntimeError('MEDIA_DOWNLOAD_TOO_SMALL')
+                          body={'snippet':{'title':item['title'],'description':item['description'],'categoryId':'27','defaultLanguage':'pt-BR'},'status':{'privacyStatus':'private','publishAt':item['publishAt'],'selfDeclaredMadeForKids':False}}
+                          media=MediaFileUpload(str(local),mimetype='video/mp4',chunksize=8*1024*1024,resumable=True)
+                          req=yt.videos().insert(part='snippet,status',body=body,media_body=media)
+                          response=None
+                          while response is None:
+                              _,response=req.next_chunk()
+                          video_id=response.get('id')
+                          if not video_id: raise RuntimeError('UPLOAD_RETURNED_NO_VIDEO_ID')
+                          row['uploadAction']='UPLOADED_NEW'; existing.append(response)
+                      rb=yt.videos().list(part='snippet,status',id=video_id).execute()
+                      if not rb.get('items'): raise RuntimeError('READBACK_VIDEO_NOT_FOUND')
+                      v=rb['items'][0]; st=v.get('status') or {}
+                      if st.get('privacyStatus')!='private': raise RuntimeError(f"READBACK_PRIVACY_NOT_PRIVATE:{st.get('privacyStatus')}")
+                      if norm_time(st.get('publishAt'))!=norm_time(item['publishAt']): raise RuntimeError(f"READBACK_PUBLISH_AT_MISMATCH:{st.get('publishAt')}")
+                      row.update({'videoId':video_id,'watchUrl':f'https://www.youtube.com/watch?v={video_id}','privacyStatus':st.get('privacyStatus'),'confirmedPublishAt':st.get('publishAt'),'state':'SCHEDULED_CONFIRMED'})
+                  except Exception as e:
+                      row['state']='FAILED'; row['error']=f'{type(e).__name__}:{e}'[:1800]
+                  finally:
+                      receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+
+              ok=[x for x in receipt['items'] if x.get('state')=='SCHEDULED_CONFIRMED']
+              receipt['finished_at']=dt.datetime.now(dt.timezone.utc).isoformat(); receipt['scheduledConfirmed']=len(ok); receipt['expected']=len(batch); receipt['result']='SUCCESS' if len(ok)==len(batch) else ('PARTIAL' if ok else 'FAILED')
+              receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+              print(json.dumps({'result':receipt['result'],'scheduledConfirmed':len(ok),'expected':len(batch),'channel':receipt['channel'],'items':[{'key':x['key'],'state':x['state'],'videoId':x.get('videoId'),'confirmedPublishAt':x.get('confirmedPublishAt'),'error':x.get('error')} for x in receipt['items']]},ensure_ascii=False,indent=2))
+              sys.exit(0 if receipt['result']=='SUCCESS' else 3)
+          except Exception as e:
+              receipt['finished_at']=dt.datetime.now(dt.timezone.utc).isoformat(); receipt['result']='FAILED'; receipt['fatalError']=f'{type(e).__name__}:{e}'[:2000]
+              receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+              print(json.dumps({'result':'FAILED','fatalError':receipt['fatalError']},ensure_ascii=False)); sys.exit(2)
+          PY
+
+      - name: Persist receipt to repository
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f "$RECEIPT_PATH" ]; then
+            mkdir -p "$(dirname "$RECEIPT_PATH")"
+            printf '%s\n' '{"task_id":"VSA-YOUTUBE-SCHEDULE-SEP10-11-20260909","project":"ORBIT/VSA","synthetic":false,"result":"FAILED","fatalError":"WORKFLOW_FAILED_BEFORE_PYTHON_RECEIPT"}' > "$RECEIPT_PATH"
+          fi
+          git config user.name 'vsa-youtube-scheduler-bot'
+          git config user.email 'vsa-youtube-scheduler-bot@users.noreply.github.com'
+          git add "$RECEIPT_PATH"
+          git commit -m 'receipt: VSA YouTube schedule Sep10-11' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
