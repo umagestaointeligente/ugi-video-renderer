@@ -41,8 +41,11 @@ def main() -> int:
         "COMMERCE_GATE_REQUIRED": runtime.get("COMMERCE_GATE_REQUIRED") is True,
         "COMMERCE_FAIL_CLOSED": runtime.get("COMMERCE_FAIL_CLOSED") is True,
         "TIKTOK_RULES_ACTIVE": runtime.get("TIKTOK", {}).get("frame_zero_hook") is True and runtime.get("TIKTOK", {}).get("experimental_duration_seconds") == {"min": 7, "max": 12},
-        "INSTAGRAM_RULES_ACTIVE": set(runtime.get("INSTAGRAM", {}).get("formats", [])) == {"reel", "carousel", "static"},
+        "INSTAGRAM_RULES_ACTIVE": {"reel", "carousel", "static"}.issubset(set(runtime.get("INSTAGRAM", {}).get("formats", []))),
         "YOUTUBE_RULES_ACTIVE": runtime.get("YOUTUBE", {}).get("micro_winner_strategy") == "descendants_not_copies",
+        "DISTRIBUTION_STATE_ACTIVE": isinstance(runtime.get("DISTRIBUTION_STATE_SHA256"), str) and len(runtime.get("DISTRIBUTION_STATE_SHA256", "")) == 64,
+        "BUFFER_PROVIDER_LOCK": runtime.get("DISTRIBUTION_STATE", {}).get("buffer", {}).get("publisher") == "buffer",
+        "YOUTUBE_PAUSED": "youtube" in set(runtime.get("EFFECTIVE_PAUSED_PLATFORMS", [])),
         "PUBLICATION_NOT_TRIGGERED": True,
         "PAYMENT_NOT_TRIGGERED": True,
     }
@@ -56,6 +59,10 @@ def main() -> int:
         "workflow_run_attempt": os.getenv("GITHUB_RUN_ATTEMPT", "LOCAL"),
         "policy_source": runtime["POLICY_SOURCE"],
         "policy_sha256": runtime["POLICY_SHA256"],
+        "distribution_state_source": runtime["DISTRIBUTION_STATE_SOURCE"],
+        "distribution_state_sha256": runtime["DISTRIBUTION_STATE_SHA256"],
+        "effective_active_platforms": runtime["EFFECTIVE_ACTIVE_PLATFORMS"],
+        "effective_paused_platforms": runtime["EFFECTIVE_PAUSED_PLATFORMS"],
         "policy_id": runtime["POLICY_ID"],
         "policy_schema_version": runtime["POLICY_SCHEMA_VERSION"],
         "runtime_engine": "UGI_GROWTH_RUNTIME",
@@ -83,6 +90,8 @@ def main() -> int:
     print(f"POLICY_SCHEMA_VERSION={runtime['POLICY_SCHEMA_VERSION']}")
     print(f"POLICY_SOURCE={runtime['POLICY_SOURCE']}")
     print(f"POLICY_SHA256={runtime['POLICY_SHA256']}")
+    print(f"DISTRIBUTION_STATE_SHA256={runtime['DISTRIBUTION_STATE_SHA256']}")
+    print("EFFECTIVE_ACTIVE_PLATFORMS=" + json.dumps(runtime["EFFECTIVE_ACTIVE_PLATFORMS"], separators=(",", ":")))
     print("RUNTIME_POLICY_ACTIVE=true")
     print("GROWTH_ENGINE_ACTIVE=true")
     print("PLATFORM_INDEPENDENCE=true")
