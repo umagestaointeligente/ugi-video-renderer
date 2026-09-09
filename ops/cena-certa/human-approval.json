@@ -1,9 +1,9 @@
 {
   "schema": "CENA_CERTA_HUMAN_APPROVAL_V1",
-  "approved": false,
+  "approved": true,
   "handoff_sha256": "2ad41078e35ff025b6775efd8b15c35596b1865bd75518b3ec7500b64d5ffbb3",
   "production_run_id": 34313779808,
-  "approved_at": null,
-  "approved_by": null,
-  "note": "Exact new outbox requires explicit human approval before scheduling."
+  "approved_at": "2026-09-09T08:25:00-03:00",
+  "approved_by": "Paulo via ChatGPT recovery",
+  "note": "Explicit authorization to complete and schedule the Sep 11 Cena Certa agenda; exact outbox preserved."
 }
