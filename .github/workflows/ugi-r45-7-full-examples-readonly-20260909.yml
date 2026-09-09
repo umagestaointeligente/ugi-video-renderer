@@ -1,0 +1,50 @@
+name: UGI R45.7 Full Editorial Examples Readonly 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-7-full-examples-readonly-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Read full matching examples only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          H=(-A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" -H 'accept: application/json')
+          curl --fail --silent --show-error "${H[@]}" "$WORKER_URL/api/drafts" > drafts.json
+          curl --fail --silent --show-error "${H[@]}" "$WORKER_URL/api/commands" > commands.json
+          python - <<'PY'
+          import json
+          d=(json.load(open('drafts.json')).get('drafts') or [])
+          c=(json.load(open('commands.json')).get('commands') or [])
+          out={'draft_examples':{},'command_examples':{},'types':sorted(set(str(x.get('type')) for x in d if x.get('type')))}
+          for typ in ['story_image','story_video','visual_post']:
+              matches=[x for x in d if x.get('type')==typ]
+              if matches: out['draft_examples'][typ]=matches[0]
+              cm=[x for x in c if x.get('type')==typ]
+              if cm: out['command_examples'][typ]=cm[0]
+          out['editorial_drafts']=[x for x in d if 'editorial' in json.dumps(x).lower()][:5]
+          out['linkedin_drafts']=[x for x in d if 'linkedin' in json.dumps(x).lower()][:5]
+          open('full-examples.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-r45-7-full-examples-${{ github.run_id }}
+          path: full-examples.json
+          retention-days: 3
