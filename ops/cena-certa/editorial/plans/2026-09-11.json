@@ -2,7 +2,7 @@
   "schema": "CENA_CERTA_EDITORIAL_PLAN_V1",
   "date": "2026-09-11",
   "timezone": "America/Sao_Paulo",
-  "status": "PROPOSED_NOT_SCHEDULED",
+  "status": "REFRESHED_WITH_METRICOOL_READBACK_EDITORIAL_NOT_SCHEDULED",
   "metricool_brand_id": "6809869",
   "metricool_best_time_summary": {
     "facebook": {"peak_hours": [10,12,11,13]},
@@ -10,36 +10,79 @@
     "tiktok": {"peak_hours": [10,12,18,16]},
     "youtube": {"peak_hours": [16,10,14,13]}
   },
-  "schedule": [
-    {"time":"07:45","type":"story","topic":"Abertura: o que assistir hoje?","providers":["instagram","facebook"],"status":"ASSET_PENDING"},
-    {"time":"08:35","type":"video","slot":"V1","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"09:35","type":"video","slot":"V2","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"10:15","type":"editorial_post","topic":"Go Team! estreia hoje na Netflix","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"11:05","type":"video","slot":"V3","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"11:45","type":"story","topic":"Enquete: team building funciona?","providers":["instagram","facebook"],"status":"ASSET_PENDING"},
-    {"time":"12:20","type":"video","slot":"V4","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"13:10","type":"editorial_carousel","topic":"Semana do Cinema: o que vale ver por R$10/R$12","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"14:20","type":"video","slot":"V5","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"15:10","type":"story","topic":"Qual filme voce escolheria hoje?","providers":["instagram","facebook"],"status":"ASSET_PENDING"},
-    {"time":"16:05","type":"video","slot":"V6","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"17:15","type":"editorial_post","topic":"Practical Magic 2: nostalgia vs critica","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"18:05","type":"video","slot":"V7","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"19:20","type":"video","slot":"V8","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"20:10","type":"editorial_post","topic":"Spider-Man e o verao recorde de Hollywood","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"21:00","type":"story","topic":"Melhor Homem-Aranha da era Tom Holland?","providers":["instagram","facebook"],"status":"ASSET_PENDING"}
+  "existing_schedule_readback": {
+    "policy": "DO_NOT_MODIFY_EXISTING",
+    "core_8_video_slots": [
+      {"time":"09:10","title":"Guardians of the Galaxy Vol. 3","providers":["facebook","instagram","tiktok","youtube"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"10:55","title":"Black Panther: Wakanda Forever","providers":["facebook","instagram","tiktok","youtube"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"12:20","title":"Shang-Chi and the Legend of the Ten Rings","providers":["facebook","instagram","tiktok","youtube"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"14:45","title":"Star Wars: Episode I - The Phantom Menace","providers":["facebook","instagram","tiktok","youtube"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"15:55","title":"Home Alone","providers":["facebook","instagram","tiktok","youtube"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"17:10","title":"Thunderbolts*","providers":["facebook","instagram","tiktok","youtube"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"18:30","title":"Avatar: The Way of Water","providers":["facebook","instagram","tiktok","youtube"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"19:50","title":"Indiana Jones and the Dial of Destiny","providers":["facebook","instagram","tiktok","youtube"],"status":"EXISTING_SCHEDULE_UNTOUCHED"}
+    ],
+    "existing_stories": [
+      {"time":"08:20","providers":["facebook","instagram"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"11:20","providers":["facebook","instagram"],"status":"EXISTING_SCHEDULE_UNTOUCHED"},
+      {"time":"14:10","providers":["facebook","instagram"],"status":"EXISTING_SCHEDULE_UNTOUCHED"}
+    ],
+    "other_existing_reels": ["10:00 Star Wars bastidores","12:00 Avatar bastidores","15:00 Franquias ou historias novas"]
+  },
+  "editorial_proposal": [
+    {
+      "time":"10:25",
+      "type":"editorial_post",
+      "topic":"Physical 100: Italy estreia hoje na Netflix",
+      "providers":["facebook","instagram","tiktok"],
+      "status":"ASSET_RIGHTS_QA_PENDING_NOT_SCHEDULED",
+      "visual":"Netflix official competition imagery / hall of busts only after reuse terms validation"
+    },
+    {
+      "time":"13:15",
+      "type":"editorial_carousel",
+      "topic":"The Revolutionaries estreia mundialmente no Prime Video",
+      "providers":["facebook","instagram","tiktok"],
+      "status":"ASSET_RIGHTS_QA_PENDING_NOT_SCHEDULED",
+      "visual":"Official Prime Video/About Amazon series imagery only after press reuse validation"
+    },
+    {
+      "time":"16:25",
+      "type":"editorial_post",
+      "topic":"Practical Magic 2: nostalgia x recepcao critica",
+      "providers":["facebook","instagram","tiktok"],
+      "status":"ASSET_RIGHTS_QA_PENDING_NOT_SCHEDULED",
+      "visual":"Warner official/press imagery only after rights validation"
+    },
+    {
+      "time":"20:35",
+      "type":"editorial_post",
+      "topic":"Spider-Man: Brand New Day e o verao recorde de bilheteria",
+      "providers":["facebook","instagram","tiktok"],
+      "status":"ASSET_RIGHTS_QA_PENDING_NOT_SCHEDULED",
+      "visual":"Sony Pictures official imagery only after rights validation"
+    }
   ],
-  "video_slot_editorial_lanes": [
-    {"slot":"V1","lane":"high-demand licensed/open film, no repeat 60d"},
-    {"slot":"V2","lane":"recognised independent/acclaimed short, rights-cleared"},
-    {"slot":"V3","lane":"thriller/horror high-retention title, rights-cleared"},
-    {"slot":"V4","lane":"drama/emotional title, rights-cleared"},
-    {"slot":"V5","lane":"sci-fi/fantasy recognisable title, rights-cleared"},
-    {"slot":"V6","lane":"international award/festival title, rights-cleared"},
-    {"slot":"V7","lane":"high-demand reserve converted after QA"},
-    {"slot":"V8","lane":"late-evening strongest retention candidate"}
+  "story_plan": [
+    {"time":"08:20","type":"story","status":"EXISTING_SCHEDULE_UNTOUCHED"},
+    {"time":"11:20","type":"story","status":"EXISTING_SCHEDULE_UNTOUCHED"},
+    {"time":"14:10","type":"story","status":"EXISTING_SCHEDULE_UNTOUCHED"},
+    {
+      "time":"21:15",
+      "type":"story",
+      "topic":"Enquete do dia: qual estreia/pauta voce quer ver analisada amanha?",
+      "providers":["facebook","instagram"],
+      "status":"ASSET_RIGHTS_QA_PENDING_NOT_SCHEDULED"
+    }
+  ],
+  "secondary_swap_options": [
+    "Last Seen - Apple TV, key art route identified",
+    "Colin From Accounts S3 - Paramount+, official key art & imagery route identified",
+    "Festival de Veneza - reta final em 11/09",
+    "Disney+ Flex X Cop S2 - lower core-fit reserve"
   ],
   "hard_gates": ["FACT_PASS","ASSET_RIGHTS_PASS","VIDEO_RIGHTS_PASS","DEDUP_60D_PASS","CANONICAL_MASK_PASS","QA_PASS"],
-  "youtube_policy": "8 videos only; no static posts",
+  "youtube_policy": "Keep YouTube focused on the 8 existing video slots; no static editorial posts.",
   "publication_allowed": false,
-  "note": "No Metricool schedules were created or modified by this radar run."
+  "note": "Metricool readback on 2026-09-09 found existing content for 11/09. This radar did not create, update, move or delete any scheduled post. Editorial additions remain proposals until rights and QA pass."
 }
