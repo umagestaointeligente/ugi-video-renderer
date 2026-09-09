@@ -1,0 +1,99 @@
+{
+  "schema": "UGI_EXACT_FINAL_APPROVAL_PACKAGE_V1",
+  "project": "UGI",
+  "date": "2026-09-09",
+  "timezone": "America/Sao_Paulo",
+  "assetCommit": "f280ea288421267727d6beedde1e2936716e5391",
+  "state": "AWAITING_EXACT_FINAL_PREVIEW_APPROVAL",
+  "publisher": "BUFFER",
+  "bufferMutationPerformed": false,
+  "gate": "config/ugi/editorial-human-approval-gate.json",
+  "approvalRule": "Paulo must see the exact commit-pinned final file before approval; preview and publish media must be byte-identical.",
+  "items": [
+    {
+      "id": "UGI-20260909-IG-STORY-APPLE-0900",
+      "platform": "instagram",
+      "format": "story",
+      "dueAtBrt": "2026-09-09T09:00:00-03:00",
+      "dueAtUtc": "2026-09-09T12:00:00Z",
+      "mediaPath": "public/ugi/editorial/2026-09-09/story-apple-0900.mp4",
+      "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/f280ea288421267727d6beedde1e2936716e5391/public/ugi/editorial/2026-09-09/story-apple-0900.mp4",
+      "sha256": "90cbc670b7dc5ddfaf500d54d7bf1c8164b4d119f99e90cf2b513fcc305e9125",
+      "music": "ORIGINAL_UGI_BAKED_IN",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-APPLE-0907",
+      "platform": "instagram",
+      "format": "story",
+      "dueAtBrt": "2026-09-09T09:07:00-03:00",
+      "dueAtUtc": "2026-09-09T12:07:00Z",
+      "mediaPath": "public/ugi/editorial/2026-09-09/story-apple-0907.mp4",
+      "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/f280ea288421267727d6beedde1e2936716e5391/public/ugi/editorial/2026-09-09/story-apple-0907.mp4",
+      "sha256": "2ce272df3011d19101e50cc5abec3026565e6f778041f82f387e60436bbf6160",
+      "music": "ORIGINAL_UGI_BAKED_IN",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-FEED-QUALCOMM-1230",
+      "platform": "instagram",
+      "format": "image",
+      "dueAtBrt": "2026-09-09T12:30:00-03:00",
+      "dueAtUtc": "2026-09-09T15:30:00Z",
+      "mediaPath": "public/ugi/editorial/2026-09-09/feed-qualcomm-amazon-1230.jpg",
+      "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/f280ea288421267727d6beedde1e2936716e5391/public/ugi/editorial/2026-09-09/feed-qualcomm-amazon-1230.jpg",
+      "sha256": "5640d52a3f31f99ba61c4fea1cf6af2da64591dd4d48700c76bb134aca46b1a6",
+      "caption": "🤖 A Qualcomm está fazendo um movimento que vai muito além de vender mais chips.\n\n📱 Durante anos, a empresa foi fortemente associada ao mercado de smartphones. Agora, a companhia tenta abrir uma nova avenida de crescimento em infraestrutura de IA.\n\n☁️ A parceria de longo prazo com a Amazon pode envolver até US$ 60 bilhões em chips e produtos para data centers de IA.\n\n📊 Isso muda a leitura do negócio: menos dependência de uma única avenida e mais exposição a um mercado que está redesenhando a infraestrutura tecnológica global.\n\n🎯 O ponto de gestão é portfólio, concentração e timing.\n\n💡 Empresas resilientes não esperam o motor principal perder força para procurar o próximo. Elas começam a construir o próximo motor enquanto o atual ainda funciona.\n\n#Gestão #Estratégia #InteligênciaArtificial #Qualcomm #Amazon #UGI",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-LI-RESILIENCE-1400",
+      "platform": "linkedin",
+      "format": "image",
+      "dueAtBrt": "2026-09-09T14:00:00-03:00",
+      "dueAtUtc": "2026-09-09T17:00:00Z",
+      "mediaPath": "public/ugi/editorial/2026-09-09/linkedin-digital-resilience-1400.jpg",
+      "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/f280ea288421267727d6beedde1e2936716e5391/public/ugi/editorial/2026-09-09/linkedin-digital-resilience-1400.jpg",
+      "sha256": "29ae8c717cc90eb6a5c9c09dc253421e435495f3a1c8611d500f3a63410bd04f",
+      "caption": "🧭 Dependência tecnológica deixou de ser um problema só da TI. Virou tema de gestão.\n\n🌐 Uma pesquisa com 1.300 executivos de grandes organizações mostra que infraestrutura digital já começa a ser tratada como energia e cadeia de suprimentos: algo que exige supervisão, contingência e capacidade de substituição.\n\n⚠️ O risco aparece quando uma empresa descobre tarde demais que trocar um fornecedor crítico não leva dias. Pode levar meses — ou mais de um ano.\n\n🔗 E isso vale para cloud, dados, modelos de IA, telecomunicações e qualquer tecnologia que sustente uma operação essencial.\n\n📌 A pergunta de gestão muda.\nNão é mais: “qual é o melhor fornecedor?”\nÉ: “se esse fornecedor ficar indisponível amanhã, quanto tempo eu levo para continuar operando?”\n\n🛠️ Isso exige pelo menos três coisas: mapear dependências críticas, definir alternativas reais e preservar controle sobre dados e ativos que não podem ficar presos a um único parceiro.\n\n💡 Eficiência busca o melhor caminho. Resiliência garante que exista um segundo caminho quando o primeiro falha.\n\n#Gestão #Estratégia #Risco #Tecnologia #InteligênciaArtificial #ContinuidadeDeNegócios #UGI",
+      "distributionGate": "PAUSED_EDITORIAL_QA_UNTIL_EXACT_APPROVAL",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-RESILIENCE-1800",
+      "platform": "instagram",
+      "format": "story",
+      "dueAtBrt": "2026-09-09T18:00:00-03:00",
+      "dueAtUtc": "2026-09-09T21:00:00Z",
+      "mediaPath": "public/ugi/editorial/2026-09-09/story-resilience-1800.mp4",
+      "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/f280ea288421267727d6beedde1e2936716e5391/public/ugi/editorial/2026-09-09/story-resilience-1800.mp4",
+      "sha256": "aa73ddd43d04859bb353322dd4b1ad9de3dcdc93c187a7c344f531e8e7221fa6",
+      "music": "ORIGINAL_UGI_BAKED_IN",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-RESILIENCE-1812",
+      "platform": "instagram",
+      "format": "story",
+      "dueAtBrt": "2026-09-09T18:12:00-03:00",
+      "dueAtUtc": "2026-09-09T21:12:00Z",
+      "mediaPath": "public/ugi/editorial/2026-09-09/story-resilience-1812.mp4",
+      "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/f280ea288421267727d6beedde1e2936716e5391/public/ugi/editorial/2026-09-09/story-resilience-1812.mp4",
+      "sha256": "855b102ce2c4a549a8a3ffd3777dcafb7894e87397ce829cd461f15fc1492b25",
+      "music": "ORIGINAL_UGI_BAKED_IN",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-FEED-MISTRAL-1915",
+      "platform": "instagram",
+      "format": "image",
+      "dueAtBrt": "2026-09-09T19:15:00-03:00",
+      "dueAtUtc": "2026-09-09T22:15:00Z",
+      "mediaPath": "public/ugi/editorial/2026-09-09/feed-mistral-1915.jpg",
+      "mediaUrl": "https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/f280ea288421267727d6beedde1e2936716e5391/public/ugi/editorial/2026-09-09/feed-mistral-1915.jpg",
+      "sha256": "a8253dc88f1d772a0e530973e11b929fbbedec2fe661bf449fc30dfa225fe57d",
+      "caption": "🤖 A Mistral tem apenas três anos — e já vale cerca de US$ 24 bilhões.\n\n💶 A empresa francesa levantou €3 bilhões em uma nova rodada de financiamento.\n\n🌍 Mas existe algo maior por trás do valuation: a Europa quer reduzir dependência tecnológica e ter uma empresa capaz de disputar espaço em inteligência artificial.\n\n🎯 Isso mostra como investidores precificam não apenas o tamanho atual de uma empresa, mas o espaço estratégico que ela pode ocupar.\n\n💡 Em mercados novos, posicionamento e velocidade podem valer tanto quanto escala.\n\n#MistralAI #InteligênciaArtificial #Estratégia #Tecnologia #Gestão #UGI",
+      "approval": "PENDING"
+    }
+  ]
+}
