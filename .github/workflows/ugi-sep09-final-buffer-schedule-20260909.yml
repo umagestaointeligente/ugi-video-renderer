@@ -88,9 +88,10 @@ jobs:
           python /tmp/schedule.py
       - name: Upload scheduling proof
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: ugi-sep09-buffer-schedule-proof-${{ github.run_id }}
           path: schedule-proof.json
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 1
