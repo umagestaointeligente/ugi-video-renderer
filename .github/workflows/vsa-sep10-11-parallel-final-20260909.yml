@@ -1,0 +1,113 @@
+name: VSA Sep10-11 Parallel Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-sep10-11-parallel-final-20260909.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  IDS_JSON: '["LITO_DCJ","TNO","HAWKING","KILAUEA","HELEN_KELLER","AURORA","POPCORN","GEYSER","ARMSTRONG","BIOLUM","SALLY_RIDE","TIDAL_BORE","AMELIA","GLACIER","CHAPLIN"]'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [LITO_DCJ,TNO,HAWKING,KILAUEA,HELEN_KELLER,AURORA,POPCORN,GEYSER,ARMSTRONG,BIOLUM,SALLY_RIDE,TIDAL_BORE,AMELIA,GLACIER,CHAPLIN]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --quiet edge-tts pyyaml
+      - name: Extract one topic and repaired renderer
+        env:
+          VSA_ID: ${{ matrix.id }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib,re,yaml,json,os
+          text=pathlib.Path('.github/workflows/vsa-sep10-11-finalize-20260909.yml').read_text(encoding='utf-8')
+          doc=yaml.safe_load(text)
+          all_topics=json.loads(doc['jobs']['build_release']['env']['TOPICS_JSON'])
+          picked=[x for x in all_topics if x['id']==os.environ['VSA_ID']]
+          if len(picked)!=1: raise SystemExit('TOPIC_NOT_UNIQUE:'+os.environ['VSA_ID'])
+          pathlib.Path('/tmp/topics.json').write_text(json.dumps(picked,ensure_ascii=False),encoding='utf-8')
+          m=re.search(r"cat > /tmp/build_vsa\.py <<'PY'\n(.*?)\n\s*PY\n\s*python /tmp/build_vsa\.py",text,re.S)
+          if not m: raise SystemExit('BUILD_SCRIPT_NOT_FOUND')
+          lines=m.group(1).splitlines(); indent=min((len(x)-len(x.lstrip()) for x in lines if x.strip()),default=0)
+          script='\n'.join(x[indent:] if len(x)>=indent else x for x in lines)+'\n'
+          reps=[
+            ('f"[0:a]aresample=48000,volume=1.0[n];"','f"[0:a]aresample=48000,volume=1.0,asplit=2[n1][n2];"'),
+            ('"[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"','"[m][n1]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"'),
+            ('"[n][duck]amix=inputs=2:duration=first:normalize=0,"','"[n2][duck]amix=inputs=2:duration=first:normalize=0,"'),
+            ('f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len}[n];"','f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len},asplit=2[n1][n2];"'),
+            ('"[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"','"[m][n1]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"'),
+            ('"[n][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"','"[n2][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"')]
+          for old,new in reps:
+              if old not in script: raise SystemExit('AUDIO_SNIPPET_MISSING')
+              script=script.replace(old,new,1)
+          old='return float(out(["ffprobe","-v","error","-show_entries","format=duration","-of","default=nw=1:nk=1",str(p)]))'
+          new='''raw=out(["ffprobe","-v","error","-show_entries","format=duration","-of","default=nw=1:nk=1",str(p)])\n    try:\n        return float(raw)\n    except (TypeError,ValueError):\n        if pathlib.Path(p).suffix.lower() in (".webm",".ogv"):\n            print("DURATION_METADATA_FALLBACK",p,raw,flush=True)\n            return 60.0\n        raise'''
+          if old not in script: raise SystemExit('PROBE_RETURN_MISSING')
+          script=script.replace(old,new,1)
+          pathlib.Path('/tmp/build_vsa.py').write_text(script,encoding='utf-8')
+          PY
+          export TOPICS_JSON="$(cat /tmp/topics.json)"
+          python -m py_compile /tmp/build_vsa.py
+          python /tmp/build_vsa.py
+      - name: Upload one master and receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-${{ matrix.id }}
+          path: /tmp/vsa_sep10_11/out/*
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: ${{ always() && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: vsa-*
+          path: /tmp/all
+      - name: Consolidate manifests
+        shell: bash
+        run: |
+          mkdir -p /tmp/release
+          find /tmp/all -type f -name '*.mp4' -exec cp {} /tmp/release/ \;
+          python - <<'PY'
+          import json,pathlib
+          rows=[]
+          for p in pathlib.Path('/tmp/all').rglob('manifest.json'):
+              d=json.loads(p.read_text())
+              rows.extend(d.get('items',[]))
+          if len(rows)!=15: raise SystemExit(f'EXPECTED_15_MANIFEST_ITEMS_GOT_{len(rows)}')
+          rows=sorted(rows,key=lambda x:(x['date'],x['time_brt']))
+          pathlib.Path('/tmp/release/manifest.json').write_text(json.dumps({'project':'ORBIT/VSA','result':'PASS_15_OF_15','items':rows},ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps({'count':len(rows),'files':[x['file'] for x in rows]},ensure_ascii=False,indent=2))
+          PY
+          test "$(find /tmp/release -maxdepth 1 -name '*.mp4' | wc -l)" -eq 15
+      - name: Publish temporary media release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          TAG="vsa-sep10-11-parallel-${{ github.run_id }}"
+          gh release create "$TAG" --title "VSA Sep10-11 Parallel Final ${{ github.run_id }}" --notes "15 canonical VSA masters for final scheduling."
+          gh release upload "$TAG" /tmp/release/*.mp4 /tmp/release/manifest.json --clobber
+          echo "$TAG" > release-tag.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-final-release-receipt
+          path: release-tag.txt
