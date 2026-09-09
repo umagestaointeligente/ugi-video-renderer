@@ -1,0 +1,171 @@
+{
+  "schema": "UGI_EDITORIAL_PLAN_V2",
+  "project": "UGI",
+  "date": "2026-09-09",
+  "timezone": "America/Sao_Paulo",
+  "state": "PREPARED_PENDING_FINAL_ASSETS_AND_HUMAN_APPROVAL",
+  "prepared_from_radar_at": "2026-09-08T22:36:00-03:00",
+  "publisher": "BUFFER",
+  "buffer_mutation_allowed_now": false,
+  "buffer_block_reason": "EDITORIAL_QA_PARTIAL_RELEASE: new assets require exact final preview and explicit approval; LinkedIn remains PAUSED_EDITORIAL_QA",
+  "principle": "A NOTICIA E O GANCHO. A INTELIGENCIA DE GESTAO E O PRODUTO.",
+  "format_mix": {
+    "instagram_reels": 1,
+    "instagram_carousels": 1,
+    "instagram_stories": 4,
+    "instagram_static_posts": 0,
+    "linkedin_company_posts": 1
+  },
+  "quality_gates": {
+    "real_subject_required": true,
+    "generic_stock_as_primary_visual_forbidden": true,
+    "ai_generated_real_person_or_real_company_substitute_forbidden": true,
+    "pixelated_media_forbidden": true,
+    "low_resolution_upscale_forbidden": true,
+    "instagram_vertical_final": "1080x1920",
+    "instagram_carousel_final": "1080x1350",
+    "linkedin_final": "1200x627_or_higher_equivalent",
+    "full_hd_or_better_source_preferred": true,
+    "story_clean_visual_required": true,
+    "story_text_density": "LOW",
+    "story_music_required": true,
+    "reel_music_required": true,
+    "music_policy": "licensed Meta audio when publication route supports it, otherwise royalty-safe instrumental baked into final MP4",
+    "reel_closed_captions": "MANDATORY_BURNED_IN",
+    "scene_by_scene_semantic_alignment": true,
+    "rights_clearance_before_final_use": true,
+    "final_asset_preview": "MANDATORY",
+    "human_approval_before_buffer": "MANDATORY",
+    "fail_closed": true
+  },
+  "slots": [
+    {
+      "id": "UGI-20260909-IG-STORY-RIR-01",
+      "local_time": "09:00",
+      "platform": "instagram",
+      "format": "story_video",
+      "topic": "Rock in Rio / Elton John — atencao intergeracional como ativo de marca",
+      "editorial_angle": "A celebridade e o show sao o gancho; a leitura UGI e como eventos transformam memoria, comunidade e atencao em valor de marca.",
+      "screen_copy": "🎹 Elton John dominou a conversa.\nMas o ativo maior foi a atenção.",
+      "visual_spec": "Imagem ou video REAL do Elton John tocando no Rock in Rio 2026, preferencialmente Palco Mundo, com identidade Rock in Rio realmente presente no ambiente ou em elemento oficial. Nao compor logo falsa sobre foto. Sem publico generico como imagem principal.",
+      "music": "faixa licenciada pela Meta adequada ao contexto do festival, ou instrumental pop/rock royalty-safe se prebaked; nao usar gravacao musical protegida fora de licenca",
+      "source_evidence": ["UOL 2026-09-08", "Folha 2026-09-08", "Rock in Rio official media"],
+      "asset_status": "PENDING_RIGHTS_CLEARED_FINAL_ASSET",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-RIR-02",
+      "local_time": "09:07",
+      "platform": "instagram",
+      "format": "story_video",
+      "topic": "Rock in Rio / experiencia de marca",
+      "editorial_angle": "Transformar repercussao cultural em insight de gestao de marca.",
+      "screen_copy": "💡 Marcas fortes não compram só alcance.\nElas constroem memória.",
+      "visual_spec": "Segundo take REAL e diferente do mesmo evento: Elton John ao piano + palco/plateia/branding oficial Rock in Rio visivel de forma natural. Composicao limpa e sem cards poluindo a imagem.",
+      "music": "continuidade da trilha licenciada/royalty-safe do Story 01",
+      "asset_status": "PENDING_RIGHTS_CLEARED_FINAL_ASSET",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-CAROUSEL-QUALCOMM-AMAZON-01",
+      "local_time": "12:30",
+      "platform": "instagram",
+      "format": "carousel",
+      "topic": "Qualcomm + Amazon — diversificacao para infraestrutura de IA",
+      "editorial_angle": "A Qualcomm esta usando IA e data centers para reduzir dependencia historica de smartphones; gestao de portfolio, cliente ancora e mudanca de campo competitivo.",
+      "slides": [
+        "🤖 A Qualcomm está mudando de campo.",
+        "A Amazon poderá comprar até US$ 60 bi em chips e produtos de data center da Qualcomm.",
+        "📱 O motivo estratégico: depender menos de smartphones e abrir uma nova avenida de crescimento.",
+        "☁️ A Amazon vira mais que cliente: ajuda a validar a Qualcomm como fornecedora de infraestrutura de IA.",
+        "⚔️ O novo jogo coloca a Qualcomm mais perto do território dominado pela Nvidia.",
+        "💡 Gestão: quando seu mercado principal desacelera, diversificar cedo vale mais do que reagir tarde."
+      ],
+      "caption": "🤖 A Qualcomm está fazendo um movimento que vai muito além de vender mais chips.\n\n📱 Durante anos, a empresa foi fortemente associada ao mercado de smartphones. Só que esse mercado enfrenta pressão, custos maiores e mudanças importantes em clientes estratégicos.\n\n☁️ Agora, a Qualcomm fechou uma parceria de longo prazo com a Amazon que pode envolver até US$ 60 bilhões em chips e produtos para data centers de IA.\n\n📊 Isso muda a leitura do negócio: a companhia deixa de depender tanto de uma única avenida de crescimento e tenta conquistar espaço em infraestrutura de IA, justamente onde a Nvidia construiu uma posição dominante.\n\n🎯 O ponto de gestão não é apenas tecnologia. É portfólio, concentração de receita e timing.\n\n💡 Empresas resilientes não esperam o motor principal perder força para procurar o próximo. Elas começam a construir o próximo motor enquanto o atual ainda funciona.\n\n#Gestão #Estratégia #InteligênciaArtificial #Qualcomm #Amazon #UGI",
+      "visual_spec": "Capa com fotografia REAL e nítida de contexto Qualcomm/Amazon ou data center oficial identificado; demais slides podem combinar logos oficiais em composição limpa com fotografias oficiais/licenciadas de chips, data centers e executivos em eventos da empresa. Proibido chip genérico inventado como evidência.",
+      "sources": ["Reuters 2026-09-08 — Qualcomm/Amazon AI chip deal"],
+      "asset_status": "PENDING_FINAL_CAROUSEL",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-LI-DIGITAL-RESILIENCE-01",
+      "local_time": "14:00",
+      "platform": "linkedin_company",
+      "format": "image_plus_text",
+      "topic": "Infraestrutura digital virou risco de conselho",
+      "editorial_angle": "Gestao de risco, dependencia de fornecedores, continuidade operacional e substituibilidade tecnologica.",
+      "post_text": "🧭 Dependência tecnológica deixou de ser um problema só da TI. Virou tema de gestão.\n\n🌐 Uma pesquisa com 1.300 executivos de grandes organizações mostra que infraestrutura digital já começa a ser tratada como energia e cadeia de suprimentos: algo que exige supervisão, contingência e capacidade de substituição.\n\n⚠️ O risco aparece quando uma empresa descobre tarde demais que trocar um fornecedor crítico não leva dias. Pode levar meses — ou mais de um ano.\n\n🔗 E isso vale para cloud, dados, modelos de IA, telecomunicações e qualquer tecnologia que sustente uma operação essencial.\n\n📌 A pergunta de gestão muda.\nNão é mais: “qual é o melhor fornecedor?”\nÉ: “se esse fornecedor ficar indisponível amanhã, quanto tempo eu levo para continuar operando?”\n\n🛠️ Isso exige pelo menos três coisas: mapear dependências críticas, definir alternativas reais e preservar controle sobre dados e ativos que não podem ficar presos a um único parceiro.\n\n💡 Eficiência busca o melhor caminho. Resiliência garante que exista um segundo caminho quando o primeiro falha.\n\n#Gestão #Estratégia #Risco #Tecnologia #InteligênciaArtificial #ContinuidadeDeNegócios #UGI",
+      "visual_spec": "Imagem REAL, limpa e Full HD de infraestrutura digital identificável — data center real, centro de operações ou ambiente tecnológico institucional — sem executivo genérico de banco de imagens. Preferir fonte institucional/press kit de empresa citada no estudo, como Airbus/Capgemini, quando direitos permitirem. Título curto sobre a imagem: 'Seu negócio sobreviveria sem um fornecedor crítico?'.",
+      "sources": ["Reuters 2026-09-08 — Boards prepare for digital infrastructure shocks / Capgemini survey"],
+      "asset_status": "PENDING_FINAL_IMAGE",
+      "distribution_status": "BLOCKED_LINKEDIN_PAUSED_EDITORIAL_QA",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-APPLE-03",
+      "local_time": "18:00",
+      "platform": "instagram",
+      "format": "story_video",
+      "topic": "Apple — primeiro grande teste de John Ternus como CEO",
+      "editorial_angle": "Expectativa, nao fato consumado: evento de 09/09 coloca hardware e IA sob teste de execucao da nova lideranca.",
+      "screen_copy": "🍎 Amanhã não é só um evento da Apple.\nÉ um teste de liderança.",
+      "visual_spec": "Imagem REAL de alta qualidade de John Ternus em palco oficial da Apple ou Tim Cook + John Ternus em contexto oficial Apple. Logo Apple apenas se fizer parte da fotografia/cenografia ou como marca oficial discreta, sem simular anuncio de produto ainda nao confirmado.",
+      "music": "instrumental tecnologia/premium royalty-safe ou faixa licenciada Meta",
+      "fact_guard": "Usar 'analistas esperam' e 'evento deve testar'; nao afirmar que produto esperado foi lançado antes do anuncio oficial.",
+      "sources": ["Reuters 2026-09-08 — Apple Ternus / event expectations"],
+      "asset_status": "PENDING_RIGHTS_CLEARED_FINAL_ASSET",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-STORY-APPLE-04",
+      "local_time": "18:12",
+      "platform": "instagram",
+      "format": "story_video",
+      "topic": "Apple — inovacao, IA e execucao",
+      "editorial_angle": "Lideranca se mede pela capacidade de transformar expectativa em entrega.",
+      "screen_copy": "💡 Liderança não herda só uma marca.\nHerda expectativas.",
+      "visual_spec": "Segundo frame REAL de evento/sede Apple ou John Ternus em contexto oficial. Manter tela limpa, com uma única frase e identidade UGI discreta.",
+      "music": "continuidade da trilha do Story 03",
+      "asset_status": "PENDING_RIGHTS_CLEARED_FINAL_ASSET",
+      "approval": "PENDING"
+    },
+    {
+      "id": "UGI-20260909-IG-REEL-MISTRAL-01",
+      "local_time": "19:15",
+      "platform": "instagram",
+      "format": "reel",
+      "topic": "Mistral AI — valuation de US$ 24 bi e soberania tecnologica europeia",
+      "editorial_angle": "Uma empresa de tres anos captando capital para competir num mercado dominado por gigantes; estrategia, velocidade e valor geopolitico.",
+      "hook": "🤖 Como uma empresa de IA com apenas três anos chegou a valer cerca de US$ 24 bilhões?",
+      "narration": "A francesa Mistral acaba de levantar 3 bilhões de euros e atingir uma avaliação próxima de 24 bilhões de dólares. E o mais interessante não é só o número. A empresa tem apenas três anos e tenta competir com gigantes muito maiores dos Estados Unidos. O novo aporte foi liderado por investidores como PSG Equity, Samsung e um fundo apoiado pela União Europeia. Parte do valor da Mistral está justamente em representar uma alternativa europeia em inteligência artificial, num momento em que tecnologia também virou questão de soberania. A empresa espera chegar a cerca de 1 bilhão de dólares em receita recorrente anual até o fim do ano. Para gestão, a lição é clara: em mercados que mudam rápido, escala importa, mas posicionamento estratégico também. A Mistral não precisa ser a maior hoje para ser considerada importante no tabuleiro de amanhã.",
+      "caption": "🤖 A Mistral tem apenas três anos — e já vale cerca de US$ 24 bilhões.\n\n💶 A empresa francesa levantou €3 bilhões numa rodada que entrou para a história da tecnologia europeia.\n\n🌍 Mas existe algo maior por trás do valuation: a Europa quer reduzir sua dependência tecnológica e ter uma empresa capaz de disputar espaço num mercado dominado por gigantes americanos e chineses.\n\n📈 A Mistral ainda é muito menor que os líderes globais, mas já projeta aproximadamente US$ 1 bilhão em receita recorrente anual até o fim do ano.\n\n🎯 Isso mostra como investidores precificam não apenas o tamanho atual de uma empresa, mas o espaço estratégico que ela pode ocupar.\n\n💡 Em mercados novos, posicionamento e velocidade podem valer tanto quanto escala.\n\n#MistralAI #InteligênciaArtificial #Estratégia #Tecnologia #Gestão #UGI",
+      "scene_plan": [
+        "0-5s: vídeo/foto REAL dos fundadores da Mistral ou fachada/escritório oficial + hook em CC",
+        "5-13s: contexto REAL Mistral em evento ou escritório; mostrar marca claramente",
+        "13-22s: imagens oficiais/licenciadas de Samsung/Europa apenas quando citadas na narração",
+        "22-32s: footage REAL de infraestrutura/modelos/evento Mistral, sem telas de IA inventadas",
+        "32-43s: Arthur Mensch ou equipe Mistral em evento/entrevista oficial, sem usar jornalista como visual principal",
+        "43-52s: imagem forte da Mistral + conclusão UGI"
+      ],
+      "music": "instrumental eletrônico moderno, sem voz, royalty-safe; audível sob narração e mantido até o último frame",
+      "sources": ["Reuters 2026-09-08 — French AI company Mistral hits $24 billion valuation in funding round"],
+      "asset_status": "PENDING_FINAL_REEL",
+      "approval": "PENDING"
+    }
+  ],
+  "dropped_for_now": [
+    {
+      "topic": "US accusations against Chinese AI firms",
+      "reason": "high factual/legal framing burden; hold unless needed after primary four-topic slate"
+    },
+    {
+      "topic": "oil near $100 / Middle East escalation",
+      "reason": "important but less aligned with current UGI visual/editorial priority than the selected management and technology slate"
+    },
+    {
+      "topic": "Nintendo / Zelda",
+      "reason": "strong social heat but lower immediate management utility than selected topics for the next slate"
+    }
+  ],
+  "release_condition": "No item may be scheduled or published until its exact final asset passes VISUAL_SEMANTIC_PASS, FORMAT_PASS, RIGHTS_PASS, MUSIC_PASS when applicable, CLOSED_CAPTION_PASS for video, and explicit Paulo approval. LinkedIn also requires distribution state reactivation before Buffer mutation."
+}
