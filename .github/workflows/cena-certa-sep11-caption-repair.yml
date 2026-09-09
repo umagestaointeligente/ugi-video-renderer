@@ -1,0 +1,118 @@
+name: Cena Certa Sep11 Caption Repair
+
+on:
+  push:
+    branches: [feat/cena-certa-factory-v2-certified]
+    paths:
+      - '.github/workflows/cena-certa-sep11-caption-repair.yml'
+
+permissions:
+  contents: write
+  packages: read
+
+jobs:
+  repair-and-activate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feat/cena-certa-factory-v2-certified
+      - name: Rebuild batch and apply measured layout repairs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          src=pathlib.Path('.github/workflows/cena-certa-sep11-dispatch-bootstrap.yml').read_text(encoding='utf-8')
+          code=src.split("python - <<'PY'\n",1)[1].split("\n          PY",1)[0]
+          code='\n'.join(line[10:] if line.startswith('          ') else line for line in code.splitlines())
+          exec(compile(code,'sep11-bootstrap-generator','exec'),{})
+          p=pathlib.Path('ops/cena-certa/batches/cena-certa-daily8-20260911-v1.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          short={'CC-20260911-GUARDIANS3-V1':'Guardians Vol. 3','CC-20260911-WAKANDA-V1':'Wakanda Forever','CC-20260911-SHANGCHI-V1':'Shang-Chi','CC-20260911-PHANTOM-MENACE-V1':'Star Wars: Episode I','CC-20260911-HOME-ALONE-V1':'Home Alone','CC-20260911-THUNDERBOLTS-V1':'Thunderbolts*','CC-20260911-AVATAR2-V1':'Avatar 2','CC-20260911-INDIANA5-V1':'Indiana Jones 5'}
+          repl={
+          'Rocket carrega um passado que o grupo nunca esqueceu.':'Rocket carrega um passado difícil.',
+          'Peter Quill ainda tenta lidar com suas perdas.':'Peter Quill ainda lida com suas perdas.',
+          'Uma nova ameaça coloca todos em movimento.':'Uma nova ameaça coloca todos em ação.',
+          'Mantis, Drax e Nebula também entram na luta.':'Mantis, Drax e Nebula entram na luta.',
+          'A família improvisada volta a ser testada.':'A família volta a ser testada.',
+          'É uma missão sobre amizade e pertencimento.':'É uma missão sobre amizade e união.',
+          'Wakanda tenta seguir em frente sem T’Challa.':'Wakanda tenta seguir sem T’Challa.',
+          'Shuri busca respostas para uma perda enorme.':'Shuri busca respostas para a perda.',
+          'Dois povos poderosos passam a se enfrentar.':'Dois povos poderosos entram em choque.',
+          'E cada lado acredita estar protegendo os seus.':'Cada lado quer proteger os seus.',
+          'Okoye encara as consequências de suas escolhas.':'Okoye encara suas escolhas.',
+          'Wakanda precisa decidir seu próximo passo.':'Wakanda precisa escolher o próximo passo.',
+          'Shang-Chi tentou deixar o passado para trás.':'Shang-Chi tentou deixar o passado.',
+          'Seu pai Wenwu volta a puxá-lo para a família.':'Wenwu o puxa de volta à família.',
+          'Cada confronto revela algo sobre sua origem.':'Cada luta revela sua origem.',
+          'Mesmo sem entender tudo o que está acontecendo.':'Sem entender tudo o que acontece.',
+          'Antes de Darth Vader, existia um menino em Tatooine.':'Antes de Vader, havia Anakin em Tatooine.',
+          'E ninguém sabia onde aquela história chegaria.':'Ninguém sabia onde aquilo chegaria.',
+          'A corrida de pods vira uma chance de liberdade.':'A corrida de pods pode libertar Anakin.',
+          'Com uma presença que virou símbolo da saga.':'Darth Maul virou símbolo da saga.',
+          'A política da República começa a se complicar.':'A República começa a se complicar.',
+          'Essa fase de Star Wars melhorou com o tempo?':'Star Wars: essa fase melhorou com o tempo?',
+          'Kevin McCallister queria que a família desaparecesse.':'Kevin queria que a família sumisse.',
+          'E por uma noite pareceu que o desejo funcionou.':'Por uma noite, pareceu funcionar.',
+          'Uma confusão deixa o garoto sozinho em casa.':'Uma confusão deixa Kevin sozinho.',
+          'Até perceber que dois ladrões escolheram sua casa.':'Dois ladrões escolhem a casa de Kevin.',
+          'O humor nasce do choque entre criança e adultos.':'Kevin vira o jogo contra os adultos.',
+          'Yelena Belova nunca foi uma heroína convencional.':'Yelena nunca foi uma heroína comum.',
+          'Bucky, Red Guardian e outros anti-heróis se encontram.':'Bucky e Red Guardian entram no grupo.',
+          'Todos carregam escolhas que gostariam de apagar.':'Todos carregam escolhas que querem apagar.',
+          'O grupo começa como uma soma de problemas.':'O grupo começa cheio de problemas.',
+          'Você prefere anti-heróis aos heróis perfeitos?':'Anti-heróis ou heróis perfeitos?',
+          'Agora ele precisa proteger uma família inteira.':'Agora ele protege uma família inteira.',
+          'Neytiri e os filhos entram no centro da história.':'Neytiri e os filhos entram no centro.',
+          'A fuga leva os Sully até outro povo Na’vi.':'Os Sully fogem até outro povo Na’vi.',
+          'James Cameron amplia Pandora em cada cena.':'James Cameron amplia Pandora.',
+          'Pais e filhos precisam confiar uns nos outros.':'Pais e filhos precisam confiar entre si.',
+          'Você prefere a floresta ou o oceano de Pandora?':'Floresta ou oceano de Pandora?',
+          'Indiana Jones nunca soube ficar longe de um artefato.':'Indiana Jones nunca larga um artefato.',
+          'Helena Shaw reaparece trazendo uma nova busca.':'Helena Shaw traz uma nova busca.',
+          'E um objeto ligado a Arquimedes vira o centro.':'Um objeto de Arquimedes vira o centro.',
+          'Indy volta a correr contra adversários perigosos.':'Indy corre contra adversários perigosos.',
+          'Qual aventura de Indiana Jones é a sua favorita?':'Qual aventura de Indy é a sua favorita?'
+          }
+          for item in data:
+              item['film_title']=short[item['id']]
+              item['caption_chunks']=[repl.get(s,s) for s in item['caption_chunks']]
+          p.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          print('SEP11_CAPTION_REPAIR_PASS',sum(1 for x in data for s in x['caption_chunks'] if s in repl.values()))
+          PY
+      - name: Activate exact validated 8-to-8 dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python ops/cena-certa/dispatch_activate.py --batch ops/cena-certa/batches/cena-certa-daily8-20260911-v1.json --select-count 8 --reserve-count 0 --note 'Paulo authorized 11/09 production and scheduling; title and caption safe-area repairs applied after measured canonical gate failures.'
+      - name: Persist validated batch and dispatch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,json,os,pathlib,urllib.error,urllib.parse,urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']; branch='feat/cena-certa-factory-v2-certified'; api='https://api.github.com/repos/'+repo+'/contents/'; headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'CenaCertaFactoryV2'}
+          def meta(path):
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(api+urllib.parse.quote(path,safe='/')+'?ref='+urllib.parse.quote(branch,safe=''),headers=headers),timeout=30) as r:return json.loads(r.read().decode())
+              except urllib.error.HTTPError as e:
+                  if e.code==404:return None
+                  raise
+          def put(path,message):
+              m=meta(path); payload={'message':message,'content':base64.b64encode(pathlib.Path(path).read_bytes()).decode(),'branch':branch}
+              if m:payload['sha']=m['sha']
+              req=urllib.request.Request(api+urllib.parse.quote(path,safe='/'),data=json.dumps(payload).encode(),headers={**headers,'Content-Type':'application/json'},method='PUT')
+              with urllib.request.urlopen(req,timeout=45) as r:out=json.loads(r.read().decode())
+              print('CONTENTS_API_WRITE_PASS',path,out['commit']['sha'])
+          put('ops/cena-certa/batches/cena-certa-daily8-20260911-v1.json','ops(cena-certa): persist Sep 11 validated batch')
+          put('ops/cena-certa/dispatch.json','ops(cena-certa): dispatch Sep 11 primary eight')
+          PY
