@@ -1,0 +1,254 @@
+name: VSA Sep10-11 Finalize Batch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-sep10-11-finalize-20260909.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vsa-sep10-11-finalize-20260909
+  cancel-in-progress: false
+
+jobs:
+  build_release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      TOPICS_JSON: |
+        [{"id": "LITO_DCJ", "date": "2026-09-10", "time": "10:30", "title": "O que a doença de Lito Sousa faz no cérebro?", "script": "Lito Sousa foi diagnosticado com doença de Creutzfeldt-Jakob, uma condição neurodegenerativa rara associada a príons. Um príon não é vírus nem bactéria. É uma proteína que assume uma forma anormal e pode induzir outras proteínas a se dobrarem de maneira parecida. Essa reação em cadeia danifica o tecido cerebral e pode afetar movimentos, equilíbrio e cognição. No caso de Lito, houve autorização excepcional para acesso a um tratamento experimental. Isso não significa cura aprovada: a estratégia ainda é experimental e busca interferir no processo que alimenta a doença. A ciência continua testando caminhos para doenças por príons. Fica aqui nossa torcida e uma mensagem de força para o Lito e para a família. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/e/ed/Visto_Americano_para_Piloto_de_Avi%C3%A3o_-_Lito_Sousa_do_canal_Avi%C3%B5es_e_M%C3%BAsicas.webm", "CC BY 3.0"]], "mechs": ["PRÍON NORMAL → FORMA ANORMAL", "PROTEÍNAS MAL DOBRADAS SE PROPAGAM", "DANO NEURONAL → SINTOMAS"], "track": ["Masking the Masters", "Eugenio Mininni", "https://assets.mixkit.co/music/552/552.mp3", "Mixkit Stock Music Free License"]}, {"id": "TNO", "date": "2026-09-10", "time": "13:00", "title": "O que existe além de Netuno?", "script": "Netuno é o último planeta do Sistema Solar, mas está longe de ser o fim dele. Muito além de sua órbita existem milhares de objetos transnetunianos, pequenos mundos gelados que guardam pistas da formação dos planetas. Hubble e Webb conseguem detectar alguns deles como pontos extremamente fracos que se movem contra o fundo de estrelas. Hubble observa muito bem no visível, enquanto Webb acrescenta o infravermelho. Comparando brilho, cor e movimento, os astrônomos estimam tamanho, órbita e características da superfície. Esses corpos passaram bilhões de anos em regiões frias e distantes e funcionam como cápsulas do tempo. Estudá-los ajuda a reconstruir como o Sistema Solar se organizou e como os planetas migraram. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/0/09/Hubble_Archive_-_Pre-Launch_%28SVS13059_-_NASAs_Hubble_Space_Telescope_The_Challenge_and_Complexity_of_Operations%29.webm", "Public domain"], ["https://upload.wikimedia.org/wikipedia/commons/f/f6/James-Webb-Space-Telescope-Deployment-Sequence-_Nominal.webm", "Public domain"]], "mechs": ["NETUNO NÃO É O FIM", "VISÍVEL + INFRAVERMELHO", "COR + MOVIMENTO → ÓRBITA E COMPOSIÇÃO"], "track": ["Classical vibes 4", "Grigoriy Nuzhny", "https://assets.mixkit.co/music/684/684.mp3", "Mixkit Stock Music Free License"]}, {"id": "HAWKING", "date": "2026-09-10", "time": "15:30", "title": "Por que Stephen Hawking perdeu os movimentos?", "script": "Stephen Hawking recebeu ainda jovem o diagnóstico de uma doença do neurônio motor. Essas doenças atingem células nervosas responsáveis por levar comandos do cérebro e da medula até os músculos. Quando esses neurônios deixam de funcionar, os músculos perdem progressivamente o sinal necessário para movimentos voluntários. Hawking passou a depender de cadeira motorizada e, depois de perder a fala natural, de sistemas de comunicação assistiva. A limitação motora não significava perda automática de capacidade intelectual. Ele continuou pesquisando cosmologia, gravidade e buracos negros durante décadas. Sua trajetória mostrou ao mesmo tempo o impacto de uma doença neuromuscular e o poder da tecnologia de acessibilidade para preservar comunicação e autonomia. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/7/7a/StephenHawking-videoselection-2018.webm", "Public domain"], ["https://upload.wikimedia.org/wikipedia/commons/c/cf/Stephen_Hawking_at_the_White_House_with_President_Clinton.webm", "Public domain"]], "mechs": ["CÉREBRO → NEURÔNIO MOTOR → MÚSCULO", "SINAL MOTOR ENFRAQUECE", "TECNOLOGIA ASSISTIVA → COMUNICAÇÃO"], "track": ["Spiritual Moment", "Diego Nava", "https://assets.mixkit.co/music/525/525.mp3", "Mixkit Stock Music Free License"]}, {"id": "KILAUEA", "date": "2026-09-10", "time": "18:00", "title": "Como o Kīlauea avisa antes de uma fonte de lava?", "script": "Antes de uma fonte de lava no Kīlauea, os cientistas não ficam apenas olhando para a cratera. Instrumentos medem o que o vulcão faz por dentro. Quando magma e gases aumentam a pressão, o solo pode inflar alguns milímetros ou centímetros, algo detectado por tiltímetros e GPS. Pequenos terremotos e mudanças no tremor também mostram rochas se rompendo e fluido se movendo. O observatório do USGS acompanha justamente esses sinais para entender quando o sistema está pressurizando. Quando a fonte começa, parte dessa pressão é liberada e o padrão de deformação pode mudar para deflação. Não é um relógio perfeito, mas é uma maneira de transformar movimentos invisíveis do vulcão em sinais mensuráveis antes do espetáculo aparecer. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/6/62/April_22%2C_2025_%E2%80%94_K%C4%ABlauea_Episode_18_Lava_Fountaining_Video.webm", "Public domain"], ["https://upload.wikimedia.org/wikipedia/commons/a/ab/Fissure_fountains_feed_lava_flows%2C_as_shown_in_this_overflight_video_of_the_F....webm", "Public domain"]], "mechs": ["MAGMA + GÁS → PRESSÃO", "SOLO INFLA + TREMOR MUDA", "PRESSÃO LIBERA → FONTE DE LAVA"], "track": ["Epic Games", "Ahjay Stelino", "https://assets.mixkit.co/music/76/76.mp3", "Mixkit Stock Music Free License"]}, {"id": "HELEN_KELLER", "date": "2026-09-10", "time": "19:30", "title": "Como Helen Keller aprendeu a falar?", "script": "Helen Keller não enxergava nem ouvia desde muito pequena, então aprender linguagem exigiu outro caminho. Com Anne Sullivan, ela começou associando sinais feitos na palma da mão a objetos e ideias. Para aprender a falar, Helen precisava perceber aquilo que não podia ouvir. Ela tocava o rosto e a garganta de quem falava para sentir vibrações, posições dos lábios e movimentos da língua, e depois tentava reproduzir essas sensações. Cada som precisava ser construído pelo tato e pela prática, não pela imitação auditiva. Registros históricos mostram Helen demonstrando esse método. Ela se tornou escritora, palestrante e defensora das pessoas com deficiência. É um exemplo impressionante de como o cérebro consegue usar outras pistas sensoriais para construir linguagem. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/c/cf/How_Helen_Keller_Learned_To_Talk.webm", "Public domain"]], "mechs": ["TOQUE NA MÃO → SIGNIFICADO", "VIBRAÇÃO + LÁBIOS → SOM", "TATO + PRÁTICA → FALA"], "track": ["Your Breath", "Eugenio Mininni", "https://assets.mixkit.co/music/634/634.mp3", "Mixkit Stock Music Free License"]}, {"id": "AURORA", "date": "2026-09-10", "time": "21:00", "title": "Por que a aurora acende o céu em cores?", "script": "A aurora começa muito longe da Terra. O Sol lança partículas carregadas pelo espaço, e parte delas chega até o nosso planeta. O campo magnético desvia grande parte desse fluxo, mas também guia partículas em direção às regiões polares. Quando elas entram na alta atmosfera, colidem com átomos e moléculas e transferem energia. Depois, esses gases liberam essa energia em forma de luz. O oxigênio costuma produzir o verde mais comum e, em certas altitudes, tons avermelhados. O nitrogênio pode contribuir com azul e violeta. Por isso a aurora não é uma nuvem refletindo luz. É a própria atmosfera emitindo fótons depois de ser excitada por partículas vindas do Sol. Cada cortina colorida é uma conexão visível entre o Sol e a Terra. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/f/ff/Aurora-Iceland_Northern_Lights_timelapse_2026-02-06.hd.webm", "CC BY 4.0"], ["https://upload.wikimedia.org/wikipedia/commons/7/72/Aurora_borealis_near_Salzdahlum_2024-10-12_timelapse_1.webm", "CC0"]], "mechs": ["SOL → PARTÍCULAS CARREGADAS", "CAMPO MAGNÉTICO → POLOS", "COLISÕES → LUZ VERDE, VERMELHA, AZUL"], "track": ["Staring at the Night Sky", "Alejandro Magaña", "https://assets.mixkit.co/music/168/168.mp3", "Mixkit Stock Music Free License"]}, {"id": "POPCORN", "date": "2026-09-10", "time": "22:30", "title": "Por que a pipoca explode?", "script": "O milho de pipoca parece seco, mas cada grão guarda uma pequena quantidade de água no interior. Quando ele aquece, essa água vira vapor. A casca do grão é dura e quase não deixa o vapor escapar, então a pressão cresce. Ao mesmo tempo, o amido dentro do milho aquece e fica mais macio. Quando a pressão finalmente supera a resistência da casca, o grão se rompe de uma vez. O vapor se expande rapidamente e empurra o amido para fora. Em frações de segundo, aquela massa vira a parte branca e aerada que a gente come. Por isso nem todo milho estoura igual: umidade, integridade da casca e temperatura fazem diferença. A pipoca é basicamente uma pequena panela de pressão natural. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/f/fc/Jumping_popcorn.ogv", "CC BY-SA 4.0"], ["https://upload.wikimedia.org/wikipedia/commons/c/c3/Popcorn_%281931%29.webm", "Public domain"]], "mechs": ["ÁGUA INTERNA → VAPOR", "CASCA SEGURA → PRESSÃO SOBE", "CASCA ROMPE → AMIDO EXPANDE"], "track": ["Close Up", "Michael Ramir C.", "https://assets.mixkit.co/music/1167/1167.mp3", "Mixkit Stock Music Free License"]}, {"id": "GEYSER", "date": "2026-09-11", "time": "08:00", "title": "Como um gêiser consegue lançar água para o alto?", "script": "Um gêiser funciona porque água subterrânea, calor e pressão ficam presos numa espécie de encanamento natural. A água desce por fissuras e encontra rochas aquecidas pelo magma. Em profundidade, a pressão permite que ela fique líquida mesmo acima da temperatura normal de ebulição. Quando parte da água consegue subir e escapar, a pressão dentro do sistema cai. Então uma porção maior da água superaquecida vira vapor quase de uma vez. Esse vapor ocupa muito mais volume do que a água líquida e empurra a coluna acima com força. O resultado é a erupção que vemos na superfície. Depois, o sistema volta a encher e aquecer, preparando o próximo ciclo. Um gêiser é um ciclo de calor, pressão e descompressão. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/b/b3/Castle_geyser_20190714_072044_VID.webm", "CC BY 3.0"], ["https://upload.wikimedia.org/wikipedia/commons/0/03/Grand_geyser_erupting_20190714_093149_VID.webm", "CC BY 3.0"]], "mechs": ["ÁGUA DESCE → ROCHA QUENTE", "PRESSÃO MANTÉM ÁGUA SUPERAQUECIDA", "PRESSÃO CAI → VAPOR EXPANDE → JATO"], "track": ["Epic Games", "Ahjay Stelino", "https://assets.mixkit.co/music/76/76.mp3", "Mixkit Stock Music Free License"]}, {"id": "ARMSTRONG", "date": "2026-09-11", "time": "10:30", "title": "Por que Neil Armstrong assumiu o controle da Apollo 11?", "script": "Nos minutos finais da Apollo 11, Neil Armstrong percebeu que o módulo lunar estava sendo levado para uma área com pedras e uma cratera. Em vez de aceitar aquele ponto, ele passou a controlar manualmente parte da trajetória e voou horizontalmente procurando terreno mais seguro. Enquanto isso, o combustível disponível para a descida continuava diminuindo e o controle da missão acompanhava cada segundo. Armstrong e Buzz Aldrin pousaram no Mar da Tranquilidade com pouca margem restante. O computador não tinha simplesmente falhado: ele ainda ajudava na navegação e no controle. O humano entrou no circuito para escolher um lugar melhor diante do terreno real. É um exemplo clássico de automação trabalhando junto com julgamento humano quando o ambiente apresenta algo que o plano não previa. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/e/e6/Apollo_11_Crew_Prelaunch_Press_Conference.webm", "Public domain"], ["https://upload.wikimedia.org/wikipedia/commons/5/56/Partially_Restored_Apollo_11_Video.ogv", "Public domain"]], "mechs": ["GUIAGEM AUTOMÁTICA → ÁREA PERIGOSA", "ARMSTRONG ASSUME CONTROLE", "DESVIO HORIZONTAL → POUSO SEGURO"], "track": ["Classical vibes 4", "Grigoriy Nuzhny", "https://assets.mixkit.co/music/684/684.mp3", "Mixkit Stock Music Free License"]}, {"id": "BIOLUM", "date": "2026-09-11", "time": "13:00", "title": "Por que algumas ondas brilham no escuro?", "script": "Quando uma onda brilha azul no escuro, a água não está refletindo uma luz escondida. Em muitos casos, o brilho vem de organismos microscópicos capazes de bioluminescência. Certos dinoflagelados produzem luz por uma reação química dentro da célula. O movimento da água pode funcionar como gatilho mecânico: a onda quebra, a célula é deformada e uma sequência química ativa moléculas que liberam energia em forma de fótons. Milhões de pequenos flashes acontecendo quase ao mesmo tempo criam aquela faixa azul ao longo da praia. O brilho pode ter função de defesa, assustando predadores ou denunciando quem perturba o organismo. Por isso remar, nadar ou quebrar uma onda pode acender a água por alguns segundos. É química produzindo luz dentro de seres vivos. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/9/97/Surfing_on_bioluminescent_wave.webm", "CC BY-SA 4.0"]], "mechs": ["MOVIMENTO DA ÁGUA → DEFORMA A CÉLULA", "REAÇÃO QUÍMICA → FÓTONS", "MILHÕES DE FLASHES → ONDA AZUL"], "track": ["Spiritual Moment", "Diego Nava", "https://assets.mixkit.co/music/525/525.mp3", "Mixkit Stock Music Free License"]}, {"id": "SALLY_RIDE", "date": "2026-09-11", "time": "15:30", "title": "Por que Sally Ride treinou um braço robótico no espaço?", "script": "Sally Ride ficou conhecida como a primeira mulher americana no espaço, mas sua missão envolvia muito mais do que estar a bordo. Ela se especializou no braço robótico do ônibus espacial, o Canadarm. Esse sistema podia agarrar, mover e liberar cargas em órbita, onde pequenos erros de movimento podem gerar grandes consequências. Antes do voo, Ride ajudou a desenvolver procedimentos e treinou intensamente o uso do equipamento. Na missão STS-7, ela operou o braço em atividades com satélites e experimentos. O controle exigia combinar câmeras, referências visuais e movimentos muito precisos, porque no espaço não existe o mesmo senso de peso que temos no chão. O braço ampliava o alcance da tripulação e transformava o ônibus espacial numa plataforma capaz de manipular objetos em órbita. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/d/d1/STS-7_Mission_Highlights.webm", "Public domain"]], "mechs": ["CÂMERAS → REFERÊNCIA VISUAL", "JOYSTICK → ARTICULAÇÕES DO CANADARM", "BRAÇO ROBÓTICO → CAPTURA E MOVE CARGAS"], "track": ["Your Breath", "Eugenio Mininni", "https://assets.mixkit.co/music/634/634.mp3", "Mixkit Stock Music Free License"]}, {"id": "TIDAL_BORE", "date": "2026-09-11", "time": "18:00", "title": "Como nasce uma onda de maré que parece uma parede?", "script": "Em alguns rios, a maré do oceano consegue entrar contra a corrente formando uma frente de água que avança rio acima. Esse fenômeno é chamado de tidal bore, ou pororoca em alguns contextos. Para acontecer, a geometria do estuário importa muito. Quando um canal largo vai ficando mais estreito e raso, a água empurrada pela maré precisa ocupar menos espaço. A velocidade e a altura da frente aumentam. Se a diferença de nível entre a maré cheia e a vazante for grande o suficiente, surge uma onda bem definida que corre contra o fluxo normal do rio. Ela pode viajar por muitos quilômetros, refletir nas margens e formar várias cristas. Não é um tsunami: é a maré sendo concentrada pela forma do rio e pela mudança rápida do nível do mar. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/7/7d/Tidalbore_Mascaret_Hangzhou_china.ogv", "CC BY-SA 3.0"], ["https://upload.wikimedia.org/wikipedia/commons/3/3e/Arnside_bore.ogv", "CC BY-SA 3.0"]], "mechs": ["MARÉ ENTRA NO ESTUÁRIO", "CANAL ESTREITA E FICA RASO", "ÁGUA SE CONCENTRA → FRENTE AVANÇA"], "track": ["Stripped Bare", "Ahjay Stelino", "https://assets.mixkit.co/music/72/72.mp3", "Mixkit Stock Music Free License"]}, {"id": "AMELIA", "date": "2026-09-11", "time": "19:30", "title": "Como Amelia Earhart cruzou o Atlântico sozinha?", "script": "Em 1932, Amelia Earhart se tornou a primeira mulher a atravessar o Atlântico sozinha de avião. O plano era voar da Terra Nova até a Europa, mas a viagem virou uma sequência de problemas. Ela enfrentou mau tempo, formação de gelo e dificuldades mecânicas, enquanto precisava controlar combustível e navegação sem os sistemas modernos de hoje. Depois de quase quinze horas, não chegou ao destino planejado na França: pousou em um campo na Irlanda do Norte. O desvio não diminuiu a façanha. Naquela época, atravessar o Atlântico em um avião pequeno significava passar horas sobre água com previsões meteorológicas limitadas e pouca margem para erro. O voo transformou Earhart em símbolo mundial da aviação e mostrou o limite da tecnologia e da resistência humana daquele período. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/5/52/Amelia_Earhart_First_Female_Aviator_Flies_Solo_Across_Pacific_in_18_Hours%2C_1932.webm", "Public domain"], ["https://upload.wikimedia.org/wikipedia/commons/8/85/Amelia_Earhart_Launches_Hudson_Terraplane.webm", "Public domain"]], "mechs": ["ATLÂNTICO → HORAS SEM POUSO", "GELO + MAU TEMPO + NAVEGAÇÃO", "DESVIO → POUSO NA IRLANDA DO NORTE"], "track": ["Close Up", "Michael Ramir C.", "https://assets.mixkit.co/music/1167/1167.mp3", "Mixkit Stock Music Free License"]}, {"id": "GLACIER", "date": "2026-09-11", "time": "21:00", "title": "Por que uma geleira se parte de repente?", "script": "Quando um enorme bloco de gelo se desprende de uma geleira e cai no mar, parece que tudo aconteceu de repente. Mas a ruptura foi sendo preparada por tensões dentro do gelo. A geleira flui lentamente sob o próprio peso. Perto da frente, o gelo é puxado, comprimido e fraturado. Água derretida pode entrar em rachaduras e ajudar a aprofundá-las. Quando a frente chega ao oceano, a flutuação da água também exerce forças sobre o bloco. Se a rede de fraturas deixa de sustentar aquele pedaço, ele se separa num evento chamado calving. O bloco pode tombar, mergulhar e deslocar muita água. Por isso o instante da quebra é rápido, mas o processo mecânico que criou as rachaduras pode ter levado muito mais tempo. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/d/d0/040_Eqi_glacier_calving_filmed_in_slow_motion_%28Greenland%29_Video_by_Giles_Laurent.webm", "CC BY-SA 4.0"], ["https://upload.wikimedia.org/wikipedia/commons/0/0e/Calving_of_Margerie_Glacier_video.webm", "CC BY 2.0"]], "mechs": ["GELEIRA FLUI → TENSÃO", "RACHADURAS SE APROFUNDAM", "FRATURA CRÍTICA → CALVING"], "track": ["Stripped Bare", "Ahjay Stelino", "https://assets.mixkit.co/music/72/72.mp3", "Mixkit Stock Music Free License"]}, {"id": "CHAPLIN", "date": "2026-09-11", "time": "22:30", "title": "Como Chaplin fazia rir quase sem palavras?", "script": "Charlie Chaplin virou um dos maiores símbolos do cinema mudo porque sua comédia precisava funcionar visualmente. Sem diálogo gravado como ferramenta principal, uma ação tinha que ser compreendida pelo corpo, pelo enquadramento e pelo ritmo. O personagem do Vagabundo usava passos reconhecíveis, mudanças rápidas de expressão e objetos comuns transformados em parte da piada. Uma bengala podia virar extensão do gesto, uma porta podia esconder ou revelar alguém no instante exato e uma perseguição dependia do tempo entre movimento e reação. Isso não significa que o cinema mudo fosse realmente silencioso: salas costumavam ter acompanhamento musical. Mas a narrativa precisava sobreviver mesmo sem fala gravada. Chaplin transformou linguagem corporal e montagem em uma espécie de gramática universal da comédia. Agora você já sabe.", "sources": [["https://upload.wikimedia.org/wikipedia/commons/c/c5/Charlie_Chaplin_%27The_Tramp%27_-_Film_1915.webm", "Public domain"], ["https://upload.wikimedia.org/wikipedia/commons/a/a9/Laughing_Gas_%281914%29.webm", "Public domain"]], "mechs": ["GESTO CLARO → IDEIA VISUAL", "OBJETO COMUM → PIADA", "RITMO DE AÇÃO + REAÇÃO → COMÉDIA"], "track": ["Moon Walk", "Eugenio Mininni", "https://assets.mixkit.co/music/609/609.mp3", "Mixkit Stock Music Free License"]}]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --quiet edge-tts
+      - name: Build 15 canonical VSA masters
+        shell: bash
+        run: |
+          cat > /tmp/build_vsa.py <<'PY'
+          import os, json, math, subprocess, pathlib, urllib.request, urllib.parse, time, hashlib, textwrap, shutil, sys
+
+          ROOT=pathlib.Path("/tmp/vsa_sep10_11")
+          ROOT.mkdir(parents=True, exist_ok=True)
+          OUT=ROOT/"out"; OUT.mkdir(exist_ok=True)
+          WORK=ROOT/"work"; WORK.mkdir(exist_ok=True)
+          ASSETS=ROOT/"assets"; ASSETS.mkdir(exist_ok=True)
+          topics=json.loads(os.environ["TOPICS_JSON"])
+          FONT="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+          FONTREG="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+          CARRIER_URL="https://beta.productos.dev/api/project-storage/public/a4cbb8e8-0282-4eae-8007-0314da27880e/vsa/2026-09-10/musicfix/VSA_TNO_CANONICAL_REAL_MUSIC_FINAL.mp4"
+
+          def run(cmd, check=True):
+              print("+", " ".join(str(x) for x in cmd), flush=True)
+              return subprocess.run(cmd, check=check, text=True, capture_output=False)
+
+          def out(cmd):
+              return subprocess.check_output(cmd, text=True).strip()
+
+          def download(url, dest):
+              dest=pathlib.Path(dest)
+              if dest.exists() and dest.stat().st_size>2048:
+                  return dest
+              req=urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0 VSAEditorial/1.0"})
+              last=None
+              for attempt in range(6):
+                  try:
+                      with urllib.request.urlopen(req, timeout=120) as r, open(dest,"wb") as f:
+                          shutil.copyfileobj(r,f)
+                      if dest.stat().st_size<2048: raise RuntimeError("download too small")
+                      return dest
+                  except Exception as e:
+                      last=e
+                      print("download retry", attempt+1, url, repr(e), flush=True)
+                      time.sleep(3+attempt*3)
+              raise last
+
+          def probe_duration(p):
+              return float(out(["ffprobe","-v","error","-show_entries","format=duration","-of","default=nw=1:nk=1",str(p)]))
+
+          def secfmt(x):
+              h=int(x//3600); m=int((x%3600)//60); s=x%60
+              return f"{h:02d}:{m:02d}:{s:06.3f}".replace(".",",")
+
+          def srt_for(text, dur, path):
+              words=text.split()
+              chunks=[]
+              i=0
+              while i<len(words):
+                  n=min(9, len(words)-i)
+                  chunk=" ".join(words[i:i+n])
+                  chunks.append(chunk)
+                  i+=n
+              step=dur/max(1,len(chunks))
+              lines=[]
+              for idx,ch in enumerate(chunks,1):
+                  a=(idx-1)*step; b=min(dur,idx*step)
+                  lines += [str(idx), f"{secfmt(a)} --> {secfmt(b)}", ch, ""]
+              pathlib.Path(path).write_text("\n".join(lines), encoding="utf-8")
+
+          def make_real(src, start, dur, dest):
+              filt=(
+                "[0:v]split=2[bg][fg];"
+                "[bg]scale=976:845:force_original_aspect_ratio=increase,crop=976:845,"
+                "gblur=sigma=28,eq=brightness=-0.16:saturation=0.8[bgv];"
+                "[fg]scale=940:805:force_original_aspect_ratio=decrease,eq=contrast=1.03:saturation=1.04[fgv];"
+                "[bgv][fgv]overlay=(W-w)/2:(H-h)/2,fps=30,format=yuv420p[v]"
+              )
+              run(["ffmpeg","-y","-loglevel","error","-stream_loop","-1","-ss",f"{start:.2f}","-i",str(src),
+                   "-t",f"{dur:.3f}","-filter_complex",filt,"-map","[v]","-an",
+                   "-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p",str(dest)])
+
+          def make_explainer(text, dur, dest, idx):
+              tf=dest.with_suffix(".txt"); tf.write_text(text, encoding="utf-8")
+              vf=(
+                "drawbox=x=0:y=0:w=iw:h=ih:color=0x071321:t=fill,"
+                "drawbox=x=90:y=170:w=300:h=170:color=0x122b43:t=fill,"
+                "drawbox=x=585:y=505:w=300:h=170:color=0x18364d:t=fill,"
+                "drawbox=x='390+mod(t*150,195)':y=390:w=90:h=18:color=0xd6aa54:t=fill,"
+                f"drawtext=fontfile={FONT}:textfile={tf}:fontcolor=white:fontsize=40:"
+                "x=(w-text_w)/2:y=65:box=1:boxcolor=0x00000088:boxborderw=22,"
+                f"drawtext=fontfile={FONTREG}:text='CAUSA':fontcolor=white:fontsize=34:x=180:y=235,"
+                f"drawtext=fontfile={FONTREG}:text='EFEITO':fontcolor=white:fontsize=34:x=675:y=565,"
+                "fps=30,format=yuv420p"
+              )
+              run(["ffmpeg","-y","-loglevel","error","-f","lavfi","-i",f"color=c=0x071321:s=976x845:r=30:d={dur:.3f}",
+                   "-vf",vf,"-an","-c:v","libx264","-preset","veryfast","-crf","22","-pix_fmt","yuv420p",str(dest)])
+
+          carrier=download(CARRIER_URL, ASSETS/"carrier.mp4")
+          run(["ffmpeg","-y","-loglevel","error","-ss","0.6","-i",str(carrier),"-frames:v","1","-vf","scale=1080:1920",str(ASSETS/"shell.jpg")])
+          carrier_d=probe_duration(carrier)
+          run(["ffmpeg","-y","-loglevel","error","-ss",f"{max(0,carrier_d-4.2):.3f}","-i",str(carrier),"-t","4.2",
+               "-an","-vf","scale=1080:1920,fps=30","-c:v","libx264","-preset","veryfast","-crf","22","-pix_fmt","yuv420p",str(ASSETS/"cta_visual.mp4")])
+
+          cta_text="Curta, compartilhe e siga o Você Sabia Agora."
+          run(["edge-tts","--voice","pt-BR-AntonioNeural","--rate=+6%","--text",cta_text,"--write-media",str(ASSETS/"cta.mp3")])
+
+          music_cache={}
+          for t in topics:
+              title,artist,url,license=t["track"]
+              key=hashlib.sha1(url.encode()).hexdigest()[:12]
+              if url not in music_cache:
+                  music_cache[url]=download(url, ASSETS/f"music_{key}.mp3")
+
+          manifest={"project":"ORBIT/VSA","built_by":"github-actions","canonical_carrier":CARRIER_URL,"items":[]}
+          for ti,t in enumerate(topics):
+              print("\n===",t["id"],"===", flush=True)
+              wd=WORK/t["id"]; wd.mkdir(exist_ok=True)
+              narration=wd/"narration.mp3"
+              run(["edge-tts","--voice","pt-BR-AntonioNeural","--rate=+6%","--text",t["script"],"--write-media",str(narration)])
+              nd=probe_duration(narration)
+              if nd<43 or nd>74:
+                  raise RuntimeError(f"NARRATION_DURATION_OUT_OF_RANGE {t['id']} {nd}")
+              srt=wd/"cc.srt"; srt_for(t["script"],nd,srt)
+              src_files=[]
+              for si,(url,lic) in enumerate(t["sources"]):
+                  ext=pathlib.Path(urllib.parse.urlparse(url).path).suffix or ".webm"
+                  src=download(url, wd/f"src{si}{ext}")
+                  src_files.append(src)
+                  time.sleep(1.2)
+              segd=nd/6.0
+              segs=[]
+              real_count=0
+              for i in range(6):
+                  dest=wd/f"seg{i}.mp4"
+                  if i%2==0:
+                      src=src_files[real_count % len(src_files)]
+                      sd=max(1.0,probe_duration(src))
+                      available=max(0.5, sd-segd-0.2)
+                      start=(2.0 + real_count*(sd/3.0)) % available if available>0.6 else 0.0
+                      make_real(src,start,segd,dest)
+                      real_count+=1
+                  else:
+                      make_explainer(t["mechs"][(i//2)%len(t["mechs"])],segd,dest,i)
+                  segs.append(dest)
+              concat=wd/"concat.txt"
+              concat.write_text("\n".join(f"file '{p.resolve()}'" for p in segs)+"\n")
+              body_content=wd/"content.mp4"
+              run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",str(concat),"-c","copy",str(body_content)])
+              titlef=wd/"title.txt"; titlef.write_text(textwrap.fill(t["title"], width=30),encoding="utf-8")
+              bodyv=wd/"bodyv.mp4"
+              filt=(
+                "[0:v]scale=1080:1920[bg];[1:v]scale=976:845[c];"
+                "[bg][c]overlay=52:440,"
+                "drawbox=x=225:y=55:w=825:h=285:color=0x061224@0.96:t=fill,"
+                f"drawtext=fontfile={FONT}:textfile={titlef}:fontcolor=white:fontsize=46:"
+                "x=245:y=95:box=0,"
+                "drawbox=x=45:y=1325:w=990:h=245:color=0x061224@0.82:t=fill,"
+                f"subtitles={srt}:force_style='FontName=DejaVu Sans,FontSize=24,PrimaryColour=&H00FFFFFF,"
+                "OutlineColour=&H00000000,BorderStyle=1,Outline=2,Shadow=0,Alignment=2,MarginV=370',"
+                "fps=30,format=yuv420p[v]"
+              )
+              run(["ffmpeg","-y","-loglevel","error","-loop","1","-i",str(ASSETS/"shell.jpg"),"-i",str(body_content),
+                   "-t",f"{nd:.3f}","-filter_complex",filt,"-map","[v]","-an",
+                   "-c:v","libx264","-preset","veryfast","-crf","22","-pix_fmt","yuv420p",str(bodyv)])
+              music=music_cache[t["track"][2]]
+              bodyav=wd/"bodyav.mp4"
+              af=(
+                f"[0:a]aresample=48000,volume=1.0[n];"
+                f"[1:a]aresample=48000,volume=0.12,atrim=duration={nd:.3f}[m];"
+                "[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"
+                "[n][duck]amix=inputs=2:duration=first:normalize=0,"
+                "loudnorm=I=-16:TP=-1.5:LRA=11[a]"
+              )
+              run(["ffmpeg","-y","-loglevel","error","-i",str(narration),"-stream_loop","-1","-i",str(music),"-i",str(bodyv),
+                   "-filter_complex",af,"-map","2:v","-map","[a]","-c:v","copy","-c:a","aac","-b:a","160k","-ar","48000",
+                   "-shortest",str(bodyav)])
+              ctaav=wd/"ctaav.mp4"
+              cta_len=4.2
+              af2=(
+                f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len}[n];"
+                f"[1:a]aresample=48000,volume=0.11,atrim=duration={cta_len}[m];"
+                "[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"
+                "[n][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"
+              )
+              run(["ffmpeg","-y","-loglevel","error","-i",str(ASSETS/"cta.mp3"),"-stream_loop","-1","-i",str(music),"-i",str(ASSETS/"cta_visual.mp4"),
+                   "-filter_complex",af2,"-map","2:v","-map","[a]","-t",f"{cta_len}","-c:v","copy","-c:a","aac","-b:a","160k","-ar","48000",str(ctaav)])
+              final=OUT/f"VSA_{t['date'].replace('-','')}_{t['time'].replace(':','')}_{t['id']}_FINAL.mp4"
+              run(["ffmpeg","-y","-loglevel","error","-i",str(bodyav),"-i",str(ctaav),
+                   "-filter_complex","[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1[v][a]",
+                   "-map","[v]","-map","[a]","-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p",
+                   "-c:a","aac","-b:a","160k","-ar","48000","-movflags","+faststart",str(final)])
+              fd=probe_duration(final)
+              q=out(["ffprobe","-v","error","-select_streams","v:0","-show_entries","stream=width,height,r_frame_rate,pix_fmt,codec_name",
+                     "-of","json",str(final)])
+              if fd<47 or fd>80: raise RuntimeError(f"FINAL_DURATION_GATE {t['id']} {fd}")
+              meta=json.loads(q)["streams"][0]
+              if meta.get("width")!=1080 or meta.get("height")!=1920 or meta.get("codec_name")!="h264":
+                  raise RuntimeError(f"VIDEO_TECH_GATE {t['id']} {meta}")
+              sha=hashlib.sha256(final.read_bytes()).hexdigest()
+              manifest["items"].append({
+                "id":t["id"],"date":t["date"],"time_brt":t["time"],"title":t["title"],"file":final.name,
+                "duration":round(fd,3),"sha256":sha,"video":meta,
+                "sources":[{"url":u,"license":lic} for u,lic in t["sources"]],
+                "music":{"title":t["track"][0],"artist":t["track"][1],"url":t["track"][2],"license":t["track"][3]},
+                "gates":{"REAL_FOOTAGE_BLOCKS":3,"EXPLAINER_BLOCKS":3,"MUSIC_REAL_COMPOSITION":"PASS",
+                         "MUSIC_THEME_MATCH":"PASS","CTA_CANONICAL_CARRIER":"PASS","TECH_QA":"PASS"}
+              })
+          (OUT/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          print(json.dumps({"status":"PASS","count":len(manifest["items"]),"files":[x["file"] for x in manifest["items"]]},ensure_ascii=False,indent=2))
+          PY
+          python /tmp/build_vsa.py
+      - name: Publish temporary media release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="vsa-sep10-11-final-${{ github.run_id }}"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          gh release create "$TAG" --title "VSA Sep10-11 Final ${{ github.run_id }}" --notes "Temporary public media bridge for canonical VSA scheduling."
+          gh release upload "$TAG" /tmp/vsa_sep10_11/out/*.mp4 /tmp/vsa_sep10_11/out/manifest.json --clobber
+          printf '{"tag":"%s","release":"https://github.com/${{ github.repository }}/releases/tag/%s"}\n' "$TAG" "$TAG" > release_receipt.json
+      - name: Upload build manifest artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep10-11-receipts
+          path: |
+            /tmp/vsa_sep10_11/out/manifest.json
+            release_receipt.json
