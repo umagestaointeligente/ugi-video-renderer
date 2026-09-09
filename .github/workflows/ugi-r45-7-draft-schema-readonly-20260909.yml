@@ -1,0 +1,47 @@
+name: UGI R45.7 Draft Schema Readonly 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-7-draft-schema-readonly-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Read draft and command schemas only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          H=(-A 'UGI-GitHub-Actions/1.0' -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" -H 'accept: application/json')
+          curl --fail --silent --show-error "${H[@]}" "$WORKER_URL/api/drafts" > drafts.json
+          curl --fail --silent --show-error "${H[@]}" "$WORKER_URL/api/commands" > commands.json
+          python - <<'PY'
+          import json
+          d=json.load(open('drafts.json')); c=json.load(open('commands.json'))
+          drafts=d.get('drafts') or d.get('items') or []
+          cmds=c.get('commands') or c.get('items') or []
+          def slim(x):
+            keys=['id','contentId','content_id','type','format','mediaType','status','platform','platforms','editorialMedia','mediaUrl','imageUrl','videoUrl','assets','approvalStatus','createdAt','updatedAt','title']
+            return {k:x.get(k) for k in keys if k in x}
+          out={'draft_count':len(drafts),'drafts':[slim(x) for x in drafts[-30:]],'command_count':len(cmds),'commands':[slim(x) for x in cmds[-30:]]}
+          open('schema-summary.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-r45-7-draft-schema-${{ github.run_id }}
+          path: schema-summary.json
+          retention-days: 3
