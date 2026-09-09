@@ -1,9 +1,9 @@
 {
   "schema": "CENA_CERTA_HUMAN_APPROVAL_V1",
   "approved": false,
-  "handoff_sha256": "c55262f23ed20fb818f0e1618fde38c1024c7f629d5f35b4c242c8c9f5dc5b3b",
-  "production_run_id": 34286440489,
+  "handoff_sha256": "2ad41078e35ff025b6775efd8b15c35596b1865bd75518b3ec7500b64d5ffbb3",
+  "production_run_id": 34313779808,
   "approved_at": null,
   "approved_by": null,
-  "note": "Sep 10 approval consumed after live Metricool reconciliation: 8 schedule objects / 32 placements observed. Gate closed for the next production cycle."
+  "note": "Exact new outbox requires explicit human approval before scheduling."
 }

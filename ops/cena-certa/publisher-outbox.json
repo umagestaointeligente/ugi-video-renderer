@@ -1,14 +1,920 @@
 {
   "schema": "CENA_CERTA_PUBLISHER_OUTBOX_V1",
-  "state": "EMPTY",
-  "production_run_id": 34286440489,
-  "batch_sha256": "c4d41204de4b41f174d36fafacdf5b2b29033ddbcd7baa6eb4b699715d046d2c",
-  "handoff_sha256": "c55262f23ed20fb818f0e1618fde38c1024c7f629d5f35b4c242c8c9f5dc5b3b",
-  "generated_at": "2026-09-08T22:37:06.785133+00:00",
-  "selected_ids": [],
+  "state": "PREVIEW_READY_HUMAN_APPROVAL_REQUIRED",
+  "production_run_id": 34313779808,
+  "batch_sha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+  "handoff_sha256": "2ad41078e35ff025b6775efd8b15c35596b1865bd75518b3ec7500b64d5ffbb3",
+  "generated_at": "2026-09-09T05:15:03.659933+00:00",
+  "selected_ids": [
+    "CC-20260911-GUARDIANS3-V1",
+    "CC-20260911-WAKANDA-V1",
+    "CC-20260911-SHANGCHI-V1",
+    "CC-20260911-PHANTOM-MENACE-V1",
+    "CC-20260911-HOME-ALONE-V1",
+    "CC-20260911-THUNDERBOLTS-V1",
+    "CC-20260911-AVATAR2-V1",
+    "CC-20260911-INDIANA5-V1"
+  ],
   "reserve_ids": [],
-  "expected_schedule_objects": 0,
-  "expected_network_placements": 0,
-  "schedule_gate": "CLOSED_AFTER_RECONCILIATION",
-  "items": []
+  "expected_schedule_objects": 8,
+  "expected_network_placements": 32,
+  "schedule_gate": "BLOCKED_UNTIL_PRIVATE_PREVIEW_AND_HUMAN_APPROVAL",
+  "items": [
+    {
+      "id": "CC-20260911-GUARDIANS3-V1",
+      "brandId": "6809869",
+      "brandLabel": "Cena Certa Ofc",
+      "timezone": "America/Sao_Paulo",
+      "date": "2026-09-11T09:10:00-03:00",
+      "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-GUARDIANS3-V1-6b0d8b3839d2%2Finstagram.mp4",
+      "videoKey": "geradas/videos/CC-20260911-GUARDIANS3-V1-6b0d8b3839d2/instagram.mp4",
+      "batchSha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+      "videoSha256": "d3459fa9382485f6304a41360ed21d488871c2e3f88c96e3f1abc2a1ac926cab",
+      "r2ContentSha256": "d3459fa9382485f6304a41360ed21d488871c2e3f88c96e3f1abc2a1ac926cab",
+      "receiptSha256": "9ddc0ff663f2b9265a47778ece2b40d2560bb7a323479aae2aea1ce27cb6f471",
+      "r2ReceiptSha256": "4cabfdbb4167ce73ef509559581837dd2c421fc543e36be2a540e66a463ad312",
+      "dispatchFingerprint": "f239d353babd0c117644da7ad5096b34f8a88867992e8668c3e0a0b57838417c",
+      "scheduleFingerprint": "11a60d8c9747c37753edae18cb9726649d15377b7ae02a66778202a9f2ad3742",
+      "approvalRequired": true,
+      "reconcileBeforeRetry": true,
+      "idempotencyKey": "6809869:CC-20260911-GUARDIANS3-V1:2026-09-11T12:10:00+00:00",
+      "expectedNetworks": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "expectedPlacements": [
+        {
+          "network": "facebook",
+          "placementKey": "6809869:CC-20260911-GUARDIANS3-V1:2026-09-11T12:10:00+00:00:facebook"
+        },
+        {
+          "network": "instagram",
+          "placementKey": "6809869:CC-20260911-GUARDIANS3-V1:2026-09-11T12:10:00+00:00:instagram"
+        },
+        {
+          "network": "tiktok",
+          "placementKey": "6809869:CC-20260911-GUARDIANS3-V1:2026-09-11T12:10:00+00:00:tiktok"
+        },
+        {
+          "network": "youtube",
+          "placementKey": "6809869:CC-20260911-GUARDIANS3-V1:2026-09-11T12:10:00+00:00:youtube"
+        }
+      ],
+      "expectedPlacementCount": 4,
+      "info": {
+        "autoPublish": true,
+        "draft": false,
+        "descendants": [],
+        "firstCommentText": "",
+        "hasNotReadNotes": false,
+        "media": [
+          "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-GUARDIANS3-V1-6b0d8b3839d2%2Finstagram.mp4"
+        ],
+        "mediaAltText": [],
+        "providers": [
+          {
+            "network": "facebook"
+          },
+          {
+            "network": "instagram"
+          },
+          {
+            "network": "tiktok"
+          },
+          {
+            "network": "youtube"
+          }
+        ],
+        "publicationDate": {
+          "dateTime": "2026-09-11T09:10:00",
+          "timezone": "America/Sao_Paulo"
+        },
+        "shortener": false,
+        "smartLinkData": {
+          "ids": []
+        },
+        "text": "🎬 FILME: Guardians of the Galaxy Vol. 3 (2023)\n\nA última missão dessa formação dos Guardiões colocou Rocket no centro de tudo.\n\n💬 Qual Guardião mais marcou você?\n\n#CenaCerta #Cinema",
+        "facebookData": {
+          "type": "REEL",
+          "title": ""
+        },
+        "instagramData": {
+          "type": "REEL",
+          "collaborators": [],
+          "showReelOnFeed": true,
+          "isAiGenerated": false
+        },
+        "tiktokData": {
+          "disableComment": false,
+          "disableDuet": false,
+          "disableStitch": false,
+          "privacyOption": "PUBLIC_TO_EVERYONE",
+          "commercialContentThirdParty": false,
+          "commercialContentOwnBrand": false,
+          "title": "Guardians of the Galaxy Vol. 3 | Cena Certa",
+          "autoAddMusic": false,
+          "photoCoverIndex": 0,
+          "isAigc": false
+        },
+        "youtubeData": {
+          "title": "Guardians of the Galaxy Vol. 3 | Cena Certa",
+          "type": "short",
+          "privacy": "public",
+          "tags": [
+            "Cena Certa",
+            "Guardians of the Galaxy Vol. 3",
+            "Cinema"
+          ],
+          "madeForKids": false,
+          "isAiGeneratedContent": false
+        }
+      }
+    },
+    {
+      "id": "CC-20260911-WAKANDA-V1",
+      "brandId": "6809869",
+      "brandLabel": "Cena Certa Ofc",
+      "timezone": "America/Sao_Paulo",
+      "date": "2026-09-11T10:55:00-03:00",
+      "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-WAKANDA-V1-6b0d8b3839d2%2Finstagram.mp4",
+      "videoKey": "geradas/videos/CC-20260911-WAKANDA-V1-6b0d8b3839d2/instagram.mp4",
+      "batchSha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+      "videoSha256": "3e698029cc3956e3ba8d94f3436d333a8175a35b926621145ae3acd907b306ab",
+      "r2ContentSha256": "3e698029cc3956e3ba8d94f3436d333a8175a35b926621145ae3acd907b306ab",
+      "receiptSha256": "f2d7c11ebfb6b667494e8be41392e6236589ccf657a92fc0fc7d4bb1697f3755",
+      "r2ReceiptSha256": "5db4c78d9a35f9ee91c9969706416b77fcc4273746863772a8ae4e0463118fe9",
+      "dispatchFingerprint": "975d2fc51dc7a3c59004d1079a7b6ffeaf6727e6a741d0f9520764804973face",
+      "scheduleFingerprint": "0f68b93eda874b877f54d2f0a3532844d391f7577dcecdbaed4f1771fec810d0",
+      "approvalRequired": true,
+      "reconcileBeforeRetry": true,
+      "idempotencyKey": "6809869:CC-20260911-WAKANDA-V1:2026-09-11T13:55:00+00:00",
+      "expectedNetworks": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "expectedPlacements": [
+        {
+          "network": "facebook",
+          "placementKey": "6809869:CC-20260911-WAKANDA-V1:2026-09-11T13:55:00+00:00:facebook"
+        },
+        {
+          "network": "instagram",
+          "placementKey": "6809869:CC-20260911-WAKANDA-V1:2026-09-11T13:55:00+00:00:instagram"
+        },
+        {
+          "network": "tiktok",
+          "placementKey": "6809869:CC-20260911-WAKANDA-V1:2026-09-11T13:55:00+00:00:tiktok"
+        },
+        {
+          "network": "youtube",
+          "placementKey": "6809869:CC-20260911-WAKANDA-V1:2026-09-11T13:55:00+00:00:youtube"
+        }
+      ],
+      "expectedPlacementCount": 4,
+      "info": {
+        "autoPublish": true,
+        "draft": false,
+        "descendants": [],
+        "firstCommentText": "",
+        "hasNotReadNotes": false,
+        "media": [
+          "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-WAKANDA-V1-6b0d8b3839d2%2Finstagram.mp4"
+        ],
+        "mediaAltText": [],
+        "providers": [
+          {
+            "network": "facebook"
+          },
+          {
+            "network": "instagram"
+          },
+          {
+            "network": "tiktok"
+          },
+          {
+            "network": "youtube"
+          }
+        ],
+        "publicationDate": {
+          "dateTime": "2026-09-11T10:55:00",
+          "timezone": "America/Sao_Paulo"
+        },
+        "shortener": false,
+        "smartLinkData": {
+          "ids": []
+        },
+        "text": "🎬 FILME: Black Panther: Wakanda Forever (2022)\n\nWakanda perdeu seu rei, mas não pode parar enquanto uma nova potência surge do oceano.\n\n💬 Quem deveria liderar esse futuro?\n\n#CenaCerta #Cinema",
+        "facebookData": {
+          "type": "REEL",
+          "title": ""
+        },
+        "instagramData": {
+          "type": "REEL",
+          "collaborators": [],
+          "showReelOnFeed": true,
+          "isAiGenerated": false
+        },
+        "tiktokData": {
+          "disableComment": false,
+          "disableDuet": false,
+          "disableStitch": false,
+          "privacyOption": "PUBLIC_TO_EVERYONE",
+          "commercialContentThirdParty": false,
+          "commercialContentOwnBrand": false,
+          "title": "Black Panther: Wakanda Forever | Cena Certa",
+          "autoAddMusic": false,
+          "photoCoverIndex": 0,
+          "isAigc": false
+        },
+        "youtubeData": {
+          "title": "Black Panther: Wakanda Forever | Cena Certa",
+          "type": "short",
+          "privacy": "public",
+          "tags": [
+            "Cena Certa",
+            "Black Panther: Wakanda Forever",
+            "Cinema"
+          ],
+          "madeForKids": false,
+          "isAiGeneratedContent": false
+        }
+      }
+    },
+    {
+      "id": "CC-20260911-SHANGCHI-V1",
+      "brandId": "6809869",
+      "brandLabel": "Cena Certa Ofc",
+      "timezone": "America/Sao_Paulo",
+      "date": "2026-09-11T12:20:00-03:00",
+      "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-SHANGCHI-V1-6b0d8b3839d2%2Finstagram.mp4",
+      "videoKey": "geradas/videos/CC-20260911-SHANGCHI-V1-6b0d8b3839d2/instagram.mp4",
+      "batchSha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+      "videoSha256": "0fd2a1bb921e607abc8ae5916f0c8d1d3a6b0edccb5e1ede35ae05774c5db990",
+      "r2ContentSha256": "0fd2a1bb921e607abc8ae5916f0c8d1d3a6b0edccb5e1ede35ae05774c5db990",
+      "receiptSha256": "ec59a1e2f9e06b448a342444414d15edab9744b27ff815db4faea613bc7f1647",
+      "r2ReceiptSha256": "e364218a1f012f1737461907b86858d47603af606545b658ec8a6d094a580e88",
+      "dispatchFingerprint": "168d0ed3cf51f1caf9a04d3d7a6a02f45a70e246b7519f5cd13db79f5c106dd1",
+      "scheduleFingerprint": "e7a675099cd8f58b624b17b17abee9f7f5dbed8802bf14acf455fb74a6c8b5bb",
+      "approvalRequired": true,
+      "reconcileBeforeRetry": true,
+      "idempotencyKey": "6809869:CC-20260911-SHANGCHI-V1:2026-09-11T15:20:00+00:00",
+      "expectedNetworks": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "expectedPlacements": [
+        {
+          "network": "facebook",
+          "placementKey": "6809869:CC-20260911-SHANGCHI-V1:2026-09-11T15:20:00+00:00:facebook"
+        },
+        {
+          "network": "instagram",
+          "placementKey": "6809869:CC-20260911-SHANGCHI-V1:2026-09-11T15:20:00+00:00:instagram"
+        },
+        {
+          "network": "tiktok",
+          "placementKey": "6809869:CC-20260911-SHANGCHI-V1:2026-09-11T15:20:00+00:00:tiktok"
+        },
+        {
+          "network": "youtube",
+          "placementKey": "6809869:CC-20260911-SHANGCHI-V1:2026-09-11T15:20:00+00:00:youtube"
+        }
+      ],
+      "expectedPlacementCount": 4,
+      "info": {
+        "autoPublish": true,
+        "draft": false,
+        "descendants": [],
+        "firstCommentText": "",
+        "hasNotReadNotes": false,
+        "media": [
+          "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-SHANGCHI-V1-6b0d8b3839d2%2Finstagram.mp4"
+        ],
+        "mediaAltText": [],
+        "providers": [
+          {
+            "network": "facebook"
+          },
+          {
+            "network": "instagram"
+          },
+          {
+            "network": "tiktok"
+          },
+          {
+            "network": "youtube"
+          }
+        ],
+        "publicationDate": {
+          "dateTime": "2026-09-11T12:20:00",
+          "timezone": "America/Sao_Paulo"
+        },
+        "shortener": false,
+        "smartLinkData": {
+          "ids": []
+        },
+        "text": "🎬 FILME: Shang-Chi and the Legend of the Ten Rings (2021)\n\nShang-Chi tentou fugir dos Dez Anéis, mas a própria família o puxou de volta.\n\n💬 Você queria vê-lo mais vezes no MCU?\n\n#CenaCerta #Cinema",
+        "facebookData": {
+          "type": "REEL",
+          "title": ""
+        },
+        "instagramData": {
+          "type": "REEL",
+          "collaborators": [],
+          "showReelOnFeed": true,
+          "isAiGenerated": false
+        },
+        "tiktokData": {
+          "disableComment": false,
+          "disableDuet": false,
+          "disableStitch": false,
+          "privacyOption": "PUBLIC_TO_EVERYONE",
+          "commercialContentThirdParty": false,
+          "commercialContentOwnBrand": false,
+          "title": "Shang-Chi and the Legend of the Ten Rings | Cena Certa",
+          "autoAddMusic": false,
+          "photoCoverIndex": 0,
+          "isAigc": false
+        },
+        "youtubeData": {
+          "title": "Shang-Chi and the Legend of the Ten Rings | Cena Certa",
+          "type": "short",
+          "privacy": "public",
+          "tags": [
+            "Cena Certa",
+            "Shang-Chi and the Legend of the Ten Rings",
+            "Cinema"
+          ],
+          "madeForKids": false,
+          "isAiGeneratedContent": false
+        }
+      }
+    },
+    {
+      "id": "CC-20260911-PHANTOM-MENACE-V1",
+      "brandId": "6809869",
+      "brandLabel": "Cena Certa Ofc",
+      "timezone": "America/Sao_Paulo",
+      "date": "2026-09-11T14:45:00-03:00",
+      "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-PHANTOM-MENACE-V1-6b0d8b3839d2%2Finstagram.mp4",
+      "videoKey": "geradas/videos/CC-20260911-PHANTOM-MENACE-V1-6b0d8b3839d2/instagram.mp4",
+      "batchSha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+      "videoSha256": "c30579c382a98c9022ae36ff9dd7bd4cd18c4e05a6dae039b316e84010bdba4f",
+      "r2ContentSha256": "c30579c382a98c9022ae36ff9dd7bd4cd18c4e05a6dae039b316e84010bdba4f",
+      "receiptSha256": "f3ea9c0a663e01eb23635d6c5eb2ee3589f3056a676927069c2240fa238b7fe8",
+      "r2ReceiptSha256": "58f226590af6ded28ce3fe89b55bd9b047889e8ab0424b07da9fc02807f74d62",
+      "dispatchFingerprint": "5c48db4cba54853a87faaa926a1781ea1fb40067d9d00ebd89255479624c0e85",
+      "scheduleFingerprint": "d89ab3158de1ebf39f1bc9deaf35bc5fcc6df5724151ae64ab1176be09495f92",
+      "approvalRequired": true,
+      "reconcileBeforeRetry": true,
+      "idempotencyKey": "6809869:CC-20260911-PHANTOM-MENACE-V1:2026-09-11T17:45:00+00:00",
+      "expectedNetworks": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "expectedPlacements": [
+        {
+          "network": "facebook",
+          "placementKey": "6809869:CC-20260911-PHANTOM-MENACE-V1:2026-09-11T17:45:00+00:00:facebook"
+        },
+        {
+          "network": "instagram",
+          "placementKey": "6809869:CC-20260911-PHANTOM-MENACE-V1:2026-09-11T17:45:00+00:00:instagram"
+        },
+        {
+          "network": "tiktok",
+          "placementKey": "6809869:CC-20260911-PHANTOM-MENACE-V1:2026-09-11T17:45:00+00:00:tiktok"
+        },
+        {
+          "network": "youtube",
+          "placementKey": "6809869:CC-20260911-PHANTOM-MENACE-V1:2026-09-11T17:45:00+00:00:youtube"
+        }
+      ],
+      "expectedPlacementCount": 4,
+      "info": {
+        "autoPublish": true,
+        "draft": false,
+        "descendants": [],
+        "firstCommentText": "",
+        "hasNotReadNotes": false,
+        "media": [
+          "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-PHANTOM-MENACE-V1-6b0d8b3839d2%2Finstagram.mp4"
+        ],
+        "mediaAltText": [],
+        "providers": [
+          {
+            "network": "facebook"
+          },
+          {
+            "network": "instagram"
+          },
+          {
+            "network": "tiktok"
+          },
+          {
+            "network": "youtube"
+          }
+        ],
+        "publicationDate": {
+          "dateTime": "2026-09-11T14:45:00",
+          "timezone": "America/Sao_Paulo"
+        },
+        "shortener": false,
+        "smartLinkData": {
+          "ids": []
+        },
+        "text": "🎬 FILME: Star Wars: Episode I - The Phantom Menace (1999)\n\nSessão Nostalgia: antes de Darth Vader, tudo começou com um menino em Tatooine.\n\n💬 Essa fase de Star Wars melhorou com o tempo?\n\n#CenaCerta #Cinema",
+        "facebookData": {
+          "type": "REEL",
+          "title": ""
+        },
+        "instagramData": {
+          "type": "REEL",
+          "collaborators": [],
+          "showReelOnFeed": true,
+          "isAiGenerated": false
+        },
+        "tiktokData": {
+          "disableComment": false,
+          "disableDuet": false,
+          "disableStitch": false,
+          "privacyOption": "PUBLIC_TO_EVERYONE",
+          "commercialContentThirdParty": false,
+          "commercialContentOwnBrand": false,
+          "title": "Star Wars: Episode I - The Phantom Menace | Cena Certa",
+          "autoAddMusic": false,
+          "photoCoverIndex": 0,
+          "isAigc": false
+        },
+        "youtubeData": {
+          "title": "Star Wars: Episode I - The Phantom Menace | Cena Certa",
+          "type": "short",
+          "privacy": "public",
+          "tags": [
+            "Cena Certa",
+            "Star Wars: Episode I - The Phantom Menace",
+            "Cinema"
+          ],
+          "madeForKids": false,
+          "isAiGeneratedContent": false
+        }
+      }
+    },
+    {
+      "id": "CC-20260911-HOME-ALONE-V1",
+      "brandId": "6809869",
+      "brandLabel": "Cena Certa Ofc",
+      "timezone": "America/Sao_Paulo",
+      "date": "2026-09-11T15:55:00-03:00",
+      "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-HOME-ALONE-V1-6b0d8b3839d2%2Finstagram.mp4",
+      "videoKey": "geradas/videos/CC-20260911-HOME-ALONE-V1-6b0d8b3839d2/instagram.mp4",
+      "batchSha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+      "videoSha256": "5bc67a741c4dea0979fcba0b437084ee8998c60f31008fc7cf070bf0247d46e9",
+      "r2ContentSha256": "5bc67a741c4dea0979fcba0b437084ee8998c60f31008fc7cf070bf0247d46e9",
+      "receiptSha256": "dce52af7211bf3bcd655a62a6ea898676b0ac4e836ead43b1f74abb313f1fd54",
+      "r2ReceiptSha256": "a7ed8afe499e5112c4b5ee4af7cc5af6b400bd1c86266dba823daa6205eed5b1",
+      "dispatchFingerprint": "489f855a62d13264ee21950867c223f3a80287ca31371ed1f49bfb4fc37f56f7",
+      "scheduleFingerprint": "166a8e45420528bc942eda581874400a1105a623314a7cfd6838b4467d0eb371",
+      "approvalRequired": true,
+      "reconcileBeforeRetry": true,
+      "idempotencyKey": "6809869:CC-20260911-HOME-ALONE-V1:2026-09-11T18:55:00+00:00",
+      "expectedNetworks": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "expectedPlacements": [
+        {
+          "network": "facebook",
+          "placementKey": "6809869:CC-20260911-HOME-ALONE-V1:2026-09-11T18:55:00+00:00:facebook"
+        },
+        {
+          "network": "instagram",
+          "placementKey": "6809869:CC-20260911-HOME-ALONE-V1:2026-09-11T18:55:00+00:00:instagram"
+        },
+        {
+          "network": "tiktok",
+          "placementKey": "6809869:CC-20260911-HOME-ALONE-V1:2026-09-11T18:55:00+00:00:tiktok"
+        },
+        {
+          "network": "youtube",
+          "placementKey": "6809869:CC-20260911-HOME-ALONE-V1:2026-09-11T18:55:00+00:00:youtube"
+        }
+      ],
+      "expectedPlacementCount": 4,
+      "info": {
+        "autoPublish": true,
+        "draft": false,
+        "descendants": [],
+        "firstCommentText": "",
+        "hasNotReadNotes": false,
+        "media": [
+          "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-HOME-ALONE-V1-6b0d8b3839d2%2Finstagram.mp4"
+        ],
+        "mediaAltText": [],
+        "providers": [
+          {
+            "network": "facebook"
+          },
+          {
+            "network": "instagram"
+          },
+          {
+            "network": "tiktok"
+          },
+          {
+            "network": "youtube"
+          }
+        ],
+        "publicationDate": {
+          "dateTime": "2026-09-11T15:55:00",
+          "timezone": "America/Sao_Paulo"
+        },
+        "shortener": false,
+        "smartLinkData": {
+          "ids": []
+        },
+        "text": "🎬 FILME: Home Alone (1990)\n\nSessão Nostalgia: Kevin ficou sozinho em casa e transformou cada cômodo em defesa.\n\n💬 Qual armadilha você nunca esqueceu?\n\n#CenaCerta #Cinema",
+        "facebookData": {
+          "type": "REEL",
+          "title": ""
+        },
+        "instagramData": {
+          "type": "REEL",
+          "collaborators": [],
+          "showReelOnFeed": true,
+          "isAiGenerated": false
+        },
+        "tiktokData": {
+          "disableComment": false,
+          "disableDuet": false,
+          "disableStitch": false,
+          "privacyOption": "PUBLIC_TO_EVERYONE",
+          "commercialContentThirdParty": false,
+          "commercialContentOwnBrand": false,
+          "title": "Home Alone | Cena Certa",
+          "autoAddMusic": false,
+          "photoCoverIndex": 0,
+          "isAigc": false
+        },
+        "youtubeData": {
+          "title": "Home Alone | Cena Certa",
+          "type": "short",
+          "privacy": "public",
+          "tags": [
+            "Cena Certa",
+            "Home Alone",
+            "Cinema"
+          ],
+          "madeForKids": false,
+          "isAiGeneratedContent": false
+        }
+      }
+    },
+    {
+      "id": "CC-20260911-THUNDERBOLTS-V1",
+      "brandId": "6809869",
+      "brandLabel": "Cena Certa Ofc",
+      "timezone": "America/Sao_Paulo",
+      "date": "2026-09-11T17:10:00-03:00",
+      "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-THUNDERBOLTS-V1-6b0d8b3839d2%2Finstagram.mp4",
+      "videoKey": "geradas/videos/CC-20260911-THUNDERBOLTS-V1-6b0d8b3839d2/instagram.mp4",
+      "batchSha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+      "videoSha256": "a7fdeda7f1462db2589ae75e562d272af435e2a858068c113542c2627e1d6b04",
+      "r2ContentSha256": "a7fdeda7f1462db2589ae75e562d272af435e2a858068c113542c2627e1d6b04",
+      "receiptSha256": "f39f8710aab9ca8b57f162a931e02c97f6d15750ede996ab4e4fac2038fa23e1",
+      "r2ReceiptSha256": "62a3a9c5e2bd48901b5ff829d7e99e4ce78f054554522b5bac7f2c5558088dad",
+      "dispatchFingerprint": "3b5a5103bb9cd9a6e74d8f37a8fba7c2e07c69174d72650ce8fcda31cc78710d",
+      "scheduleFingerprint": "946391f5ce67b8cda8cb7bf6f86dd53711a92d83e13fce7432621a686eea8f03",
+      "approvalRequired": true,
+      "reconcileBeforeRetry": true,
+      "idempotencyKey": "6809869:CC-20260911-THUNDERBOLTS-V1:2026-09-11T20:10:00+00:00",
+      "expectedNetworks": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "expectedPlacements": [
+        {
+          "network": "facebook",
+          "placementKey": "6809869:CC-20260911-THUNDERBOLTS-V1:2026-09-11T20:10:00+00:00:facebook"
+        },
+        {
+          "network": "instagram",
+          "placementKey": "6809869:CC-20260911-THUNDERBOLTS-V1:2026-09-11T20:10:00+00:00:instagram"
+        },
+        {
+          "network": "tiktok",
+          "placementKey": "6809869:CC-20260911-THUNDERBOLTS-V1:2026-09-11T20:10:00+00:00:tiktok"
+        },
+        {
+          "network": "youtube",
+          "placementKey": "6809869:CC-20260911-THUNDERBOLTS-V1:2026-09-11T20:10:00+00:00:youtube"
+        }
+      ],
+      "expectedPlacementCount": 4,
+      "info": {
+        "autoPublish": true,
+        "draft": false,
+        "descendants": [],
+        "firstCommentText": "",
+        "hasNotReadNotes": false,
+        "media": [
+          "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-THUNDERBOLTS-V1-6b0d8b3839d2%2Finstagram.mp4"
+        ],
+        "mediaAltText": [],
+        "providers": [
+          {
+            "network": "facebook"
+          },
+          {
+            "network": "instagram"
+          },
+          {
+            "network": "tiktok"
+          },
+          {
+            "network": "youtube"
+          }
+        ],
+        "publicationDate": {
+          "dateTime": "2026-09-11T17:10:00",
+          "timezone": "America/Sao_Paulo"
+        },
+        "shortener": false,
+        "smartLinkData": {
+          "ids": []
+        },
+        "text": "🎬 FILME: Thunderbolts* (2025)\n\nA Marvel juntou personagens quebrados num time que ninguém chamaria de perfeito.\n\n💬 Você prefere anti-heróis aos heróis perfeitos?\n\n#CenaCerta #Cinema",
+        "facebookData": {
+          "type": "REEL",
+          "title": ""
+        },
+        "instagramData": {
+          "type": "REEL",
+          "collaborators": [],
+          "showReelOnFeed": true,
+          "isAiGenerated": false
+        },
+        "tiktokData": {
+          "disableComment": false,
+          "disableDuet": false,
+          "disableStitch": false,
+          "privacyOption": "PUBLIC_TO_EVERYONE",
+          "commercialContentThirdParty": false,
+          "commercialContentOwnBrand": false,
+          "title": "Thunderbolts* | Cena Certa",
+          "autoAddMusic": false,
+          "photoCoverIndex": 0,
+          "isAigc": false
+        },
+        "youtubeData": {
+          "title": "Thunderbolts* | Cena Certa",
+          "type": "short",
+          "privacy": "public",
+          "tags": [
+            "Cena Certa",
+            "Thunderbolts*",
+            "Cinema"
+          ],
+          "madeForKids": false,
+          "isAiGeneratedContent": false
+        }
+      }
+    },
+    {
+      "id": "CC-20260911-AVATAR2-V1",
+      "brandId": "6809869",
+      "brandLabel": "Cena Certa Ofc",
+      "timezone": "America/Sao_Paulo",
+      "date": "2026-09-11T18:30:00-03:00",
+      "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-AVATAR2-V1-6b0d8b3839d2%2Finstagram.mp4",
+      "videoKey": "geradas/videos/CC-20260911-AVATAR2-V1-6b0d8b3839d2/instagram.mp4",
+      "batchSha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+      "videoSha256": "50670ef487d93c65864e2fd04c20f59113981021a42fe4ad167f271e1c51e6bb",
+      "r2ContentSha256": "50670ef487d93c65864e2fd04c20f59113981021a42fe4ad167f271e1c51e6bb",
+      "receiptSha256": "8e32ede5b9ec1ed8385af686175360684d6ee600772c828c5169f8013d63a803",
+      "r2ReceiptSha256": "73aa28bb4938146953fc8d7b8ad2c657756ca5eecd10b6e11bdc3e16404e0a32",
+      "dispatchFingerprint": "b155822e2918f2b75e2eb4a0387542f50ac48b3d419a231d9ff347cda6753e99",
+      "scheduleFingerprint": "eda9d743a3e42e50d8b1bf961ed9caf9a46d4dc660232092b5eb4768c3f34343",
+      "approvalRequired": true,
+      "reconcileBeforeRetry": true,
+      "idempotencyKey": "6809869:CC-20260911-AVATAR2-V1:2026-09-11T21:30:00+00:00",
+      "expectedNetworks": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "expectedPlacements": [
+        {
+          "network": "facebook",
+          "placementKey": "6809869:CC-20260911-AVATAR2-V1:2026-09-11T21:30:00+00:00:facebook"
+        },
+        {
+          "network": "instagram",
+          "placementKey": "6809869:CC-20260911-AVATAR2-V1:2026-09-11T21:30:00+00:00:instagram"
+        },
+        {
+          "network": "tiktok",
+          "placementKey": "6809869:CC-20260911-AVATAR2-V1:2026-09-11T21:30:00+00:00:tiktok"
+        },
+        {
+          "network": "youtube",
+          "placementKey": "6809869:CC-20260911-AVATAR2-V1:2026-09-11T21:30:00+00:00:youtube"
+        }
+      ],
+      "expectedPlacementCount": 4,
+      "info": {
+        "autoPublish": true,
+        "draft": false,
+        "descendants": [],
+        "firstCommentText": "",
+        "hasNotReadNotes": false,
+        "media": [
+          "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-AVATAR2-V1-6b0d8b3839d2%2Finstagram.mp4"
+        ],
+        "mediaAltText": [],
+        "providers": [
+          {
+            "network": "facebook"
+          },
+          {
+            "network": "instagram"
+          },
+          {
+            "network": "tiktok"
+          },
+          {
+            "network": "youtube"
+          }
+        ],
+        "publicationDate": {
+          "dateTime": "2026-09-11T18:30:00",
+          "timezone": "America/Sao_Paulo"
+        },
+        "shortener": false,
+        "smartLinkData": {
+          "ids": []
+        },
+        "text": "🎬 FILME: Avatar: The Way of Water (2022)\n\nPandora ficou ainda maior quando a família Sully precisou aprender a viver no oceano.\n\n💬 Você prefere a floresta ou o oceano de Pandora?\n\n#CenaCerta #Cinema",
+        "facebookData": {
+          "type": "REEL",
+          "title": ""
+        },
+        "instagramData": {
+          "type": "REEL",
+          "collaborators": [],
+          "showReelOnFeed": true,
+          "isAiGenerated": false
+        },
+        "tiktokData": {
+          "disableComment": false,
+          "disableDuet": false,
+          "disableStitch": false,
+          "privacyOption": "PUBLIC_TO_EVERYONE",
+          "commercialContentThirdParty": false,
+          "commercialContentOwnBrand": false,
+          "title": "Avatar: The Way of Water | Cena Certa",
+          "autoAddMusic": false,
+          "photoCoverIndex": 0,
+          "isAigc": false
+        },
+        "youtubeData": {
+          "title": "Avatar: The Way of Water | Cena Certa",
+          "type": "short",
+          "privacy": "public",
+          "tags": [
+            "Cena Certa",
+            "Avatar: The Way of Water",
+            "Cinema"
+          ],
+          "madeForKids": false,
+          "isAiGeneratedContent": false
+        }
+      }
+    },
+    {
+      "id": "CC-20260911-INDIANA5-V1",
+      "brandId": "6809869",
+      "brandLabel": "Cena Certa Ofc",
+      "timezone": "America/Sao_Paulo",
+      "date": "2026-09-11T19:50:00-03:00",
+      "videoUrl": "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-INDIANA5-V1-6b0d8b3839d2%2Finstagram.mp4",
+      "videoKey": "geradas/videos/CC-20260911-INDIANA5-V1-6b0d8b3839d2/instagram.mp4",
+      "batchSha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+      "videoSha256": "26a0bcca4b4c21b4f64ab2972dedb36ca54425628598cc27a5d3d9da13edd0ee",
+      "r2ContentSha256": "26a0bcca4b4c21b4f64ab2972dedb36ca54425628598cc27a5d3d9da13edd0ee",
+      "receiptSha256": "dfa6f2382928e8c12389dced351467b3ab5104afcf875f0ce76d01ac9f21f4bc",
+      "r2ReceiptSha256": "11668b731b9b1bfb27a57e7d155ea757174ad4c9cdd0900c3f1d12f7de0ab983",
+      "dispatchFingerprint": "03f26010d4368777cd26d532b383ea3ddb15634cfc385b42300578293015b439",
+      "scheduleFingerprint": "724bd5f88cdbac3c5ec08609460ec85ac2272acaf080237d009e39c6fee117cd",
+      "approvalRequired": true,
+      "reconcileBeforeRetry": true,
+      "idempotencyKey": "6809869:CC-20260911-INDIANA5-V1:2026-09-11T22:50:00+00:00",
+      "expectedNetworks": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "youtube"
+      ],
+      "expectedPlacements": [
+        {
+          "network": "facebook",
+          "placementKey": "6809869:CC-20260911-INDIANA5-V1:2026-09-11T22:50:00+00:00:facebook"
+        },
+        {
+          "network": "instagram",
+          "placementKey": "6809869:CC-20260911-INDIANA5-V1:2026-09-11T22:50:00+00:00:instagram"
+        },
+        {
+          "network": "tiktok",
+          "placementKey": "6809869:CC-20260911-INDIANA5-V1:2026-09-11T22:50:00+00:00:tiktok"
+        },
+        {
+          "network": "youtube",
+          "placementKey": "6809869:CC-20260911-INDIANA5-V1:2026-09-11T22:50:00+00:00:youtube"
+        }
+      ],
+      "expectedPlacementCount": 4,
+      "info": {
+        "autoPublish": true,
+        "draft": false,
+        "descendants": [],
+        "firstCommentText": "",
+        "hasNotReadNotes": false,
+        "media": [
+          "https://lola-operacional-ugi.umagestaointeligente.workers.dev/media/geradas%2Fvideos%2FCC-20260911-INDIANA5-V1-6b0d8b3839d2%2Finstagram.mp4"
+        ],
+        "mediaAltText": [],
+        "providers": [
+          {
+            "network": "facebook"
+          },
+          {
+            "network": "instagram"
+          },
+          {
+            "network": "tiktok"
+          },
+          {
+            "network": "youtube"
+          }
+        ],
+        "publicationDate": {
+          "dateTime": "2026-09-11T19:50:00",
+          "timezone": "America/Sao_Paulo"
+        },
+        "shortener": false,
+        "smartLinkData": {
+          "ids": []
+        },
+        "text": "🎬 FILME: Indiana Jones and the Dial of Destiny (2023)\n\nIndiana Jones volta a correr atrás de um artefato quando o próprio tempo virou parte da história.\n\n💬 Qual aventura de Indiana Jones é a sua favorita?\n\n#CenaCerta #Cinema",
+        "facebookData": {
+          "type": "REEL",
+          "title": ""
+        },
+        "instagramData": {
+          "type": "REEL",
+          "collaborators": [],
+          "showReelOnFeed": true,
+          "isAiGenerated": false
+        },
+        "tiktokData": {
+          "disableComment": false,
+          "disableDuet": false,
+          "disableStitch": false,
+          "privacyOption": "PUBLIC_TO_EVERYONE",
+          "commercialContentThirdParty": false,
+          "commercialContentOwnBrand": false,
+          "title": "Indiana Jones and the Dial of Destiny | Cena Certa",
+          "autoAddMusic": false,
+          "photoCoverIndex": 0,
+          "isAigc": false
+        },
+        "youtubeData": {
+          "title": "Indiana Jones and the Dial of Destiny | Cena Certa",
+          "type": "short",
+          "privacy": "public",
+          "tags": [
+            "Cena Certa",
+            "Indiana Jones and the Dial of Destiny",
+            "Cinema"
+          ],
+          "madeForKids": false,
+          "isAiGeneratedContent": false
+        }
+      }
+    }
+  ]
 }

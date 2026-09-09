@@ -1,14 +1,11 @@
 {
   "schema": "CENA_CERTA_PRODUCTION_DISPATCH_V1",
-  "enabled": true,
-  "mode": "PREPARE",
-  "batch_path": "ops/cena-certa/batches/cena-certa-daily8-20260911-v2.json",
-  "batch_sha256": "6b0d8b3839d29d042d0ea393440c988f1d404b9ea33be5f0f6367243f4162eaf",
+  "enabled": false,
+  "mode": "IDLE",
+  "batch_path": "",
+  "batch_sha256": "",
   "prepared_run_id": "",
-  "requested_at": "2026-09-09T05:09:44.585242+00:00",
-  "request_id": "8ffdfb6eb21f49828006be8b0ab44baf",
-  "candidate_count": 8,
-  "selected_count": 8,
-  "reserve_count": 0,
-  "note": "Sep11 recovery: exact batch v2 proved 8/8 READY in shadow run 34313372760; no blind retry; scheduling remains human-gated."
+  "requested_at": "",
+  "request_id": "",
+  "note": "Automatically closed after one canonical single-run factory execution; human scheduling gate remains closed."
 }
