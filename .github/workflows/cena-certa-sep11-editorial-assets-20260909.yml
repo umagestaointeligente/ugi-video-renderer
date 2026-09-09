@@ -161,11 +161,11 @@ jobs:
           print('VIDEO_BYTES='+str(a.get('videoBytes') or d.get('videoBytes') or ''))
           PY
       - name: Proof artifact
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.id }}
           path: |
-            out/${{ matrix.id }}.mp4
             out/${{ matrix.id }}.probe.json
             out/${{ matrix.id }}.r2.json
-          retention-days: 7
+          retention-days: 1
