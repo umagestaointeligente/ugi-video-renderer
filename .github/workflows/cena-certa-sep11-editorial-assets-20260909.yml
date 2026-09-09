@@ -1,0 +1,166 @@
+name: Cena Certa Sep11 Editorial Companion Assets 2026-09-09
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cena-certa-sep11-editorial-assets-20260909.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render-upload:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: CC-20260911-STORY-STARWARS
+            eyebrow: CENA CERTA • CURIOSIDADE
+            title1: STAR WARS EP. I
+            title2: A MULTIDAO ERA... COTONETE?
+            body1: Na corrida de pods, parte da arquibancada
+            body2: foi feita com hastes de algodao coloridas.
+            question: EFEITO PRATICO OU CGI: QUAL TE IMPRESSIONA MAIS?
+            source: Fonte factual: StarWars.com / Lucasfilm
+            theme: stars
+          - id: CC-20260911-POST-STARWARS
+            eyebrow: CENA CERTA • BASTIDOR
+            title1: UM TRUQUE MINUSCULO
+            title2: PARA UMA CENA GIGANTE
+            body1: A equipe usou hastes de algodao coloridas
+            body2: para simular parte da plateia da corrida de pods.
+            question: SABER O TRUQUE AUMENTA OU QUEBRA A MAGIA DO FILME?
+            source: Fonte factual: StarWars.com / Lucasfilm
+            theme: stars
+          - id: CC-20260911-STORY-AVATAR2
+            eyebrow: CENA CERTA • CURIOSIDADE
+            title1: AVATAR 2
+            title2: MERGULHO DE VERDADE
+            body1: O elenco treinou mergulho livre para as cenas
+            body2: e a captura subaquatica exigiu uma estrutura enorme.
+            question: ATORES DEVEM IR TAO LONGE PELO REALISMO?
+            source: Fonte factual: Avatar.com
+            theme: water
+          - id: CC-20260911-POST-AVATAR2
+            eyebrow: CENA CERTA • BASTIDOR
+            title1: 680 MIL GALOES
+            title2: PARA CAPTURAR OCEANO
+            body1: A producao aperfeicoou performance capture
+            body2: subaquatica em um tanque de 680 mil galoes.
+            question: TECNOLOGIA OU INTERPRETACAO: O QUE VENDE MAIS A CENA?
+            source: Fonte factual: Avatar.com
+            theme: water
+          - id: CC-20260911-STORY-FRANQUIAS
+            eyebrow: CENA CERTA • DEBATE
+            title1: FRANQUIAS
+            title2: OU HISTORIAS NOVAS?
+            body1: Sequencias entregam personagens conhecidos.
+            body2: Originais entregam risco e surpresa.
+            question: HOJE, QUAL VOCE ESCOLHE PARA IR AO CINEMA?
+            source: Discussao editorial
+            theme: split
+          - id: CC-20260911-POST-FRANQUIAS
+            eyebrow: CENA CERTA • DISCUSSAO
+            title1: MAIS UMA SEQUENCIA?
+            title2: OU ALGO QUE NINGUEM VIU?
+            body1: Nostalgia reduz o risco. Ideias novas podem criar
+            body2: o proximo classico — mas precisam conquistar do zero.
+            question: HOLLYWOOD ESTA EXAGERANDO NAS FRANQUIAS?
+            source: Discussao editorial
+            theme: split
+          - id: CC-20260911-STORY-SUPERESTIMADO
+            eyebrow: CENA CERTA • SEM MEDO
+            title1: TODO MUNDO AMA...
+            title2: MAS VOCE NAO?
+            body1: Tem filme premiado, cultuado e chamado de classico
+            body2: que simplesmente nao funciona para todo mundo.
+            question: QUAL FILME VOCE ACHA SUPERESTIMADO?
+            source: Pergunta para a comunidade
+            theme: cinema
+          - id: CC-20260911-POST-SUPERESTIMADO
+            eyebrow: CENA CERTA • DEBATE ABERTO
+            title1: A OPINIAO IMPOPULAR
+            title2: VALE MAIS QUE A NOTA?
+            body1: Critica, bilheteria e premios ajudam a construir fama.
+            body2: Mas gosto pessoal nao precisa seguir consenso.
+            question: CITE UM FILME ACLAMADO QUE NAO TE CONVENCEU.
+            source: Pergunta para a comunidade
+            theme: cinema
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      ASSET_ID: ${{ matrix.id }}
+      EYEBROW: ${{ matrix.eyebrow }}
+      TITLE1: ${{ matrix.title1 }}
+      TITLE2: ${{ matrix.title2 }}
+      BODY1: ${{ matrix.body1 }}
+      BODY2: ${{ matrix.body2 }}
+      QUESTION: ${{ matrix.question }}
+      SOURCE: ${{ matrix.source }}
+      THEME: ${{ matrix.theme }}
+    steps:
+      - name: Runtime preflight
+        run: |
+          set -euo pipefail
+          test -n "$UGI_VIDEO_UPLOAD_URL"
+          test -n "$UGI_VIDEO_UPLOAD_KEY"
+          command -v ffmpeg >/dev/null
+          command -v ffprobe >/dev/null
+          test -f /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
+      - name: Render original vertical discussion card
+        run: |
+          set -euo pipefail
+          mkdir -p out txt
+          printf '%s\n' "$EYEBROW" > txt/eyebrow.txt
+          printf '%s\n%s\n' "$TITLE1" "$TITLE2" > txt/title.txt
+          printf '%s\n%s\n' "$BODY1" "$BODY2" > txt/body.txt
+          printf '%s\n' "$QUESTION" > txt/question.txt
+          printf '%s\n' "$SOURCE" > txt/source.txt
+          case "$THEME" in
+            stars) BG='0x07111f'; ACCENT='0xd7b55b';;
+            water) BG='0x061b29'; ACCENT='0x78c7df';;
+            split) BG='0x17141f'; ACCENT='0xe2b85b';;
+            cinema) BG='0x140b10'; ACCENT='0xd7b55b';;
+            *) BG='0x0c1118'; ACCENT='0xd7b55b';;
+          esac
+          FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
+          REG=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+          FILTER="noise=alls=7:allf=t+u,drawbox=x=70:y=110:w=940:h=5:color=${ACCENT}:t=fill,drawbox=x=70:y=1490:w=940:h=260:color=black@0.28:t=fill,drawtext=fontfile=${FONT}:textfile=txt/eyebrow.txt:fontcolor=${ACCENT}:fontsize=34:x=70:y=155,drawtext=fontfile=${FONT}:textfile=txt/title.txt:fontcolor=white:fontsize=64:line_spacing=18:x=70:y=310,drawtext=fontfile=${REG}:textfile=txt/body.txt:fontcolor=white@0.92:fontsize=38:line_spacing=18:x=70:y=700,drawtext=fontfile=${FONT}:textfile=txt/question.txt:fontcolor=white:fontsize=38:x=70:y=1535,drawtext=fontfile=${REG}:textfile=txt/source.txt:fontcolor=white@0.60:fontsize=23:x=70:y=1810,drawtext=fontfile=${FONT}:text='CENA CERTA':fontcolor=white@0.88:fontsize=28:x=w-tw-70:y=155"
+          ffmpeg -hide_banner -loglevel error -y \
+            -f lavfi -i "color=c=${BG}:s=1080x1920:r=30:d=8" \
+            -vf "$FILTER,fade=t=in:st=0:d=0.35,fade=t=out:st=7.55:d=0.45,format=yuv420p" \
+            -c:v libx264 -preset veryfast -crf 18 -movflags +faststart -an "out/${ASSET_ID}.mp4"
+          test -s "out/${ASSET_ID}.mp4"
+          ffprobe -v error -show_entries stream=codec_name,width,height,pix_fmt -show_entries format=duration -of json "out/${ASSET_ID}.mp4" | tee "out/${ASSET_ID}.probe.json"
+      - name: Deliver through existing Cena Certa R2 route
+        run: |
+          set -euo pipefail
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "out/${ASSET_ID}.mp4")
+          response=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 240 \
+            -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${ASSET_ID}&platform=instagram&duration=${dur}&githubRunId=${GITHUB_RUN_ID}" \
+            -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
+            -H 'Content-Type: video/mp4' \
+            --data-binary @"out/${ASSET_ID}.mp4")
+          printf '%s\n' "$response" > "out/${ASSET_ID}.r2.json"
+          python - <<'PY'
+          import json,os
+          p=f"out/{os.environ['ASSET_ID']}.r2.json"
+          d=json.load(open(p,encoding='utf-8'))
+          assert d.get('ok') is True, d
+          a=(d.get('assets') or {}).get('instagram') or {}
+          url=a.get('videoUrl') or d.get('videoUrl')
+          assert url and url.startswith('https://'), d
+          print('ASSET_READY',os.environ['ASSET_ID'])
+          print('VIDEO_URL='+url)
+          print('VIDEO_BYTES='+str(a.get('videoBytes') or d.get('videoBytes') or ''))
+          PY
+      - name: Proof artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.id }}
+          path: |
+            out/${{ matrix.id }}.mp4
+            out/${{ matrix.id }}.probe.json
+            out/${{ matrix.id }}.r2.json
+          retention-days: 7
