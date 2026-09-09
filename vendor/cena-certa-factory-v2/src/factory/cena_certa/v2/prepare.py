@@ -113,7 +113,7 @@ def normalize_music(c,src,out):
   if measured_tp>tp+0.3:
    # AAC can overshoot the requested loudnorm ceiling. Retry a bounded set of
    # progressively safer ceilings and measure the encoded output every time.
-   for safety_margin in (1.0,2.0,3.0):
+   for safety_margin in (1.0,2.0,2.25,2.5,3.0):
     safety_tp=tp-safety_margin
     safety=f'loudnorm=I={target}:TP={safety_tp}:LRA=7'
     sh(['ffmpeg','-loglevel','error','-y','-i',str(src),'-vn','-af',safety,'-c:a','aac','-b:a','192k','-ar','48000',str(fix)],timeout=150)
