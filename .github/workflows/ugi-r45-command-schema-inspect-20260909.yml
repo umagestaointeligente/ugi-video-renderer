@@ -1,0 +1,28 @@
+name: UGI R45 Command Schema Inspect 2026-09-09
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-command-schema-inspect-20260909.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect command and editorial schema source only
+        shell: bash
+        run: |
+          set -euo pipefail
+          f='cloudflare/lola-operacional-worker.mjs'
+          for pat in 'function validateCommand' 'function createCommand' 'editorialMediaPublishing' '/api/editorial-media' '/api/media-draft' '/api/linkedin-publish' 'isLolaUGIAuthorized' 'isAdminAuthorized'; do
+            echo "===== $pat ====="
+            line=$(grep -n -m1 "$pat" "$f" | cut -d: -f1 || true)
+            if [ -n "$line" ]; then
+              start=$(( line > 25 ? line-25 : 1 ))
+              end=$(( line+120 ))
+              sed -n "${start},${end}p" "$f"
+            else
+              echo 'NOT_FOUND'
+            fi
+          done
