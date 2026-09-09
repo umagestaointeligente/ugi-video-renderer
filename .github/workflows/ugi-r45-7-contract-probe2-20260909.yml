@@ -1,0 +1,54 @@
+name: UGI R45.7 Contract Probe 2 2026-09-09
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-r45-7-contract-probe2-20260909.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Probe staged validation without media
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          python - <<'PY'
+          import json, os, subprocess
+          base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
+          H=['-A','UGI-GitHub-Actions/1.0','-H',f'x-lola-command-key: {key}','-H','accept: application/json','-H','content-type: application/json']
+          cases=[
+            {'id':'UGI-20260909-IG-STORY-APPLE-0900'},
+            {'id':'UGI-20260909-IG-STORY-APPLE-0900','platform':'instagram'},
+            {'id':'UGI-20260909-IG-STORY-APPLE-0900','platform':'instagram','mode':'customScheduled'},
+            {'id':'UGI-20260909-IG-STORY-APPLE-0900','platform':'instagram','mode':'customScheduled','dueAt':'2026-09-09T12:00:00Z'}
+          ]
+          out=[]
+          for payload in cases:
+            p=subprocess.run(['curl','--silent','--show-error','--location','--max-time','30',*H,'--data-binary',json.dumps(payload),'-w','\nHTTP:%{http_code}',base+'/api/platform-publish'],text=True,capture_output=True)
+            body,_,code=p.stdout.rpartition('\nHTTP:')
+            try: parsed=json.loads(body)
+            except: parsed={'raw':body[:1000]}
+            if parsed.get('ok') is True:
+              raise SystemExit('UNEXPECTED_SUCCESS_WITHOUT_MEDIA')
+            out.append({'payload':payload,'http':code,'response':parsed})
+          open('contract2.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-r45-7-contract2-${{ github.run_id }}
+          path: contract2.json
+          retention-days: 3
