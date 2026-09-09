@@ -53,7 +53,53 @@ def load_growth_policy() -> tuple[dict, str]:
     return policy, hashlib.sha256(raw).hexdigest()
 
 
-def expose_runtime_policy(policy: dict, sha256: str) -> dict:
+def load_distribution_state(policy: dict) -> tuple[dict, str, str]:
+    """Load the operational distribution state referenced by policy, fail-closed."""
+    ref = policy.get("distribution", {}).get("state_ref")
+    if not isinstance(ref, str) or not ref:
+        raise GrowthPolicyError("DISTRIBUTION_STATE_REQUIRED")
+    path = (REPO_ROOT / ref).resolve()
+    try:
+        path.relative_to(REPO_ROOT)
+    except ValueError as exc:
+        raise GrowthPolicyError("DISTRIBUTION_STATE_OUTSIDE_REPOSITORY") from exc
+    if not path.is_file():
+        raise GrowthPolicyError(f"DISTRIBUTION_STATE_MISSING:{ref}")
+    raw = path.read_bytes()
+    try:
+        state = json.loads(raw.decode("utf-8"))
+    except Exception as exc:
+        raise GrowthPolicyError(f"DISTRIBUTION_STATE_INVALID_JSON:{exc}") from exc
+    if not isinstance(state, dict) or state.get("project") != "UGI":
+        raise GrowthPolicyError("DISTRIBUTION_STATE_INVALID_PROJECT")
+    buffer = state.get("buffer", {})
+    active = buffer.get("active_platforms")
+    paused = buffer.get("paused_platforms")
+    if buffer.get("publisher") != "buffer":
+        raise GrowthPolicyError("DISTRIBUTION_STATE_BUFFER_PROVIDER_LOCK")
+    if not isinstance(active, list) or not isinstance(paused, list):
+        raise GrowthPolicyError("DISTRIBUTION_STATE_PLATFORM_LISTS_REQUIRED")
+    active_set = {str(item).lower() for item in active}
+    paused_set = {str(item).lower() for item in paused}
+    allowed = {"linkedin", "instagram", "tiktok", "youtube"}
+    if not active_set or not active_set <= allowed or not paused_set <= allowed:
+        raise GrowthPolicyError("DISTRIBUTION_STATE_INVALID_PLATFORMS")
+    if active_set & paused_set:
+        raise GrowthPolicyError("DISTRIBUTION_STATE_ACTIVE_PAUSED_CONFLICT")
+    if int(buffer.get("active_channel_count", -1)) != len(active_set):
+        raise GrowthPolicyError("DISTRIBUTION_STATE_ACTIVE_COUNT_MISMATCH")
+    if "youtube" not in paused_set or buffer.get("youtube_buffer_status") != "PAUSED":
+        raise GrowthPolicyError("DISTRIBUTION_STATE_YOUTUBE_PAUSE_LOCK")
+    return state, hashlib.sha256(raw).hexdigest(), ref
+
+
+def expose_runtime_policy(
+    policy: dict,
+    sha256: str,
+    distribution_state: dict,
+    distribution_state_sha256: str,
+    distribution_state_source: str,
+) -> dict:
     """Compact policy surface consumed by UGI generation/runtime gates."""
     return {
         "POLICY_REQUIRED": True,
@@ -64,6 +110,11 @@ def expose_runtime_policy(policy: dict, sha256: str) -> dict:
         "POLICY_SHA256": sha256,
         "RUNTIME_POLICY_ACTIVE": True,
         "GROWTH_ENGINE_ACTIVE": True,
+        "DISTRIBUTION_STATE_SOURCE": distribution_state_source,
+        "DISTRIBUTION_STATE_SHA256": distribution_state_sha256,
+        "DISTRIBUTION_STATE": distribution_state,
+        "EFFECTIVE_ACTIVE_PLATFORMS": distribution_state["buffer"]["active_platforms"],
+        "EFFECTIVE_PAUSED_PLATFORMS": distribution_state["buffer"]["paused_platforms"],
         "NORTH_STAR_VIEWS": policy["north_star"]["organic_views_per_content_platform"],
         "DISTRIBUTION_LADDER": policy["north_star"]["distribution_ladder"],
         "OPTIMIZATION_PRIORITY": policy["optimization_priority"],
@@ -99,8 +150,12 @@ def validate_runtime_contract(runtime: dict) -> None:
         "COMMERCE_GATE_REQUIRED": runtime.get("COMMERCE_GATE_REQUIRED") is True,
         "COMMERCE_FAIL_CLOSED": runtime.get("COMMERCE_FAIL_CLOSED") is True,
         "TIKTOK_RULES": runtime.get("TIKTOK", {}).get("frame_zero_hook") is True,
-        "INSTAGRAM_RULES": set(runtime.get("INSTAGRAM", {}).get("formats", [])) == {"reel", "carousel", "static"},
+        "INSTAGRAM_RULES": {"reel", "carousel", "static"}.issubset(set(runtime.get("INSTAGRAM", {}).get("formats", []))),
         "YOUTUBE_RULES": runtime.get("YOUTUBE", {}).get("micro_winner_strategy") == "descendants_not_copies",
+        "DISTRIBUTION_STATE_ACTIVE": isinstance(runtime.get("DISTRIBUTION_STATE_SHA256"), str)
+            and len(runtime.get("DISTRIBUTION_STATE_SHA256", "")) == 64,
+        "BUFFER_PROVIDER_LOCK": runtime.get("DISTRIBUTION_STATE", {}).get("buffer", {}).get("publisher") == "buffer",
+        "YOUTUBE_PAUSED": "youtube" in set(runtime.get("EFFECTIVE_PAUSED_PLATFORMS", [])),
     }
     failures = [name for name, passed in checks.items() if not passed]
     if failures:
@@ -109,7 +164,8 @@ def validate_runtime_contract(runtime: dict) -> None:
 
 def load_runtime_policy() -> dict:
     policy, sha256 = load_growth_policy()
-    runtime = expose_runtime_policy(policy, sha256)
+    state, state_sha256, state_source = load_distribution_state(policy)
+    runtime = expose_runtime_policy(policy, sha256, state, state_sha256, state_source)
     validate_runtime_contract(runtime)
     return runtime
 

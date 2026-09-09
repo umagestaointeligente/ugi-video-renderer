@@ -3,36 +3,62 @@ run-name: UGI Growth Policy Smoke ${{ github.run_id }}
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'config/ugi/growth-policy.json'
+      - 'config/ugi/distribution-state.json'
+      - 'scripts/ugi_growth_runtime.py'
+      - 'scripts/ugi_growth_policy_smoke.py'
+      - '.github/workflows/ugi-growth-policy-smoke.yml'
   push:
     branches: [main]
     paths:
       - 'config/ugi/growth-policy.json'
-      - 'magic-engine/magic_engine.py'
+      - 'config/ugi/distribution-state.json'
+      - 'scripts/ugi_growth_runtime.py'
       - 'scripts/ugi_growth_policy_smoke.py'
       - '.github/workflows/ugi-growth-policy-smoke.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: ugi-growth-policy-runtime-smoke
+  group: ugi-growth-policy-runtime-smoke-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  runtime-policy-smoke:
+  validate-readonly:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Checkout exact triggering commit
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Validate canonical policy and operational state
+        run: python scripts/ugi_growth_policy_smoke.py
+      - name: Run incident regression tests
+        run: python -m unittest tests.test_ugi_policy_incident_regression
+      - name: Upload independent evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-growth-policy-smoke-${{ github.run_id }}
+          path: control-plane/receipts/ugi-growth-engine/*.json
+          retention-days: 30
+          if-no-files-found: error
+
+  persist-receipt:
+    if: github.event_name != 'pull_request'
+    needs: validate-readonly
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
-
-      - name: Execute read-only runtime policy smoke
+      - name: Re-run validated smoke at exact commit
         run: python scripts/ugi_growth_policy_smoke.py
-
-      - name: Persist receipt in UGI control plane
+      - name: Persist receipt only after validation
         shell: bash
         run: |
           set -euo pipefail
@@ -43,33 +69,6 @@ jobs:
             echo 'No receipt change found' >&2
             exit 1
           fi
-          git commit -m "UGI growth: persist runtime policy smoke receipt [skip ci]"
+          git commit -m "UGI growth: persist validated runtime receipt [skip ci]"
+          git pull --rebase origin main
           git push origin HEAD:main
-          echo "RECEIPT_COMMIT_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
-
-      - name: Upload independent evidence artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ugi-growth-policy-smoke-${{ github.run_id }}
-          path: control-plane/receipts/ugi-growth-engine/*.json
-          retention-days: 30
-          if-no-files-found: error
-
-      - name: Summarize evidence
-        shell: bash
-        run: |
-          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
-          import json, os
-          from pathlib import Path
-          p = json.loads(Path('control-plane/receipts/ugi-growth-engine/latest.json').read_text())
-          print('# UGI Growth Policy Runtime Smoke')
-          print(f"- POLICY_ID: {p['policy_id']}")
-          print(f"- POLICY_SCHEMA_VERSION: {p['policy_schema_version']}")
-          print(f"- POLICY_SHA256: {p['policy_sha256']}")
-          print(f"- RUNTIME_ENGINE: {p['runtime_engine']}")
-          print(f"- RUNTIME_ENGINE_VERSION: {p['runtime_engine_version']}")
-          print(f"- SMOKE_TEST_PASS: {p['SMOKE_TEST_PASS']}")
-          print('- PUBLICATION_TRIGGERED: false')
-          print('- PAYMENT_TRIGGERED: false')
-          print(f"- RECEIPT_COMMIT_SHA: {os.environ.get('RECEIPT_COMMIT_SHA','NOT_SET')}")
-          PY

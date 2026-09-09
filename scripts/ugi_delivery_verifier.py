@@ -16,6 +16,8 @@ OUT = ROOT / "control-plane" / "delivery-proof" / "latest.json"
 WORKER = "https://lola-operacional-ugi.umagestaointeligente.workers.dev"
 GRACE_MINUTES = 12
 LOOKBACK_HOURS = 36
+MAX_READBACKS = 25
+DISTRIBUTION_STATE = ROOT / "config" / "ugi" / "distribution-state.json"
 
 
 class Client:
@@ -37,6 +39,18 @@ def parse_time(value: Any) -> dt.datetime | None:
         return dt.datetime.fromisoformat(str(value).replace("Z", "+00:00")).astimezone(dt.timezone.utc)
     except Exception:
         return None
+
+
+def load_active_platforms() -> set[str]:
+    data = json.loads(DISTRIBUTION_STATE.read_text(encoding="utf-8"))
+    buffer = data.get("buffer", {})
+    if buffer.get("publisher") != "buffer":
+        raise SystemExit("DELIVERY_VERIFIER_PROVIDER_LOCK")
+    active = {str(x).lower() for x in buffer.get("active_platforms", [])}
+    paused = {str(x).lower() for x in buffer.get("paused_platforms", [])}
+    if not active or active & paused:
+        raise SystemExit("DELIVERY_VERIFIER_DISTRIBUTION_STATE_INVALID")
+    return active
 
 
 def external_proof(url: str | None) -> dict[str, Any]:
@@ -80,6 +94,8 @@ def main() -> int:
     now = dt.datetime.now(dt.timezone.utc)
     lower = now - dt.timedelta(hours=LOOKBACK_HOURS)
     results: list[dict[str, Any]] = []
+    active_platforms = load_active_platforms()
+    seen: set[tuple[str, str]] = set()
 
     sources = (
         list(iter_receipts(VIDEO_RECEIPTS, "video") or [])
@@ -94,20 +110,27 @@ def main() -> int:
             continue
 
         platform = str(row.get("platform") or ("instagram" if kind in {"static", "r453"} else "")).lower()
-        if platform not in {"instagram", "tiktok", "youtube"}:
+        if platform not in active_platforms:
             continue
 
-        if kind == "r453":
-            buffer_id = str(row.get("bufferPostId") or "").strip()
-            if not buffer_id:
-                continue
+        buffer_id = str(row.get("bufferPostId") or "").strip()
+        draft_id = str(row.get("draftId") or "").strip()
+        identity_value = buffer_id or draft_id
+        if not identity_value:
+            continue
+        dedupe_key = (platform, identity_value)
+        if dedupe_key in seen:
+            continue
+        if len(seen) >= MAX_READBACKS:
+            break
+        seen.add(dedupe_key)
+
+        if buffer_id:
             endpoint = "/api/r45-2/buffer-status?id=" + requests.utils.quote(buffer_id, safe="")
             code, rb = client.get(endpoint)
             pub = rb.get("post") or {}
-            identity = {"bufferPostId": buffer_id, "draftId": row.get("draftId")}
         else:
-            draft_id = str(row.get("draftId") or "").strip()
-            if not draft_id:
+            if kind == "r453":
                 continue
             if kind == "static":
                 endpoint = "/api/r45/static-publication-status?id=" + requests.utils.quote(draft_id, safe="")
@@ -115,9 +138,10 @@ def main() -> int:
                 endpoint = "/api/platform-publication-status?id=" + requests.utils.quote(draft_id, safe="") + "&platform=" + requests.utils.quote(platform, safe="")
             code, rb = client.get(endpoint)
             pub = rb.get("publication") or {}
-            identity = {"draftId": draft_id, "bufferPostId": pub.get("bufferPostId")}
+        identity = {"draftId": draft_id or None, "bufferPostId": buffer_id or pub.get("bufferPostId")}
 
-        state = classify(pub, due, now) if code == 200 and rb.get("ok") is True else ("LATE" if now > due + dt.timedelta(minutes=GRACE_MINUTES) else "PENDING_WITHIN_GRACE")
+        readback_ok = code == 200 and rb.get("ok") is True
+        state = classify(pub, due, now) if readback_ok else "UNVERIFIABLE"
         results.append({
             "receipt": str(path.relative_to(ROOT)),
             "contentId": row.get("contentId"),
@@ -131,6 +155,7 @@ def main() -> int:
             "sentAt": pub.get("sentAt"),
             "externalLink": pub.get("externalLink"),
             "error": pub.get("error"),
+            "readbackError": None if readback_ok else str(rb.get("error") or rb.get("message") or f"HTTP_{code}")[:300],
             "state": state,
             "externalProof": external_proof(pub.get("externalLink")) if state == "DELIVERED" else {"attempted": False},
         })
@@ -139,6 +164,7 @@ def main() -> int:
     pending = sum(1 for x in results if x["state"] == "PENDING_WITHIN_GRACE")
     late = sum(1 for x in results if x["state"] == "LATE")
     failed = sum(1 for x in results if x["state"] == "FAILED")
+    unverifiable = sum(1 for x in results if x["state"] == "UNVERIFIABLE")
     payload = {
         "project":"UGI",
         "component":"DELIVERY-VERIFIER",
@@ -149,13 +175,16 @@ def main() -> int:
         "pendingWithinGrace":pending,
         "late":late,
         "failed":failed,
-        "state":"HEALTHY" if late == 0 and failed == 0 else "ALERT",
+        "unverifiable":unverifiable,
+        "activePlatformsChecked":sorted(active_platforms),
+        "readbackLimit":MAX_READBACKS,
+        "state":"HEALTHY" if late == 0 and failed == 0 and unverifiable == 0 else "ALERT",
         "results":results,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     print(json.dumps(payload, ensure_ascii=False, indent=2))
-    return 0 if late == 0 and failed == 0 else 2
+    return 0 if late == 0 and failed == 0 and unverifiable == 0 else 2
 
 
 if __name__ == "__main__":
