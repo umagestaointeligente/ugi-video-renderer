@@ -2,86 +2,107 @@
   "schema": "CENA_CERTA_EDITORIAL_RADAR_V1",
   "date": "2026-09-11",
   "timezone": "America/Sao_Paulo",
-  "status": "RESEARCH_COMPLETE_ASSETS_PENDING_RIGHTS_QA",
+  "status": "RESEARCH_REFRESHED_2026-09-09_ASSETS_PENDING_RIGHTS_QA",
   "platform_scope": ["facebook", "instagram", "tiktok", "youtube"],
   "youtube_policy": "video_only",
   "primary_topics": [
     {
-      "slug": "go-team-netflix",
-      "title": "Go Team!",
-      "platform": "Netflix",
-      "hook": "Comedia espanhola estreia globalmente em 11/09 e transforma um retiro corporativo em guerra por sobrevivencia profissional.",
-      "fact_status": "PASS",
-      "source": "https://about.netflix.com/en/news/netflix-premieres-go-team-on-september-11",
-      "asset_route": "Netflix About/Media route includes first-look images; later official trailer page explicitly offers new pictures and key art download.",
-      "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_REUSE_TERMS_TO_VERIFY",
-      "engagement_prompt": "Team building aproxima pessoas ou so mascara problemas da empresa?"
-    },
-    {
       "slug": "practical-magic-2",
-      "title": "Da Magia a Seducao 2: Feitico do Amor",
+      "title": "Practical Magic 2",
       "platform": "Cinema",
-      "hook": "Estreia brasileira em 10/09, nostalgia forte e recepcao critica dividida criam pauta ideal para debate no dia seguinte.",
+      "hook": "Estreia em 11/09 nos EUA; Sandra Bullock e Nicole Kidman retornam, enquanto a recepcao critica inicial esta dividida, criando um forte debate nostalgia x qualidade.",
       "fact_status": "PASS",
-      "source": "https://guia.folha.uol.com.br/cinema/2026/09/semana-do-cinema-tem-filmes-por-r-10-incluindo-sessoes-imax-em-redes-de-sao-paulo.shtml",
-      "social_signal": "Reddit mostra divisao entre critica baixa e fanbase muito fiel ao original.",
-      "asset_route": "Warner/press material to be used only after explicit editorial reuse validation.",
+      "sources": [
+        "https://cinemaunited.org/release-calendar/",
+        "https://www.reddit.com/r/movies/comments/1wasfg3/practical_magic_2_review_thread/"
+      ],
+      "social_signal": "Review threads publicos no Reddit mostram alto interesse e polarizacao; criticas iniciais citadas no thread estao abaixo de 50% em agregadores.",
+      "asset_route": "Warner Bros official/press asset only after explicit editorial reuse verification; public posters are not treated as licensed.",
       "asset_rights_status": "PENDING",
-      "engagement_prompt": "A continuacao precisava existir ou o original deveria ter ficado intocado?"
+      "engagement_prompt": "A nostalgia das irmas Owens basta para justificar essa continuacao?"
     },
     {
-      "slug": "semana-do-cinema",
-      "title": "Semana do Cinema",
-      "platform": "Cinema Brasil",
-      "hook": "Ingressos promocionais de 10 a 16/09 criam utilidade imediata para o publico brasileiro e permitem recomendar filmes em cartaz.",
+      "slug": "the-revolutionaries-prime",
+      "title": "The Revolutionaries",
+      "platform": "Prime Video",
+      "hook": "Estreia mundial em 11/09 no Prime Video; drama historico de Nikkhil Advani sobre quatro revolucionarios menos conhecidos da luta pela independencia da India.",
       "fact_status": "PASS",
-      "source": "https://guia.folha.uol.com.br/cinema/2026/09/semana-do-cinema-tem-filmes-por-r-10-incluindo-sessoes-imax-em-redes-de-sao-paulo.shtml",
-      "asset_route": "Use cards autorais + logos/arte promocional de exibidores apenas se houver permissao; filmes citados exigem assets individualmente aprovados.",
-      "asset_rights_status": "MIXED_PENDING",
-      "engagement_prompt": "Com ingresso a R$10, qual filme voce escolheria ver no cinema?"
+      "sources": [
+        "https://www.aboutamazon.in/news/entertainment/prime-videos-the-revolutionaries-starring-bhuvan-bam-rohit-saraf-to-release-worldwide-on-september-11"
+      ],
+      "asset_route": "About Amazon article contains official promotional imagery; final reuse still requires confirmation of press/editorial terms before scheduling.",
+      "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_TERMS_TO_VERIFY",
+      "engagement_prompt": "Voce assistiria uma serie historica que troca figuras famosas por personagens quase esquecidos?"
     },
     {
-      "slug": "spider-man-summer-record",
+      "slug": "physical-100-italy",
+      "title": "Physical 100: Italy",
+      "platform": "Netflix",
+      "hook": "Estreia em 11/09 com os tres primeiros episodios; 100 competidores, incluindo atletas olimpicos e celebridades italianas, disputam provas fisicas extremas.",
+      "fact_status": "PASS",
+      "sources": [
+        "https://about.netflix.com/en/news/the-official-trailer-of-physical-100-italy-on-netflix-from-september-11",
+        "https://media.netflix.com/en/only-on-netflix/81771552"
+      ],
+      "asset_route": "Netflix About page explicitly exposes official images with credits and Netflix Media Center has title imagery; reuse terms still require final check.",
+      "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_TERMS_TO_VERIFY",
+      "engagement_prompt": "Forca, resistencia ou estrategia: qual decide uma competicao como essa?"
+    },
+    {
+      "slug": "spider-man-boxoffice-record",
       "title": "Spider-Man: Brand New Day e o verao recorde",
       "platform": "Bilheteria",
-      "hook": "O filme chegou a seis semanas seguidas no topo e cerca de US$2,4 bi globais, ajudando Hollywood a fechar o maior verao de bilheteria nominal da historia nos EUA.",
+      "hook": "Depois de seis semanas seguidas no topo, Spider-Man passa de US$2,4 bi globais e ajuda Hollywood a fechar um verao recorde em receita nominal nos EUA.",
       "fact_status": "PASS",
-      "source": "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
-      "asset_route": "Sony Pictures official stills/press assets only after reuse terms validation.",
+      "sources": [
+        "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
+        "https://www.boxofficemojo.com/daily/2026/",
+        "https://www.sonypictures.com/movies/spidermanbrandnewday"
+      ],
+      "social_signal": "Posts publicos de fandom acompanham a marca de US$2,4 bi e recordes domesticos, mantendo a pauta quente.",
+      "asset_route": "Sony Pictures official film page provides current official imagery; reuse rights are not assumed and must be validated before scheduling.",
       "asset_rights_status": "PENDING",
-      "engagement_prompt": "Foi o melhor Homem-Aranha da era Tom Holland ou o hype carregou a bilheteria?"
+      "engagement_prompt": "Bilheteria desse tamanho prova qualidade ou prova a forca da marca Homem-Aranha?"
     }
   ],
   "secondary_watchlist": [
     {
-      "title": "Desaparecida / Last Seen",
+      "title": "Last Seen",
       "platform": "Apple TV",
-      "signal": "Estreou em 09/09; Apple TV Press Brasil oferece baixar conteudo/key art e trailer oficial.",
-      "source": "https://www.apple.com/br/tv-pr/originals/last-seen/",
+      "signal": "Estreou globalmente em 09/09 com dois episodios; thriller australiano adaptado de The Dispatcher.",
+      "source": "https://www.apple.com/tv-pr/originals/last-seen/",
+      "asset_route": "Apple TV Press oferece Download Key Art e press contacts.",
       "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_TERMS_TO_VERIFY"
     },
     {
       "title": "Colin From Accounts S3",
       "platform": "Paramount+",
-      "signal": "Temporada final estreou em 10/09; Paramount Press Express oferece key art e imagery para download.",
+      "signal": "Terceira e ultima temporada estreou em 10/09.",
       "source": "https://www.paramountpressexpress.com/paramount-plus/shows/colin-from-accounts/releases/",
+      "asset_route": "Paramount Press Express oferece Download Season Three Official Key Art & Imagery.",
       "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_TERMS_TO_VERIFY"
     },
     {
-      "title": "The Whisper Man",
-      "platform": "Netflix",
-      "signal": "Lidera o Top 10 global de filmes em ingles da Netflix com 33,4M de views na semana de 31/08.",
-      "source": "https://www.netflix.com/tudum/articles/top-10-august-31-2026",
-      "asset_rights_status": "NETFLIX_MEDIA_ROUTE_TO_VERIFY"
+      "title": "Festival de Veneza - reta final",
+      "platform": "Festival",
+      "signal": "Biennale Cinema segue ate 12/09; em 11/09 ha sessoes oficiais como Nino - Un film su Nino Rota, narrado por Sting, e Be Brave, com Anna Wintour entre os participantes.",
+      "source": "https://www.labiennale.org/en",
+      "asset_route": "Use apenas assets de press/evento com termos verificados; pagina publica nao equivale a licenca.",
+      "asset_rights_status": "PENDING"
     },
     {
-      "title": "Drawn Together / Neagley",
-      "platform": "Prime Video",
-      "signal": "Prime Video mantem setembro forte em adaptacoes literarias e expansao do universo Reacher; Neagley estreia 16/09.",
-      "source": "https://www.aboutamazon.com/news/entertainment/prime-video-september-films-shows-sports-2026",
-      "asset_rights_status": "ABOUT_AMAZON_IMAGES_NOT_AUTOMATICALLY_LICENSED"
+      "title": "Disney+ / Hulu",
+      "platform": "Disney+",
+      "signal": "Em 11/09 entram novo episodio de Flex X Cop S2 e o especial 9/11 Tribute in Light; baixo fit para o core do Cena Certa, mantidos apenas como monitoramento.",
+      "source": "https://press.disneyplus.com/news/next-on-disney-plus-september-2026",
+      "asset_rights_status": "PRESS_ROUTE_TO_VERIFY"
     }
   ],
+  "metricool_readback": {
+    "checked_on": "2026-09-09",
+    "existing_11_sep": "8 videos + 3 stories already scheduled; do not modify",
+    "editorial_posts_existing": 0
+  },
   "rights_rule": "Public availability is not treated as a license. Every final asset requires explicit press/editorial reuse evidence or a separately cleared license before scheduling.",
   "publication_allowed": false
 }
