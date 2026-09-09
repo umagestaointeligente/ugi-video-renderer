@@ -3,67 +3,31 @@
   "target_date": "2026-09-11",
   "items": [
     {
-      "id": "SRC-20260911-WAKANDA",
-      "title": "Black Panther: Wakanda Forever",
-      "source_url": "https://video.disney.com/watch/marvel-studios-black-panther-wakanda-forever-official-trailer-5ea2349d1b158ebd6b4f2a72",
+      "id": "SRC-20260911-A-NEW-HOPE",
+      "title": "Star Wars: Episode IV - A New Hope",
+      "source_url": "https://video.disney.com/watch/a-new-hope-star-wars-the-digital-movie-collection-512da74c219284c3cb2e7a69",
       "rights_pass": true,
-      "rights_evidence": "Disney UK Press states the brand-new trailer, poster and images are available to download and links official AV assets for press coverage; source is the matching official Disney Video page.",
+      "rights_evidence": "Lucasfilm / Disney UK Press has current 2026 editorial coverage for Star Wars: A New Hope ahead of its 50th anniversary, and the audiovisual source is the matching official Disney Video studio page. Use is restricted to the Cena Certa editorial/transformative coverage context; this does not assert a general redistribution license.",
       "fallback_urls": [],
-      "resolver_revision": 10
+      "resolver_revision": 11
     },
     {
-      "id": "SRC-20260911-SHANGCHI",
-      "title": "Shang-Chi and the Legend of the Ten Rings",
-      "source_url": "https://video.disney.com/watch/official-trailer-marvel-studios-shang-chi-and-the-legend-of-the-ten-rings-5c58d1f20eb12ebd6b4f2a72",
+      "id": "SRC-20260911-ALIEN-ROMULUS-RESERVE",
+      "title": "Alien: Romulus",
+      "source_url": "https://youtu.be/TSWXIzu51so",
       "rights_pass": true,
-      "rights_evidence": "The film has an official Walt Disney Studios UK Press Kit and the audiovisual source is the matching official Disney Video studio page used for press/editorial coverage.",
+      "rights_evidence": "20th Century Studios / Disney UK Press publishes the official film press kit and states the new audiovisual material and poster are available now, linking this studio trailer for press/editorial coverage; official image gallery is marked Editorial use only.",
       "fallback_urls": [],
-      "resolver_revision": 10
+      "resolver_revision": 11
     },
     {
-      "id": "SRC-20260911-THUNDERBOLTS",
-      "title": "Thunderbolts*",
-      "source_url": "https://video.disney.com/watch/marvel-studios-thunderbolts-final-trailer-in-theaters-may-2-632eb42e874e5de9f3c51fcc",
+      "id": "SRC-20260911-THE-CREATOR-RESERVE",
+      "title": "The Creator",
+      "source_url": "https://youtu.be/go4dkOkze6U",
       "rights_pass": true,
-      "rights_evidence": "Marvel Studios / Disney UK Press states the official audiovisual material, poster and stills are available through the press workflow; source is the matching Disney Video page.",
+      "rights_evidence": "20th Century Studios / Disney UK Press states that the new audiovisual material and stills for The Creator are available now and links this official studio source for press/editorial coverage.",
       "fallback_urls": [],
-      "resolver_revision": 10
-    },
-    {
-      "id": "SRC-20260911-AVATAR2",
-      "title": "Avatar: The Way of Water",
-      "source_url": "https://video.disney.com/watch/avatar-the-way-of-water-official-trailer-5ed8b01b7a61aebd6b4f2a72",
-      "rights_pass": true,
-      "rights_evidence": "20th Century Studios / Disney UK Press provides the official press kit, film images and materials; the official gallery marks Disney images as editorial use only. Source is the matching Disney Video page.",
-      "fallback_urls": [],
-      "resolver_revision": 10
-    },
-    {
-      "id": "SRC-20260911-INDIANA5",
-      "title": "Indiana Jones and the Dial of Destiny",
-      "source_url": "https://video.disney.com/watch/indiana-jones-and-the-dial-of-destiny-official-trailer-5f8c056393323ebd6b4f2a72",
-      "rights_pass": true,
-      "rights_evidence": "Lucasfilm / Disney UK Press states the audiovisual material, poster and stills are available and links AV assets for press coverage; source is the matching official Disney Video page.",
-      "fallback_urls": [],
-      "resolver_revision": 10
-    },
-    {
-      "id": "SRC-20260911-PHANTOM-MENACE",
-      "title": "Star Wars: Episode I - The Phantom Menace",
-      "source_url": "https://video.disney.com/watch/the-phantom-menace-star-wars-the-digital-movie-collection-512d99ea8762a4c3cb2e7a69",
-      "rights_pass": true,
-      "rights_evidence": "Lucasfilm / Disney UK Press provides the official anniversary re-release press kit and downloadable high-resolution assets; the official gallery marks the images editorial use only. Source is an official Disney Video page for the same film.",
-      "fallback_urls": [],
-      "resolver_revision": 10
-    },
-    {
-      "id": "SRC-20260911-TITANIC",
-      "title": "Titanic",
-      "source_url": "https://press.disney.co.uk/press-kit/titanic-re-release",
-      "rights_pass": true,
-      "rights_evidence": "20th Century Studios / Disney UK Press provides the official Titanic re-release press kit and downloadable film stills; the gallery explicitly marks the images editorial use only. This URL is being tested once as the official press audiovisual source route; no blind retry is permitted if the resolver cannot extract video.",
-      "fallback_urls": [],
-      "resolver_revision": 10
+      "resolver_revision": 11
     }
   ]
 }
