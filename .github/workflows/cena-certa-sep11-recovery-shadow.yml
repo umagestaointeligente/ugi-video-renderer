@@ -1,0 +1,86 @@
+name: Cena Certa Sep11 Recovery Shadow
+
+on:
+  push:
+    branches: [fix/sep11-production-recovery-20260909]
+    paths:
+      - '.github/workflows/cena-certa-sep11-recovery-shadow.yml'
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  validate-batch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate code, state and exact batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile vendor/cena-certa-factory-v2/src/factory/cena_certa/v2/prepare.py ops/cena-certa/dispatch_fail_recover.py
+          python ops/cena-certa/factory_doctor.py
+          PYTHONPATH=vendor/cena-certa-factory-v2/src python -m factory.cena_certa.v2.preflight validate-batch \
+            --batch ops/cena-certa/batches/cena-certa-daily8-20260911-v2.json --expect 8
+
+  prepare-eight:
+    needs: validate-batch
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        index: [0,1,2,3,4,5,6,7]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    container:
+      image: ghcr.io/umagestaointeligente/cena-certa-runtime@sha256:5e35dcb15a263b190fd91ad759c6e570d16a186c180fe18fe3f8080ac86acf9c
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Prepare candidate without render, dispatch or publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=vendor/cena-certa-factory-v2/src
+          python -m factory.cena_certa.v2.prepare \
+            --batch ops/cena-certa/batches/cena-certa-daily8-20260911-v2.json \
+            --index '${{ matrix.index }}' --prepared-root prepared
+          test "$(find prepared -name prepared.json | wc -l | tr -d ' ')" = 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sep11-recovery-ready-${{ matrix.index }}
+          path: prepared/*/prepared.json
+          if-no-files-found: error
+          retention-days: 2
+
+  prove-eight:
+    needs: prepare-eight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: sep11-recovery-ready-*
+          path: proof
+      - name: Require eight independently prepared manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import glob,json
+          files=glob.glob('proof/**/prepared.json',recursive=True)
+          manifests=[json.load(open(p,encoding='utf-8')) for p in files]
+          ids={m.get('id') for m in manifests if m.get('prepared_pass') is True and m.get('no_blank_visual_pass') is True}
+          if len(files)!=8 or len(ids)!=8:
+              raise SystemExit(f'SEP11_RECOVERY_READY_FAIL files={len(files)} ids={len(ids)}')
+          print('SEP11_RECOVERY_READY_8_OF_8_PASS',sorted(ids))
+          PY
