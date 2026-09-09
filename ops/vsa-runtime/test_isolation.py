@@ -18,7 +18,7 @@ run(['preflight','--channel','VSA','--account-id','88240'],2)
 run(['preflight','--channel','VSA','--write-path','canonical/cena-certa/should-never-write.json'],2)
 run(['preflight','--channel','Cena Certa'],2)
 
-# A normal release job must carry semantic topic identity + history + QA + rights proof.
+# A normal release job must carry semantic topic identity + history + QA + rights + thematic music proof.
 with tempfile.TemporaryDirectory() as td:
     job=Path(td)/'job.json'
     payload={
@@ -33,11 +33,47 @@ with tempfile.TemporaryDirectory() as td:
         'base_video_qa':'PASS',
         'final_qa':'PASS',
         'topic_history_gate':'PASS',
+        'music_track_title':'Classical vibes 4',
+        'music_artist_or_composer':'Grigoriy Nuzhny',
+        'music_source':'Mixkit',
+        'music_license_or_usage_basis':'Mixkit Stock Music Free License',
+        'music_editorial_class':'science_documentary',
+        'music_form':'documentary film score',
+        'music_has_vocals':False,
+        'music_composition_gate':'PASS',
+        'music_theme_match_gate':'PASS',
+        'music_audibility_gate':'PASS',
+        'music_no_tone_or_game_style_gate':'PASS',
+        'music_rights_gate':'PASS',
         'social_account_id':88527,
         'write_paths':['exports/vsa/test.mp4']
     }
     job.write_text(json.dumps(payload),encoding='utf-8')
     run(['validate-job','--job',str(job)])
+
+    # Missing music metadata/gates must block.
+    bad_music_missing=Path(td)/'bad-music-missing.json'
+    bad_music_missing_payload=dict(payload); bad_music_missing_payload.pop('music_track_title')
+    bad_music_missing.write_text(json.dumps(bad_music_missing_payload),encoding='utf-8')
+    run(['validate-job','--job',str(bad_music_missing)],2)
+
+    # A sine-wave/tone bed is explicitly forbidden even if other metadata exists.
+    bad_music_tone=Path(td)/'bad-music-tone.json'
+    bad_music_tone_payload=dict(payload, music_form='sine_wave_bed')
+    bad_music_tone.write_text(json.dumps(bad_music_tone_payload),encoding='utf-8')
+    run(['validate-job','--job',str(bad_music_tone)],2)
+
+    # A track that fails theme/audibility/no-game-style proof must block.
+    bad_music_gate=Path(td)/'bad-music-gate.json'
+    bad_music_gate_payload=dict(payload, music_theme_match_gate='FAIL')
+    bad_music_gate.write_text(json.dumps(bad_music_gate_payload),encoding='utf-8')
+    run(['validate-job','--job',str(bad_music_gate)],2)
+
+    # Vocals are forbidden in VSA background music.
+    bad_music_vocals=Path(td)/'bad-music-vocals.json'
+    bad_music_vocals_payload=dict(payload, music_has_vocals=True)
+    bad_music_vocals.write_text(json.dumps(bad_music_vocals_payload),encoding='utf-8')
+    run(['validate-job','--job',str(bad_music_vocals)],2)
 
     # Missing 60-day topic gate must block.
     bad=Path(td)/'bad-topic.json'
@@ -85,10 +121,15 @@ run(['check-topic','--semantic-topic-id','rocket_exhaust_spiral_sky','--content-
 
 print(json.dumps({
     'status':'PASS',
-    'suite':'VSA_ISOLATION_V3',
+    'suite':'VSA_ISOLATION_V4_MUSIC_GATE',
     'topic_lock_days':60,
     'semantic_ledger_gate':True,
     'breaking_exception_manifest_gate':True,
     'person_reference_gate':True,
+    'music_real_composition_gate':True,
+    'music_theme_match_gate':True,
+    'music_audibility_gate':True,
+    'music_no_tone_or_game_style_gate':True,
+    'music_rights_gate':True,
     'cena_certa_untouched_by_design':True
 }))
