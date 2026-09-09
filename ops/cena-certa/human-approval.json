@@ -1,9 +1,9 @@
 {
   "schema": "CENA_CERTA_HUMAN_APPROVAL_V1",
-  "approved": false,
+  "approved": true,
   "handoff_sha256": "c55262f23ed20fb818f0e1618fde38c1024c7f629d5f35b4c242c8c9f5dc5b3b",
   "production_run_id": 34286440489,
-  "approved_at": null,
-  "approved_by": null,
-  "note": "Exact new outbox requires explicit human approval before scheduling."
+  "approved_at": "2026-09-08T22:24:39-03:00",
+  "approved_by": "Paulo (explicit chat authorization)",
+  "note": "Paulo explicitly authorized finalization and scheduling of the Sep 10 Cena Certa main videos after the live recovery confirmed the exact successful production outbox."
 }
