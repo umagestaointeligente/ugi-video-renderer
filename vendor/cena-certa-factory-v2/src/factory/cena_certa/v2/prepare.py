@@ -37,13 +37,39 @@ def _story_voice_with_measured_pace(c,text,caption_chunks,voice):
  if not (low<=wpm<=high): raise RuntimeError(f'VOICE_PACE_FAIL_AFTER_MEASURED_CORRECTION {wpm:.1f}')
  return cues,vd,wpm
 
-def _precut_scene_with_black_repair(src,start,dur,out,c,threads,source_dur,blocked_ranges,label):
- start=float(start); dur=max(0.8,float(dur)); offsets=[0]
- for step in range(5,31,5): offsets.extend((-step,step))
+def _source_black_ranges(src,c,source_dur):
+ """Measure the source once so scene repair does not encode blind retries."""
+ q=c['qa']; threshold=float(q['story_black_interval_max_seconds'])
+ p=sh([
+  'ffmpeg','-hide_banner','-nostats','-loglevel','info','-t',f'{float(source_dur):.3f}',
+  '-i',str(src),'-an','-vf',
+  f'blackdetect=d={threshold:.3f}:pix_th={float(q["story_black_pixel_threshold"]):.3f}:pic_th={float(q["story_black_picture_ratio"]):.3f}',
+  '-f','null','-'
+ ],check=False,timeout=max(120,float(source_dur)*2.0))
+ found=[]
+ for m in re.finditer(r'black_start:([0-9.]+)\s+black_end:([0-9.]+)\s+black_duration:([0-9.]+)',p.stderr or ''):
+  a,b,d=(float(m.group(i)) for i in (1,2,3))
+  if d>threshold+0.001: found.append((a,b))
+ print('SOURCE_BLACK_MAP_PASS',f'intervals={len(found)}')
+ return found
+
+def _candidate_offsets(max_shift=30.0,step=0.25):
+ yield 0.0
+ ticks=int(round(float(max_shift)/float(step)))
+ for i in range(1,ticks+1):
+  delta=i*float(step)
+  yield -delta; yield delta
+
+def _overlap(a0,a1,b0,b1):
+ return max(0.0,min(a1,b1)-max(a0,b0))
+
+def _precut_scene_with_black_repair(src,start,dur,out,c,threads,source_dur,blocked_ranges,source_black_ranges,label):
+ start=float(start); dur=max(0.8,float(dur)); max_blank=float(c['qa']['story_black_interval_max_seconds'])
  last=None; tried=[]
- for off in offsets:
+ for off in _candidate_offsets():
   cand=max(0.0,min(start+off,max(0.0,float(source_dur)-dur)))
-  if any(min(cand+dur,b)-max(cand,a)>0.20 for a,b in blocked_ranges): continue
+  if any(_overlap(cand,cand+dur,a,b)>0.20 for a,b in blocked_ranges): continue
+  if any(_overlap(cand,cand+dur,a,b)>max_blank+0.001 for a,b in source_black_ranges): continue
   if any(abs(cand-x)<0.01 for x in tried): continue
   tried.append(cand); precut_scene(src,cand,dur,out,threads)
   try: black_intervals(out,c,max_duration=dur,label=label)
@@ -52,7 +78,7 @@ def _precut_scene_with_black_repair(src,start,dur,out,c,threads,source_dur,block
    last=e; continue
   if abs(cand-start)>0.01: print('SCENE_BLACK_MEASURED_AUTOSHIFT_PASS',label,f'from={start:.3f}',f'to={cand:.3f}')
   return cand
- raise RuntimeError(f'{label}_BLANK_VISUAL_FAIL_AFTER_MEASURED_AUTOSHIFT tried={tried} last={last}')
+ raise RuntimeError(f'{label}_BLANK_VISUAL_FAIL_AFTER_MEASURED_AUTOSHIFT tried={tried[:12]} candidates={len(tried)} last={last}')
 
 def normalize_music(c,src,out):
  target=float(c['music'].get('prepared_master_lufs',-14.0)); tp=float(c['music'].get('prepared_master_true_peak_dbtp',-2.0)); out=Path(out); tmp=out.with_name(out.stem+f'.part-{os.getpid()}'+out.suffix); fix=out.with_name(out.stem+f'.peakfix-{os.getpid()}'+out.suffix)
@@ -85,12 +111,16 @@ def normalize_music(c,src,out):
    measured_lufs,measured_tp=loudness(out)
    print('MUSIC_MASTER_MEASURED_CORRECTION_PASS',correction_pass,f'lufs={measured_lufs:.2f}',f'tp={measured_tp:.2f}',f'gain={gain_db:.2f}')
   if measured_tp>tp+0.3:
-   safety_tp=tp-1.0
-   safety=f'loudnorm=I={target}:TP={safety_tp}:LRA=7'
-   sh(['ffmpeg','-loglevel','error','-y','-i',str(src),'-vn','-af',safety,'-c:a','aac','-b:a','192k','-ar','48000',str(fix)],timeout=150)
-   media_probe(fix,'audio'); os.replace(fix,out)
-   measured_lufs,measured_tp=loudness(out)
-   print('MUSIC_MASTER_TRUE_PEAK_SAFETY_PASS',f'lufs={measured_lufs:.2f}',f'tp={measured_tp:.2f}',f'target_tp={safety_tp:.2f}')
+   # AAC can overshoot the requested loudnorm ceiling. Retry a bounded set of
+   # progressively safer ceilings and measure the encoded output every time.
+   for safety_margin in (1.0,2.0,3.0):
+    safety_tp=tp-safety_margin
+    safety=f'loudnorm=I={target}:TP={safety_tp}:LRA=7'
+    sh(['ffmpeg','-loglevel','error','-y','-i',str(src),'-vn','-af',safety,'-c:a','aac','-b:a','192k','-ar','48000',str(fix)],timeout=150)
+    media_probe(fix,'audio'); os.replace(fix,out)
+    measured_lufs,measured_tp=loudness(out)
+    print('MUSIC_MASTER_TRUE_PEAK_SAFETY_PASS',f'margin={safety_margin:.1f}',f'lufs={measured_lufs:.2f}',f'tp={measured_tp:.2f}',f'target_tp={safety_tp:.2f}')
+    if measured_tp<=tp+0.3 and abs(measured_lufs-target)<=1.5: break
   if abs(measured_lufs-target)>1.5: raise RuntimeError(f'MUSIC_MASTER_LUFS_FAIL actual={measured_lufs:.2f} target={target:.2f}')
   if measured_tp>tp+0.3: raise RuntimeError(f'MUSIC_MASTER_PEAK_FAIL actual={measured_tp:.2f} max={tp:.2f}')
   return measured_lufs,measured_tp
@@ -172,16 +202,17 @@ def prepare_one(batch,index,prepared_root):
  atomic_download(mt['url'],music_raw,'audio',c['runtime']['music_max_bytes'],mt.get('sha256'),90)
  music=root/'music-master.m4a'; music_lufs,music_tp=normalize_music(c,music_raw,music)
 
+ source_black_ranges=_source_black_ranges(source,c,source_dur)
  base_ranges=[(float(s['start_seconds']),float(s['start_seconds'])+float(timeline[i][2])) for i,s in enumerate(item['scene_plan'])]
  scene_jobs=[]
  for i,s in enumerate(item['scene_plan']):
   timeline_start,timeline_end,target=timeline[i]; source_start=float(s['start_seconds']); blocked=[r for j,r in enumerate(base_ranges) if j!=i]
-  scene_jobs.append((source,source_start,target,root/f'scene-{i:02d}.mp4',c,c['runtime']['scene_encoder_threads'],source_dur,blocked,f'SCENE_{i:02d}'))
+  scene_jobs.append((source,source_start,target,root/f'scene-{i:02d}.mp4',c,c['runtime']['scene_encoder_threads'],source_dur,blocked,source_black_ranges,f'SCENE_{i:02d}'))
  workers=max(1,min(int(c['runtime']['scene_workers_per_video']),len(scene_jobs)))
  with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex: used_starts=list(ex.map(lambda a:_precut_scene_with_black_repair(*a),scene_jobs))
  scenes=[]
  for i,(job,start) in enumerate(zip(scene_jobs,used_starts)):
-  src,planned_start,target,out,contract,threads,sdur,blocked,label=job; actual=duration(out); timeline_start,timeline_end,_=timeline[i]
+  src,planned_start,target,out,contract,threads,sdur,blocked,source_black,label=job; actual=duration(out); timeline_start,timeline_end,_=timeline[i]
   if actual+0.12<target: raise RuntimeError(f'SCENE_PRECUT_SHORT scene={i} actual={actual:.3f} target={target:.3f}')
   if c['runtime'].get('scene_black_guard_before_render',True): black_intervals(out,c,max_duration=target,label=f'SCENE_{i:02d}')
   scenes.append({'index':i,'file':out.name,'sha256':sha256(out),'duration':actual,'target_duration':target,'timeline_start':timeline_start,'timeline_end':timeline_end,'source_start':start,'caption_start':item['scene_plan'][i]['caption_start'],'caption_end':item['scene_plan'][i]['caption_end'],'semantic_reason':item['scene_plan'][i]['semantic_reason'],'blank_visual_pass':True})
