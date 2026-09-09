@@ -806,14 +806,11 @@ jobs:
           PY
 
       - name: Preserve GitHub artifact
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: ugi-reel-r43-8-4-${{ inputs.render_id }}
           path: |
-            output/ugi-reel.mp4
-            output/instagram-reel.mp4
-            output/tiktok-reel.mp4
-            output/youtube-short.mp4
             output/ffprobe.json
             output/audio-check.txt
             output/r42-platform-manifest.json
@@ -827,7 +824,7 @@ jobs:
             output/semantic-result-request.json
             output/semantic-result-response.json
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 1
 
       - name: Report failure to Lola
         if: ${{ failure() }}
