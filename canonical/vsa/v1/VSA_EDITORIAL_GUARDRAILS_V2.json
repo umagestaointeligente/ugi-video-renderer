@@ -14,18 +14,34 @@
       "performance_alone_is_not_exception": true
     }
   },
+  "real_footage_alternation": {
+    "status": "HARD_GATE",
+    "observable_real_world_topic_requires_real_footage": true,
+    "minimum_real_footage_blocks": 3,
+    "minimum_distinct_real_clips_or_angles": 2,
+    "required_sequence": ["REAL_1", "EXPLANATION", "REAL_2_DIFFERENT", "EXPLANATION", "REAL_3_OR_CONSEQUENCE", "PAYOFF", "CTA"],
+    "same_take_reused_as_new_evidence": "FAIL",
+    "animation_may_replace_observable_subject_for_convenience": false,
+    "not_applicable_requires_reason": true,
+    "insufficient_rights_safe_footage_result": "BLOCK_REAL_FOOTAGE",
+    "release_gate": "real_footage_gate=PASS"
+  },
   "people_biocuriosity": {
     "enabled": true,
     "content_class": "PERSON_PROFILE",
     "real_person_reference_required": true,
+    "real_person_video_required": true,
+    "minimum_distinct_real_person_video_segments": 2,
     "prohibited_substitutes": ["journalist_as_subject_proxy", "presenter_as_subject_proxy", "generic_stock_person", "unrelated_broll_person"],
     "animation_role": "Explain disease, physiology, mechanism, technology, context or cause while keeping the real person visually anchored.",
-    "preferred_sequence": ["REAL_PERSON", "CONTEXT", "EXPLANATION_ANIMATION", "REAL_PERSON_OR_EVIDENCE", "CONSEQUENCE", "PAYOFF"],
+    "preferred_sequence": ["REAL_PERSON_VIDEO_1", "CONTEXT_OR_EXPLANATION", "REAL_PERSON_VIDEO_2_DIFFERENT", "EXPLANATION", "REAL_PERSON_OR_EVIDENCE", "CONSEQUENCE", "PAYOFF"],
     "health_rule": "Separate documented facts from inference; do not diagnose beyond reliable sources.",
-    "release_gate": "person_visual_reference_gate=PASS"
+    "release_gate": "person_visual_reference_gate=PASS and person_real_video_segments_gate=PASS"
   },
   "job_requirements": {
     "topic_history_gate": "PASS",
-    "person_visual_reference_gate_when_person_profile": "PASS"
+    "real_footage_gate_when_required": "PASS",
+    "person_visual_reference_gate_when_person_profile": "PASS",
+    "person_real_video_segments_gate_when_person_profile": "PASS"
   }
 }
