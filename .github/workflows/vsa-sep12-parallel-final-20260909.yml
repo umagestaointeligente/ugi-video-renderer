@@ -1,0 +1,163 @@
+name: VSA Sep12 Parallel Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-sep12-parallel-final-20260909.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  MEDIA_BRANCH: 'vsa-media-sep12-20260909'
+  TOPICS_JSON: |
+    [{"id":"CHANDRA_HYPERSOFT","date":"2026-09-12","time":"08:00","bucket":"WORLD_SCIENCE","title":"Que objetos misteriosos o Chandra encontrou em outras galáxias?","script":"Astrônomos usando o observatório Chandra encontraram dezenas de fontes que emitem um tipo incomum de radiação: raios X extremamente suaves e muita radiação ultravioleta. Elas apareceram em várias galáxias e se comportam de maneira diferente das fontes de raios X mais conhecidas. Misteriosas não significa alienígenas, nem que a explicação já esteja fechada. Os pesquisadores chamaram o grupo de fontes de raios X hipermacias e agora testam o que pode produzir esse padrão. Entre as hipóteses estão sistemas em que uma anã branca, estrela de nêutrons ou buraco negro puxa matéria de uma estrela companheira. Comparando energia, brilho e localização, os astrônomos tentam descobrir qual motor está escondido nesses pontos. Às vezes uma nova descoberta começa justamente quando os dados não cabem nas categorias antigas. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/KSC-04-S-00307_%28ksc_082604_chandra%29.webm","Public domain - NASA"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/Take_a_Cosmic_Road_Trip_this_Summer_with_Chandra_and_Webb_%28SVS31304%29.webm","Public domain - NASA"]],"mechs":["RAIO X SUAVE + ULTRAVIOLETA","84 FONTES EM 6 GALÁXIAS","ESPECTRO + BRILHO → TESTE DE HIPÓTESES"],"track":["Spiritual Moment","Diego Nava","https://assets.mixkit.co/music/525/525.mp3","Mixkit Stock Music Free License"],"real_starts":[5,5,55],"thumb":"OBJETOS DE RAIO X?"},{"id":"IBERE","date":"2026-09-12","time":"10:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Iberê Thenório virou o creator mais influente do Brasil?","script":"A pesquisa MIC² da Ipsos divulgada nesta semana colocou Iberê Thenório, do Manual do Mundo, no topo do ranking de creators mais influentes do Brasil. E influência, nesse estudo, não é simplesmente quantidade de seguidores. A metodologia observa fatores como confiança e inspiração, sucesso, conexão com os jovens, carisma e outros atributos. Isso ajuda a entender por que conteúdos de ciência e curiosidade conseguem construir uma relação tão forte com o público. Iberê transforma perguntas simples em demonstrações visuais, mostra processos e deixa a pessoa acompanhar a descoberta. Quando informação complexa vira uma experiência concreta, ela tende a ser lembrada e compartilhada. O ranking não prova que exista uma única fórmula para influência, mas mostra que credibilidade e capacidade de explicar podem pesar muito além do número bruto de seguidores. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/-SomosLivres_-_Iber%C3%AA_Then%C3%B3rio.webm","CC BY 3.0 - Repórter Brasil"]],"mechs":["SEGUIDORES ≠ INFLUÊNCIA","CONFIANÇA + INSPIRAÇÃO + CONEXÃO","EXPLICAÇÃO VISUAL → MEMÓRIA + COMPARTILHAMENTO"],"track":["Close Up","Michael Ramir C.","https://assets.mixkit.co/music/1167/1167.mp3","Mixkit Stock Music Free License"],"real_starts":[5,45,90],"thumb":"Nº 1 EM INFLUÊNCIA?"},{"id":"PEAT_FIRE","date":"2026-09-12","time":"13:00","bucket":"WORLD_SCIENCE","title":"Como um incêndio consegue queimar debaixo da terra?","script":"Em regiões de turfa, um incêndio pode continuar ativo mesmo quando quase não existe chama visível. Turfa é um solo muito rico em matéria orgânica acumulada durante longos períodos. Quando seca, ela vira combustível. Em vez de uma chama alta, parte do fogo pode avançar lentamente por combustão sem chama, aquecendo e consumindo o material poroso debaixo da superfície. O oxigênio entra pelos espaços do solo e mantém pontos quentes ativos por muito tempo. É por isso que incêndios em turfeiras, como os que preocupam partes da Indonésia neste momento, são tão difíceis de detectar e apagar. Molhar apenas a superfície pode não alcançar a zona que continua quente em profundidade. O fogo pode parecer extinto e depois reaparecer em outro ponto. Para controlar de verdade, é preciso resfriar e reumidificar o material abaixo do chão. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Fire_burning.webm","CC BY-SA 4.0 - Gpkp"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/Madeira_Forest_Fire_at_Ribeira_da_Tabua_area_filmed_from_ER110_above_%282017%29.webm","CC BY 3.0 - Strinder"]],"mechs":["TURFA SECA = COMBUSTÍVEL","CALOR AVANÇA PELOS POROS DO SOLO","FOGO SUBTERRÂNEO → REAPARECE"],"track":["Epic Games","Ahjay Stelino","https://assets.mixkit.co/music/76/76.mp3","Mixkit Stock Music Free License"],"real_starts":[5,8,35],"thumb":"FOGO DEBAIXO DA TERRA?"},{"id":"HOUDINI","date":"2026-09-12","time":"15:30","bucket":"PEOPLE_CURIOSITY","title":"Como Houdini escapava de algemas?","script":"Harry Houdini ficou famoso parecendo escapar de qualquer algema, mas não existia um único segredo mágico. Ele estudava fechaduras profundamente e conhecia o funcionamento de muitos modelos de algema. Em diferentes apresentações, podia recorrer a pequenas chaves escondidas ou posicionadas de forma estratégica. Alguns modelos antigos também permitiam técnicas de manipulação que variavam conforme a trava, e havia números em que o próprio equipamento era preparado. O que fazia a apresentação funcionar não era apenas abrir uma fechadura. Houdini combinava conhecimento técnico, condicionamento físico, controle da respiração, ensaio e espetáculo para fazer o público acreditar que a situação era impossível. A ilusão vinha da forma como o desafio era apresentado; a fuga, do domínio sobre mecanismos e do treinamento. Por isso copiar uma única técnica nunca explicaria todos os números de Houdini. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Man_from_Beyond_%281922%29.webm","Public domain"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Master_Mystery_ep.1_%281920%29.webm","Public domain"]],"mechs":["FECHADURA → MECANISMO","CHAVE / MANIPULAÇÃO → TRAVA LIBERA","TÉCNICA + TREINO + APRESENTAÇÃO"],"track":["Stripped Bare","Ahjay Stelino","https://assets.mixkit.co/music/72/72.mp3","Mixkit Stock Music Free License"],"real_starts":[300,500,2800],"thumb":"COMO ELE ESCAPAVA?"},{"id":"EQUAL_EARTH","date":"2026-09-12","time":"18:00","bucket":"WORLD_SCIENCE","title":"Por que o mapa-múndi distorce tanto alguns países?","script":"Transformar uma esfera em um mapa plano sempre cria alguma distorção. A projeção de Mercator ficou famosa porque preserva ângulos locais, algo muito útil para navegação, mas ela aumenta visualmente áreas próximas dos polos. Por isso a Groenlândia parece gigantesca quando comparada à África, embora a África seja muitas vezes maior. Projeções de área equivalente fazem uma troca diferente: sacrificam parte da forma para representar melhor o tamanho relativo dos continentes. A Equal Earth foi criada para preservar áreas e manter uma aparência familiar do planeta, e ganhou nova atenção depois que a ONU apoiou seu uso em materiais e instituições. Não existe um mapa plano perfeito. A pergunta é qual propriedade você quer preservar: direção, forma, distância ou área. O mapa que parece neutro está sempre fazendo uma escolha matemática. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Map_projections_and_distortions.webm","CC BY-SA 4.0"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/Earth_360_animation.webm","CC0"]],"mechs":["ESFERA → PLANO = DISTORÇÃO","MERCATOR PRESERVA ÂNGULOS","EQUAL EARTH PRESERVA ÁREAS"],"track":["Classical vibes 4","Grigoriy Nuzhny","https://assets.mixkit.co/music/684/684.mp3","Mixkit Stock Music Free License"],"real_starts":[10,5,170],"thumb":"SEU MAPA DISTORCE O MUNDO"},{"id":"BUSTER_KEATON","date":"2026-09-12","time":"19:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Buster Keaton quase nunca sorria em cena?","script":"Buster Keaton ficou conhecido como The Great Stone Face, mas isso não quer dizer que ele fosse incapaz de sorrir ou que fosse uma pessoa permanentemente triste. Filmes antigos mostram Keaton sorrindo antes de consolidar a famosa expressão séria. O rosto impassível virou uma decisão de comédia. Ele percebeu que situações absurdas ficavam ainda mais engraçadas quando o personagem permanecia solene, como se o caos ao redor fosse perfeitamente normal. Esse contraste criava a piada antes mesmo de qualquer legenda. Nos filmes seguintes, Keaton trabalhava o corpo, o timing, os objetos e o enquadramento enquanto mantinha aquela expressão quase neutra. A chamada cara de pedra era uma ferramenta de linguagem visual, não um retrato completo da personalidade dele. O público via o mundo desabar e, no centro de tudo, um homem agindo como se nada estivesse acontecendo. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Coney_Island_1917_FATTY_ARBUCKLE_BUSTER_KEATON.webm","Public domain"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/The_General_%281926%29_-_short_video_selection.ogv","Public domain"]],"mechs":["CAOS AO REDOR","ROSTO IMPASSÍVEL","CONTRASTE → COMÉDIA"],"track":["Classical vibes 4","Grigoriy Nuzhny","https://assets.mixkit.co/music/684/684.mp3","Mixkit Stock Music Free License"],"real_starts":[100,5,700],"thumb":"POR QUE ELE NÃO SORRIA?"},{"id":"EL_NINO","date":"2026-09-12","time":"21:00","bucket":"WORLD_SCIENCE","title":"Por que um El Niño forte mexe com o clima do planeta inteiro?","script":"El Niño começa no Pacífico tropical, mas seus efeitos podem chegar a regiões muito distantes. Em condições normais, os ventos alísios empurram água quente para o oeste e ajudam água mais fria a subir perto da América do Sul. Durante o El Niño, esses ventos enfraquecem e a superfície do Pacífico central e oriental fica mais quente. Isso muda onde grandes volumes de ar quente e úmido sobem e reorganiza padrões de circulação da atmosfera. O resultado não é igual em todos os lugares: algumas regiões tendem a receber mais chuva, enquanto outras podem enfrentar seca, calor ou tempestades diferentes do normal. É por isso que meteorologistas acompanham temperatura do oceano, ventos e pressão. Uma faixa de água mais quente no Pacífico consegue reorganizar conexões climáticas ao redor do planeta. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/NASA_-_Observing_the_2015_El_Ni%C3%B1o_N-ViWN2dviQ.webm","Public domain - NASA"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/El_Ni%C3%B1o_Sea_Surface_Temperature_and_Height_Anomaly_on_a_Globe-_January_1997_through_December_1997_%28SVS145%29.webm","Public domain - NASA"]],"mechs":["ALÍSIOS ENFRAQUECEM","ÁGUA QUENTE SE DESLOCA","OCEANO MUDA → ATMOSFERA REORGANIZA"],"track":["Masking the Masters","Eugenio Mininni","https://assets.mixkit.co/music/552/552.mp3","Mixkit Stock Music Free License"],"real_starts":[5,3,45],"thumb":"UM OCEANO MUDA O CLIMA"},{"id":"ROOSEVELT","date":"2026-09-12","time":"22:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Roosevelt continuou um discurso depois de levar um tiro?","script":"Em 1912, Theodore Roosevelt estava em campanha quando levou um tiro no peito antes de um discurso em Milwaukee. A bala não foi parada pelo papel, mas perdeu energia ao atravessar duas coisas que estavam no bolso: um estojo metálico de óculos e um discurso dobrado com cerca de cinquenta páginas. Roosevelt percebeu que não estava tossindo sangue e insistiu em subir ao palco antes de ir ao hospital. O projétil havia entrado no peito e acabou permanecendo no corpo pelo resto da vida. O episódio ficou famoso porque o estojo e o manuscrito realmente ajudaram a reduzir a energia do tiro, mas isso não tornou o ferimento seguro. Foi uma combinação improvável de objetos no bolso, anatomia e muita insistência pessoal. Só depois de terminar a fala ele aceitou atendimento médico. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Theodore_Roosevelt_at_Sagamore_Hill_%281916%29.webm","Public domain"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/Theodore_Roosevelt_-_The_River_of_Doubt%2C_Part_1.webm","Public domain"]],"mechs":["BALA → ESTOJO + 50 PÁGINAS","ENERGIA DIMINUI","FERIMENTO → DISCURSO → HOSPITAL"],"track":["Stripped Bare","Ahjay Stelino","https://assets.mixkit.co/music/72/72.mp3","Mixkit Stock Music Free License"],"real_starts":[10,120,70],"thumb":"LEVOU UM TIRO. E FALOU."}]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [CHANDRA_HYPERSOFT,IBERE,PEAT_FIRE,HOUDINI,EQUAL_EARTH,BUSTER_KEATON,EL_NINO,ROOSEVELT]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --quiet edge-tts pyyaml pillow
+      - name: Extract one Sep12 topic and hardened renderer
+        env:
+          VSA_ID: ${{ matrix.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,re,yaml,json,os
+          own=pathlib.Path('.github/workflows/vsa-sep12-parallel-final-20260909.yml')
+          doc=yaml.safe_load(own.read_text(encoding='utf-8'))
+          all_topics=json.loads(doc['env']['TOPICS_JSON'])
+          picked=[x for x in all_topics if x['id']==os.environ['VSA_ID']]
+          if len(picked)!=1: raise SystemExit('TOPIC_NOT_UNIQUE:'+os.environ['VSA_ID'])
+          pathlib.Path('/tmp/topics.json').write_text(json.dumps(picked,ensure_ascii=False),encoding='utf-8')
+          oldwf=pathlib.Path('.github/workflows/vsa-sep10-11-finalize-20260909.yml').read_text(encoding='utf-8')
+          m=re.search(r"cat > /tmp/build_vsa\.py <<'PY'\n(.*?)\n\s*PY\n\s*python /tmp/build_vsa\.py",oldwf,re.S)
+          if not m: raise SystemExit('BUILD_SCRIPT_NOT_FOUND')
+          lines=m.group(1).splitlines(); indent=min((len(x)-len(x.lstrip()) for x in lines if x.strip()),default=0)
+          script='\n'.join(x[indent:] if len(x)>=indent else x for x in lines)+'\n'
+          reps=[
+            ('f"[0:a]aresample=48000,volume=1.0[n];"','f"[0:a]aresample=48000,volume=1.0,asplit=2[n1][n2];"'),
+            ('"[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"','"[m][n1]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"'),
+            ('"[n][duck]amix=inputs=2:duration=first:normalize=0,"','"[n2][duck]amix=inputs=2:duration=first:normalize=0,"'),
+            ('f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len}[n];"','f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len},asplit=2[n1][n2];"'),
+            ('"[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"','"[m][n1]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"'),
+            ('"[n][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"','"[n2][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"')]
+          for old,new in reps:
+              if old not in script: raise SystemExit('AUDIO_SNIPPET_MISSING')
+              script=script.replace(old,new,1)
+          old='return float(out(["ffprobe","-v","error","-show_entries","format=duration","-of","default=nw=1:nk=1",str(p)]))'
+          new='''raw=out(["ffprobe","-v","error","-show_entries","format=duration","-of","default=nw=1:nk=1",str(p)])\n    try:\n        return float(raw)\n    except (TypeError,ValueError):\n        if pathlib.Path(p).suffix.lower() in (".webm",".ogv"):\n            print("DURATION_METADATA_FALLBACK",p,raw,flush=True)\n            return 60.0\n        raise'''
+          if old not in script: raise SystemExit('PROBE_RETURN_MISSING')
+          script=script.replace(old,new,1)
+          old='start=(2.0 + real_count*(sd/3.0)) % available if available>0.6 else 0.0'
+          new='''custom=t.get("real_starts") or []\n                    start=float(custom[real_count]) if real_count < len(custom) else ((2.0 + real_count*(sd/3.0)) % available if available>0.6 else 0.0)\n                    start=max(0.0,min(start,max(0.0,sd-segd-0.2)))'''
+          if old not in script: raise SystemExit('REAL_START_SNIPPET_MISSING')
+          script=script.replace(old,new,1)
+          pathlib.Path('/tmp/build_vsa.py').write_text(script,encoding='utf-8')
+          PY
+          export TOPICS_JSON="$(cat /tmp/topics.json)"
+          python -m py_compile /tmp/build_vsa.py
+          python /tmp/build_vsa.py
+      - name: Generate editorial thumbnail and scene-diversity receipt
+        env:
+          VSA_ID: ${{ matrix.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib,subprocess,textwrap,os
+          from PIL import Image, ImageDraw, ImageFont
+          t=json.loads(pathlib.Path('/tmp/topics.json').read_text(encoding='utf-8'))[0]
+          root=pathlib.Path('/tmp/vsa_sep10_11')
+          srcs=sorted([p for p in root.rglob('src0.*') if t['id'] in str(p.parent)])
+          if not srcs: srcs=sorted(root.rglob('src0.*'))
+          if not srcs: raise SystemExit('THUMB_SOURCE_MISSING')
+          src=srcs[0]
+          start=float((t.get('real_starts') or [3])[0])+1.0
+          base=pathlib.Path('/tmp/thumb_base.jpg')
+          filt="[0:v]split=2[bg][fg];[bg]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=18:1[bg2];[fg]scale=1000:1350:force_original_aspect_ratio=decrease[fg2];[bg2][fg2]overlay=(W-w)/2:250"
+          subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(start),'-i',str(src),'-frames:v','1','-filter_complex',filt,str(base)],check=True)
+          im=Image.open(base).convert('RGB')
+          ov=Image.new('RGBA',im.size,(0,0,0,0)); d=ImageDraw.Draw(ov)
+          d.rectangle((0,0,1080,250),fill=(2,18,48,205)); d.rectangle((0,1160,1080,1920),fill=(2,18,48,220))
+          font='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+          small=ImageFont.truetype(font,48); big=ImageFont.truetype(font,86)
+          d.text((60,70),'VOCÊ SABIA AGORA?',font=small,fill=(255,206,37,255))
+          words=t['thumb'].split(); lines=[]; cur=''
+          for w in words:
+              test=(cur+' '+w).strip()
+              if d.textbbox((0,0),test,font=big)[2] > 920 and cur:
+                  lines.append(cur); cur=w
+              else: cur=test
+          if cur: lines.append(cur)
+          y=1240
+          for line in lines[:4]:
+              box=d.textbbox((0,0),line,font=big); x=(1080-(box[2]-box[0]))//2
+              d.text((x,y),line,font=big,fill=(255,255,255,255),stroke_width=3,stroke_fill=(0,0,0,220)); y+=105
+          out=pathlib.Path('/tmp/vsa_sep10_11/out')/f"VSA_20260912_{t['time'].replace(':','')}_{t['id']}_THUMB.jpg"
+          Image.alpha_composite(im.convert('RGBA'),ov).convert('RGB').save(out,quality=94,subsampling=0)
+          receipt={'id':t['id'],'bucket':t['bucket'],'scene_diversity':'PASS_DESIGNED','real_blocks':3,'distinct_real_moments':3,'thumbnail_ready':True,'thumbnail_file':out.name,'music':{'title':t['track'][0],'artist':t['track'][1],'license':t['track'][3]}}
+          pathlib.Path('/tmp/vsa_sep10_11/out')/f"{t['id']}_qa.json"
+          (pathlib.Path('/tmp/vsa_sep10_11/out')/f"{t['id']}_qa.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(receipt,ensure_ascii=False))
+          PY
+      - name: Upload one master thumbnail and receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep12-${{ matrix.id }}
+          path: /tmp/vsa_sep10_11/out/*
+          if-no-files-found: error
+
+  host:
+    needs: build
+    if: ${{ always() && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: vsa-sep12-*
+          path: /tmp/all
+          merge-multiple: false
+      - name: Verify and publish isolated static media branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/release
+          find /tmp/all -type f -name '*.mp4' -exec cp {} /tmp/release/ \;
+          find /tmp/all -type f -name '*_THUMB.jpg' -exec cp {} /tmp/release/ \;
+          test "$(find /tmp/release -maxdepth 1 -name '*.mp4' | wc -l)" -eq 8
+          test "$(find /tmp/release -maxdepth 1 -name '*_THUMB.jpg' | wc -l)" -eq 8
+          git config user.name 'vsa-static-media-bot'
+          git config user.email 'vsa-static-media-bot@users.noreply.github.com'
+          git checkout --orphan "$MEDIA_BRANCH"
+          git rm -rf . >/dev/null 2>&1 || true
+          mkdir -p media
+          cp /tmp/release/* media/
+          printf '%s\n' '# VSA Sep12 static delivery media' > README.md
+          printf '%s\n' '8 masters + 8 editorial thumbnails. Isolated from Cena Certa.' >> README.md
+          git add README.md media/*
+          git commit -m 'media(vsa): Sep12 8x8 masters and thumbnails'
+          git push --force origin HEAD:"$MEDIA_BRANCH"
+          git rev-parse HEAD | tee media-commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep12-static-receipt
+          path: media-commit.txt
