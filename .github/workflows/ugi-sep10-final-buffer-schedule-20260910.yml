@@ -1,0 +1,169 @@
+name: UGI Sep10 Final Buffer Schedule 2026-09-10
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-sep10-final-buffer-schedule-20260910.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Schedule exact Sep10 editorial assets once and prove Buffer readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          cat > /tmp/schedule.py <<'PY'
+          import os,json,hashlib,urllib.request,urllib.error,time
+          from datetime import datetime,timezone
+
+          BASE=os.environ['WORKER_URL'].rstrip('/')
+          KEY=os.environ['UGI_LOLA_COMMAND_KEY']
+          COMMIT='45f58ae8522d16dd5519e91b15b582a5ec2e03c1'
+          ROOT=f'https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/{COMMIT}/public/ugi/editorial/2026-09-10/'
+          APPROVAL='https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/control-plane/publisher-hub/approval-pending/UGI-20260910-BATCH-SCOPED-APPROVAL.json'
+          IG='6a7896cdb2d9d57743457e33'
+          LI='6a9acd94065799be46891f24'
+          TT='6a789721b2d9d5774345839d'
+
+          REEL_TEXT='''🎤 Quando um nicho vira mercado de verdade? Quando comunidade, linguagem própria e disposição para pagar começam a mover a operação das grandes marcas.\n\nO Rock in Rio dedicar um dia inteiro do Palco Mundo ao K-pop — com data esgotada — é um sinal de que a demanda já ultrapassou a borda cultural.\n\n💡 Para gestão, a lição é observar comunidades antes que elas virem consenso. Quem percebe cedo consegue adaptar produto, experiência e comunicação antes do mercado inteiro.\n\n#Gestão #Estratégia #Kpop #RockInRio #Comunidade #UGI'''
+          LOCK_TEXT='''🎯 #lockedin não é agenda cheia. É compromisso com uma entrega que realmente muda o resultado.\n\nSe o dia acabou e você não consegue dizer o que avançou, talvez você tenha estado ocupado — não focado.\n\n#Gestão #Produtividade #Foco #UGI'''
+          LINKEDIN_TEXT='''☕ Recuperar clientes é só metade de um turnaround. O segundo ato é transformar a melhora de experiência em rentabilidade sustentável.\n\nA Starbucks é um bom exemplo da tensão entre marca, operação e resultado. Reaproximar o consumidor exige mais do que campanha: passa por loja, serviço, velocidade, proposta de valor e disciplina operacional.\n\n📌 Para gestão, a pergunta importante não é apenas “o cliente voltou?”. É “o modelo econômico melhorou junto?”.\n\nCrescimento sem qualidade de margem pode comprar tempo, mas não conclui uma recuperação. Um turnaround consistente precisa conectar experiência do cliente, produtividade, mix, preço e retorno sobre o capital.\n\n💡 Marca forte ajuda a reconquistar atenção. Gestão forte transforma essa atenção em valor recorrente.\n\n#Gestão #Estratégia #Turnaround #ExperiênciaDoCliente #Starbucks #UGI'''
+          OIL_TEXT='''🛢️ Petróleo acima de US$ 100 não é apenas uma notícia de energia. Pode chegar rapidamente ao DRE.\n\nFrete, combustível, embalagens ligadas à cadeia petroquímica, inflação e juros podem pressionar custo e margem ao mesmo tempo.\n\n📊 O carrossel mostra a pergunta que a gestão precisa fazer antes do choque: quanto do aumento consigo absorver, repassar, redesenhar ou negociar?\n\n💡 Cenário não serve para prever exatamente o futuro. Serve para não começar a pensar quando o impacto já chegou.\n\n#Gestão #Estratégia #Custos #Margem #Petróleo #UGI'''
+          ESSILOR_TEXT='''👓 Governança aparece de verdade quando existe conflito.\n\nNo caso EssilorLuxottica, família, propriedade, conselho e gestão mostram por que papéis claros importam antes da crise.\n\nA pergunta é simples: quando todos discordam, quem tem mandato para decidir?\n\n#Gestão #Governança #Liderança #RayBan #UGI'''
+
+          items=[
+            {'id':'UGI-20260910-IG-STORY-QUANTUM-0830','p':'instagram','format':'story','route':'ig_story','files':['story-quantum-0830.mp4'],'sha':['cedb335cc54965748fa34c8b7a308ebb38808ee6c2dd4c793fda3f7bf7d83dbc'],'due':'2026-09-10T11:30:00Z','text':''},
+            {'id':'UGI-20260910-IG-REEL-KPOP-1015','p':'instagram','format':'reel','route':'editorial_video','files':['reel-kpop-1015.mp4'],'sha':['a63ceadfeb6feb040252b031f3a2072ad96c7083c61ccc36d917919ee3a9583c'],'due':'2026-09-10T13:15:00Z','text':REEL_TEXT},
+            {'id':'UGI-20260910-TT-LOCKEDIN-1130','p':'tiktok','format':'video','route':'editorial_video','files':['tiktok-lockedin-1130.mp4'],'sha':['c96438d1f898b6dfaf5b6da1e240b87ae94cc91dea62497026640f8b4cddba77'],'due':'2026-09-10T14:30:00Z','text':LOCK_TEXT},
+            {'id':'UGI-20260910-IG-STORY-COMPLIANCE-1200','p':'instagram','format':'story','route':'ig_story','files':['story-compliance-1200.mp4'],'sha':['a1890e8ff57e07fc3a555be9511483d2734613fae5e4b8682646ac862c4ed122'],'due':'2026-09-10T15:00:00Z','text':''},
+            {'id':'UGI-20260910-LI-STARBUCKS-1400','p':'linkedin','format':'post','route':'editorial_image','files':['linkedin-starbucks-1400.jpg'],'sha':['e472e2fee08c7232eedd644332ec27b39d9f3e016b499d00a4101bd98dde1091'],'due':'2026-09-10T17:00:00Z','text':LINKEDIN_TEXT},
+            {'id':'UGI-20260910-IG-CAROUSEL-OIL-1430','p':'instagram','format':'carousel','route':'ig_carousel','files':['carousel-oil-1430-01.jpg','carousel-oil-1430-02.jpg','carousel-oil-1430-03.jpg','carousel-oil-1430-04.jpg','carousel-oil-1430-05.jpg','carousel-oil-1430-06.jpg'],'sha':['8874cf74f239d97f02f9621410d7a594fe7021c8128b2e271b9e124a6a37a0a3','7f92992ecc7c496b1483d88c6e80387ee1505b50c031e4471933d8d5a728acbc','7f5bd2fc0149e38d3f97213bf1113734deca95f3f25bd5697c6aee19c9c60f38','8829ae8b56625ce0561bee5d135eceb063e5a285d7309b5f520e14e12882aced','c1c704de477fe1c1ab9fbbc62b367ed94b2c98d849f67d325c12145363808f69','42c92aa3dc54a67aaa4293dd61685f2015cf069bf2a429a3338faa5943664b1b'],'due':'2026-09-10T17:30:00Z','text':OIL_TEXT},
+            {'id':'UGI-20260910-IG-STORY-SP500-1730','p':'instagram','format':'story','route':'ig_story','files':['story-sp500-1730.mp4'],'sha':['44a3fa38ba2dfee044e4f3dd945cecaa2d6ed99154728a9b096f116022fb1d87'],'due':'2026-09-10T20:30:00Z','text':''},
+            {'id':'UGI-20260910-TT-ESSILOR-1945','p':'tiktok','format':'video','route':'editorial_video','files':['tiktok-essilor-1945.mp4'],'sha':['6b13872a34a758d04687d7b79766fb4086b40817108d698cc0587a121fad4a04'],'due':'2026-09-10T22:45:00Z','text':ESSILOR_TEXT},
+            {'id':'UGI-20260910-IG-STORY-USCANADA-2030','p':'instagram','format':'story','route':'ig_story','files':['story-uscanada-2030.mp4'],'sha':['3865313901724a3dfacc226da781ef123ee165b7412c9fe0fcc61eb80161eed7'],'due':'2026-09-10T23:30:00Z','text':''},
+          ]
+
+          expected_channel={'instagram':IG,'linkedin':LI,'tiktok':TT}
+          def iso(v): return datetime.fromisoformat(str(v).replace('Z','+00:00')).astimezone(timezone.utc)
+          def call(method,url,payload=None):
+              data=None if payload is None else json.dumps(payload,ensure_ascii=False).encode('utf-8')
+              req=urllib.request.Request(url,data=data,method=method,headers={'x-lola-command-key':KEY,'accept':'application/json','content-type':'application/json','user-agent':'UGI-Sep10-Exact-Scheduler/1.0'})
+              try:
+                  with urllib.request.urlopen(req,timeout=60) as r:
+                      raw=r.read().decode('utf-8','replace')
+                      try: body=json.loads(raw)
+                      except Exception: body={'raw':raw[:1200]}
+                      return r.status,body
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8','replace')
+                  try: body=json.loads(raw)
+                  except Exception: body={'raw':raw[:1200]}
+                  return e.code,body
+              except Exception as e:
+                  return 0,{'ok':False,'error':f'{type(e).__name__}:{e}','mutationOutcome':'AMBIGUOUS_DO_NOT_RETRY'}
+
+          proof={'schema':'UGI_BUFFER_SCHEDULE_PROOF_V2','assetCommit':COMMIT,'approvalRecord':APPROVAL,'humanApproval':True,'scope':'SEP10_EXACT_BATCH_ONLY','globalDistributionStateChanged':False,'startedAt':datetime.now(timezone.utc).isoformat(),'items':[],'overall':'IN_PROGRESS'}
+
+          # Authorization must still pin this exact asset commit.
+          with urllib.request.urlopen(APPROVAL,timeout=30) as r:
+              approval=json.loads(r.read().decode('utf-8'))
+          if approval.get('humanApproval') is not True or approval.get('assetCommit')!=COMMIT or approval.get('state')!='APPROVED_EXACT_BATCH_ONLY':
+              proof['overall']='APPROVAL_GATE_FAILED'; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(9)
+
+          # Preflight every byte before the first external mutation.
+          checked=0
+          for x in items:
+              for fname,want in zip(x['files'],x['sha']):
+                  url=ROOT+fname
+                  with urllib.request.urlopen(url,timeout=90) as r:
+                      b=r.read(); ct=(r.headers.get('content-type') or '').lower()
+                  got=hashlib.sha256(b).hexdigest()
+                  if got!=want:
+                      proof['overall']='PREFLIGHT_HASH_FAILED'; proof['failure']={'id':x['id'],'file':fname,'expected':want,'actual':got}; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(10)
+                  if fname.endswith('.mp4') and 'video' not in ct and 'octet-stream' not in ct:
+                      proof['overall']='PREFLIGHT_CONTENT_TYPE_FAILED'; proof['failure']={'id':x['id'],'file':fname,'contentType':ct}; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(11)
+                  if fname.endswith('.jpg') and 'image' not in ct and 'octet-stream' not in ct:
+                      proof['overall']='PREFLIGHT_CONTENT_TYPE_FAILED'; proof['failure']={'id':x['id'],'file':fname,'contentType':ct}; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(12)
+                  checked+=1
+          print(f'PRECHECK_SHA256={checked}/14_PASS')
+
+          for x in items:
+              urls=[ROOT+f for f in x['files']]
+              if x['route']=='ig_story':
+                  route='/api/r45-3/instagram-publish'
+                  payload={'kind':'story_video','text':'','videoUrl':urls[0],'imageUrls':[],'mode':'customScheduled','dueAt':x['due']}
+              elif x['route']=='ig_carousel':
+                  route='/api/r45-3/instagram-publish'
+                  payload={'kind':'mixed_carousel','text':x['text'],'videoUrl':'','imageUrls':urls,'mode':'customScheduled','dueAt':x['due']}
+              else:
+                  route='/api/editorial-media-publish'
+                  payload={'platform':x['p'],'mediaType':'video' if x['route']=='editorial_video' else 'image','mediaUrl':urls[0],'text':x['text'],'format':x['format'],'mode':'customScheduled','dueAt':x['due']}
+
+              h,res=call('POST',BASE+route,payload)
+              rec={'id':x['id'],'platform':x['p'],'format':x['format'],'dueAtExpected':x['due'],'assetUrls':urls,'sha256':x['sha'],'scheduleHttp':h,'mutationAttemptedOnce':True}
+              if h<200 or h>=300 or res.get('ok') is not True:
+                  rec.update(scheduleConfirmed=False,error=res.get('error') or res.get('errorClass') or res.get('raw'),bufferMutationPerformed=res.get('bufferMutationPerformed','UNKNOWN'),mutationOutcome=res.get('mutationOutcome'))
+                  proof['items'].append(rec); proof['overall']='STOPPED_FAIL_CLOSED_NO_MUTATION_RETRY'; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); print(json.dumps({'STOP':rec},ensure_ascii=False)); raise SystemExit(20)
+
+              if x['route'] in {'ig_story','ig_carousel'}:
+                  post=res.get('post') or {}; target=res.get('channel') or {}; pid=post.get('id'); cid=target.get('id') or post.get('channelId'); create_status=post.get('status')
+              else:
+                  pub=res.get('publication') or {}; target=res.get('target') or {}; pid=pub.get('bufferPostId'); cid=target.get('channelId') or pub.get('channelId'); create_status=pub.get('bufferStatus') or pub.get('status')
+                  rec['targetType']=target.get('type'); rec['personalProfileTargetAllowed']=target.get('personalProfileTargetAllowed')
+              rec.update(bufferPostId=pid,channelId=cid,createStatus=create_status,bufferMutationPerformed=res.get('bufferMutationPerformed',True))
+
+              if not pid or cid!=expected_channel[x['p']]:
+                  rec.update(scheduleConfirmed=False,error='MISSING_POST_ID_OR_WRONG_CHANNEL')
+                  proof['items'].append(rec); proof['overall']='STOPPED_FAIL_CLOSED_CHANNEL_MISMATCH'; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(30)
+              if x['p']=='linkedin' and rec.get('personalProfileTargetAllowed') is not False:
+                  rec.update(scheduleConfirmed=False,error='LINKEDIN_PERSONAL_PROFILE_GUARD_NOT_PROVEN')
+                  proof['items'].append(rec); proof['overall']='STOPPED_FAIL_CLOSED_LINKEDIN_TARGET_GUARD'; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(31)
+
+              # Readback only may retry for eventual consistency. Mutation above is never retried.
+              rb=None; rh=0
+              for attempt in range(1,5):
+                  if x['p']=='linkedin': rh,rb=call('GET',BASE+'/api/linkedin-publication-status?postId='+pid)
+                  else: rh,rb=call('GET',BASE+'/api/r45-2/buffer-status?id='+pid)
+                  if rh==200 and rb.get('ok') is True: break
+                  time.sleep(2)
+              if x['p']=='linkedin':
+                  rp=(rb or {}).get('publication') or {}; st=rp.get('bufferStatus') or rp.get('status'); da=rp.get('dueAt'); service='linkedin'
+              else:
+                  rp=(rb or {}).get('post') or {}; st=rp.get('status'); da=rp.get('dueAt'); service=rp.get('channelService')
+              dueok=False
+              try: dueok=abs((iso(da)-iso(x['due'])).total_seconds())<1
+              except Exception: pass
+              serviceok=(service==x['p'])
+              rec.update(readbackHttp=rh,readbackStatus=st,dueAtActual=da,dueAtMatch=dueok,channelService=service,channelServiceMatch=serviceok,externalLink=rp.get('externalLink'),readbackPayloadSummary={'id':rp.get('id') or rp.get('bufferPostId'),'status':st,'dueAt':da},scheduleConfirmed=(rh==200 and str(st or '').lower()=='scheduled' and dueok and serviceok))
+              proof['items'].append(rec)
+              print(json.dumps({'id':x['id'],'bufferPostId':pid,'platform':x['p'],'status':st,'dueAt':da,'confirmed':rec['scheduleConfirmed']},ensure_ascii=False))
+              if not rec['scheduleConfirmed']:
+                  proof['overall']='STOPPED_READBACK_MISMATCH_NO_MUTATION_RETRY'; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(40)
+
+          proof['confirmedCount']=sum(1 for r in proof['items'] if r.get('scheduleConfirmed'))
+          proof['overall']='BUFFER_SCHEDULED_9_OF_9' if proof['confirmedCount']==9 else 'INCOMPLETE'
+          proof['finishedAt']=datetime.now(timezone.utc).isoformat()
+          open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2))
+          print(json.dumps({'overall':proof['overall'],'confirmedCount':proof['confirmedCount']},ensure_ascii=False))
+          PY
+          python /tmp/schedule.py
+
+      - name: Upload scheduling proof
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-sep10-buffer-schedule-proof-${{ github.run_id }}
+          path: schedule-proof.json
+          if-no-files-found: warn
+          retention-days: 7
