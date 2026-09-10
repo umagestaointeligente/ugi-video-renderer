@@ -1,0 +1,44 @@
+name: Orbit Direct Auth Binding Probe
+
+on:
+  push:
+    paths:
+      - '.github/workflows/orbit-direct-auth-binding-probe-20260910.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      ORBIT_YOUTUBE_CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      ORBIT_YOUTUBE_CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
+      CENA_CERTA_YOUTUBE_REFRESH_TOKEN: ${{ secrets.CENA_CERTA_YOUTUBE_REFRESH_TOKEN }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      CENA_CERTA_META_ACCESS_TOKEN: ${{ secrets.CENA_CERTA_META_ACCESS_TOKEN }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Report binding presence only
+        shell: bash
+        run: |
+          set -euo pipefail
+          present() { if [ -n "${!1:-}" ]; then echo "$1=true"; else echo "$1=false"; fi; }
+          echo 'ORBIT_DIRECT_AUTH_BINDING_PROBE_V1'
+          for k in \
+            ORBIT_YOUTUBE_CLIENT_ID ORBIT_YOUTUBE_CLIENT_SECRET CENA_CERTA_YOUTUBE_REFRESH_TOKEN \
+            GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET YOUTUBE_CLIENT_ID YOUTUBE_CLIENT_SECRET YOUTUBE_REFRESH_TOKEN \
+            GOOGLE_OAUTH_CLIENT_ID GOOGLE_OAUTH_CLIENT_SECRET CENA_CERTA_META_ACCESS_TOKEN \
+            CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+            present "$k"
+          done
+          echo 'SECRET_VALUES_EXPOSED=false'
