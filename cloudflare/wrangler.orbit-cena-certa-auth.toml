@@ -1,0 +1,11 @@
+name = "orbit-cena-certa-auth"
+main = "orbit-cena-certa-auth.mjs"
+compatibility_date = "2026-09-10"
+
+[[durable_objects.bindings]]
+name = "AUTH_STATE"
+class_name = "AuthState"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["AuthState"]
