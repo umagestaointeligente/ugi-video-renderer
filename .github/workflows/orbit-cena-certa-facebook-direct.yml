@@ -81,6 +81,9 @@ jobs:
           caption=os.environ.get('CAPTION','')
           fmt=os.environ['FORMAT'].strip().lower()
           publish_at=os.environ['PUBLISH_AT'].strip()
+          canonical_page='1314911305035494'
+          if page != canonical_page:
+              raise SystemExit('BLOCKED: expected_page_id is not canonical Cena Certa page')
 
           def get(path, params):
               q=urllib.parse.urlencode({**params,'access_token':token})
@@ -114,7 +117,7 @@ jobs:
               raise SystemExit('BLOCKED: Facebook Story requires native UI or due-time executor; no fake native schedule')
 
           marker='orbit_'+hashlib.sha256(item.encode()).hexdigest()[:24]
-          recent=get('/'+page+'/videos',{'fields':'id,description,created_time','limit':'50'})
+          recent=get('/'+page+'/videos',{'fields':'id,description,created_time','limit':'100'})
           for v in recent.get('data',[]):
               if marker in (v.get('description') or ''):
                   print('IDEMPOTENT_EXISTING_VIDEO_ID='+str(v.get('id')))
@@ -129,8 +132,12 @@ jobs:
           })
           vid=out.get('id')
           if not vid:
-              raise SystemExit('BLOCKED: Facebook returned no scheduled video id')
+              raise SystemExit('UNCERTAIN_AFTER_POST: Facebook returned no scheduled video id; readback required')
+          verify=get('/'+str(vid),{'fields':'id,description,scheduled_publish_time,published'})
+          if marker not in (verify.get('description') or '') or bool(verify.get('published')):
+              raise SystemExit('UNCERTAIN_AFTER_POST: Facebook readback state mismatch; do not retry blindly')
           print('NATIVE_VIDEO_ID='+str(vid))
+          print('READBACK_VERIFIED=true')
           print('NATIVE_PUBLISH_AT='+publish_at)
           print('ORBIT_ITEM_KEY='+item)
           PY
