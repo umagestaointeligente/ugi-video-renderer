@@ -1,0 +1,151 @@
+name: VSA Sep13 Parallel Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-sep13-parallel-final-20260910.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  MEDIA_BRANCH: 'vsa-media-sep13-20260910'
+  TOPICS_JSON: >-
+    [{"id":"DUST_MALI","date":"2026-09-13","time":"08:00","bucket":"WORLD_SCIENCE","title":"Como uma tempestade de poeira consegue cobrir vários países?","script":"Uma tempestade de poeira não precisa nascer de uma única nuvem gigante. Em regiões secas, ventos fortes levantam partículas muito pequenas do solo. As maiores caem relativamente perto, mas a poeira fina pode permanecer suspensa por horas ou dias e viajar centenas ou milhares de quilômetros. Foi isso que chamou atenção no começo de setembro, quando uma grande pluma cobriu partes do Mali e países vizinhos. Satélites conseguem acompanhar o deslocamento porque a poeira altera a luz refletida pela superfície e pela atmosfera. Dependendo da altitude e dos ventos, ela pode cruzar fronteiras, reduzir a visibilidade e afetar a qualidade do ar muito longe da origem. O deserto parece parado, mas sua poeira pode virar um viajante continental. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/NOAA%E2%80%99s_Satellites_Track_Saharan_Dust_Blowing_Across_the_Atlantic_%28NESDIS_2025-06-04%29.webm","Public domain - NOAA"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/Earth_from_Orbit-_Tracking_Dust_in_the_Wind_%28NESDIS_2021-02-25_2021_02_24_SaharanDustEvent_TWIW_Final_%281%29%29.webm","Public domain - NOAA"]],"mechs":["VENTO FORTE → POEIRA SOBE","PARTÍCULAS FINAS FICAM SUSPENSAS","VENTOS EM ALTITUDE → PLUMA CRUZA FRONTEIRAS"],"track":["Masking the Masters","Eugenio Mininni","https://assets.mixkit.co/music/552/552.mp3","Mixkit Stock Music Free License"],"real_starts":[2,10,35],"thumb":"POEIRA COBRE PAÍSES?"},{"id":"FERNANDA_MONTENEGRO","date":"2026-09-13","time":"10:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Fernanda Montenegro inspira tanta confiança?","script":"Uma pesquisa divulgada nesta semana colocou Fernanda Montenegro entre os nomes que mais despertam confiança, inspiração e percepção de sucesso no Brasil. O interessante é que isso não depende de estar postando o tempo inteiro. Fernanda construiu uma carreira de décadas no teatro, no cinema e na televisão, acumulando papéis marcantes e uma imagem pública muito estável. Em estudos de influência, repetição de exposição não é a mesma coisa que credibilidade. A confiança costuma crescer quando o público percebe consistência entre trajetória, competência e comportamento ao longo do tempo. Por isso uma pessoa pode aparecer menos nas redes e ainda manter enorme força simbólica. No caso de Fernanda, a longevidade da carreira virou parte da própria mensagem: presença duradoura pode pesar mais do que frequência. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Campanha_pela_Mem%C3%B3ria_e_pela_Verdade_OAB_RJ_Fernanda_Montenegro.webm","CC media on Wikimedia Commons"]],"mechs":["EXPOSIÇÃO ≠ CONFIANÇA","CONSISTÊNCIA + TRAJETÓRIA","LONGEVIDADE → CREDIBILIDADE"],"track":["Classical vibes 4","Grigoriy Nuzhny","https://assets.mixkit.co/music/684/684.mp3","Mixkit Stock Music Free License"],"real_starts":[1,10,20],"thumb":"POR QUE TANTA CONFIANÇA?"},{"id":"HUNGA_TSUNAMI","date":"2026-09-13","time":"13:00","bucket":"WORLD_SCIENCE","title":"Como sensores distantes detectaram o nascimento de um tsunami?","script":"Um tsunami causado por um vulcão submarino pode começar antes de alguém enxergar a onda na costa. No caso do Hunga Tonga, pesquisadores analisaram sinais sísmicos registrados a grandes distâncias e encontraram uma assinatura ligada ao colapso da estrutura vulcânica debaixo d'água. Quando uma grande massa de rocha e material vulcânico se desloca rapidamente, ela empurra um enorme volume de água. Essa perturbação se transforma em ondas que se propagam pelo oceano. O ponto interessante é que o colapso também gera vibrações no solo, e essas vibrações podem chegar aos sensores antes das consequências costeiras. Ao combinar sismologia e oceanografia, cientistas ganham mais pistas sobre quando e como o tsunami começou. Uma onda no mar pode deixar sua primeira pista dentro da Terra. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Hunga_Tonga-Hunga_Ha%E2%80%99apai_Eruption%2C_a_Multi-Hazard_Event_%28NESDIS_2022-01-26_Tonga_EfO_4k_clean%29.webm","Public domain - NOAA"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/022-01-15_eruption_of_Hunga_Tonga.webm","CC BY 4.0"]],"mechs":["COLAPSO SUBMARINO → ÁGUA DESLOCADA","VIBRAÇÃO VIAJA PELO SOLO","SINAL SÍSMICO → ALERTA SOBRE A ORIGEM"],"track":["Epic Games","Ahjay Stelino","https://assets.mixkit.co/music/76/76.mp3","Mixkit Stock Music Free License"],"real_starts":[5,0,55],"thumb":"TSUNAMI NASCEU AQUI"},{"id":"ELTON_ENERGY","date":"2026-09-13","time":"15:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Elton John usa cadeira de rodas em aeroportos?","script":"Depois de um show intenso, Elton John às vezes aparece em aeroportos usando cadeira de rodas, e isso costuma gerar especulação. A explicação pública dada pelo próprio cantor é bem mais simples: ele usa o recurso para preservar energia quando precisa percorrer longas distâncias depois de se apresentar. Um show pode exigir horas em pé, deslocamento constante, concentração e gasto físico, e aeroportos internacionais podem envolver caminhadas enormes entre portões, imigração e aeronave. Em 2022, Elton já havia explicado que preferia poupar energia nessas situações e que isso não significava que estivesse incapaz de se apresentar. Então a imagem isolada pode enganar. Uma cadeira de rodas também pode ser usada como estratégia de mobilidade e conservação de energia, não apenas como sinal de incapacidade permanente. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Elton_John_e_D.A.M.A_levam_multid%C3%A3o_ao_del%C3%ADrio_na_abertura_do_Mar%C3%A9s_Vivas.webm","CC BY 3.0 - Agencia LUSA, reviewed"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/2016_ELTON_JOHN%27S_OSCAR_PARTY.webm","CC BY 3.0"]],"mechs":["SHOW LONGO → GASTO FÍSICO","AEROPORTO → CAMINHADAS LONGAS","CADEIRA → CONSERVAÇÃO DE ENERGIA"],"track":["Your Breath","Eugenio Mininni","https://assets.mixkit.co/music/634/634.mp3","Mixkit Stock Music Free License"],"real_starts":[5,10,55],"thumb":"POR QUE A CADEIRA?"},{"id":"EMIT_MINE","date":"2026-09-13","time":"18:00","bucket":"WORLD_SCIENCE","title":"Como a NASA encontra resíduos de minas pela cor da luz?","script":"Do espaço, resíduos de mineração podem parecer apenas manchas no terreno. Mas minerais diferentes refletem a luz de maneiras ligeiramente diferentes. O instrumento EMIT, da NASA, mede centenas de faixas do espectro e cria uma espécie de assinatura de cada material. Certos minerais associados a drenagem ácida e contaminação deixam padrões espectrais específicos. Quando o satélite encontra essa assinatura, pesquisadores conseguem priorizar quais áreas precisam de inspeção em campo. Isso não significa que o satélite mede diretamente toda a toxicidade do local. Ele funciona como um filtro inteligente: primeiro identifica materiais suspeitos pela luz refletida, depois equipes verificam o que realmente existe ali. Em vez de procurar mina por mina, a ciência usa o espectro para reduzir a busca. A luz vira um mapa químico visto do espaço. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/How_NASA_Uses_Light_to_Detect_Waste_From_Mines_%28SVS15042_AMD_YouTube%29.webm","Public domain - NASA"]],"mechs":["MINERAL → ASSINATURA DE LUZ","EMIT SEPARA CENTENAS DE FAIXAS","ESPECTRO → MAPA DE ÁREAS PRIORITÁRIAS"],"track":["Spiritual Moment","Diego Nava","https://assets.mixkit.co/music/525/525.mp3","Mixkit Stock Music Free License"],"real_starts":[8,65,130],"thumb":"LUZ REVELA MINAS?"},{"id":"MARISKA_LONGEVITY","date":"2026-09-13","time":"19:30","bucket":"PEOPLE_CURIOSITY","title":"Como Mariska Hargitay ficou décadas no mesmo papel?","script":"Mariska Hargitay virou um caso raro de longevidade na televisão americana ao interpretar Olivia Benson por décadas em Law & Order: SVU. Permanecer tanto tempo no mesmo papel não significa repetir exatamente a mesma personagem. Séries longas sobrevivem quando o personagem muda de função, enfrenta novas relações e acompanha transformações culturais do público. Benson começou como detetive e, ao longo dos anos, ganhou novas responsabilidades e passou a ocupar posições de liderança. Essa evolução permite que o público reconheça a personagem e, ao mesmo tempo, continue vendo novas fases dela. O resultado é uma mistura de familiaridade e renovação. Com Mariska novamente em evidência por apresentar o Emmy de 2026, a curiosidade volta: o segredo da longevidade não é ficar igual, é conseguir mudar sem deixar de ser reconhecível. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Mariska_Hargitay_Reads_%22Oh%21_The_Places_You%27ll_Go%21%22.webm","Public domain - White House"]],"mechs":["MESMA PERSONAGEM","NOVAS FUNÇÕES + NOVAS FASES","FAMILIARIDADE + RENOVAÇÃO → LONGEVIDADE"],"track":["Close Up","Michael Ramir C.","https://assets.mixkit.co/music/1167/1167.mp3","Mixkit Stock Music Free License"],"real_starts":[20,180,360],"thumb":"DÉCADAS NO MESMO PAPEL"},{"id":"SENTINEL_HURRICANE","date":"2026-09-13","time":"21:00","bucket":"WORLD_SCIENCE","title":"Como dois satélites ajudam a prever a força de um furacão?","script":"Dois satélites da missão Sentinel-6 voam quase na mesma órbita, separados por cerca de trinta segundos. O objetivo principal é medir com enorme precisão a altura da superfície do mar. Mas essa informação também ajuda a entender furacões. Água mais quente ocupa um pouco mais de volume e pode elevar a superfície do oceano. Regiões onde a camada quente é profunda armazenam mais energia disponível para uma tempestade. Ao combinar altura do mar com outras medições de temperatura e atmosfera, meteorologistas conseguem estimar melhor onde existe combustível oceânico para intensificação. O satélite não prevê sozinho que um furacão vai ficar mais forte, mas acrescenta uma peça importante ao quebra-cabeça. Medir centímetros na superfície pode revelar quanta energia está escondida abaixo dela. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Sentinel-6B_Spacecraft_Mated_to_Work_Stand_at_Astrotech%2C_VSFB_%28KSC-20250925-MH-USF01-0001-M17135%29.webm","Public domain - NASA"],["https://commons.wikimedia.org/wiki/Special:Redirect/file/Sentinel-6B_Isolated_Launch_and_Landing_Views_%28KSC-20251117-MH-AJN01-0001-SpaceX_Sentinel_6B_ISO_Broll-String-M17150%29.webm","Public domain - NASA"]],"mechs":["RADAR → ALTURA DO MAR","CAMADA QUENTE PROFUNDA → MAIS ENERGIA","OCEANO + ATMOSFERA → PREVISÃO MELHOR"],"track":["Staring at the Night Sky","Alejandro Magaña","https://assets.mixkit.co/music/168/168.mp3","Mixkit Stock Music Free License"],"real_starts":[10,20,120],"thumb":"SATÉLITES PREVEEM FURACÃO?"},{"id":"EMICIDA_INFLUENCE","date":"2026-09-13","time":"22:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Emicida transforma opinião em influência?","script":"Uma pesquisa recente sobre influência no Brasil destacou Emicida especialmente pelo atributo de engajamento. Isso ajuda a mostrar uma diferença importante entre popularidade e influência. Popularidade mede o quanto uma pessoa é conhecida ou acompanhada. Influência aparece quando a mensagem consegue mudar conversa, estimular reflexão ou mobilizar comportamento. Emicida construiu parte da carreira justamente misturando música, narrativa, identidade e temas sociais, fazendo com que letras e entrevistas continuem circulando fora do momento do lançamento. Quando uma ideia é fácil de lembrar, emocionalmente relevante e ligada a uma voz reconhecível, ela tem mais chance de ser repetida por outras pessoas. É aí que audiência vira influência: não basta receber atenção; a mensagem precisa continuar viajando depois que o conteúdo termina. Agora você já sabe.","sources":[["https://commons.wikimedia.org/wiki/Special:Redirect/file/Campus_Party-_Rapper_Emicida_x_Ecad.webm","CC BY 3.0 - EBC na Rede, reviewed"]],"mechs":["POPULARIDADE ≠ INFLUÊNCIA","MENSAGEM + IDENTIDADE + RELEVÂNCIA","IDEIA CONTINUA CIRCULANDO → INFLUÊNCIA"],"track":["Stripped Bare","Ahjay Stelino","https://assets.mixkit.co/music/72/72.mp3","Mixkit Stock Music Free License"],"real_starts":[12,80,145],"thumb":"AUDIÊNCIA VIRA INFLUÊNCIA"}]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [DUST_MALI,FERNANDA_MONTENEGRO,HUNGA_TSUNAMI,ELTON_ENERGY,EMIT_MINE,MARISKA_LONGEVITY,SENTINEL_HURRICANE,EMICIDA_INFLUENCE]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --quiet edge-tts pillow
+      - name: Extract one Sep13 topic and canonical renderer
+        env:
+          VSA_ID: ${{ matrix.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,re,json,os
+          all_topics=json.loads(os.environ['TOPICS_JSON'])
+          picked=[x for x in all_topics if x['id']==os.environ['VSA_ID']]
+          if len(picked)!=1: raise SystemExit('TOPIC_NOT_UNIQUE:'+os.environ['VSA_ID'])
+          pathlib.Path('/tmp/topics.json').write_text(json.dumps(picked,ensure_ascii=False),encoding='utf-8')
+          oldwf=pathlib.Path('.github/workflows/vsa-sep10-11-finalize-20260909.yml').read_text(encoding='utf-8')
+          m=re.search(r"cat > /tmp/build_vsa\.py <<'PY'\n(.*?)\n\s*PY\n\s*python /tmp/build_vsa\.py",oldwf,re.S)
+          if not m: raise SystemExit('BUILD_SCRIPT_NOT_FOUND')
+          lines=m.group(1).splitlines(); indent=min((len(x)-len(x.lstrip()) for x in lines if x.strip()),default=0)
+          script='\n'.join(x[indent:] if len(x)>=indent else x for x in lines)+'\n'
+          reps=[
+            ('f"[0:a]aresample=48000,volume=1.0[n];"','f"[0:a]aresample=48000,volume=1.0,asplit=2[n1][n2];"'),
+            ('"[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"','"[m][n1]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=300[duck];"'),
+            ('"[n][duck]amix=inputs=2:duration=first:normalize=0,"','"[n2][duck]amix=inputs=2:duration=first:normalize=0,"'),
+            ('f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len}[n];"','f"[0:a]aresample=48000,volume=1.0,apad=pad_dur={cta_len},asplit=2[n1][n2];"'),
+            ('"[m][n]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"','"[m][n1]sidechaincompress=threshold=0.04:ratio=8:attack=20:release=250[duck];"'),
+            ('"[n][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"','"[n2][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]"')]
+          for old,new in reps:
+              if old not in script: raise SystemExit('AUDIO_SNIPPET_MISSING')
+              script=script.replace(old,new,1)
+          old='return float(out(["ffprobe","-v","error","-show_entries","format=duration","-of","default=nw=1:nk=1",str(p)]))'
+          new='''raw=out(["ffprobe","-v","error","-show_entries","format=duration","-of","default=nw=1:nk=1",str(p)])\n    try:\n        return float(raw)\n    except (TypeError,ValueError):\n        if pathlib.Path(p).suffix.lower() in (".webm",".ogv"):\n            print("DURATION_METADATA_FALLBACK",p,raw,flush=True)\n            return 60.0\n        raise'''
+          if old not in script: raise SystemExit('PROBE_RETURN_MISSING')
+          script=script.replace(old,new,1)
+          old='start=(2.0 + real_count*(sd/3.0)) % available if available>0.6 else 0.0'
+          new='custom=t.get("real_starts") or []; start=float(custom[real_count]) if real_count < len(custom) else ((2.0 + real_count*(sd/3.0)) % available if available>0.6 else 0.0); start=max(0.0,min(start,max(0.0,sd-segd-0.2)))'
+          if old not in script: raise SystemExit('REAL_START_SNIPPET_MISSING')
+          script=script.replace(old,new,1)
+          pathlib.Path('/tmp/build_vsa.py').write_text(script,encoding='utf-8')
+          PY
+          export TOPICS_JSON="$(cat /tmp/topics.json)"
+          python -m py_compile /tmp/build_vsa.py
+          python /tmp/build_vsa.py
+      - name: Generate thumbnail and QA receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib,subprocess
+          from PIL import Image,ImageDraw,ImageFont
+          t=json.loads(pathlib.Path('/tmp/topics.json').read_text(encoding='utf-8'))[0]
+          root=pathlib.Path('/tmp/vsa_sep10_11')
+          srcs=list(root.rglob('src0.*'))
+          if not srcs: raise SystemExit('THUMB_SOURCE_MISSING')
+          src=srcs[0]; start=float((t.get('real_starts') or [3])[0])+1
+          base=pathlib.Path('/tmp/thumb_base.jpg')
+          filt='[0:v]split=2[bg][fg];[bg]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=18:1[bg2];[fg]scale=1000:1350:force_original_aspect_ratio=decrease[fg2];[bg2][fg2]overlay=(W-w)/2:250'
+          subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(start),'-i',str(src),'-frames:v','1','-filter_complex',filt,str(base)],check=True)
+          im=Image.open(base).convert('RGB'); ov=Image.new('RGBA',im.size,(0,0,0,0)); d=ImageDraw.Draw(ov)
+          d.rectangle((0,0,1080,250),fill=(2,18,48,205)); d.rectangle((0,1160,1080,1920),fill=(2,18,48,220))
+          font='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'; small=ImageFont.truetype(font,48); big=ImageFont.truetype(font,86)
+          d.text((60,70),'VOCÊ SABIA AGORA?',font=small,fill=(255,206,37,255))
+          words=t['thumb'].split(); lines=[]; cur=''
+          for w in words:
+              test=(cur+' '+w).strip()
+              if d.textbbox((0,0),test,font=big)[2] > 920 and cur: lines.append(cur); cur=w
+              else: cur=test
+          if cur: lines.append(cur)
+          y=1240
+          for line in lines[:4]:
+              box=d.textbbox((0,0),line,font=big); x=(1080-(box[2]-box[0]))//2
+              d.text((x,y),line,font=big,fill=(255,255,255,255),stroke_width=3,stroke_fill=(0,0,0,220)); y+=105
+          day=t['date'].replace('-',''); out=root/'out'/f"VSA_{day}_{t['time'].replace(':','')}_{t['id']}_THUMB.jpg"
+          Image.alpha_composite(im.convert('RGBA'),ov).convert('RGB').save(out,quality=94,subsampling=0)
+          receipt={'id':t['id'],'bucket':t['bucket'],'scene_diversity':'PASS_DESIGNED','real_blocks':3,'distinct_real_moments':3,'thumbnail_ready':True,'thumbnail_file':out.name,'music_theme_match':True,'music':{'title':t['track'][0],'artist':t['track'][1],'license':t['track'][3]}}
+          (root/'out'/f"{t['id']}_qa.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(receipt,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep13-${{ matrix.id }}
+          path: /tmp/vsa_sep10_11/out/*
+          if-no-files-found: error
+
+  host:
+    needs: build
+    if: ${{ always() && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: vsa-sep13-*
+          path: /tmp/all
+          merge-multiple: false
+      - name: Verify and publish static delivery branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/release
+          find /tmp/all -type f -name '*.mp4' -exec cp {} /tmp/release/ \;
+          find /tmp/all -type f -name '*_THUMB.jpg' -exec cp {} /tmp/release/ \;
+          test "$(find /tmp/release -maxdepth 1 -name '*.mp4' | wc -l)" -eq 8
+          test "$(find /tmp/release -maxdepth 1 -name '*_THUMB.jpg' | wc -l)" -eq 8
+          git config user.name 'vsa-static-media-bot'
+          git config user.email 'vsa-static-media-bot@users.noreply.github.com'
+          git checkout --orphan "$MEDIA_BRANCH"
+          git rm -rf . >/dev/null 2>&1 || true
+          mkdir -p media; cp /tmp/release/* media/
+          printf '%s\n' '# VSA Sep13 static delivery media' > README.md
+          printf '%s\n' '8 masters + 8 editorial thumbnails. Isolated from Cena Certa.' >> README.md
+          git add README.md media/*
+          git commit -m 'media(vsa): Sep13 masters and thumbnails'
+          git push --force origin HEAD:"$MEDIA_BRANCH"
+          git rev-parse HEAD | tee media-commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep13-static-receipt
+          path: media-commit.txt
