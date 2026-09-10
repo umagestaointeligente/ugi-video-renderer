@@ -12,7 +12,7 @@ on:
         required: true
         type: string
       caption:
-        description: Facebook caption; ignored for Story
+        description: Facebook caption
         required: false
         default: ''
         type: string
@@ -21,15 +21,20 @@ on:
         required: true
         type: string
       format:
-        description: reel or story
+        description: video or story; Reel remains fail-closed until native contract is verified
         required: true
-        default: reel
+        default: video
         type: choice
-        options: [reel, story]
+        options: [video, story]
       expected_page_id:
         description: Hard-lock expected Facebook Page id
         required: true
         default: '1314911305035494'
+        type: string
+      graph_version:
+        description: Explicit Graph API version after contract verification
+        required: true
+        default: v23.0
         type: string
 
 permissions:
@@ -51,6 +56,7 @@ jobs:
       CAPTION: ${{ inputs.caption }}
       PUBLISH_AT: ${{ inputs.publish_at }}
       FORMAT: ${{ inputs.format }}
+      GRAPH_VERSION: ${{ inputs.graph_version }}
     steps:
       - name: Validate secret presence
         shell: bash
@@ -63,8 +69,11 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, os, urllib.parse, urllib.request, datetime, sys
-          API='https://graph.facebook.com/v23.0'
+          import datetime, hashlib, json, os, sys, urllib.error, urllib.parse, urllib.request
+          version=os.environ['GRAPH_VERSION'].strip()
+          if not version.startswith('v'):
+              raise SystemExit('BLOCKED: invalid Graph API version')
+          API='https://graph.facebook.com/'+version
           token=os.environ['PAGE_ACCESS_TOKEN']
           page=os.environ['PAGE_ID'].strip()
           item=os.environ['ITEM_KEY'].strip()
@@ -91,7 +100,7 @@ jobs:
           now=datetime.datetime.now(datetime.timezone.utc)
           if dt <= now + datetime.timedelta(minutes=10):
               raise SystemExit('BLOCKED: Facebook native scheduling requires >10 minutes lead time')
-          if not media.startswith('https://') or fmt not in {'reel','story'}:
+          if not media.startswith('https://') or fmt not in {'video','story'}:
               raise SystemExit('BLOCKED: invalid media/format')
 
           me=get('/me',{'fields':'id,name'})
@@ -100,8 +109,11 @@ jobs:
           if str(me.get('id')) != page:
               raise SystemExit('BLOCKED: token does not belong to Cena Certa Ofc page')
 
-          marker='ORBIT_ITEM:'+item
-          # Read recent Page videos before mutation; exact marker makes retries idempotent.
+          # Stories are intentionally not represented as native future schedules.
+          if fmt=='story':
+              raise SystemExit('BLOCKED: Facebook Story requires native UI or due-time executor; no fake native schedule')
+
+          marker='orbit_'+hashlib.sha256(item.encode()).hexdigest()[:24]
           recent=get('/'+page+'/videos',{'fields':'id,description,created_time','limit':'50'})
           for v in recent.get('data',[]):
               if marker in (v.get('description') or ''):
@@ -109,10 +121,6 @@ jobs:
                   sys.exit(0)
 
           epoch=int(dt.timestamp())
-          if fmt=='story':
-              # Graph API has no reliable future Page Story scheduling contract.
-              raise SystemExit('BLOCKED: Facebook Story must use native UI or a due-time executor; no fake native schedule')
-
           out=post('/'+page+'/videos',{
               'file_url':media,
               'description':caption+'\n\n'+marker,
