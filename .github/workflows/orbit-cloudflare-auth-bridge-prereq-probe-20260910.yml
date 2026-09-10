@@ -1,0 +1,29 @@
+name: Orbit Cloudflare Auth Bridge Prereq Probe
+on:
+  push:
+    paths:
+      - '.github/workflows/orbit-cloudflare-auth-bridge-prereq-probe-20260910.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      UGI_ADMIN_CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      ORBIT_BUNDLE_TOKEN: ${{ secrets.ORBIT_BUNDLE_TOKEN }}
+      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+    steps:
+      - name: Presence only
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo ORBIT_CLOUDFLARE_AUTH_BRIDGE_PREREQ_V1
+          for k in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID UGI_ADMIN_CLOUDFLARE_API_TOKEN UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID ORBIT_BUNDLE_TOKEN YOUTUBE_CLIENT_ID YOUTUBE_CLIENT_SECRET; do
+            if [ -n "${!k:-}" ]; then echo "$k=true"; else echo "$k=false"; fi
+          done
+          echo SECRET_VALUES_EXPOSED=false
