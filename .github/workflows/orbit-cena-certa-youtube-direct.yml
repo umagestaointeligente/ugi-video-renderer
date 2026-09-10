@@ -1,0 +1,153 @@
+name: Orbit Cena Certa YouTube Direct
+
+on:
+  workflow_dispatch:
+    inputs:
+      item_key:
+        description: Canonical unique item key (e.g. metricool-372509819-youtube)
+        required: true
+        type: string
+      media_url:
+        description: Public HTTPS MP4 URL
+        required: true
+        type: string
+      title:
+        description: YouTube title (max 100 chars)
+        required: true
+        type: string
+      description:
+        description: YouTube description/caption
+        required: true
+        type: string
+      publish_at:
+        description: Future RFC3339 UTC timestamp, e.g. 2026-09-10T03:30:00Z
+        required: true
+        type: string
+      expected_channel_id:
+        description: Hard-lock expected channel id
+        required: true
+        default: UCq1h6RSnev5-JJQ8k4T98tg
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orbit-cena-certa-youtube-${{ inputs.item_key }}
+  cancel-in-progress: false
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
+      REFRESH_TOKEN: ${{ secrets.CENA_CERTA_YOUTUBE_REFRESH_TOKEN }}
+      EXPECTED_CHANNEL_ID: ${{ inputs.expected_channel_id }}
+      ITEM_KEY: ${{ inputs.item_key }}
+      MEDIA_URL: ${{ inputs.media_url }}
+      VIDEO_TITLE: ${{ inputs.title }}
+      VIDEO_DESCRIPTION: ${{ inputs.description }}
+      PUBLISH_AT: ${{ inputs.publish_at }}
+    steps:
+      - name: Validate secret presence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLIENT_ID" || { echo 'BLOCKED: ORBIT_YOUTUBE_CLIENT_ID missing'; exit 78; }
+          test -n "$CLIENT_SECRET" || { echo 'BLOCKED: ORBIT_YOUTUBE_CLIENT_SECRET missing'; exit 78; }
+          test -n "$REFRESH_TOKEN" || { echo 'BLOCKED: CENA_CERTA_YOUTUBE_REFRESH_TOKEN missing'; exit 78; }
+
+      - name: Native schedule with identity and duplicate guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, sys, time, urllib.request, urllib.parse, datetime
+
+          def req(url, method='GET', headers=None, data=None):
+              r=urllib.request.Request(url, data=data, method=method, headers=headers or {})
+              try:
+                  with urllib.request.urlopen(r, timeout=120) as resp:
+                      return resp.status, resp.headers, resp.read()
+              except urllib.error.HTTPError as e:
+                  body=e.read()
+                  print('HTTP_ERROR', e.code, body[:2000].decode('utf-8','replace'))
+                  raise
+
+          item=os.environ['ITEM_KEY'].strip()
+          title=os.environ['VIDEO_TITLE'].strip()
+          desc=os.environ['VIDEO_DESCRIPTION']
+          media=os.environ['MEDIA_URL'].strip()
+          expected=os.environ['EXPECTED_CHANNEL_ID'].strip()
+          publish_at=os.environ['PUBLISH_AT'].strip()
+          if not item or len(title)>100 or not media.startswith('https://'):
+              raise SystemExit('BLOCKED: invalid item/title/media input')
+          dt=datetime.datetime.fromisoformat(publish_at.replace('Z','+00:00'))
+          now=datetime.datetime.now(datetime.timezone.utc)
+          if dt <= now + datetime.timedelta(minutes=2):
+              raise SystemExit('BLOCKED: publish_at must be >2 minutes in future')
+
+          token_body=urllib.parse.urlencode({
+              'client_id':os.environ['CLIENT_ID'],
+              'client_secret':os.environ['CLIENT_SECRET'],
+              'refresh_token':os.environ['REFRESH_TOKEN'],
+              'grant_type':'refresh_token'}).encode()
+          _,_,raw=req('https://oauth2.googleapis.com/token','POST',{'Content-Type':'application/x-www-form-urlencoded'},token_body)
+          tok=json.loads(raw)['access_token']
+          auth={'Authorization':'Bearer '+tok}
+
+          _,_,raw=req('https://www.googleapis.com/youtube/v3/channels?part=id,snippet&mine=true',headers=auth)
+          ch=json.loads(raw).get('items') or []
+          if len(ch)!=1:
+              raise SystemExit('BLOCKED: OAuth identity did not resolve exactly one YouTube channel')
+          actual=ch[0]['id']
+          print('CHANNEL_ID='+actual)
+          print('CHANNEL_TITLE='+ch[0].get('snippet',{}).get('title',''))
+          if actual != expected:
+              raise SystemExit('BLOCKED: Cena Certa channel identity mismatch')
+
+          # Duplicate guard: exact canonical item marker in descriptions of recent uploads.
+          _,_,raw=req('https://www.googleapis.com/youtube/v3/channels?part=contentDetails&mine=true',headers=auth)
+          uploads=json.loads(raw)['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+          _,_,raw=req('https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId='+urllib.parse.quote(uploads),headers=auth)
+          ids=[x['contentDetails']['videoId'] for x in json.loads(raw).get('items',[])]
+          marker='ORBIT_ITEM:'+item
+          if ids:
+              _,_,raw=req('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+','.join(ids),headers=auth)
+              for v in json.loads(raw).get('items',[]):
+                  if marker in (v.get('snippet',{}).get('description') or ''):
+                      print('IDEMPOTENT_EXISTING_VIDEO_ID='+v['id'])
+                      print('IDEMPOTENT_EXISTING_PUBLISH_AT='+str(v.get('status',{}).get('publishAt')))
+                      sys.exit(0)
+
+          # Download media once; fail closed on non-video/empty payload.
+          mreq=urllib.request.Request(media, headers={'User-Agent':'OrbitDirectPublisher/1.0'})
+          with urllib.request.urlopen(mreq, timeout=180) as mr:
+              ctype=(mr.headers.get('Content-Type') or '').lower()
+              video=mr.read()
+          if not video or ('video/' not in ctype and not video[4:8]==b'ftyp'):
+              raise SystemExit('BLOCKED: media URL did not return a valid video payload')
+          print('MEDIA_BYTES='+str(len(video)))
+
+          metadata={
+              'snippet':{'title':title,'description':desc+'\n\n'+marker,'categoryId':'24'},
+              'status':{'privacyStatus':'private','publishAt':publish_at,'selfDeclaredMadeForKids':False}
+          }
+          boundary='orbit_boundary_%d'%int(time.time())
+          meta=json.dumps(metadata,separators=(',',':')).encode()
+          body=(('--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n').encode()+meta+
+                ('\r\n--'+boundary+'\r\nContent-Type: video/mp4\r\n\r\n').encode()+video+
+                ('\r\n--'+boundary+'--\r\n').encode())
+          url='https://www.googleapis.com/upload/youtube/v3/videos?uploadType=multipart&part=snippet,status'
+          _,_,raw=req(url,'POST',{'Authorization':'Bearer '+tok,'Content-Type':'multipart/related; boundary='+boundary},body)
+          out=json.loads(raw)
+          vid=out.get('id')
+          if not vid:
+              raise SystemExit('BLOCKED: YouTube upload returned no video id')
+          print('NATIVE_VIDEO_ID='+vid)
+          print('NATIVE_PUBLISH_AT='+publish_at)
+          print('NATIVE_PRIVACY_STATUS='+str(out.get('status',{}).get('privacyStatus')))
+          print('ORBIT_ITEM_KEY='+item)
+          PY
