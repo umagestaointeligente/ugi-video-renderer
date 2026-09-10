@@ -50,6 +50,9 @@ jobs:
             'uncertain mutation state': "unknown_after_upload" in worker,
             'story fail closed': "Facebook Story requires native UI" in fb,
             'deploy manual only': 'workflow_dispatch:' in deploy and '  push:' not in deploy,
+            'no expired Sep10 YouTube batch': not Path('.github/workflows/orbit-cena-certa-youtube-schedule-sep10-20260910.yml').exists(),
+            'no expired Sep10 Meta batch': not Path('.github/workflows/orbit-cena-certa-facebook-batch-sep10-20260910.yml').exists(),
+            'no expired queue item': not Path('control-plane/orbit-direct-youtube/metricool-372509910-youtube.json').exists(),
           }
           failed=[name for name,ok in checks.items() if not ok]
           for name,ok in checks.items():
