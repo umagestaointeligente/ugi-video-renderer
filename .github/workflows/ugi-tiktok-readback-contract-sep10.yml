@@ -1,0 +1,29 @@
+name: UGI TikTok Readback Contract Sep10
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-tiktok-readback-contract-sep10.yml'
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Read historical proven TikTok Buffer post through live status routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          ID='6a9a35aacfb379682d06d661'
+          for endpoint in \
+            "/api/r45-2/buffer-status?id=$ID" \
+            "/api/platform-publication-status?postId=$ID" \
+            "/api/platform-publication-status?id=$ID&platform=tiktok"; do
+            echo "ENDPOINT=$endpoint"
+            curl -sS -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" -H 'accept: application/json' "$WORKER_URL$endpoint" || true
+            echo
+          done
