@@ -1,0 +1,141 @@
+{
+  "schema": "UGI_EDITORIAL_COPYLOCK_V1",
+  "project": "UGI",
+  "date": "2026-09-10",
+  "timezone": "America/Sao_Paulo",
+  "state": "COPY_SCRIPT_LOCKED_PENDING_VISUAL_ASSETS_QA_HUMAN_APPROVAL",
+  "publisherMutationPerformed": false,
+  "trendSnapshot": "control-plane/trend-intelligence/2026-09-10.json",
+  "rules": {
+    "globalTopicCooldownDays": 60,
+    "globalNetworks": ["instagram", "tiktok", "linkedin"],
+    "sameDayCrossNetworkDuplicate": "BLOCK_BY_DEFAULT",
+    "noImageGenerationAtThisStage": true,
+    "realCompanyVisualMustIdentifyCompany": true,
+    "genericStockAsPrimaryEvidence": false,
+    "linkedinText": "short blocks with functional emojis; news is hook, management intelligence is product",
+    "exactFinalPreviewRequiredBeforeBuffer": true,
+    "explicitPauloApprovalRequiredBeforeBuffer": true
+  },
+  "items": [
+    {
+      "id": "UGI-20260910-IG-STORY-QUANTUM-0830",
+      "timeBrt": "08:30",
+      "platform": "instagram",
+      "format": "story",
+      "topic": "Quanto custa a corrida quântica?",
+      "screenCopy": "⚛️ A corrida quântica já custa bilhões.\nO retorno ainda é uma aposta.",
+      "supportCopy": "💡 Gestão: inovação de fronteira exige capital, horizonte e disciplina para decidir sob incerteza.",
+      "visualDirectionOnly": "Contexto real de computação quântica: laboratório, equipamento criogênico ou instalação de pesquisa identificável. Sem chip genérico inventado.",
+      "source": "Reuters Econ World — The cost of quantum — 2026-09-09"
+    },
+    {
+      "id": "UGI-20260910-IG-REEL-KPOP-1015",
+      "timeBrt": "10:15",
+      "platform": "instagram",
+      "format": "reel",
+      "topic": "Rock in Rio e K-pop — quando um nicho vira mercado",
+      "hook": "🎤 Quando um festival muda o palco principal para um público que antes era tratado como nicho, alguma coisa mudou no mercado.",
+      "narration": "Pela primeira vez em 41 anos, o Rock in Rio terá um dia inteiro dedicado ao K-pop no Palco Mundo. NEXZ, Hwasa e Stray Kids ocupam a programação de sexta-feira, e a data já está esgotada. Até os lightsticks, parte importante da cultura dos fãs de K-pop, foram incorporados à experiência do festival. Isso mostra uma mudança maior do que o line-up. Um nicho deixa de ser nicho quando ganha comunidade organizada, capacidade de mobilização e disposição para pagar por uma experiência própria. Para gestão, a lição é simples: novos mercados raramente aparecem do nada. Eles crescem primeiro nas bordas, criam linguagem, comportamento e comunidade — e só depois obrigam as grandes marcas a redesenhar produto, experiência e comunicação. Quem percebe cedo não está seguindo uma moda. Está aprendendo a reconhecer demanda antes que ela vire consenso.",
+      "caption": "🎤 O K-pop deixou de ser uma curiosidade de nicho para ocupar um dia inteiro do Palco Mundo do Rock in Rio.\n\n🌍 O movimento não é só musical. Ele mostra como comunidades organizadas conseguem criar demanda, linguagem própria e poder de mobilização.\n\n📌 Para marcas e gestores, o aprendizado é olhar para as bordas antes que elas virem centro.\n\n💡 Mercados novos costumam parecer pequenos até o momento em que todo mundo percebe que eles já cresceram.\n\n#Gestão #Estratégia #Marketing #Kpop #RockInRio #UGI",
+      "visualDirectionOnly": "Somente contexto real/licenciado do Rock in Rio 2026 e artistas citados quando os direitos permitirem. Branding do festival deve aparecer naturalmente no ambiente; sem montar logo falso sobre imagem genérica.",
+      "source": "UOL — primeiro dia inteiro de K-pop no Rock in Rio — 2026-09-09"
+    },
+    {
+      "id": "UGI-20260910-TT-LOCKEDIN-1130",
+      "timeBrt": "11:30",
+      "platform": "tiktok",
+      "format": "video",
+      "topic": "#lockedin — foco real ou aparência de produtividade?",
+      "hook": "Você está focado — ou só está ocupado o suficiente para parecer focado?",
+      "narration": "O TikTok colocou o #lockedin entre os sinais culturais de 2026. A lógica é simples: pessoas assumem um compromisso em público, mostram o processo e usam a comunidade como cobrança e motivação. Mas no trabalho existe uma diferença importante. Foco não é encher a agenda, responder tudo rápido ou passar o dia em reunião. Foco é escolher o que merece energia e conseguir provar avanço. Se você terminou o dia cansado, mas não consegue dizer qual resultado moveu, talvez você não estivesse locked in. Talvez estivesse só ocupado. A pergunta útil para amanhã é: qual entrega, se avançar de verdade, muda o seu resultado? Comece por ela.",
+      "caption": "🎯 Foco não é agenda cheia. É avanço comprovável. #lockedin #produtividade #gestão #trabalho #UGI",
+      "visualDirectionOnly": "TikTok nativo, processo real, mesa/rotina/tela/checklist como contexto; evitar estética excessivamente publicitária e evitar repetir visual de bloco/caneta já saturado no histórico UGI.",
+      "source": "TikTok Next 2026 — #lockedin"
+    },
+    {
+      "id": "UGI-20260910-IG-STORY-COMPLIANCE-1200",
+      "timeBrt": "12:00",
+      "platform": "instagram",
+      "format": "story",
+      "topic": "479 trabalhadores resgatados — compliance também é gestão da cadeia",
+      "screenCopy": "⚠️ 479 trabalhadores foram resgatados.\nCompliance não termina no contrato.",
+      "supportCopy": "🔎 Fornecedor, subcontratado e operação terceirizada também carregam risco humano, jurídico e reputacional.",
+      "visualDirectionOnly": "Tratamento sóbrio. Preferir imagem institucional da fiscalização/operação ou contexto real de trabalho e cadeia produtiva com direitos adequados. Não explorar vítimas visualmente.",
+      "source": "Ministério do Trabalho e Emprego — Operação Resgate VI — 2026-09-09"
+    },
+    {
+      "id": "UGI-20260910-LI-STARBUCKS-1400",
+      "timeBrt": "14:00",
+      "platform": "linkedin",
+      "format": "image_plus_text",
+      "topic": "Starbucks — recuperar clientes é só metade do turnaround",
+      "postText": "☕ Recuperar clientes é só metade de um turnaround.\n\n📈 Nos dois primeiros anos de Brian Niccol, a Starbucks conseguiu reverter seis trimestres consecutivos de queda nas vendas comparáveis. A estratégia foi voltar ao básico: reduzir espera, simplificar a operação, investir nas lojas e recuperar a experiência que ajudou a construir a marca.\n\n💰 O problema é que recuperação custa dinheiro. A companhia investiu pelo menos US$ 500 milhões em mão de obra dentro da reestruturação, enquanto a margem operacional global caiu para 12,9%, ante 15,8% dois anos antes.\n\n🧠 É aqui que o caso fica interessante para gestão. Um turnaround não termina quando o cliente volta. Ele entra numa segunda fase: transformar a melhora da experiência em crescimento que também sustente margem, caixa e retorno.\n\n⚖️ Cortar custos cedo demais pode destruir a recuperação. Manter a estrutura de recuperação para sempre pode destruir a rentabilidade. O desafio do gestor é saber quando mudar de marcha.\n\n💡 A lição da Starbucks é simples: recuperar demanda prova que a estratégia começou a funcionar. Converter essa demanda em lucro sustentável prova que o modelo voltou a funcionar.\n\n#Gestão #Estratégia #Turnaround #Liderança #Starbucks #UGI",
+      "visualDirectionOnly": "A imagem precisa identificar Starbucks de forma inequívoca: fachada/loja real com nome Starbucks visível, ambiente institucional identificável ou Brian Niccol em contexto oficial da empresa. Prioridade para loja/fachada real. Não usar café genérico como imagem principal. Não criar aparência de anúncio, parceria ou endosso da Starbucks. Direitos/uso devem ser comprovados antes do asset final.",
+      "source": "Reuters — Starbucks CEO Niccol brought back customers. Investors want fatter margins next — 2026-09-09"
+    },
+    {
+      "id": "UGI-20260910-IG-CAROUSEL-OIL-1430",
+      "timeBrt": "14:30",
+      "platform": "instagram",
+      "format": "carousel",
+      "topic": "Petróleo acima de US$100 — onde isso bate dentro de uma empresa?",
+      "slides": [
+        "🛢️ Petróleo acima de US$100. Isso chega ao seu DRE mais rápido do que parece.",
+        "🚚 1. Combustível e frete: energia mais cara pode aumentar o custo de movimentar produto.",
+        "📦 2. Embalagens e insumos: materiais ligados à cadeia petroquímica podem sofrer pressão de custo.",
+        "📈 3. Inflação e juros: energia mais cara pode contaminar preços e prolongar pressão financeira.",
+        "💵 4. Preço ou margem? Nem todo custo pode ser repassado ao consumidor sem perder volume.",
+        "🎯 Gestão: simule cenários antes que o choque apareça no resultado — custo, preço, estoque, fornecedor e caixa."
+      ],
+      "caption": "🛢️ Petróleo acima de US$100 não é uma notícia que termina no posto de gasolina.\n\n🚚 Ele pode pressionar transporte, frete e custos logísticos.\n\n📦 Também pode chegar a insumos e materiais ligados à cadeia petroquímica.\n\n📈 E, quando energia pressiona inflação e juros, o efeito pode chegar ao custo financeiro e à demanda.\n\n🎯 Para gestão, a pergunta não é só 'quanto o petróleo subiu?'. É 'onde esse choque aparece primeiro no meu negócio e quanto eu consigo absorver?'.\n\n💡 Cenário não elimina risco. Mas evita que o risco chegue sem dono e sem plano.\n\n#Gestão #Estratégia #Petróleo #Custos #Margem #UGI",
+      "visualDirectionOnly": "Visual editorial informativo, não alarmista. Imagens reais/licenciadas de petróleo/logística/refinaria quando necessárias e gráficos próprios simples. Não usar imagens de guerra como choque visual sem necessidade editorial.",
+      "source": "Reuters — Trading Day: $100 oil bites — 2026-09-09"
+    },
+    {
+      "id": "UGI-20260910-IG-STORY-SP500-1730",
+      "timeBrt": "17:30",
+      "platform": "instagram",
+      "format": "story",
+      "topic": "Resultados fortes não eliminam o risco de expectativas altas",
+      "screenCopy": "📈 86% das empresas do S&P 500 superaram estimativas.\nResultado forte não elimina expectativa alta.",
+      "supportCopy": "💡 Quanto maior o preço da expectativa, menor a margem para errar no próximo trimestre.",
+      "visualDirectionOnly": "Gráfico próprio/mercado em contexto editorial. Não usar logo de empresa específica se o tema é o índice agregado.",
+      "source": "Reuters/LSEG — Barclays lifts S&P 500 year-end target — 2026-09-09"
+    },
+    {
+      "id": "UGI-20260910-TT-ESSILOR-1945",
+      "timeBrt": "19:45",
+      "platform": "tiktok",
+      "format": "video",
+      "topic": "EssilorLuxottica/Ray-Ban — quando herdeiro, conselho e CEO entram em conflito, quem manda?",
+      "hook": "O filho do fundador critica o CEO. O conselho responde: estamos com o CEO. Quem manda numa empresa assim?",
+      "narration": "A EssilorLuxottica, dona da Ray-Ban, virou um caso interessante de governança. Leonardo Maria Del Vecchio, filho do fundador, criticou publicamente a liderança e pediu mais transparência e mudanças estratégicas. O conselho respondeu de forma unânime: reafirmou confiança no CEO Francesco Milleri e na direção da empresa. O ponto aqui não é escolher um lado. É entender que família, propriedade, conselho e gestão são papéis diferentes. Ter sobrenome, participação econômica ou legado não significa controlar sozinho a decisão executiva. E um conselho que existe só para concordar também não cumpre seu papel. Governança funciona quando as regras de poder estão claras antes do conflito. Porque, quando a crise chega, descobrir quem decide já é tarde demais.",
+      "caption": "🕶️ Família, acionista, conselho e CEO não são a mesma coisa. Governança existe justamente para quando eles discordam. #governança #liderança #gestão #RayBan #UGI",
+      "visualDirectionOnly": "Contexto real da EssilorLuxottica/Ray-Ban, sede/evento/loja/branding identificável e, se usado, CEO ou Leonardo Maria Del Vecchio em material editorial/licenciado. Não transformar Ray-Ban em propaganda de produto.",
+      "source": "Reuters — EssilorLuxottica board backs CEO Milleri after criticism from Del Vecchio heir — 2026-09-09"
+    },
+    {
+      "id": "UGI-20260910-IG-STORY-USCANADA-2030",
+      "timeBrt": "20:30",
+      "platform": "instagram",
+      "format": "story",
+      "topic": "EUA x Canadá — quando política comercial vira risco operacional",
+      "screenCopy": "🇺🇸🇨🇦 Tarifas já viraram proibições.\nGeopolítica também entra na operação.",
+      "supportCopy": "✈️ A Bombardier segue contratando nos EUA mesmo sob ameaça ao acesso ao seu maior mercado. Gestão de risco também é decidir antes de saber como a disputa termina.",
+      "visualDirectionOnly": "Contexto real/licenciado de comércio EUA-Canadá ou Bombardier quando citada. Evitar montagem política sensacionalista; foco em operação, cadeia e empresa.",
+      "source": "Reuters — Bombardier says it wants to fill 500 open US jobs despite Trump's threats — 2026-09-09"
+    }
+  ],
+  "nextGate": [
+    "FINAL_60D_PRE_PUBLISHER_RECONCILIATION",
+    "RIGHTS_PASS",
+    "VISUAL_SEMANTIC_PASS",
+    "FORMAT_PASS",
+    "CLOSED_CAPTION_PASS_FOR_VIDEO",
+    "MUSIC_PASS_WHERE_REQUIRED",
+    "EXACT_FINAL_PREVIEW",
+    "EXPLICIT_PAULO_APPROVAL",
+    "BUFFER_MUTATION_AND_READBACK"
+  ]
+}
