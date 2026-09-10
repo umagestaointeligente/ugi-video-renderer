@@ -1,0 +1,128 @@
+name: Orbit Cena Certa Facebook Direct
+
+on:
+  workflow_dispatch:
+    inputs:
+      item_key:
+        description: Canonical unique item key
+        required: true
+        type: string
+      media_url:
+        description: Public HTTPS media URL
+        required: true
+        type: string
+      caption:
+        description: Facebook caption; ignored for Story
+        required: false
+        default: ''
+        type: string
+      publish_at:
+        description: Future RFC3339 UTC timestamp
+        required: true
+        type: string
+      format:
+        description: reel or story
+        required: true
+        default: reel
+        type: choice
+        options: [reel, story]
+      expected_page_id:
+        description: Hard-lock expected Facebook Page id
+        required: true
+        default: '1314911305035494'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orbit-cena-certa-facebook-${{ inputs.item_key }}
+  cancel-in-progress: false
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PAGE_ACCESS_TOKEN: ${{ secrets.CENA_CERTA_META_ACCESS_TOKEN }}
+      PAGE_ID: ${{ inputs.expected_page_id }}
+      ITEM_KEY: ${{ inputs.item_key }}
+      MEDIA_URL: ${{ inputs.media_url }}
+      CAPTION: ${{ inputs.caption }}
+      PUBLISH_AT: ${{ inputs.publish_at }}
+      FORMAT: ${{ inputs.format }}
+    steps:
+      - name: Validate secret presence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$PAGE_ACCESS_TOKEN" || { echo 'BLOCKED: CENA_CERTA_META_ACCESS_TOKEN missing'; exit 78; }
+
+      - name: Native schedule with page identity and duplicate guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.parse, urllib.request, datetime, sys
+          API='https://graph.facebook.com/v23.0'
+          token=os.environ['PAGE_ACCESS_TOKEN']
+          page=os.environ['PAGE_ID'].strip()
+          item=os.environ['ITEM_KEY'].strip()
+          media=os.environ['MEDIA_URL'].strip()
+          caption=os.environ.get('CAPTION','')
+          fmt=os.environ['FORMAT'].strip().lower()
+          publish_at=os.environ['PUBLISH_AT'].strip()
+
+          def get(path, params):
+              q=urllib.parse.urlencode({**params,'access_token':token})
+              with urllib.request.urlopen(API+path+'?'+q, timeout=120) as r:
+                  return json.loads(r.read())
+          def post(path, data):
+              payload=urllib.parse.urlencode({**data,'access_token':token}).encode()
+              req=urllib.request.Request(API+path,data=payload,method='POST')
+              try:
+                  with urllib.request.urlopen(req,timeout=180) as r:
+                      return json.loads(r.read())
+              except urllib.error.HTTPError as e:
+                  print('HTTP_ERROR',e.code,e.read()[:3000].decode('utf-8','replace'))
+                  raise
+
+          dt=datetime.datetime.fromisoformat(publish_at.replace('Z','+00:00'))
+          now=datetime.datetime.now(datetime.timezone.utc)
+          if dt <= now + datetime.timedelta(minutes=10):
+              raise SystemExit('BLOCKED: Facebook native scheduling requires >10 minutes lead time')
+          if not media.startswith('https://') or fmt not in {'reel','story'}:
+              raise SystemExit('BLOCKED: invalid media/format')
+
+          me=get('/me',{'fields':'id,name'})
+          print('PAGE_TOKEN_ID='+str(me.get('id')))
+          print('PAGE_TOKEN_NAME='+str(me.get('name')))
+          if str(me.get('id')) != page:
+              raise SystemExit('BLOCKED: token does not belong to Cena Certa Ofc page')
+
+          marker='ORBIT_ITEM:'+item
+          # Read recent Page videos before mutation; exact marker makes retries idempotent.
+          recent=get('/'+page+'/videos',{'fields':'id,description,created_time','limit':'50'})
+          for v in recent.get('data',[]):
+              if marker in (v.get('description') or ''):
+                  print('IDEMPOTENT_EXISTING_VIDEO_ID='+str(v.get('id')))
+                  sys.exit(0)
+
+          epoch=int(dt.timestamp())
+          if fmt=='story':
+              # Graph API has no reliable future Page Story scheduling contract.
+              raise SystemExit('BLOCKED: Facebook Story must use native UI or a due-time executor; no fake native schedule')
+
+          out=post('/'+page+'/videos',{
+              'file_url':media,
+              'description':caption+'\n\n'+marker,
+              'published':'false',
+              'scheduled_publish_time':str(epoch)
+          })
+          vid=out.get('id')
+          if not vid:
+              raise SystemExit('BLOCKED: Facebook returned no scheduled video id')
+          print('NATIVE_VIDEO_ID='+str(vid))
+          print('NATIVE_PUBLISH_AT='+publish_at)
+          print('ORBIT_ITEM_KEY='+item)
+          PY
