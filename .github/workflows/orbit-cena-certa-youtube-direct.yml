@@ -152,17 +152,19 @@ jobs:
               page=listing.get('nextPageToken','')
               if not page: break
           if ids:
-              _,_,raw=req('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+','.join(ids),headers=auth)
-              for v in json.loads(raw).get('items',[]):
-                  if marker in (v.get('snippet',{}).get('tags') or []):
-                      existing_at=str(v.get('status',{}).get('publishAt') or '')
-                      requested_at=dt.isoformat().replace('+00:00','Z')
-                      normalized_existing=existing_at.replace('.000Z','Z')
-                      if normalized_existing != requested_at:
-                          raise SystemExit('BLOCKED: item_key already exists with different publish_at')
-                      print('IDEMPOTENT_EXISTING_VIDEO_ID='+v['id'])
-                      print('IDEMPOTENT_EXISTING_PUBLISH_AT='+existing_at)
-                      sys.exit(0)
+              for offset in range(0,len(ids),50):
+                  batch=ids[offset:offset+50]
+                  _,_,raw=req('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+','.join(batch),headers=auth)
+                  for v in json.loads(raw).get('items',[]):
+                      if marker in (v.get('snippet',{}).get('tags') or []):
+                          existing_at=str(v.get('status',{}).get('publishAt') or '')
+                          requested_at=dt.isoformat().replace('+00:00','Z')
+                          normalized_existing=existing_at.replace('.000Z','Z')
+                          if normalized_existing != requested_at or v.get('snippet',{}).get('title') != title:
+                              raise SystemExit('BLOCKED: item_key already exists with different immutable fields')
+                          print('IDEMPOTENT_EXISTING_VIDEO_ID='+v['id'])
+                          print('IDEMPOTENT_EXISTING_PUBLISH_AT='+existing_at)
+                          sys.exit(0)
 
           tmp='/tmp/orbit-direct.mp4'
           mreq=urllib.request.Request(media, headers={'User-Agent':'OrbitDirectPublisher/1.0'})
