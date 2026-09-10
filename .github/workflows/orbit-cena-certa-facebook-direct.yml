@@ -41,7 +41,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: orbit-cena-certa-facebook-${{ inputs.item_key }}
+  group: orbit-cena-certa-facebook-mutation
   cancel-in-progress: false
 
 jobs:
