@@ -1,0 +1,47 @@
+{
+  "task_id": "VSA-SEP12-SCHEDULE-CONFIRM-20260909",
+  "project": "ORBIT/VSA",
+  "synthetic": false,
+  "verified_at_utc": "2026-09-10T02:10:30Z",
+  "timezone": "America/Sao_Paulo",
+  "channel": {
+    "platform": "youtube",
+    "name": "Você Sabia Agora?",
+    "channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ"
+  },
+  "render": {
+    "initial_run_id": 34427691578,
+    "initial_result": "FAILED_PRE_RENDER_INDENTATION_PATCH",
+    "repair_run_id": 34427935290,
+    "repair_result": "8_OF_8_BUILD_SUCCESS",
+    "media_branch": "vsa-media-sep12-20260909",
+    "media_commit": "6c51a590aeaa9192eaa901a9f8132f0cab4cba81",
+    "masters": 8,
+    "thumbnails": 8
+  },
+  "result": "SUCCESS",
+  "summary": {
+    "date": "2026-09-12",
+    "expected": 8,
+    "confirmed_scheduled": 8,
+    "world_science": 4,
+    "people_curiosity": 4,
+    "thumbnail_url_configured": 8
+  },
+  "items": [
+    {"time_local":"08:00","bucket":"WORLD_SCIENCE","title":"Que objetos misteriosos o Chandra encontrou em outras galáxias?","semantic_topic_id":"chandra_hypersoft_xray_sources_2026","postly_id":"6aa210cb2fb84eb801000000","status":"scheduled"},
+    {"time_local":"10:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Iberê Thenório virou o creator mais influente do Brasil?","semantic_topic_id":"ibere_thenorio_mic2_influence_2026","postly_id":"6aa210e36d9eed6209000000","status":"scheduled"},
+    {"time_local":"13:00","bucket":"WORLD_SCIENCE","title":"Como um incêndio consegue queimar debaixo da terra?","semantic_topic_id":"peat_fire_subsurface_smouldering","postly_id":"6aa210ff2fb855b801000000","status":"scheduled"},
+    {"time_local":"15:30","bucket":"PEOPLE_CURIOSITY","title":"Como Houdini escapava de algemas?","semantic_topic_id":"houdini_handcuff_escape_mechanics","postly_id":"6aa2111b2fb857b801000000","status":"scheduled"},
+    {"time_local":"18:00","bucket":"WORLD_SCIENCE","title":"Por que o mapa-múndi distorce tanto alguns países?","semantic_topic_id":"map_projection_mercator_equal_earth_distortion","postly_id":"6aa211363ed9e363c5000000","status":"scheduled"},
+    {"time_local":"19:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Buster Keaton quase nunca sorria em cena?","semantic_topic_id":"buster_keaton_stone_face_comedy_language","postly_id":"6aa211532fb85cb801000000","status":"scheduled"},
+    {"time_local":"21:00","bucket":"WORLD_SCIENCE","title":"Por que um El Niño forte mexe com o clima do planeta inteiro?","semantic_topic_id":"el_nino_pacific_atmospheric_teleconnections","postly_id":"6aa2116c3ed9e763c5000000","status":"scheduled"},
+    {"time_local":"22:30","bucket":"PEOPLE_CURIOSITY","title":"Por que Roosevelt continuou um discurso depois de levar um tiro?","semantic_topic_id":"theodore_roosevelt_1912_bullet_speech_case","postly_id":"6aa2118b3ed9e963c5000000","status":"scheduled"}
+  ],
+  "quality_policy": {
+    "scene_diversity": "3_DISTINCT_REAL_MOMENTS_DESIGNED_PER_VIDEO",
+    "music": "THEMATIC_INSTRUMENTAL_TRACK_PER_VIDEO",
+    "thumbnail": "CUSTOM_EDITORIAL_THUMBNAIL_CONFIGURED_PER_POST"
+  },
+  "isolation": {"cena_certa_touched": false}
+}
