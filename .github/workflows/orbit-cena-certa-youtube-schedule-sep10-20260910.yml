@@ -1,0 +1,95 @@
+name: Orbit Cena Certa YouTube Schedule Sep10
+on:
+  push:
+    paths:
+      - '.github/workflows/orbit-cena-certa-youtube-schedule-sep10-20260910.yml'
+permissions:
+  contents: read
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      WORKER_URL: https://orbit-cena-certa-auth.umagestaointeligente.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy latest guarded publisher
+        working-directory: cloudflare
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npx --yes wrangler@4 deploy --config wrangler.orbit-cena-certa-auth.toml
+          printf '%s' "$YOUTUBE_CLIENT_ID" | npx --yes wrangler@4 secret put YOUTUBE_CLIENT_ID --config wrangler.orbit-cena-certa-auth.toml >/dev/null
+          printf '%s' "$YOUTUBE_CLIENT_SECRET" | npx --yes wrangler@4 secret put YOUTUBE_CLIENT_SECRET --config wrangler.orbit-cena-certa-auth.toml >/dev/null
+      - name: Open one-run command gate
+        id: gate
+        working-directory: cloudflare
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOKEN="$(openssl rand -hex 32)"
+          echo "::add-mask::$TOKEN"
+          echo "COMMAND_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+          printf '%s' "$TOKEN" | npx --yes wrangler@4 secret put COMMAND_TOKEN --config wrangler.orbit-cena-certa-auth.toml >/dev/null
+          echo COMMAND_GATE=OPEN_MASKED
+      - name: Verify canonical authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..12}; do
+            curl -fsS "$WORKER_URL/status" > /tmp/status.json && \
+            grep -q '"authorized":true' /tmp/status.json && \
+            grep -q '"channel_id":"UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/status.json && \
+            grep -q '"has_refresh_token":true' /tmp/status.json && break
+            sleep 5
+          done
+          cat /tmp/status.json
+          grep -q '"authorized":true' /tmp/status.json
+          grep -q '"channel_id":"UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/status.json
+          grep -q '"has_refresh_token":true' /tmp/status.json
+          echo IDENTITY_GATE=PASS
+      - name: Schedule 8 canonical Sep10 videos
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/items.json <<'JSON'
+          [
+            {"item_key":"cc-20260910-0910-avatar","title":"Avatar: Fire and Ash | Cena Certa","description":"🎬 FILME: Avatar: Fire and Ash (2025)\n\nJake precisa proteger a família enquanto Pandora enfrenta uma ameaça que agora também divide os próprios Na’vi.\n\n💬 Você assistiria?\n\n#CenaCerta #Cinema #Filme","media_url":"https://static.metricool.com/planner/202609/6809869-file-5595474224742679778.mp4","publish_at":"2026-09-10T12:10:00Z"},
+            {"item_key":"cc-20260910-1055-fantastic-four","title":"Fantastic Four: First Steps | Cena Certa","description":"🎬 FILME: The Fantastic Four: First Steps (2025)\n\nA família mais famosa da Marvel precisa enfrentar Galactus sem deixar de proteger aquilo que a mantém unida.\n\n💬 Você assistiria?\n\n#CenaCerta #Cinema #Filme","media_url":"https://static.metricool.com/planner/202609/6809869-file-12107579948747182229.mp4","publish_at":"2026-09-10T13:55:00Z"},
+            {"item_key":"cc-20260910-1220-freakier-friday","title":"Freakier Friday | Cena Certa","description":"🎬 FILME: Freakier Friday (2025)\n\nAnos depois da primeira troca, Anna e Tess descobrem que a confusão voltou — agora envolvendo uma nova geração.\n\n💬 Você assistiria?\n\n#CenaCerta #Cinema #Filme","media_url":"https://static.metricool.com/planner/202609/6809869-file-5344562135665139186.mp4","publish_at":"2026-09-10T15:20:00Z"},
+            {"item_key":"cc-20260910-1445-mandalorian-grogu","title":"The Mandalorian & Grogu | Cena Certa","description":"🎬 FILME: The Mandalorian & Grogu (2026)\n\nDin Djarin e Grogu voltam à estrada enquanto restos do Império ainda ameaçam uma galáxia tentando se reorganizar.\n\n💬 Você assistiria?\n\n#CenaCerta #Cinema #Filme","media_url":"https://static.metricool.com/planner/202609/6809869-file-2541473595053156097.mp4","publish_at":"2026-09-10T17:45:00Z"},
+            {"item_key":"cc-20260910-1555-tron-ares","title":"TRON: Ares | Cena Certa","description":"🎬 FILME: TRON: Ares (2025)\n\nUm programa cruza a fronteira digital e chega ao nosso mundo. O problema é que Ares começa a tomar suas próprias decisões.\n\n💬 Você assistiria?\n\n#CenaCerta #Cinema #Filme","media_url":"https://static.metricool.com/planner/202609/6809869-file-6675897578004913803.mp4","publish_at":"2026-09-10T18:55:00Z"},
+            {"item_key":"cc-20260910-1710-lilo-stitch","title":"Lilo & Stitch | Cena Certa","description":"🎬 FILME: Lilo & Stitch (2025)\n\nLilo adota uma criatura que parece impossível de controlar. Só depois descobre que Stitch foi criado para destruir.\n\n💬 Você assistiria?\n\n#CenaCerta #Cinema #Filme","media_url":"https://static.metricool.com/planner/202609/6809869-file-9593390560294638437.mp4","publish_at":"2026-09-10T20:10:00Z"},
+            {"item_key":"cc-20260910-1830-snow-white","title":"Snow White | Cena Certa","description":"🎬 FILME: Snow White (2025)\n\nBranca de Neve foge de uma rainha que governa pelo medo e precisa descobrir se tem coragem para voltar.\n\n💬 Você assistiria?\n\n#CenaCerta #Cinema #Filme","media_url":"https://static.metricool.com/planner/202609/6809869-file-16299976514689167123.mp4","publish_at":"2026-09-10T21:30:00Z"},
+            {"item_key":"cc-20260910-1950-zootopia2","title":"Zootopia 2 | Cena Certa","description":"🎬 FILME: Zootopia 2 (2025)\n\nJudy e Nick investigam uma serpente misteriosa e acabam descobrindo segredos que podem mudar a cidade inteira.\n\n💬 Você assistiria?\n\n#CenaCerta #Cinema #Filme","media_url":"https://static.metricool.com/planner/202609/6809869-file-16383714918174588957.mp4","publish_at":"2026-09-10T22:50:00Z"}
+          ]
+          JSON
+          : > /tmp/receipts.ndjson
+          COUNT=$(jq length /tmp/items.json)
+          for ((i=0;i<COUNT;i++)); do
+            ITEM=$(jq -c ".[$i]" /tmp/items.json)
+            KEY=$(jq -r '.item_key' <<<"$ITEM")
+            echo "SCHEDULING=$KEY"
+            HTTP=$(curl -sS -o /tmp/resp.json -w '%{http_code}' -X POST "$WORKER_URL/schedule" -H "Authorization: Bearer $COMMAND_TOKEN" -H 'Content-Type: application/json' --data "$ITEM")
+            cat /tmp/resp.json
+            jq -c . /tmp/resp.json >> /tmp/receipts.ndjson
+            test "$HTTP" = "200"
+            jq -e '.ok == true and (.result == "SCHEDULED" or .result == "ALREADY_EXISTS") and .channel_id == "UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/resp.json >/dev/null
+          done
+          echo RECEIPT_COUNT=$(wc -l < /tmp/receipts.ndjson)
+          echo MUTATION_BATCH=COMPLETE
+      - name: Seal command gate
+        if: always()
+        working-directory: cloudflare
+        shell: bash
+        run: |
+          set -euo pipefail
+          SEAL="$(openssl rand -hex 32)"
+          echo "::add-mask::$SEAL"
+          printf '%s' "$SEAL" | npx --yes wrangler@4 secret put COMMAND_TOKEN --config wrangler.orbit-cena-certa-auth.toml >/dev/null
+          echo COMMAND_GATE=SEALED
