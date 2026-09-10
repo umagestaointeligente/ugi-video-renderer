@@ -1,0 +1,33 @@
+{
+  "schema": "UGI_BUFFER_SCHEDULE_RECEIPT_V2",
+  "project": "UGI",
+  "date": "2026-09-10",
+  "publisher": "BUFFER",
+  "state": "PROVEN_SCHEDULED_9_OF_9",
+  "assetCommit": "45f58ae8522d16dd5519e91b15b582a5ec2e03c1",
+  "schedulerRunId": 34431551934,
+  "schedulerJobId": 102727937465,
+  "independentReadbackRunId": 34431608628,
+  "independentReadbackJobId": 102728113524,
+  "preflightSha256": "14_OF_14_PASS",
+  "globalDistributionStateChanged": false,
+  "batchScopedApproval": true,
+  "items": [
+    {"id":"UGI-20260910-IG-STORY-QUANTUM-0830","platform":"instagram","format":"story","bufferPostId":"6aa21d004a183ce6067226ab","dueAt":"2026-09-10T11:30:00.000Z","dueAtBrt":"2026-09-10T08:30:00-03:00","status":"scheduled"},
+    {"id":"UGI-20260910-IG-REEL-KPOP-1015","platform":"instagram","format":"reel","bufferPostId":"6aa21d01a39ecd5cb8bac0b9","dueAt":"2026-09-10T13:15:00.000Z","dueAtBrt":"2026-09-10T10:15:00-03:00","status":"scheduled"},
+    {"id":"UGI-20260910-TT-LOCKEDIN-1130","platform":"tiktok","format":"video","bufferPostId":"6aa21d024a183ce6067226db","dueAt":"2026-09-10T14:30:00.000Z","dueAtBrt":"2026-09-10T11:30:00-03:00","status":"scheduled"},
+    {"id":"UGI-20260910-IG-STORY-COMPLIANCE-1200","platform":"instagram","format":"story","bufferPostId":"6aa21d024a183ce606722704","dueAt":"2026-09-10T15:00:00.000Z","dueAtBrt":"2026-09-10T12:00:00-03:00","status":"scheduled"},
+    {"id":"UGI-20260910-LI-STARBUCKS-1400","platform":"linkedin","format":"post","bufferPostId":"6aa21d03a39ecd5cb8bac11c","dueAt":"2026-09-10T17:00:00.000Z","dueAtBrt":"2026-09-10T14:00:00-03:00","status":"scheduled"},
+    {"id":"UGI-20260910-IG-CAROUSEL-OIL-1430","platform":"instagram","format":"carousel","bufferPostId":"6aa21d045761fd1f97d06e5c","dueAt":"2026-09-10T17:30:00.000Z","dueAtBrt":"2026-09-10T14:30:00-03:00","status":"scheduled"},
+    {"id":"UGI-20260910-IG-STORY-SP500-1730","platform":"instagram","format":"story","bufferPostId":"6aa21d045761fd1f97d06e84","dueAt":"2026-09-10T20:30:00.000Z","dueAtBrt":"2026-09-10T17:30:00-03:00","status":"scheduled"},
+    {"id":"UGI-20260910-TT-ESSILOR-1945","platform":"tiktok","format":"video","bufferPostId":"6aa21d0502b1a6fe6e42c9a8","dueAt":"2026-09-10T22:45:00.000Z","dueAtBrt":"2026-09-10T19:45:00-03:00","status":"scheduled"},
+    {"id":"UGI-20260910-IG-STORY-USCANADA-2030","platform":"instagram","format":"story","bufferPostId":"6aa21d065761fd1f97d06ead","dueAt":"2026-09-10T23:30:00.000Z","dueAtBrt":"2026-09-10T20:30:00-03:00","status":"scheduled"}
+  ],
+  "verification": {
+    "schedulerResult": "BUFFER_SCHEDULED_9_OF_9",
+    "independentReadbackResult": "READBACK_9_OF_9_SCHEDULED",
+    "wrongChannelDetected": false,
+    "duplicateMutationRetryPerformed": false,
+    "youtubeMutationPerformed": false
+  }
+}
