@@ -1,0 +1,276 @@
+{
+  "schema": "UGI_EDITORIAL_ASSET_PROVENANCE_V2",
+  "date": "2026-09-10",
+  "state": "FINAL_ASSETS_QA_PENDING",
+  "batchScopedPreviewWaiver": true,
+  "waiverBasis": "Paulo explicitly authorized direct scheduling of the Sep10 batch without sending intermediate previews in chat; general future approval policy remains unchanged.",
+  "images": {
+    "starbucks": {
+      "filename": "Starbucks SOH.jpg",
+      "width": 1200,
+      "license": "CC0 1.0",
+      "author": "KratosinWiki",
+      "page": "https://commons.wikimedia.org/wiki/File:Starbucks_SOH.jpg"
+    },
+    "straykids": {
+      "filename": "Stray Kids in 2026.png",
+      "width": 1919,
+      "license": "CC BY 4.0",
+      "author": "_TV10 / YouTube",
+      "page": "https://commons.wikimedia.org/wiki/File:Stray_Kids_in_2026.png"
+    },
+    "rayban": {
+      "filename": "New Ray-Ban Store Miami Worldcenter.jpg",
+      "width": 2560,
+      "license": "CC BY 2.0",
+      "author": "Phillip Pessar",
+      "page": "https://commons.wikimedia.org/wiki/File:New_Ray-Ban_Store_Miami_Worldcenter.jpg"
+    }
+  },
+  "music": {
+    "quantum": {
+      "filename": "Sascha Ende - I Feel It (instrumental) (cc-by) (filmmusic).ogg",
+      "license": "CC BY 4.0",
+      "author": "Sascha Ende",
+      "page": "https://commons.wikimedia.org/wiki/File:Sascha_Ende_-_I_Feel_It_(instrumental)_(cc-by)_(filmmusic).ogg"
+    },
+    "compliance": {
+      "filename": "Nctrnm - Queue.ogg",
+      "license": "CC BY 4.0",
+      "author": "Nctrnm",
+      "page": "https://commons.wikimedia.org/wiki/File:Nctrnm_-_Queue.ogg"
+    },
+    "sp500": {
+      "filename": "Mise - 02 - Alive Doing It Right Instrumental.ogg",
+      "license": "CC BY 4.0",
+      "author": "Mise",
+      "page": "https://commons.wikimedia.org/wiki/File:Mise_-_02_-_Alive_Doing_It_Right_Instrumental.ogg"
+    },
+    "uscanada": {
+      "filename": "Josh Woodward - 10 - Perfect Instrumental Version.ogg",
+      "license": "CC BY 4.0",
+      "author": "Josh Woodward",
+      "page": "https://commons.wikimedia.org/wiki/File:Josh_Woodward_-_10_-_Perfect_Instrumental_Version.ogg"
+    },
+    "video": {
+      "path": "assets/music/innovation/dreamstate_library-modern-tech-corporate-theme-469710 (1).mp3",
+      "license": "repository-approved licensed asset",
+      "author": "Dreamstate Library",
+      "page": "repository asset"
+    }
+  },
+  "rules": {
+    "globalAntiRepeatDays": 60,
+    "noGenericCompanyVisual": true,
+    "starbucksIdentifiable": true,
+    "visibleCopyControlledRenderer": true,
+    "storyMusicDistinct": true,
+    "videosNarratedPtBr": true
+  },
+  "finals": [
+    {
+      "path": "public/ugi/editorial/2026-09-10/story-quantum-0830.mp4",
+      "bytes": 260100,
+      "sha256": "cedb335cc54965748fa34c8b7a308ebb38808ee6c2dd4c793fda3f7bf7d83dbc",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "8.000000"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/story-compliance-1200.mp4",
+      "bytes": 257972,
+      "sha256": "a1890e8ff57e07fc3a555be9511483d2734613fae5e4b8682646ac862c4ed122",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "8.000000"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/story-sp500-1730.mp4",
+      "bytes": 243853,
+      "sha256": "44a3fa38ba2dfee044e4f3dd945cecaa2d6ed99154728a9b096f116022fb1d87",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "8.000000"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/story-uscanada-2030.mp4",
+      "bytes": 240203,
+      "sha256": "3865313901724a3dfacc226da781ef123ee165b7412c9fe0fcc61eb80161eed7",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "8.000000"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/linkedin-starbucks-1400.jpg",
+      "bytes": 147722,
+      "sha256": "e472e2fee08c7232eedd644332ec27b39d9f3e016b499d00a4101bd98dde1091",
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/carousel-oil-1430-01.jpg",
+      "bytes": 138665,
+      "sha256": "8874cf74f239d97f02f9621410d7a594fe7021c8128b2e271b9e124a6a37a0a3",
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/carousel-oil-1430-02.jpg",
+      "bytes": 135262,
+      "sha256": "7f92992ecc7c496b1483d88c6e80387ee1505b50c031e4471933d8d5a728acbc",
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/carousel-oil-1430-03.jpg",
+      "bytes": 143180,
+      "sha256": "7f5bd2fc0149e38d3f97213bf1113734deca95f3f25bd5697c6aee19c9c60f38",
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/carousel-oil-1430-04.jpg",
+      "bytes": 131202,
+      "sha256": "8829ae8b56625ce0561bee5d135eceb063e5a285d7309b5f520e14e12882aced",
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/carousel-oil-1430-05.jpg",
+      "bytes": 130801,
+      "sha256": "c1c704de477fe1c1ab9fbbc62b367ed94b2c98d849f67d325c12145363808f69",
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/carousel-oil-1430-06.jpg",
+      "bytes": 150095,
+      "sha256": "42c92aa3dc54a67aaa4293dd61685f2015cf069bf2a429a3338faa5943664b1b",
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/reel-kpop-1015.mp4",
+      "bytes": 2380736,
+      "sha256": "a63ceadfeb6feb040252b031f3a2072ad96c7083c61ccc36d917919ee3a9583c",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "44.833333"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/tiktok-lockedin-1130.mp4",
+      "bytes": 1310267,
+      "sha256": "c96438d1f898b6dfaf5b6da1e240b87ae94cc91dea62497026640f8b4cddba77",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "35.333333"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-10/tiktok-essilor-1945.mp4",
+      "bytes": 3035885,
+      "sha256": "6b13872a34a758d04687d7b79766fb4086b40817108d698cc0587a121fad4a04",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "40.666667"
+        }
+      }
+    }
+  ],
+  "captionQa": "BURNED_IN_CAPTIONS_3_OF_3"
+}
