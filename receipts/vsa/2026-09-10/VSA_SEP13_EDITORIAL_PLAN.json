@@ -1,0 +1,32 @@
+{
+  "task_id": "VSA-SEP13-EDITORIAL-PLAN-20260910",
+  "project": "ORBIT/VSA",
+  "date_local": "2026-09-13",
+  "timezone": "America/Sao_Paulo",
+  "status": "EDITORIAL_PROPOSED_NOT_SCHEDULED",
+  "mix": {"WORLD_SCIENCE": 4, "PEOPLE_CURIOSITY": 4},
+  "rules": {
+    "topic_lock_days": 60,
+    "scene_diversity": "NO_REPEATED_TAKE_OR_PHOTO; 3 DISTINCT REAL MOMENTS DESIGNED",
+    "real_footage_interleave": "REAL -> EXPLAIN -> REAL_DIFFERENT -> EXPLAIN -> REAL_OR_CONSEQUENCE -> PAYOFF -> CTA",
+    "music": "THEMATIC_REAL_INSTRUMENTAL_COMPOSITION_REQUIRED",
+    "thumbnail": "EDITORIAL_THUMBNAIL_REQUIRED",
+    "rights": "PROVENANCE_AND_REUSE_BASIS_REQUIRED_BEFORE_RENDER_RELEASE"
+  },
+  "items": [
+    {"time":"08:00","bucket":"WORLD_SCIENCE","semantic_topic_id":"mali_dust_storm_transport_2026","title":"Como uma tempestade de poeira consegue cobrir vários países?","hook":"NASA Terra registrou uma grande pluma sobre Mali e países vizinhos em setembro.","status":"CANDIDATE_GREEN"},
+    {"time":"10:30","bucket":"PEOPLE_CURIOSITY","semantic_topic_id":"anitta_grande_rio_rainha_bateria_role_2026","title":"O que uma rainha de bateria realmente faz — e por que Anitta foi escolhida?","hook":"Anitta está novamente no centro das conversas após assumir a bateria da Grande Rio.","status":"CANDIDATE_GREEN_RIGHTS_REVIEW"},
+    {"time":"13:00","bucket":"WORLD_SCIENCE","semantic_topic_id":"xz_andromedae_eclipsing_binary_wink","title":"Por que uma estrela parece piscar como se tivesse um olho?","hook":"XZ Andromedae é um sistema eclipsante visto quase de lado da Terra.","status":"CANDIDATE_GREEN"},
+    {"time":"15:30","bucket":"PEOPLE_CURIOSITY","semantic_topic_id":"elton_john_airport_wheelchair_energy_conservation_2026","title":"Por que Elton John usa cadeira de rodas em aeroportos mesmo depois de tocar por horas?","hook":"Após o Rock in Rio, o uso da cadeira voltou a gerar curiosidade; ele já explicou publicamente que a utiliza para preservar energia.","status":"CANDIDATE_GREEN_RIGHTS_REVIEW"},
+    {"time":"18:00","bucket":"WORLD_SCIENCE","semantic_topic_id":"hunga_underwater_collapse_tsunami_seismic_detection","title":"Como sensores distantes detectaram o nascimento de um tsunami?","hook":"Novo estudo mostra como sinais sísmicos localizaram o colapso submarino que gerou o tsunami de Hunga.","status":"CANDIDATE_GREEN"},
+    {"time":"19:30","bucket":"PEOPLE_CURIOSITY","semantic_topic_id":"jao_elton_john_cover_attention_path","title":"Como um cover fez Elton John reparar em Jão antes de eles se encontrarem?","hook":"O encontro dos dois no Rock in Rio reacendeu uma conexão que começou anos antes com um cover de Jão.","status":"CANDIDATE_GREEN_RIGHTS_REVIEW"},
+    {"time":"21:00","bucket":"WORLD_SCIENCE","semantic_topic_id":"sentinel6_ocean_height_hurricane_intensification","title":"Como dois satélites separados por 30 segundos ajudam a prever a força de um furacão?","hook":"Sentinel-6 Michael Freilich e Sentinel-6B medem altura do mar para inferir calor oceânico ligado à intensificação de furacões.","status":"CANDIDATE_GREEN_DIFFERENT_FROM_EL_NINO_TOPIC"},
+    {"time":"22:30","bucket":"PEOPLE_CURIOSITY","semantic_topic_id":"mariska_hargitay_olivia_benson_longevity_record","title":"Como Mariska Hargitay ficou décadas no mesmo papel e bateu um recorde da TV?","hook":"Ela apresenta o Emmy 2026 e Olivia Benson é uma das personagens live-action de maior longevidade da TV americana.","status":"CANDIDATE_GREEN_RIGHTS_REVIEW"}
+  ],
+  "reserves": [
+    {"name":"Michael J. Fox","reason":"CURRENT_HIGH_INTEREST_BUT_RECENT_VSA_MEDICAL_PERSON_CLUSTER_AND_MOVING_FOOTAGE_RIGHTS_NEED_MORE_WORK"},
+    {"name":"Harry Styles","reason":"CURRENT_TREND_SIGNAL_BUT_MOVING_FOOTAGE_REUSE_PATH_WEAKER"},
+    {"name":"Hailey Bieber","reason":"CURRENT_BRAZIL_ANGLE_BUT_MOVING_FOOTAGE_DIVERSITY_NOT_YET_PROVEN"}
+  ],
+  "cena_certa_touched": false
+}
