@@ -1,0 +1,61 @@
+name: UGI Sep10 Publish Contract Probe
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-sep10-publish-contract-probe.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Probe fail-closed contracts without valid media
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          python - <<'PY'
+          import json,os,urllib.request,urllib.error
+          base=os.environ['WORKER_URL']; key=os.environ['UGI_LOLA_COMMAND_KEY']
+          tests=[
+            ('tiktok_editorial','/api/editorial-media-publish',{'platform':'tiktok','mediaType':'video','text':'contract probe - no media','format':'video','mode':'customScheduled','dueAt':'2026-09-10T14:30:00Z'}),
+            ('ig_reel_video','/api/r45-3/instagram-publish',{'kind':'reel_video','text':'contract probe - no media','videoUrl':'','imageUrls':[],'mode':'customScheduled','dueAt':'2026-09-10T13:15:00Z'}),
+            ('ig_reel','/api/r45-3/instagram-publish',{'kind':'reel','text':'contract probe - no media','videoUrl':'','imageUrls':[],'mode':'customScheduled','dueAt':'2026-09-10T13:15:00Z'}),
+            ('ig_video','/api/r45-3/instagram-publish',{'kind':'video','text':'contract probe - no media','videoUrl':'','imageUrls':[],'mode':'customScheduled','dueAt':'2026-09-10T13:15:00Z'}),
+          ]
+          out=[]
+          for name,path,payload in tests:
+            req=urllib.request.Request(base+path,data=json.dumps(payload).encode(),method='POST',headers={'x-lola-command-key':key,'content-type':'application/json','accept':'application/json','user-agent':'UGI-Sep10-Contract-Probe/1.0'})
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r: code=r.status; raw=r.read().decode()
+            except urllib.error.HTTPError as e: code=e.code; raw=e.read().decode('utf-8','replace')
+            try: body=json.loads(raw)
+            except: body={'raw':raw[:1000]}
+            rec={'name':name,'http':code,'body':body}
+            # A contract probe must never create a Buffer post.
+            ids=[]
+            def walk(x):
+              if isinstance(x,dict):
+                for k,v in x.items():
+                  if k in ('bufferPostId','id') and isinstance(v,str) and len(v)>=20: ids.append(v)
+                  walk(v)
+              elif isinstance(x,list):
+                for v in x: walk(v)
+            walk(body)
+            if ids or body.get('ok') is True:
+              raise SystemExit(f'UNSAFE_PROBE_RESULT:{name}:{code}:{ids}')
+            out.append(rec)
+          open('contract-probe.json','w').write(json.dumps(out,ensure_ascii=False,indent=2))
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-sep10-contract-probe-${{ github.run_id }}
+          path: contract-probe.json
+          retention-days: 3
