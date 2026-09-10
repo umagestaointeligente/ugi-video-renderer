@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0",
   "effective_at": "2026-09-07T23:47:00-03:00",
+  "policy_overlay_effective_at": "2026-09-09T21:05:00-03:00",
   "project": "UGI",
   "state": "EDITORIAL_QA_PARTIAL_RELEASE",
   "buffer": {
@@ -50,6 +51,19 @@
     }
   },
   "distribution_priority": ["linkedin", "instagram", "tiktok"],
+  "editorial_anti_repeat": {
+    "status": "CANONICAL_HARD_GATE",
+    "policy": "control-plane/policies/UGI_ANTI_REPEAT_V2.md",
+    "trend_gate": "config/ugi/editorial-trend-gate-v2.5.json",
+    "cooldown_days": 60,
+    "scope": "GLOBAL_INSTAGRAM_TIKTOK_LINKEDIN",
+    "semantic_matching": true,
+    "stories_count": true,
+    "same_topic_cross_network_blocked": true,
+    "same_day_cross_network_duplicate_default": "BLOCK",
+    "extraordinary_exception": "EDITORIAL_REPEAT_EXCEPTION_BREAKING",
+    "ambiguous_history": "FAIL_CLOSED_OR_SELECT_NEXT_CLEAN_TOPIC"
+  },
   "analytics": {
     "compare_raw_platform_performance_without_context": false,
     "context_dimensions": [
@@ -85,7 +99,7 @@
       "IMPROVE"
     ],
     "management_angle_required": true,
-    "trend_threshold_policy": "config/ugi/editorial-trend-gate-v2.4.json",
+    "trend_threshold_policy": "config/ugi/editorial-trend-gate-v2.5.json",
     "publish_only_because_viral": false
   },
   "career_products": {
@@ -101,6 +115,8 @@
     "Do not mutate existing Instagram or TikTok publications without necessity.",
     "During EDITORIAL_QA_PARTIAL_RELEASE, only exact final assets explicitly approved by Paulo may receive a new Buffer mutation.",
     "LinkedIn and TikTok remain paused until their exact replacement assets receive explicit human approval.",
-    "Resume a platform only after VISUAL_SEMANTIC_PASS, CLOSED_CAPTION_PASS when applicable, FORMAT_PASS and EDITORIAL_VALUE_PASS on the final file."
+    "Resume a platform only after VISUAL_SEMANTIC_PASS, CLOSED_CAPTION_PASS when applicable, FORMAT_PASS and EDITORIAL_VALUE_PASS on the final file.",
+    "For new UGI editorial content, apply a 60-day semantic topic cooldown globally across Instagram, TikTok and LinkedIn; a topic used on any one of these networks blocks the same normalized topic on all three unless a durable EDITORIAL_REPEAT_EXCEPTION_BREAKING record exists.",
+    "Stories participate in the 60-day global history; changing network, format, caption, soundtrack or CONTENT_ID does not create novelty."
   ]
 }
