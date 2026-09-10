@@ -1,0 +1,31 @@
+{
+  "schema": "UGI_GLOBAL_60D_ANTI_REPEAT_FINAL_CHECK_V1",
+  "project": "UGI",
+  "date": "2026-09-10",
+  "timezone": "America/Sao_Paulo",
+  "policy": "control-plane/policies/UGI_ANTI_REPEAT_V2.md",
+  "cooldownDays": 60,
+  "scope": ["instagram", "tiktok", "linkedin"],
+  "state": "PASS_WITH_CURRENT_DURABLE_EVIDENCE",
+  "historyBackfillCompleteness": "PARTIAL_LEGACY_BACKFILL",
+  "failClosedRule": "If a credible prior occurrence is discovered before Buffer mutation, block that slot and do not publish it.",
+  "checkedTopics": [
+    {"slot":"08:30","topic":"quantum investment cost race","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"},
+    {"slot":"10:15","topic":"Rock in Rio K-pop niche to market","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"},
+    {"slot":"11:30","topic":"locked in focus accountability versus performance","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"},
+    {"slot":"12:00","topic":"worker rescue supply-chain compliance","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"},
+    {"slot":"14:00","topic":"Starbucks turnaround growth versus margin","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"},
+    {"slot":"14:30","topic":"oil above 100 business cost chain","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"},
+    {"slot":"17:30","topic":"S&P 500 earnings expectations valuation","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"},
+    {"slot":"19:45","topic":"EssilorLuxottica Ray-Ban board heir CEO governance","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"},
+    {"slot":"20:30","topic":"US Canada trade operational risk","decision":"PASS_NO_CREDIBLE_COLLISION_FOUND"}
+  ],
+  "knownRejectedCandidates": [
+    {"topic":"TikTok #joblife / trabalho real x employer branding","reason":"used by UGI TikTok on 2026-09-04"},
+    {"topic":"Apple / iPhone / leadership execution","reason":"recent UGI occurrences including 2026-09-09"},
+    {"topic":"OpenAI + Samsung / AI hardware","reason":"semantic overlap with recent AI hardware/manufacturing content"}
+  ],
+  "sameDayCrossNetworkDuplicateCheck": "PASS",
+  "extraordinaryRepeatExceptionUsed": false,
+  "publisherMutationPerformed": false
+}
