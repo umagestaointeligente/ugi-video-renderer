@@ -28,6 +28,34 @@ on:
         required: true
         default: UCq1h6RSnev5-JJQ8k4T98tg
         type: string
+  workflow_call:
+    inputs:
+      item_key:
+        required: true
+        type: string
+      media_url:
+        required: true
+        type: string
+      title:
+        required: true
+        type: string
+      description:
+        required: true
+        type: string
+      publish_at:
+        required: true
+        type: string
+      expected_channel_id:
+        required: false
+        default: UCq1h6RSnev5-JJQ8k4T98tg
+        type: string
+    secrets:
+      ORBIT_YOUTUBE_CLIENT_ID:
+        required: true
+      ORBIT_YOUTUBE_CLIENT_SECRET:
+        required: true
+      CENA_CERTA_YOUTUBE_REFRESH_TOKEN:
+        required: true
 
 permissions:
   contents: read
@@ -108,7 +136,6 @@ jobs:
           if actual != expected:
               raise SystemExit('BLOCKED: Cena Certa channel identity mismatch')
 
-          # Idempotency marker is kept in tags, not appended to the public description.
           marker='orbit_'+hashlib.sha256(item.encode()).hexdigest()[:24]
           uploads=ch[0]['contentDetails']['relatedPlaylists']['uploads']
           _,_,raw=req('https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId='+urllib.parse.quote(uploads),headers=auth)
