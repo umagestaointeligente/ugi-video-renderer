@@ -12,7 +12,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
     steps:
-      - name: Redacted static publish contract readback
+      - name: Redacted callable publisher contract readback
         shell: bash
         run: |
           set -euo pipefail
@@ -22,14 +22,14 @@ jobs:
           python - <<'PY'
           import re
           s=open('/tmp/w','rb').read().decode('utf-8','ignore')
-          print('LSI_STATIC_PUBLISH_CONTRACT_V1')
-          for needle in ['/api/r45/static-publish','function createBufferStatic','staticPublish','handleStaticPublish','function bufferCreatePost','async function bufferCreatePost']:
+          print('LSI_CALLABLE_PUBLISHER_CONTRACT_V1')
+          for needle in ['/api/r45-3/instagram-publish','createBufferEditorialMediaPost(','/api/editorial','platform-publication-eligibility']:
             pos=0; seen=0
-            while seen<5:
+            while seen<8:
               i=s.find(needle,pos)
               if i<0: break
-              clean=re.sub(r'\s+',' ',s[max(0,i-500):i+2600])
-              print('SNIP='+clean[:3100])
+              clean=re.sub(r'\s+',' ',s[max(0,i-1200):i+4200])
+              print('SNIP='+clean[:5400])
               pos=i+len(needle); seen+=1
           PY
-# static-contract-readback 2026-09-09T21:29:00-03:00
+# callable-contract-readback 2026-09-09T21:31:00-03:00
