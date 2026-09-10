@@ -31,3 +31,4 @@ jobs:
                   pos=i+len(n); seen+=1
               if seen==0: print('NOT_FOUND')
           PY
+# recovery-readback trigger 2026-09-09T21:18:18-03:00
