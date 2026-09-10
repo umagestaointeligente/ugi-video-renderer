@@ -1,0 +1,36 @@
+name: Orbit Auth Reference Inventory
+
+on:
+  push:
+    paths:
+      - '.github/workflows/orbit-auth-reference-inventory-20260910.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory referenced secret names only
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'ORBIT_AUTH_REFERENCE_INVENTORY_V1'
+          python - <<'PY'
+          import pathlib,re
+          names=set()
+          for p in pathlib.Path('.').rglob('*'):
+            if not p.is_file() or '.git' in p.parts: continue
+            try: s=p.read_text(errors='ignore')
+            except: continue
+            for m in re.finditer(r'secrets\.([A-Za-z0-9_]+)',s):
+              n=m.group(1)
+              if any(k in n.upper() for k in ('YOUTUBE','GOOGLE','META','FACEBOOK','CLOUDFLARE','ORBIT')):
+                names.add(n)
+          for n in sorted(names): print('SECRET_REF='+n)
+          print('COUNT='+str(len(names)))
+          print('SECRET_VALUES_EXPOSED=false')
+          PY
