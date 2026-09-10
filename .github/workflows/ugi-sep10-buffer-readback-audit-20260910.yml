@@ -1,0 +1,63 @@
+name: UGI Sep10 Buffer Readback Audit 2026-09-10
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-sep10-buffer-readback-audit-20260910.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Independently re-read all nine Buffer posts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          python - <<'PY'
+          import os,json,urllib.request
+          from datetime import datetime,timezone
+          BASE=os.environ['WORKER_URL'].rstrip('/'); KEY=os.environ['UGI_LOLA_COMMAND_KEY']
+          rows=[
+            ('UGI-20260910-IG-STORY-QUANTUM-0830','instagram','6aa21d004a183ce6067226ab','2026-09-10T11:30:00Z'),
+            ('UGI-20260910-IG-REEL-KPOP-1015','instagram','6aa21d01a39ecd5cb8bac0b9','2026-09-10T13:15:00Z'),
+            ('UGI-20260910-TT-LOCKEDIN-1130','tiktok','6aa21d024a183ce6067226db','2026-09-10T14:30:00Z'),
+            ('UGI-20260910-IG-STORY-COMPLIANCE-1200','instagram','6aa21d024a183ce606722704','2026-09-10T15:00:00Z'),
+            ('UGI-20260910-LI-STARBUCKS-1400','linkedin','6aa21d03a39ecd5cb8bac11c','2026-09-10T17:00:00Z'),
+            ('UGI-20260910-IG-CAROUSEL-OIL-1430','instagram','6aa21d045761fd1f97d06e5c','2026-09-10T17:30:00Z'),
+            ('UGI-20260910-IG-STORY-SP500-1730','instagram','6aa21d045761fd1f97d06e84','2026-09-10T20:30:00Z'),
+            ('UGI-20260910-TT-ESSILOR-1945','tiktok','6aa21d0502b1a6fe6e42c9a8','2026-09-10T22:45:00Z'),
+            ('UGI-20260910-IG-STORY-USCANADA-2030','instagram','6aa21d065761fd1f97d06ead','2026-09-10T23:30:00Z'),
+          ]
+          def get(url):
+            req=urllib.request.Request(url,headers={'x-lola-command-key':KEY,'accept':'application/json','user-agent':'UGI-Sep10-Readback-Audit/1.0'})
+            with urllib.request.urlopen(req,timeout=45) as r: return r.status,json.loads(r.read().decode())
+          def iso(v): return datetime.fromisoformat(str(v).replace('Z','+00:00')).astimezone(timezone.utc)
+          out={'schema':'UGI_BUFFER_READBACK_AUDIT_V1','readOnly':True,'checkedAt':datetime.now(timezone.utc).isoformat(),'items':[]}
+          for cid,platform,pid,due in rows:
+            if platform=='linkedin':
+              h,b=get(BASE+'/api/linkedin-publication-status?postId='+pid); p=b.get('publication') or {}; status=p.get('bufferStatus') or p.get('status'); actual=p.get('dueAt'); service='linkedin'
+            else:
+              h,b=get(BASE+'/api/r45-2/buffer-status?id='+pid); p=b.get('post') or {}; status=p.get('status'); actual=p.get('dueAt'); service=p.get('channelService')
+            dueok=abs((iso(actual)-iso(due)).total_seconds())<1 if actual else False
+            ok=(h==200 and b.get('ok') is True and str(status or '').lower()=='scheduled' and dueok and service==platform)
+            rec={'id':cid,'platform':platform,'bufferPostId':pid,'status':status,'dueAtExpected':due,'dueAtActual':actual,'service':service,'ok':ok}
+            out['items'].append(rec); print(json.dumps(rec,ensure_ascii=False))
+            if not ok:
+              out['overall']='FAILED'; open('readback-audit.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)); raise SystemExit(1)
+          out['confirmedCount']=9; out['overall']='READBACK_9_OF_9_SCHEDULED'; open('readback-audit.json','w').write(json.dumps(out,ensure_ascii=False,indent=2)); print(json.dumps({'overall':out['overall'],'confirmedCount':9}))
+          PY
+      - name: Upload readback audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-sep10-buffer-readback-audit-${{ github.run_id }}
+          path: readback-audit.json
+          retention-days: 7
