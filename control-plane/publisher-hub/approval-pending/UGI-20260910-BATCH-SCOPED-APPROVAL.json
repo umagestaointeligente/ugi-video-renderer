@@ -1,0 +1,30 @@
+{
+  "schema": "UGI_BATCH_SCOPED_DISTRIBUTION_APPROVAL_V1",
+  "project": "UGI",
+  "date": "2026-09-10",
+  "state": "APPROVED_EXACT_BATCH_ONLY",
+  "approvalSource": "current ChatGPT conversation",
+  "humanApproval": true,
+  "approvalTextMeaning": "Paulo explicitly instructed Lola to proceed with scheduling the Sep10 batch after QA completion.",
+  "assetCommit": "45f58ae8522d16dd5519e91b15b582a5ec2e03c1",
+  "globalDistributionStateUnchanged": true,
+  "globalLinkedInPauseUnchanged": true,
+  "globalTikTokPauseUnchanged": true,
+  "scope": {
+    "instagram": ["08:30 story", "10:15 reel", "12:00 story", "14:30 carousel", "17:30 story", "20:30 story"],
+    "linkedin": ["14:00 company-page image post"],
+    "tiktok": ["11:30 video", "19:45 video"]
+  },
+  "hardGates": {
+    "mediaQa": "PASS",
+    "storyAudio": "4_OF_4_PASS",
+    "closedCaptions": "3_OF_3_PASS",
+    "carousel": "6_OF_6_PASS",
+    "linkedinFormat": "1200x627_PASS",
+    "antiRepeat60d": "PASS_WITH_DURABLE_EVIDENCE_AND_PARTIAL_LEGACY_BACKFILL_CAVEAT",
+    "publisher": "BUFFER",
+    "youtubeMutationAllowed": false,
+    "oldQueueReleaseAllowed": false
+  },
+  "note": "This record does not reactivate LinkedIn or TikTok globally. It authorizes only the exact Sep10 files pinned to assetCommit and the exact schedule in the one-off scheduler."
+}
