@@ -12,7 +12,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
     steps:
-      - name: Redacted live capability readback
+      - name: Redacted route contract readback
         shell: bash
         run: |
           set -euo pipefail
@@ -20,22 +20,16 @@ jobs:
           curl --fail --silent --show-error -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
             "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/lola-operacional-ugi" -o /tmp/w
           python - <<'PY'
-          s=open('/tmp/w','rb').read().decode('utf-8','ignore').lower()
-          checks={
-            'r453_helper':'r453createinstagrampost(' in s,
-            'r453_endpoint':'/api/r45-3/' in s,
-            'buffer':'buffer.com' in s or 'api.bufferapp.com' in s or 'buffer_api' in s,
-            'metricool':'metricool' in s,
-            'meta_graph':'graph.facebook.com' in s,
-            'instagram_graph':'graph.instagram.com' in s,
-            'youtube_googleapis':'youtube.googleapis.com' in s or 'googleapis.com/upload/youtube' in s,
-            'youtube_publishat':'publishat' in s,
-            'tiktok_direct':'open.tiktokapis.com' in s or 'tiktokapis.com/v2/post/publish' in s,
-            'scheduled_publish_time':'scheduled_publish_time' in s,
-            'story_video':'story_video' in s,
-            'imageurls':'imageurls' in s,
-          }
-          print('LSI_ROUTE_CAPABILITY_V1')
-          for k,v in checks.items(): print(f'{k}={str(v).lower()}')
+          import re
+          s=open('/tmp/w','rb').read().decode('utf-8','ignore')
+          print('LSI_R453_ROUTE_CONTRACT_V2')
+          paths=sorted(set(re.findall(r'["\'](/api/[^"\']+)["\']',s)))
+          for p in paths:
+            if 'r45' in p.lower() or 'platform-publication' in p.lower(): print('PATH='+p[:240])
+          for needle in ['function r453CreateInstagramPost','function createBufferEditorialMediaPost','async function r453CreateInstagramPost','r453CreateInstagramPost =']:
+            i=s.find(needle)
+            if i>=0:
+              clean=re.sub(r'\s+',' ',s[i:i+1800])
+              print('CONTRACT='+clean[:1800])
           PY
-# concise-live-readback 2026-09-09T21:24:00-03:00
+# route-contract-readback 2026-09-09T21:27:00-03:00
