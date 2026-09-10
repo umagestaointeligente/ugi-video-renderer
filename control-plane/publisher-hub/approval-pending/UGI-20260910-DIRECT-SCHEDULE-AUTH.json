@@ -1,0 +1,31 @@
+{
+  "schema": "UGI_BATCH_DIRECT_SCHEDULE_AUTH_V1",
+  "project": "UGI",
+  "batchDate": "2026-09-10",
+  "timezone": "America/Sao_Paulo",
+  "state": "AUTHORIZED_BATCH_ONLY_PENDING_FINAL_QA",
+  "authorizedPlatforms": ["instagram", "tiktok", "linkedin"],
+  "authorizedSlotCount": 9,
+  "authorizationScope": "Only the editorial batch defined in control-plane/editorial-copy-lock-2026-09-10.json may bypass the intermediate chat preview step. Exact final asset QA, rights validation, SHA-256 pinning, correct target/channel verification and Buffer scheduled readback remain mandatory.",
+  "humanInstruction": "Paulo explicitly authorized direct scheduling for the Sep 10 batch without sending the generated finals back in chat first.",
+  "generalPolicyPreserved": true,
+  "futureBatchesPreviewApprovalGatePreserved": true,
+  "forbidden": [
+    "reuse this waiver for another date",
+    "relax visual/audio QA",
+    "publish to Paulo personal LinkedIn profile",
+    "publish to YouTube",
+    "blind retry",
+    "schedule a file whose SHA-256 is not part of the final asset provenance"
+  ],
+  "requiredBeforeBufferMutation": [
+    "GLOBAL_60D_ANTI_REPEAT_PASS",
+    "RIGHTS_PASS",
+    "VISUAL_SEMANTIC_PASS",
+    "FORMAT_PASS",
+    "AUDIO_PASS_FOR_STORIES_AND_VIDEO",
+    "BURNED_CAPTION_PASS_FOR_NARRATED_VIDEO",
+    "ASSET_SHA256_PINNED",
+    "BUFFER_CHANNEL_TARGET_PASS"
+  ]
+}
