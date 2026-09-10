@@ -1,0 +1,45 @@
+name: Career360 Testers Auth Redirect Fix
+run-name: Career360 Testers Auth Redirect Fix ${{ github.run_id }}
+
+on:
+  push:
+    branches: ['career360-cloudflare-preview-20260906']
+    paths: ['.github/workflows/career360-testers-auth-redirect.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: career360-cloudflare-preview-20260906
+          fetch-depth: 1
+      - name: Point tester email confirmation back to stable tester host
+        shell: bash
+        run: |
+          set -euo pipefail
+          OLD="https://lsi-career-360.vercel.app/"
+          NEW="https://lsi-career-360.umagestaointeligente.workers.dev/"
+          grep -F "APP='$OLD'" career360/frontend/app-a.js >/dev/null
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('career360/frontend/app-a.js')
+          s = p.read_text()
+          old = "APP='https://lsi-career-360.vercel.app/'"
+          new = "APP='https://lsi-career-360.umagestaointeligente.workers.dev/'"
+          if s.count(old) != 1:
+              raise SystemExit(f'expected exactly one old APP target, got {s.count(old)}')
+          p.write_text(s.replace(old, new, 1))
+          PY
+          grep -F "APP='$NEW'" career360/frontend/app-a.js >/dev/null
+          ! grep -F "APP='$OLD'" career360/frontend/app-a.js >/dev/null
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add career360/frontend/app-a.js
+          git commit -m 'career360: align tester auth redirect with stable Workers entrypoint'
+          git push origin HEAD:career360-cloudflare-preview-20260906
+          echo 'TESTER_AUTH_REDIRECT_SOURCE=WORKERS_STABLE_URL' >> "$GITHUB_STEP_SUMMARY"
