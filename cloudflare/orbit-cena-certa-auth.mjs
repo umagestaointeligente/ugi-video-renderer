@@ -60,13 +60,13 @@ async function channelPreflight(token){
   const items=d.items||[]; if(items.length!==1||items[0].id!==EXPECTED_CHANNEL_ID) throw new Error('CHANNEL_IDENTITY_MISMATCH');
   return items[0];
 }
-async function findExisting(token, uploadsId, title){
+async function findExisting(token, uploadsId, marker){
   let page='';
   for(let n=0;n<4;n++){
     const q=new URLSearchParams({part:'snippet,status',playlistId:uploadsId,maxResults:'50'}); if(page) q.set('pageToken',page);
     const r=await fetch('https://www.googleapis.com/youtube/v3/playlistItems?'+q,{headers:{authorization:'Bearer '+token}});
     const d=await r.json(); if(!r.ok) throw new Error('DUPLICATE_PREFLIGHT_'+r.status);
-    for(const it of (d.items||[])) if((it.snippet?.title||'')===title) return {videoId:it.snippet?.resourceId?.videoId||null,title};
+    for(const it of (d.items||[])) if((it.snippet?.description||'').includes(marker)) return {videoId:it.snippet?.resourceId?.videoId||null,title:it.snippet?.title||''};
     page=d.nextPageToken||''; if(!page) break;
   }
   return null;
@@ -81,7 +81,8 @@ async function scheduleVideo(env,p){
   const token=await accessToken(env);
   const ch=await channelPreflight(token);
   const uploadsId=ch.contentDetails?.relatedPlaylists?.uploads; if(!uploadsId) throw new Error('UPLOADS_PLAYLIST_MISSING');
-  const existing=await findExisting(token,uploadsId,p.title);
+  const marker='orbit_'+Array.from(await sha256(p.item_key)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,24);
+  const existing=await findExisting(token,uploadsId,marker);
   if(existing) return {ok:true,result:'ALREADY_EXISTS',item_key:p.item_key,channel_id:EXPECTED_CHANNEL_ID,video_id:existing.videoId,title:p.title,publish_at:p.publish_at,mutation_performed:false};
 
   const src=await fetch(p.media_url,{redirect:'follow'});
@@ -89,7 +90,7 @@ async function scheduleVideo(env,p){
   const ctype=src.headers.get('content-type')||'video/mp4';
   if(!ctype.toLowerCase().includes('video')) throw new Error('MEDIA_NOT_VIDEO');
   const len=src.headers.get('content-length');
-  const metadata={snippet:{title:p.title,description:p.description,categoryId:'24'},status:{privacyStatus:'private',publishAt:new Date(publishMs).toISOString(),selfDeclaredMadeForKids:false,containsSyntheticMedia:false}};
+  const metadata={snippet:{title:p.title,description:p.description+'\n\n'+marker,categoryId:'24',tags:['Cena Certa',marker]},status:{privacyStatus:'private',publishAt:new Date(publishMs).toISOString(),selfDeclaredMadeForKids:false,containsSyntheticMedia:false}};
   const initHeaders={'authorization':'Bearer '+token,'content-type':'application/json; charset=UTF-8','x-upload-content-type':ctype}; if(len) initHeaders['x-upload-content-length']=len;
   const init=await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status',{method:'POST',headers:initHeaders,body:JSON.stringify(metadata)});
   if(!init.ok){ const t=(await init.text()).slice(0,800); throw new Error('UPLOAD_INIT_'+init.status+'_'+t); }
@@ -100,7 +101,9 @@ async function scheduleVideo(env,p){
   if(vd.snippet?.channelId!==EXPECTED_CHANNEL_ID) throw new Error('POST_UPLOAD_CHANNEL_MISMATCH');
   const verify=await fetch('https://www.googleapis.com/youtube/v3/videos?part=id,snippet,status&id='+encodeURIComponent(vd.id),{headers:{authorization:'Bearer '+token}});
   const vj=await verify.json(); const v=(vj.items||[])[0]; if(!verify.ok||!v) throw new Error('VERIFY_FAILED_'+verify.status);
-  if(v.snippet?.channelId!==EXPECTED_CHANNEL_ID||v.status?.privacyStatus!=='private') throw new Error('VERIFY_STATE_MISMATCH');
+  const actualAt=(v.status?.publishAt||'').replace('.000Z','Z');
+  const requestedAt=new Date(publishMs).toISOString().replace('.000Z','Z');
+  if(v.snippet?.channelId!==EXPECTED_CHANNEL_ID||v.status?.privacyStatus!=='private'||!(v.snippet?.tags||[]).includes(marker)||actualAt!==requestedAt) throw new Error('UNCERTAIN_AFTER_UPLOAD_VERIFY_STATE_MISMATCH');
   return {ok:true,result:'SCHEDULED',item_key:p.item_key,channel_id:EXPECTED_CHANNEL_ID,video_id:v.id,title:v.snippet?.title||p.title,privacy_status:v.status?.privacyStatus,publish_at:v.status?.publishAt||p.publish_at,mutation_performed:true};
 }
 
@@ -136,7 +139,7 @@ export default {
       const auth=req.headers.get('authorization')||''; const given=auth.startsWith('Bearer ')?auth.slice(7):'';
       if(!env.COMMAND_TOKEN||!safeEq(given,env.COMMAND_TOKEN)) return json({ok:false,error:'COMMAND_GATE'},403);
       try { return json(await scheduleVideo(env,await req.json())); }
-      catch(e){ return json({ok:false,error:String(e?.message||e),mutation_performed:false},409); }
+      catch(e){ const error=String(e?.message||e); const uncertain=error.startsWith('UNCERTAIN_AFTER_UPLOAD'); return json({ok:false,error,mutation_performed:uncertain?null:false,mutation_state:uncertain?'unknown_after_upload':'none'},409); }
     }
     return new Response('not found',{status:404});
   }
