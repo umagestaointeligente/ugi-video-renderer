@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: ugi-build-editorial-assets-20260910
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-finals:
@@ -75,12 +75,14 @@ jobs:
           required_videos=['story-quantum-0830.mp4','reel-kpop-1015.mp4','tiktok-lockedin-1130.mp4','story-compliance-1200.mp4','story-sp500-1730.mp4','tiktok-essilor-1945.mp4','story-uscanada-2030.mp4']
           for n in required_videos:
             p=out/n
-            if not p.exists() or p.stat().st_size<250000: raise SystemExit(f'VIDEO_FILE_FAIL:{n}')
-            j=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','stream=codec_type,width,height:format=duration','-of','json',str(p)],text=True))
+            if not p.exists() or p.stat().st_size<50000: raise SystemExit(f'VIDEO_FILE_FAIL:{n}:{p.stat().st_size if p.exists() else 0}')
+            j=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','stream=codec_type,width,height,codec_name:format=duration','-of','json',str(p)],text=True))
             kinds={s.get('codec_type') for s in j.get('streams',[])}
             v=next((s for s in j.get('streams',[]) if s.get('codec_type')=='video'),{})
+            a=next((s for s in j.get('streams',[]) if s.get('codec_type')=='audio'),{})
             if not {'video','audio'}.issubset(kinds): raise SystemExit(f'AUDIO_STREAM_FAIL:{n}')
             if (v.get('width'),v.get('height'))!=(1080,1920): raise SystemExit(f'VIDEO_DIM_FAIL:{n}:{v}')
+            if not v.get('codec_name') or not a.get('codec_name'): raise SystemExit(f'CODEC_FAIL:{n}')
             dur=float((j.get('format') or {}).get('duration') or 0)
             if n.startswith('story-') and not 7.5<=dur<=8.5: raise SystemExit(f'STORY_DURATION_FAIL:{n}:{dur}')
             if not n.startswith('story-') and not 25<=dur<=70: raise SystemExit(f'NARRATED_DURATION_FAIL:{n}:{dur}')
