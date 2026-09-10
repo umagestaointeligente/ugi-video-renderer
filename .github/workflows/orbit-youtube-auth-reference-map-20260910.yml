@@ -1,0 +1,22 @@
+name: Orbit YouTube Auth Reference Map
+on:
+  push:
+    paths:
+      - '.github/workflows/orbit-youtube-auth-reference-map-20260910.yml'
+permissions:
+  contents: read
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Map auth references without secret values
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo ORBIT_YOUTUBE_AUTH_REFERENCE_MAP_V1
+          git grep -nE 'YOUTUBE_(CLIENT_ID|CLIENT_SECRET|REFRESH_TOKEN)|ORBIT_YOUTUBE_REFRESH_TOKEN|VSA_YOUTUBE_REFRESH_TOKEN|oauth2callback|redirect_uri' -- ':!*.json' ':!*.lock' | sed -E 's/(secrets\.[A-Za-z0-9_]+)/SECRET_REF/g' | head -300 || true
+          echo SECRET_VALUES_EXPOSED=false
