@@ -1,0 +1,144 @@
+{
+  "project": "UGI",
+  "date": "2026-09-10",
+  "timezone": "America/Sao_Paulo",
+  "state": "RESEARCHED_PRELOCK_PENDING_GLOBAL_60D_RECONCILIATION_FINAL_ASSETS_AND_HUMAN_APPROVAL",
+  "publisherMutationPerformed": false,
+  "policy": {
+    "trendGate": "config/ugi/editorial-trend-gate-v2.5.json",
+    "antiRepeat": "control-plane/policies/UGI_ANTI_REPEAT_V2.md",
+    "cooldownDays": 60,
+    "scope": "GLOBAL_INSTAGRAM_TIKTOK_LINKEDIN",
+    "sameDayCrossNetworkDuplicate": "BLOCK_BY_DEFAULT",
+    "extraordinaryException": "EDITORIAL_REPEAT_EXCEPTION_BREAKING"
+  },
+  "knownRejectedCandidates": [
+    {
+      "candidate": "TikTok #joblife / realidade do trabalho",
+      "decision": "ANTI_REPEAT_BLOCK_TOPIC_60D",
+      "reason": "UGI TikTok already used #joblife / trabalho real x employer branding on 2026-09-04."
+    },
+    {
+      "candidate": "TikTok OpenAI + Samsung / chips e hardware de IA",
+      "decision": "ANTI_REPEAT_BLOCK_TOPIC_60D",
+      "reason": "Recent UGI Instagram history contains AI hardware / manufacturing demand on 2026-09-02; new proposal repeats substantially the same AI-infrastructure/hardware learning under the stricter global 60-day rule."
+    },
+    {
+      "candidate": "Apple / iPhone / John Ternus",
+      "decision": "ANTI_REPEAT_BLOCK_TOPIC_60D",
+      "reason": "Apple has multiple recent UGI occurrences including 2026-09-01 and 2026-09-09."
+    }
+  ],
+  "allocation": {
+    "instagram": {"reel": 1, "carousel": 1, "stories": 4, "static": 0, "total": 6},
+    "tiktok": {"video": 2, "total": 2},
+    "linkedin": {"post": 1, "total": 1},
+    "totalCrossNetwork": 9
+  },
+  "slots": [
+    {
+      "timeBrt": "08:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "quantum-investment-cost-race",
+      "topic": "Quanto custa a corrida quântica?",
+      "managementAngle": "inovação de fronteira, capital, horizonte de retorno e decisão sob incerteza",
+      "antiRepeat": "PRELIMINARY_PASS_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    },
+    {
+      "timeBrt": "10:15",
+      "platform": "instagram",
+      "format": "reel",
+      "topicKey": "rock-in-rio-kpop-niche-to-market",
+      "topic": "Rock in Rio e o primeiro dia inteiro de K-pop — quando um nicho vira mercado",
+      "managementAngle": "segmentação, expansão de público, cultura e reposicionamento de marca",
+      "antiRepeat": "PRELIMINARY_PASS_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    },
+    {
+      "timeBrt": "11:30",
+      "platform": "tiktok",
+      "format": "video",
+      "topicKey": "lockedin-focus-accountability-vs-performance",
+      "topic": "#lockedin — foco real ou apenas aparência de produtividade?",
+      "managementAngle": "compromisso público, foco, accountability e diferença entre atividade e resultado",
+      "nativeSignal": "TikTok Next 2026 lists #lockedin as a major Reali-Tea trend signal",
+      "antiRepeat": "PRELIMINARY_PASS_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    },
+    {
+      "timeBrt": "12:00",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "worker-rescue-supply-chain-compliance",
+      "topic": "479 trabalhadores resgatados — compliance também é gestão da cadeia",
+      "managementAngle": "responsabilidade na cadeia, auditoria de fornecedores e risco reputacional",
+      "antiRepeat": "PRELIMINARY_PASS_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    },
+    {
+      "timeBrt": "14:00",
+      "platform": "linkedin",
+      "format": "post_image_text",
+      "topicKey": "starbucks-turnaround-growth-vs-margin",
+      "topic": "Starbucks — recuperar clientes é só metade do turnaround",
+      "managementAngle": "experiência do cliente, crescimento, custo da recuperação e disciplina de margem",
+      "editorialThesis": "A recuperação de demanda pode ser real e ainda não significar que o turnaround terminou; o segundo ato é transformar tráfego e experiência em rentabilidade sustentável.",
+      "antiRepeat": "PRELIMINARY_PASS_NO_DIRECT_PRIOR_STARBUCKS_OCCURRENCE_FOUND_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    },
+    {
+      "timeBrt": "14:30",
+      "platform": "instagram",
+      "format": "carousel",
+      "topicKey": "oil-above-100-business-cost-chain",
+      "topic": "Petróleo acima de US$100 — onde isso bate dentro de uma empresa?",
+      "managementAngle": "combustível, frete, embalagem, inflação, preço, margem e caixa",
+      "antiRepeat": "PRELIMINARY_PASS_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    },
+    {
+      "timeBrt": "17:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "sp500-earnings-expectations-valuation",
+      "topic": "Resultados fortes não eliminam o risco de expectativas altas",
+      "managementAngle": "resultado, expectativa, valuation e disciplina financeira",
+      "antiRepeat": "PRELIMINARY_PASS_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    },
+    {
+      "timeBrt": "19:45",
+      "platform": "tiktok",
+      "format": "video",
+      "topicKey": "essilorluxottica-board-heir-ceo-governance",
+      "topic": "EssilorLuxottica/Ray-Ban — quando herdeiro, conselho e CEO entram em conflito, quem manda?",
+      "managementAngle": "governança, poder acionário, conselho, liderança executiva e transparência",
+      "antiRepeat": "PRELIMINARY_PASS_NO_DIRECT_PRIOR_ENTITY_OCCURRENCE_FOUND_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    },
+    {
+      "timeBrt": "20:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "us-canada-trade-operational-risk",
+      "topic": "EUA x Canadá — quando política comercial vira risco operacional",
+      "managementAngle": "tarifas, fornecedores, mercados e contingência operacional",
+      "antiRepeat": "PRELIMINARY_PASS_REQUIRES_FULL_60D_DURABLE_RECONCILIATION"
+    }
+  ],
+  "linkedinDraftDirection": {
+    "hook": "☕ Recuperar clientes é só metade de um turnaround.",
+    "factBase": "Starbucks reversed six consecutive quarters of comparable-sales declines under Brian Niccol's Back to Starbucks strategy, while operating margins compressed as the company invested in staffing, stores and customer experience.",
+    "managementLesson": "Crescimento recuperado precisa virar rentabilidade sustentável; experiência do cliente e margem não podem ser geridas como escolhas permanentes entre uma e outra.",
+    "visual": "real high-resolution Starbucks store or Brian Niccol/official company context; no generic coffee stock as primary evidence"
+  },
+  "releaseGate": [
+    "GLOBAL_60D_HISTORY_RECONCILIATION_PASS",
+    "CROSS_NETWORK_DEDUP_PASS",
+    "FACT_PASS",
+    "RIGHTS_PASS",
+    "VISUAL_SEMANTIC_PASS",
+    "FORMAT_PASS",
+    "CLOSED_CAPTION_PASS_FOR_VIDEO",
+    "MUSIC_PASS_WHERE_REQUIRED",
+    "EDITORIAL_VALUE_PASS",
+    "EXACT_FINAL_PREVIEW",
+    "EXPLICIT_PAULO_APPROVAL",
+    "DISTRIBUTION_STATE_ALLOWS_TARGET_PLATFORM"
+  ],
+  "publicationRule": "No Buffer mutation until the exact final asset for each slot passes every applicable gate and receives explicit human approval."
+}
