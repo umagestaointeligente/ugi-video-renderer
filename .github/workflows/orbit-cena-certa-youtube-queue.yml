@@ -1,0 +1,90 @@
+name: Orbit Cena Certa YouTube Queue
+
+on:
+  push:
+    paths:
+      - 'control-plane/orbit-direct-youtube/*.json'
+
+permissions:
+  contents: read
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    outputs:
+      item_key: ${{ steps.queue.outputs.item_key }}
+      media_url: ${{ steps.queue.outputs.media_url }}
+      title: ${{ steps.queue.outputs.title }}
+      description_b64: ${{ steps.queue.outputs.description_b64 }}
+      publish_at: ${{ steps.queue.outputs.publish_at }}
+      expected_channel_id: ${{ steps.queue.outputs.expected_channel_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: queue
+        name: Resolve exactly one queue item
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- 'control-plane/orbit-direct-youtube/*.json' | sed '/^$/d')
+          count=$(printf '%s\n' "$files" | grep -c . || true)
+          if [ "$count" -ne 1 ]; then
+            echo "BLOCKED: expected exactly one changed YouTube queue file, got $count"
+            exit 78
+          fi
+          file=$(printf '%s\n' "$files")
+          python - "$file" >> "$GITHUB_OUTPUT" <<'PY'
+          import base64, json, pathlib, re, sys
+          p=pathlib.Path(sys.argv[1])
+          d=json.loads(p.read_text())
+          required=['item_key','media_url','title','description','publish_at']
+          missing=[k for k in required if not str(d.get(k,'')).strip()]
+          if missing:
+              raise SystemExit('BLOCKED: missing queue fields '+','.join(missing))
+          expected=str(d.get('expected_channel_id') or 'UCq1h6RSnev5-JJQ8k4T98tg').strip()
+          if expected != 'UCq1h6RSnev5-JJQ8k4T98tg':
+              raise SystemExit('BLOCKED: queue target is not canonical Cena Certa channel')
+          if not re.fullmatch(r'[A-Za-z0-9._:-]{4,160}',str(d['item_key'])):
+              raise SystemExit('BLOCKED: invalid item_key')
+          print('item_key='+str(d['item_key']))
+          print('media_url='+str(d['media_url']))
+          print('title='+str(d['title']).replace('\n',' ').replace('\r',' '))
+          print('description_b64='+base64.b64encode(str(d['description']).encode()).decode())
+          print('publish_at='+str(d['publish_at']))
+          print('expected_channel_id='+expected)
+          PY
+
+  decode:
+    needs: parse
+    runs-on: ubuntu-latest
+    outputs:
+      description: ${{ steps.dec.outputs.description }}
+    steps:
+      - id: dec
+        shell: bash
+        env:
+          D: ${{ needs.parse.outputs.description_b64 }}
+        run: |
+          set -euo pipefail
+          decoded=$(printf '%s' "$D" | base64 -d)
+          {
+            echo 'description<<ORBIT_EOF'
+            printf '%s\n' "$decoded"
+            echo 'ORBIT_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+  schedule:
+    needs: [parse, decode]
+    uses: ./.github/workflows/orbit-cena-certa-youtube-direct.yml
+    with:
+      item_key: ${{ needs.parse.outputs.item_key }}
+      media_url: ${{ needs.parse.outputs.media_url }}
+      title: ${{ needs.parse.outputs.title }}
+      description: ${{ needs.decode.outputs.description }}
+      publish_at: ${{ needs.parse.outputs.publish_at }}
+      expected_channel_id: ${{ needs.parse.outputs.expected_channel_id }}
+    secrets:
+      ORBIT_YOUTUBE_CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      ORBIT_YOUTUBE_CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
+      CENA_CERTA_YOUTUBE_REFRESH_TOKEN: ${{ secrets.CENA_CERTA_YOUTUBE_REFRESH_TOKEN }}
