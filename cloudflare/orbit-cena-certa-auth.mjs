@@ -83,7 +83,15 @@ async function scheduleVideo(env,p){
   const uploadsId=ch.contentDetails?.relatedPlaylists?.uploads; if(!uploadsId) throw new Error('UPLOADS_PLAYLIST_MISSING');
   const marker='orbit_'+Array.from(await sha256(p.item_key)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,24);
   const existing=await findExisting(token,uploadsId,marker);
-  if(existing) return {ok:true,result:'ALREADY_EXISTS',item_key:p.item_key,channel_id:EXPECTED_CHANNEL_ID,video_id:existing.videoId,title:p.title,publish_at:p.publish_at,mutation_performed:false};
+  if(existing){
+    const er=await fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+encodeURIComponent(existing.videoId),{headers:{authorization:'Bearer '+token}});
+    const ej=await er.json(); const ev=(ej.items||[])[0];
+    if(!er.ok||!ev) throw new Error('DUPLICATE_READBACK_FAILED_'+er.status);
+    const existingAt=(ev.status?.publishAt||'').replace('.000Z','Z');
+    const requestedAt=new Date(publishMs).toISOString().replace('.000Z','Z');
+    if(ev.snippet?.channelId!==EXPECTED_CHANNEL_ID||!(ev.snippet?.tags||[]).includes(marker)||ev.snippet?.title!==p.title||existingAt!==requestedAt) throw new Error('IDEMPOTENCY_KEY_CONFLICT');
+    return {ok:true,result:'ALREADY_EXISTS',item_key:p.item_key,channel_id:EXPECTED_CHANNEL_ID,video_id:existing.videoId,title:ev.snippet.title,publish_at:ev.status.publishAt,mutation_performed:false};
+  }
 
   const src=await fetch(p.media_url,{redirect:'follow'});
   if(!src.ok||!src.body) throw new Error('MEDIA_FETCH_'+src.status);
@@ -97,10 +105,10 @@ async function scheduleVideo(env,p){
   const loc=init.headers.get('location'); if(!loc) throw new Error('UPLOAD_LOCATION_MISSING');
   const upHeaders={'authorization':'Bearer '+token,'content-type':ctype}; if(len) upHeaders['content-length']=len;
   const up=await fetch(loc,{method:'PUT',headers:upHeaders,body:src.body});
-  const vd=await up.json(); if(!up.ok||!vd.id) throw new Error('UPLOAD_FINAL_'+up.status+'_'+JSON.stringify(vd).slice(0,800));
-  if(vd.snippet?.channelId!==EXPECTED_CHANNEL_ID) throw new Error('POST_UPLOAD_CHANNEL_MISMATCH');
+  const vd=await up.json(); if(!up.ok||!vd.id) throw new Error('UNCERTAIN_AFTER_UPLOAD_FINAL_'+up.status+'_'+JSON.stringify(vd).slice(0,800));
+  if(vd.snippet?.channelId!==EXPECTED_CHANNEL_ID) throw new Error('UNCERTAIN_AFTER_UPLOAD_CHANNEL_MISMATCH');
   const verify=await fetch('https://www.googleapis.com/youtube/v3/videos?part=id,snippet,status&id='+encodeURIComponent(vd.id),{headers:{authorization:'Bearer '+token}});
-  const vj=await verify.json(); const v=(vj.items||[])[0]; if(!verify.ok||!v) throw new Error('VERIFY_FAILED_'+verify.status);
+  const vj=await verify.json(); const v=(vj.items||[])[0]; if(!verify.ok||!v) throw new Error('UNCERTAIN_AFTER_UPLOAD_VERIFY_FAILED_'+verify.status);
   const actualAt=(v.status?.publishAt||'').replace('.000Z','Z');
   const requestedAt=new Date(publishMs).toISOString().replace('.000Z','Z');
   if(v.snippet?.channelId!==EXPECTED_CHANNEL_ID||v.status?.privacyStatus!=='private'||!(v.snippet?.tags||[]).includes(marker)||actualAt!==requestedAt) throw new Error('UNCERTAIN_AFTER_UPLOAD_VERIFY_STATE_MISMATCH');
