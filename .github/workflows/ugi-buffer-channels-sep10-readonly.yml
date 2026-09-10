@@ -1,0 +1,37 @@
+name: UGI Buffer Channels Sep10 Readonly
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-buffer-channels-sep10-readonly.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+env:
+  WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Read live UGI Buffer channels
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          curl --fail --silent --show-error -A 'UGI-Sep10-Channel-Read/1.0' \
+            -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" -H 'accept: application/json' \
+            "$WORKER_URL/api/buffer/channels" > channels.json
+          python - <<'PY'
+          import json
+          p=json.load(open('channels.json'))
+          if p.get('ok') is not True: raise SystemExit('BUFFER_CHANNEL_READ_FAILED')
+          print(json.dumps(p,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ugi-buffer-channels-sep10-${{ github.run_id }}
+          path: channels.json
+          retention-days: 3
