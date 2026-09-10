@@ -9,6 +9,7 @@ on:
       - 'cloudflare/orbit-cena-certa-auth.mjs'
       - 'cloudflare/wrangler.orbit-cena-certa-auth.toml'
       - '.github/workflows/orbit-direct-publisher-guard-ci.yml'
+      - '.github/workflows/orbit-deploy-cena-certa-auth-20260910.yml'
   workflow_dispatch:
 
 permissions:
@@ -34,6 +35,7 @@ jobs:
           queue=Path('.github/workflows/orbit-cena-certa-youtube-queue.yml').read_text()
           fb=Path('.github/workflows/orbit-cena-certa-facebook-direct.yml').read_text()
           worker=Path('cloudflare/orbit-cena-certa-auth.mjs').read_text()
+          deploy=Path('.github/workflows/orbit-deploy-cena-certa-auth-20260910.yml').read_text()
 
           checks={
             'youtube canonical lock': canonical_channel in yt and "expected != canonical" in yt,
@@ -47,6 +49,7 @@ jobs:
             'meta readback': 'READBACK_VERIFIED=true' in fb,
             'uncertain mutation state': "unknown_after_upload" in worker,
             'story fail closed': "Facebook Story requires native UI" in fb,
+            'deploy manual only': 'workflow_dispatch:' in deploy and '  push:' not in deploy,
           }
           failed=[name for name,ok in checks.items() if not ok]
           for name,ok in checks.items():
