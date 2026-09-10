@@ -1,0 +1,45 @@
+{
+  "task_id": "VSA-SEP13-SCHEDULE-CONFIRM-20260910",
+  "project": "ORBIT/VSA",
+  "synthetic": false,
+  "verified_at_utc": "2026-09-10T22:18:30Z",
+  "timezone": "America/Sao_Paulo",
+  "channel": {
+    "platform": "youtube",
+    "name": "Você Sabia Agora?",
+    "channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ"
+  },
+  "production": {
+    "workflow_run_id": 34536086386,
+    "workflow_commit": "6a77fd00220a397ba5ce5e5c7d5252ab75106c8e",
+    "result": "8_OF_8_BUILD_SUCCESS_AND_HOST_SUCCESS",
+    "media_branch": "vsa-media-sep13-20260910",
+    "media_commit": "09b5f9903eecc3c0562729c01877f3c02336aefe",
+    "masters": 8,
+    "thumbnails": 8
+  },
+  "schedule": {
+    "date": "2026-09-13",
+    "expected": 8,
+    "confirmed_scheduled": 8,
+    "world_science": 4,
+    "people_curiosity": 4
+  },
+  "items": [
+    {"time_local":"08:00","bucket":"WORLD_SCIENCE","id":"DUST_MALI","title":"Como uma tempestade de poeira consegue cobrir vários países?","postly_id":"6aa32bd751838bb343000000","status":"scheduled","master":"VSA_20260913_0800_DUST_MALI_FINAL.mp4","thumbnail":"VSA_20260913_0800_DUST_MALI_THUMB.jpg"},
+    {"time_local":"10:30","bucket":"PEOPLE_CURIOSITY","id":"FERNANDA_MONTENEGRO","title":"Por que Fernanda Montenegro inspira tanta confiança?","postly_id":"6aa32befa5a276c5de000000","status":"scheduled","master":"VSA_20260913_1030_FERNANDA_MONTENEGRO_FINAL.mp4","thumbnail":"VSA_20260913_1030_FERNANDA_MONTENEGRO_THUMB.jpg"},
+    {"time_local":"13:00","bucket":"WORLD_SCIENCE","id":"HUNGA_TSUNAMI","title":"Como sensores distantes detectaram o nascimento de um tsunami?","postly_id":"6aa32c0ea5a27ec5de000000","status":"scheduled","master":"VSA_20260913_1300_HUNGA_TSUNAMI_FINAL.mp4","thumbnail":"VSA_20260913_1300_HUNGA_TSUNAMI_THUMB.jpg"},
+    {"time_local":"15:30","bucket":"PEOPLE_CURIOSITY","id":"ELTON_ENERGY","title":"Por que Elton John usa cadeira de rodas em aeroportos?","postly_id":"6aa32c2a5183a8b343000000","status":"scheduled","master":"VSA_20260913_1530_ELTON_ENERGY_FINAL.mp4","thumbnail":"VSA_20260913_1530_ELTON_ENERGY_THUMB.jpg"},
+    {"time_local":"18:00","bucket":"WORLD_SCIENCE","id":"EMIT_MINE","title":"Como a NASA encontra resíduos de minas pela cor da luz?","postly_id":"6aa32c46a5a28cc5de000000","status":"scheduled","master":"VSA_20260913_1800_EMIT_MINE_FINAL.mp4","thumbnail":"VSA_20260913_1800_EMIT_MINE_THUMB.jpg"},
+    {"time_local":"19:30","bucket":"PEOPLE_CURIOSITY","id":"MARISKA_LONGEVITY","title":"Como Mariska Hargitay ficou décadas no mesmo papel?","postly_id":"6aa32c625183bfb343000000","status":"scheduled","master":"VSA_20260913_1930_MARISKA_LONGEVITY_FINAL.mp4","thumbnail":"VSA_20260913_1930_MARISKA_LONGEVITY_THUMB.jpg"},
+    {"time_local":"21:00","bucket":"WORLD_SCIENCE","id":"SENTINEL_HURRICANE","title":"Como dois satélites ajudam a prever a força de um furacão?","postly_id":"6aa32c82a5a299c5de000000","status":"scheduled","master":"VSA_20260913_2100_SENTINEL_HURRICANE_FINAL.mp4","thumbnail":"VSA_20260913_2100_SENTINEL_HURRICANE_THUMB.jpg"},
+    {"time_local":"22:30","bucket":"PEOPLE_CURIOSITY","id":"EMICIDA_INFLUENCE","title":"Por que Emicida transforma opinião em influência?","postly_id":"6aa32c9ba5a2a3c5de000000","status":"scheduled","master":"VSA_20260913_2230_EMICIDA_INFLUENCE_FINAL.mp4","thumbnail":"VSA_20260913_2230_EMICIDA_INFLUENCE_THUMB.jpg"}
+  ],
+  "quality_policy": {
+    "scene_diversity": "3_DISTINCT_REAL_MOMENTS_DESIGNED_PER_VIDEO",
+    "music": "THEMATIC_INSTRUMENTAL_TRACK_PER_VIDEO",
+    "thumbnail": "CUSTOM_EDITORIAL_THUMBNAIL_CONFIGURED_PER_POST",
+    "repeat_lock": "60_DAY_SEMANTIC_LOCK_APPLIED"
+  },
+  "isolation": {"cena_certa_touched": false}
+}
