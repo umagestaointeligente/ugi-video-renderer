@@ -1,0 +1,28 @@
+{
+  "date": "2026-09-12",
+  "timezone": "America/Sao_Paulo",
+  "status": "PLAN_READY_NO_NEW_SCHEDULE_WRITES",
+  "existing_metricool_items_preserved": true,
+  "existing": {
+    "videos": ["09:10 Guardians of the Galaxy Vol. 3", "10:55 Black Panther: Wakanda Forever", "12:20 Shang-Chi and the Legend of the Ten Rings", "14:45 Star Wars: Episode I - The Phantom Menace", "15:55 Home Alone", "17:10 Thunderbolts*", "18:30 Avatar: The Way of Water", "19:50 Indiana Jones and the Dial of Destiny"],
+    "stories": ["08:20", "11:20", "14:10"],
+    "other_existing_reels": ["10:00 Star Wars bastidores", "12:00 Avatar bastidores", "15:00 Franquias ou historias novas"]
+  },
+  "metricool_best_hours": {
+    "facebook": [10, 11, 12, 13, 18],
+    "instagram": [10, 11, 12, 18, 16],
+    "tiktok": [10, 12, 18, 16, 11],
+    "youtube": [16, 10, 17, 12, 15]
+  },
+  "new_editorial_proposal": [
+    {"time": "10:25", "type": "carousel", "topic": "A Love Other Than Yours - Prime Video", "platforms": ["facebook", "instagram", "tiktok"], "status": "ASSET_RIGHTS_AND_QA_PENDING"},
+    {"time": "13:20", "type": "post_or_carousel", "topic": "Supergirl no HBO Max - streaming muda a opiniao?", "platforms": ["facebook", "instagram", "tiktok"], "status": "ASSET_RIGHTS_AND_QA_PENDING"},
+    {"time": "16:35", "type": "carousel", "topic": "Go Team! - Netflix", "platforms": ["facebook", "instagram", "tiktok"], "status": "ASSET_RIGHTS_AND_QA_PENDING"},
+    {"time": "20:35", "type": "post_breaking", "topic": "Veneza 2026 - vencedores / Leao de Ouro", "platforms": ["facebook", "instagram", "tiktok"], "status": "WAIT_FOR_OFFICIAL_AWARDS_RESULT_THEN_ASSET_QA"}
+  ],
+  "new_story_proposal": [
+    {"time": "21:15", "topic": "Enquete: vencedor de Veneza foi justo?", "platforms": ["facebook", "instagram"], "status": "WAIT_FOR_OFFICIAL_AWARDS_RESULT_THEN_ASSET_QA"}
+  ],
+  "youtube_policy": "Only the 8 scheduled videos; no static editorial posts added.",
+  "guardrails": ["Do not alter existing Metricool schedules", "Do not schedule any new editorial before ASSET_RIGHTS_PASS and QA_PASS", "Do not treat public images as licensed", "Revalidate Venice winners and box office on publication day"]
+}
