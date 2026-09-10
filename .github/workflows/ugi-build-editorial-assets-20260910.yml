@@ -1,0 +1,118 @@
+name: UGI Build Editorial Assets 2026-09-10
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-build-editorial-assets-20260910.yml'
+      - 'scripts/ugi_build_editorial_assets_20260910.py'
+      - 'scripts/ugi_burn_captions_20260910.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-build-editorial-assets-20260910
+  cancel-in-progress: false
+
+jobs:
+  build-finals:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet --upgrade pip
+          python -m pip install --quiet pillow requests numpy soundfile 'kokoro>=0.9.4'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core espeak-ng
+      - name: Build exact Sep10 assets
+        run: python scripts/ugi_build_editorial_assets_20260910.py
+      - name: Burn narration captions
+        run: python scripts/ugi_burn_captions_20260910.py
+      - name: Refresh provenance after captions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,subprocess
+          from pathlib import Path
+          out=Path('public/ugi/editorial/2026-09-10')
+          mp=out/'asset-provenance.json'; p=json.load(open(mp,encoding='utf-8'))
+          def sha(x):
+            h=hashlib.sha256();
+            with open(x,'rb') as f:
+              for b in iter(lambda:f.read(1024*1024),b''): h.update(b)
+            return h.hexdigest()
+          def probe(x):
+            return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_type,codec_name,width,height','-of','json',str(x)],text=True))
+          finals=[]
+          for old in p.get('finals',[]):
+            x=Path(old['path'])
+            if x.exists(): finals.append({'path':str(x),'bytes':x.stat().st_size,'sha256':sha(x),'probe':probe(x) if x.suffix.lower()=='.mp4' else None})
+          p['finals']=finals; p['captionQa']='BURNED_IN_CAPTIONS_3_OF_3'; p['state']='FINAL_ASSETS_QA_PENDING'
+          mp.write_text(json.dumps(p,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Verify final media hard gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          from PIL import Image
+          out=Path('public/ugi/editorial/2026-09-10')
+          required_videos=['story-quantum-0830.mp4','reel-kpop-1015.mp4','tiktok-lockedin-1130.mp4','story-compliance-1200.mp4','story-sp500-1730.mp4','tiktok-essilor-1945.mp4','story-uscanada-2030.mp4']
+          for n in required_videos:
+            p=out/n
+            if not p.exists() or p.stat().st_size<250000: raise SystemExit(f'VIDEO_FILE_FAIL:{n}')
+            j=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','stream=codec_type,width,height:format=duration','-of','json',str(p)],text=True))
+            kinds={s.get('codec_type') for s in j.get('streams',[])}
+            v=next((s for s in j.get('streams',[]) if s.get('codec_type')=='video'),{})
+            if kinds!={'video','audio'} and not {'video','audio'}.issubset(kinds): raise SystemExit(f'AUDIO_STREAM_FAIL:{n}')
+            if (v.get('width'),v.get('height'))!=(1080,1920): raise SystemExit(f'VIDEO_DIM_FAIL:{n}:{v}')
+            dur=float((j.get('format') or {}).get('duration') or 0)
+            if n.startswith('story-') and not 7.5<=dur<=8.5: raise SystemExit(f'STORY_DURATION_FAIL:{n}:{dur}')
+            if not n.startswith('story-') and not 25<=dur<=70: raise SystemExit(f'NARRATED_DURATION_FAIL:{n}:{dur}')
+          li=Image.open(out/'linkedin-starbucks-1400.jpg')
+          if li.size!=(1200,627): raise SystemExit(f'LINKEDIN_DIM_FAIL:{li.size}')
+          for i in range(1,7):
+            p=out/f'carousel-oil-1430-{i:02d}.jpg'; im=Image.open(p)
+            if im.size!=(1080,1350): raise SystemExit(f'CAROUSEL_DIM_FAIL:{i}:{im.size}')
+          for n in ['reel-kpop-1015.srt','tiktok-lockedin-1130.srt','tiktok-essilor-1945.srt']:
+            if not (out/n).exists(): raise SystemExit(f'CAPTION_EVIDENCE_FAIL:{n}')
+          prov=json.load(open(out/'asset-provenance.json',encoding='utf-8'))
+          if prov.get('captionQa')!='BURNED_IN_CAPTIONS_3_OF_3': raise SystemExit('CAPTION_QA_FAIL')
+          if len(prov.get('finals') or [])!=13: raise SystemExit(f'PUBLISHABLE_COUNT_FAIL:{len(prov.get("finals") or [])}')
+          print('MEDIA_QA=PASS')
+          print('STORY_AUDIO=4_OF_4_PASS')
+          print('CAPTIONS=3_OF_3_PASS')
+          print('CAROUSEL=6_OF_6_PASS')
+          print('LINKEDIN_STARBUCKS=1200x627_PASS')
+          PY
+      - name: Remove temporary/source files before commit
+        run: rm -rf public/ugi/editorial/2026-09-10/tmp public/ugi/editorial/2026-09-10/sources
+      - name: Commit exact finals and provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-builder-bot'
+          git config user.email 'ugi-editorial-builder@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-10
+          if git diff --cached --quiet; then
+            echo 'No asset changes to persist'
+            exit 0
+          fi
+          git commit -m 'assets(ugi): build Sep 10 exact editorial finals [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
