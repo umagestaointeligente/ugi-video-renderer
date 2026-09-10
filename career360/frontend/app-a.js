@@ -1,5 +1,5 @@
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.114.0/+esm';
-const URL='https://nxjdnzdxclszqyqrkwdk.supabase.co',KEY='sb_publishable_BCa63l0nMBLzOOHLZPpxfg_Ep2CqYdU',APP='https://lsi-career-360.vercel.app/';
+const URL='https://nxjdnzdxclszqyqrkwdk.supabase.co',KEY='sb_publishable_BCa63l0nMBLzOOHLZPpxfg_Ep2CqYdU',APP='https://lsi-career-360.umagestaointeligente.workers.dev/';
 const sb=createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}),$=x=>document.getElementById(x),csv=x=>String(x||'').split(',').map(v=>v.trim()).filter(Boolean);
 const F={ing:'career-document-ingest',pro:'career-document-process',con:'career-profile-confirm',add:'career-opportunity-add',list:'career-opportunity-list',ag:'career-agent',sup:'career-support',mas:'career-master-status',emp:'career-employer-suggest'};
 let mode='login',S={session:null,role:'candidate',profile:null,prefs:null,blocks:[],skills:[],docs:[],cvDraft:null,opps:[],draft:null,parsed:null,step:1,skillSelected:new Set()};
