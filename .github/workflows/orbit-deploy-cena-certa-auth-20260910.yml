@@ -26,7 +26,7 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           test -n "$YOUTUBE_CLIENT_ID"
           test -n "$YOUTUBE_CLIENT_SECRET"
-      - name: Deploy isolated OAuth worker
+      - name: Deploy isolated OAuth and publisher worker
         shell: bash
         working-directory: cloudflare
         run: |
@@ -40,13 +40,16 @@ jobs:
           printf '%s' "$YOUTUBE_CLIENT_ID" | npx --yes wrangler@4 secret put YOUTUBE_CLIENT_ID --config wrangler.orbit-cena-certa-auth.toml >/dev/null
           printf '%s' "$YOUTUBE_CLIENT_SECRET" | npx --yes wrangler@4 secret put YOUTUBE_CLIENT_SECRET --config wrangler.orbit-cena-certa-auth.toml >/dev/null
           echo SECRET_VALUES_EXPOSED=false
-      - name: Verify health and fail-closed state
+      - name: Verify health and authorization state
         shell: bash
         run: |
           set -euo pipefail
           URL='https://orbit-cena-certa-auth.umagestaointeligente.workers.dev'
           curl --fail --silent --show-error "$URL/health" | tee /tmp/health.json
           grep -q '"ok":true' /tmp/health.json
-          grep -q '"mutation_enabled":false' /tmp/health.json
+          grep -q '"mutation_mode":"guarded"' /tmp/health.json
           curl --fail --silent --show-error "$URL/status" | tee /tmp/status.json
+          grep -q '"authorized":true' /tmp/status.json
+          grep -q '"channel_id":"UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/status.json
+          grep -q '"has_refresh_token":true' /tmp/status.json
           echo DEPLOY_RESULT=SUCCESS
