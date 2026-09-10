@@ -1,0 +1,70 @@
+name: VSA Visual Recovery Canary Hunga V2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-visual-recovery-canary-hunga-v2-20260910.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vsa-visual-recovery-canary-hunga-v2
+  cancel-in-progress: true
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deterministic renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core curl
+          python -m pip install --quiet pillow edge-tts pyyaml
+      - name: Recover exact canonical mask and CTA
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vsa-recovery
+          curl -L --fail --retry 2 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789082127386_VSA_MASK_CANONICAL_V1.png?alt=media' -o /tmp/vsa-recovery/mask.png
+          curl -L --fail --retry 2 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789082145247_VSA_CTA_VISUAL_CANONICAL_V1.png?alt=media' -o /tmp/vsa-recovery/cta.png
+          echo '9f6ebae6742b007b1e660cd401b610933d0a06c2c3fee240220abf7215e1a4d9  /tmp/vsa-recovery/mask.png' | sha256sum -c -
+          echo '6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8  /tmp/vsa-recovery/cta.png' | sha256sum -c -
+      - name: Extract previous canary renderer and repair TTS argument only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,re
+          src=pathlib.Path('.github/workflows/vsa-visual-recovery-canary-hunga-20260910.yml').read_text(encoding='utf-8')
+          m=re.search(r"cat > /tmp/vsa-recovery/render\.py <<'PY'\n(.*?)\n\s*PY\n\s*python /tmp/vsa-recovery/render\.py",src,re.S)
+          if not m: raise SystemExit('CANARY_SCRIPT_NOT_FOUND')
+          lines=m.group(1).splitlines()
+          indent=min((len(x)-len(x.lstrip()) for x in lines if x.strip()),default=0)
+          script='\n'.join(x[indent:] if x.strip() else '' for x in lines)+'\n'
+          old="'--pitch','-2Hz'"
+          new="'--pitch=-2Hz'"
+          if script.count(old)!=1: raise SystemExit(f'TTS_PATCH_MATCH_COUNT:{script.count(old)}')
+          script=script.replace(old,new,1)
+          pathlib.Path('/tmp/vsa-recovery/render.py').write_text(script,encoding='utf-8')
+          PY
+          python -m py_compile /tmp/vsa-recovery/render.py
+          python /tmp/vsa-recovery/render.py
+      - name: Fail-closed visual regression gate
+        run: |
+          python ops/vsa-runtime/visual_regression_guard.py /tmp/vsa-recovery/manifest.json
+          ffprobe -v error -show_entries stream=codec_name,width,height,profile,pix_fmt,r_frame_rate -show_entries format=duration -of json /tmp/vsa-recovery/VSA_HUNGA_VISUAL_RECOVERY_CANARY.mp4
+      - name: Upload canary evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: VSA-HUNGA-VISUAL-RECOVERY-CANARY-V2
+          retention-days: 3
+          if-no-files-found: error
+          path: |
+            /tmp/vsa-recovery/VSA_HUNGA_VISUAL_RECOVERY_CANARY.mp4
+            /tmp/vsa-recovery/VSA_HUNGA_VISUAL_RECOVERY_THUMB.jpg
+            /tmp/vsa-recovery/contact.jpg
+            /tmp/vsa-recovery/manifest.json
