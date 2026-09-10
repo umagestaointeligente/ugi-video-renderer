@@ -12,7 +12,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
     steps:
-      - name: Redacted route contract readback
+      - name: Redacted static publish contract readback
         shell: bash
         run: |
           set -euo pipefail
@@ -22,14 +22,14 @@ jobs:
           python - <<'PY'
           import re
           s=open('/tmp/w','rb').read().decode('utf-8','ignore')
-          print('LSI_R453_ROUTE_CONTRACT_V2')
-          paths=sorted(set(re.findall(r'["\'](/api/[^"\']+)["\']',s)))
-          for p in paths:
-            if 'r45' in p.lower() or 'platform-publication' in p.lower(): print('PATH='+p[:240])
-          for needle in ['function r453CreateInstagramPost','function createBufferEditorialMediaPost','async function r453CreateInstagramPost','r453CreateInstagramPost =']:
-            i=s.find(needle)
-            if i>=0:
-              clean=re.sub(r'\s+',' ',s[i:i+1800])
-              print('CONTRACT='+clean[:1800])
+          print('LSI_STATIC_PUBLISH_CONTRACT_V1')
+          for needle in ['/api/r45/static-publish','function createBufferStatic','staticPublish','handleStaticPublish','function bufferCreatePost','async function bufferCreatePost']:
+            pos=0; seen=0
+            while seen<5:
+              i=s.find(needle,pos)
+              if i<0: break
+              clean=re.sub(r'\s+',' ',s[max(0,i-500):i+2600])
+              print('SNIP='+clean[:3100])
+              pos=i+len(needle); seen+=1
           PY
-# route-contract-readback 2026-09-09T21:27:00-03:00
+# static-contract-readback 2026-09-09T21:29:00-03:00
