@@ -37,6 +37,20 @@ jobs:
           echo "COMMAND_TOKEN=$TOKEN" >> "$GITHUB_ENV"
           printf '%s' "$TOKEN" | npx --yes wrangler@4 secret put COMMAND_TOKEN --config wrangler.orbit-cena-certa-auth.toml >/dev/null
           echo COMMAND_GATE=OPEN_MASKED
+      - name: Wait for command gate propagation
+        shell: bash
+        run: |
+          set -euo pipefail
+          READY=false
+          for i in {1..20}; do
+            HTTP=$(curl -sS -o /tmp/gate.json -w '%{http_code}' -X POST "$WORKER_URL/schedule" -H "Authorization: Bearer $COMMAND_TOKEN" -H 'Content-Type: application/json' --data '{}')
+            if [ "$HTTP" = "409" ] && grep -q 'INVALID_ITEM_KEY' /tmp/gate.json; then READY=true; break; fi
+            sleep 3
+          done
+          cat /tmp/gate.json
+          test "$READY" = true
+          echo COMMAND_GATE_PROPAGATED=true
+          echo MUTATION_PERFORMED=false
       - name: Verify canonical authorization
         shell: bash
         run: |
