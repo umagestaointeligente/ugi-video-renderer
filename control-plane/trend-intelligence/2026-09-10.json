@@ -1,0 +1,132 @@
+{
+  "schema": "UGI_TREND_INTELLIGENCE_SNAPSHOT_V2",
+  "project": "UGI",
+  "editorialDate": "2026-09-10",
+  "capturedAt": "2026-09-09T23:00:00-03:00",
+  "region": "BR",
+  "policy": {
+    "trendGate": "config/ugi/editorial-trend-gate-v2.5.json",
+    "antiRepeat": "control-plane/policies/UGI_ANTI_REPEAT_V2.md",
+    "cooldownDays": 60,
+    "scope": "GLOBAL_INSTAGRAM_TIKTOK_LINKEDIN",
+    "sameDayCrossNetworkDuplicate": "BLOCK_BY_DEFAULT",
+    "extraordinaryException": "EDITORIAL_REPEAT_EXCEPTION_BREAKING"
+  },
+  "historyQuality": {
+    "registryBackfillComplete": false,
+    "decisionRule": "FAIL_CLOSED_ON_CREDIBLE_REPEAT_RISK",
+    "availableDurableHistoryReviewed": true,
+    "note": "No direct collision was found for the retained Sep10 topics in the available durable UGI history. Because older backfill is incomplete, final pre-publisher reconciliation remains mandatory."
+  },
+  "rejectedCandidates": [
+    {
+      "topic": "Apple / iPhone / John Ternus",
+      "decision": "ANTI_REPEAT_BLOCK_TOPIC_60D",
+      "reason": "Multiple recent UGI Apple occurrences including 2026-09-01 and 2026-09-09."
+    },
+    {
+      "topic": "TikTok #joblife / work reality",
+      "decision": "ANTI_REPEAT_BLOCK_TOPIC_60D",
+      "reason": "UGI TikTok already used #joblife / trabalho real x employer branding on 2026-09-04."
+    },
+    {
+      "topic": "OpenAI + Samsung / AI chips and hardware",
+      "decision": "ANTI_REPEAT_BLOCK_TOPIC_60D",
+      "reason": "Recent UGI history includes AI hardware/manufacturing capacity on 2026-09-02; the new proposal was too close under the stricter global rule."
+    }
+  ],
+  "selectedTopics": [
+    {
+      "platform": "instagram",
+      "timeBrt": "08:30",
+      "format": "story",
+      "topicKey": "quantum-investment-cost-race",
+      "topic": "Quanto custa a corrida quântica?",
+      "factStatus": "PASS",
+      "antiRepeatDecision": "NO_CONFLICT_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "Reuters Econ World — The cost of quantum — 2026-09-09"
+    },
+    {
+      "platform": "instagram",
+      "timeBrt": "10:15",
+      "format": "reel",
+      "topicKey": "rock-in-rio-kpop-niche-to-market",
+      "topic": "Rock in Rio e o primeiro dia inteiro de K-pop — quando um nicho vira mercado",
+      "factStatus": "PASS",
+      "antiRepeatDecision": "NO_CONFLICT_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "UOL — primeiro dia inteiro de K-pop no Rock in Rio — 2026-09-09"
+    },
+    {
+      "platform": "tiktok",
+      "timeBrt": "11:30",
+      "format": "video",
+      "topicKey": "lockedin-focus-accountability-vs-performance",
+      "topic": "#lockedin — foco real ou aparência de produtividade?",
+      "factStatus": "PASS_PLATFORM_TREND_SIGNAL",
+      "antiRepeatDecision": "NO_DIRECT_TOPIC_COLLISION_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "TikTok Next 2026 — #lockedin"
+    },
+    {
+      "platform": "instagram",
+      "timeBrt": "12:00",
+      "format": "story",
+      "topicKey": "worker-rescue-supply-chain-compliance",
+      "topic": "479 trabalhadores resgatados — compliance também é gestão da cadeia",
+      "factStatus": "PASS_PRIMARY_OFFICIAL_SOURCE",
+      "antiRepeatDecision": "NO_CONFLICT_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "Ministério do Trabalho e Emprego — Operação Resgate VI — 2026-09-09"
+    },
+    {
+      "platform": "linkedin",
+      "timeBrt": "14:00",
+      "format": "post_image_text",
+      "topicKey": "starbucks-turnaround-growth-vs-margin",
+      "topic": "Starbucks — recuperar clientes é só metade do turnaround",
+      "factStatus": "PASS",
+      "antiRepeatDecision": "NO_DIRECT_STARBUCKS_OR_SAME_EVENT_COLLISION_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "Reuters — Starbucks CEO Niccol brought back customers. Investors want fatter margins next — 2026-09-09"
+    },
+    {
+      "platform": "instagram",
+      "timeBrt": "14:30",
+      "format": "carousel",
+      "topicKey": "oil-above-100-business-cost-chain",
+      "topic": "Petróleo acima de US$100 — onde isso bate dentro de uma empresa?",
+      "factStatus": "PASS",
+      "antiRepeatDecision": "NO_CONFLICT_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "Reuters — Trading Day: $100 oil bites — 2026-09-09"
+    },
+    {
+      "platform": "instagram",
+      "timeBrt": "17:30",
+      "format": "story",
+      "topicKey": "sp500-earnings-expectations-valuation",
+      "topic": "Resultados fortes não eliminam o risco de expectativas altas",
+      "factStatus": "PASS",
+      "antiRepeatDecision": "NO_CONFLICT_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "Reuters — Barclays lifts S&P 500 year-end target — 2026-09-09"
+    },
+    {
+      "platform": "tiktok",
+      "timeBrt": "19:45",
+      "format": "video",
+      "topicKey": "essilorluxottica-board-heir-ceo-governance",
+      "topic": "EssilorLuxottica/Ray-Ban — quando herdeiro, conselho e CEO entram em conflito, quem manda?",
+      "factStatus": "PASS",
+      "antiRepeatDecision": "NO_DIRECT_ENTITY_OR_EVENT_COLLISION_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "Reuters — EssilorLuxottica board backs CEO Milleri — 2026-09-09"
+    },
+    {
+      "platform": "instagram",
+      "timeBrt": "20:30",
+      "format": "story",
+      "topicKey": "us-canada-trade-operational-risk",
+      "topic": "EUA x Canadá — quando política comercial vira risco operacional",
+      "factStatus": "PASS",
+      "antiRepeatDecision": "NO_CONFLICT_FOUND_IN_AVAILABLE_60D_DURABLE_HISTORY_FINAL_PREP_ALLOWED",
+      "source": "Reuters — Bombardier / escalating US-Canada trade dispute — 2026-09-09"
+    }
+  ],
+  "releaseStatus": "EDITORIAL_RESEARCH_LOCKED_COPY_PREP_ALLOWED_NO_PUBLISHER_MUTATION",
+  "publisherMutationPerformed": false
+}
