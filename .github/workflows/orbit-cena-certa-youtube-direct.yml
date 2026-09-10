@@ -61,7 +61,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: orbit-cena-certa-youtube-${{ inputs.item_key }}
+  group: orbit-cena-certa-youtube-mutation
   cancel-in-progress: false
 
 jobs:
