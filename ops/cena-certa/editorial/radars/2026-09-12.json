@@ -1,0 +1,82 @@
+{
+  "date": "2026-09-12",
+  "timezone": "America/Sao_Paulo",
+  "status": "RADAR_READY_RIGHTS_QA_PENDING",
+  "do_not_modify_existing_schedules": true,
+  "signals": [
+    {
+      "priority": 1,
+      "title": "Venice Film Festival 2026 - Awards Day",
+      "hook": "Hoje sai o Leao de Ouro: qual filme vai dominar a conversa?",
+      "facts": ["A 83a Mostra de Veneza termina em 12/09/2026", "A cerimonia oficial de premios acontece em 12/09/2026"],
+      "source": "https://www.labiennale.org/en/cinema/2026/83rd-festival",
+      "asset_route": "Biennale official press/media route",
+      "asset_rights_status": "YELLOW_VERIFY_TERMS_BEFORE_REUSE"
+    },
+    {
+      "priority": 2,
+      "title": "A Love Other Than Yours",
+      "hook": "Dez anos juntos: casar ou terminar? O novo drama romantico do Prime Video estreia hoje.",
+      "facts": ["Prime Video lista A Love Other Than Yours para 12/09/2026"],
+      "source": "https://www.aboutamazon.com/news/entertainment/prime-video-september-films-shows-sports-2026",
+      "asset_route": "Prime Video / Amazon official promotional imagery",
+      "asset_rights_status": "YELLOW_VERIFY_TERMS_BEFORE_REUSE"
+    },
+    {
+      "priority": 3,
+      "title": "Supergirl on HBO Max",
+      "hook": "Streaming pode mudar a opiniao sobre um filme que dividiu o publico?",
+      "facts": ["Supergirl entrou no HBO Max em 10/09/2026", "O filme estreia no canal linear HBO em 12/09/2026"],
+      "source": "https://press.wbd.com/us/search?type=media_release",
+      "social_signal": "Discussao recente no Reddit mostra publico dividido entre 'melhor do que diziam' e 'mediano'",
+      "asset_route": "WBD Pressroom official imagery",
+      "asset_rights_status": "YELLOW_LOGIN_OR_TERMS_MAY_APPLY"
+    },
+    {
+      "priority": 4,
+      "title": "Spider-Man: Brand New Day - box office record chase",
+      "hook": "Depois de seis fins de semana no topo, ele pode bater mais um recorde domestico?",
+      "facts": ["US$ 2.4 bi globais", "seis fins de semana consecutivos em primeiro lugar", "mais de US$ 923 mi domesticos no fim de semana anterior"],
+      "source": "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
+      "social_signal": "r/boxoffice segue discutindo a possibilidade de ultrapassar The Force Awakens domesticamente",
+      "asset_route": "Sony Pictures official film/press route",
+      "asset_rights_status": "YELLOW_VERIFY_PRESS_USAGE"
+    },
+    {
+      "priority": 5,
+      "title": "Go Team!",
+      "hook": "Comedia de escritorio vira guerra depois que funcionarios descobrem demissoes a caminho.",
+      "facts": ["Estreia global Netflix em 11/09/2026"],
+      "source": "https://about.netflix.com/en/news/netflix-reveals-the-official-trailer-for-go-team",
+      "asset_route": "Netflix official page exposes trailer, new pictures and key art download",
+      "asset_rights_status": "GREEN_PRESS_ROUTE_IDENTIFIED_VERIFY_FINAL_TERMS"
+    },
+    {
+      "priority": 6,
+      "title": "Flex X Cop S2",
+      "hook": "Fim de semana com episodio novo no Disney+: vale entrar agora na serie?",
+      "facts": ["Novo episodio em Disney+ e Hulu em 12/09/2026"],
+      "source": "https://press.disneyplus.com/news/next-on-disney-plus-september-2026",
+      "asset_route": "Disney+ Press official media route",
+      "asset_rights_status": "YELLOW_VERIFY_DOWNLOAD_TERMS"
+    },
+    {
+      "priority": 7,
+      "title": "Apple TV - Last Seen / Mayday follow-through",
+      "hook": "O que vale testar no Apple TV neste fim de semana?",
+      "facts": ["Apple TV mantem lancamentos semanais", "Mayday estreou em 04/09/2026", "Last Seen estreou em 09/09/2026"],
+      "source": "https://www.apple.com/tv-pr/originals/filters/series/2026/",
+      "asset_route": "Apple TV Press key art/first-look route",
+      "asset_rights_status": "YELLOW_VERIFY_PRESS_USAGE"
+    }
+  ],
+  "platform_notes": {
+    "paramount_plus": "12/09 tem Noche UFC e Zuffa Boxing; baixo fit editorial para Cena Certa, portanto nao entra no top 4.",
+    "youtube": "manter apenas os 8 videos existentes; sem posts estaticos nesta grade."
+  },
+  "safety": {
+    "public_image_is_not_license": true,
+    "schedule_only_after_asset_rights_pass": true,
+    "schedule_only_after_qa_pass": true
+  }
+}
