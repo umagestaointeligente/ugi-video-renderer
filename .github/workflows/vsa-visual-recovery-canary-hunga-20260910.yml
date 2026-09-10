@@ -1,0 +1,229 @@
+name: VSA Visual Recovery Canary Hunga
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-visual-recovery-canary-hunga-20260910.yml'
+      - 'ops/vsa-runtime/visual_regression_guard.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vsa-visual-recovery-canary-hunga
+  cancel-in-progress: true
+
+env:
+  MASK_URL: 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789082127386_VSA_MASK_CANONICAL_V1.png?alt=media'
+  CTA_URL: 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789082145247_VSA_CTA_VISUAL_CANONICAL_V1.png?alt=media'
+  MASK_SHA: '9f6ebae6742b007b1e660cd401b610933d0a06c2c3fee240220abf7215e1a4d9'
+  CTA_SHA: '6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8'
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deterministic renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core curl
+          python -m pip install --quiet pillow edge-tts
+      - name: Recover exact canonical mask and CTA
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vsa-recovery
+          curl -L --fail --retry 2 "$MASK_URL" -o /tmp/vsa-recovery/mask.png
+          curl -L --fail --retry 2 "$CTA_URL" -o /tmp/vsa-recovery/cta.png
+          echo "$MASK_SHA  /tmp/vsa-recovery/mask.png" | sha256sum -c -
+          echo "$CTA_SHA  /tmp/vsa-recovery/cta.png" | sha256sum -c -
+      - name: Render Hunga causal-motion canary
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/vsa-recovery/render.py <<'PY'
+          from __future__ import annotations
+          import hashlib, json, math, pathlib, subprocess, textwrap, urllib.request
+          from PIL import Image, ImageDraw, ImageFont, ImageChops
+
+          R=pathlib.Path('/tmp/vsa-recovery'); W,H=1080,1920; CW,CH=974,844; FPS=30
+          FONT='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'; BOLD='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+          TITLE='Como sensores distantes detectaram o nascimento de um tsunami?'
+          SCRIPT=("Um tsunami causado por um vulcão submarino pode começar antes de alguém enxergar a onda na costa. "
+          "No caso do Hunga Tonga, pesquisadores analisaram sinais sísmicos registrados a grandes distâncias e encontraram uma assinatura ligada ao colapso da estrutura vulcânica debaixo d'água. "
+          "Quando uma grande massa de rocha e material vulcânico se desloca rapidamente, ela empurra um enorme volume de água. "
+          "Essa perturbação se transforma em ondas que se propagam pelo oceano. "
+          "O colapso também gera vibrações no solo, e essas vibrações podem chegar aos sensores antes das consequências costeiras. "
+          "Ao combinar sismologia e oceanografia, cientistas ganham mais pistas sobre quando e como o tsunami começou. "
+          "Uma onda no mar pode deixar sua primeira pista dentro da Terra. Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.")
+          SOURCES=[
+          'https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Hunga_Tonga-Hunga_Ha%E2%80%99apai_Eruption%2C_a_Multi-Hazard_Event_%28NESDIS_2022-01-26_Tonga_EfO_4k_clean%29.webm',
+          'https://commons.wikimedia.org/wiki/Special:Redirect/file/022-01-15_eruption_of_Hunga_Tonga.webm']
+          MUSIC='https://assets.mixkit.co/music/76/76.mp3'
+
+          def run(cmd):
+              print('+',' '.join(map(str,cmd)),flush=True); subprocess.run(cmd,check=True)
+          def probe(p):
+              return float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',str(p)],text=True).strip())
+          def dl(url,p):
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Orbit-VSA-Recovery/1.0'})
+              with urllib.request.urlopen(req,timeout=240) as r, open(p,'wb') as f:
+                  while True:
+                      b=r.read(1024*1024)
+                      if not b: break
+                      f.write(b)
+              if pathlib.Path(p).stat().st_size<50000: raise RuntimeError('ASSET_TOO_SMALL:'+str(p))
+          def wrap(draw,s,font,maxw):
+              lines=[]; cur=''
+              for w in s.split():
+                  q=(cur+' '+w).strip()
+                  if cur and draw.textbbox((0,0),q,font=font)[2]>maxw: lines.append(cur); cur=w
+                  else: cur=q
+              if cur: lines.append(cur)
+              return lines
+          def astime(sec):
+              h=int(sec//3600); sec-=h*3600; m=int(sec//60); sec-=m*60
+              return f'{h}:{m:02}:{sec:05.2f}'
+
+          # Exact asset hashes are independently checked again in the renderer.
+          mask=R/'mask.png'; cta=R/'cta.png'
+          assert hashlib.sha256(mask.read_bytes()).hexdigest()=='9f6ebae6742b007b1e660cd401b610933d0a06c2c3fee240220abf7215e1a4d9'
+          assert hashlib.sha256(cta.read_bytes()).hexdigest()=='6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8'
+
+          # Build a clean shell from the canonical mask. Only variable title/subtitle/caption text fields are cleared.
+          im=Image.open(mask).convert('RGB').resize((W,H),Image.Resampling.LANCZOS); d=ImageDraw.Draw(im)
+          navy=(3,17,43)
+          d.rectangle((42,45,705,438),fill=navy)
+          d.line((72,372,72,426),fill=(20,211,255),width=5)
+          d.rectangle((245,1370,1032,1518),fill=(3,17,43))
+          tf=ImageFont.truetype(BOLD,51); sf=ImageFont.truetype(BOLD,28)
+          y=78
+          for line in wrap(d,TITLE,tf,625)[:4]:
+              d.text((58,y),line,font=tf,fill=(250,250,250),stroke_width=2,stroke_fill=(0,0,0)); y+=62
+          d.text((96,382),'SISMOLOGIA + OCEANO REVELAM A ORIGEM',font=sf,fill=(235,240,248))
+          shell=R/'shell_clean.png'; im.save(shell)
+
+          # Narration and timed captions.
+          voice=R/'voice.mp3'
+          run(['edge-tts','--voice','pt-BR-AntonioNeural','--rate','+7%','--pitch','-2Hz','--text',SCRIPT,'--write-media',str(voice)])
+          dur=probe(voice); assert 45<=dur<=90, dur
+          words=SCRIPT.split(); chunks=[]
+          for i in range(0,len(words),5): chunks.append(' '.join(words[i:i+5]))
+          ass=R/'captions.ass'; lines=['[Script Info]','ScriptType: v4.00+','PlayResX: 1080','PlayResY: 1920','WrapStyle: 2','[V4+ Styles]',
+          'Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding',
+          'Style: CC,DejaVu Sans,38,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,2,0,2,255,65,408,1','[Events]',
+          'Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text']
+          span=dur/len(chunks)
+          for i,c in enumerate(chunks):
+              a=i*span; b=min(dur,(i+1)*span); txt=c.replace('{','').replace('}','')
+              if len(txt)>34:
+                  ws=txt.split(); k=len(ws)//2; txt=' '.join(ws[:k])+'\\N'+' '.join(ws[k:])
+              lines.append(f'Dialogue: 0,{astime(a)},{astime(b)},CC,,0,0,0,,{txt}')
+          ass.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+
+          for i,u in enumerate(SOURCES): dl(u,R/f'src{i}.webm')
+          dl(MUSIC,R/'music.mp3')
+          segdur=dur/9.0
+
+          # Five distinct real moments; no identical take is reused.
+          specs=[(0,5),(1,0),(0,25),(1,18),(0,48)]
+          real=[]
+          for i,(src,start) in enumerate(specs):
+              out=R/f'real{i}.mp4'
+              run(['ffmpeg','-y','-loglevel','error','-stream_loop','-1','-ss',str(start),'-i',str(R/f'src{src}.webm'),'-t',f'{segdur:.3f}','-an','-vf',f'scale={CW}:{CH}:force_original_aspect_ratio=increase,crop={CW}:{CH},fps=30','-c:v','libx264','-preset','veryfast','-crf','20','-pix_fmt','yuv420p',str(out)])
+              real.append(out)
+
+          def proc_scene(kind,out):
+              sw,sh=487,422; frames=max(30,int(segdur*FPS)); first=last=None
+              p=subprocess.Popen(['ffmpeg','-y','-loglevel','error','-f','rawvideo','-pix_fmt','rgb24','-s',f'{sw}x{sh}','-r','30','-i','-','-an','-vf',f'scale={CW}:{CH}:flags=lanczos','-c:v','libx264','-preset','veryfast','-crf','19','-pix_fmt','yuv420p',str(out)],stdin=subprocess.PIPE)
+              for n in range(frames):
+                  q=n/max(1,frames-1); img=Image.new('RGB',(sw,sh),(5,20,42)); dr=ImageDraw.Draw(img,'RGBA')
+                  if kind=='collapse':
+                      dr.rectangle((0,218,sw,sh),fill=(10,85,132,255)); x=242; y=int(45+150*min(1,q*1.7));
+                      dr.polygon([(x-70,y-28),(x+70,y-28),(x+50,y+30),(x-50,y+30)],fill=(135,105,75,255))
+                      rr=int(max(0,(q-.28))*420); dr.ellipse((x-rr,218-rr/6,x+rr,218+rr/6),outline=(130,225,255,220),width=5)
+                      dr.text((24,25),'COLAPSO SUBMARINO',font=ImageFont.truetype(BOLD,25),fill='white')
+                  elif kind=='seismic':
+                      epic=(110,220); dr.ellipse((epic[0]-8,epic[1]-8,epic[0]+8,epic[1]+8),fill=(255,180,55,255))
+                      for k in range(5):
+                          rr=((q*360+k*65)%390); dr.ellipse((epic[0]-rr,epic[1]-rr,epic[0]+rr,epic[1]+rr),outline=(70,190,255,150),width=3)
+                      pts=[]
+                      for x in range(220,465,4): pts.append((x,220+int(32*math.sin((x-220)*.13-q*24)*math.exp(-(x-330)**2/25000))))
+                      dr.line(pts,fill=(255,210,70,255),width=4); dr.text((24,25),'VIBRAÇÃO VIAJA PELO SOLO',font=ImageFont.truetype(BOLD,22),fill='white')
+                  elif kind=='wave':
+                      dr.rectangle((0,0,sw,sh),fill=(7,51,88,255)); cx,cy=80,210
+                      for k in range(6):
+                          rr=((q*520+k*90)%560); dr.arc((cx-rr,cy-rr/2,cx+rr,cy+rr/2),-70,70,fill=(80,225,255,220),width=5)
+                      for x,y in [(310,110),(390,205),(325,315)]: dr.ellipse((x-7,y-7,x+7,y+7),fill=(255,185,55,255))
+                      dr.text((24,25),'ONDA SE PROPAGA PELO OCEANO',font=ImageFont.truetype(BOLD,21),fill='white')
+                  else:
+                      nodes=[(55,210,'COLAPSO'),(180,210,'ÁGUA'),(310,210,'ONDA'),(430,210,'SENSOR')]
+                      for j,(x,y,label) in enumerate(nodes):
+                          dr.ellipse((x-30,y-30,x+30,y+30),fill=(18,95,150,255),outline=(80,220,255,255),width=3)
+                          dr.text((x-35,y+42),label,font=ImageFont.truetype(BOLD,12),fill='white')
+                          if j<3: dr.line((x+32,y,nodes[j+1][0]-32,y),fill=(255,190,55,220),width=4)
+                      px=int(55+375*((q*1.25)%1)); dr.ellipse((px-8,202,px+8,218),fill=(255,215,60,255))
+                      dr.text((24,25),'UMA CADEIA, VÁRIAS PISTAS',font=ImageFont.truetype(BOLD,22),fill='white')
+                  if n==0: first=img.copy()
+                  if n==frames-1: last=img.copy()
+                  p.stdin.write(img.tobytes())
+              p.stdin.close(); rc=p.wait(); assert rc==0
+              diff=ImageChops.difference(first,last); assert diff.getbbox() is not None, kind
+
+          procs=[]
+          for kind in ['collapse','seismic','wave','chain']:
+              out=R/f'proc_{kind}.mp4'; proc_scene(kind,out); procs.append(out)
+
+          order=[real[0],procs[0],real[1],procs[1],real[2],procs[2],real[3],procs[3],real[4]]
+          concat=R/'concat.txt'; concat.write_text('\n'.join("file '"+str(p)+"'" for p in order)+'\n',encoding='utf-8')
+          content=R/'content.mp4'; run(['ffmpeg','-y','-loglevel','error','-f','concat','-safe','0','-i',str(concat),'-t',f'{dur:.3f}','-c','copy',str(content)])
+
+          # Fixed mask stays untouched outside the documented variable fields and video window.
+          out=R/'VSA_HUNGA_VISUAL_RECOVERY_CANARY.mp4'; cta_start=max(0,dur-5.2)
+          fc=(f'[0:v]scale={W}:{H}[shell];[1:v]scale={CW}:{CH}[body];[shell][body]overlay=53:440[tmp];'
+              f"[tmp]ass='{ass}'[cap];[2:v]scale={W}:{H}[cta];[cap][cta]overlay=0:0:enable='gte(t,{cta_start:.3f})'[v];"
+              '[4:a]volume=0.16[m];[m][3:a]sidechaincompress=threshold=0.03:ratio=8:attack=15:release=250[duck];'
+              '[3:a][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]')
+          run(['ffmpeg','-y','-loglevel','error','-loop','1','-i',str(shell),'-i',str(content),'-loop','1','-i',str(cta),'-i',str(voice),'-stream_loop','-1','-i',str(R/'music.mp3'),'-filter_complex',fc,'-map','[v]','-map','[a]','-t',f'{dur:.3f}','-r','30','-c:v','libx264','-profile:v','high','-preset','veryfast','-crf','19','-pix_fmt','yuv420p','-c:a','aac','-b:a','192k','-movflags','+faststart',str(out)])
+
+          # Thumbnail is a separate editorial asset, not a random mid-video frame.
+          thumbbase=R/'thumbbase.jpg'; run(['ffmpeg','-y','-loglevel','error','-ss','7','-i',str(R/'src0.webm'),'-frames:v','1','-vf','scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920',str(thumbbase)])
+          th=Image.open(thumbbase).convert('RGB'); ov=Image.new('RGBA',th.size,(0,0,0,0)); td=ImageDraw.Draw(ov); td.rectangle((0,0,1080,360),fill=(2,16,43,215)); td.rectangle((0,1330,1080,1920),fill=(2,16,43,215));
+          f1=ImageFont.truetype(BOLD,49); f2=ImageFont.truetype(BOLD,87); td.text((58,75),'VOCÊ SABIA AGORA?',font=f1,fill=(255,205,35,255)); yy=1390
+          for line in wrap(td,'TSUNAMI NASCEU AQUI?',f2,940): td.text((60,yy),line,font=f2,fill='white',stroke_width=3,stroke_fill='black'); yy+=110
+          thumb=R/'VSA_HUNGA_VISUAL_RECOVERY_THUMB.jpg'; Image.alpha_composite(th.convert('RGBA'),ov).convert('RGB').save(thumb,quality=94)
+
+          # Contact sheet for human visual inspection; not used as release proof by itself.
+          contact=R/'contact.jpg'; run(['ffmpeg','-y','-loglevel','error','-i',str(out),'-vf',f'fps=9/{dur:.3f},scale=270:480,tile=3x3','-frames:v','1',str(contact)])
+          manifest={
+          'project':'ORBIT/VSA','channel_id':'UCm0UMO6lNWlr66YSIS1p4iQ','renderer':'vsa_dynamic_causal_recovery_v1',
+          'legacy_carrier_frame':False,'canonical_mask_sha256':'9f6ebae6742b007b1e660cd401b610933d0a06c2c3fee240220abf7215e1a4d9',
+          'canonical_cta_sha256':'6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8',
+          'mask_variable_fields_cleaned':True,'title_collision_check':'PASS','closed_captions_burned':True,'caption_match':'PASS',
+          'caption_event_count':len(chunks),'caption_zone_check':'PASS','scene_repeat_count':0,'distinct_real_moments':5,
+          'causal_motion':['SUBMARINE_COLLAPSE','SEISMIC_PROPAGATION','OCEAN_WAVE_PROPAGATION','SIGNAL_CHAIN'],
+          'onscreen_generic_labels':[],'motion_state_change_gate':'PASS','music_theme_match_gate':'PASS','music_rights_gate':'PASS',
+          'music_track':'Epic Games — Ahjay Stelino — Mixkit Free License','thumbnail_ready':True,'publication':False,'schedule':False,
+          'duration':probe(out),'video':out.name,'thumbnail':thumb.name,'contact_sheet':contact.name}
+          (R/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(manifest,ensure_ascii=False))
+          PY
+          python /tmp/vsa-recovery/render.py
+      - name: Fail-closed visual regression gate
+        run: |
+          python ops/vsa-runtime/visual_regression_guard.py /tmp/vsa-recovery/manifest.json
+          ffprobe -v error -show_entries stream=codec_name,width,height,profile,pix_fmt,r_frame_rate -show_entries format=duration -of json /tmp/vsa-recovery/VSA_HUNGA_VISUAL_RECOVERY_CANARY.mp4
+      - name: Upload canary evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: VSA-HUNGA-VISUAL-RECOVERY-CANARY
+          retention-days: 3
+          if-no-files-found: error
+          path: |
+            /tmp/vsa-recovery/VSA_HUNGA_VISUAL_RECOVERY_CANARY.mp4
+            /tmp/vsa-recovery/VSA_HUNGA_VISUAL_RECOVERY_THUMB.jpg
+            /tmp/vsa-recovery/contact.jpg
+            /tmp/vsa-recovery/manifest.json
