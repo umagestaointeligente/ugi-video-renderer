@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       item_key:
-        description: Canonical unique item key (e.g. metricool-372509819-youtube)
+        description: Canonical unique item key
         required: true
         type: string
       media_url:
@@ -20,7 +20,7 @@ on:
         required: true
         type: string
       publish_at:
-        description: Future RFC3339 UTC timestamp, e.g. 2026-09-10T03:30:00Z
+        description: Future RFC3339 UTC timestamp
         required: true
         type: string
       expected_channel_id:
@@ -64,12 +64,12 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, os, sys, time, urllib.request, urllib.parse, datetime
+          import datetime, hashlib, json, os, sys, time, urllib.error, urllib.parse, urllib.request
 
-          def req(url, method='GET', headers=None, data=None):
+          def req(url, method='GET', headers=None, data=None, timeout=180):
               r=urllib.request.Request(url, data=data, method=method, headers=headers or {})
               try:
-                  with urllib.request.urlopen(r, timeout=120) as resp:
+                  with urllib.request.urlopen(r, timeout=timeout) as resp:
                       return resp.status, resp.headers, resp.read()
               except urllib.error.HTTPError as e:
                   body=e.read()
@@ -82,7 +82,7 @@ jobs:
           media=os.environ['MEDIA_URL'].strip()
           expected=os.environ['EXPECTED_CHANNEL_ID'].strip()
           publish_at=os.environ['PUBLISH_AT'].strip()
-          if not item or len(title)>100 or not media.startswith('https://'):
+          if not item or not title or len(title)>100 or not media.startswith('https://'):
               raise SystemExit('BLOCKED: invalid item/title/media input')
           dt=datetime.datetime.fromisoformat(publish_at.replace('Z','+00:00'))
           now=datetime.datetime.now(datetime.timezone.utc)
@@ -98,7 +98,7 @@ jobs:
           tok=json.loads(raw)['access_token']
           auth={'Authorization':'Bearer '+tok}
 
-          _,_,raw=req('https://www.googleapis.com/youtube/v3/channels?part=id,snippet&mine=true',headers=auth)
+          _,_,raw=req('https://www.googleapis.com/youtube/v3/channels?part=id,snippet,contentDetails&mine=true',headers=auth)
           ch=json.loads(raw).get('items') or []
           if len(ch)!=1:
               raise SystemExit('BLOCKED: OAuth identity did not resolve exactly one YouTube channel')
@@ -108,40 +108,49 @@ jobs:
           if actual != expected:
               raise SystemExit('BLOCKED: Cena Certa channel identity mismatch')
 
-          # Duplicate guard: exact canonical item marker in descriptions of recent uploads.
-          _,_,raw=req('https://www.googleapis.com/youtube/v3/channels?part=contentDetails&mine=true',headers=auth)
-          uploads=json.loads(raw)['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+          # Idempotency marker is kept in tags, not appended to the public description.
+          marker='orbit_'+hashlib.sha256(item.encode()).hexdigest()[:24]
+          uploads=ch[0]['contentDetails']['relatedPlaylists']['uploads']
           _,_,raw=req('https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId='+urllib.parse.quote(uploads),headers=auth)
           ids=[x['contentDetails']['videoId'] for x in json.loads(raw).get('items',[])]
-          marker='ORBIT_ITEM:'+item
           if ids:
               _,_,raw=req('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+','.join(ids),headers=auth)
               for v in json.loads(raw).get('items',[]):
-                  if marker in (v.get('snippet',{}).get('description') or ''):
+                  if marker in (v.get('snippet',{}).get('tags') or []):
                       print('IDEMPOTENT_EXISTING_VIDEO_ID='+v['id'])
                       print('IDEMPOTENT_EXISTING_PUBLISH_AT='+str(v.get('status',{}).get('publishAt')))
                       sys.exit(0)
 
-          # Download media once; fail closed on non-video/empty payload.
+          tmp='/tmp/orbit-direct.mp4'
           mreq=urllib.request.Request(media, headers={'User-Agent':'OrbitDirectPublisher/1.0'})
-          with urllib.request.urlopen(mreq, timeout=180) as mr:
+          with urllib.request.urlopen(mreq, timeout=180) as mr, open(tmp,'wb') as f:
               ctype=(mr.headers.get('Content-Type') or '').lower()
-              video=mr.read()
-          if not video or ('video/' not in ctype and not video[4:8]==b'ftyp'):
+              total=0
+              while True:
+                  chunk=mr.read(1024*1024)
+                  if not chunk: break
+                  f.write(chunk); total += len(chunk)
+          if total <= 0:
+              raise SystemExit('BLOCKED: empty media payload')
+          with open(tmp,'rb') as f:
+              head=f.read(12)
+          if 'video/' not in ctype and b'ftyp' not in head:
               raise SystemExit('BLOCKED: media URL did not return a valid video payload')
-          print('MEDIA_BYTES='+str(len(video)))
+          print('MEDIA_BYTES='+str(total))
 
           metadata={
-              'snippet':{'title':title,'description':desc+'\n\n'+marker,'categoryId':'24'},
+              'snippet':{'title':title,'description':desc,'categoryId':'24','tags':['Cena Certa',marker]},
               'status':{'privacyStatus':'private','publishAt':publish_at,'selfDeclaredMadeForKids':False}
           }
           boundary='orbit_boundary_%d'%int(time.time())
           meta=json.dumps(metadata,separators=(',',':')).encode()
+          with open(tmp,'rb') as f:
+              video=f.read()
           body=(('--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n').encode()+meta+
                 ('\r\n--'+boundary+'\r\nContent-Type: video/mp4\r\n\r\n').encode()+video+
                 ('\r\n--'+boundary+'--\r\n').encode())
           url='https://www.googleapis.com/upload/youtube/v3/videos?uploadType=multipart&part=snippet,status'
-          _,_,raw=req(url,'POST',{'Authorization':'Bearer '+tok,'Content-Type':'multipart/related; boundary='+boundary},body)
+          _,_,raw=req(url,'POST',{'Authorization':'Bearer '+tok,'Content-Type':'multipart/related; boundary='+boundary},body,timeout=300)
           out=json.loads(raw)
           vid=out.get('id')
           if not vid:
