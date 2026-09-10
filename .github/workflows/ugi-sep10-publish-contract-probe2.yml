@@ -1,0 +1,30 @@
+name: UGI Sep10 Publish Contract Probe 2
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-sep10-publish-contract-probe2.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Probe Instagram editorial Reel contract without media
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          code=$(curl -sS -o body.json -w '%{http_code}' -X POST \
+            -H "x-lola-command-key: $UGI_LOLA_COMMAND_KEY" -H 'content-type: application/json' \
+            --data '{"platform":"instagram","mediaType":"video","text":"contract probe - no media","format":"reel","mode":"customScheduled","dueAt":"2026-09-10T13:15:00Z"}' \
+            "$WORKER_URL/api/editorial-media-publish")
+          python - "$code" <<'PY'
+          import json,sys
+          code=int(sys.argv[1]); b=json.load(open('body.json'))
+          print(json.dumps({'http':code,'body':b},ensure_ascii=False,indent=2))
+          if b.get('ok') is True or b.get('bufferMutationPerformed') is True or b.get('publicationTriggered') is True: raise SystemExit('UNSAFE_PROBE')
+          if 'mediaUrl' not in str(b.get('error') or ''): raise SystemExit('IG_EDITORIAL_REEL_CONTRACT_NOT_PROVEN')
+          PY
