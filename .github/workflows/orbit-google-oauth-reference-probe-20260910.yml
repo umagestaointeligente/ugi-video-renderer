@@ -1,0 +1,40 @@
+name: Orbit Google OAuth Reference Probe
+
+on:
+  push:
+    paths:
+      - '.github/workflows/orbit-google-oauth-reference-probe-20260910.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find non-secret OAuth callback references
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'ORBIT_GOOGLE_OAUTH_REFERENCE_PROBE_V1'
+          python - <<'PY'
+          import pathlib,re
+          pats=[r'redirect_uri',r'oauth2callback',r'accounts\.google\.com/o/oauth2',r'oauth2\.googleapis\.com/token',r'YOUTUBE_CLIENT_ID']
+          hits=[]
+          for p in pathlib.Path('.').rglob('*'):
+            if not p.is_file() or '.git' in p.parts: continue
+            try: lines=p.read_text(errors='ignore').splitlines()
+            except: continue
+            for i,line in enumerate(lines,1):
+              if any(re.search(x,line,re.I) for x in pats):
+                s=line.strip()
+                s=re.sub(r'([A-Za-z0-9_]*(?:SECRET|TOKEN|PASSWORD|KEY)[A-Za-z0-9_]*\s*[:=]\s*)([^\s]+)',r'\1[REDACTED]',s,flags=re.I)
+                if '${{ secrets.' in s:
+                  s=re.sub(r'\$\{\{\s*secrets\.([A-Za-z0-9_]+)\s*\}\}',r'SECRET_REF(\1)',s)
+                hits.append((str(p),i,s[:300]))
+          for p,i,s in hits[:120]: print(f'HIT={p}:{i}:{s}')
+          print('COUNT='+str(len(hits)))
+          print('SECRET_VALUES_EXPOSED=false')
+          PY
