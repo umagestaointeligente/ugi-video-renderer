@@ -109,7 +109,10 @@ jobs:
           desc=os.environ['VIDEO_DESCRIPTION']
           media=os.environ['MEDIA_URL'].strip()
           expected=os.environ['EXPECTED_CHANNEL_ID'].strip()
+          canonical='UCq1h6RSnev5-JJQ8k4T98tg'
           publish_at=os.environ['PUBLISH_AT'].strip()
+          if expected != canonical:
+              raise SystemExit('BLOCKED: expected_channel_id is not canonical Cena Certa channel')
           if not item or not title or len(title)>100 or not media.startswith('https://'):
               raise SystemExit('BLOCKED: invalid item/title/media input')
           dt=datetime.datetime.fromisoformat(publish_at.replace('Z','+00:00'))
@@ -138,14 +141,27 @@ jobs:
 
           marker='orbit_'+hashlib.sha256(item.encode()).hexdigest()[:24]
           uploads=ch[0]['contentDetails']['relatedPlaylists']['uploads']
-          _,_,raw=req('https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId='+urllib.parse.quote(uploads),headers=auth)
-          ids=[x['contentDetails']['videoId'] for x in json.loads(raw).get('items',[])]
+          ids=[]
+          page=''
+          for _ in range(4):
+              url='https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId='+urllib.parse.quote(uploads)
+              if page: url += '&pageToken='+urllib.parse.quote(page)
+              _,_,raw=req(url,headers=auth)
+              listing=json.loads(raw)
+              ids.extend(x['contentDetails']['videoId'] for x in listing.get('items',[]))
+              page=listing.get('nextPageToken','')
+              if not page: break
           if ids:
               _,_,raw=req('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+','.join(ids),headers=auth)
               for v in json.loads(raw).get('items',[]):
                   if marker in (v.get('snippet',{}).get('tags') or []):
+                      existing_at=str(v.get('status',{}).get('publishAt') or '')
+                      requested_at=dt.isoformat().replace('+00:00','Z')
+                      normalized_existing=existing_at.replace('.000Z','Z')
+                      if normalized_existing != requested_at:
+                          raise SystemExit('BLOCKED: item_key already exists with different publish_at')
                       print('IDEMPOTENT_EXISTING_VIDEO_ID='+v['id'])
-                      print('IDEMPOTENT_EXISTING_PUBLISH_AT='+str(v.get('status',{}).get('publishAt')))
+                      print('IDEMPOTENT_EXISTING_PUBLISH_AT='+existing_at)
                       sys.exit(0)
 
           tmp='/tmp/orbit-direct.mp4'
@@ -182,8 +198,21 @@ jobs:
           vid=out.get('id')
           if not vid:
               raise SystemExit('BLOCKED: YouTube upload returned no video id')
+          _,_,verified_raw=req('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+urllib.parse.quote(vid),headers=auth)
+          verified_items=json.loads(verified_raw).get('items') or []
+          if len(verified_items)!=1:
+              raise SystemExit('UNCERTAIN_AFTER_UPLOAD: readback did not return exactly one video')
+          verified=verified_items[0]
+          v_status=verified.get('status',{})
+          v_snippet=verified.get('snippet',{})
+          if v_snippet.get('channelId') != canonical or v_status.get('privacyStatus') != 'private' or marker not in (v_snippet.get('tags') or []):
+              raise SystemExit('UNCERTAIN_AFTER_UPLOAD: readback state mismatch; do not retry without reconciliation')
+          actual_at=str(v_status.get('publishAt') or '')
+          if actual_at.replace('.000Z','Z') != dt.isoformat().replace('+00:00','Z'):
+              raise SystemExit('UNCERTAIN_AFTER_UPLOAD: publish_at mismatch; do not retry without reconciliation')
           print('NATIVE_VIDEO_ID='+vid)
-          print('NATIVE_PUBLISH_AT='+publish_at)
-          print('NATIVE_PRIVACY_STATUS='+str(out.get('status',{}).get('privacyStatus')))
+          print('NATIVE_PUBLISH_AT='+actual_at)
+          print('NATIVE_PRIVACY_STATUS='+v_status.get('privacyStatus',''))
+          print('READBACK_VERIFIED=true')
           print('ORBIT_ITEM_KEY='+item)
           PY
