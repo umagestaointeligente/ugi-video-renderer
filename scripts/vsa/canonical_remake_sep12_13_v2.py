@@ -5,6 +5,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageStat
 import canonical_remake_sep12_13 as base
 
 _ORIGINAL_ANIM = base.anim_frame
+_ORIGINAL_TTS = base.tts
 
 
 def enhanced_anim_frame(mode: str, idx: int, p: float, label: str) -> Image.Image:
@@ -87,6 +88,53 @@ def localized_motion_score(video: pathlib.Path, seg: float, work: pathlib.Path, 
     return round(score, 3)
 
 
+async def robust_tts(text: str, audio: pathlib.Path, rate: str):
+    """Produce audio and reliable caption timing even when Edge omits WordBoundary events."""
+    words = await _ORIGINAL_TTS(text, audio, rate)
+    if words:
+        print(f'CC_TIMING_SOURCE=edge_word_boundaries count={len(words)}', flush=True)
+        return words
+
+    dur = base.duration(audio)
+    tokens = [t for t in text.split() if t.strip()]
+    if not tokens or dur <= 1.0:
+        raise RuntimeError('CC_TIMING_FALLBACK_NO_AUDIO_OR_TEXT')
+
+    # Character-weighted interpolation follows real encoded narration duration.
+    # Punctuation receives a small extra weight, approximating natural pauses.
+    weights = []
+    for token in tokens:
+        clean = token.strip()
+        weight = max(2.0, float(len(clean.strip('.,;:!?—-'))))
+        if clean.endswith(('.', '!', '?')):
+            weight += 3.2
+        elif clean.endswith((',', ';', ':')):
+            weight += 1.4
+        weights.append(weight)
+
+    lead = min(0.18, dur * 0.01)
+    tail = min(0.22, dur * 0.012)
+    usable = max(0.8, dur - lead - tail)
+    total = sum(weights)
+    cursor = lead
+    synthetic = []
+    for token, weight in zip(tokens, weights):
+        span = usable * weight / total
+        spoken = max(0.06, span * 0.88)
+        synthetic.append({
+            'type': 'WordBoundary',
+            'text': token,
+            'offset': int(cursor * 10_000_000),
+            'duration': int(spoken * 10_000_000),
+        })
+        cursor += span
+
+    if len(synthetic) < 6:
+        raise RuntimeError(f'CC_TIMING_FALLBACK_TOO_FEW_WORDS count={len(synthetic)}')
+    print(f'CC_TIMING_SOURCE=duration_interpolation words={len(synthetic)} audio_duration={dur:.3f}', flush=True)
+    return synthetic
+
+
 def ass_time(seconds: float) -> str:
     """Native ASS time is H:MM:SS.cc (centiseconds), not millisecond SRT syntax."""
     cs = max(0, int(round(seconds * 100)))
@@ -98,7 +146,7 @@ def ass_time(seconds: float) -> str:
 
 def corrected_build_ass(words, ass: pathlib.Path):
     if not words:
-        raise RuntimeError('CC_WORD_BOUNDARIES_EMPTY')
+        raise RuntimeError('CC_WORD_BOUNDARIES_EMPTY_AFTER_FALLBACK')
     groups = []
     cur = []
     start = end = None
@@ -154,6 +202,7 @@ def corrected_build_ass(words, ass: pathlib.Path):
 
 base.anim_frame = enhanced_anim_frame
 base.motion_score = localized_motion_score
+base.tts = robust_tts
 base.build_ass = corrected_build_ass
 
 if __name__ == '__main__':
