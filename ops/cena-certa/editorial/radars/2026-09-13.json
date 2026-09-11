@@ -1,0 +1,106 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_RADAR_V1",
+  "date": "2026-09-13",
+  "timezone": "America/Sao_Paulo",
+  "generated_at": "2026-09-11T08:11:16-03:00",
+  "metricool_brand": {"id": 6809869, "label": "Cena Certa Ofc"},
+  "metricool_existing_scheduled_count": 0,
+  "policy": {
+    "no_schedule_without_asset_rights_pass": true,
+    "no_schedule_without_qa_pass": true,
+    "public_image_is_not_licensed_by_default": true,
+    "youtube_editorial_static_posts": false,
+    "preserve_existing_schedules": true
+  },
+  "priority_topics": [
+    {
+      "rank": 1,
+      "topic": "Kraven the Hunter chega ao Disney+ em 13/09",
+      "hook": "Vale rever no streaming? O vilão do universo do Homem-Aranha ganha uma segunda vida em casa.",
+      "fact_status": "PASS",
+      "sources": [
+        "https://press.disneyplus.com/news/next-on-disney-plus-september-2026",
+        "https://www.disneyplus.com/explore/articles/new-to-disney-plus"
+      ],
+      "asset_route": "Disney+ Press / official Disney+ release artwork",
+      "asset_rights_status": "PENDING_TERMS_VALIDATION"
+    },
+    {
+      "rank": 2,
+      "topic": "Spider-Man: Brand New Day x The Odyssey — fenômeno de bilheteria",
+      "hook": "Dois filmes ajudaram a empurrar o verão de 2026 para recorde; qual deles virou o verdadeiro evento cultural?",
+      "fact_status": "PASS",
+      "sources": [
+        "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
+        "https://www.theguardian.com/film/2026/sep/10/the-odyssey-and-spider-man-make-for-record-breaking-summer-box-office-worldwide"
+      ],
+      "facts": {"spider_man_global_usd": "~2.4B", "odyssey_global_usd": "~1.6B"},
+      "asset_route": "Sony Pictures / Universal official publicity assets only",
+      "asset_rights_status": "PENDING_TERMS_VALIDATION"
+    },
+    {
+      "rank": 3,
+      "topic": "Last Seen / Desaparecida — Apple TV",
+      "hook": "Uma ligação faz um pai acreditar que a filha desaparecida há 11 anos ainda está viva: vale entrar nesse thriller?",
+      "fact_status": "PASS",
+      "sources": [
+        "https://www.apple.com/br/tv-pr/originals/last-seen/"
+      ],
+      "asset_route": "Apple TV Press BR — página oferece Baixar conteúdo / key art",
+      "asset_rights_status": "PRESS_ROUTE_IDENTIFIED_TERMS_REVIEW_REQUIRED"
+    },
+    {
+      "rank": 4,
+      "topic": "Veneza 83 — vencedores e fechamento",
+      "hook": "No dia seguinte à cerimônia: o Leão de Ouro foi justo?",
+      "fact_status": "CONDITIONAL_REVALIDATE_2026-09-13",
+      "sources": [
+        "https://www.labiennale.org/en/cinema/2026/83rd-festival",
+        "https://www.labiennale.org/en/news/dio-ride-giovanni-veronesi-closing-film-biennale-cinema-2026"
+      ],
+      "asset_route": "La Biennale official press assets",
+      "asset_rights_status": "PENDING_PRESS_TERMS",
+      "note": "Awards are announced on 12/09; re-read official results before copy or artwork is frozen."
+    }
+  ],
+  "secondary_watchlist": [
+    {
+      "topic": "A Love Other Than Yours",
+      "platform": "Prime Video",
+      "status": "released 12/09; suitable D+1 recommendation",
+      "source": "https://www.aboutamazon.com/news/entertainment/prime-video-september-films-shows-sports-2026",
+      "asset_route": "About Amazon / Amazon MGM publicity imagery; rights review required"
+    },
+    {
+      "topic": "Drawn Together",
+      "platform": "Prime Video",
+      "status": "streaming worldwide since 09/09; book-to-film engagement angle",
+      "source": "https://www.aboutamazon.com/news/entertainment/marfil-drawn-together-prime-video",
+      "asset_route": "About Amazon official stills; rights review required"
+    },
+    {
+      "topic": "The Whisper Man",
+      "platform": "Netflix",
+      "status": "No. 1 English film in Netflix Top 10 week ending 06/09 with 33.4M views",
+      "source": "https://www.netflix.com/tudum/articles/top-10-august-31-2026",
+      "asset_route": "Netflix Tudum/Media Center; rights review required"
+    },
+    {
+      "topic": "Bunker",
+      "platform": "festival / theatrical pipeline",
+      "status": "Venice buzz; 16-minute standing ovation reported before TIFF",
+      "source": "https://people.com/penelope-cruz-javier-bardem-bunker-16-minute-venice-standing-ovation-12111916",
+      "asset_route": "Prefer Venice/TIFF/producer press stills; do not use news-site imagery without permission"
+    }
+  ],
+  "platform_scan": {
+    "netflix": "The Whisper Man is the strongest verified demand signal; no higher-value 13/09 scripted premiere verified from current official sources.",
+    "prime_video": "A Love Other Than Yours (12/09) and Drawn Together (09/09) are strongest current movie/series hooks; Neagley arrives 16/09 and is a forward watch.",
+    "disney_plus": "Kraven the Hunter is the cleanest exact-date 13/09 hook.",
+    "hbo_max": "No stronger Brazil-relevant exact 13/09 scripted launch verified in current official scan; keep monitoring pressroom.",
+    "paramount_plus": "13/09 official surfaced item is primarily CBS/60 Minutes availability; lower fit for Cena Certa than selected movie/series topics.",
+    "apple_tv": "Last Seen/Desaparecida (09/09) remains the strongest fresh scripted hook with official BR press page and downloadable press content route.",
+    "festivals": "Venice closes 12/09; 13/09 is ideal for a revalidated winners recap. TIFF is underway but no clean official 13/09 title page was verified in this scan.",
+    "box_office": "Spider-Man: Brand New Day and The Odyssey remain the dominant high-recognition box-office conversation."
+  }
+}
