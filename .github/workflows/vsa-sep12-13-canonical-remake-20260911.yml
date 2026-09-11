@@ -35,14 +35,14 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Validate canonical renderer and policy
+      - name: Validate canonical renderer policy and workflow contract
         shell: bash
         run: |
           set -euo pipefail
           python -m py_compile scripts/vsa/canonical_remake_sep12_13.py
           python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
           python scripts/vsa/validate_release_receipt.py --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json --self-test
-          ! grep -nE 'CENA[_ -]?CERTA|88240|88242|METRICOOL' scripts/vsa/canonical_remake_sep12_13.py
+          python scripts/vsa/check_workflow_compliance.py .github/workflows/vsa-sep12-13-canonical-remake-20260911.yml
 
   build:
     needs: preflight
@@ -139,7 +139,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,pathlib,hashlib
+          import json,pathlib
           root=pathlib.Path('/tmp/review')
           rows=[]
           for p in sorted(root.rglob('*_VSA_VISUAL_RELEASE_RECEIPT_V1.json')):
