@@ -1,0 +1,708 @@
+{
+  "schema": "UGI_EDITORIAL_ASSET_PROVENANCE_V3",
+  "date": "2026-09-11",
+  "state": "FINAL_ASSETS_QA_PENDING",
+  "visualGate": "config/ugi/visual-semantic-gate-v3.json",
+  "batchScopedAuthorization": true,
+  "images": {
+    "altera_hq": {
+      "filename": "Altera HQ in February 2026.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Jhumbo",
+      "page": "https://commons.wikimedia.org/wiki/File:Altera_HQ_in_February_2026.jpg",
+      "semantic": "Altera headquarters"
+    },
+    "intel_hq": {
+      "filename": "Intel Headquarters in 2023.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Coolcaesar",
+      "page": "https://commons.wikimedia.org/wiki/File:Intel_Headquarters_in_2023.jpg",
+      "semantic": "Intel headquarters"
+    },
+    "faa_ind": {
+      "filename": "IND FAA air traffic control tower.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "AVA Navigate",
+      "page": "https://commons.wikimedia.org/wiki/File:IND_FAA_air_traffic_control_tower.jpg",
+      "semantic": "FAA airport control tower"
+    },
+    "faa_phl": {
+      "filename": "The FAA air traffic control tower at Philadelphia International Airport.jpg",
+      "width": 1600,
+      "license": "CC BY 4.0",
+      "author": "Harrison Keely",
+      "page": "https://commons.wikimedia.org/wiki/File:The_FAA_air_traffic_control_tower_at_Philadelphia_International_Airport.jpg",
+      "semantic": "FAA control tower at Philadelphia airport"
+    },
+    "faa_den": {
+      "filename": "DEN Air Traffic Control Tower.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Bmurphy380",
+      "page": "https://commons.wikimedia.org/wiki/File:DEN_Air_Traffic_Control_Tower.jpg",
+      "semantic": "Denver airport control tower and aircraft"
+    },
+    "faa_view": {
+      "filename": "View of the IND Airport from the FAA Control tower.jpg",
+      "width": 1600,
+      "license": "CC BY 4.0",
+      "author": "AVA Navigate",
+      "page": "https://commons.wikimedia.org/wiki/File:View_of_the_IND_Airport_from_the_FAA_Control_tower.jpg",
+      "semantic": "airport view from FAA control tower"
+    },
+    "faa_orlando": {
+      "filename": "Air traffic control tower, Orlando International Airport.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Olga Ernst",
+      "page": "https://commons.wikimedia.org/wiki/File:Air_traffic_control_tower,_Orlando_International_Airport.jpg",
+      "semantic": "US airport control tower"
+    },
+    "kojima1": {
+      "filename": "Hideo Kojima shows Metal Gear for PS One.jpg",
+      "width": 1600,
+      "license": "CC BY 2.0",
+      "author": "Nikita / malfet_",
+      "page": "https://commons.wikimedia.org/wiki/File:Hideo_Kojima_shows_Metal_Gear_for_PS_One.jpg",
+      "semantic": "Hideo Kojima"
+    },
+    "kojima2": {
+      "filename": "Hideo Kojima at Tokyo Game Show 20081009.jpg",
+      "width": 1600,
+      "license": "Creative Commons",
+      "author": "Commons contributor",
+      "page": "https://commons.wikimedia.org/wiki/File:Hideo_Kojima_at_Tokyo_Game_Show_20081009.jpg",
+      "semantic": "Hideo Kojima at Tokyo Game Show"
+    },
+    "playstation": {
+      "filename": "PlayStation 5 and DualSense (2).jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Osh33m",
+      "page": "https://commons.wikimedia.org/wiki/File:PlayStation_5_and_DualSense_(2).jpg",
+      "semantic": "PlayStation 5 console and DualSense controller"
+    },
+    "xbox_logo": {
+      "filename": "Xbox Series X mit Controller.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Der. Bellemer",
+      "page": "https://commons.wikimedia.org/wiki/File:Xbox_Series_X_mit_Controller.jpg",
+      "semantic": "Xbox Series X console and controller"
+    },
+    "xbox_device": {
+      "filename": "Xbox Series X and S with controllers.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "AsmodeanUnderscore / Ian Hughes",
+      "page": "https://commons.wikimedia.org/wiki/File:Xbox_Series_X_and_S_with_controllers.jpg",
+      "semantic": "Xbox Series X and S with controllers"
+    },
+    "coke_store": {
+      "filename": "Coca-Cola Store (27691646803).jpg",
+      "width": 1600,
+      "license": "CC BY-SA 2.0",
+      "author": "Michael Gray / Flickr",
+      "page": "https://commons.wikimedia.org/wiki/File:Coca-Cola_Store_(27691646803).jpg",
+      "semantic": "Coca-Cola branded store"
+    },
+    "coke_bottles": {
+      "filename": "Coca-Cola bottles.jpg",
+      "width": 1600,
+      "license": "CC BY 2.0",
+      "author": "DeusXFlorida",
+      "page": "https://commons.wikimedia.org/wiki/File:Coca-Cola_bottles.jpg",
+      "semantic": "Coca-Cola products"
+    },
+    "hsbc_hq": {
+      "filename": "HSBC HQ.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 1.0",
+      "author": "Gordon Joly",
+      "page": "https://commons.wikimedia.org/wiki/File:HSBC_HQ.jpg",
+      "semantic": "HSBC world headquarters"
+    },
+    "stellantis": {
+      "filename": "Stellantis.jpg",
+      "width": 1400,
+      "license": "CC0 1.0",
+      "author": "Wrossimallo",
+      "page": "https://commons.wikimedia.org/wiki/File:Stellantis.jpg",
+      "semantic": "Stellantis facility"
+    },
+    "fiat_hq": {
+      "filename": "Fiat - Mirafiori building (Italy, 2020).png",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Bruce The Deus",
+      "page": "https://commons.wikimedia.org/wiki/File:Fiat_-_Mirafiori_building_(Italy,_2020).png",
+      "semantic": "Fiat Mirafiori headquarters"
+    },
+    "ram": {
+      "filename": "2025 Ram 1500.jpg",
+      "width": 1600,
+      "license": "CC0 1.0",
+      "author": "Ontariocarguy07",
+      "page": "https://commons.wikimedia.org/wiki/File:2025_Ram_1500.jpg",
+      "semantic": "Ram vehicle, Stellantis US portfolio"
+    },
+    "ram2": {
+      "filename": "2025 RAM 1500, front 7.1.25.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Kevauto",
+      "page": "https://commons.wikimedia.org/wiki/File:2025_RAM_1500,_front_7.1.25.jpg",
+      "semantic": "Ram vehicle, Stellantis US portfolio"
+    },
+    "jeep": {
+      "filename": "2025 Jeep Wrangler 2-Door Sport in Joose, front right, 2025-08-24.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Elise240SX",
+      "page": "https://commons.wikimedia.org/wiki/File:2025_Jeep_Wrangler_2-Door_Sport_in_Joose,_front_right,_2025-08-24.jpg",
+      "semantic": "Jeep Wrangler, Stellantis US portfolio"
+    },
+    "grand_cherokee": {
+      "filename": "Jeep Grand Cherokee SRT.jpg",
+      "width": 1600,
+      "license": "CC BY 4.0",
+      "author": "Commons contributor",
+      "page": "https://commons.wikimedia.org/wiki/File:Jeep_Grand_Cherokee_SRT.jpg",
+      "semantic": "Jeep Grand Cherokee, Stellantis portfolio"
+    },
+    "bending_spoons": {
+      "filename": "Bending Spoons Logo Icon.png",
+      "width": 1024,
+      "license": "Public domain textlogo; trademarked",
+      "author": "Bending Spoons S.p.A.",
+      "page": "https://commons.wikimedia.org/wiki/File:Bending_Spoons_Logo_Icon.png",
+      "semantic": "Bending Spoons brand icon"
+    },
+    "collaboration_whiteboard": {
+      "filename": "Team Meeting.jpg",
+      "width": 1600,
+      "license": "CC BY 2.0",
+      "author": "woodleywonderworks",
+      "page": "https://commons.wikimedia.org/wiki/File:Team_Meeting.jpg",
+      "semantic": "collaborative digital work context, aligned to Miro use case"
+    },
+    "primark1": {
+      "filename": "Primark Shop.jpg",
+      "width": 1600,
+      "license": "CC0 1.0",
+      "author": "Jan Hagelskamp1",
+      "page": "https://commons.wikimedia.org/wiki/File:Primark_Shop.jpg",
+      "semantic": "Primark store"
+    },
+    "primark2": {
+      "filename": "Primark Store in Birmingham - geograph.org.uk - 8163706.jpg",
+      "width": 1600,
+      "license": "Creative Commons / Geograph",
+      "author": "Philip Halling",
+      "page": "https://commons.wikimedia.org/wiki/File:Primark_Store_in_Birmingham_-_geograph.org.uk_-_8163706.jpg",
+      "semantic": "Primark store Birmingham"
+    },
+    "primark3": {
+      "filename": "Primark, Oxford Street, Harrogate (27th September 2017).jpg",
+      "width": 1600,
+      "license": "Creative Commons",
+      "author": "Commons contributor",
+      "page": "https://commons.wikimedia.org/wiki/File:Primark,_Oxford_Street,_Harrogate_(27th_September_2017).jpg",
+      "semantic": "Primark store Harrogate"
+    },
+    "primark4": {
+      "filename": "Oxford Street shops - geograph.org.uk - 5110385.jpg",
+      "width": 1600,
+      "license": "Creative Commons / Geograph",
+      "author": "Jim Osley",
+      "page": "https://commons.wikimedia.org/wiki/File:Oxford_Street_shops_-_geograph.org.uk_-_5110385.jpg",
+      "semantic": "Oxford Street retail context"
+    },
+    "primark_distribution": {
+      "filename": "Warehouse distribution-center-1136510.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "Rsherwin",
+      "page": "https://commons.wikimedia.org/wiki/File:Warehouse_distribution-center-1136510.jpg",
+      "semantic": "high-resolution distribution and fulfillment center"
+    },
+    "hefei_skyline": {
+      "filename": "Skylines of Hefei at Tianehu.jpg",
+      "width": 1600,
+      "license": "CC BY-SA 4.0",
+      "author": "钉钉",
+      "page": "https://commons.wikimedia.org/wiki/File:Skylines_of_Hefei_at_Tianehu.jpg",
+      "semantic": "Hefei skyline"
+    },
+    "hefei_retail": {
+      "filename": "Yuanyi Times Square, Hefei, China.jpg",
+      "width": 1600,
+      "license": "Public domain by uploader",
+      "author": "Commons contributor",
+      "page": "https://commons.wikimedia.org/wiki/File:Yuanyi_Times_Square,_Hefei,_China.jpg",
+      "semantic": "Hefei retail/commercial area"
+    }
+  },
+  "music": {
+    "tech": {
+      "path": "assets/music/innovation/dreamstate_library-modern-tech-corporate-theme-469710 (1).mp3",
+      "license": "repository-approved licensed asset",
+      "author": "Dreamstate Library",
+      "page": "repository asset"
+    },
+    "electronic": {
+      "filename": "Sascha Ende - I Feel It (instrumental) (cc-by) (filmmusic).ogg",
+      "license": "CC BY 4.0",
+      "author": "Sascha Ende",
+      "page": "https://commons.wikimedia.org/wiki/File:Sascha_Ende_-_I_Feel_It_(instrumental)_(cc-by)_(filmmusic).ogg"
+    },
+    "focused": {
+      "filename": "Nctrnm - Queue.ogg",
+      "license": "CC BY 4.0",
+      "author": "Nctrnm",
+      "page": "https://commons.wikimedia.org/wiki/File:Nctrnm_-_Queue.ogg"
+    },
+    "upbeat": {
+      "filename": "Mise - 02 - Alive Doing It Right Instrumental.ogg",
+      "license": "CC BY 4.0",
+      "author": "Mise",
+      "page": "https://commons.wikimedia.org/wiki/File:Mise_-_02_-_Alive_Doing_It_Right_Instrumental.ogg"
+    },
+    "reflective": {
+      "filename": "Josh Woodward - 10 - Perfect Instrumental Version.ogg",
+      "license": "CC BY 4.0",
+      "author": "Josh Woodward",
+      "page": "https://commons.wikimedia.org/wiki/File:Josh_Woodward_-_10_-_Perfect_Instrumental_Version.ogg"
+    }
+  },
+  "rules": {
+    "globalAntiRepeatDays": 60,
+    "realContextualVisualRequired": true,
+    "storyMinDistinctSources": 2,
+    "narratedVideoMinDistinctSources": 5,
+    "carouselMinDistinctSources": 6,
+    "singleImageLoopBlocked": true,
+    "genericAbstractPrimaryVisualBlocked": true
+  },
+  "finals": [
+    {
+      "path": "public/ugi/editorial/2026-09-11/story-altera-0830.mp4",
+      "bytes": 850660,
+      "sha256": "48d1e900babcd9ea8033e51173672cca4b949ac022b41c9117055c359a4e24dd",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "8.000000"
+        }
+      },
+      "visualQa": {
+        "kind": "story",
+        "sourceKeys": [
+          "altera_hq",
+          "intel_hq"
+        ],
+        "distinctSourceCount": 2,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": "electronic",
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/reel-faa-1015.mp4",
+      "bytes": 2664297,
+      "sha256": "1f8a486b9c0a9f0d47e5eb9e4bf9f4470277b877e5d9c2d3deac028e652ce72f",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "37.833333"
+        }
+      },
+      "visualQa": {
+        "kind": "narrated_video",
+        "sourceKeys": [
+          "faa_ind",
+          "faa_phl",
+          "faa_den",
+          "faa_view",
+          "faa_orlando"
+        ],
+        "distinctSourceCount": 5,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": "tech",
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/tiktok-kojima-1130.mp4",
+      "bytes": 2307770,
+      "sha256": "815faba146f23a587a913dd7d2f17bc33f56af37c83769df89352d1e4adb74f7",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "36.333333"
+        }
+      },
+      "visualQa": {
+        "kind": "narrated_video",
+        "sourceKeys": [
+          "kojima1",
+          "playstation",
+          "kojima2",
+          "xbox_logo",
+          "xbox_device"
+        ],
+        "distinctSourceCount": 5,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": "electronic",
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/story-cocacola-1200.mp4",
+      "bytes": 609508,
+      "sha256": "6b0a09950e3a6dfaf1cd502e9643765afcf74c0e3be76867cfa9a0c680858b2a",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "8.000000"
+        }
+      },
+      "visualQa": {
+        "kind": "story",
+        "sourceKeys": [
+          "coke_store",
+          "coke_bottles"
+        ],
+        "distinctSourceCount": 2,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": "upbeat",
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/linkedin-hsbc-1400.jpg",
+      "bytes": 117603,
+      "sha256": "d9eafd08a7fab05c3023b7f50756006f2b6ad96987e02fd8a6a516aeb11fa674",
+      "probe": null,
+      "visualQa": {
+        "kind": "linkedin_image",
+        "sourceKeys": [
+          "hsbc_hq"
+        ],
+        "distinctSourceCount": 1,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": null,
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/carousel-stellantis-1430-01.jpg",
+      "bytes": 316898,
+      "sha256": "179d8e945f5a8dccc8b0dbd8ad6757e6a7c66b6d08da536d32495bdb073e3158",
+      "probe": null,
+      "visualQa": {
+        "kind": "carousel_slide",
+        "sourceKeys": [
+          "stellantis"
+        ],
+        "distinctSourceCount": 1,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": null,
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/carousel-stellantis-1430-02.jpg",
+      "bytes": 394067,
+      "sha256": "b014519c837f75df9dde2fcb01bf48f74f21f23b96c60e6aa81e557535189d45",
+      "probe": null,
+      "visualQa": {
+        "kind": "carousel_slide",
+        "sourceKeys": [
+          "ram"
+        ],
+        "distinctSourceCount": 1,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": null,
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/carousel-stellantis-1430-03.jpg",
+      "bytes": 437357,
+      "sha256": "84b735403b42ec41a2c7e1047386ba2b3f6edfc78a7eebe6a9b7693244550d63",
+      "probe": null,
+      "visualQa": {
+        "kind": "carousel_slide",
+        "sourceKeys": [
+          "jeep"
+        ],
+        "distinctSourceCount": 1,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": null,
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/carousel-stellantis-1430-04.jpg",
+      "bytes": 373588,
+      "sha256": "dbbaf184312ef9f5a81bda197bd2a250a1b6932910bb6f794f681228fa66cfb1",
+      "probe": null,
+      "visualQa": {
+        "kind": "carousel_slide",
+        "sourceKeys": [
+          "fiat_hq"
+        ],
+        "distinctSourceCount": 1,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": null,
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/carousel-stellantis-1430-05.jpg",
+      "bytes": 329392,
+      "sha256": "4957f36650317bf5b3d8fa7378cdcf7b5925b9c54ebfb027088c5c0d649ec260",
+      "probe": null,
+      "visualQa": {
+        "kind": "carousel_slide",
+        "sourceKeys": [
+          "ram2"
+        ],
+        "distinctSourceCount": 1,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": null,
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/carousel-stellantis-1430-06.jpg",
+      "bytes": 279878,
+      "sha256": "435acd10b1cb6c716f777e44b9537e28d57947538ff7e83b2b724ae9b098d6b2",
+      "probe": null,
+      "visualQa": {
+        "kind": "carousel_slide",
+        "sourceKeys": [
+          "grand_cherokee"
+        ],
+        "distinctSourceCount": 1,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": null,
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/story-miro-1730.mp4",
+      "bytes": 445923,
+      "sha256": "a091822f8b737ab5874d90ec5e8495a1fabee163672b1e16a402b9e0d6a96713",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "8.000000"
+        }
+      },
+      "visualQa": {
+        "kind": "story",
+        "sourceKeys": [
+          "bending_spoons",
+          "collaboration_whiteboard"
+        ],
+        "distinctSourceCount": 2,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": "focused",
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/tiktok-primark-1945.mp4",
+      "bytes": 2725890,
+      "sha256": "cd169225d0c56f55dc3cd0c9c3c9dfffbdf0ffaeb41577a6c460cf52d53505bb",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "36.000000"
+        }
+      },
+      "visualQa": {
+        "kind": "narrated_video",
+        "sourceKeys": [
+          "primark1",
+          "primark2",
+          "primark3",
+          "primark4",
+          "primark_distribution"
+        ],
+        "distinctSourceCount": 5,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": "upbeat",
+      "musicFitPass": true
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-11/story-hefei-2030.mp4",
+      "bytes": 729873,
+      "sha256": "cffce9e67c8fcda76b6bfeae7f4ef4ddf04ee4c629dd8867b2a3a12f01f319a4",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "8.000000"
+        }
+      },
+      "visualQa": {
+        "kind": "story",
+        "sourceKeys": [
+          "hefei_skyline",
+          "hefei_retail"
+        ],
+        "distinctSourceCount": 2,
+        "rightsPass": true,
+        "visualSemanticPass": true,
+        "sceneDiversityPass": true,
+        "speechVisualMatchPass": true,
+        "abstractOnlyPrimaryVisual": false
+      },
+      "musicKey": "reflective",
+      "musicFitPass": true
+    }
+  ],
+  "captionQa": "BURNED_IN_CAPTIONS_3_OF_3"
+}
