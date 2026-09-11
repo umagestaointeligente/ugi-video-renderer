@@ -1,0 +1,47 @@
+{
+  "schema": "VSA_SEP12_13_HUMAN_VISUAL_QA_V1",
+  "date": "2026-09-11",
+  "source_run": 34642134698,
+  "roosevelt_repair_run": 34646631066,
+  "schedule_mutated": false,
+  "release_eligible": false,
+  "human_review_required": true,
+  "frozen_technical_pass": [
+    "CHANDRA_HYPERSOFT",
+    "PEAT_FIRE",
+    "HOUDINI",
+    "EQUAL_EARTH",
+    "BUSTER_KEATON",
+    "EL_NINO",
+    "DUST_MALI",
+    "ELTON_ENERGY",
+    "EMIT_MINE",
+    "SENTINEL_HURRICANE"
+  ],
+  "blocked_visual_repair": {
+    "IBERE": "Single talking-head source is reused across the story; scene diversity and narrative continuation are insufficient.",
+    "ROOSEVELT": "Causal animation passes, but the final real block does not clearly depict post-speech medical care and is semantically weak.",
+    "FERNANDA_MONTENEGRO": "The same short source/take is reused across the story; visual evidence does not express the multi-decade credibility narrative.",
+    "HUNGA_TSUNAMI": "Batch remake regressed versus the approved Hunga V3 narrative logic; a volcano/crater shot appears where the narration requires a coastal consequence.",
+    "MARISKA_LONGEVITY": "One White House reading source is reused across all real blocks; it does not visualize decades, changing roles, or career phases.",
+    "EMICIDA_INFLUENCE": "One panel/talk source is reused across the story; it does not visualize message propagation, performance, and influence as distinct moments."
+  },
+  "repair_plan": {
+    "rerender_only": [
+      "IBERE",
+      "ROOSEVELT",
+      "FERNANDA_MONTENEGRO",
+      "MARISKA_LONGEVITY",
+      "EMICIDA_INFLUENCE"
+    ],
+    "reuse_immutable_candidate": {
+      "HUNGA_TSUNAMI": {
+        "run_id": 34594731572,
+        "artifact": "vsa-hunga-narrative-visual-repair-v3",
+        "master_sha256": "3bc00e9cae30a28f87ff3217722dca6a8e235a0c984e6688318ba31113eb7de6"
+      }
+    }
+  },
+  "hard_gate": "NARRATIVE_VISUAL_ALIGNMENT_AND_SCENE_DIVERSITY",
+  "status": "BLOCKED_PENDING_TARGETED_VISUAL_REPAIR"
+}
