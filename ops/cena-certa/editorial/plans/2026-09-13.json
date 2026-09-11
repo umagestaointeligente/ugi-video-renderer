@@ -10,7 +10,9 @@
     "stories": 4,
     "youtube_video_only": true,
     "no_write_without_rights_and_qa": true,
-    "preserve_existing_schedules": true
+    "preserve_existing_schedules": true,
+    "tiktok_editorial_posts_supported": true,
+    "tiktok_story_via_metricool_not_assumed": true
   },
   "metricool_signal_summary": {
     "facebook": {"peak":"10:00","peak_value":7653,"secondary":["12:00","18:00","11:00","09:00","17:00"]},
@@ -20,42 +22,38 @@
   },
   "schedule": [
     {"time":"07:50","type":"story","topic":"Abertura: qual filme ou série vai dominar seu domingo?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"08:35","type":"video","slot":1,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"09:40","type":"video","slot":2,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"08:35","type":"video","slot":1,"lane":"high-recognition cleared title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"09:40","type":"video","slot":2,"lane":"acclaimed independent cleared title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
     {"time":"10:20","type":"editorial_post","topic":"Veneza 83 — vencedores / Leão de Ouro","format":"results_carousel","providers":["facebook","instagram","tiktok"],"status":"REVALIDATE_OFFICIAL_RESULTS_PLUS_ASSET_RIGHTS_QA_PENDING"},
-    {"time":"11:10","type":"video","slot":3,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"11:10","type":"video","slot":3,"lane":"thriller/horror cleared title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
     {"time":"11:50","type":"story","topic":"Veneza: o vencedor mereceu?","providers":["facebook","instagram"],"status":"REVALIDATE_OFFICIAL_RESULTS_PLUS_ASSET_RIGHTS_QA_PENDING"},
-    {"time":"12:25","type":"video","slot":4,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"13:20","type":"editorial_post","topic":"Physical 100: Italy — reação do primeiro fim de semana","format":"carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"14:15","type":"story","topic":"Project Hail Mary: ficção científica do fim de semana — vale ver?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"15:10","type":"video","slot":5,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"16:05","type":"video","slot":6,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"12:25","type":"video","slot":4,"lane":"drama/emotional cleared title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"13:20","type":"editorial_post","topic":"The Whisper Man — No.1 global na Netflix, mas divide o público","format":"carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"14:15","type":"story","topic":"Escolha rápida: Physical 100 Italy, Last Seen ou Colin From Accounts?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"15:10","type":"video","slot":5,"lane":"sci-fi/action cleared title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"16:05","type":"video","slot":6,"lane":"festival/acclaimed cleared title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
     {"time":"17:20","type":"editorial_post","topic":"Supergirl no HBO Max — segunda vida no streaming?","format":"static_or_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"18:10","type":"video","slot":7,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"19:20","type":"video","slot":8,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"20:15","type":"editorial_post","topic":"Last Seen / Desaparecida — Apple TV","format":"static_or_2_slide_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"21:05","type":"story","topic":"Escolha da noite: Last Seen, Colin From Accounts ou Kraven?","providers":["facebook","instagram"],"status":"KRAVEN_BR_TERRITORY_REVALIDATION_PLUS_ASSET_RIGHTS_QA_PENDING"}
+    {"time":"18:10","type":"video","slot":7,"lane":"evergreen high-demand cleared title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"19:20","type":"video","slot":8,"lane":"live-demand flex cleared title","providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"20:15","type":"editorial_post","topic":"A Love Other Than Yours — 10 anos juntos: casar ou terminar?","format":"static_or_2_slide_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"21:05","type":"story","topic":"Spider-Man record watch: bateu The Force Awakens?","providers":["facebook","instagram"],"status":"SAME_DAY_BOX_OFFICE_REVALIDATION_PLUS_ASSET_RIGHTS_QA_PENDING"}
   ],
   "video_lane_guidance": [
-    "1 current/high-recognition title with cleared footage",
-    "1 acclaimed independent with explicit reuse license",
-    "1 thriller/horror lane",
-    "1 drama/emotional lane",
-    "1 sci-fi/action lane",
-    "1 festival/acclaimed lane",
-    "1 evergreen high-demand lane",
-    "1 flex slot based on live demand; all titles deduped against the canonical 60-day ledger"
+    "All 8 video titles must come from the Cena Certa rights-cleared/canonical production pool, not from the editorial trend list unless footage rights are separately proven.",
+    "Every video title must pass the canonical 60-day dedup ledger.",
+    "No video is READY until source rights, semantic scene plan, music, canonical mask, captions, CTA and final QA pass.",
+    "YouTube remains video-only in this plan."
   ],
   "editorial_copy_hooks": {
     "venice": "Veneza terminou. O Leão de Ouro foi para o filme certo?",
-    "physical_100_italy": "A versão italiana chegou com 100 competidores. A franquia ainda tem fôlego?",
+    "whisper_man": "É o filme mais visto da Netflix na semana — mas a conversa está dividida. Você acha que o elenco entrega mais que o roteiro?",
     "supergirl": "O cinema não transformou Supergirl em mega-hit. O streaming pode mudar a história?",
-    "last_seen": "Uma ligação reacende um desaparecimento de 11 anos. Você entraria nessa busca?"
+    "love_other_than_yours": "Depois de 10 anos juntos, casamento é o próximo passo — ou o sinal de que é hora de soltar?"
   },
   "story_backup_topics": [
     "Kraven the Hunter — use only if Brazil Disney+ availability is confirmed live on 13/09",
     "Colin From Accounts S3 — final-season poll using Paramount press assets after terms review",
-    "Spider-Man x The Odyssey — refresh weekend box-office numbers before any numeric card"
+    "Project Hail Mary — worldwide Prime Video recommendation using Amazon official route after terms review"
   ],
-  "publication_gate": "Do not schedule any item until the exact visual asset is tied to a documented press/reuse route and QA passes. Venice results, Kraven Brazil availability and weekend box-office numbers require same-day revalidation before copy/artwork freeze."
+  "publication_gate": "Do not schedule any item until the exact visual asset is tied to a documented press/reuse route and QA passes. Venice results and Spider-Man weekend box-office numbers require same-day revalidation; Kraven requires Brazil territory verification before any local availability claim."
 }
