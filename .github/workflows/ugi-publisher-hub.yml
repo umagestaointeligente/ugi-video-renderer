@@ -163,11 +163,15 @@ jobs:
           done
           git config user.name 'ugi-publisher-hub-bot'
           git config user.email 'ugi-publisher-hub@users.noreply.github.com'
-          git add control-plane/publisher-hub/render-state/*.json 2>/dev/null || true
-          git add control-plane/publisher-hub/receipts/*.json 2>/dev/null || true
-          git add control-plane/publisher-hub/status/latest.json 2>/dev/null || true
-          git add control-plane/anti-repeat/platform-topic-history.json 2>/dev/null || true
-          git add control-plane/observability/buffer-circuit.json 2>/dev/null || true
+          # Stage the exact persistence allowlist assembled above. Keeping one
+          # source of truth prevents a tracked state file (for example,
+          # anti-repeat/latest.json) from being left dirty before rebase.
+          git add -- "${files[@]}"
+          if ! git diff --quiet; then
+            echo "::error::Publisher Hub produced tracked state outside the persistence allowlist"
+            git status --short
+            exit 1
+          fi
           if git diff --cached --quiet; then
             echo "No Publisher Hub state changes"
             exit 0
