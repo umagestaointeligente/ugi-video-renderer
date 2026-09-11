@@ -56,11 +56,7 @@ def enhanced_anim_frame(mode: str, idx: int, p: float, label: str) -> Image.Imag
 
 
 def localized_motion_score(video: pathlib.Path, seg: float, work: pathlib.Path, tag: str) -> float:
-    """Fail closed on static panels while accepting meaningful localized causal motion.
-
-    A video passes if it has either substantial full-frame change or a sufficiently large,
-    sufficiently intense active causal region. Tiny decorative motion remains below threshold.
-    """
+    """Fail closed on static panels while accepting meaningful localized causal motion."""
     a = work / f'motion_{tag}_a.png'
     b = work / f'motion_{tag}_b.png'
     base.run(['ffmpeg','-y','-loglevel','error','-ss',f'{seg*0.22:.3f}','-i',str(video),'-frames:v','1','-vf','scale=488:422',str(a)])
@@ -81,7 +77,6 @@ def localized_motion_score(video: pathlib.Path, seg: float, work: pathlib.Path, 
             tile = gray.crop((xx*tw, yy*th, (xx+1)*tw if xx < 3 else gray.width, (yy+1)*th if yy < 3 else gray.height))
             tile_max = max(tile_max, ImageStat.Stat(tile).mean[0])
 
-    # Composite is deliberately below 1 for tiny decorative changes.
     if global_mean >= 1.0:
         score = global_mean
     elif active_ratio >= 0.012 and tile_max >= 4.0:
@@ -92,8 +87,74 @@ def localized_motion_score(video: pathlib.Path, seg: float, work: pathlib.Path, 
     return round(score, 3)
 
 
+def ass_time(seconds: float) -> str:
+    """Native ASS time is H:MM:SS.cc (centiseconds), not millisecond SRT syntax."""
+    cs = max(0, int(round(seconds * 100)))
+    h, rem = divmod(cs, 360000)
+    m, rem = divmod(rem, 6000)
+    s, c = divmod(rem, 100)
+    return f'{h}:{m:02d}:{s:02d}.{c:02d}'
+
+
+def corrected_build_ass(words, ass: pathlib.Path):
+    if not words:
+        raise RuntimeError('CC_WORD_BOUNDARIES_EMPTY')
+    groups = []
+    cur = []
+    start = end = None
+    chars = 0
+    for w in words:
+        txt = str(w.get('text', '')).strip()
+        if not txt:
+            continue
+        st = float(w.get('offset', 0)) / 10_000_000
+        en = st + float(w.get('duration', 0)) / 10_000_000
+        if start is None:
+            start = st
+        if cur and (chars + 1 + len(txt) > 44 or len(cur) >= 8 or en - start > 3.8):
+            groups.append((start, end, ' '.join(cur)))
+            cur = []
+            start = st
+            chars = 0
+        cur.append(txt)
+        chars += len(txt) + 1
+        end = en
+    if cur:
+        groups.append((start, end, ' '.join(cur)))
+    if len(groups) < 3:
+        raise RuntimeError(f'CC_GROUPS_TOO_FEW count={len(groups)}')
+
+    head = (
+        '[Script Info]\n'
+        'ScriptType: v4.00+\n'
+        'PlayResX: 1080\n'
+        'PlayResY: 1920\n'
+        'WrapStyle: 2\n'
+        '[V4+ Styles]\n'
+        'Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding\n'
+        'Style: CC,DejaVu Sans,33,&H00FFFFFF,&H00FFFFFF,&H00101010,&H88020F25,1,0,0,0,100,100,0,0,3,1,0,5,40,40,0,1\n'
+        '[Events]\n'
+        'Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n'
+    )
+    lines = []
+    for st, en, txt in groups:
+        if len(txt) > 34:
+            q = txt.split()
+            mid = len(q) // 2
+            txt = ' '.join(q[:mid]) + r'\N' + ' '.join(q[mid:])
+        lines.append(
+            f'Dialogue: 0,{ass_time(st)},{ass_time(max(en, st + 0.65))},CC,,0,0,0,,'
+            f'{{\\an5\\pos(620,1450)}}{txt}'
+        )
+    ass.write_text(head + '\n'.join(lines) + '\n', encoding='utf-8')
+    if 'Dialogue:' not in ass.read_text(encoding='utf-8'):
+        raise RuntimeError('CC_ASS_DIALOGUE_MISSING')
+    print(f'CC_ASS_READY groups={len(lines)} first={lines[0][:90]}', flush=True)
+
+
 base.anim_frame = enhanced_anim_frame
 base.motion_score = localized_motion_score
+base.build_ass = corrected_build_ass
 
 if __name__ == '__main__':
     base.main()
