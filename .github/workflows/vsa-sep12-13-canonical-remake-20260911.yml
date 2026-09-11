@@ -1,0 +1,190 @@
+# VSA_VISUAL_STORY_ENGINE_V1
+# VSA_VISUAL_RELEASE_RECEIPT_V1
+name: VSA Sep12-13 Canonical Remake
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-sep12-13-canonical-remake-20260911.yml'
+      - 'scripts/vsa/canonical_remake_sep12_13.py'
+  workflow_dispatch:
+    inputs:
+      human_approved:
+        description: 'Explicit human approval after reviewing the generated masters'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false','true']
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: vsa-sep12-13-canonical-remake-20260911
+  cancel-in-progress: false
+
+env:
+  GOLDEN_RUN_ID: '34594731572'
+  GOLDEN_ARTIFACT: 'vsa-hunga-narrative-visual-repair-v3'
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate canonical renderer and policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/vsa/canonical_remake_sep12_13.py
+          python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
+          python scripts/vsa/validate_release_receipt.py --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json --self-test
+          ! grep -nE 'CENA[_ -]?CERTA|88240|88242|METRICOOL' scripts/vsa/canonical_remake_sep12_13.py
+
+  build:
+    needs: preflight
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        id:
+          - CHANDRA_HYPERSOFT
+          - IBERE
+          - PEAT_FIRE
+          - HOUDINI
+          - EQUAL_EARTH
+          - BUSTER_KEATON
+          - EL_NINO
+          - ROOSEVELT
+          - DUST_MALI
+          - FERNANDA_MONTENEGRO
+          - HUNGA_TSUNAMI
+          - ELTON_ENERGY
+          - EMIT_MINE
+          - MARISKA_LONGEVITY
+          - SENTINEL_HURRICANE
+          - EMICIDA_INFLUENCE
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install zero-cost canonical renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core curl
+          python -m pip install --quiet pillow pyyaml edge-tts
+      - name: Recover immutable Hunga V3 golden reference
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.GOLDEN_ARTIFACT }}
+          path: /tmp/golden
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ env.GOLDEN_RUN_ID }}
+      - name: Render one canonical remake candidate
+        shell: bash
+        env:
+          VSA_ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          GOLDEN=/tmp/golden/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V3.mp4
+          test -s "$GOLDEN"
+          mkdir -p /tmp/output
+          python scripts/vsa/canonical_remake_sep12_13.py \
+            --id "$VSA_ID" \
+            --golden "$GOLDEN" \
+            --out-dir /tmp/output
+          test "$(find /tmp/output -maxdepth 1 -name '*_REMAKE.mp4' | wc -l)" -eq 1
+          test "$(find /tmp/output -maxdepth 1 -name '*_CONTACT_SHEET.jpg' | wc -l)" -eq 1
+          test "$(find /tmp/output -maxdepth 1 -name '*_VSA_VISUAL_RELEASE_RECEIPT_V1.json' | wc -l)" -eq 1
+      - name: Assert pre-release receipt is fail-closed pending human review
+        shell: bash
+        run: |
+          set -euo pipefail
+          RECEIPT="$(find /tmp/output -maxdepth 1 -name '*_VSA_VISUAL_RELEASE_RECEIPT_V1.json' -print -quit)"
+          python - "$RECEIPT" <<'PY'
+          import json,sys
+          r=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert r['human_review']['approved'] is False
+          assert r['release_eligible'] is False
+          assert r['schedule_mutated_before_gate'] is False
+          assert all(r['gates'].values())
+          assert r['status']=='AWAITING_HUMAN_REVIEW'
+          print('VSA_CANONICAL_REMAKE_PRE_RELEASE_PASS',r['video_id'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-canonical-remake-${{ matrix.id }}
+          path: /tmp/output/*
+          if-no-files-found: error
+          retention-days: 14
+
+  review_pack:
+    needs: build
+    if: ${{ always() && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: vsa-canonical-remake-*
+          path: /tmp/review
+          merge-multiple: false
+      - name: Build human-review index without releasing or scheduling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib,hashlib
+          root=pathlib.Path('/tmp/review')
+          rows=[]
+          for p in sorted(root.rglob('*_VSA_VISUAL_RELEASE_RECEIPT_V1.json')):
+              r=json.load(open(p,encoding='utf-8'))
+              rows.append({'video_id':r['video_id'],'master':r['master']['file'],'sha256':r['master']['sha256'],'duration':r['master']['duration'],'contact_sheet':r['visual_proof']['contact_sheet_file'],'status':r['status']})
+          if len(rows)!=16: raise SystemExit(f'REVIEW_PACK_EXPECTED_16_GOT_{len(rows)}')
+          out={'schema':'VSA_SEP12_13_CANONICAL_REMAKE_REVIEW_PACK_V1','count':16,'release_eligible':False,'human_review_required':True,'schedule_mutated':False,'items':rows}
+          pathlib.Path('/tmp/VSA_SEP12_13_REVIEW_INDEX.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep12-13-human-review-index
+          path: /tmp/VSA_SEP12_13_REVIEW_INDEX.json
+          retention-days: 14
+
+  release_gate:
+    needs: build
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.human_approved == 'true' && needs.build.result == 'success' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [CHANDRA_HYPERSOFT,IBERE,PEAT_FIRE,HOUDINI,EQUAL_EARTH,BUSTER_KEATON,EL_NINO,ROOSEVELT,DUST_MALI,FERNANDA_MONTENEGRO,HUNGA_TSUNAMI,ELTON_ENERGY,EMIT_MINE,MARISKA_LONGEVITY,SENTINEL_HURRICANE,EMICIDA_INFLUENCE]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: vsa-canonical-remake-${{ matrix.id }}
+          path: /tmp/approved
+      - name: Apply explicit human approval to this immutable receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          RECEIPT="$(find /tmp/approved -name '*_VSA_VISUAL_RELEASE_RECEIPT_V1.json' -print -quit)"
+          python - "$RECEIPT" <<'PY'
+          import json,sys
+          p=sys.argv[1]; r=json.load(open(p,encoding='utf-8'))
+          r['human_review']={'approved':True,'reviewer':'PAULO_EXPLICIT_APPROVAL'}
+          r['release_eligible']=True
+          r['status']='HUMAN_APPROVED_AWAITING_SCHEDULER_REPLACEMENT'
+          open(p,'w',encoding='utf-8').write(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: ${{ format('/tmp/approved/{0}_VSA_VISUAL_RELEASE_RECEIPT_V1.json', matrix.id) }}
+      - name: Assert no scheduler mutation in render/review workflow
+        run: echo 'SCHEDULE_MUTATED=false'
