@@ -1,0 +1,119 @@
+{
+  "schema": "VSA_VISUAL_RELEASE_RECEIPT_V1",
+  "policy_id": "VSA_VISUAL_STORY_ENGINE_V1",
+  "video_id": "REPLACE_ME",
+  "channel": {
+    "name": "Você Sabia Agora?",
+    "youtube_channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ"
+  },
+  "shot_map": [
+    {
+      "id": "shot_01",
+      "narration": "REPLACE_ME",
+      "media_type": "REAL",
+      "visual_role": "CAUSE",
+      "visual_description": "REPLACE_ME",
+      "visible_action": "REPLACE_ME",
+      "semantic_claim": "REPLACE_ME",
+      "semantic_match": "EXACT",
+      "causal_link_id": "link_01",
+      "topic_only_match": false,
+      "generic_filler": false,
+      "reused_take_as_variety": false,
+      "asset": {
+        "event": "REPLACE_ME",
+        "semantic_role": "CAUSE",
+        "visible_action": "REPLACE_ME",
+        "source_url": "REPLACE_ME",
+        "license": "REPLACE_ME",
+        "source_timestamp_seconds": 0,
+        "rights_verified": false
+      }
+    },
+    {
+      "id": "shot_02",
+      "narration": "REPLACE_ME",
+      "media_type": "ANIMATION",
+      "visual_role": "MECHANISM",
+      "visual_description": "REPLACE_ME",
+      "visible_action": "REPLACE_ME",
+      "semantic_claim": "REPLACE_ME",
+      "semantic_match": "EXACT",
+      "causal_link_id": "link_01",
+      "topic_only_match": false,
+      "generic_filler": false,
+      "reused_take_as_variety": false
+    },
+    {
+      "id": "shot_03",
+      "narration": "REPLACE_ME",
+      "media_type": "REAL",
+      "visual_role": "CONSEQUENCE",
+      "visual_description": "REPLACE_ME",
+      "visible_action": "REPLACE_ME",
+      "semantic_claim": "REPLACE_ME",
+      "semantic_match": "EXACT",
+      "causal_link_id": "link_01",
+      "topic_only_match": false,
+      "generic_filler": false,
+      "reused_take_as_variety": false,
+      "asset": {
+        "event": "REPLACE_ME",
+        "semantic_role": "CONSEQUENCE",
+        "visible_action": "REPLACE_ME",
+        "source_url": "REPLACE_ME",
+        "license": "REPLACE_ME",
+        "source_timestamp_seconds": 0,
+        "rights_verified": false
+      }
+    }
+  ],
+  "gates": {
+    "SHOT_MAP_PASS": false,
+    "VISUAL_NARRATIVE_ALIGNMENT_PASS": false,
+    "REAL_ACTION_VISIBLE_PASS": false,
+    "CAUSE_EFFECT_CONTINUITY_PASS": false,
+    "NO_GENERIC_FILLER_PASS": false,
+    "SCENE_DIVERSITY_PASS": false,
+    "RIGHTS_TRACEABILITY_PASS": false,
+    "CAUSAL_VISUAL_MOTION_PASS": false,
+    "CC_VISIBLE_PASS": false,
+    "SINGLE_TITLE_PASS": false,
+    "THUMBNAIL_PASS": false,
+    "CTA_CANONICAL_PASS": false,
+    "FORMAT_PASS": false,
+    "AUDIO_PASS": false
+  },
+  "captions": {
+    "burned_in_final_master": false,
+    "maximum_lines_observed": 0,
+    "visible_samples": []
+  },
+  "title": {
+    "layer_count": 0,
+    "ghost_duplicate_detected": true
+  },
+  "cta": {
+    "lines": [
+      "Agora você já sabe.",
+      "Curta, compartilhe e siga o Você Sabia Agora."
+    ]
+  },
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "video_codec": "h264",
+    "pixel_format": "yuv420p"
+  },
+  "visual_proof": {
+    "contact_sheet_generated": false,
+    "all_story_blocks_sampled": false
+  },
+  "human_review": {
+    "approved": false,
+    "reviewer": ""
+  },
+  "release_eligible": false,
+  "schedule_mutated_before_gate": false
+}
