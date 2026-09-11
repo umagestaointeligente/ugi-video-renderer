@@ -65,10 +65,22 @@ jobs:
             "cta_sha256":"6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8"
           }
           JSON
+      - name: Build deterministic CTA timing repair
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          src=Path('scripts/vsa/render_canonical_v2.py').read_text(encoding='utf-8')
+          old="""    body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_audio=work/'cta.mp3'\n    run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])\n    run(['edge-tts','--voice',voice,'--rate','+22%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])\n    bd=dur(body_audio); cd=min(4.5,max(3.0,dur(cta_audio)+0.15))\n    if dur(cta_audio)>4.5: raise SystemExit('CTA_VOICE_TOO_LONG')\n"""
+          new="""    body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_raw=work/'cta_raw.mp3'; cta_audio=work/'cta.mp3'\n    run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])\n    run(['edge-tts','--voice',voice,'--rate','+18%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_raw])\n    raw_cta=dur(cta_raw); target_cta=4.15; tempo=raw_cta/target_cta\n    if tempo < 0.5 or tempo > 2.0: raise SystemExit(f'CTA_TEMPO_UNSAFE:{raw_cta}:{tempo}')\n    run(['ffmpeg','-y','-loglevel','error','-i',cta_raw,'-filter:a',f'atempo={tempo:.6f}','-ar','48000',cta_audio])\n    cta_d=dur(cta_audio); bd=dur(body_audio); cd=min(4.5,max(3.0,cta_d+0.15))\n    if cta_d>4.35 or cta_d<3.6: raise SystemExit(f'CTA_TIMING_FAIL:{cta_d}')\n"""
+          if old not in src: raise SystemExit('CTA_PATCH_ANCHOR_NOT_FOUND')
+          Path('/tmp/render_canonical_v2_recovery.py').write_text(src.replace(old,new,1),encoding='utf-8')
+          PY
+          python -m py_compile /tmp/render_canonical_v2_recovery.py
       - name: Render with fail-closed V2 renderer
         run: |
           set -euo pipefail
-          python scripts/vsa/render_canonical_v2.py \
+          python /tmp/render_canonical_v2_recovery.py \
             --topic /tmp/vsa/topic.json \
             --mask /tmp/vsa/assets/mask.png \
             --cta /tmp/vsa/assets/cta.png \
