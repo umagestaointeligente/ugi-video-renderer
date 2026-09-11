@@ -8,20 +8,24 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: orbit-cena-certa-youtube-queue-mutation
+  cancel-in-progress: false
+
 jobs:
-  parse:
+  schedule:
     runs-on: ubuntu-latest
-    outputs:
-      item_key: ${{ steps.queue.outputs.item_key }}
-      media_url: ${{ steps.queue.outputs.media_url }}
-      title: ${{ steps.queue.outputs.title }}
-      description_b64: ${{ steps.queue.outputs.description_b64 }}
-      publish_at: ${{ steps.queue.outputs.publish_at }}
-      expected_channel_id: ${{ steps.queue.outputs.expected_channel_id }}
+    timeout-minutes: 25
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      WORKER_URL: https://orbit-cena-certa-auth.umagestaointeligente.workers.dev
+      CANONICAL_CHANNEL_ID: UCq1h6RSnev5-JJQ8k4T98tg
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
+
       - id: queue
         name: Resolve exactly one queue item
         shell: bash
@@ -34,8 +38,8 @@ jobs:
             exit 78
           fi
           file=$(printf '%s\n' "$files")
-          python - "$file" >> "$GITHUB_OUTPUT" <<'PY'
-          import base64, json, pathlib, re, sys
+          python - "$file" > /tmp/item.json <<'PY'
+          import datetime, json, pathlib, re, sys
           p=pathlib.Path(sys.argv[1])
           d=json.loads(p.read_text())
           required=['item_key','media_url','title','description','publish_at']
@@ -47,44 +51,90 @@ jobs:
               raise SystemExit('BLOCKED: queue target is not canonical Cena Certa channel')
           if not re.fullmatch(r'[A-Za-z0-9._:-]{4,160}',str(d['item_key'])):
               raise SystemExit('BLOCKED: invalid item_key')
-          print('item_key='+str(d['item_key']))
-          print('media_url='+str(d['media_url']))
-          print('title='+str(d['title']).replace('\n',' ').replace('\r',' '))
-          print('description_b64='+base64.b64encode(str(d['description']).encode()).decode())
-          print('publish_at='+str(d['publish_at']))
-          print('expected_channel_id='+expected)
+          if not str(d['media_url']).startswith('https://'):
+              raise SystemExit('BLOCKED: media_url must use https')
+          dt=datetime.datetime.fromisoformat(str(d['publish_at']).replace('Z','+00:00'))
+          now=datetime.datetime.now(datetime.timezone.utc)
+          if dt <= now + datetime.timedelta(minutes=5):
+              raise SystemExit('BLOCKED: publish_at must be >5 minutes in future')
+          out={k:d[k] for k in required}
+          print(json.dumps(out,ensure_ascii=False))
           PY
+          echo "QUEUE_ITEM=$(jq -r .item_key /tmp/item.json)"
+          echo "QUEUE_PUBLISH_AT=$(jq -r .publish_at /tmp/item.json)"
 
-  decode:
-    needs: parse
-    runs-on: ubuntu-latest
-    outputs:
-      description: ${{ steps.dec.outputs.description }}
-    steps:
-      - id: dec
+      - name: Validate worker control credentials
         shell: bash
-        env:
-          D: ${{ needs.parse.outputs.description_b64 }}
         run: |
           set -euo pipefail
-          decoded=$(printf '%s' "$D" | base64 -d)
-          {
-            echo 'description<<ORBIT_EOF'
-            printf '%s\n' "$decoded"
-            echo 'ORBIT_EOF'
-          } >> "$GITHUB_OUTPUT"
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'BLOCKED: UGI_ADMIN_CLOUDFLARE_API_TOKEN missing'; exit 78; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'BLOCKED: UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID missing'; exit 78; }
 
-  schedule:
-    needs: [parse, decode]
-    uses: ./.github/workflows/orbit-cena-certa-youtube-direct.yml
-    with:
-      item_key: ${{ needs.parse.outputs.item_key }}
-      media_url: ${{ needs.parse.outputs.media_url }}
-      title: ${{ needs.parse.outputs.title }}
-      description: ${{ needs.decode.outputs.description }}
-      publish_at: ${{ needs.parse.outputs.publish_at }}
-      expected_channel_id: ${{ needs.parse.outputs.expected_channel_id }}
-    secrets:
-      ORBIT_YOUTUBE_CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
-      ORBIT_YOUTUBE_CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
-      CENA_CERTA_YOUTUBE_REFRESH_TOKEN: ${{ secrets.CENA_CERTA_YOUTUBE_REFRESH_TOKEN }}
+      - name: Open one-run command gate
+        working-directory: cloudflare
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOKEN="$(openssl rand -hex 32)"
+          echo "::add-mask::$TOKEN"
+          echo "COMMAND_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+          printf '%s' "$TOKEN" | npx --yes wrangler@4 secret put COMMAND_TOKEN --config wrangler.orbit-cena-certa-auth.toml >/dev/null
+          echo COMMAND_GATE=OPEN_MASKED
+
+      - name: Wait for command gate propagation
+        shell: bash
+        run: |
+          set -euo pipefail
+          READY=false
+          for i in {1..20}; do
+            HTTP=$(curl -sS -o /tmp/gate.json -w '%{http_code}' -X POST "$WORKER_URL/schedule" -H "Authorization: Bearer $COMMAND_TOKEN" -H 'Content-Type: application/json' --data '{}')
+            if [ "$HTTP" = "409" ] && grep -q 'INVALID_ITEM_KEY' /tmp/gate.json; then READY=true; break; fi
+            sleep 3
+          done
+          cat /tmp/gate.json
+          test "$READY" = true
+          echo COMMAND_GATE_PROPAGATED=true
+          echo MUTATION_PERFORMED=false
+
+      - name: Verify canonical authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..12}; do
+            curl -fsS "$WORKER_URL/status" > /tmp/status.json && \
+            grep -q '"authorized":true' /tmp/status.json && \
+            grep -q '"channel_id":"UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/status.json && \
+            grep -q '"has_refresh_token":true' /tmp/status.json && break
+            sleep 5
+          done
+          cat /tmp/status.json
+          grep -q '"authorized":true' /tmp/status.json
+          grep -q '"channel_id":"UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/status.json
+          grep -q '"has_refresh_token":true' /tmp/status.json
+          echo IDENTITY_GATE=PASS
+
+      - name: Schedule canonical queue item
+        shell: bash
+        run: |
+          set -euo pipefail
+          HTTP=$(curl -sS -o /tmp/resp.json -w '%{http_code}' -X POST "$WORKER_URL/schedule" -H "Authorization: Bearer $COMMAND_TOKEN" -H 'Content-Type: application/json' --data-binary @/tmp/item.json)
+          cat /tmp/resp.json
+          test "$HTTP" = "200"
+          jq -e '.ok == true and (.result == "SCHEDULED" or .result == "ALREADY_EXISTS") and .channel_id == "UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/resp.json >/dev/null
+          echo "DIRECT_RESULT=$(jq -r .result /tmp/resp.json)"
+          echo "DIRECT_VIDEO_ID=$(jq -r '.video_id // .existing_video_id // empty' /tmp/resp.json)"
+          echo "DIRECT_PUBLISH_AT=$(jq -r '.publish_at // empty' /tmp/resp.json)"
+          echo READBACK_VERIFIED=true
+
+      - name: Seal command gate
+        if: always()
+        working-directory: cloudflare
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${CLOUDFLARE_API_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+            SEAL="$(openssl rand -hex 32)"
+            echo "::add-mask::$SEAL"
+            printf '%s' "$SEAL" | npx --yes wrangler@4 secret put COMMAND_TOKEN --config wrangler.orbit-cena-certa-auth.toml >/dev/null
+            echo COMMAND_GATE=SEALED
+          fi
