@@ -1,0 +1,61 @@
+{
+  "schema": "VSA_VISUAL_STORY_ENGINE_ACTIVATION_RECEIPT_V1",
+  "policy_id": "VSA_VISUAL_STORY_ENGINE_V1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "activated_at": "2026-09-11T11:10:00-03:00",
+  "scope": "ALL_NEW_VSA_VIDEO_WORKFLOWS_AND_RELEASES",
+  "golden_reference": {
+    "id": "HUNGA_TSUNAMI",
+    "run_id": 34594731572,
+    "commit": "d12c0ae4a8d4847638782d84490d68adf90ee9fe",
+    "artifact": "vsa-hunga-narrative-visual-repair-v3"
+  },
+  "implementation": {
+    "policy_commit": "1c2c2add34f8e838c52d7ab0c3d34ef7edef95a1",
+    "validator_commit": "9b0496cb179ebdcaad6e318e1e3608c3010c9d00",
+    "release_gate_action_commit": "e0dd76466efd31ca88300cf7460557a7f6fbc2dc",
+    "workflow_compliance_commit": "968352903343ecd7e6ac08c711fa3398d1c9d3a2",
+    "receipt_template_commit": "67d173c2518dde9214d9eddf629e686ef17ab82a",
+    "guard_commit": "a8760a83e4a33da9b0b549536fef2d47c949b219",
+    "guard_run_id": 34608591343,
+    "guard_run_conclusion": "success"
+  },
+  "verified_controls": {
+    "shot_map_required": true,
+    "exact_semantic_match_required": true,
+    "real_action_visible_required": true,
+    "mechanism_to_real_consequence_link_required": true,
+    "generic_filler_blocked": true,
+    "topic_only_footage_blocked": true,
+    "repeated_take_as_variety_blocked": true,
+    "rights_traceability_required": true,
+    "cc_visible_in_final_master_required": true,
+    "single_title_required": true,
+    "canonical_cta_required": true,
+    "visual_contact_sheet_required": true,
+    "human_review_required": true,
+    "schedule_before_gate_blocked": true,
+    "future_workflow_without_canonical_gate_blocked_by_compliance_guard": true,
+    "legacy_generic_cause_effect_renderer_blocked_in_new_or_changed_vsa_workflows": true
+  },
+  "negative_tests": {
+    "generic_filler": "BLOCKED",
+    "topic_only_match": "BLOCKED",
+    "captions_missing": "BLOCKED",
+    "duplicate_title": "BLOCKED",
+    "wrong_cta": "BLOCKED",
+    "rights_not_verified": "BLOCKED",
+    "human_review_missing": "BLOCKED",
+    "real_action_gate_false": "BLOCKED",
+    "schedule_mutated_before_gate": "BLOCKED",
+    "future_vsa_workflow_without_release_gate": "BLOCKED"
+  },
+  "safety": {
+    "schedules_mutated": false,
+    "sep13_blocked_batch_unblocked": false,
+    "cena_certa_touched": false,
+    "metricool_used_for_vsa": false,
+    "paid_route_used": false
+  },
+  "operational_boundary": "This guard governs the canonical VSA repository and official release path. A manual out-of-band upload performed outside the canonical path cannot be technically prevented by repository code alone."
+}
