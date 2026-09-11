@@ -4,18 +4,53 @@
   "project_lock": {
     "project": "ORBIT/VSA",
     "channel_name": "Você Sabia Agora?",
-    "accepted_aliases": ["VSA", "VOCE SABIA AGORA", "VOCÊ SABIA AGORA"],
+    "accepted_aliases": [
+      "VSA",
+      "VOCE SABIA AGORA",
+      "VOCÊ SABIA AGORA"
+    ],
     "fail_closed_on_ambiguous_target": true,
-    "forbidden_write_prefixes": ["canonical/cena-certa/", "ops/cena-certa-runtime/", "Cena Certa", "Cena Certa Ofc"],
-    "forbidden_account_ids": [88240, 88242],
-    "approved_upload_post_profile": {"username":"voce-sabia-agora","youtube_channel":"Você Sabia Agora?","handle":"@vocesabiaagoraoficial"},
-    "historical_post_bridge_account": {"id": 88527, "platform": "youtube", "username": "Você Sabia Agora?"}
+    "forbidden_write_prefixes": [
+      "canonical/cena-certa/",
+      "ops/cena-certa-runtime/",
+      "Cena Certa",
+      "Cena Certa Ofc"
+    ],
+    "forbidden_account_ids": [
+      88240,
+      88242
+    ],
+    "approved_upload_post_profile": {
+      "username": "voce-sabia-agora",
+      "youtube_channel": "Você Sabia Agora?",
+      "handle": "@vocesabiaagoraoficial"
+    },
+    "historical_post_bridge_account": {
+      "id": 88527,
+      "platform": "youtube",
+      "username": "Você Sabia Agora?"
+    }
   },
   "format": {
-    "canvas": {"width": 1080, "height": 1920, "aspect": "9:16", "fps": 30},
+    "canvas": {
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "fps": 30
+    },
     "codec": "H.264 High / yuv420p",
-    "duration_seconds": {"preferred_min": 60, "preferred_max": 90, "hard_max": 120},
-    "audio": {"target_lufs": -16, "true_peak_dbTP_max": -1.5, "narration_language": "pt-BR", "voice": "male young-adult natural neutral", "music_vocals": false}
+    "duration_seconds": {
+      "preferred_min": 60,
+      "preferred_max": 90,
+      "hard_max": 120
+    },
+    "audio": {
+      "target_lufs": -16,
+      "true_peak_dbTP_max": -1.5,
+      "narration_language": "pt-BR",
+      "voice": "male young-adult natural neutral",
+      "music_vocals": false
+    }
   },
   "music_policy": {
     "status": "HARD_GATE",
@@ -27,52 +62,170 @@
     "audible_under_narration": true,
     "theme_match_required": true,
     "rights_provenance_required": true,
-    "music_source_must_identify": ["track_title", "artist_or_composer", "source", "license_or_usage_basis"],
-    "forbidden_music_forms": ["single_tone", "dual_tone", "continuous_test_tone", "sine_wave_bed", "oscillator_bed", "ringtone", "notification_tone", "polyphonic_phone_style", "chiptune", "8bit_game_style", "videogame_like_loop", "isolated_pulse", "isolated_drone_without_musical_development", "sound_effect_as_music", "generic_hum", "beep_sequence"],
+    "music_source_must_identify": [
+      "track_title",
+      "artist_or_composer",
+      "source",
+      "license_or_usage_basis"
+    ],
+    "forbidden_music_forms": [
+      "single_tone",
+      "dual_tone",
+      "continuous_test_tone",
+      "sine_wave_bed",
+      "oscillator_bed",
+      "ringtone",
+      "notification_tone",
+      "polyphonic_phone_style",
+      "chiptune",
+      "8bit_game_style",
+      "videogame_like_loop",
+      "isolated_pulse",
+      "isolated_drone_without_musical_development",
+      "sound_effect_as_music",
+      "generic_hum",
+      "beep_sequence"
+    ],
     "editorial_mood_map": {
-      "science_documentary": ["documentary film score", "cinematic ambient composition", "piano and strings", "subtle orchestral", "measured atmospheric instrumental"],
-      "space_astronomy": ["cinematic atmospheric", "documentary space score", "piano/strings with ambient texture", "ethereal instrumental with musical development"],
-      "mystery_investigation": ["mysterious film score", "suspense composition", "piano/percussion tension", "documentary investigation score"],
-      "adventure_discovery": ["cinematic adventure score", "orchestral hybrid", "percussion and strings", "uplifting discovery film score"],
-      "technology_future": ["futuristic documentary score", "cinematic electronic composition with rhythm and harmony", "technology underscore with drums/bass/melodic structure"],
-      "danger_catastrophe": ["serious cinematic tension", "dramatic documentary score", "percussion/strings tension composition"],
-      "human_emotional": ["warm documentary instrumental", "piano/strings", "reflective cinematic score"]
+      "science_documentary": [
+        "documentary film score",
+        "cinematic ambient composition",
+        "piano and strings",
+        "subtle orchestral",
+        "measured atmospheric instrumental"
+      ],
+      "space_astronomy": [
+        "cinematic atmospheric",
+        "documentary space score",
+        "piano/strings with ambient texture",
+        "ethereal instrumental with musical development"
+      ],
+      "mystery_investigation": [
+        "mysterious film score",
+        "suspense composition",
+        "piano/percussion tension",
+        "documentary investigation score"
+      ],
+      "adventure_discovery": [
+        "cinematic adventure score",
+        "orchestral hybrid",
+        "percussion and strings",
+        "uplifting discovery film score"
+      ],
+      "technology_future": [
+        "futuristic documentary score",
+        "cinematic electronic composition with rhythm and harmony",
+        "technology underscore with drums/bass/melodic structure"
+      ],
+      "danger_catastrophe": [
+        "serious cinematic tension",
+        "dramatic documentary score",
+        "percussion/strings tension composition"
+      ],
+      "human_emotional": [
+        "warm documentary instrumental",
+        "piano/strings",
+        "reflective cinematic score"
+      ]
     },
     "selection_rule": "Select music from the story's dominant emotional/editorial class. Do not choose merely because a catalog tag contains science, technology, space, mystery or adventure; the actual musical language must fit the finished video.",
     "mix_rule": "Music must be clearly perceptible on normal phone speakers/headphones without competing with narration. Use ducking under speech; do not bury music until it is effectively inaudible.",
-    "qa_required": ["MUSIC_COMPOSITION_PASS", "MUSIC_THEME_MATCH_PASS", "MUSIC_AUDIBILITY_PASS", "MUSIC_NO_TONE_OR_GAME_STYLE_PASS", "MUSIC_RIGHTS_PASS"]
+    "qa_required": [
+      "MUSIC_COMPOSITION_PASS",
+      "MUSIC_THEME_MATCH_PASS",
+      "MUSIC_AUDIBILITY_PASS",
+      "MUSIC_NO_TONE_OR_GAME_STYLE_PASS",
+      "MUSIC_RIGHTS_PASS"
+    ]
   },
   "visual_grammar": {
     "core_equation": "NARRAÇÃO = IMAGEM = AÇÃO VISUAL = SIGNIFICADO",
     "real_footage_first": true,
     "animation_purpose": "Explain invisible, internal, microscopic, electrical, molecular, force, trajectory, spatial, scale, data or abstract mechanisms; decorative animation is FAIL.",
     "causal_motion_required": true,
-    "preferred_sequence": ["REAL_HOOK", "EXPLANATION", "REAL_EVIDENCE", "EXPLANATION", "CONSEQUENCE_OR_PROOF", "PAYOFF", "CTA"],
+    "preferred_sequence": [
+      "REAL_HOOK",
+      "EXPLANATION",
+      "REAL_EVIDENCE",
+      "EXPLANATION",
+      "CONSEQUENCE_OR_PROOF",
+      "PAYOFF",
+      "CTA"
+    ],
     "first_frame": "Immediate anomaly/action; never logo, static title, still photo, avatar or intro animation.",
     "hook_deadline_seconds": 1.5,
     "no_accidental_footage_repeat": true,
     "internal_motion_rule": "An explanatory shot may last several seconds only if it contains continuous meaningful state changes/events.",
-    "prohibited": ["slideshow", "static-photo-plus-zoom", "generic-unrelated-stock", "decorative-animation", "gratuitous-flash", "black-screen", "prolonged-freeze", "accidental-repeat", "meaningless-transition", "text-as-visual-substitute", "talking-avatar", "animated-powerpoint"]
+    "prohibited": [
+      "slideshow",
+      "static-photo-plus-zoom",
+      "generic-unrelated-stock",
+      "decorative-animation",
+      "gratuitous-flash",
+      "black-screen",
+      "prolonged-freeze",
+      "accidental-repeat",
+      "meaningless-transition",
+      "text-as-visual-substitute",
+      "talking-avatar",
+      "animated-powerpoint"
+    ]
   },
   "editorial_lock": {
     "topic_no_repeat_days": 60,
-    "match_basis": ["core_topic", "semantic_cluster", "central_phenomenon_or_mechanism"],
-    "classifications": ["NEW_TOPIC", "REPEAT_BLOCKED", "BREAKING_EXCEPTION"],
+    "match_basis": [
+      "core_topic",
+      "semantic_cluster",
+      "central_phenomenon_or_mechanism"
+    ],
+    "classifications": [
+      "NEW_TOPIC",
+      "REPEAT_BLOCKED",
+      "BREAKING_EXCEPTION"
+    ],
     "breaking_exception_required": true,
     "breaking_exception_rule": "Only when a materially new strong fact, occurrence, discovery, case or consequence changes the story. Prior performance alone never qualifies.",
-    "breaking_exception_manifest_fields": ["previous_topic", "previous_date", "new_fact", "current_source", "exception_justification"]
+    "breaking_exception_manifest_fields": [
+      "previous_topic",
+      "previous_date",
+      "new_fact",
+      "current_source",
+      "exception_justification"
+    ]
   },
   "people_bio_curiosity": {
     "enabled": true,
     "person_real_visual_required": true,
-    "forbidden_visual_substitutes": ["journalist_as_person_proxy", "presenter_as_person_proxy", "actor_as_person_proxy", "generic_stock_person_as_person_proxy"],
+    "forbidden_visual_substitutes": [
+      "journalist_as_person_proxy",
+      "presenter_as_person_proxy",
+      "actor_as_person_proxy",
+      "generic_stock_person_as_person_proxy"
+    ],
     "animation_role": "Explain disease, physiology, mechanism, technology, history, context or cause without replacing the real person as the story anchor.",
-    "preferred_sequence": ["REAL_PERSON", "CONTEXT", "ANIMATED_EXPLANATION", "REAL_PERSON_OR_PROOF", "CONSEQUENCE", "PAYOFF"],
+    "preferred_sequence": [
+      "REAL_PERSON",
+      "CONTEXT",
+      "ANIMATED_EXPLANATION",
+      "REAL_PERSON_OR_PROOF",
+      "CONSEQUENCE",
+      "PAYOFF"
+    ],
     "health_rule": "Use documented public facts and reliable sources; distinguish fact from inference; do not diagnose beyond evidence.",
     "rights_rule": "Real-person footage/photo/archive must have provenance and reuse rights before publication."
   },
   "narrative": {
-    "suggested_arc": ["ANOMALY_OR_CONSEQUENCE", "QUESTION", "CONTEXT", "CAUSE", "MECHANISM", "SCALE_OR_COMPARISON", "PROOF_OR_CONSEQUENCE", "PAYOFF", "CTA"],
+    "suggested_arc": [
+      "ANOMALY_OR_CONSEQUENCE",
+      "QUESTION",
+      "CONTEXT",
+      "CAUSE",
+      "MECHANISM",
+      "SCALE_OR_COMPARISON",
+      "PROOF_OR_CONSEQUENCE",
+      "PAYOFF",
+      "CTA"
+    ],
     "semantic_map_required": true,
     "unrepresented_spoken_claim_blocks_release": true,
     "payoff_exact": "Agora você já sabe.",
@@ -81,53 +234,174 @@
   "mask": {
     "fixed_asset": true,
     "regenerate_per_video": false,
-    "library_path": "/VSA/Canonical Assets/VSA_MASK_CANONICAL_V1.png",
-    "sha256": "9f6ebae6742b007b1e660cd401b610933d0a06c2c3fee240220abf7215e1a4d9",
-    "source_dimensions": [864, 1536],
+    "library_path": "/VSA/Canonical Assets/VSA_MASK_CANONICAL_V2.png",
+    "sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+    "source_dimensions": [
+      864,
+      1536
+    ],
     "apply_stage": "AFTER_BASE_VIDEO_QA",
-    "variable_fields_only": ["title", "subtitle", "closed_caption"],
+    "variable_fields_only": [
+      "title",
+      "subtitle",
+      "closed_caption"
+    ],
     "reference_geometry_864x1536": {
-      "video_window": {"x": 42, "y": 352, "w": 780, "h": 676},
-      "caption_zone": {"x": 34, "y": 1084, "w": 796, "h": 145},
-      "footer_branding_zone": {"x": 0, "y": 1245, "w": 864, "h": 291}
+      "video_window": {
+        "x": 42,
+        "y": 352,
+        "w": 780,
+        "h": 676
+      },
+      "caption_zone": {
+        "x": 34,
+        "y": 1084,
+        "w": 796,
+        "h": 145
+      },
+      "footer_branding_zone": {
+        "x": 0,
+        "y": 1245,
+        "w": 864,
+        "h": 291
+      }
     },
-    "rules": ["No content may overlap mask UI.", "Do not crop important information.", "Do not use aggressive zoom merely to fit the window.", "Prefer contain/blur-background treatment when source aspect differs.", "Closed caption max two lines and must remain inside caption zone."]
+    "rules": [
+      "No content may overlap mask UI.",
+      "Do not crop important information.",
+      "Do not use aggressive zoom merely to fit the window.",
+      "Prefer contain/blur-background treatment when source aspect differs.",
+      "Closed caption max two lines and must remain inside caption zone."
+    ],
+    "legacy_v1_status": "HISTORICAL_ONLY_DO_NOT_RENDER",
+    "clean_header_required": true,
+    "single_title_render_required": true,
+    "clean_caption_zone_required": true,
+    "header_cover_panel_over_previous_title_forbidden": true
   },
   "cta": {
     "fixed_asset": true,
     "regenerate_per_video": false,
     "library_path": "/VSA/Canonical Assets/VSA_CTA_VISUAL_CANONICAL_V1.png",
     "sha256": "6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8",
-    "source_dimensions": [864, 1536],
-    "duration_seconds": {"min": 3.0, "max": 4.5},
-    "narrative_order": ["Agora você já sabe.", "Curta, compartilhe e siga o Você Sabia Agora."]
+    "source_dimensions": [
+      864,
+      1536
+    ],
+    "duration_seconds": {
+      "min": 3.0,
+      "max": 4.5
+    },
+    "narrative_order": [
+      "Agora você já sabe.",
+      "Curta, compartilhe e siga o Você Sabia Agora."
+    ]
   },
-  "captions": {"max_lines": 2, "synced": true, "discreet": true, "must_not_cover_critical_visual": true},
+  "captions": {
+    "max_lines": 2,
+    "synced": true,
+    "discreet": true,
+    "must_not_cover_critical_visual": true
+  },
   "tool_routing": {
-    "real_footage": ["rights-safe real video sources", "source-specific downloader/ingest"],
-    "timeline_compositor": ["Remotion"],
-    "motion_graphics": ["GSAP", "SVG", "Canvas"],
-    "spatial_2_5d_3d": ["Three.js/WebGL"],
-    "premium_3d_templates": ["Blender procedural/PBR"],
-    "finalization": ["FFmpeg"],
-    "qa": ["FFmpeg", "OpenCV", "dense visual sampling"],
+    "real_footage": [
+      "rights-safe real video sources",
+      "source-specific downloader/ingest"
+    ],
+    "timeline_compositor": [
+      "Remotion"
+    ],
+    "motion_graphics": [
+      "GSAP",
+      "SVG",
+      "Canvas"
+    ],
+    "spatial_2_5d_3d": [
+      "Three.js/WebGL"
+    ],
+    "premium_3d_templates": [
+      "Blender procedural/PBR"
+    ],
+    "finalization": [
+      "FFmpeg"
+    ],
+    "qa": [
+      "FFmpeg",
+      "OpenCV",
+      "dense visual sampling"
+    ],
     "ai_video": "Selective only; never replace observable real footage merely because generation is easier.",
     "paid_tools": "BLOCK unless Paulo explicitly authorizes purchase/credits."
   },
-  "golden_components": ["MAP_ZOOM", "GLOBE_TO_LOCATION", "OBJECT_EXPLODE", "CROSS_SECTION", "PARTICLE_FLOW", "CAUSE_EFFECT_CHAIN", "SCALE_COMPARE", "TIMELINE", "DATA_COUNTER", "CAMERA_FLYTHROUGH", "MICROSCOPIC_ZOOM", "X_RAY_REVEAL", "ROUTE_ANIMATION", "LABEL_TRACK", "PROGRESSIVE_HIGHLIGHT"],
+  "golden_components": [
+    "MAP_ZOOM",
+    "GLOBE_TO_LOCATION",
+    "OBJECT_EXPLODE",
+    "CROSS_SECTION",
+    "PARTICLE_FLOW",
+    "CAUSE_EFFECT_CHAIN",
+    "SCALE_COMPARE",
+    "TIMELINE",
+    "DATA_COUNTER",
+    "CAMERA_FLYTHROUGH",
+    "MICROSCOPIC_ZOOM",
+    "X_RAY_REVEAL",
+    "ROUTE_ANIMATION",
+    "LABEL_TRACK",
+    "PROGRESSIVE_HIGHLIGHT"
+  ],
   "pacing_guidance": {
     "principle": "Benchmark dynamism is driven by physical transformation inside shots, not just rapid cutting.",
-    "shot_median_seconds_reference_range": [2.5, 4.7],
+    "shot_median_seconds_reference_range": [
+      2.5,
+      4.7
+    ],
     "target": "Multiple meaningful internal events per explanatory shot; no long visually idle block.",
     "metrics_are_guidance_not_hard_gates": true
   },
   "qa": {
-    "workflow": ["BASE_RENDER", "TECH_QA", "MUSIC_QA", "DENSE_VISUAL_QA", "BENCHMARK_COMPARISON", "AUTO_CORRECT", "MASK_APPLICATION", "FINAL_QA", "RELEASE"],
+    "workflow": [
+      "BASE_RENDER",
+      "TECH_QA",
+      "MUSIC_QA",
+      "DENSE_VISUAL_QA",
+      "BENCHMARK_COMPARISON",
+      "AUTO_CORRECT",
+      "MASK_APPLICATION",
+      "FINAL_QA",
+      "RELEASE"
+    ],
     "dense_sampling_hz_default": 4,
     "never_call_4hz_frame_by_frame": true,
-    "checks": ["black frames", "prolonged freezes", "gratuitous flashes", "audio silence/clipping", "real instrumental music composition present", "music audible under narration", "music theme/mood matches editorial subject", "no tone/ringtone/chiptune/game-like loop or sound-effect substitute", "music provenance/rights", "semantic narration-image match", "crop/safe-area", "caption collision", "footage repetition", "internal motion", "CTA order", "technical format"],
-    "anti_regression": ["KEEP validated strengths", "CHANGE only current bottleneck", "FORBID reintroduction of rejected defects", "Do not render a change that removes more validated strengths than it adds"],
-    "release_rule": "Only deliver/schedule a version after all applicable gates PASS. Otherwise render V2/V3 internally."
+    "checks": [
+      "black frames",
+      "prolonged freezes",
+      "gratuitous flashes",
+      "audio silence/clipping",
+      "real instrumental music composition present",
+      "music audible under narration",
+      "music theme/mood matches editorial subject",
+      "no tone/ringtone/chiptune/game-like loop or sound-effect substitute",
+      "music provenance/rights",
+      "semantic narration-image match",
+      "crop/safe-area",
+      "caption collision",
+      "footage repetition",
+      "internal motion",
+      "CTA order",
+      "technical format",
+      "clean V2 header source",
+      "single title render",
+      "no residual previous title",
+      "clean caption zone"
+    ],
+    "anti_regression": [
+      "KEEP validated strengths",
+      "CHANGE only current bottleneck",
+      "FORBID reintroduction of rejected defects",
+      "Do not render a change that removes more validated strengths than it adds"
+    ],
+    "release_rule": "Only deliver/schedule a version after all applicable gates PASS, including CLEAN_HEADER_PASS and CLEAN_CC_ZONE_PASS. Otherwise render V2/V3 internally."
   },
   "rights": {
     "manifest_required_before_publication": true,
@@ -136,10 +410,23 @@
   },
   "publishing": {
     "allowed_target_requires_exact_channel_resolution": true,
-    "current_verified_route": {"connector": "Upload-Post", "profile": "voce-sabia-agora", "youtube_channel": "Você Sabia Agora?", "handle": "@vocesabiaagoraoficial"},
-    "historical_post_bridge": {"youtube_account_id": 88527, "status": "fallback only while create_post is HTTP 500"},
+    "current_verified_route": {
+      "connector": "Upload-Post",
+      "profile": "voce-sabia-agora",
+      "youtube_channel": "Você Sabia Agora?",
+      "handle": "@vocesabiaagoraoficial"
+    },
+    "historical_post_bridge": {
+      "youtube_account_id": 88527,
+      "status": "fallback only while create_post is HTTP 500"
+    },
     "metricool_status": "Current connected Metricool brand is Cena Certa Ofc only; forbidden for VSA until a VSA brand is verified.",
-    "schedule_evidence_required": ["platform/account identity", "scheduled job/post ID", "scheduled datetime", "scheduled status"],
+    "schedule_evidence_required": [
+      "platform/account identity",
+      "scheduled job/post ID",
+      "scheduled datetime",
+      "scheduled status"
+    ],
     "never_claim_scheduled_without_receipt": true
   },
   "learning": {

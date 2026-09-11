@@ -16,6 +16,7 @@ CURRENT = ROOT / "canonical" / "vsa" / "CURRENT.json"
 CONTRACT = ROOT / "canonical" / "vsa" / "v1" / "VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json"
 GUARDRAILS = ROOT / "canonical" / "vsa" / "v1" / "VSA_EDITORIAL_GUARDRAILS_V2.json"
 TOPIC_LEDGER = ROOT / "canonical" / "vsa" / "v1" / "VSA_TOPIC_LEDGER_60D.json"
+MASK_GUARD = ROOT / "canonical" / "vsa" / "v1" / "VSA_CLEAN_HEADER_GUARD_V1.json"
 CENA_PREFIXES = ("canonical/cena-certa/", "ops/cena-certa-runtime/")
 VSA_ALIASES = {"vsa", "voce sabia agora", "você sabia agora", "você sabia agora?", "voce sabia agora?"}
 
@@ -214,6 +215,23 @@ def assert_real_footage_policy(job, guardrails):
         result["person_real_video_segments"] = person_segments
     return result
 
+def assert_clean_header_policy(job):
+    guard = load_json(MASK_GUARD)
+    if guard.get("status") != "CANONICAL_ACTIVE":
+        raise GateError("CLEAN_HEADER_GUARD_NOT_ACTIVE")
+    expected_sha = str((guard.get("mask") or {}).get("sha256") or "")
+    if str(job.get("mask_sha256") or "") != expected_sha:
+        raise GateError("CLEAN_HEADER_MASK_SHA_MISMATCH")
+    required = ["clean_header_gate", "clean_cc_zone_gate", "single_title_render_gate"]
+    failed = [k for k in required if job.get(k) != "PASS"]
+    if failed:
+        raise GateError("CLEAN_HEADER_GATE_NOT_PASS:" + ",".join(failed))
+    if job.get("legacy_v1_body_shell_used") is True:
+        raise GateError("LEGACY_V1_MASK_FORBIDDEN")
+    if job.get("header_cover_panel_used") is True:
+        raise GateError("TITLE_OVER_TITLE")
+    return {"mask_sha256": expected_sha, "clean_header": "PASS", "clean_cc_zone": "PASS", "single_title": "PASS"}
+
 def preflight(args):
     current = load_json(CURRENT)
     contract = load_json(CONTRACT)
@@ -261,6 +279,7 @@ def validate_job(args):
     topic_result = assert_topic_history(job, guardrails)
     music_result = assert_music_policy(job, contract)
     footage_result = assert_real_footage_policy(job, guardrails)
+    clean_header_result = assert_clean_header_policy(job)
     if job.get("topic_history_gate") != guardrails["job_requirements"]["topic_history_gate"]:
         raise GateError("TOPIC_HISTORY_GATE_NOT_PASS")
     if job.get("base_video_qa") != "PASS" or job.get("final_qa") != "PASS":
@@ -273,6 +292,7 @@ def validate_job(args):
         "topic_classification": topic_result["classification"],
         "music": music_result,
         "real_footage": footage_result,
+        "clean_header": clean_header_result,
     }, ensure_ascii=False))
 
 def main():
