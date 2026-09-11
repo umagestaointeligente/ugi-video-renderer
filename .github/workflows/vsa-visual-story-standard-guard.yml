@@ -1,0 +1,107 @@
+name: VSA Visual Story Standard Guard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'config/vsa/**'
+      - 'scripts/vsa/**'
+      - '.github/actions/vsa-release-gate/**'
+      - '.github/workflows/vsa-*.yml'
+      - '.github/workflows/vsa-*.yaml'
+  pull_request:
+    paths:
+      - 'config/vsa/**'
+      - 'scripts/vsa/**'
+      - '.github/actions/vsa-release-gate/**'
+      - '.github/workflows/vsa-*.yml'
+      - '.github/workflows/vsa-*.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vsa-visual-story-standard-guard-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  canonical_contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate canonical policy JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
+          python -m json.tool config/vsa/VSA_VISUAL_RELEASE_RECEIPT_TEMPLATE_V1.json >/dev/null
+          test "$(python - <<'PY'
+          import json
+          p=json.load(open('config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json',encoding='utf-8'))
+          print(p['status'])
+          PY
+          )" = 'ACTIVE_FAIL_CLOSED'
+
+      - name: Prove validator blocks known regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/vsa/validate_release_receipt.py \
+            --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json \
+            --self-test
+
+      - name: Identify changed repository paths
+        id: changes
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = 'pull_request' ]; then
+            git fetch origin "$BASE_REF" --depth=1 || true
+            git diff --name-only "origin/$BASE_REF...HEAD" > /tmp/vsa_changed_paths.txt
+          elif [ -n "${BEFORE:-}" ] && ! printf '%s' "$BEFORE" | grep -Eq '^0+$'; then
+            git diff --name-only "$BEFORE" "$SHA" > /tmp/vsa_changed_paths.txt
+          else
+            git show --pretty='' --name-only "$SHA" > /tmp/vsa_changed_paths.txt
+          fi
+          cat /tmp/vsa_changed_paths.txt
+
+      - name: Block new or changed VSA workflows that bypass canonical gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < /tmp/vsa_changed_paths.txt
+          python scripts/vsa/check_workflow_compliance.py "${changed[@]}"
+
+      - name: Assert channel isolation and no secret material
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -RniE 'CENA[_ -]?CERTA|88240|88242|METRICOOL' \
+            config/vsa scripts/vsa .github/actions/vsa-release-gate
+          ! grep -RniE '(POSTLY_API_KEY|CLIENT_SECRET|REFRESH_TOKEN)[[:space:]]*[:=][[:space:]]*[^$<{ ]+' \
+            config/vsa scripts/vsa .github/actions/vsa-release-gate
+
+      - name: Canonical guard receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' \
+            'VSA_VISUAL_STORY_ENGINE_V1=ACTIVE_FAIL_CLOSED' \
+            'SHOT_MAP_REQUIRED=true' \
+            'EXACT_REAL_ACTION_REQUIRED=true' \
+            'GENERIC_FILLER_FORBIDDEN=true' \
+            'CC_VISIBLE_PROOF_REQUIRED=true' \
+            'SINGLE_TITLE_REQUIRED=true' \
+            'HUMAN_REVIEW_REQUIRED=true' \
+            'SCHEDULE_BEFORE_GATE_FORBIDDEN=true' \
+            'CENA_CERTA_TOUCHED=false'
