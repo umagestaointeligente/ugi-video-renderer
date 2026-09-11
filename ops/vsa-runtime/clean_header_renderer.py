@@ -78,9 +78,10 @@ def main() -> None:
     script = replace_once(script, old_start, new_start, 'REAL_START_SNIPPET_MISSING')
 
     # CLEAN HEADER V2. The inherited carrier contains old sample copy. Erase it once,
-    # at mask construction time, while preserving the logo on the right.
+    # at mask construction time, while preserving the logo on the right. A narrow
+    # cleanup strip below the logo removes residual sample copy without touching it.
     old_shell = 'run(["ffmpeg","-y","-loglevel","error","-ss","0.6","-i",str(carrier),"-frames:v","1","-vf","scale=1080:1920",str(ASSETS/"shell.jpg")])'
-    clean_shell = 'run(["ffmpeg","-y","-loglevel","error","-ss","0.6","-i",str(carrier),"-frames:v","1","-vf","scale=1080:1920,drawbox=x=35:y=45:w=735:h=385:color=0x04142c@1.0:t=fill",str(ASSETS/"shell.jpg")])'
+    clean_shell = 'run(["ffmpeg","-y","-loglevel","error","-ss","0.6","-i",str(carrier),"-frames:v","1","-vf","scale=1080:1920,drawbox=x=35:y=45:w=735:h=385:color=0x04142c@1.0:t=fill,drawbox=x=760:y=278:w=320:h=48:color=0x04142c@1.0:t=fill",str(ASSETS/"shell.jpg")])'
     script = replace_once(script, old_shell, clean_shell, 'SHELL_SOURCE_SNIPPET_MISSING')
 
     # Do not stack a second title card over the mask. Draw one title only.
@@ -109,11 +110,14 @@ def main() -> None:
         raise SystemExit('CLEAN_MASK_RESIDUAL_FAIL')
     if 'drawbox=x=35:y=45:w=735:h=385:color=0x04142c@1.0:t=fill' not in script:
         raise SystemExit('CLEAN_HEADER_BASE_FAIL')
+    if 'drawbox=x=760:y=278:w=320:h=48:color=0x04142c@1.0:t=fill' not in script:
+        raise SystemExit('CLEAN_HEADER_RIGHT_STRIP_FAIL')
 
     OUT_RENDERER.write_text(script, encoding='utf-8')
     print(json.dumps({
         'id': vsa_id,
         'clean_header': 'PATCH_PASS',
+        'clean_header_right_strip': 'PATCH_PASS',
         'clean_cc_zone': 'PATCH_PASS',
         'single_title': True,
         'preserve_body_animation_music': True,
