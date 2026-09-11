@@ -1,0 +1,15 @@
+{
+  "mission_id": "lsi-availability-20260911T2200Z",
+  "response_public_jwk": {
+    "kty": "RSA",
+    "n": "vIrxepyOuDySOW6icWxxE1ZbaLia_IGKmknaM6oj7VXyMIl1qQjXcsKrNNRE5r07GedPIK6Fjt78USJTKe28YBqFqkN_JcB2SMWZlekogQAPj59kYlOS3vcKRJhXw_w_sdZvGjN-2mN9BMOTcROH7mFBP7fGk1NIrfwdGI9u29PPPnoGYRscBZo9Z4xU7LzXJNr3ullgH0YbsZh1He1NRzRbxPQ43Y8K0rC-ig7xLMFdebFzTobt7J46D8JPeHR79LZL7N5YjJB4xgmkZIVKlA3EPxKrveROJjfIWwZbJvXkSEhQpkFNEcBJyoUVVM5rbllLn_XxWRdTx5WEudfNzQ",
+    "e": "AQAB"
+  },
+  "encrypted": {
+    "alg": "RSA-OAEP-256+A256GCM",
+    "wrapped_key": "MSumPS0WwGe8-vU5Wbuaj_sAFI_9uwIljDtdkEI8LlbAN8QfTxiUKRZjM1A7-k_ijag2aE58baTC1JbVWiSL_Ky59wr7lJuI3XZMBU3VP9isxF2rRSnX3lTrT54NN-B6KibUETgQszWav0e4HxM2A4uDFqQSc6yfXlax0hygpsWTPKKw0z5khnAYPSOS-GuF_d_Uf4NqzIfmUfhoDrXK2JFqHRV0MJq_UHuzDkQ1J7kfVuje8bWCYwaH1iX4p8kw5yl8YZ4_bt5adiIWQYX_XyuqXWxkuNqwWC3ssTwMkMEYg4D7PR3r4UxIVHlA2jK5hhaJDRSE4RyB4D8aiOcrVg",
+    "iv": "gbcSZe2hQiGctfrF",
+    "aad": "bHNpLWF2YWlsYWJpbGl0eS0yMDI2MDkxMVQyMjAwWg",
+    "ciphertext": "Ur8X6TwbVqYzbh2HTrGSYfSaQ3kEKvytWPDXev0Glv3xVWZnZstWq-FXBNvSjml_MXBtb1fJh4lB3fGePtVLNKn5mhUcpCz22VdnP8EvIvfVOTaqiz_Y6rtSg5K_FJppRarzvcq5MMzOYSTmJnx28_yHuVbFY9hFLqOoCR7tJ08a0YOXyATgjjnNA0-FY02sisFtxAkgDdNpMpHjTQ55o47bOOIXPf892i_ramVIeWATabGGWiLEB9III3SltPNy"
+  }
+}
