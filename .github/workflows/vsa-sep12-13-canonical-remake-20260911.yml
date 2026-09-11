@@ -24,7 +24,7 @@ permissions:
 
 concurrency:
   group: vsa-sep12-13-canonical-remake-20260911
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   GOLDEN_RUN_ID: '34594731572'
