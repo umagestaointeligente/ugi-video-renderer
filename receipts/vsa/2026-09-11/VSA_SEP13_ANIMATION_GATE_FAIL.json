@@ -1,0 +1,42 @@
+{
+  "schema": "VSA_ANIMATION_GATE_INCIDENT_V1",
+  "project": "ORBIT/VSA",
+  "date_local": "2026-09-13",
+  "detected_at_local": "2026-09-11T01:18:00-03:00",
+  "status": "BLOCKED_BY_ANIMATION_GATE",
+  "scope": [
+    "DUST_MALI",
+    "FERNANDA_MONTENEGRO",
+    "HUNGA_TSUNAMI",
+    "ELTON_ENERGY",
+    "EMIT_MINE",
+    "MARISKA_LONGEVITY",
+    "SENTINEL_HURRICANE",
+    "EMICIDA_INFLUENCE"
+  ],
+  "root_cause": "The inherited VSA renderer substitutes each mechanism segment with the same generic CAUSA/EFEITO panel. Only a small decorative bar moves, so the segment does not visually explain the narrated mechanism.",
+  "evidence": {
+    "sample_master": "VSA_20260913_1300_HUNGA_TSUNAMI_FINAL.mp4",
+    "source_run_id": 34548975468,
+    "source_job_id": 103107638970,
+    "observed_mechanism_windows_seconds": [
+      [8.072, 16.144],
+      [24.216, 32.288],
+      [40.360, 48.432]
+    ],
+    "renderer_pattern": "generic static CAUSA/EFEITO boxes for every t['mechs'] item",
+    "systemic": true
+  },
+  "hard_gate": {
+    "name": "CAUSAL_VISUAL_MOTION_PASS",
+    "required": true,
+    "legacy_static_cause_effect_template": "FORBIDDEN",
+    "decorative_motion_only": "FORBIDDEN",
+    "real_footage_or_topic_specific_causal_animation_required": true
+  },
+  "release_eligible": false,
+  "schedule_action": "DO_NOT_CREATE_OR_RECREATE_SEP13_SCHEDULES_UNTIL_REPAIRED_AND_HUMAN_APPROVED",
+  "schedules_mutated": false,
+  "cena_certa_touched": false,
+  "next_step": "Human-review the corrected HUNGA causal-animation pilot; only after approval apply topic-specific repair to the remaining Sep13 masters."
+}
