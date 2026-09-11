@@ -5,9 +5,11 @@
   "version": "VSA_CANONICAL_PRODUCTION_V1",
   "timezone": "America/Sao_Paulo",
   "contract": "canonical/vsa/v1/VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json",
+  "mask_guard": "canonical/vsa/v1/VSA_CLEAN_HEADER_GUARD_V1.json",
+  "active_mask_library_path": "/VSA/Canonical Assets/VSA_MASK_CANONICAL_V2.png",
   "runbook": "canonical/vsa/v1/README.md",
   "runtime": "ops/vsa-runtime/runtime.py",
   "isolation_test": "ops/vsa-runtime/test_isolation.py",
   "recovery_trigger": "RECOVERY::ORBIT::VSA::CANONICAL_V1",
-  "hard_rule": "Fail closed if target channel is not explicitly VSA. Never write to Cena Certa paths/accounts/schedules."
+  "hard_rule": "Fail closed if target channel is not explicitly VSA. Never write to Cena Certa paths/accounts/schedules. Do not release any VSA master without CLEAN_HEADER_PASS and CLEAN_CC_ZONE_PASS."
 }
