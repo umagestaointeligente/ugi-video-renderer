@@ -55,6 +55,9 @@ jobs:
           print('UGI_PUBLICATION_ROUTING_LOCK_PASS=true')
           PY
 
+      - name: Verify canonical LSI availability and auth boundary
+        run: python scripts/lsi_availability_probe.py
+
       - name: Run autonomous trend radar
         run: python magic-engine/magic_engine.py
 
@@ -100,5 +103,14 @@ jobs:
         with:
           name: magic-engine-plan-${{ github.run_id }}
           path: magic-engine/output/*.json
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Persist LSI availability evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lsi-availability-${{ github.run_id }}
+          path: generated/evidence/lsi-availability-latest.json
           retention-days: 7
           if-no-files-found: error
