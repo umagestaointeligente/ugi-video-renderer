@@ -2,7 +2,7 @@
 from __future__ import annotations
 import argparse, asyncio, hashlib, json, math, pathlib, random, shutil, subprocess
 from typing import Any
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont, ImageStat
 import yaml
 import edge_tts
 
@@ -116,6 +116,11 @@ def make_animation(mode:str,idx:int,seg:float,dst:pathlib.Path,label:str):
     tmp=dst.parent/f'frames_{dst.stem}';tmp.mkdir(parents=True,exist_ok=True);n=max(2,int(seg*30))
     for i in range(n):anim_frame(mode,idx,i/(n-1),label).save(tmp/f'{i:05d}.png')
     run(['ffmpeg','-y','-loglevel','error','-framerate','30','-i',str(tmp/'%05d.png'),'-t',f'{seg:.3f}','-c:v','libx264','-preset','veryfast','-crf','19','-pix_fmt','yuv420p',str(dst)]);shutil.rmtree(tmp,ignore_errors=True)
+def motion_score(video:pathlib.Path,seg:float,work:pathlib.Path,tag:str)->float:
+    a=work/f'motion_{tag}_a.png';b=work/f'motion_{tag}_b.png'
+    run(['ffmpeg','-y','-loglevel','error','-ss',f'{seg*0.22:.3f}','-i',str(video),'-frames:v','1','-vf','scale=488:422',str(a)])
+    run(['ffmpeg','-y','-loglevel','error','-ss',f'{seg*0.78:.3f}','-i',str(video),'-frames:v','1','-vf','scale=488:422',str(b)])
+    ia=Image.open(a).convert('RGB');ib=Image.open(b).convert('RGB');stat=ImageStat.Stat(ImageChops.difference(ia,ib));return round(sum(stat.mean)/3.0,3)
 async def tts(text:str,audio:pathlib.Path,rate:str):
     c=edge_tts.Communicate(text,VOICE,rate=rate);words=[]
     with audio.open('wb') as f:
@@ -128,7 +133,7 @@ def ts(s:float)->str:
 def build_ass(words,ass:pathlib.Path):
     groups=[];cur=[];start=end=None;chars=0
     for w in words:
-        txt=str(w.get('text','')).strip();
+        txt=str(w.get('text','')).strip()
         if not txt:continue
         st=float(w.get('offset',0))/10000000;en=st+float(w.get('duration',0))/10000000
         if start is None:start=st
@@ -169,19 +174,23 @@ def build(topic,golden,outdir):
         if body<=51.0:break
         narration.unlink();words=asyncio.run(tts(topic['script'],narration,rate));body=duration(narration)
     if not 42<=body<=55:raise RuntimeError(f'NARRATION_DURATION_OUT_OF_RANGE {body}')
-    ass=work/'cc.ass';build_ass(words,ass);structured=vid in SCIENCE or vid in HYBRID;nblocks=7 if structured else 6;seg=body/nblocks;labels=BLOCK_LABELS[vid];blocks=[];shots=[];real_i=0;first=None;fracs=[.08,.26,.48,.72,.88]
+    ass=work/'cc.ass';build_ass(words,ass);structured=vid in SCIENCE or vid in HYBRID;nblocks=7 if structured else 6;seg=body/nblocks;labels=BLOCK_LABELS[vid];blocks=[];shots=[];real_i=0;first=None;fracs=[.08,.26,.48,.72,.88];motion_metrics=[]
     for i in range(nblocks):
         anim=structured and i in(1,3,5);label=labels[i];dst=work/f'block_{i:02}.mp4'
         if anim:
-            make_animation(ANIM_MODE[vid],i,seg,dst,label);shots.append({'id':f'shot_{i+1:02}','narration':label,'media_type':'ANIMATION','visual_role':'MECHANISM','visual_description':label,'visible_action':label,'semantic_claim':label,'semantic_match':'EXACT','causal_link_id':'story_main','topic_only_match':False,'generic_filler':False,'reused_take_as_variety':False})
+            make_animation(ANIM_MODE[vid],i,seg,dst,label)
+            score=motion_score(dst,seg,work,f'{i:02}');motion_metrics.append({'block':i+1,'type':'ANIMATION','score':score})
+            if score<1.0:raise RuntimeError(f'CAUSAL_VISUAL_MOTION_FAIL block={i+1} score={score}')
+            shots.append({'id':f'shot_{i+1:02}','narration':label,'media_type':'ANIMATION','visual_role':'MECHANISM','visual_description':label,'visible_action':label,'semantic_claim':label,'semantic_match':'EXACT','causal_link_id':'story_main','topic_only_match':False,'generic_filler':False,'reused_take_as_variety':False})
         else:
             sp,url,lic,sd=srcs[real_i%len(srcs)];st=safe_start(sd,fracs[real_i%len(fracs)],seg);real_segment(sp,st,seg,dst,label);role=('CAUSE' if i==0 else 'PROOF' if i==nblocks-1 else 'CONSEQUENCE') if structured else ('EVIDENCE' if i<nblocks-1 else 'PROOF');shots.append({'id':f'shot_{i+1:02}','narration':label,'media_type':'REAL','visual_role':role,'visual_description':label,'visible_action':label,'semantic_claim':label,'semantic_match':'EXACT','causal_link_id':'story_main','topic_only_match':False,'generic_filler':False,'reused_take_as_variety':False,'asset':{'event':topic['title'],'semantic_role':role,'visible_action':label,'source_url':url,'license':lic,'source_timestamp_seconds':round(st,3),'rights_verified':True}})
-            if first is None:first=work/'thumb_source.jpg';run(['ffmpeg','-y','-loglevel','error','-ss',f'{seg*.45:.3f}','-i',str(dst),'-frames:v','1','-vf','scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920',str(first)])
+            if first is None:
+                first=work/'thumb_source.jpg';run(['ffmpeg','-y','-loglevel','error','-ss',f'{seg*.45:.3f}','-i',str(dst),'-frames:v','1','-vf','scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920',str(first)])
             real_i+=1
         blocks.append(dst)
     lst=work/'blocks.txt';lst.write_text(''.join(f"file '{p}'\n" for p in blocks));central=work/'central.mp4';run(['ffmpeg','-y','-loglevel','error','-f','concat','-safe','0','-i',str(lst),'-c','copy',str(central)]);bg=work/'bg.png';make_background(golden,topic['title'],bg);bodyv=work/'body.mp4';filt=f"[0:v][1:v]overlay=52:440:eof_action=pass,subtitles={ass}:fontsdir=/usr/share/fonts/truetype/dejavu,fps=30,format=yuv420p[v]";run(['ffmpeg','-y','-loglevel','error','-loop','1','-framerate','30','-i',str(bg),'-i',str(central),'-t',f'{body:.3f}','-filter_complex',filt,'-map','[v]','-an','-c:v','libx264','-preset','veryfast','-crf','19','-pix_fmt','yuv420p',str(bodyv)])
     gd=duration(golden);cta_v=work/'cta.mp4';run(['ffmpeg','-y','-loglevel','error','-ss',f'{max(0,gd-4.2):.3f}','-i',str(golden),'-t','4.2','-an','-vf','fps=30,format=yuv420p','-c:v','libx264','-preset','veryfast','-crf','19','-pix_fmt','yuv420p',str(cta_v)]);vl=work/'video.txt';vl.write_text(f"file '{bodyv}'\nfile '{cta_v}'\n");fullv=work/'video_noaudio.mp4';run(['ffmpeg','-y','-loglevel','error','-f','concat','-safe','0','-i',str(vl),'-c','copy',str(fullv)])
-    ctaa=work/'cta.mp3';asyncio.run(tts(CTA,ctaa,'+5%'));sil=work/'sil.wav';run(['ffmpeg','-y','-loglevel','error','-f','lavfi','-i','anullsrc=r=48000:cl=mono','-t','.25',str(sil)]);sl=work/'speech.txt';sl.write_text(f"file '{narration}'\nfile '{sil}'\nfile '{ctaa}'\n");speech=work/'speech.wav';run(['ffmpeg','-y','-loglevel','error','-f','concat','-safe','0','-i',str(sl),'-ar','48000','-ac','1',str(speech)]);music=work/'music.mp3';download(topic['track'][2],music);total=duration(fullv);mix=work/'mix.wav';fc='[1:a]volume=0.22[m];[m][0:a]sidechaincompress=threshold=0.025:ratio=8:attack=20:release=320[duck];[0:a][duck]amix=inputs=2:duration=longest:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]';run(['ffmpeg','-y','-loglevel','error','-i',str(speech),'-stream_loop','-1','-i',str(music),'-t',f'{total:.3f}','-filter_complex',fc,'-map','[a]','-ar','48000','-ac','2',str(mix)])
+    ctaa=work/'cta.mp3';asyncio.run(tts(CTA,ctaa,'+5%'));speech=work/'speech.wav';speech_fc='[0:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=mono[a0];[1:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=mono[a1];[2:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=mono[a2];[a0][a1][a2]concat=n=3:v=0:a=1[s]';run(['ffmpeg','-y','-loglevel','error','-i',str(narration),'-f','lavfi','-t','0.25','-i','anullsrc=r=48000:cl=mono','-i',str(ctaa),'-filter_complex',speech_fc,'-map','[s]','-ar','48000','-ac','1',str(speech)]);music=work/'music.mp3';download(topic['track'][2],music);total=duration(fullv);mix=work/'mix.wav';fc='[1:a]volume=0.22[m];[m][0:a]sidechaincompress=threshold=0.025:ratio=8:attack=20:release=320[duck];[0:a][duck]amix=inputs=2:duration=longest:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11[a]';run(['ffmpeg','-y','-loglevel','error','-i',str(speech),'-stream_loop','-1','-i',str(music),'-t',f'{total:.3f}','-filter_complex',fc,'-map','[a]','-ar','48000','-ac','2',str(mix)])
     name=f"VSA_{topic['date'].replace('-','')}_{topic['time'].replace(':','')}_{vid}_REMAKE.mp4";final=outdir/name;run(['ffmpeg','-y','-loglevel','error','-i',str(fullv),'-i',str(mix),'-map','0:v','-map','1:a','-c:v','copy','-c:a','aac','-b:a','160k','-shortest','-movflags','+faststart',str(final)]);thumb=outdir/f'{vid}_THUMB_REMAKE.jpg';make_thumb(first,topic['title'],thumb)
     frames=[]
     for i in range(nblocks):
@@ -195,7 +204,7 @@ def build(topic,golden,outdir):
     for frac in(.2,.5,.8):
         t=body*frac;p=work/f'cc{frac}.png';run(['ffmpeg','-y','-loglevel','error','-ss',f'{t:.3f}','-i',str(final),'-frames:v','1',str(p)]);ar=Image.open(p).convert('L').crop((180,1320,1050,1580));bright=sum(1 for x in ar.getdata() if x>220);cc.append({'t':round(t,2),'visible':bright>120,'bright_pixels':bright})
     if not all(x['visible'] for x in cc):raise RuntimeError('CC_VISIBLE_FAIL '+str(cc))
-    gates=['SHOT_MAP_PASS','VISUAL_NARRATIVE_ALIGNMENT_PASS','REAL_ACTION_VISIBLE_PASS','CAUSE_EFFECT_CONTINUITY_PASS','NO_GENERIC_FILLER_PASS','SCENE_DIVERSITY_PASS','RIGHTS_TRACEABILITY_PASS','CAUSAL_VISUAL_MOTION_PASS','CC_VISIBLE_PASS','SINGLE_TITLE_PASS','THUMBNAIL_PASS','CTA_CANONICAL_PASS','FORMAT_PASS','AUDIO_PASS'];receipt={'schema':'VSA_VISUAL_RELEASE_RECEIPT_V1','policy_id':'VSA_VISUAL_STORY_ENGINE_V1','video_id':vid,'channel':{'name':'Você Sabia Agora?','youtube_channel_id':'UCm0UMO6lNWlr66YSIS1p4iQ'},'master':{'file':final.name,'sha256':sha256(final),'duration':round(float(pr['format']['duration']),3)},'shot_map':shots,'gates':{g:True for g in gates},'captions':{'burned_in_final_master':True,'maximum_lines_observed':2,'visible_samples':cc},'title':{'layer_count':1,'ghost_duplicate_detected':False},'cta':{'lines':['Agora você já sabe.',CTA]},'format':{'width':1080,'height':1920,'fps':30,'video_codec':'h264','pixel_format':'yuv420p'},'visual_proof':{'contact_sheet_generated':True,'all_story_blocks_sampled':True,'contact_sheet_file':contact.name},'human_review':{'approved':False,'reviewer':''},'release_eligible':False,'schedule_mutated_before_gate':False,'thumbnail':thumb.name,'status':'AWAITING_HUMAN_REVIEW'};(outdir/f'{vid}_VSA_VISUAL_RELEASE_RECEIPT_V1.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n');print(json.dumps({'id':vid,'master':final.name,'sha256':receipt['master']['sha256'],'duration':receipt['master']['duration'],'cc':cc},ensure_ascii=False))
+    gates=['SHOT_MAP_PASS','VISUAL_NARRATIVE_ALIGNMENT_PASS','REAL_ACTION_VISIBLE_PASS','CAUSE_EFFECT_CONTINUITY_PASS','NO_GENERIC_FILLER_PASS','SCENE_DIVERSITY_PASS','RIGHTS_TRACEABILITY_PASS','CAUSAL_VISUAL_MOTION_PASS','CC_VISIBLE_PASS','SINGLE_TITLE_PASS','THUMBNAIL_PASS','CTA_CANONICAL_PASS','FORMAT_PASS','AUDIO_PASS'];receipt={'schema':'VSA_VISUAL_RELEASE_RECEIPT_V1','policy_id':'VSA_VISUAL_STORY_ENGINE_V1','video_id':vid,'channel':{'name':'Você Sabia Agora?','youtube_channel_id':'UCm0UMO6lNWlr66YSIS1p4iQ'},'master':{'file':final.name,'sha256':sha256(final),'duration':round(float(pr['format']['duration']),3)},'shot_map':shots,'gates':{g:True for g in gates},'captions':{'burned_in_final_master':True,'maximum_lines_observed':2,'visible_samples':cc},'title':{'layer_count':1,'ghost_duplicate_detected':False},'cta':{'lines':['Agora você já sabe.',CTA]},'format':{'width':1080,'height':1920,'fps':30,'video_codec':'h264','pixel_format':'yuv420p'},'visual_proof':{'contact_sheet_generated':True,'all_story_blocks_sampled':True,'contact_sheet_file':contact.name,'causal_motion_metrics':motion_metrics},'human_review':{'approved':False,'reviewer':''},'release_eligible':False,'schedule_mutated_before_gate':False,'thumbnail':thumb.name,'status':'AWAITING_HUMAN_REVIEW'};(outdir/f'{vid}_VSA_VISUAL_RELEASE_RECEIPT_V1.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n');print(json.dumps({'id':vid,'master':final.name,'sha256':receipt['master']['sha256'],'duration':receipt['master']['duration'],'cc':cc,'motion':motion_metrics},ensure_ascii=False))
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--id',required=True);ap.add_argument('--golden',required=True);ap.add_argument('--out-dir',required=True);a=ap.parse_args();topics=load_topics();outdir=pathlib.Path(a.out_dir);outdir.mkdir(parents=True,exist_ok=True);build(topics[a.id],pathlib.Path(a.golden),outdir)
 if __name__=='__main__':main()
