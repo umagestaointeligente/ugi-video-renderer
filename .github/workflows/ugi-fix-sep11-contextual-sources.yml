@@ -1,0 +1,50 @@
+name: UGI Fix Sep11 Contextual Sources
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-fix-sep11-contextual-sources.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Replace logo-only sources with contextual raster media
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/ugi_build_editorial_assets_20260911.py')
+          s=p.read_text(encoding='utf-8')
+          replacements={
+            "'playstation':{'filename':'PlayStation logo.svg','width':1400,'license':'Public domain textlogo; trademarked','author':'Sony Interactive Entertainment','page':'https://commons.wikimedia.org/wiki/File:PlayStation_logo.svg','semantic':'PlayStation brand'},": "'playstation':{'filename':'PlayStation 5 and DualSense (2).jpg','width':1600,'license':'CC BY-SA 4.0','author':'Osh33m','page':'https://commons.wikimedia.org/wiki/File:PlayStation_5_and_DualSense_(2).jpg','semantic':'PlayStation 5 console and DualSense controller'},",
+            "'xbox_logo':{'filename':'Xbox logo (2019).svg','width':1400,'license':'Public domain textlogo; trademarked','author':'Microsoft Corporation','page':'https://commons.wikimedia.org/wiki/File:Xbox_logo_(2019).svg','semantic':'Xbox brand'},": "'xbox_logo':{'filename':'Xbox Series X mit Controller.jpg','width':1600,'license':'CC BY-SA 4.0','author':'Der. Bellemer','page':'https://commons.wikimedia.org/wiki/File:Xbox_Series_X_mit_Controller.jpg','semantic':'Xbox Series X console and controller'},",
+            "'xbox_device':{'filename':'Microsoft Xbox.png','width':1600,'license':'CC BY-SA 4.0 / GFDL','author':'KK PANG','page':'https://commons.wikimedia.org/wiki/File:Microsoft_Xbox.png','semantic':'Xbox hardware'},": "'xbox_device':{'filename':'Xbox Series X and S with controllers.jpg','width':1600,'license':'CC BY-SA 4.0','author':'AsmodeanUnderscore / Ian Hughes','page':'https://commons.wikimedia.org/wiki/File:Xbox_Series_X_and_S_with_controllers.jpg','semantic':'Xbox Series X and S with controllers'},",
+            "'bending_spoons':{'filename':'Bending Spoons.svg','width':1600,'license':'Public domain textlogo; trademarked','author':'Bending Spoons Operations S.p.A.','page':'https://commons.wikimedia.org/wiki/File:Bending_Spoons.svg','semantic':'Bending Spoons brand'},": "'bending_spoons':{'filename':'Bending Spoons Logo Icon.png','width':1024,'license':'Public domain textlogo; trademarked','author':'Bending Spoons S.p.A.','page':'https://commons.wikimedia.org/wiki/File:Bending_Spoons_Logo_Icon.png','semantic':'Bending Spoons brand icon'},"
+          }
+          for old,new in replacements.items():
+              if old not in s:
+                  raise SystemExit('EXPECTED_SOURCE_LINE_NOT_FOUND:'+old[:80])
+              s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          print('PATCHED_CONTEXTUAL_SOURCES=4')
+          PY
+          git diff --check
+          git diff -- scripts/ugi_build_editorial_assets_20260911.py
+      - name: Commit contextual source fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-builder-bot'
+          git config user.email 'ugi-editorial-builder@users.noreply.github.com'
+          git add scripts/ugi_build_editorial_assets_20260911.py
+          git commit -m 'fix(ugi): use contextual raster sources for Sep11 [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
