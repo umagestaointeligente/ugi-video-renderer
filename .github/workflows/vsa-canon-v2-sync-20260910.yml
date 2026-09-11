@@ -1,0 +1,80 @@
+name: VSA Canon V2 Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-canon-v2-sync-20260910.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Synchronize VSA clean-mask canon and runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('.')
+          cp=root/'canonical/vsa/v1/VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json'
+          contract=json.loads(cp.read_text(encoding='utf-8'))
+          mask=contract.setdefault('mask',{})
+          mask['library_path']='/VSA/Canonical Assets/VSA_MASK_CANONICAL_V2.png'
+          mask['sha256']='ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56'
+          mask['legacy_v1_status']='HISTORICAL_ONLY_DO_NOT_RENDER'
+          mask['clean_header_required']=True
+          mask['single_title_render_required']=True
+          mask['clean_caption_zone_required']=True
+          mask['header_cover_panel_over_previous_title_forbidden']=True
+          contract['qa']['checks']=list(dict.fromkeys(contract['qa'].get('checks',[])+[
+            'clean V2 header source','single title render','no residual previous title','clean caption zone'
+          ]))
+          contract['qa']['release_rule']='Only deliver/schedule a version after all applicable gates PASS, including CLEAN_HEADER_PASS and CLEAN_CC_ZONE_PASS. Otherwise render V2/V3 internally.'
+          cp.write_text(json.dumps(contract,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          rp=root/'ops/vsa-runtime/runtime.py'
+          s=rp.read_text(encoding='utf-8')
+          if 'MASK_GUARD = ROOT / "canonical" / "vsa" / "v1" / "VSA_CLEAN_HEADER_GUARD_V1.json"' not in s:
+              anchor='TOPIC_LEDGER = ROOT / "canonical" / "vsa" / "v1" / "VSA_TOPIC_LEDGER_60D.json"\n'
+              s=s.replace(anchor,anchor+'MASK_GUARD = ROOT / "canonical" / "vsa" / "v1" / "VSA_CLEAN_HEADER_GUARD_V1.json"\n',1)
+          if 'def assert_clean_header_policy(job):' not in s:
+              fn='''\ndef assert_clean_header_policy(job):\n    guard = load_json(MASK_GUARD)\n    if guard.get("status") != "CANONICAL_ACTIVE":\n        raise GateError("CLEAN_HEADER_GUARD_NOT_ACTIVE")\n    expected_sha = str((guard.get("mask") or {}).get("sha256") or "")\n    if str(job.get("mask_sha256") or "") != expected_sha:\n        raise GateError("CLEAN_HEADER_MASK_SHA_MISMATCH")\n    required = ["clean_header_gate", "clean_cc_zone_gate", "single_title_render_gate"]\n    failed = [k for k in required if job.get(k) != "PASS"]\n    if failed:\n        raise GateError("CLEAN_HEADER_GATE_NOT_PASS:" + ",".join(failed))\n    if job.get("legacy_v1_body_shell_used") is True:\n        raise GateError("LEGACY_V1_MASK_FORBIDDEN")\n    if job.get("header_cover_panel_used") is True:\n        raise GateError("TITLE_OVER_TITLE")\n    return {"mask_sha256": expected_sha, "clean_header": "PASS", "clean_cc_zone": "PASS", "single_title": "PASS"}\n\n'''
+              s=s.replace('\ndef preflight(args):',fn+'def preflight(args):',1)
+          needle='    footage_result = assert_real_footage_policy(job, guardrails)\n'
+          if 'clean_header_result = assert_clean_header_policy(job)' not in s:
+              s=s.replace(needle,needle+'    clean_header_result = assert_clean_header_policy(job)\n',1)
+          needle2='        "real_footage": footage_result,\n'
+          if '"clean_header": clean_header_result' not in s:
+              s=s.replace(needle2,needle2+'        "clean_header": clean_header_result,\n',1)
+          rp.write_text(s,encoding='utf-8')
+          PY
+          python -m py_compile ops/vsa-runtime/runtime.py
+          python - <<'PY'
+          import json
+          c=json.load(open('canonical/vsa/v1/VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json',encoding='utf-8'))
+          assert c['mask']['library_path'].endswith('VSA_MASK_CANONICAL_V2.png')
+          assert c['mask']['sha256']=='ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56'
+          s=open('ops/vsa-runtime/runtime.py',encoding='utf-8').read()
+          assert 'def assert_clean_header_policy(job):' in s
+          assert 'clean_header_result = assert_clean_header_policy(job)' in s
+          print('VSA_CANON_V2_SYNC_PASS')
+          PY
+      - name: Commit VSA-only canon repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'vsa-canon-bot'
+          git config user.email 'vsa-canon-bot@users.noreply.github.com'
+          git add canonical/vsa/v1/VSA_CANONICAL_PRODUCTION_CONTRACT_V1.json ops/vsa-runtime/runtime.py
+          if git diff --cached --quiet; then
+            echo 'NO_CHANGES_ALREADY_SYNCED'
+          else
+            git commit -m 'fix(vsa): enforce clean V2 mask in contract and runtime'
+            git push origin HEAD:main
+          fi
