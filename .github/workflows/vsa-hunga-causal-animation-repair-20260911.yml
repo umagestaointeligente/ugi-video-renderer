@@ -16,17 +16,15 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SOURCE_RUN_ID: '34562655978'
-  SOURCE_ARTIFACT: 'vsa-hunga-causal-animation-repair'
-  MASK_URL: 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789088208879_VSA_MASK_CANONICAL_V2.png?alt=media'
-  MASK_SHA256: 'ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56'
-  HUNGA_REAL_URL: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Hunga_Tonga-Hunga_Ha%E2%80%99apai_Eruption%2C_a_Multi-Hazard_Event_%28NESDIS_2022-01-26_Tonga_EfO_4k_clean%29.webm'
-  TSUNAMI_REAL_URL: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Tsunami_20110311_Kita-Ibaraki_Japan.ogv'
+  SOURCE_RUN_ID: '34593780386'
+  SOURCE_ARTIFACT: 'vsa-hunga-narrative-visual-repair'
+  SOURCE_SHA256: '02738a24f77b6d676af96b9984063f7cd89717a1b0a2bff039ca193b05e09ac5'
+  PAGO_PAGO_URL: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/FBI_tsunami_video_-_Pago_Pago_parking_lot.ogv'
 
 jobs:
-  narrative_repair_hunga_only:
+  strengthen_real_tsunami_only:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -34,180 +32,120 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg fonts-dejavu-core curl
-          python -m pip install --quiet edge-tts pillow numpy pyyaml
+          python -m pip install --quiet pillow numpy
 
-      - name: Recover human-approved causal-animation pilot
+      - name: Recover narrative pilot with restored title and CC
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.SOURCE_ARTIFACT }}
-          path: /tmp/causal_artifact
+          path: /tmp/source
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ env.SOURCE_RUN_ID }}
 
-      - name: Validate source pilot and download rights-tracked real footage
+      - name: Verify immutable source and download public-domain tsunami arrival footage
         shell: bash
         run: |
           set -euo pipefail
-          SRC=/tmp/causal_artifact/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4
+          SRC=/tmp/source/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4
           test -s "$SRC"
-          test "$(sha256sum "$SRC" | awk '{print $1}')" = 'bdf60099ce85252c730f00cc7b10eedbc415c72b5f815b04d2a144c2b1fdc5f9'
-          curl -L --fail --retry 2 --retry-delay 2 "$MASK_URL" -o /tmp/mask.png
-          test "$(sha256sum /tmp/mask.png | awk '{print $1}')" = "$MASK_SHA256"
-          curl -L --fail --retry 2 --retry-delay 2 "$HUNGA_REAL_URL" -o /tmp/hunga_real.webm
-          curl -L --fail --retry 2 --retry-delay 2 "$TSUNAMI_REAL_URL" -o /tmp/tsunami_real.ogv
-          test "$(stat -c%s /tmp/hunga_real.webm)" -gt 100000
-          test "$(stat -c%s /tmp/tsunami_real.ogv)" -gt 1000000
-          ffprobe -v error /tmp/hunga_real.webm >/dev/null
-          ffprobe -v error /tmp/tsunami_real.ogv >/dev/null
+          test "$(sha256sum "$SRC" | awk '{print $1}')" = "$SOURCE_SHA256"
+          curl -L --fail --retry 2 --retry-delay 2 "$PAGO_PAGO_URL" -o /tmp/pago_pago.ogv
+          test "$(stat -c%s /tmp/pago_pago.ogv)" -gt 500000
+          ffprobe -v error /tmp/pago_pago.ogv >/dev/null
 
-      - name: Extract approved causal animations from pilot
+      - name: Build strong real tsunami arrival scene
         shell: bash
         run: |
           set -euo pipefail
-          SRC=/tmp/causal_artifact/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4
-          mkdir -p /tmp/segments
-          for spec in '8.072 anim1' '24.216 anim2' '40.360 anim3'; do
-            set -- $spec
-            ffmpeg -y -loglevel error -ss "$1" -i "$SRC" -t 8.072 \
-              -vf 'crop=976:844:52:440,fps=30,format=yuv420p' -an \
-              -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p "/tmp/segments/$2.mp4"
-          done
+          # Commons metadata states the tsunami arrives around 1:45; start just before arrival.
+          ffmpeg -y -loglevel error -ss 102.5 -i /tmp/pago_pago.ogv -t 8.072 \
+            -filter_complex "[0:v]split=2[bg][fg];[bg]scale=976:844:force_original_aspect_ratio=increase,crop=976:844,gblur=sigma=22,eq=brightness=-0.14:saturation=0.86[bgv];[fg]scale=940:805:force_original_aspect_ratio=decrease,eq=contrast=1.05:saturation=1.05[fgv];[bgv][fgv]overlay=(W-w)/2:(H-h)/2,drawbox=x=18:y=18:w=430:h=40:color=black@0.60:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='IMAGEM REAL • TSUNAMI':fontcolor=white:fontsize=21:x=32:y=27,fps=30,format=yuv420p[v]" \
+            -map '[v]' -an -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/real_tsunami_arrival.mp4
 
-      - name: Build narration-aligned real scenes
+      - name: Replace only weak real block and preserve everything else
         shell: bash
         run: |
           set -euo pipefail
-          mkreal() {
-            local src="$1" start="$2" out="$3"
-            ffmpeg -y -loglevel error -ss "$start" -i "$src" -t 8.072 \
-              -filter_complex "[0:v]split=2[bg][fg];[bg]scale=976:844:force_original_aspect_ratio=increase,crop=976:844,gblur=sigma=24,eq=brightness=-0.14:saturation=0.88[bgv];[fg]scale=940:805:force_original_aspect_ratio=decrease,eq=contrast=1.04:saturation=1.05[fgv];[bgv][fgv]overlay=(W-w)/2:(H-h)/2,fps=30,format=yuv420p[v]" \
-              -map '[v]' -an -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p "$out"
-          }
-          mkreal /tmp/hunga_real.webm 4.0 /tmp/segments/real1.mp4
-          mkreal /tmp/tsunami_real.ogv 35.0 /tmp/segments/real2.mp4
-          mkreal /tmp/tsunami_real.ogv 185.0 /tmp/segments/real3.mp4
+          SRC=/tmp/source/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4
+          ffmpeg -y -loglevel error -i "$SRC" -i /tmp/real_tsunami_arrival.mp4 \
+            -filter_complex "[1:v]setpts=PTS+16.144/TB[real];[0:v][real]overlay=52:440:eof_action=pass:enable='between(t,16.144,24.216)',fps=30,format=yuv420p[v]" \
+            -map '[v]' -map 0:a -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p -c:a copy -movflags +faststart \
+            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V2.mp4
 
-      - name: Build narrative sequence and canonical single-title shell
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > /tmp/concat.txt <<'EOF'
-          file '/tmp/segments/real1.mp4'
-          file '/tmp/segments/anim1.mp4'
-          file '/tmp/segments/real2.mp4'
-          file '/tmp/segments/anim2.mp4'
-          file '/tmp/segments/real3.mp4'
-          file '/tmp/segments/anim3.mp4'
-          EOF
-          ffmpeg -y -loglevel error -f concat -safe 0 -i /tmp/concat.txt -c copy /tmp/content48.mp4
-          printf '%s\n' 'Como sensores distantes' 'detectaram o nascimento de' 'um tsunami?' > /tmp/title.txt
-          ffmpeg -y -loglevel error -loop 1 -i /tmp/mask.png -i /tmp/content48.mp4 -t 48.432 \
-            -filter_complex "[0:v]scale=1080:1920[bg];[1:v]scale=976:844[c];[bg][c]overlay=52:440,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:textfile=/tmp/title.txt:fontcolor=white:fontsize=44:x=70:y=72:line_spacing=8:box=0,fps=30,format=yuv420p[v]" \
-            -map '[v]' -an -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/body_no_cc.mp4
-
-      - name: Restore synchronized captions in dedicated CC zone
-        shell: bash
-        run: |
-          set -euo pipefail
-          SCRIPT="Um tsunami causado por um vulcão submarino pode começar antes de alguém enxergar a onda na costa. No caso do Hunga Tonga, pesquisadores analisaram sinais sísmicos registrados a grandes distâncias e encontraram uma assinatura ligada ao colapso da estrutura vulcânica debaixo d'água. Quando uma grande massa de rocha e material vulcânico se desloca rapidamente, ela empurra um enorme volume de água. Essa perturbação se transforma em ondas que se propagam pelo oceano. O ponto interessante é que o colapso também gera vibrações no solo, e essas vibrações podem chegar aos sensores antes das consequências costeiras. Ao combinar sismologia e oceanografia, cientistas ganham mais pistas sobre quando e como o tsunami começou. Uma onda no mar pode deixar sua primeira pista dentro da Terra. Agora você já sabe."
-          edge-tts --voice pt-BR-AntonioNeural --rate=+6% --text "$SCRIPT" --write-media /tmp/cc_timing.mp3 --write-subtitles /tmp/cc_raw.srt
-          python - <<'PY'
-          import pathlib,re,textwrap
-          raw=pathlib.Path('/tmp/cc_raw.srt').read_text(encoding='utf-8')
-          blocks=re.split(r'\n\s*\n',raw.strip())
-          filters=[]
-          for i,b in enumerate(blocks,1):
-              lines=b.splitlines()
-              if len(lines)<3: continue
-              times=lines[1]
-              m=re.match(r'(\d\d):(\d\d):(\d\d),(\d+) --> (\d\d):(\d\d):(\d\d),(\d+)',times)
-              if not m: continue
-              a=list(map(int,m.groups()[:4])); z=list(map(int,m.groups()[4:]))
-              start=a[0]*3600+a[1]*60+a[2]+a[3]/1000
-              end=z[0]*3600+z[1]*60+z[2]+z[3]/1000
-              if start>=48.432: continue
-              end=min(end,48.432)
-              text=' '.join(lines[2:]).strip()
-              wrapped='\n'.join(textwrap.wrap(text,width=38)[:2])
-              tf=pathlib.Path(f'/tmp/cap_{i:03d}.txt'); tf.write_text(wrapped,encoding='utf-8')
-              filters.append("drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:" f"textfile={tf}:fontcolor=white:fontsize=32:line_spacing=7:" "x=622-text_w/2:y=1372:box=0:borderw=2:bordercolor=black@0.85:" f"enable='between(t,{start:.3f},{end:.3f})'")
-          if len(filters)<8: raise SystemExit('CC_GENERATION_FAIL')
-          pathlib.Path('/tmp/cc_filters.txt').write_text(','.join(filters),encoding='utf-8')
-          print('CC_BLOCKS',len(filters))
-          PY
-          ffmpeg -y -loglevel error -i /tmp/body_no_cc.mp4 -vf "$(cat /tmp/cc_filters.txt)" \
-            -an -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/body_cc.mp4
-
-      - name: Preserve canonical CTA and source audio
-        shell: bash
-        run: |
-          set -euo pipefail
-          SRC=/tmp/causal_artifact/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4
-          ffmpeg -y -loglevel error -ss 48.432 -i "$SRC" -t 4.204 -an \
-            -vf 'fps=30,format=yuv420p' -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/cta_visual.mp4
-          ffmpeg -y -loglevel error -i /tmp/body_cc.mp4 -i /tmp/cta_visual.mp4 \
-            -filter_complex '[0:v][1:v]concat=n=2:v=1:a=0[v]' -map '[v]' \
-            -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/full_visual.mp4
-          ffmpeg -y -loglevel error -i /tmp/full_visual.mp4 -i "$SRC" \
-            -map 0:v -map 1:a -c:v copy -c:a copy -shortest -movflags +faststart \
-            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4
-
-      - name: Fail-closed narrative visual, CC and title QA
+      - name: Fail-closed preservation and real-footage QA
         shell: bash
         run: |
           set -euo pipefail
           cat > /tmp/qa.py <<'PY'
-          import hashlib,json,pathlib,subprocess,statistics
+          import hashlib,json,pathlib,statistics,subprocess
           import numpy as np
           from PIL import Image
-          out=pathlib.Path('/tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4')
-          mask=pathlib.Path('/tmp/mask.png')
-          if not out.exists() or out.stat().st_size<1000000: raise SystemExit('MASTER_MISSING')
-          probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_name,width,height,r_frame_rate','-of','json',str(out)],text=True))
-          v=next(s for s in probe['streams'] if s.get('width'))
+          src=pathlib.Path('/tmp/source/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4')
+          out=pathlib.Path('/tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V2.mp4')
+          def probe(p):
+              return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_name,width,height,r_frame_rate','-of','json',str(p)],text=True))
+          pr=probe(out); v=next(s for s in pr['streams'] if s.get('width'))
           if (v['width'],v['height'])!=(1080,1920) or v['r_frame_rate']!='30/1': raise SystemExit('FORMAT_FAIL')
-          dur=float(probe['format']['duration'])
-          if not 52.0<=dur<=53.2: raise SystemExit('DURATION_FAIL')
-          tmp=pathlib.Path('/tmp/qa_frames'); tmp.mkdir(exist_ok=True)
-          times=[3,12,20,28,36,44]
-          for t in times:
-              subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(t),'-i',str(out),'-frames:v','1',str(tmp/f'f{t}.png')],check=True)
-          base=np.asarray(Image.open(mask).convert('RGB').resize((1080,1920)),dtype=np.float32)
-          cc_diffs=[]; title_diffs=[]
-          for t in times:
-              a=np.asarray(Image.open(tmp/f'f{t}.png').convert('RGB'),dtype=np.float32)
-              cc_diffs.append(float(np.mean(np.abs(a[1340:1535,235:1010]-base[1340:1535,235:1010]))))
-              title_diffs.append(float(np.mean(np.abs(a[60:300,45:790]-base[60:300,45:790]))))
-          if sum(x>1.0 for x in cc_diffs)<4: raise SystemExit(f'CLEAN_CC_ZONE_FAIL captions_missing diffs={cc_diffs}')
-          if min(title_diffs)<1.0: raise SystemExit(f'TITLE_MISSING {title_diffs}')
-          block_motion=[]
-          for idx,start in enumerate([0,8.072,16.144,24.216,32.288,40.360],1):
-              td=tmp/f'm{idx}'; td.mkdir(exist_ok=True)
-              subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(start),'-t','7.5','-i',str(out),'-vf','crop=976:844:52:440,fps=1,scale=244:211',str(td/'%02d.png')],check=True)
-              fs=sorted(td.glob('*.png')); arr=[np.asarray(Image.open(f).convert('L'),dtype=np.float32) for f in fs]
-              dif=[float(np.mean(np.abs(arr[i]-arr[i-1]))) for i in range(1,len(arr))]
-              med=statistics.median(dif)
-              if med<0.8: raise SystemExit(f'NARRATIVE_BLOCK_STATIC_FAIL block={idx} med={med}')
-              block_motion.append(round(med,3))
-          a=np.asarray(Image.open(tmp/'f20.png').resize((120,180)).convert('L'),dtype=np.float32)
-          b=np.asarray(Image.open(tmp/'f36.png').resize((120,180)).convert('L'),dtype=np.float32)
+          dur=float(pr['format']['duration'])
+          if not 52.0<=dur<=53.2: raise SystemExit(f'DURATION_FAIL {dur}')
+          root=pathlib.Path('/tmp/qa'); root.mkdir(exist_ok=True)
+          for tag,p in [('src',src),('out',out)]:
+              for t in [6,20,28,36,44]:
+                  subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(t),'-i',str(p),'-frames:v','1',str(root/f'{tag}_{t}.png')],check=True)
+          # Title and CC live outside the swapped content window and must remain visually unchanged.
+          preservation=[]
+          for t in [6,20,28,36,44]:
+              a=np.asarray(Image.open(root/f'src_{t}.png').convert('RGB'),dtype=np.float32)
+              b=np.asarray(Image.open(root/f'out_{t}.png').convert('RGB'),dtype=np.float32)
+              title=float(np.mean(np.abs(a[55:330,40:800]-b[55:330,40:800])))
+              cc=float(np.mean(np.abs(a[1320:1580,200:1040]-b[1320:1580,200:1040])))
+              if title>6.0 or cc>6.0: raise SystemExit(f'HEADER_OR_CC_REGRESSION t={t} title={title} cc={cc}')
+              preservation.append({'t':t,'title_diff':round(title,3),'cc_diff':round(cc,3)})
+          # New real tsunami block must contain substantial real motion.
+          td=root/'motion'; td.mkdir(exist_ok=True)
+          subprocess.run(['ffmpeg','-y','-loglevel','error','-ss','16.144','-t','7.8','-i',str(out),'-vf','crop=976:844:52:440,fps=2,scale=244:211',str(td/'%02d.png')],check=True)
+          fs=sorted(td.glob('*.png')); arr=[np.asarray(Image.open(f).convert('L'),dtype=np.float32) for f in fs]
+          dif=[float(np.mean(np.abs(arr[i]-arr[i-1]))) for i in range(1,len(arr))]
+          med=statistics.median(dif)
+          if med<2.0: raise SystemExit(f'REAL_TSUNAMI_MOTION_FAIL {med}')
+          # Arrival shot and later Japan inundation shot must be visually distinct.
+          a=np.asarray(Image.open(root/'out_20.png').resize((120,180)).convert('L'),dtype=np.float32)
+          b=np.asarray(Image.open(root/'out_36.png').resize((120,180)).convert('L'),dtype=np.float32)
           distinct=float(np.mean(np.abs(a-b)))
-          if distinct<8.0: raise SystemExit(f'REAL_SCENE_REPEAT_FAIL diff={distinct}')
+          if distinct<8.0: raise SystemExit(f'REAL_SCENE_DISTINCTNESS_FAIL {distinct}')
           def sha(p):
               h=hashlib.sha256()
               with open(p,'rb') as f:
-                  for chunk in iter(lambda:f.read(1024*1024),b''): h.update(chunk)
+                  for c in iter(lambda:f.read(1024*1024),b''): h.update(c)
               return h.hexdigest()
-          receipt={'schema':'VSA_NARRATIVE_VISUAL_REPAIR_V1','id':'HUNGA_TSUNAMI','source_causal_run_id':34562655978,'output_master':out.name,'output_sha256':sha(out),'narrative_sequence':['REAL_HUNGA_EVENT','ANIM_COLLAPSE_TO_WAVE','REAL_TSUNAMI_APPROACH_COAST','ANIM_SEISMIC_TRAVEL','REAL_TSUNAMI_COASTAL_INUNDATION','ANIM_ORIGIN_RECONSTRUCTION'],'real_rights':[{'source':'NOAA/Wikimedia Commons','role':'Hunga source event','license':'Public domain - NOAA'},{'source':'Edomurasaki/Wikimedia Commons','role':'real tsunami coast/inundation','license':'CC BY 3.0'}],'real_scene_timestamps_seconds':{'hunga':4.0,'tsunami_approach':35.0,'tsunami_inundation':185.0},'causal_visual_motion_pass':True,'narrative_visual_alignment_gate':'PASS_DESIGNED_HUMAN_REVIEW_REQUIRED','cc_restored_pass':True,'cc_zone_diff_samples':[round(x,3) for x in cc_diffs],'single_title_source':'VSA_MASK_CANONICAL_V2 + one drawtext layer','single_title_pass':True,'block_motion_medians':block_motion,'real_scene_distinctness':round(distinct,3),'audio_preserved_from_approved_pilot':True,'schedule_mutated':False,'release_eligible':False,'human_review_required':True}
-          pathlib.Path('/tmp/HUNGA_NARRATIVE_REPAIR_QA.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          receipt={
+            'schema':'VSA_HUNGA_REAL_FOOTAGE_STRENGTHENING_V1',
+            'id':'HUNGA_TSUNAMI',
+            'source_run_id':34593780386,
+            'source_sha256':sha(src),
+            'output_master':out.name,
+            'output_sha256':sha(out),
+            'changed_window_seconds':[16.144,24.216],
+            'new_real_footage':{'event':'2009 American Samoa tsunami arrival at FBI parking lot','source':'Wikimedia Commons / FBI Honolulu','license':'Public domain','source_start_seconds':102.5},
+            'visual_story_sequence':['REAL_HUNGA_ORIGIN','ANIM_COLLAPSE_CREATES_WAVE','REAL_TSUNAMI_ARRIVAL','ANIM_SEISMIC_SIGNAL_TRAVEL','REAL_URBAN_INUNDATION','ANIM_ORIGIN_RECONSTRUCTION'],
+            'title_preserved_single_layer':True,
+            'cc_preserved_visible':True,
+            'preservation_samples':preservation,
+            'new_real_motion_median':round(med,3),
+            'real_scene_distinctness':round(distinct,3),
+            'schedule_mutated':False,
+            'release_eligible':False,
+            'human_review_required':True
+          }
+          pathlib.Path('/tmp/HUNGA_NARRATIVE_REPAIR_V2_QA.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print(json.dumps(receipt,ensure_ascii=False))
           PY
           python /tmp/qa.py
 
       - uses: actions/upload-artifact@v4
         with:
-          name: vsa-hunga-narrative-visual-repair
+          name: vsa-hunga-narrative-visual-repair-v2
           path: |
-            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4
-            /tmp/HUNGA_NARRATIVE_REPAIR_QA.json
+            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V2.mp4
+            /tmp/HUNGA_NARRATIVE_REPAIR_V2_QA.json
           if-no-files-found: error
