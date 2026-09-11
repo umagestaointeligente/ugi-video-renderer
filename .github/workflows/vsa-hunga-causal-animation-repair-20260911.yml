@@ -1,4 +1,4 @@
-name: VSA Hunga Causal Animation Repair
+name: VSA Hunga Narrative Visual Repair
 
 on:
   push:
@@ -9,347 +9,205 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: vsa-hunga-causal-animation-repair-20260911
   cancel-in-progress: false
 
+env:
+  SOURCE_RUN_ID: '34562655978'
+  SOURCE_ARTIFACT: 'vsa-hunga-causal-animation-repair'
+  MASK_URL: 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789088208879_VSA_MASK_CANONICAL_V2.png?alt=media'
+  MASK_SHA256: 'ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56'
+  HUNGA_REAL_URL: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Hunga_Tonga-Hunga_Ha%E2%80%99apai_Eruption%2C_a_Multi-Hazard_Event_%28NESDIS_2022-01-26_Tonga_EfO_4k_clean%29.webm'
+  TSUNAMI_REAL_URL: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Tsunami_20110311_Kita-Ibaraki_Japan.ogv'
+
 jobs:
-  repair_hunga_only:
+  narrative_repair_hunga_only:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install zero-cost renderer
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg fonts-dejavu-core
-          python -m pip install --quiet pillow numpy
+          sudo apt-get install -y ffmpeg fonts-dejavu-core curl
+          python -m pip install --quiet edge-tts pillow numpy pyyaml
 
-      - name: Recover immutable approved master
+      - name: Recover human-approved causal-animation pilot
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.SOURCE_ARTIFACT }}
+          path: /tmp/causal_artifact
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Validate source pilot and download rights-tracked real footage
         shell: bash
         run: |
           set -euo pipefail
-          MEDIA_COMMIT='bf7ba5e4a3a602780d228c0e5b995a423f733541'
-          git fetch origin vsa-media-sep13-clean-20260910 --depth=1
-          test "$(git rev-parse FETCH_HEAD)" = "$MEDIA_COMMIT"
-          git show "$MEDIA_COMMIT:media/VSA_20260913_1300_HUNGA_TSUNAMI_FINAL.mp4" > /tmp/hunga_input.mp4
-          test "$(stat -c%s /tmp/hunga_input.mp4)" -gt 100000
-          sha256sum /tmp/hunga_input.mp4
+          SRC=/tmp/causal_artifact/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4
+          test -s "$SRC"
+          test "$(sha256sum "$SRC" | awk '{print $1}')" = 'bdf60099ce85252c730f00cc7b10eedbc415c72b5f815b04d2a144c2b1fdc5f9'
+          curl -L --fail --retry 2 --retry-delay 2 "$MASK_URL" -o /tmp/mask.png
+          test "$(sha256sum /tmp/mask.png | awk '{print $1}')" = "$MASK_SHA256"
+          curl -L --fail --retry 2 --retry-delay 2 "$HUNGA_REAL_URL" -o /tmp/hunga_real.webm
+          curl -L --fail --retry 2 --retry-delay 2 "$TSUNAMI_REAL_URL" -o /tmp/tsunami_real.ogv
+          test "$(stat -c%s /tmp/hunga_real.webm)" -gt 100000
+          test "$(stat -c%s /tmp/tsunami_real.ogv)" -gt 1000000
+          ffprobe -v error /tmp/hunga_real.webm >/dev/null
+          ffprobe -v error /tmp/tsunami_real.ogv >/dev/null
 
-      - name: Generate three causal mechanism animations
+      - name: Extract approved causal animations from pilot
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/causal_anim.py <<'PY'
-          import math, subprocess, pathlib
-          import numpy as np
-          from PIL import Image, ImageDraw, ImageFont
+          SRC=/tmp/causal_artifact/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4
+          mkdir -p /tmp/segments
+          for spec in '8.072 anim1' '24.216 anim2' '40.360 anim3'; do
+            set -- $spec
+            ffmpeg -y -loglevel error -ss "$1" -i "$SRC" -t 8.072 \
+              -vf 'crop=976:844:52:440,fps=30,format=yuv420p' -an \
+              -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p "/tmp/segments/$2.mp4"
+          done
 
-          W,H=976,844
-          FPS=30
-          DUR=8.072
-          N=round(DUR*FPS)
-          OUT=pathlib.Path('/tmp/causal')
-          OUT.mkdir(parents=True,exist_ok=True)
+      - name: Build narration-aligned real scenes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkreal() {
+            local src="$1" start="$2" out="$3"
+            ffmpeg -y -loglevel error -ss "$start" -i "$src" -t 8.072 \
+              -filter_complex "[0:v]split=2[bg][fg];[bg]scale=976:844:force_original_aspect_ratio=increase,crop=976:844,gblur=sigma=24,eq=brightness=-0.14:saturation=0.88[bgv];[fg]scale=940:805:force_original_aspect_ratio=decrease,eq=contrast=1.04:saturation=1.05[fgv];[bgv][fgv]overlay=(W-w)/2:(H-h)/2,fps=30,format=yuv420p[v]" \
+              -map '[v]' -an -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p "$out"
+          }
+          mkreal /tmp/hunga_real.webm 4.0 /tmp/segments/real1.mp4
+          mkreal /tmp/tsunami_real.ogv 35.0 /tmp/segments/real2.mp4
+          mkreal /tmp/tsunami_real.ogv 185.0 /tmp/segments/real3.mp4
 
-          font_bold='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
-          font_reg='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
-          FB=ImageFont.truetype(font_bold,38)
-          FS=ImageFont.truetype(font_bold,28)
-          FR=ImageFont.truetype(font_reg,24)
+      - name: Build narrative sequence and canonical single-title shell
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/concat.txt <<'EOF'
+          file '/tmp/segments/real1.mp4'
+          file '/tmp/segments/anim1.mp4'
+          file '/tmp/segments/real2.mp4'
+          file '/tmp/segments/anim2.mp4'
+          file '/tmp/segments/real3.mp4'
+          file '/tmp/segments/anim3.mp4'
+          EOF
+          ffmpeg -y -loglevel error -f concat -safe 0 -i /tmp/concat.txt -c copy /tmp/content48.mp4
+          printf '%s\n' 'Como sensores distantes' 'detectaram o nascimento de' 'um tsunami?' > /tmp/title.txt
+          ffmpeg -y -loglevel error -loop 1 -i /tmp/mask.png -i /tmp/content48.mp4 -t 48.432 \
+            -filter_complex "[0:v]scale=1080:1920[bg];[1:v]scale=976:844[c];[bg][c]overlay=52:440,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:textfile=/tmp/title.txt:fontcolor=white:fontsize=44:x=70:y=72:line_spacing=8:box=0,fps=30,format=yuv420p[v]" \
+            -map '[v]' -an -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/body_no_cc.mp4
 
-          def ocean_bg():
-              arr=np.zeros((H,W,3),dtype=np.uint8)
-              for y in range(H):
-                  q=y/(H-1)
-                  arr[y,:,0]=int(4+4*q)
-                  arr[y,:,1]=int(22+18*(1-q))
-                  arr[y,:,2]=int(48+38*(1-q))
-              return Image.fromarray(arr,'RGB')
-
-          def header(d,title,subtitle):
-              d.text((36,26),title,font=FB,fill=(245,250,255))
-              d.line((36,76,W-36,76),fill=(54,184,230),width=3)
-              d.text((36,88),subtitle,font=FR,fill=(185,217,236))
-
-          def encode(path,drawer):
-              cmd=[
-                  'ffmpeg','-y','-loglevel','error',
-                  '-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','-',
-                  '-an','-c:v','libx264','-preset','veryfast','-crf','19','-pix_fmt','yuv420p',str(path)
-              ]
-              p=subprocess.Popen(cmd,stdin=subprocess.PIPE)
-              for i in range(N):
-                  p.stdin.write(np.asarray(drawer(i/FPS),dtype=np.uint8).tobytes())
-              p.stdin.close()
-              if p.wait()!=0:
-                  raise SystemExit('ANIMATION_ENCODE_FAIL')
-
-          def collapse_to_wave(t):
-              im=ocean_bg(); d=ImageDraw.Draw(im)
-              header(d,'COLAPSO SUBMARINO → ONDA','a água é deslocada pelo próprio colapso')
-              sy=245
-              collapse=max(0,min(1,(t-1.2)/2.0))
-              wave=max(0,t-3.0)
-              pts=[]
-              for x in range(W):
-                  amp=0.0
-                  if wave>0:
-                      for direction in (-1,1):
-                          cx=W/2+direction*wave*95
-                          amp += 23*math.exp(-((x-cx)/95)**2)*math.sin((x-cx)/34)
-                  amp += 26*collapse*math.exp(-((x-W/2)/135)**2)*math.sin(math.pi*collapse)
-                  pts.append((x,sy-amp))
-              d.line(pts,fill=(82,210,255),width=5)
-              for k in range(28):
-                  x=(37*k*29+int(t*18*(k%3+1)))%W
-                  y=280+(k*47)%430
-                  r=2+(k%2)
-                  d.ellipse((x-r,y-r,x+r,y+r),fill=(55,120,155))
-              d.polygon([(0,730),(0,H),(W,H),(W,730),(700,695),(520,705),(300,690)],fill=(30,42,58))
-              cx=W//2
-              sink=int(95*collapse)
-              peak=(cx,400+sink)
-              d.polygon([(300,700),peak,(680,700)],fill=(69,70,78))
-              crw=78+int(42*collapse)
-              d.arc((cx-crw,peak[1]-20,cx+crw,peak[1]+45),0,180,fill=(245,129,58),width=6)
-              if collapse>0:
-                  for j in range(7):
-                      phase=max(0,min(1,(t-1.2-j*0.12)/1.8))
-                      x=cx-90+j*30+12*math.sin(j*2)
-                      y=430+j*10+phase*190
-                      r=9+(j%3)*3
-                      d.rectangle((x-r,y-r,x+r,y+r),fill=(110,91,78))
-              if 1.3<t<4.0:
-                  a=min(1,(t-1.3)/0.8)
-                  for dx in (-115,-55,55,115):
-                      x=cx+dx; y0=520-int(90*a)
-                      d.line((x,560,x,y0),fill=(255,201,74),width=7)
-                      d.polygon([(x,y0-14),(x-9,y0+6),(x+9,y0+6)],fill=(255,201,74))
-              if wave>0:
-                  for direction in (-1,1):
-                      x=cx+direction*min(350,wave*90); y=205
-                      d.line((cx+direction*60,y,x,y),fill=(255,201,74),width=6)
-                      if direction>0:
-                          d.polygon([(x+15,y),(x-8,y-10),(x-8,y+10)],fill=(255,201,74))
-                      else:
-                          d.polygon([(x-15,y),(x+8,y-10),(x+8,y+10)],fill=(255,201,74))
-              stage='1  estrutura desaba' if t<2.8 else ('2  água é empurrada' if t<4.7 else '3  ondas se propagam')
-              d.text((36,790),stage,font=FS,fill=(255,214,92))
-              return im
-
-          def seismic_travel(t):
-              im=Image.new('RGB',(W,H),(5,18,34)); d=ImageDraw.Draw(im)
-              header(d,'VIBRAÇÃO VIAJA PELO SOLO','o colapso também deixa uma assinatura sísmica')
-              d.rectangle((0,210,W,H),fill=(31,42,55))
-              d.polygon([(0,320),(W,280),(W,390),(0,420)],fill=(42,58,69))
-              d.polygon([(0,520),(W,460),(W,575),(0,635)],fill=(52,60,70))
-              sx,sy=165,545
-              d.polygon([(55,210),(145,330),(235,210)],fill=(62,68,74))
-              d.ellipse((sx-17,sy-17,sx+17,sy+17),fill=(255,120,65))
-              d.text((60,350),'origem do colapso',font=FS,fill=(240,246,250))
-              sensor_x=790
-              d.rectangle((sensor_x-40,150,sensor_x+40,220),fill=(170,188,198))
-              d.rectangle((sensor_x-14,120,sensor_x+14,150),fill=(223,231,235))
-              d.text((690,88),'sensor sísmico',font=FS,fill=(240,246,250))
-              age=max(0,t-0.5)
-              for k in range(5):
-                  r=age*115-k*85
-                  if 10<r<780:
-                      box=(sx-r,sy-r*0.68,sx+r,sy+r*0.68)
-                      d.arc(box,200,340,fill=(76,201,255),width=5)
-                      d.arc(box,20,160,fill=(76,201,255),width=3)
-              progress=max(0,min(1,(t-0.8)/5.0))
-              ex=sx+(sensor_x-sx)*progress
-              ey=sy-(sy-260)*progress
-              d.line((sx,sy,ex,ey),fill=(255,210,78),width=5)
-              if progress>0:
-                  d.ellipse((ex-8,ey-8,ex+8,ey+8),fill=(255,230,140))
-              d.rectangle((600,260,930,420),outline=(90,120,145),width=2)
-              d.text((615,270),'registro',font=FR,fill=(190,215,230))
-              arrival=5.5
-              pts=[]
-              for x in range(620,915):
-                  u=(x-620)/295*3.0
-                  if t<arrival:
-                      y=355+2*math.sin(x/8)
-                  else:
-                      amp=45*math.exp(-max(0,u-1.3))*math.sin(u*17)
-                      y=355-amp
-                  pts.append((x,y))
-              d.line(pts,fill=((111,235,155) if t>=arrival else (120,160,180)),width=3)
-              if t>=arrival:
-                  d.text((610,445),'chegada detectada',font=FS,fill=(255,214,92))
-              d.text((36,790),'a vibração chega antes de parte do impacto costeiro',font=FS,fill=(255,214,92))
-              return im
-
-          def origin_reconstruction(t):
-              im=Image.new('RGB',(W,H),(6,18,35)); d=ImageDraw.Draw(im)
-              header(d,'SINAIS REVELAM A ORIGEM','estações distantes ajudam a reconstruir onde começou')
-              d.rectangle((35,135,600,760),fill=(10,45,74),outline=(60,135,175),width=2)
-              d.polygon([(45,160),(180,145),(230,230),(190,330),(95,310)],fill=(46,78,82))
-              d.polygon([(420,500),(580,460),(590,650),(500,735),(430,690)],fill=(46,78,82))
-              ox,oy=320,420
-              d.ellipse((ox-10,oy-10,ox+10,oy+10),fill=(255,116,70))
-              d.text((250,448),'Hunga Tonga',font=FR,fill=(235,242,247))
-              stations=[(125,560),(515,225),(505,650)]
-              for idx,(x,y) in enumerate(stations,1):
-                  d.rectangle((x-18,y-18,x+18,y+18),fill=(195,205,215))
-                  d.text((x-12,y-13),str(idx),font=FS,fill=(20,30,40))
-              age=max(0,t-0.6); r=age*80
-              if r<420:
-                  d.ellipse((ox-r,oy-r,ox+r,oy+r),outline=(72,205,255),width=5)
-              detections=[]
-              for x,y in stations:
-                  hit=t>0.6+math.hypot(x-ox,y-oy)/80
-                  detections.append(hit)
-                  if hit:
-                      d.ellipse((x-28,y-28,x+28,y+28),outline=(255,211,76),width=5)
-              d.text((650,145),'tempo de chegada',font=FS,fill=(240,246,250))
-              for idx in range(3):
-                  y=250+idx*150
-                  d.text((650,y-38),f'estação {idx+1}',font=FR,fill=(190,215,230))
-                  d.line((650,y,920,y),fill=(84,110,130),width=2)
-                  if detections[idx]:
-                      startt=1.2+idx*0.7
-                      maxx=650+min(270,max(0,int((t-startt)*110)))
-                      pts=[]
-                      for x in range(650,max(651,maxx)):
-                          u=(x-650)/35
-                          amp=35*math.exp(-0.08*u)*math.sin(u*2.7)
-                          pts.append((x,y-amp))
-                      if len(pts)>1:
-                          d.line(pts,fill=(111,235,155),width=3)
-              if all(detections) and t>6.0:
-                  for x,y in stations:
-                      rr=int(math.hypot(x-ox,y-oy))
-                      d.ellipse((x-rr,y-rr,x+rr,y+rr),outline=(255,211,76),width=2)
-                  d.ellipse((ox-22,oy-22,ox+22,oy+22),outline=(255,255,255),width=4)
-                  d.text((645,720),'origem reconstruída',font=FS,fill=(255,214,92))
-              return im
-
-          for name,drawer in [
-              ('01_collapse_to_wave.mp4',collapse_to_wave),
-              ('02_seismic_travel.mp4',seismic_travel),
-              ('03_origin_reconstruction.mp4',origin_reconstruction),
-          ]:
-              encode(OUT/name,drawer)
+      - name: Restore synchronized captions in dedicated CC zone
+        shell: bash
+        run: |
+          set -euo pipefail
+          SCRIPT="Um tsunami causado por um vulcão submarino pode começar antes de alguém enxergar a onda na costa. No caso do Hunga Tonga, pesquisadores analisaram sinais sísmicos registrados a grandes distâncias e encontraram uma assinatura ligada ao colapso da estrutura vulcânica debaixo d'água. Quando uma grande massa de rocha e material vulcânico se desloca rapidamente, ela empurra um enorme volume de água. Essa perturbação se transforma em ondas que se propagam pelo oceano. O ponto interessante é que o colapso também gera vibrações no solo, e essas vibrações podem chegar aos sensores antes das consequências costeiras. Ao combinar sismologia e oceanografia, cientistas ganham mais pistas sobre quando e como o tsunami começou. Uma onda no mar pode deixar sua primeira pista dentro da Terra. Agora você já sabe."
+          edge-tts --voice pt-BR-AntonioNeural --rate=+6% --text "$SCRIPT" --write-media /tmp/cc_timing.mp3 --write-subtitles /tmp/cc_raw.srt
+          python - <<'PY'
+          import pathlib,re,textwrap
+          raw=pathlib.Path('/tmp/cc_raw.srt').read_text(encoding='utf-8')
+          blocks=re.split(r'\n\s*\n',raw.strip())
+          filters=[]
+          for i,b in enumerate(blocks,1):
+              lines=b.splitlines()
+              if len(lines)<3: continue
+              times=lines[1]
+              m=re.match(r'(\d\d):(\d\d):(\d\d),(\d+) --> (\d\d):(\d\d):(\d\d),(\d+)',times)
+              if not m: continue
+              a=list(map(int,m.groups()[:4])); z=list(map(int,m.groups()[4:]))
+              start=a[0]*3600+a[1]*60+a[2]+a[3]/1000
+              end=z[0]*3600+z[1]*60+z[2]+z[3]/1000
+              if start>=48.432: continue
+              end=min(end,48.432)
+              text=' '.join(lines[2:]).strip()
+              wrapped='\n'.join(textwrap.wrap(text,width=38)[:2])
+              tf=pathlib.Path(f'/tmp/cap_{i:03d}.txt'); tf.write_text(wrapped,encoding='utf-8')
+              filters.append("drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:" f"textfile={tf}:fontcolor=white:fontsize=32:line_spacing=7:" "x=622-text_w/2:y=1372:box=0:borderw=2:bordercolor=black@0.85:" f"enable='between(t,{start:.3f},{end:.3f})'")
+          if len(filters)<8: raise SystemExit('CC_GENERATION_FAIL')
+          pathlib.Path('/tmp/cc_filters.txt').write_text(','.join(filters),encoding='utf-8')
+          print('CC_BLOCKS',len(filters))
           PY
-          python /tmp/causal_anim.py
+          ffmpeg -y -loglevel error -i /tmp/body_no_cc.mp4 -vf "$(cat /tmp/cc_filters.txt)" \
+            -an -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/body_cc.mp4
 
-      - name: Replace only the three invalid mechanism panels
+      - name: Preserve canonical CTA and source audio
         shell: bash
         run: |
           set -euo pipefail
-          ffmpeg -y -loglevel error \
-            -i /tmp/hunga_input.mp4 \
-            -i /tmp/causal/01_collapse_to_wave.mp4 \
-            -i /tmp/causal/02_seismic_travel.mp4 \
-            -i /tmp/causal/03_origin_reconstruction.mp4 \
-            -filter_complex \
-            "[1:v]setpts=PTS+8.072/TB[a1];\
-             [2:v]setpts=PTS+24.216/TB[a2];\
-             [3:v]setpts=PTS+40.360/TB[a3];\
-             [0:v][a1]overlay=52:440:enable='between(t,8.072,16.144)'[v1];\
-             [v1][a2]overlay=52:440:enable='between(t,24.216,32.288)'[v2];\
-             [v2][a3]overlay=52:440:enable='between(t,40.360,48.432)'[vout]" \
-            -map '[vout]' -map 0:a \
-            -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p \
-            -c:a copy -movflags +faststart \
-            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4
+          SRC=/tmp/causal_artifact/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4
+          ffmpeg -y -loglevel error -ss 48.432 -i "$SRC" -t 4.204 -an \
+            -vf 'fps=30,format=yuv420p' -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/cta_visual.mp4
+          ffmpeg -y -loglevel error -i /tmp/body_cc.mp4 -i /tmp/cta_visual.mp4 \
+            -filter_complex '[0:v][1:v]concat=n=2:v=1:a=0[v]' -map '[v]' \
+            -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/full_visual.mp4
+          ffmpeg -y -loglevel error -i /tmp/full_visual.mp4 -i "$SRC" \
+            -map 0:v -map 1:a -c:v copy -c:a copy -shortest -movflags +faststart \
+            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4
 
-      - name: Fail-closed causal motion QA
+      - name: Fail-closed narrative visual, CC and title QA
         shell: bash
         run: |
           set -euo pipefail
           cat > /tmp/qa.py <<'PY'
-          import hashlib,json,pathlib,statistics,subprocess
+          import hashlib,json,pathlib,subprocess,statistics
           import numpy as np
           from PIL import Image
-
-          src=pathlib.Path('/tmp/hunga_input.mp4')
-          out=pathlib.Path('/tmp/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4')
-          if not out.exists() or out.stat().st_size<500000:
-              raise SystemExit('FINAL_MASTER_MISSING')
-
-          probe=json.loads(subprocess.check_output([
-              'ffprobe','-v','error','-show_entries',
-              'format=duration:stream=codec_name,width,height,r_frame_rate',
-              '-of','json',str(out)
-          ],text=True))
+          out=pathlib.Path('/tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4')
+          mask=pathlib.Path('/tmp/mask.png')
+          if not out.exists() or out.stat().st_size<1000000: raise SystemExit('MASTER_MISSING')
+          probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_name,width,height,r_frame_rate','-of','json',str(out)],text=True))
           v=next(s for s in probe['streams'] if s.get('width'))
-          if (v['width'],v['height'])!=(1080,1920):
-              raise SystemExit('FORMAT_FAIL')
-          if v['r_frame_rate']!='30/1':
-              raise SystemExit('FPS_FAIL')
+          if (v['width'],v['height'])!=(1080,1920) or v['r_frame_rate']!='30/1': raise SystemExit('FORMAT_FAIL')
           dur=float(probe['format']['duration'])
-          if not 52.0<=dur<=53.2:
-              raise SystemExit('DURATION_FAIL')
-
-          def motion(start,end,idx):
-              td=pathlib.Path(f'/tmp/motion{idx}')
-              td.mkdir(exist_ok=True)
-              subprocess.run([
-                  'ffmpeg','-y','-loglevel','error','-ss',str(start),'-t',str(end-start),
-                  '-i',str(out),'-vf','crop=976:844:52:440,fps=1,scale=244:210',
-                  str(td/'f_%02d.png')
-              ],check=True)
-              fs=sorted(td.glob('f_*.png'))
-              arr=[np.asarray(Image.open(f).convert('L'),dtype=np.float32) for f in fs]
+          if not 52.0<=dur<=53.2: raise SystemExit('DURATION_FAIL')
+          tmp=pathlib.Path('/tmp/qa_frames'); tmp.mkdir(exist_ok=True)
+          times=[3,12,20,28,36,44]
+          for t in times:
+              subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(t),'-i',str(out),'-frames:v','1',str(tmp/f'f{t}.png')],check=True)
+          base=np.asarray(Image.open(mask).convert('RGB'),dtype=np.float32)
+          cc_diffs=[]; title_diffs=[]
+          for t in times:
+              a=np.asarray(Image.open(tmp/f'f{t}.png').convert('RGB'),dtype=np.float32)
+              cc_diffs.append(float(np.mean(np.abs(a[1340:1535,235:1010]-base[1340:1535,235:1010]))))
+              title_diffs.append(float(np.mean(np.abs(a[60:300,45:790]-base[60:300,45:790]))))
+          if sum(x>1.0 for x in cc_diffs)<4: raise SystemExit(f'CLEAN_CC_ZONE_FAIL captions_missing diffs={cc_diffs}')
+          if min(title_diffs)<1.0: raise SystemExit(f'TITLE_MISSING {title_diffs}')
+          block_motion=[]
+          for idx,start in enumerate([0,8.072,16.144,24.216,32.288,40.360],1):
+              td=tmp/f'm{idx}'; td.mkdir(exist_ok=True)
+              subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(start),'-t','7.5','-i',str(out),'-vf','crop=976:844:52:440,fps=1,scale=244:211',str(td/'%02d.png')],check=True)
+              fs=sorted(td.glob('*.png')); arr=[np.asarray(Image.open(f).convert('L'),dtype=np.float32) for f in fs]
               dif=[float(np.mean(np.abs(arr[i]-arr[i-1]))) for i in range(1,len(arr))]
               med=statistics.median(dif)
-              active=sum(d>0.8 for d in dif)
-              if med<=1.0 or active<5:
-                  raise SystemExit(f'CAUSAL_MOTION_FAIL segment={idx} median={med:.3f} active={active}')
-              return {'median_abs_diff':round(med,3),'active_transitions':active,'samples':len(dif)}
-
-          metrics=[
-              motion(8.072,16.144,1),
-              motion(24.216,32.288,2),
-              motion(40.360,48.432,3),
-          ]
-
+              if med<0.8: raise SystemExit(f'NARRATIVE_BLOCK_STATIC_FAIL block={idx} med={med}')
+              block_motion.append(round(med,3))
+          a=np.asarray(Image.open(tmp/'f20.png').resize((120,180)).convert('L'),dtype=np.float32)
+          b=np.asarray(Image.open(tmp/'f36.png').resize((120,180)).convert('L'),dtype=np.float32)
+          distinct=float(np.mean(np.abs(a-b)))
+          if distinct<8.0: raise SystemExit(f'REAL_SCENE_REPEAT_FAIL diff={distinct}')
           def sha(p):
               h=hashlib.sha256()
               with open(p,'rb') as f:
-                  for b in iter(lambda:f.read(1024*1024),b''):
-                      h.update(b)
+                  for chunk in iter(lambda:f.read(1024*1024),b''): h.update(chunk)
               return h.hexdigest()
-
-          receipt={
-              'schema':'VSA_CAUSAL_ANIMATION_REPAIR_V1',
-              'id':'HUNGA_TSUNAMI',
-              'source_media_commit':'bf7ba5e4a3a602780d228c0e5b995a423f733541',
-              'source_master_sha256':sha(src),
-              'output_master':out.name,
-              'output_sha256':sha(out),
-              'legacy_static_cause_effect_template_used':False,
-              'mechanism_segments':[
-                  'submarine_collapse_displaces_water',
-                  'seismic_wave_travels_through_ground',
-                  'distant_stations_reconstruct_origin'
-              ],
-              'causal_motion_gate':'PASS',
-              'motion_metrics':metrics,
-              'audio_stream_preserved_from_source':True,
-              'schedule_mutated':False,
-              'release_eligible':False,
-              'human_review_required':True
-          }
-          pathlib.Path('/tmp/HUNGA_CAUSAL_REPAIR_QA.json').write_text(
-              json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          receipt={'schema':'VSA_NARRATIVE_VISUAL_REPAIR_V1','id':'HUNGA_TSUNAMI','source_causal_run_id':34562655978,'output_master':out.name,'output_sha256':sha(out),'narrative_sequence':['REAL_HUNGA_EVENT','ANIM_COLLAPSE_TO_WAVE','REAL_TSUNAMI_APPROACH_COAST','ANIM_SEISMIC_TRAVEL','REAL_TSUNAMI_COASTAL_INUNDATION','ANIM_ORIGIN_RECONSTRUCTION'],'real_rights':[{'source':'NOAA/Wikimedia Commons','role':'Hunga source event','license':'Public domain - NOAA'},{'source':'Edomurasaki/Wikimedia Commons','role':'real tsunami coast/inundation','license':'CC BY 3.0'}],'real_scene_timestamps_seconds':{'hunga':4.0,'tsunami_approach':35.0,'tsunami_inundation':185.0},'causal_visual_motion_pass':True,'narrative_visual_alignment_gate':'PASS_DESIGNED_HUMAN_REVIEW_REQUIRED','cc_restored_pass':True,'cc_zone_diff_samples':[round(x,3) for x in cc_diffs],'single_title_source':'VSA_MASK_CANONICAL_V2 + one drawtext layer','single_title_pass':True,'block_motion_medians':block_motion,'real_scene_distinctness':round(distinct,3),'audio_preserved_from_approved_pilot':True,'schedule_mutated':False,'release_eligible':False,'human_review_required':True}
+          pathlib.Path('/tmp/HUNGA_NARRATIVE_REPAIR_QA.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print(json.dumps(receipt,ensure_ascii=False))
           PY
           python /tmp/qa.py
 
       - uses: actions/upload-artifact@v4
         with:
-          name: vsa-hunga-causal-animation-repair
+          name: vsa-hunga-narrative-visual-repair
           path: |
-            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_CAUSAL_REPAIR.mp4
-            /tmp/HUNGA_CAUSAL_REPAIR_QA.json
+            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4
+            /tmp/HUNGA_NARRATIVE_REPAIR_QA.json
           if-no-files-found: error
