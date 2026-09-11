@@ -55,6 +55,38 @@ jobs:
             --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json \
             --self-test
 
+      - name: Prove a future VSA workflow cannot bypass canonical gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          BAD=.github/workflows/vsa-negative-guard-self-test.yml
+          GOOD=.github/workflows/vsa-positive-guard-self-test.yml
+          trap 'rm -f "$BAD" "$GOOD"' EXIT
+          cat > "$BAD" <<'YAML'
+          name: bad future vsa workflow
+          jobs:
+            render:
+              steps:
+                - run: echo generic-render-without-gate
+          YAML
+          if python scripts/vsa/check_workflow_compliance.py "$BAD"; then
+            echo 'NEGATIVE_WORKFLOW_WAS_NOT_BLOCKED'
+            exit 1
+          fi
+          cat > "$GOOD" <<'YAML'
+          # VSA_VISUAL_STORY_ENGINE_V1
+          # VSA_VISUAL_RELEASE_RECEIPT_V1
+          name: compliant future vsa workflow
+          jobs:
+            gate:
+              steps:
+                - uses: ./.github/actions/vsa-release-gate
+                  with:
+                    receipt: /tmp/receipt.json
+          YAML
+          python scripts/vsa/check_workflow_compliance.py "$GOOD"
+          echo 'VSA_FUTURE_WORKFLOW_BYPASS_SELF_TEST_PASS'
+
       - name: Identify changed repository paths
         id: changes
         shell: bash
@@ -104,4 +136,5 @@ jobs:
             'SINGLE_TITLE_REQUIRED=true' \
             'HUMAN_REVIEW_REQUIRED=true' \
             'SCHEDULE_BEFORE_GATE_FORBIDDEN=true' \
+            'FUTURE_WORKFLOW_BYPASS_BLOCKED=true' \
             'CENA_CERTA_TOUCHED=false'
