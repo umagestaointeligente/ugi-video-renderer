@@ -1,0 +1,107 @@
+name: VSA Canonical V2 Recovery Canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-canonical-v2-recovery-canary-20260910.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vsa-canonical-v2-recovery-canary
+  cancel-in-progress: false
+
+env:
+  MEDIA_BRANCH: vsa-recovery-canary-20260910
+  MASK_URL: 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789093377716_VSA_MASK_CANONICAL_V2.png?alt=media'
+  CTA_URL: 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789093395839_VSA_CTA_VISUAL_CANONICAL_V1.png?alt=media'
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install canonical renderer dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --quiet edge-tts pillow numpy
+      - name: Fetch exact canonical V2 mask and CTA
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vsa/assets /tmp/vsa/src /tmp/vsa/out
+          curl -fL --retry 3 "$MASK_URL" -o /tmp/vsa/assets/mask.png
+          curl -fL --retry 3 "$CTA_URL" -o /tmp/vsa/assets/cta.png
+          echo 'ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56  /tmp/vsa/assets/mask.png' | sha256sum -c -
+          echo '6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8  /tmp/vsa/assets/cta.png' | sha256sum -c -
+      - name: Fetch three distinct rights-safe real dust sources and thematic music
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 'https://commons.wikimedia.org/wiki/Special:Redirect/file/NOAA%E2%80%99s_Satellites_Track_Saharan_Dust_Blowing_Across_the_Atlantic_%28NESDIS_2025-06-04%29.webm' -o /tmp/vsa/src/real1.webm
+          curl -fL --retry 3 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Earth_from_Orbit-_Tracking_Dust_in_the_Wind_%28NESDIS_2021-02-25_2021_02_24_SaharanDustEvent_TWIW_Final_%281%29%29.webm' -o /tmp/vsa/src/real2.webm
+          curl -fL --retry 3 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saharan_Dust_Spreads_Out_Over_the_Atlantic_Ocean_%28CIRA_2024-01-29_-_labels%29.webm' -o /tmp/vsa/src/real3.webm
+          curl -fL --retry 3 'https://assets.mixkit.co/music/552/552.mp3' -o /tmp/vsa/assets/music.mp3
+          for f in /tmp/vsa/src/*.webm /tmp/vsa/assets/music.mp3; do test -s "$f"; done
+      - name: Build topic manifest
+        run: |
+          cat > /tmp/vsa/topic.json <<'JSON'
+          {
+            "id":"DUST_MALI_RECOVERY",
+            "bucket":"WORLD_SCIENCE",
+            "title":"Como uma tempestade de poeira consegue cobrir vários países?",
+            "script":"Uma tempestade de poeira não precisa nascer de uma única nuvem gigante. Em regiões secas, ventos fortes levantam partículas muito pequenas do solo. As maiores caem relativamente perto, mas a poeira fina pode permanecer suspensa por horas ou dias e viajar centenas ou milhares de quilômetros. Foi isso que chamou atenção no começo de setembro, quando uma grande pluma cobriu partes do Mali e países vizinhos. Satélites conseguem acompanhar o deslocamento porque a poeira altera a luz refletida pela superfície e pela atmosfera. Dependendo da altitude e dos ventos, ela pode cruzar fronteiras, reduzir a visibilidade e afetar a qualidade do ar muito longe da origem. O deserto parece parado, mas sua poeira pode virar um viajante continental. Agora você já sabe.",
+            "mechs":["VENTO FORTE → PARTÍCULAS SOBEM","PARTÍCULAS FINAS → MAIS TEMPO NO AR","VENTOS EM ALTITUDE → PLUMA VIAJA LONGE"],
+            "source_files":["/tmp/vsa/src/real1.webm","/tmp/vsa/src/real2.webm","/tmp/vsa/src/real3.webm"],
+            "real_starts":[2,10,4],
+            "track_file":"/tmp/vsa/assets/music.mp3",
+            "track_meta":{"title":"Masking the Masters","artist":"Eugenio Mininni","source":"Mixkit","license":"Mixkit Stock Music Free License","editorial_mood":"serious documentary / atmospheric"},
+            "thumb":"POEIRA CRUZA FRONTEIRAS?",
+            "mask_sha256":"ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+            "cta_sha256":"6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8"
+          }
+          JSON
+      - name: Render with fail-closed V2 renderer
+        run: |
+          set -euo pipefail
+          python scripts/vsa/render_canonical_v2.py \
+            --topic /tmp/vsa/topic.json \
+            --mask /tmp/vsa/assets/mask.png \
+            --cta /tmp/vsa/assets/cta.png \
+            --work /tmp/vsa/work \
+            --out /tmp/vsa/out/VSA_13-09_PILOTO_TEMPESTADE_DE_POEIRA_V2.mp4
+      - name: Require final QA evidence before delivery
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('/tmp/vsa/out/VSA_13-09_PILOTO_TEMPESTADE_DE_POEIRA_V2_QA.json')
+          q=json.loads(p.read_text())
+          required=['CLEAN_HEADER_PASS','CLEAN_CC_ZONE_PASS','CAPTION_BURNIN_PASS','SCENE_DIVERSITY_PASS','ANIMATION_SEMANTIC_PASS','MUSIC_THEME_MATCH_PASS','THUMBNAIL_READY_PASS']
+          bad=[k for k in required if q.get(k) is not True]
+          if bad: raise SystemExit('QA_FAIL:'+','.join(bad))
+          print(json.dumps(q,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-canonical-v2-recovery-canary
+          path: /tmp/vsa/out/*
+          if-no-files-found: error
+      - name: Publish isolated review branch
+        run: |
+          set -euo pipefail
+          git config user.name 'vsa-recovery-bot'
+          git config user.email 'vsa-recovery-bot@users.noreply.github.com'
+          git checkout --orphan "$MEDIA_BRANCH"
+          git rm -rf . >/dev/null 2>&1 || true
+          mkdir -p media
+          cp /tmp/vsa/out/* media/
+          printf '%s\n' '# VSA canonical V2 recovery canary — REVIEW ONLY / NOT SCHEDULED' > README.md
+          git add README.md media/*
+          git commit -m 'media(vsa): canonical V2 recovery canary'
+          git push --force origin HEAD:"$MEDIA_BRANCH"
+          git rev-parse HEAD
