@@ -77,7 +77,7 @@ def main():
         result={"status":"HARD_STOP_NO_OPENROUTER_KEY","generated_at":now,"cost_gate":"PASS","calls":0}
         (OUT/"multi-ai-council-latest.json").write_text(json.dumps(result,indent=2),encoding="utf-8")
         print("MULTI_AI_COUNCIL=HARD_STOP_NO_OPENROUTER_KEY")
-        return 0
+        return 2
 
     plan_path=OUT/"latest.json"
     if not plan_path.exists():
@@ -94,7 +94,7 @@ def main():
         result={"status":"HARD_STOP_NO_ZERO_COST_MODELS","generated_at":now,"cost_gate":"FAIL","calls":0}
         (OUT/"multi-ai-council-latest.json").write_text(json.dumps(result,indent=2),encoding="utf-8")
         print("MULTI_AI_COUNCIL=HARD_STOP_NO_ZERO_COST_MODELS")
-        return 0
+        return 2
 
     prompt=("Review these top Lola Magic Engine opportunities and recommend: (1) best item to produce now, "
             "(2) hook/format, (3) monetization angle, (4) rights/fact risk, (5) one reason NOT to publish. "

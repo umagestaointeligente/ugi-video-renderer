@@ -1,13 +1,27 @@
 # LSI — RECOVERY CURRENT
 
 Status: CURRENT / AUTORITATIVO PARA HANDOFF
-Atualizado: 2026-09-07 BRT
+Atualizado: 2026-09-11 BRT
 Âncora humana: `Recovery LSI`
 
 Handoff canônico desta transição de chat:
 `docs/LSI_CAREER360_HANDOFF_2026-09-05_1609.md`
 
 ## 0. Estado global
+
+### Disponibilidade LSI — prova de 2026-09-11
+
+`LSI_RUNTIME_HEALTH=PASS`
+`LSI_BROKER_EXECUTION_SMOKE=PASS`
+`LSI_EXECUTION_ACCESS=GITHUB_ACTIONS_OIDC_ONLY`
+`LSI_CHAT_DIRECT_CONNECTOR=NOT_LIVE`
+
+- broker `lsi-zero-cost-broker`: HTTP 200, Workers AI e chave de criptografia presentes;
+- núcleo `lsi-hyperwork-core`: HTTP 200, Durable Objects, Workers AI, sentinel e background engine presentes;
+- conselho automático: run `34649059091`, `PASS`, 3 modelos, 2026-09-11;
+- smoke sob demanda criptografado: run `34656251844`, commit `0bb722ba698129cd9ece491f7f34f294ce12f7f9`, 1/1 tarefa, 307 ms, retorno `LSI_EXECUTION_OK`;
+- a rota de execução continua protegida por GitHub OIDC; uma conversa sem conector LSI não pode chamar o broker diretamente;
+- regra de verdade: `Ativar LSI` ou `Recovery LSI` recupera contexto, mas não prova conectividade do chat. Declarar `CHAT_READY` somente quando um conector direto estiver instalado e um smoke feito pela própria conversa passar.
 
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`
 `CURRENT_STATUS=V14_OFFICIAL_PRODUCTION_STABLE_V16_TESTER_ENTRYPOINT_LIVE_BROWSER_VALIDATED_PUBLIC_BETA_CLOSED`
