@@ -1,0 +1,51 @@
+{
+  "renderer": "VSA_CANONICAL_V2_FAIL_CLOSED",
+  "title": "Como uma tempestade de poeira consegue cobrir vários países?",
+  "mask_sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+  "cta_sha256": "6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8",
+  "CLEAN_HEADER_PASS": true,
+  "CLEAN_CC_ZONE_PASS": true,
+  "CAPTION_BURNIN_PASS": true,
+  "caption_pixel_delta": 1.68,
+  "SCENE_DIVERSITY_PASS": true,
+  "real_scene_hash_distances": [
+    16,
+    21,
+    23
+  ],
+  "ANIMATION_SEMANTIC_PASS": true,
+  "animation_motion_hash_distances": [
+    14,
+    16,
+    12
+  ],
+  "MUSIC_THEME_MATCH_PASS": true,
+  "music": {
+    "title": "Masking the Masters",
+    "artist": "Eugenio Mininni",
+    "source": "Mixkit",
+    "license": "Mixkit Stock Music Free License",
+    "editorial_mood": "serious documentary / atmospheric"
+  },
+  "THUMBNAIL_READY_PASS": true,
+  "output": "VSA_13-09_PILOTO_TEMPESTADE_DE_POEIRA_V2.mp4",
+  "thumbnail": "VSA_13-09_PILOTO_TEMPESTADE_DE_POEIRA_V2_THUMB.jpg",
+  "duration": 50.919,
+  "probe": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920,
+        "r_frame_rate": "30/1"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0"
+      }
+    ]
+  }
+}
