@@ -1,0 +1,28 @@
+{
+  "schema": "VSA_CLEAN_HEADER_GUARD_V1",
+  "status": "CANONICAL_ACTIVE",
+  "project": "ORBIT/VSA",
+  "mask": {
+    "active_library_path": "/VSA/Canonical Assets/VSA_MASK_CANONICAL_V2.png",
+    "sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+    "legacy_v1_status": "HISTORICAL_ONLY_DO_NOT_RENDER",
+    "legacy_reason": "V1 contains variable example title/subtitle/caption text baked into the asset."
+  },
+  "hard_gates": {
+    "clean_header_required": true,
+    "clean_caption_zone_required": true,
+    "single_title_render_required": true,
+    "logo_collision_forbidden": true,
+    "residual_previous_title_forbidden": true,
+    "per_video_cover_panel_over_previous_title_forbidden": true
+  },
+  "failure_codes": [
+    "CLEAN_HEADER_FAIL",
+    "TITLE_OVER_TITLE",
+    "RESIDUAL_TITLE_GHOST",
+    "CLEAN_CC_ZONE_FAIL",
+    "TITLE_LOGO_COLLISION"
+  ],
+  "release_rule": "Do not schedule or publish any VSA master unless CLEAN_HEADER_PASS and CLEAN_CC_ZONE_PASS are present in final QA evidence.",
+  "scope_lock": "VSA only. Never modify Cena Certa canonical paths, assets, schedules or accounts."
+}
