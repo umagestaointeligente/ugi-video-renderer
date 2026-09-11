@@ -1,0 +1,53 @@
+{
+  "schema": "UGI_VISUAL_SEMANTIC_GATE_V3",
+  "project": "UGI",
+  "status": "CANONICAL_HARD_GATE",
+  "effectiveAt": "2026-09-10T21:50:00-03:00",
+  "reason": "Prevent abstract/generic cards and repetitive single-image videos from passing technical QA when the editorial subject has identifiable real-world visual evidence.",
+  "rules": {
+    "realContextualVisualRequired": true,
+    "namedEntityMustBeVisuallyIdentifiableWhenPracticable": true,
+    "abstractOnlyPrimaryVisualBlockedWhenRealEvidenceExists": true,
+    "supportGraphicsOnly": ["icons", "arrows", "charts", "labels", "maps", "text"],
+    "supportGraphicsCannotReplacePrimaryEvidence": true,
+    "story": {
+      "minDistinctContextualSources": 2,
+      "singleStaticCardBlocked": true,
+      "musicRequired": true,
+      "musicMustFitTopicTone": true
+    },
+    "narratedVerticalVideo": {
+      "minDistinctContextualSources": 5,
+      "minDistinctScenes": 5,
+      "exactSourceReuseWithinVideoBlocked": true,
+      "singleImageLoopBlocked": true,
+      "speechVisualSemanticMatchRequiredPerScene": true,
+      "burnedCaptionsRequired": true,
+      "narrationPtBrRequired": true,
+      "musicRequired": true,
+      "musicMustFitTopicTone": true
+    },
+    "carousel": {
+      "minDistinctContextualSources": 6,
+      "primaryEvidencePerSlideRequired": true,
+      "abstractOnlySlideBlockedWhenRealEvidenceExists": true
+    },
+    "linkedinImage": {
+      "realNamedEntityContextRequired": true,
+      "genericStockPrimaryVisualBlocked": true,
+      "advertisingLookBlocked": true
+    }
+  },
+  "requiredPasses": [
+    "RIGHTS_PASS",
+    "VISUAL_SEMANTIC_PASS",
+    "SCENE_DIVERSITY_PASS",
+    "SPEECH_VISUAL_MATCH_PASS",
+    "MUSIC_FIT_PASS",
+    "FORMAT_PASS",
+    "CLOSED_CAPTION_PASS_WHERE_APPLICABLE",
+    "EDITORIAL_VALUE_PASS"
+  ],
+  "failClosed": true,
+  "userFacingInvariant": "If the subject is a real company, person, place, product, operation or event, the visual package must show that subject or directly contextual real-world evidence. A generic card cannot be the main visual substitute."
+}
