@@ -1,0 +1,60 @@
+name: Orbit Cena Certa Meta Auth Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [orbit/direct-publisher-v1]
+    paths:
+      - '.github/workflows/orbit-cena-certa-meta-auth-probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PAGE_ACCESS_TOKEN: ${{ secrets.CENA_CERTA_META_ACCESS_TOKEN }}
+      EXPECTED_PAGE_ID: '1314911305035494'
+      GRAPH_VERSION: 'v23.0'
+    steps:
+      - name: Validate secret presence
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${PAGE_ACCESS_TOKEN:-}" ]; then
+            echo 'META_AUTH=BLOCKED_SECRET_MISSING'
+            exit 78
+          fi
+          echo 'META_SECRET_PRESENT=true'
+      - name: Verify canonical page identity read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.parse, urllib.request, urllib.error
+          token=os.environ['PAGE_ACCESS_TOKEN']
+          expected=os.environ['EXPECTED_PAGE_ID']
+          version=os.environ['GRAPH_VERSION']
+          q=urllib.parse.urlencode({'fields':'id,name','access_token':token})
+          url=f'https://graph.facebook.com/{version}/me?{q}'
+          try:
+              with urllib.request.urlopen(url, timeout=60) as r:
+                  d=json.loads(r.read())
+          except urllib.error.HTTPError as e:
+              body=e.read().decode('utf-8','replace')[:1200]
+              print('META_AUTH=BLOCKED_GRAPH_ERROR')
+              print('HTTP_STATUS='+str(e.code))
+              print('GRAPH_BODY='+body)
+              raise
+          actual=str(d.get('id',''))
+          name=str(d.get('name',''))
+          print('META_PAGE_ID='+actual)
+          print('META_PAGE_NAME='+name)
+          if actual != expected:
+              print('META_AUTH=BLOCKED_IDENTITY_MISMATCH')
+              raise SystemExit(79)
+          print('META_AUTH=PASS')
+          print('MUTATION_PERFORMED=false')
+          PY
