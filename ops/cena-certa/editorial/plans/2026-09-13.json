@@ -1,0 +1,55 @@
+{
+  "schema": "CENA_CERTA_EDITORIAL_PLAN_V1",
+  "date": "2026-09-13",
+  "timezone": "America/Sao_Paulo",
+  "status": "PROPOSED_NOT_SCHEDULED",
+  "metricool_existing_scheduled_count": 0,
+  "constraints": {
+    "videos": 8,
+    "editorial_posts": 4,
+    "stories": 4,
+    "youtube_video_only": true,
+    "no_write_without_rights_and_qa": true
+  },
+  "metricool_signal_summary": {
+    "facebook": "peak 10:00; strong 09:00, 11:00-12:00, 17:00-19:00",
+    "instagram": "peak 10:00; strong 09:00, 11:00-12:00, 17:00-19:00",
+    "tiktok": "peak 10:00; strong 12:00, 16:00, 18:00-20:00",
+    "youtube": "peak 16:00; strongest window 15:00-18:00, with 10:00 secondary"
+  },
+  "schedule": [
+    {"time":"07:50","type":"story","topic":"Abertura: qual filme/série você vai ver hoje?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"08:35","type":"video","slot":1,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"09:40","type":"video","slot":2,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"10:20","type":"editorial_post","topic":"Kraven the Hunter chega ao Disney+","format":"carousel_or_static","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"11:10","type":"video","slot":3,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"11:50","type":"story","topic":"Kraven: vale rever no streaming?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"12:25","type":"video","slot":4,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"13:20","type":"editorial_post","topic":"Last Seen / Desaparecida — Apple TV","format":"static_or_2_slide_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"14:15","type":"story","topic":"Thriller do dia: você atenderia essa ligação?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"15:10","type":"video","slot":5,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"16:05","type":"video","slot":6,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"17:15","type":"editorial_post","topic":"Spider-Man: Brand New Day x The Odyssey — qual foi o evento do verão?","format":"comparison_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"18:10","type":"video","slot":7,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"19:20","type":"video","slot":8,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
+    {"time":"20:20","type":"editorial_post","topic":"Veneza 83 — vencedores e Leão de Ouro","format":"results_carousel","providers":["facebook","instagram","tiktok"],"status":"REVALIDATE_RESULTS_PLUS_ASSET_RIGHTS_QA_PENDING"},
+    {"time":"21:10","type":"story","topic":"O Leão de Ouro foi justo?","providers":["facebook","instagram"],"status":"REVALIDATE_RESULTS_PLUS_ASSET_RIGHTS_QA_PENDING"}
+  ],
+  "video_lane_guidance": [
+    "1 current/high-recognition title with cleared footage",
+    "1 acclaimed independent with explicit reuse license",
+    "1 thriller/horror lane",
+    "1 drama/emotional lane",
+    "1 sci-fi/action lane",
+    "1 festival/acclaimed lane",
+    "1 evergreen high-demand lane",
+    "1 flex slot based on live demand, all deduped against 60-day ledger"
+  ],
+  "editorial_copy_hooks": {
+    "kraven": "Kraven chegou ao Disney+. Vale dar uma segunda chance no streaming?",
+    "last_seen": "Uma ligação reacende um desaparecimento de 11 anos. Você entraria nessa busca?",
+    "box_office": "Spider-Man fez cerca de US$ 2,4 bi; The Odyssey, cerca de US$ 1,6 bi. Qual virou o verdadeiro evento do cinema em 2026?",
+    "venice": "Veneza terminou. O Leão de Ouro foi para o filme certo?"
+  },
+  "publication_gate": "Do not schedule any item until the exact visual asset is tied to a documented press/reuse route and QA passes. Venice copy must be refreshed after official 12/09 awards are published."
+}
