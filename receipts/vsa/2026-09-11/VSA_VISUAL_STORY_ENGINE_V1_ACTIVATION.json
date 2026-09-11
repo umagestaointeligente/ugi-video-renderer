@@ -16,8 +16,8 @@
     "release_gate_action_commit": "e0dd76466efd31ca88300cf7460557a7f6fbc2dc",
     "workflow_compliance_commit": "968352903343ecd7e6ac08c711fa3398d1c9d3a2",
     "receipt_template_commit": "67d173c2518dde9214d9eddf629e686ef17ab82a",
-    "guard_commit": "a8760a83e4a33da9b0b549536fef2d47c949b219",
-    "guard_run_id": 34608591343,
+    "guard_commit": "5f31ec9da240129b1d9abb1a29ca1c87b2fcc281",
+    "guard_run_id": 34608789657,
     "guard_run_conclusion": "success"
   },
   "verified_controls": {
@@ -36,7 +36,9 @@
     "human_review_required": true,
     "schedule_before_gate_blocked": true,
     "future_workflow_without_canonical_gate_blocked_by_compliance_guard": true,
-    "legacy_generic_cause_effect_renderer_blocked_in_new_or_changed_vsa_workflows": true
+    "legacy_generic_cause_effect_renderer_blocked_in_new_or_changed_vsa_workflows": true,
+    "channel_isolation_asserted_fail_closed": true,
+    "secret_literal_scan_asserted_fail_closed": true
   },
   "negative_tests": {
     "generic_filler": "BLOCKED",
