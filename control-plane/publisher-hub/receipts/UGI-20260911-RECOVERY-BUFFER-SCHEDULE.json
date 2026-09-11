@@ -1,0 +1,29 @@
+{
+  "schema": "UGI_BUFFER_RECOVERY_RECEIPT_V1",
+  "project": "UGI",
+  "incident": "SEP11_ASSETS_BUILT_BUT_BUFFER_MUTATION_MISSED",
+  "assetCommit": "df7541feecd2450b21df0e24fdc508b971ab0f6b",
+  "qaRunId": 34549856604,
+  "approvalCommit": "d70a6268b604ea2c3ec628e503a387ad31b51d49",
+  "schedulerRunId": 34644679240,
+  "schedulerCommit": "c26cbecdfef4d7d01984f7a1e13f0fda524e4dc3",
+  "auditRunId": 34644765590,
+  "auditCommit": "3f396e1d897bb1a13da3dc45a94bcf7d6000d555",
+  "precheck": "SHA256_14_OF_14_PASS",
+  "schedulerResult": "BUFFER_SCHEDULED_9_OF_9",
+  "independentReadback": "READBACK_9_OF_9_SCHEDULED",
+  "globalDistributionStateChanged": false,
+  "mutationRetryPerformed": false,
+  "recoveryPlan": "Three remaining Sep11 items preserved with Miro moved from missed 17:30 to 18:00 BRT; six already missed items carried to Sep12 at their original logical times.",
+  "items": [
+    {"date":"2026-09-11","timeBrt":"18:00","platform":"instagram","format":"story","topic":"Bending Spoons compra a Miro por US$1,36 bilhão","bufferPostId":"6aa465377145e39ccec66e7f","status":"scheduled","dueAt":"2026-09-11T21:00:00.000Z"},
+    {"date":"2026-09-11","timeBrt":"19:45","platform":"tiktok","format":"video","topic":"Primark finalmente vai entregar em casa","bufferPostId":"6aa465380ebef6a55a406352","status":"scheduled","dueAt":"2026-09-11T22:45:00.000Z"},
+    {"date":"2026-09-11","timeBrt":"20:30","platform":"instagram","format":"story","topic":"Hefei cresce 6,8%, mas o varejo só 0,6%","bufferPostId":"6aa465390ebef6a55a406389","status":"scheduled","dueAt":"2026-09-11T23:30:00.000Z"},
+    {"date":"2026-09-12","timeBrt":"08:30","platform":"instagram","format":"story","topic":"Altera prepara IPO de mais de US$2 bilhões","bufferPostId":"6aa4653acb62fc78b5029e50","status":"scheduled","dueAt":"2026-09-12T11:30:00.000Z"},
+    {"date":"2026-09-12","timeBrt":"10:15","platform":"instagram","format":"reel","topic":"FAA quer prever atrasos antes que eles aconteçam","bufferPostId":"6aa4653bdf564d9b29a4db22","status":"scheduled","dueAt":"2026-09-12T13:15:00.000Z"},
+    {"date":"2026-09-12","timeBrt":"11:30","platform":"tiktok","format":"video","topic":"Kojima / PHYSINT muda de PlayStation para Xbox","bufferPostId":"6aa4653c7145e39ccec66f15","status":"scheduled","dueAt":"2026-09-12T14:30:00.000Z"},
+    {"date":"2026-09-12","timeBrt":"12:00","platform":"instagram","format":"story","topic":"Coca-Cola volta a acelerar inovação","bufferPostId":"6aa4653dcb62fc78b5029ea3","status":"scheduled","dueAt":"2026-09-12T15:00:00.000Z"},
+    {"date":"2026-09-12","timeBrt":"14:00","platform":"linkedin","format":"post_image_text","topic":"HSBC — sucessão da CFO em meio à transformação","bufferPostId":"6aa4653eb68936ea7a44d842","status":"scheduled","dueAt":"2026-09-12T17:00:00.000Z"},
+    {"date":"2026-09-12","timeBrt":"14:30","platform":"instagram","format":"carousel","topic":"Stellantis: uma empresa, dois playbooks","bufferPostId":"6aa46540df564d9b29a4dba9","status":"scheduled","dueAt":"2026-09-12T17:30:00.000Z"}
+  ]
+}
