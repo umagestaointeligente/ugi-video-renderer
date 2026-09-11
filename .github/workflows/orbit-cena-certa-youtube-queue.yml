@@ -25,7 +25,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-
       - id: queue
         name: Resolve exactly one queue item
         shell: bash
@@ -33,116 +32,72 @@ jobs:
           set -euo pipefail
           files=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- 'control-plane/orbit-direct-youtube/*.json' | sed '/^$/d')
           count=$(printf '%s\n' "$files" | grep -c . || true)
-          if [ "$count" -ne 1 ]; then
-            echo "BLOCKED: expected exactly one changed YouTube queue file, got $count"
-            exit 78
-          fi
+          if [ "$count" -ne 1 ]; then echo "BLOCKED: expected exactly one changed YouTube queue file, got $count"; exit 78; fi
           file=$(printf '%s\n' "$files")
           python - "$file" > /tmp/item.json <<'PY'
-          import datetime, json, pathlib, re, sys
-          p=pathlib.Path(sys.argv[1])
-          d=json.loads(p.read_text())
+          import datetime,json,pathlib,re,sys
+          d=json.loads(pathlib.Path(sys.argv[1]).read_text())
           required=['item_key','media_url','title','description','publish_at']
           missing=[k for k in required if not str(d.get(k,'')).strip()]
-          if missing:
-              raise SystemExit('BLOCKED: missing queue fields '+','.join(missing))
+          if missing: raise SystemExit('BLOCKED: missing queue fields '+','.join(missing))
           expected=str(d.get('expected_channel_id') or 'UCq1h6RSnev5-JJQ8k4T98tg').strip()
-          if expected != 'UCq1h6RSnev5-JJQ8k4T98tg':
-              raise SystemExit('BLOCKED: queue target is not canonical Cena Certa channel')
-          if not re.fullmatch(r'[A-Za-z0-9._:-]{4,160}',str(d['item_key'])):
-              raise SystemExit('BLOCKED: invalid item_key')
-          if not str(d['media_url']).startswith('https://'):
-              raise SystemExit('BLOCKED: media_url must use https')
+          if expected!='UCq1h6RSnev5-JJQ8k4T98tg': raise SystemExit('BLOCKED: queue target is not canonical Cena Certa channel')
+          if not re.fullmatch(r'[A-Za-z0-9._:-]{4,160}',str(d['item_key'])): raise SystemExit('BLOCKED: invalid item_key')
+          if not str(d['media_url']).startswith('https://'): raise SystemExit('BLOCKED: media_url must use https')
           dt=datetime.datetime.fromisoformat(str(d['publish_at']).replace('Z','+00:00'))
-          now=datetime.datetime.now(datetime.timezone.utc)
-          if dt <= now + datetime.timedelta(minutes=5):
-              raise SystemExit('BLOCKED: publish_at must be >5 minutes in future')
-          out={k:d[k] for k in required}
-          print(json.dumps(out,ensure_ascii=False))
+          if dt<=datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=5): raise SystemExit('BLOCKED: publish_at must be >5 minutes in future')
+          print(json.dumps({k:d[k] for k in required},ensure_ascii=False))
           PY
-          echo "QUEUE_ITEM=$(jq -r .item_key /tmp/item.json)"
-          echo "QUEUE_PUBLISH_AT=$(jq -r .publish_at /tmp/item.json)"
-
+          echo "QUEUE_ITEM=$(jq -r .item_key /tmp/item.json)" >> "$GITHUB_ENV"
       - name: Validate worker control credentials
-        shell: bash
         run: |
-          set -euo pipefail
           test -n "$CLOUDFLARE_API_TOKEN" || { echo 'BLOCKED: UGI_ADMIN_CLOUDFLARE_API_TOKEN missing'; exit 78; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'BLOCKED: UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID missing'; exit 78; }
-
       - name: Open one-run command gate
         working-directory: cloudflare
-        shell: bash
         run: |
-          set -euo pipefail
-          TOKEN="$(openssl rand -hex 32)"
-          echo "::add-mask::$TOKEN"
-          echo "COMMAND_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+          TOKEN="$(openssl rand -hex 32)"; echo "::add-mask::$TOKEN"; echo "COMMAND_TOKEN=$TOKEN" >> "$GITHUB_ENV"
           printf '%s' "$TOKEN" | npx --yes wrangler@4 secret put COMMAND_TOKEN --config wrangler.orbit-cena-certa-auth.toml >/dev/null
-          echo COMMAND_GATE=OPEN_MASKED
-
       - name: Wait for command gate propagation
-        shell: bash
         run: |
-          set -euo pipefail
           READY=false
-          for i in {1..20}; do
-            HTTP=$(curl -sS -o /tmp/gate.json -w '%{http_code}' -X POST "$WORKER_URL/schedule" -H "Authorization: Bearer $COMMAND_TOKEN" -H 'Content-Type: application/json' --data '{}')
-            if [ "$HTTP" = "409" ] && grep -q 'INVALID_ITEM_KEY' /tmp/gate.json; then READY=true; break; fi
-            sleep 3
-          done
-          cat /tmp/gate.json
+          for i in {1..20}; do HTTP=$(curl -sS -o /tmp/gate.json -w '%{http_code}' -X POST "$WORKER_URL/schedule" -H "Authorization: Bearer $COMMAND_TOKEN" -H 'Content-Type: application/json' --data '{}'); if [ "$HTTP" = "409" ] && grep -q 'INVALID_ITEM_KEY' /tmp/gate.json; then READY=true; break; fi; sleep 3; done
           test "$READY" = true
-          echo COMMAND_GATE_PROPAGATED=true
-          echo MUTATION_PERFORMED=false
-
       - name: Verify canonical authorization
-        shell: bash
         run: |
-          set -euo pipefail
-          for i in {1..12}; do
-            curl -fsS "$WORKER_URL/status" > /tmp/status.json && \
-            grep -q '"authorized":true' /tmp/status.json && \
-            grep -q '"channel_id":"UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/status.json && \
-            grep -q '"has_refresh_token":true' /tmp/status.json && break
-            sleep 5
-          done
-          cat /tmp/status.json
+          curl -fsS "$WORKER_URL/status" > /tmp/status.json
           grep -q '"authorized":true' /tmp/status.json
           grep -q '"channel_id":"UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/status.json
           grep -q '"has_refresh_token":true' /tmp/status.json
-          echo IDENTITY_GATE=PASS
-
-      - name: Schedule canonical queue item
-        shell: bash
+      - id: publish
+        name: Schedule canonical queue item
+        continue-on-error: true
         run: |
-          set -u
           HTTP=$(curl -sS -o /tmp/resp.json -w '%{http_code}' -X POST "$WORKER_URL/schedule" -H "Authorization: Bearer $COMMAND_TOKEN" -H 'Content-Type: application/json' --data-binary @/tmp/item.json)
+          echo "$HTTP" > /tmp/http_status.txt
           cat /tmp/resp.json
-          MSG=$(jq -c . /tmp/resp.json 2>/dev/null || cat /tmp/resp.json)
-          if [ "$HTTP" != "200" ]; then
-            echo "::error title=Direct publisher response::$MSG"
-            exit 1
-          fi
-          if ! jq -e '.ok == true and (.result == "SCHEDULED" or .result == "ALREADY_EXISTS") and .channel_id == "UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/resp.json >/dev/null; then
-            echo "::error title=Unexpected direct publisher receipt::$MSG"
-            exit 1
-          fi
-          echo "::notice title=Direct publisher receipt::$MSG"
+          if [ "$HTTP" != "200" ]; then exit 1; fi
+          jq -e '.ok == true and (.result == "SCHEDULED" or .result == "ALREADY_EXISTS") and .channel_id == "UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/resp.json >/dev/null
+      - name: Upload sanitized direct response
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: direct-response-${{ github.run_id }}
+          path: |
+            /tmp/resp.json
+            /tmp/http_status.txt
+          retention-days: 1
+          if-no-files-found: warn
+      - name: Enforce publish outcome
+        if: always()
+        run: |
+          test "${{ steps.publish.outcome }}" = "success" || exit 1
           echo "DIRECT_RESULT=$(jq -r .result /tmp/resp.json)"
           echo "DIRECT_VIDEO_ID=$(jq -r '.video_id // .existing_video_id // empty' /tmp/resp.json)"
           echo "DIRECT_PUBLISH_AT=$(jq -r '.publish_at // empty' /tmp/resp.json)"
           echo READBACK_VERIFIED=true
-
       - name: Seal command gate
         if: always()
         working-directory: cloudflare
-        shell: bash
         run: |
-          set -euo pipefail
-          if [ -n "${CLOUDFLARE_API_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
-            SEAL="$(openssl rand -hex 32)"
-            echo "::add-mask::$SEAL"
-            printf '%s' "$SEAL" | npx --yes wrangler@4 secret put COMMAND_TOKEN --config wrangler.orbit-cena-certa-auth.toml >/dev/null
-            echo COMMAND_GATE=SEALED
-          fi
+          if [ -n "${CLOUDFLARE_API_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then SEAL="$(openssl rand -hex 32)"; echo "::add-mask::$SEAL"; printf '%s' "$SEAL" | npx --yes wrangler@4 secret put COMMAND_TOKEN --config wrangler.orbit-cena-certa-auth.toml >/dev/null; fi
