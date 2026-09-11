@@ -18,6 +18,8 @@
   "story_contract": {
     "narration_image_action_meaning_required": true,
     "shot_map_required_before_render": true,
+    "shot_narration_must_be_bound_to_rendered_tts_timing": true,
+    "editorial_label_cannot_substitute_for_narration_quote": true,
     "minimum_shots": 3,
     "real_after_mechanism_required": true,
     "causal_link_id_required_for_mechanism": true,
@@ -25,6 +27,8 @@
     "forbid_generic_filler": true,
     "forbid_generic_cause_effect_card": true,
     "forbid_repeated_take_as_variety": true,
+    "forbid_repeated_animation_as_distinct_mechanisms": true,
+    "animation_blocks_must_be_visually_distinct": true,
     "if_exact_licensed_visual_is_missing": "BLOCK_ASSET"
   },
   "real_asset_required_fields": [
@@ -37,11 +41,13 @@
   ],
   "required_gates": [
     "SHOT_MAP_PASS",
+    "NARRATION_BOUNDARY_PASS",
     "VISUAL_NARRATIVE_ALIGNMENT_PASS",
     "REAL_ACTION_VISIBLE_PASS",
     "CAUSE_EFFECT_CONTINUITY_PASS",
     "NO_GENERIC_FILLER_PASS",
     "SCENE_DIVERSITY_PASS",
+    "ANIMATION_DISTINCTNESS_PASS",
     "RIGHTS_TRACEABILITY_PASS",
     "CAUSAL_VISUAL_MOTION_PASS",
     "CC_VISIBLE_PASS",
@@ -76,6 +82,7 @@
   "release": {
     "fail_closed": true,
     "human_review_required": true,
+    "visual_narrative_alignment_must_remain_false_until_human_approval": true,
     "release_receipt_schema": "VSA_VISUAL_RELEASE_RECEIPT_V1",
     "release_eligible_must_be_true": true,
     "schedule_requires_same_validated_receipt": true,
