@@ -2,10 +2,6 @@ name: Orbit Cena Certa Meta Auth Probe
 
 on:
   workflow_dispatch:
-  push:
-    branches: [orbit/direct-publisher-v1]
-    paths:
-      - '.github/workflows/orbit-cena-certa-meta-auth-probe.yml'
 
 permissions:
   contents: read
