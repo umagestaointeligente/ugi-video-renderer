@@ -57,8 +57,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Use the event-only Commons extract so the visible wave/inundation begins inside this 8s block.
-          ffmpeg -y -loglevel error -ss 1.5 -i /tmp/pago_pago_end.ogv -t 8.072 \
+          # Start deeper into the event-only extract so this block shows water sweeping the parking lot/vehicles.
+          ffmpeg -y -loglevel error -ss 8.0 -i /tmp/pago_pago_end.ogv -t 8.072 \
             -filter_complex "[0:v]split=2[bg][fg];[bg]scale=976:844:force_original_aspect_ratio=increase,crop=976:844,gblur=sigma=22,eq=brightness=-0.14:saturation=0.86[bgv];[fg]scale=940:805:force_original_aspect_ratio=decrease,eq=contrast=1.05:saturation=1.05[fgv];[bgv][fgv]overlay=(W-w)/2:(H-h)/2,drawbox=x=18:y=18:w=430:h=40:color=black@0.60:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='IMAGEM REAL • TSUNAMI':fontcolor=white:fontsize=21:x=32:y=27,fps=30,format=yuv420p[v]" \
             -map '[v]' -an -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p /tmp/real_tsunami_arrival.mp4
 
@@ -70,18 +70,18 @@ jobs:
           ffmpeg -y -loglevel error -i "$SRC" -i /tmp/real_tsunami_arrival.mp4 \
             -filter_complex "[1:v]setpts=PTS+16.144/TB[real];[0:v][real]overlay=52:440:eof_action=pass:enable='between(t,16.144,24.216)',fps=30,format=yuv420p[v]" \
             -map '[v]' -map 0:a -c:v libx264 -preset veryfast -crf 19 -pix_fmt yuv420p -c:a copy -movflags +faststart \
-            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V2.mp4
+            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V3.mp4
 
       - name: Fail-closed preservation and real-footage QA
         shell: bash
         run: |
           set -euo pipefail
           cat > /tmp/qa.py <<'PY'
-          import hashlib,json,pathlib,statistics,subprocess
+          import hashlib,json,pathlib,subprocess
           import numpy as np
           from PIL import Image
           src=pathlib.Path('/tmp/source/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR.mp4')
-          out=pathlib.Path('/tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V2.mp4')
+          out=pathlib.Path('/tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V3.mp4')
           def probe(p):
               return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_name,width,height,r_frame_rate','-of','json',str(p)],text=True))
           pr=probe(out); v=next(s for s in pr['streams'] if s.get('width'))
@@ -92,7 +92,6 @@ jobs:
           for tag,p in [('src',src),('out',out)]:
               for t in [6,18,20,22,28,36,44]:
                   subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(t),'-i',str(p),'-frames:v','1',str(root/f'{tag}_{t}.png')],check=True)
-          # Title and CC must remain exactly where the approved narrative pilot placed them.
           preservation=[]
           for t in [6,18,20,22,28,36,44]:
               a=np.asarray(Image.open(root/f'src_{t}.png').convert('RGB'),dtype=np.float32)
@@ -101,21 +100,17 @@ jobs:
               cc=float(np.mean(np.abs(a[1320:1580,200:1040]-b[1320:1580,200:1040])))
               if title>6.0 or cc>6.0: raise SystemExit(f'HEADER_OR_CC_REGRESSION t={t} title={title} cc={cc}')
               preservation.append({'t':t,'title_diff':round(title,3),'cc_diff':round(cc,3)})
-          # Real tsunami block must contain a visible dynamic event. Use mean + upper percentile
-          # rather than median so a fixed security camera is not falsely treated as a static card.
           td=root/'motion'; td.mkdir(exist_ok=True)
           subprocess.run(['ffmpeg','-y','-loglevel','error','-ss','16.144','-t','7.8','-i',str(out),'-vf','crop=976:844:52:440,fps=3,scale=244:211',str(td/'%02d.png')],check=True)
           fs=sorted(td.glob('*.png')); arr=[np.asarray(Image.open(f).convert('L'),dtype=np.float32) for f in fs]
           dif=np.array([float(np.mean(np.abs(arr[i]-arr[i-1]))) for i in range(1,len(arr))],dtype=float)
           mean_motion=float(np.mean(dif)); p90=float(np.percentile(dif,90)); peak=float(np.max(dif))
-          if mean_motion<0.35 or p90<1.2 or peak<2.0:
+          if mean_motion<0.55 or p90<1.4 or peak<2.0:
               raise SystemExit(f'REAL_TSUNAMI_MOTION_FAIL mean={mean_motion} p90={p90} peak={peak}')
-          # Arrival shot and later urban inundation shot must be visually distinct.
           a=np.asarray(Image.open(root/'out_20.png').resize((120,180)).convert('L'),dtype=np.float32)
           b=np.asarray(Image.open(root/'out_36.png').resize((120,180)).convert('L'),dtype=np.float32)
           distinct=float(np.mean(np.abs(a-b)))
           if distinct<8.0: raise SystemExit(f'REAL_SCENE_DISTINCTNESS_FAIL {distinct}')
-          # The new scene must differ materially from the weak prior scene.
           old=np.asarray(Image.open(root/'src_20.png').resize((120,180)).convert('L'),dtype=np.float32)
           new=np.asarray(Image.open(root/'out_20.png').resize((120,180)).convert('L'),dtype=np.float32)
           replacement_diff=float(np.mean(np.abs(old-new)))
@@ -126,15 +121,15 @@ jobs:
                   for c in iter(lambda:f.read(1024*1024),b''): h.update(c)
               return h.hexdigest()
           receipt={
-            'schema':'VSA_HUNGA_REAL_FOOTAGE_STRENGTHENING_V2',
+            'schema':'VSA_HUNGA_REAL_FOOTAGE_STRENGTHENING_V3',
             'id':'HUNGA_TSUNAMI',
             'source_run_id':34593780386,
             'source_sha256':sha(src),
             'output_master':out.name,
             'output_sha256':sha(out),
             'changed_window_seconds':[16.144,24.216],
-            'new_real_footage':{'event':'2009 American Samoa tsunami striking FBI parking lot — event-only extract','source':'Wikimedia Commons / FBI Honolulu','license':'Public domain','source_start_seconds':1.5},
-            'visual_story_sequence':['REAL_HUNGA_ORIGIN','ANIM_COLLAPSE_CREATES_WAVE','REAL_TSUNAMI_ARRIVAL_AND_INUNDATION','ANIM_SEISMIC_SIGNAL_TRAVEL','REAL_URBAN_INUNDATION','ANIM_ORIGIN_RECONSTRUCTION'],
+            'new_real_footage':{'event':'2009 American Samoa tsunami sweeping FBI parking lot — event-only extract','source':'Wikimedia Commons / FBI Honolulu','license':'Public domain','source_start_seconds':8.0},
+            'visual_story_sequence':['REAL_HUNGA_ORIGIN','ANIM_COLLAPSE_CREATES_WAVE','REAL_TSUNAMI_SWEEPS_COASTAL_PARKING_LOT','ANIM_SEISMIC_SIGNAL_TRAVEL','REAL_URBAN_INUNDATION','ANIM_ORIGIN_RECONSTRUCTION'],
             'title_preserved_single_layer':True,
             'cc_preserved_visible':True,
             'preservation_samples':preservation,
@@ -147,15 +142,15 @@ jobs:
             'release_eligible':False,
             'human_review_required':True
           }
-          pathlib.Path('/tmp/HUNGA_NARRATIVE_REPAIR_V2_QA.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          pathlib.Path('/tmp/HUNGA_NARRATIVE_REPAIR_V3_QA.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print(json.dumps(receipt,ensure_ascii=False))
           PY
           python /tmp/qa.py
 
       - uses: actions/upload-artifact@v4
         with:
-          name: vsa-hunga-narrative-visual-repair-v2
+          name: vsa-hunga-narrative-visual-repair-v3
           path: |
-            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V2.mp4
-            /tmp/HUNGA_NARRATIVE_REPAIR_V2_QA.json
+            /tmp/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V3.mp4
+            /tmp/HUNGA_NARRATIVE_REPAIR_V3_QA.json
           if-no-files-found: error
