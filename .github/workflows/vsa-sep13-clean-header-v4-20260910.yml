@@ -1,0 +1,100 @@
+name: VSA Sep13 Clean Header V4
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/vsa-sep13-clean-header-v4-20260910.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vsa-sep13-clean-header-v4-20260910
+  cancel-in-progress: false
+
+env:
+  MEDIA_BRANCH: 'vsa-media-sep13-clean-v4-20260910'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [DUST_MALI,FERNANDA_MONTENEGRO,HUNGA_TSUNAMI,ELTON_ENERGY,EMIT_MINE,MARISKA_LONGEVITY,SENTINEL_HURRICANE,EMICIDA_INFLUENCE]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --quiet edge-tts pyyaml pillow
+      - name: Prepare clean-header renderer
+        env:
+          VSA_ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          python ops/vsa-runtime/clean_header_renderer.py
+          python -m py_compile /tmp/build_vsa.py
+      - name: Render canonical master
+        run: |
+          set -euo pipefail
+          export TOPICS_JSON="$(cat /tmp/topics.json)"
+          python /tmp/build_vsa.py
+      - name: Generate thumbnail and header QA frame
+        run: |
+          set -euo pipefail
+          python ops/vsa-runtime/sep13_thumbnail_qa.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep13-clean-v4-${{ matrix.id }}
+          path: /tmp/vsa_sep10_11/out/*
+          if-no-files-found: error
+
+  host:
+    needs: build
+    if: ${{ always() && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: vsa-sep13-clean-v4-*
+          path: /tmp/all
+          merge-multiple: false
+      - name: Verify clean V4 package
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/release
+          find /tmp/all -type f -name '*_FINAL.mp4' -exec cp {} /tmp/release/ \;
+          find /tmp/all -type f -name '*_THUMB.jpg' -exec cp {} /tmp/release/ \;
+          find /tmp/all -type f -name '*_HEADER_QA.jpg' -exec cp {} /tmp/release/ \;
+          test "$(find /tmp/release -maxdepth 1 -name '*_FINAL.mp4' | wc -l)" -eq 8
+          test "$(find /tmp/release -maxdepth 1 -name '*_THUMB.jpg' | wc -l)" -eq 8
+          test "$(find /tmp/release -maxdepth 1 -name '*_HEADER_QA.jpg' | wc -l)" -eq 8
+      - name: Publish isolated static delivery branch
+        run: |
+          set -euo pipefail
+          git config user.name 'vsa-static-media-bot'
+          git config user.email 'vsa-static-media-bot@users.noreply.github.com'
+          git checkout --orphan "$MEDIA_BRANCH"
+          git rm -rf . >/dev/null 2>&1 || true
+          mkdir -p media
+          cp /tmp/release/*_FINAL.mp4 media/
+          cp /tmp/release/*_THUMB.jpg media/
+          printf '%s\n' '# VSA Sep13 CLEAN HEADER V4 delivery media' > README.md
+          printf '%s\n' '8 clean-header masters + 8 editorial thumbnails. Visual canary checked before scheduling.' >> README.md
+          git add README.md media/*
+          git commit -m 'media(vsa): Sep13 clean-header V4 masters and thumbnails'
+          git push --force origin HEAD:"$MEDIA_BRANCH"
+          git rev-parse HEAD | tee media-commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep13-clean-v4-static-receipt
+          path: media-commit.txt
