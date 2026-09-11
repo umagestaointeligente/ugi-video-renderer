@@ -7,7 +7,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/vsa-sep12-13-canonical-remake-20260911.yml'
-      - 'scripts/vsa/canonical_remake_sep12_13_v6.py'
+      - 'scripts/vsa/canonical_remake_sep12_13_v7.py'
       - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
 
 permissions:
@@ -28,16 +28,17 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Validate targeted V6 renderer and canonical contract
+      - name: Validate targeted V7 renderer and canonical contract
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/vsa/canonical_remake_sep12_13.py scripts/vsa/canonical_remake_sep12_13_v2.py scripts/vsa/canonical_remake_sep12_13_v3.py scripts/vsa/canonical_remake_sep12_13_v4.py scripts/vsa/canonical_remake_sep12_13_v5.py scripts/vsa/canonical_remake_sep12_13_v6.py
+          python -m py_compile scripts/vsa/canonical_remake_sep12_13.py scripts/vsa/canonical_remake_sep12_13_v2.py scripts/vsa/canonical_remake_sep12_13_v3.py scripts/vsa/canonical_remake_sep12_13_v4.py scripts/vsa/canonical_remake_sep12_13_v5.py scripts/vsa/canonical_remake_sep12_13_v6.py scripts/vsa/canonical_remake_sep12_13_v7.py
           python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
           python scripts/vsa/validate_release_receipt.py --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json --self-test
           python scripts/vsa/check_workflow_compliance.py .github/workflows/vsa-sep12-13-canonical-remake-20260911.yml
 
   build:
+    if: ${{ contains(github.event.head_commit.message, '[vsa-targeted-recovery-v7]') }}
     needs: preflight
     strategy:
       fail-fast: false
@@ -71,7 +72,7 @@ jobs:
           path: /tmp/golden
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ env.GOLDEN_RUN_ID }}
-      - name: Render one targeted V6 candidate
+      - name: Render one targeted V7 candidate
         shell: bash
         env:
           VSA_ID: ${{ matrix.id }}
@@ -80,11 +81,11 @@ jobs:
           GOLDEN=/tmp/golden/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V3.mp4
           test -s "$GOLDEN"
           mkdir -p /tmp/output
-          python scripts/vsa/canonical_remake_sep12_13_v6.py --id "$VSA_ID" --golden "$GOLDEN" --out-dir /tmp/output
+          python scripts/vsa/canonical_remake_sep12_13_v7.py --id "$VSA_ID" --golden "$GOLDEN" --out-dir /tmp/output
           test "$(find /tmp/output -maxdepth 1 -name '*_REMAKE.mp4' | wc -l)" -eq 1
           test "$(find /tmp/output -maxdepth 1 -name '*_CONTACT_SHEET.jpg' | wc -l)" -eq 1
           test "$(find /tmp/output -maxdepth 1 -name '*_VSA_VISUAL_RELEASE_RECEIPT_V1.json' | wc -l)" -eq 1
-      - name: Assert V6 remains truthfully fail-closed
+      - name: Assert V7 remains truthfully fail-closed
         shell: bash
         run: |
           set -euo pipefail
@@ -100,17 +101,17 @@ jobs:
           assert r['gates']['VISUAL_NARRATIVE_ALIGNMENT_PASS'] is False
           assert all(v for k,v in r['gates'].items() if k != 'VISUAL_NARRATIVE_ALIGNMENT_PASS')
           assert r['status'] == 'AWAITING_HUMAN_VISUAL_ALIGNMENT_REVIEW'
-          assert r.get('repair_version') == 'V6_NARRATION_BOUND_DISTINCT_ANIMATION'
-          print('VSA_V6_FAIL_CLOSED_PRE_RELEASE_PASS',r['video_id'])
+          assert r.get('repair_version') == 'V7_TARGETED_SEMANTIC_MOTION'
+          print('VSA_V7_FAIL_CLOSED_PRE_RELEASE_PASS',r['video_id'])
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: vsa-v6-narrative-repair-${{ matrix.id }}
+          name: vsa-v7-narrative-repair-${{ matrix.id }}
           path: /tmp/output/*
           if-no-files-found: error
           retention-days: 14
 
-  # This recovery run never publishes or schedules. Any later release remains behind:
+  # This recovery workflow never publishes or schedules. Any later release remains behind:
   # ./.github/actions/vsa-release-gate
   release_gate_marker:
     if: ${{ false }}
