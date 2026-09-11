@@ -1,0 +1,153 @@
+{
+  "schema": "UGI_EDITORIAL_PLAN_V3",
+  "project": "UGI",
+  "date": "2026-09-11",
+  "timezone": "America/Sao_Paulo",
+  "state": "USER_AUTHORIZED_FOR_BUILD_AND_BATCH_SCOPED_SCHEDULE_PENDING_FINAL_QA",
+  "publisherMutationPerformed": false,
+  "userAuthorization": "Paulo explicitly said 'Ok Lola prossiga com a agenda!' after reviewing the Sep11 nine-slot plan. Authorization is batch-scoped and does not relax future approval policy.",
+  "policy": {
+    "antiRepeat": "control-plane/policies/UGI_ANTI_REPEAT_V2.md",
+    "cooldownDays": 60,
+    "scope": "GLOBAL_INSTAGRAM_TIKTOK_LINKEDIN",
+    "visualGate": "config/ugi/visual-semantic-gate-v3.json",
+    "sameDayCrossNetworkDuplicate": "BLOCK",
+    "extraordinaryException": "EDITORIAL_REPEAT_EXCEPTION_BREAKING"
+  },
+  "antiRepeatDecision": {
+    "state": "ANTI_REPEAT_PASS_AGAINST_RECONCILED_DURABLE_EVIDENCE",
+    "legacyBackfillComplete": false,
+    "rule": "Fail closed before Buffer mutation if a credible collision is discovered."
+  },
+  "allocation": {
+    "instagram": {"reel": 1, "carousel": 1, "stories": 4, "total": 6},
+    "tiktok": {"video": 2, "total": 2},
+    "linkedin": {"post": 1, "total": 1},
+    "totalCrossNetwork": 9
+  },
+  "slots": [
+    {
+      "id": "UGI-20260911-IG-STORY-ALTERA-0830",
+      "timeBrt": "08:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "altera-ipo-intel-retained-stake-optionality",
+      "topic": "Altera prepara IPO de mais de US$2 bilhões — por que a Intel vendeu o controle e manteve 49%",
+      "managementAngle": "alocação de capital, desinvestimento parcial e preservação de opcionalidade",
+      "factSource": "Reuters 2026-09-10",
+      "visualContract": ["altera_hq", "intel_hq"],
+      "minDistinctVisualSources": 2
+    },
+    {
+      "id": "UGI-20260911-IG-REEL-FAA-1015",
+      "timeBrt": "10:15",
+      "platform": "instagram",
+      "format": "reel",
+      "topicKey": "faa-smart-predictive-flight-delay-operations",
+      "topic": "FAA quer prever atrasos antes que eles aconteçam",
+      "managementAngle": "antecipação de gargalos, dados operacionais e decisão antes do problema",
+      "factSource": "Reuters 2026-09-10",
+      "visualContract": ["faa_ind", "faa_phl", "faa_den", "faa_atl", "faa_view"],
+      "minDistinctVisualSources": 5
+    },
+    {
+      "id": "UGI-20260911-TT-KOJIMA-1130",
+      "timeBrt": "11:30",
+      "platform": "tiktok",
+      "format": "video",
+      "topicKey": "kojima-physint-playstation-xbox-partner-switch",
+      "topic": "Kojima perdeu a PlayStation e levou PHYSINT para o Xbox",
+      "managementAngle": "perder um parceiro não precisa matar o projeto; preservar proposta e buscar novo encaixe estratégico",
+      "factSource": "Kojima Productions + Xbox Wire 2026-09-10",
+      "visualContract": ["kojima1", "kojima2", "kojima3", "kojima4", "xbox"],
+      "minDistinctVisualSources": 5
+    },
+    {
+      "id": "UGI-20260911-IG-STORY-COCACOLA-1200",
+      "timeBrt": "12:00",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "cocacola-innovation-after-portfolio-pruning",
+      "topic": "Coca-Cola volta a acelerar inovação depois de enxugar o portfólio",
+      "managementAngle": "menos inovação aleatória, mais precisão e escala",
+      "factSource": "FoodNavigator 2026-09-10",
+      "visualContract": ["coke_store", "coke_bottles"],
+      "minDistinctVisualSources": 2
+    },
+    {
+      "id": "UGI-20260911-LI-HSBC-1400",
+      "timeBrt": "14:00",
+      "platform": "linkedin",
+      "format": "post_image_text",
+      "topicKey": "hsbc-pam-kaur-cfo-succession-transformation",
+      "topic": "HSBC — quando uma CFO sai no meio de uma transformação",
+      "managementAngle": "sucessão, continuidade de liderança e risco de execução",
+      "factSource": "Reuters 2026-09-10",
+      "visualContract": ["hsbc_hq"],
+      "namedEntityMustBeVisible": true
+    },
+    {
+      "id": "UGI-20260911-IG-CAROUSEL-STELLANTIS-1430",
+      "timeBrt": "14:30",
+      "platform": "instagram",
+      "format": "carousel",
+      "topicKey": "stellantis-us-global-divergent-playbooks",
+      "topic": "Stellantis: uma empresa, dois playbooks",
+      "managementAngle": "adaptação estratégica por mercado, regulação e consumidor",
+      "factSource": "Reuters 2026-09-10",
+      "visualContract": ["stellantis", "chrysler_hq", "ram", "jeep", "fiat_hq", "grand_cherokee"],
+      "minDistinctVisualSources": 6
+    },
+    {
+      "id": "UGI-20260911-IG-STORY-MIRO-1730",
+      "timeBrt": "17:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "bending-spoons-miro-acquisition-operating-growth",
+      "topic": "Bending Spoons compra a Miro por US$1,36 bilhão",
+      "managementAngle": "crescimento por aquisição e capacidade de operar melhor ativos adquiridos",
+      "factSource": "Reuters 2026-09-10",
+      "visualContract": ["bending_spoons", "collaboration_whiteboard"],
+      "wrongEntityBlocked": "Miro legacy video-player/software imagery",
+      "minDistinctVisualSources": 2
+    },
+    {
+      "id": "UGI-20260911-TT-PRIMARK-1945",
+      "timeBrt": "19:45",
+      "platform": "tiktok",
+      "format": "video",
+      "topicKey": "primark-home-delivery-strategy-reversal",
+      "topic": "Primark finalmente vai entregar em casa",
+      "managementAngle": "quando uma estratégia que funcionou por anos deixa de encaixar no mercado",
+      "factSource": "Reuters 2026-09-10",
+      "visualContract": ["primark1", "primark2", "primark3", "primark4", "primark_distribution"],
+      "minDistinctVisualSources": 5
+    },
+    {
+      "id": "UGI-20260911-IG-STORY-HEFEI-2030",
+      "timeBrt": "20:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "hefei-production-growth-retail-demand-gap",
+      "topic": "Hefei cresce 6,8%, mas o varejo só 0,6%",
+      "managementAngle": "produção e capacidade não garantem demanda; crescimento precisa fechar o ciclo de consumo",
+      "factSource": "Reuters 2026-09-10",
+      "visualContract": ["hefei_skyline", "hefei_retail"],
+      "minDistinctVisualSources": 2
+    }
+  ],
+  "releaseGate": [
+    "ANTI_REPEAT_PASS",
+    "FACT_PASS",
+    "RIGHTS_PASS",
+    "VISUAL_SEMANTIC_PASS",
+    "SCENE_DIVERSITY_PASS",
+    "SPEECH_VISUAL_MATCH_PASS",
+    "MUSIC_FIT_PASS",
+    "FORMAT_PASS",
+    "CLOSED_CAPTION_PASS_FOR_NARRATED_VIDEO",
+    "EDITORIAL_VALUE_PASS",
+    "BATCH_SCOPED_USER_AUTHORIZATION",
+    "BUFFER_CHANNEL_AND_DUEAT_READBACK"
+  ]
+}
