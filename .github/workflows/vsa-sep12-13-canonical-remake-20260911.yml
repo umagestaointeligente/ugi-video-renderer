@@ -11,6 +11,29 @@ on:
       - 'scripts/vsa/canonical_remake_sep12_13_v2.py'
   workflow_dispatch:
     inputs:
+      target:
+        description: 'Render target; ALL only when a full rebuild is intentionally required'
+        required: true
+        default: 'ALL'
+        type: choice
+        options:
+          - ALL
+          - CHANDRA_HYPERSOFT
+          - IBERE
+          - PEAT_FIRE
+          - HOUDINI
+          - EQUAL_EARTH
+          - BUSTER_KEATON
+          - EL_NINO
+          - ROOSEVELT
+          - DUST_MALI
+          - FERNANDA_MONTENEGRO
+          - HUNGA_TSUNAMI
+          - ELTON_ENERGY
+          - EMIT_MINE
+          - MARISKA_LONGEVITY
+          - SENTINEL_HURRICANE
+          - EMICIDA_INFLUENCE
       human_approved:
         description: 'Explicit human approval after reviewing the generated masters'
         required: false
@@ -28,7 +51,8 @@ concurrency:
 
 env:
   GOLDEN_RUN_ID: '34594731572'
-  GOLDEN_ARTIFACT: 'vsa-hunga-narrative-visual-repair-v3'
+  GOLDEN_ARTIFACT: vsa-hunga-narrative-visual-repair-v3
+  BASE_REVIEW_RUN_ID: '34642134698'
 
 jobs:
   preflight:
@@ -46,28 +70,13 @@ jobs:
           python scripts/vsa/check_workflow_compliance.py .github/workflows/vsa-sep12-13-canonical-remake-20260911.yml
 
   build:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     needs: preflight
     strategy:
       fail-fast: false
       max-parallel: 8
       matrix:
-        id:
-          - CHANDRA_HYPERSOFT
-          - IBERE
-          - PEAT_FIRE
-          - HOUDINI
-          - EQUAL_EARTH
-          - BUSTER_KEATON
-          - EL_NINO
-          - ROOSEVELT
-          - DUST_MALI
-          - FERNANDA_MONTENEGRO
-          - HUNGA_TSUNAMI
-          - ELTON_ENERGY
-          - EMIT_MINE
-          - MARISKA_LONGEVITY
-          - SENTINEL_HURRICANE
-          - EMICIDA_INFLUENCE
+        id: ${{ fromJSON(inputs.target == 'ALL' && '["CHANDRA_HYPERSOFT","IBERE","PEAT_FIRE","HOUDINI","EQUAL_EARTH","BUSTER_KEATON","EL_NINO","ROOSEVELT","DUST_MALI","FERNANDA_MONTENEGRO","HUNGA_TSUNAMI","ELTON_ENERGY","EMIT_MINE","MARISKA_LONGEVITY","SENTINEL_HURRICANE","EMICIDA_INFLUENCE"]' || format('["{0}"]', inputs.target)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -95,10 +104,7 @@ jobs:
           GOLDEN=/tmp/golden/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V3.mp4
           test -s "$GOLDEN"
           mkdir -p /tmp/output
-          python scripts/vsa/canonical_remake_sep12_13_v2.py \
-            --id "$VSA_ID" \
-            --golden "$GOLDEN" \
-            --out-dir /tmp/output
+          python scripts/vsa/canonical_remake_sep12_13_v2.py --id "$VSA_ID" --golden "$GOLDEN" --out-dir /tmp/output
           test "$(find /tmp/output -maxdepth 1 -name '*_REMAKE.mp4' | wc -l)" -eq 1
           test "$(find /tmp/output -maxdepth 1 -name '*_CONTACT_SHEET.jpg' | wc -l)" -eq 1
           test "$(find /tmp/output -maxdepth 1 -name '*_VSA_VISUAL_RELEASE_RECEIPT_V1.json' | wc -l)" -eq 1
@@ -125,8 +131,8 @@ jobs:
           retention-days: 14
 
   review_pack:
+    if: ${{ inputs.target == 'ALL' && needs.build.result == 'success' }}
     needs: build
-    if: ${{ always() && needs.build.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -141,15 +147,13 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import json,pathlib
-          root=pathlib.Path('/tmp/review')
-          rows=[]
+          root=pathlib.Path('/tmp/review'); rows=[]
           for p in sorted(root.rglob('*_VSA_VISUAL_RELEASE_RECEIPT_V1.json')):
               r=json.load(open(p,encoding='utf-8'))
               rows.append({'video_id':r['video_id'],'master':r['master']['file'],'sha256':r['master']['sha256'],'duration':r['master']['duration'],'contact_sheet':r['visual_proof']['contact_sheet_file'],'status':r['status']})
           if len(rows)!=16: raise SystemExit(f'REVIEW_PACK_EXPECTED_16_GOT_{len(rows)}')
           out={'schema':'VSA_SEP12_13_CANONICAL_REMAKE_REVIEW_PACK_V1','count':16,'release_eligible':False,'human_review_required':True,'schedule_mutated':False,'items':rows}
           pathlib.Path('/tmp/VSA_SEP12_13_REVIEW_INDEX.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print(json.dumps(out,ensure_ascii=False))
           PY
       - uses: actions/upload-artifact@v4
         with:
@@ -157,9 +161,50 @@ jobs:
           path: /tmp/VSA_SEP12_13_REVIEW_INDEX.json
           retention-days: 14
 
-  release_gate:
+  recovery_review_pack:
+    if: ${{ inputs.target == 'ROOSEVELT' && needs.build.result == 'success' }}
     needs: build
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.human_approved == 'true' && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Recover the 15 already-green immutable artifacts from run 7
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vsa-canonical-remake-*
+          path: /tmp/review/base
+          merge-multiple: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ env.BASE_REVIEW_RUN_ID }}
+      - name: Recover corrected Roosevelt from this run
+        uses: actions/download-artifact@v4
+        with:
+          name: vsa-canonical-remake-ROOSEVELT
+          path: /tmp/review/roosevelt
+      - name: Build recovered 16-master human-review index
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('/tmp/review'); by_id={}
+          for p in root.rglob('*_VSA_VISUAL_RELEASE_RECEIPT_V1.json'):
+              r=json.load(open(p,encoding='utf-8'))
+              by_id[r['video_id']]={'video_id':r['video_id'],'master':r['master']['file'],'sha256':r['master']['sha256'],'duration':r['master']['duration'],'contact_sheet':r['visual_proof']['contact_sheet_file'],'status':r['status']}
+          if len(by_id)!=16: raise SystemExit(f'RECOVERY_REVIEW_PACK_EXPECTED_16_GOT_{len(by_id)}')
+          rows=[by_id[k] for k in sorted(by_id)]
+          out={'schema':'VSA_SEP12_13_CANONICAL_REMAKE_REVIEW_PACK_V2','count':16,'source_base_run':34642134698,'roosevelt_repair_run':int(__import__('os').environ['GITHUB_RUN_ID']),'release_eligible':False,'human_review_required':True,'schedule_mutated':False,'items':rows}
+          pathlib.Path('/tmp/VSA_SEP12_13_REVIEW_INDEX.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep12-13-human-review-index-recovered
+          path: /tmp/VSA_SEP12_13_REVIEW_INDEX.json
+          retention-days: 14
+
+  release_gate:
+    if: ${{ inputs.target == 'ALL' && inputs.human_approved == 'true' && needs.build.result == 'success' }}
+    needs: build
     strategy:
       fail-fast: false
       matrix:
