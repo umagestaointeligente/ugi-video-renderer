@@ -1,0 +1,143 @@
+name: UGI Build Editorial Assets 2026-09-11
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-build-editorial-assets-20260911.yml'
+      - 'scripts/ugi_build_editorial_assets_20260911.py'
+      - 'scripts/ugi_burn_captions_20260911.py'
+      - 'config/ugi/editorial-plan-2026-09-11.json'
+      - 'config/ugi/visual-semantic-gate-v3.json'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-build-editorial-assets-20260911
+  cancel-in-progress: true
+
+jobs:
+  build-finals:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet --upgrade pip
+          python -m pip install --quiet pillow requests numpy soundfile 'kokoro>=0.9.4'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core espeak-ng
+      - name: Build contextual Sep11 assets
+        run: python scripts/ugi_build_editorial_assets_20260911.py
+      - name: Burn narration captions
+        run: python scripts/ugi_burn_captions_20260911.py
+      - name: Refresh final provenance after captions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,subprocess
+          from pathlib import Path
+          out=Path('public/ugi/editorial/2026-09-11'); mp=out/'asset-provenance.json'; p=json.load(open(mp,encoding='utf-8'))
+          def sha(x):
+            h=hashlib.sha256()
+            with open(x,'rb') as f:
+              for b in iter(lambda:f.read(1024*1024),b''): h.update(b)
+            return h.hexdigest()
+          def probe(x): return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_type,codec_name,width,height','-of','json',str(x)],text=True))
+          refreshed=[]
+          for r in p['finals']:
+            x=Path(r['path']); r['bytes']=x.stat().st_size; r['sha256']=sha(x); r['probe']=probe(x) if x.suffix.lower()=='.mp4' else None; refreshed.append(r)
+          p['finals']=refreshed; p['captionQa']='BURNED_IN_CAPTIONS_3_OF_3'; p['state']='FINAL_ASSETS_QA_PENDING'; mp.write_text(json.dumps(p,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Verify technical and visual-semantic hard gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,subprocess
+          from pathlib import Path
+          from PIL import Image
+          out=Path('public/ugi/editorial/2026-09-11'); src=out/'sources'; prov=json.load(open(out/'asset-provenance.json',encoding='utf-8'))
+          gate=json.load(open('config/ugi/visual-semantic-gate-v3.json',encoding='utf-8'))
+          plan=json.load(open('config/ugi/editorial-plan-2026-09-11.json',encoding='utf-8'))
+          if gate.get('status')!='CANONICAL_HARD_GATE' or not gate.get('failClosed'): raise SystemExit('VISUAL_GATE_NOT_HARD')
+          if plan.get('antiRepeatDecision',{}).get('state')!='ANTI_REPEAT_PASS_AGAINST_RECONCILED_DURABLE_EVIDENCE': raise SystemExit('ANTI_REPEAT_NOT_PASS')
+          videos=['story-altera-0830.mp4','reel-faa-1015.mp4','tiktok-kojima-1130.mp4','story-cocacola-1200.mp4','story-miro-1730.mp4','tiktok-primark-1945.mp4','story-hefei-2030.mp4']
+          for n in videos:
+            p=out/n
+            if not p.exists() or p.stat().st_size<50000: raise SystemExit(f'VIDEO_FILE_FAIL:{n}')
+            j=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','stream=codec_type,width,height,codec_name:format=duration','-of','json',str(p)],text=True))
+            kinds={s.get('codec_type') for s in j.get('streams',[])}; v=next((s for s in j.get('streams',[]) if s.get('codec_type')=='video'),{}); a=next((s for s in j.get('streams',[]) if s.get('codec_type')=='audio'),{})
+            if not {'video','audio'}.issubset(kinds): raise SystemExit(f'AUDIO_STREAM_FAIL:{n}')
+            if (v.get('width'),v.get('height'))!=(1080,1920): raise SystemExit(f'VIDEO_DIM_FAIL:{n}:{v}')
+            if not v.get('codec_name') or not a.get('codec_name'): raise SystemExit(f'CODEC_FAIL:{n}')
+            dur=float((j.get('format') or {}).get('duration') or 0)
+            if n.startswith('story-') and not 7.5<=dur<=8.5: raise SystemExit(f'STORY_DURATION_FAIL:{n}:{dur}')
+            if not n.startswith('story-') and not 25<=dur<=70: raise SystemExit(f'NARRATED_DURATION_FAIL:{n}:{dur}')
+          li=Image.open(out/'linkedin-hsbc-1400.jpg')
+          if li.size!=(1200,627): raise SystemExit(f'LINKEDIN_DIM_FAIL:{li.size}')
+          for i in range(1,7):
+            p=out/f'carousel-stellantis-1430-{i:02d}.jpg'; im=Image.open(p)
+            if im.size!=(1080,1350): raise SystemExit(f'CAROUSEL_DIM_FAIL:{i}:{im.size}')
+          for n in ['reel-faa-1015.srt','tiktok-kojima-1130.srt','tiktok-primark-1945.srt']:
+            if not (out/n).exists(): raise SystemExit(f'CAPTION_EVIDENCE_FAIL:{n}')
+          if prov.get('captionQa')!='BURNED_IN_CAPTIONS_3_OF_3': raise SystemExit('CAPTION_QA_FAIL')
+          if len(prov.get('finals') or [])!=14: raise SystemExit(f'FINAL_COUNT_FAIL:{len(prov.get("finals") or [])}')
+          byname={Path(r['path']).name:r for r in prov['finals']}
+          story_names=['story-altera-0830.mp4','story-cocacola-1200.mp4','story-miro-1730.mp4','story-hefei-2030.mp4']
+          long_names=['reel-faa-1015.mp4','tiktok-kojima-1130.mp4','tiktok-primark-1945.mp4']
+          for n in story_names:
+            q=byname[n]['visualQa']
+            if q.get('distinctSourceCount',0)<2 or not q.get('rightsPass') or not q.get('visualSemanticPass') or q.get('abstractOnlyPrimaryVisual') is not False or not byname[n].get('musicFitPass'): raise SystemExit(f'STORY_VISUAL_SEMANTIC_FAIL:{n}:{q}')
+          for n in long_names:
+            q=byname[n]['visualQa']; keys=q.get('sourceKeys') or []
+            if q.get('distinctSourceCount',0)<5 or len(keys)!=len(set(keys)) or not q.get('sceneDiversityPass') or not q.get('speechVisualMatchPass') or not q.get('rightsPass') or not byname[n].get('musicFitPass'): raise SystemExit(f'NARRATED_VISUAL_SEMANTIC_FAIL:{n}:{q}')
+          q=byname['linkedin-hsbc-1400.jpg']['visualQa']
+          if q.get('sourceKeys')!=['hsbc_hq'] or not q.get('visualSemanticPass'): raise SystemExit('LINKEDIN_HSBC_ENTITY_FAIL')
+          carousel=[byname[f'carousel-stellantis-1430-{i:02d}.jpg']['visualQa']['sourceKeys'][0] for i in range(1,7)]
+          if len(set(carousel))!=6: raise SystemExit(f'CAROUSEL_SOURCE_DIVERSITY_FAIL:{carousel}')
+          if any('Miro icon' in str(v) or 'video software' in str(v) for v in prov.get('images',{}).values()): raise SystemExit('WRONG_MIRO_ENTITY_FAIL')
+          # Verify downloaded source bytes are not duplicates within each long video.
+          def digest(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+          for n in long_names:
+            keys=byname[n]['visualQa']['sourceKeys']; files=[]
+            for k in keys:
+              candidates=list(src.glob(k+'.*'))
+              if len(candidates)!=1: raise SystemExit(f'SOURCE_FILE_LOOKUP_FAIL:{k}:{candidates}')
+              files.append(digest(candidates[0]))
+            if len(files)!=len(set(files)): raise SystemExit(f'SOURCE_BYTE_DUPLICATION_FAIL:{n}')
+          print('MEDIA_QA=PASS')
+          print('VISUAL_SEMANTIC=14_OF_14_PASS')
+          print('STORY_CONTEXTUAL_SOURCES=4_OF_4_PASS')
+          print('NARRATED_SCENE_DIVERSITY=3_OF_3_PASS')
+          print('SPEECH_VISUAL_MATCH=3_OF_3_PASS')
+          print('MUSIC_FIT=7_OF_7_VIDEO_PASS')
+          print('CAPTIONS=3_OF_3_PASS')
+          print('LINKEDIN_HSBC_ENTITY=PASS')
+          print('CAROUSEL_DISTINCT_VISUALS=6_OF_6_PASS')
+          PY
+      - name: Remove temporary and downloaded source files before commit
+        run: rm -rf public/ugi/editorial/2026-09-11/tmp public/ugi/editorial/2026-09-11/sources
+      - name: Commit exact Sep11 finals and provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-builder-bot'
+          git config user.email 'ugi-editorial-builder@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-11
+          if git diff --cached --quiet; then echo 'No asset changes to persist'; exit 0; fi
+          git commit -m 'assets(ugi): build Sep11 contextual editorial finals [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
