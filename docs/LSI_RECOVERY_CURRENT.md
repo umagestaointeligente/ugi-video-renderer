@@ -11,16 +11,29 @@ Handoff canônico desta transição de chat:
 
 ### Disponibilidade LSI — prova de 2026-09-11
 
-`LSI_RUNTIME_HEALTH=PASS`
-`LSI_BROKER_EXECUTION_SMOKE=PASS`
+`LSI_CANONICAL_PRODUCTOS=BLOCKED_INSUFFICIENT_CREDITS`
+`LSI_PRODUCTOS_AVAILABLE_CREDITS=0`
+`LSI_COUNCIL_SANDBOX=NOT_PROVISIONED`
+`LSI_NODE_LOLA=NOT_PROVISIONED`
+`LSI_NODE_CLAUDE=NOT_PROVISIONED`
+`LSI_NODE_GEMINI=NOT_PROVISIONED`
+`LSI_NODE_GROK=NOT_PROVISIONED`
+`LSI_NODE_DEEPSEEK=NOT_PROVISIONED`
+`LSI_NODE_PERPLEXITY=NOT_PROVISIONED`
+`LSI_NODE_QWEN=NOT_PROVISIONED`
+`LSI_FALLBACK_RUNTIME_HEALTH=PASS`
+`LSI_FALLBACK_BROKER_EXECUTION_SMOKE=PASS`
 `LSI_EXECUTION_ACCESS=GITHUB_ACTIONS_OIDC_ONLY`
 `LSI_CHAT_DIRECT_CONNECTOR=NOT_LIVE`
 
-- broker `lsi-zero-cost-broker`: HTTP 200, Workers AI e chave de criptografia presentes;
-- núcleo `lsi-hyperwork-core`: HTTP 200, Durable Objects, Workers AI, sentinel e background engine presentes;
-- conselho automático: run `34649059091`, `PASS`, 3 modelos, 2026-09-11;
-- smoke sob demanda criptografado: run `34656251844`, commit `0bb722ba698129cd9ece491f7f34f294ce12f7f9`, 1/1 tarefa, 307 ms, retorno `LSI_EXECUTION_OK`;
-- a rota de execução continua protegida por GitHub OIDC; uma conversa sem conector LSI não pode chamar o broker diretamente;
+- ProductOS canônico: Council e sete nós confirmados como `not-provisioned`;
+- tentativa controlada de iniciar o nó Lola: `insufficient_credits`, plano `free`, saldo `0`; não repetir enquanto o saldo não mudar;
+- fallback broker `lsi-zero-cost-broker`: HTTP 200, Workers AI e chave de criptografia presentes;
+- fallback núcleo `lsi-hyperwork-core`: HTTP 200, Durable Objects, Workers AI, sentinel e background engine presentes;
+- conselho automático alternativo: run `34649059091`, `PASS`, 3 modelos, 2026-09-11;
+- smoke criptografado do fallback: run `34656251844`, commit `0bb722ba698129cd9ece491f7f34f294ce12f7f9`, 1/1 tarefa, 307 ms, retorno `LSI_EXECUTION_OK`;
+- a rota alternativa continua protegida por GitHub OIDC; uma conversa sem conector LSI não pode chamar o broker diretamente;
+- não declarar Council ProductOS ou nós canônicos ativos com base em health do fallback Cloudflare/GitHub;
 - regra de verdade: `Ativar LSI` ou `Recovery LSI` recupera contexto, mas não prova conectividade do chat. Declarar `CHAT_READY` somente quando um conector direto estiver instalado e um smoke feito pela própria conversa passar.
 
 `CURRENT_FOCUS=LSI_CAREER_360_MASTER_PILOT_1_0`

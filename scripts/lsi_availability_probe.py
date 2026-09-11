@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed, side-effect-free availability probe for the canonical LSI runtime."""
+"""Fail-closed availability probe for the Cloudflare/GitHub LSI fallback."""
 
 from __future__ import annotations
 
@@ -96,15 +96,17 @@ def main() -> int:
         "schema_version": "1.0",
         "checked_at": checked_at,
         "status": "PASS" if not errors else "FAIL",
+        "scope": "fallback_cloudflare_github",
         "checks": checks,
         "execution_access": "github_actions_oidc_only",
         "chat_direct_connector": False,
+        "canonical_productos_status": "not_checked_by_this_probe",
         "production_actions": False,
         "errors": errors,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(f"LSI_AVAILABILITY={result['status']}")
+    print(f"LSI_FALLBACK_AVAILABILITY={result['status']}")
     print(f"LSI_EXECUTION_ACCESS={result['execution_access']}")
     return 0 if not errors else 2
 

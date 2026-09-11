@@ -55,7 +55,7 @@ jobs:
           print('UGI_PUBLICATION_ROUTING_LOCK_PASS=true')
           PY
 
-      - name: Verify canonical LSI availability and auth boundary
+      - name: Verify LSI fallback availability and auth boundary
         run: python scripts/lsi_availability_probe.py
 
       - name: Run autonomous trend radar
