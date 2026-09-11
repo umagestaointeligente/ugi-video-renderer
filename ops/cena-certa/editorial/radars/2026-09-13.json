@@ -2,7 +2,7 @@
   "schema": "CENA_CERTA_EDITORIAL_RADAR_V1",
   "date": "2026-09-13",
   "timezone": "America/Sao_Paulo",
-  "generated_at": "2026-09-11T08:39:21-03:00",
+  "generated_at": "2026-09-11T09:08:52-03:00",
   "status": "RADAR_READY_RIGHTS_QA_PENDING",
   "metricool_brand": {"id": 6809869, "label": "Cena Certa Ofc"},
   "metricool_existing_scheduled_count": 0,
@@ -20,7 +20,7 @@
       "topic": "Veneza 83 — vencedores e Leão de Ouro",
       "hook": "Veneza terminou: o Leão de Ouro foi para o filme certo?",
       "fact_status": "CONDITIONAL_REVALIDATE_2026-09-13",
-      "facts": ["A Biennale encerra sua 83a edição em 12/09/2026", "A grade oficial prevê a exibição do vencedor do Golden Lion em 12/09 às 21:30 locais"],
+      "facts": ["A 83a Mostra de Veneza termina em 12/09/2026", "A grade oficial prevê a exibição do vencedor do Golden Lion em 12/09 às 21:30 locais"],
       "sources": ["https://www.labiennale.org/en/cinema/2026/program-cinema-2026-public/awarded-film-golden-lion-2026-09-12-21-30"],
       "asset_route": "La Biennale official press/media imagery",
       "asset_rights_status": "PENDING_PRESS_TERMS",
@@ -28,41 +28,50 @@
     },
     {
       "rank": 2,
-      "topic": "Physical 100: Italy — reação do primeiro fim de semana",
-      "hook": "100 competidores, três episódios no ar e uma pergunta: a versão italiana mantém a força da franquia?",
-      "fact_status": "PASS",
-      "facts": ["Os três primeiros episódios estreiam em 11/09/2026", "Novos episódios seguem semanalmente até a final de 02/10/2026"],
-      "sources": ["https://about.netflix.com/en/news/the-official-trailer-of-physical-100-italy-on-netflix-from-september-11"],
-      "asset_route": "Netflix official press article with credited imagery and press contacts",
-      "asset_rights_status": "OFFICIAL_PRESS_ROUTE_IDENTIFIED_TERMS_REVIEW_REQUIRED"
+      "topic": "The Whisper Man — Netflix Top 10 + recepção dividida",
+      "hook": "O filme mais visto da Netflix na semana merece o topo ou o elenco é melhor que o filme?",
+      "fact_status": "PASS_WITH_SCOPE_NOTE",
+      "facts": ["Netflix Tudum reportou The Whisper Man no No.1 global de filmes em 31/08-06/09, com 33,4 milhões de views", "Netflix mantém página oficial acessível no Brasil com áudio e legendas PT-BR"],
+      "sources": ["https://www.netflix.com/tudum/articles/top-10-august-31-2026", "https://www.netflix.com/br-en/title/81278442"],
+      "social_signal": "Discussões públicas recentes no Reddit estão fortemente divididas entre elogios ao elenco/atmosfera e críticas a ritmo/previsibilidade.",
+      "asset_route": "Netflix official title/Tudum imagery; use only after press/reuse terms are confirmed",
+      "asset_rights_status": "OFFICIAL_SOURCE_IDENTIFIED_TERMS_REVIEW_REQUIRED"
     },
     {
       "rank": 3,
       "topic": "Supergirl no HBO Max — segunda vida no streaming?",
-      "hook": "Depois de uma bilheteria bem abaixo dos mega-hits do ano, o streaming pode mudar a percepção do público?",
+      "hook": "Depois de dividir público e crítica nos cinemas, o streaming pode mudar a percepção sobre Supergirl?",
       "fact_status": "PASS",
-      "facts": ["HBO Max iniciou o streaming global de Supergirl em 10/09/2026", "A HBO linear exibe o filme em 12/09/2026"],
+      "facts": ["HBO Max iniciou o streaming global de Supergirl em 10/09/2026", "No Brasil, a HBO anunciou exibição linear em 12/09 às 21h"],
       "sources": ["https://press.wbd.com/us/search?type=media_release"],
-      "social_signal": "Comunidades públicas de DC continuam debatendo recepção, visual e desempenho do filme.",
+      "social_signal": "Post recente em comunidade pública de Supergirl ultrapassou 600 votos e concentra comentários de espectadores que esperaram o streaming para assistir.",
       "asset_route": "WBD Pressroom official imagery",
       "asset_rights_status": "LOGIN_OR_TERMS_MAY_APPLY"
     },
     {
       "rank": 4,
-      "topic": "Last Seen / Desaparecida — Apple TV",
-      "hook": "Uma ligação reacende o desaparecimento de uma filha 11 anos depois: vale entrar nesse thriller?",
+      "topic": "A Love Other Than Yours — Prime Video",
+      "hook": "Depois de 10 anos juntos, casar ou terminar? O novo romance do Prime chega no fim de semana.",
       "fact_status": "PASS",
-      "facts": ["Last Seen estreou globalmente em 09/09/2026 com dois episódios", "Novos episódios seguem às quartas até 07/10/2026"],
-      "sources": ["https://www.apple.com/br/tv-pr/originals/last-seen/"],
-      "asset_route": "Apple TV Press BR exposes Baixar conteúdo and press contacts",
-      "asset_rights_status": "PRESS_DOWNLOAD_ROUTE_IDENTIFIED_TERMS_REVIEW_REQUIRED"
+      "facts": ["Prime Video lista A Love Other Than Yours para 12/09/2026"],
+      "sources": ["https://www.aboutamazon.com/news/entertainment/prime-video-september-films-shows-sports-2026"],
+      "asset_route": "About Amazon / Prime Video official promotional imagery",
+      "asset_rights_status": "OFFICIAL_SOURCE_IDENTIFIED_TERMS_REVIEW_REQUIRED"
     }
   ],
   "secondary_watchlist": [
     {
+      "topic": "Physical 100: Italy",
+      "platform": "Netflix",
+      "status": "fresh weekend release",
+      "facts": ["Os três primeiros episódios estrearam em 11/09/2026", "Novos episódios seguem semanalmente até 02/10/2026"],
+      "source": "https://about.netflix.com/en/news/the-official-trailer-of-physical-100-italy-on-netflix-from-september-11",
+      "asset_route": "Netflix official press article with credited imagery and press contacts; terms review required"
+    },
+    {
       "topic": "Project Hail Mary",
       "platform": "Prime Video",
-      "status": "confirmed streaming worldwide; high-recognition weekend recommendation",
+      "status": "confirmed worldwide streaming; high-recognition evergreen",
       "facts": ["Prime Video confirma streaming mundial", "Amazon reporta mais de US$ 680M globais"],
       "source": "https://www.aboutamazon.com/news/entertainment/project-hail-mary-ryan-gosling-amazon-mgm-studios",
       "asset_route": "About Amazon / Amazon MGM official promotional imagery; terms review required"
@@ -70,33 +79,44 @@
     {
       "topic": "Kraven the Hunter",
       "platform": "Disney+",
-      "status": "official September schedule lists 13/09; Brazil territory must be revalidated before local claim",
+      "status": "official September schedule lists 13/09; Brazil territory not yet verified",
       "source": "https://press.disneyplus.com/news/next-on-disney-plus-september-2026",
       "asset_route": "Disney+ Press official media route; territory and usage terms verification required"
     },
     {
       "topic": "Colin From Accounts Season 3",
       "platform": "Paramount+",
-      "status": "third and final season premiered 10/09; suitable weekend recommendation",
-      "source": "https://www.paramountpressexpress.com/paramount-plus/releases/",
-      "asset_route": "Paramount Press Express explicitly exposes Download Season Three Official Key Art & Imagery; final usage terms review required"
+      "status": "third and final season premiered 10/09; strong weekend recommendation",
+      "facts": ["Paramount+ announced all episodes of season 3 for 10/09/2026", "Press Express exposes official key art and imagery downloads"],
+      "source": "https://www.paramountpressexpress.com/paramount-plus/shows/colin-from-accounts/releases/",
+      "social_signal": "Recent public discussion remains positive, with viewers calling it one of their favorite current comedies.",
+      "asset_route": "Paramount Press Express official key art & imagery; final usage terms review required"
+    },
+    {
+      "topic": "Last Seen",
+      "platform": "Apple TV",
+      "status": "fresh thriller launched 09/09",
+      "facts": ["Premiered globally 09/09 with two episodes", "New episodes every Wednesday through 07/10"],
+      "source": "https://www.apple.com/tv-pr/originals/last-seen/",
+      "asset_route": "Apple TV Press explicitly exposes Download Key Art; terms review required"
     },
     {
       "topic": "Spider-Man: Brand New Day x The Odyssey",
       "platform": "box office",
       "status": "high-recognition box-office debate; numbers must be refreshed on 13/09 before publication",
-      "facts": ["AP reported Spider-Man at about US$2.4B globally after six weekends at No.1", "AP reported The Odyssey at about US$1.63B globally in the prior weekend wrap"],
+      "facts": ["AP reported Spider-Man at about US$2.4B globally after six weekends at No.1", "AP reported about US$923M domestic, roughly US$13M behind The Force Awakens record", "The Odyssey was about US$1.63B globally in the prior weekend wrap"],
       "source": "https://apnews.com/article/0985d43deebda5f5721267b51104ef4c",
+      "social_signal": "r/boxoffice is actively discussing whether Spider-Man can pass the domestic record during the Sep 11-13 weekend.",
       "asset_route": "Sony Pictures / Universal official publicity routes only"
     }
   ],
   "platform_scan": {
-    "netflix": "Physical 100: Italy is the strongest fresh weekend hook verified from an official source.",
-    "prime_video": "Project Hail Mary is confirmed streaming worldwide and remains a strong high-recognition recommendation; Amazon's latest worldwide Prime Originals list also kept it in the Top 10 for Aug 31-Sep 6.",
+    "netflix": "The Whisper Man is the strongest verified trend signal: No.1 global film in the latest completed Netflix week; Physical 100: Italy is the strongest fresh release for the weekend.",
+    "prime_video": "A Love Other Than Yours arrives 12/09; Project Hail Mary remains a high-recognition worldwide-streaming fallback.",
     "disney_plus": "Official September calendar lists Kraven the Hunter for 13/09; Brazil availability must be checked before publication.",
-    "hbo_max": "Supergirl is fresh on streaming after its 10/09 global HBO Max debut.",
+    "hbo_max": "Supergirl is fresh on streaming after its 10/09 global HBO Max debut and has active public discussion.",
     "paramount_plus": "Colin From Accounts S3 is the strongest scripted fit; official Press Express provides a key-art/imagery download route.",
-    "apple_tv": "Last Seen/Desaparecida has a Brazilian Apple TV Press page with downloadable press content.",
+    "apple_tv": "Last Seen has official key art and fresh-release status.",
     "box_office": "Spider-Man remains the strongest mass-recognition conversation; weekend totals must be refreshed on publication day.",
     "festivals": "13/09 is the ideal day-after-Venice recap, conditional on official award results."
   },
