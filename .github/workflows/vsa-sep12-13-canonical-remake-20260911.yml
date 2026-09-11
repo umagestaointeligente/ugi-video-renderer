@@ -11,6 +11,7 @@ on:
       - 'scripts/vsa/canonical_remake_sep12_13_v2.py'
       - 'scripts/vsa/canonical_remake_sep12_13_v3.py'
       - 'scripts/vsa/canonical_remake_sep12_13_v4.py'
+      - 'scripts/vsa/canonical_remake_sep12_13_v5.py'
 
 permissions:
   contents: read
@@ -30,11 +31,11 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Validate targeted V4 renderer and canonical contract
+      - name: Validate targeted V5 renderer and canonical contract
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/vsa/canonical_remake_sep12_13.py scripts/vsa/canonical_remake_sep12_13_v2.py scripts/vsa/canonical_remake_sep12_13_v3.py scripts/vsa/canonical_remake_sep12_13_v4.py
+          python -m py_compile scripts/vsa/canonical_remake_sep12_13.py scripts/vsa/canonical_remake_sep12_13_v2.py scripts/vsa/canonical_remake_sep12_13_v3.py scripts/vsa/canonical_remake_sep12_13_v4.py scripts/vsa/canonical_remake_sep12_13_v5.py
           python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
           python scripts/vsa/validate_release_receipt.py --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json --self-test
           python scripts/vsa/check_workflow_compliance.py .github/workflows/vsa-sep12-13-canonical-remake-20260911.yml
@@ -69,7 +70,7 @@ jobs:
           path: /tmp/golden
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ env.GOLDEN_RUN_ID }}
-      - name: Render one targeted V4 candidate
+      - name: Render one targeted V5 candidate
         shell: bash
         env:
           VSA_ID: ${{ matrix.id }}
@@ -78,7 +79,7 @@ jobs:
           GOLDEN=/tmp/golden/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V3.mp4
           test -s "$GOLDEN"
           mkdir -p /tmp/output
-          python scripts/vsa/canonical_remake_sep12_13_v4.py --id "$VSA_ID" --golden "$GOLDEN" --out-dir /tmp/output
+          python scripts/vsa/canonical_remake_sep12_13_v5.py --id "$VSA_ID" --golden "$GOLDEN" --out-dir /tmp/output
           test "$(find /tmp/output -maxdepth 1 -name '*_REMAKE.mp4' | wc -l)" -eq 1
           test "$(find /tmp/output -maxdepth 1 -name '*_CONTACT_SHEET.jpg' | wc -l)" -eq 1
           test "$(find /tmp/output -maxdepth 1 -name '*_VSA_VISUAL_RELEASE_RECEIPT_V1.json' | wc -l)" -eq 1
@@ -96,11 +97,11 @@ jobs:
           assert all(r['gates'].values())
           assert r['status'].startswith('AWAITING_HUMAN_REVIEW')
           assert r.get('repair_version') == 'V4_TARGETED_NARRATIVE_DIVERSITY'
-          print('VSA_V4_TARGETED_PRE_RELEASE_PASS',r['video_id'])
+          print('VSA_V5_TARGETED_PRE_RELEASE_PASS',r['video_id'])
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: vsa-v4-narrative-repair-${{ matrix.id }}
+          name: vsa-v5-narrative-repair-${{ matrix.id }}
           path: /tmp/output/*
           if-no-files-found: error
           retention-days: 14
