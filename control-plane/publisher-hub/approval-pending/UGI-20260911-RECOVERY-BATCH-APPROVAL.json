@@ -1,0 +1,25 @@
+{
+  "schema": "UGI_BATCH_SCOPED_APPROVAL_V1",
+  "state": "APPROVED_EXACT_BATCH_ONLY",
+  "project": "UGI",
+  "humanApproval": true,
+  "authorizationSource": "Paulo explicitly said 'Prossiga' after the Sep11 missed-schedule diagnosis and recovery proposal.",
+  "assetCommit": "df7541feecd2450b21df0e24fdc508b971ab0f6b",
+  "qaRunId": 34549856604,
+  "qaConclusion": "success",
+  "scope": "SEP11_RECOVERY_AND_SEP12_CARRYOVER_EXACT_NINE_ASSETS_ONLY",
+  "globalDistributionStateChanged": false,
+  "noBlindMutationRetry": true,
+  "recoveryReason": "Sep11 assets passed final QA but Buffer mutation was never executed.",
+  "schedule": [
+    {"id":"UGI-RECOVERY-20260911-IG-STORY-MIRO-1800","sourceSlot":"UGI-20260911-IG-STORY-MIRO-1730","dueAt":"2026-09-11T21:00:00Z"},
+    {"id":"UGI-RECOVERY-20260911-TT-PRIMARK-1945","sourceSlot":"UGI-20260911-TT-PRIMARK-1945","dueAt":"2026-09-11T22:45:00Z"},
+    {"id":"UGI-RECOVERY-20260911-IG-STORY-HEFEI-2030","sourceSlot":"UGI-20260911-IG-STORY-HEFEI-2030","dueAt":"2026-09-11T23:30:00Z"},
+    {"id":"UGI-RECOVERY-20260912-IG-STORY-ALTERA-0830","sourceSlot":"UGI-20260911-IG-STORY-ALTERA-0830","dueAt":"2026-09-12T11:30:00Z"},
+    {"id":"UGI-RECOVERY-20260912-IG-REEL-FAA-1015","sourceSlot":"UGI-20260911-IG-REEL-FAA-1015","dueAt":"2026-09-12T13:15:00Z"},
+    {"id":"UGI-RECOVERY-20260912-TT-KOJIMA-1130","sourceSlot":"UGI-20260911-TT-KOJIMA-1130","dueAt":"2026-09-12T14:30:00Z"},
+    {"id":"UGI-RECOVERY-20260912-IG-STORY-COCACOLA-1200","sourceSlot":"UGI-20260911-IG-STORY-COCACOLA-1200","dueAt":"2026-09-12T15:00:00Z"},
+    {"id":"UGI-RECOVERY-20260912-LI-HSBC-1400","sourceSlot":"UGI-20260911-LI-HSBC-1400","dueAt":"2026-09-12T17:00:00Z"},
+    {"id":"UGI-RECOVERY-20260912-IG-CAROUSEL-STELLANTIS-1430","sourceSlot":"UGI-20260911-IG-CAROUSEL-STELLANTIS-1430","dueAt":"2026-09-12T17:30:00Z"}
+  ]
+}
