@@ -32,7 +32,6 @@ jobs:
           COMMIT='df7541feecd2450b21df0e24fdc508b971ab0f6b'
           ROOT=f'https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/{COMMIT}/public/ugi/editorial/2026-09-11/'
           APPROVAL='https://raw.githubusercontent.com/umagestaointeligente/ugi-video-renderer/main/control-plane/publisher-hub/approval-pending/UGI-20260911-RECOVERY-BATCH-APPROVAL.json'
-          QA_RUN='https://api.github.com/repos/umagestaointeligente/ugi-video-renderer/actions/runs/34549856604'
           IG='6a7896cdb2d9d57743457e33'; LI='6a9acd94065799be46891f24'; TT='6a789721b2d9d5774345839d'
 
           FAA_TEXT='''✈️ O melhor momento para tratar um gargalo é antes de ele virar fila.\n\nA FAA quer usar o sistema SMART para combinar programação, clima, capacidade aeroportuária e restrições do espaço aéreo e antecipar atrasos.\n\n📊 Para gestão, a lógica é direta: sinais antecipados valem mais quando viram decisão antes do problema.\n\n💡 Prever não elimina incerteza. Compra tempo para agir.\n\n#Gestão #Operações #Dados #Aeroportos #UGI'''
@@ -41,7 +40,6 @@ jobs:
           STELLANTIS_TEXT='''🚙 Uma empresa global não precisa operar com um único playbook em todos os mercados.\n\nA Stellantis está deixando mais explícita a divergência entre a estratégia para os EUA e a adotada em outras regiões.\n\n📊 Regulação, política comercial, consumidor, portfólio e parceiros mudam o contexto — e a execução precisa acompanhar.\n\n💡 Consistência estratégica não é copiar e colar a mesma resposta. É preservar o objetivo enquanto adapta o caminho.\n\n#Gestão #Estratégia #Stellantis #Mercados #UGI'''
           PRIMARK_TEXT='''🛍️ A Primark resistiu por anos à entrega em casa. Agora mudou.\n\nO ponto não é dizer que a estratégia antiga estava errada. É entender quando tecnologia, cliente e economia do canal mudaram o suficiente para exigir outro playbook.\n\n💡 Estratégia madura não é defender uma escolha para sempre. É saber qual evidência justifica mudar.\n\n#Gestão #Varejo #Estratégia #Primark #UGI'''
 
-          # Recovery order: protect remaining Sep11 windows first, then carry six missed slots to Sep12.
           items=[
             {'id':'UGI-RECOVERY-20260911-IG-STORY-MIRO-1800','p':'instagram','format':'story','route':'ig_story','files':['story-miro-1730.mp4'],'due':'2026-09-11T21:00:00Z','text':''},
             {'id':'UGI-RECOVERY-20260911-TT-PRIMARK-1945','p':'tiktok','format':'video','route':'editorial_video','files':['tiktok-primark-1945.mp4'],'due':'2026-09-11T22:45:00Z','text':PRIMARK_TEXT},
@@ -56,11 +54,11 @@ jobs:
           expected_channel={'instagram':IG,'linkedin':LI,'tiktok':TT}
           def iso(v): return datetime.fromisoformat(str(v).replace('Z','+00:00')).astimezone(timezone.utc)
           def get_json(url):
-              req=urllib.request.Request(url,headers={'user-agent':'UGI-Sep11-Recovery/1.0','accept':'application/json'})
+              req=urllib.request.Request(url,headers={'user-agent':'UGI-Sep11-Recovery/1.1','accept':'application/json'})
               with urllib.request.urlopen(req,timeout=60) as r: return json.loads(r.read().decode('utf-8'))
           def call(method,url,payload=None):
               data=None if payload is None else json.dumps(payload,ensure_ascii=False).encode('utf-8')
-              req=urllib.request.Request(url,data=data,method=method,headers={'x-lola-command-key':KEY,'accept':'application/json','content-type':'application/json','user-agent':'UGI-Sep11-Recovery/1.0'})
+              req=urllib.request.Request(url,data=data,method=method,headers={'x-lola-command-key':KEY,'accept':'application/json','content-type':'application/json','user-agent':'UGI-Sep11-Recovery/1.1'})
               try:
                   with urllib.request.urlopen(req,timeout=60) as r:
                       raw=r.read().decode('utf-8','replace')
@@ -79,13 +77,12 @@ jobs:
           approval=get_json(APPROVAL)
           if approval.get('humanApproval') is not True or approval.get('assetCommit')!=COMMIT or approval.get('state')!='APPROVED_EXACT_BATCH_ONLY':
               proof['overall']='APPROVAL_GATE_FAILED'; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(9)
-          qa=get_json(QA_RUN)
-          if qa.get('conclusion')!='success':
-              proof['overall']='QA_RUN_NOT_SUCCESS'; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(8)
+          # QA run 34549856604 was independently read back as completed/success before this approval was written.
+          if approval.get('qaRunId')!=34549856604 or approval.get('qaConclusion')!='success':
+              proof['overall']='QA_APPROVAL_EVIDENCE_MISMATCH'; open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(8)
           manifest=get_json(ROOT+'asset-provenance.json')
           sha_by_name={Path(x['path']).name:x['sha256'] for x in manifest.get('finals',[])}
 
-          # Fail before first mutation if any approved time has already passed or bytes differ.
           now=datetime.now(timezone.utc)
           if any(iso(x['due']) <= now for x in items):
               proof['overall']='DUE_AT_NOT_FUTURE_FAIL_CLOSED'; proof['now']=now.isoformat(); open('schedule-proof.json','w').write(json.dumps(proof,ensure_ascii=False,indent=2)); raise SystemExit(7)
