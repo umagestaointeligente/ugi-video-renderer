@@ -1,9 +1,12 @@
 name: Orbit Cena Certa YouTube Queue
 
 on:
-  push:
-    paths:
-      - 'control-plane/orbit-direct-youtube/*.json'
+  workflow_dispatch:
+    inputs:
+      queue_file:
+        description: Exact Cena Certa queue JSON path
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -21,19 +24,20 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
       WORKER_URL: https://orbit-cena-certa-auth.umagestaointeligente.workers.dev
       CANONICAL_CHANNEL_ID: UCq1h6RSnev5-JJQ8k4T98tg
+      QUEUE_FILE: ${{ inputs.queue_file }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
       - id: queue
-        name: Resolve exactly one queue item
+        name: Resolve one explicit queue item
         shell: bash
         run: |
           set -euo pipefail
-          files=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- 'control-plane/orbit-direct-youtube/*.json' | sed '/^$/d')
-          count=$(printf '%s\n' "$files" | grep -c . || true)
-          if [ "$count" -ne 1 ]; then echo "BLOCKED: expected exactly one changed YouTube queue file, got $count"; exit 78; fi
-          file=$(printf '%s\n' "$files")
+          file="$QUEUE_FILE"
+          case "$file" in
+            control-plane/orbit-direct-youtube/*.json) ;;
+            *) echo "BLOCKED: queue_file must be a Cena Certa direct YouTube JSON"; exit 78 ;;
+          esac
+          test -f "$file" || { echo "BLOCKED: queue file not found"; exit 78; }
           python - "$file" > /tmp/item.json <<'PY'
           import datetime,json,pathlib,re,sys
           d=json.loads(pathlib.Path(sys.argv[1]).read_text())
