@@ -1,0 +1,20 @@
+name: VSA Release Gate
+
+description: Fail-closed canonical release gate for Você Sabia Agora masters
+
+inputs:
+  receipt:
+    description: Path to VSA_VISUAL_RELEASE_RECEIPT_V1 JSON
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Validate VSA visual story release receipt
+      shell: bash
+      run: |
+        set -euo pipefail
+        test -s "${{ inputs.receipt }}"
+        python scripts/vsa/validate_release_receipt.py \
+          --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json \
+          --receipt "${{ inputs.receipt }}"
