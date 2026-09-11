@@ -9,31 +9,32 @@
     "editorial_posts": 4,
     "stories": 4,
     "youtube_video_only": true,
-    "no_write_without_rights_and_qa": true
+    "no_write_without_rights_and_qa": true,
+    "preserve_existing_schedules": true
   },
   "metricool_signal_summary": {
-    "facebook": "peak 10:00; strong 09:00, 11:00-12:00, 17:00-19:00",
-    "instagram": "peak 10:00; strong 09:00, 11:00-12:00, 17:00-19:00",
-    "tiktok": "peak 10:00; strong 12:00, 16:00, 18:00-20:00",
-    "youtube": "peak 16:00; strongest window 15:00-18:00, with 10:00 secondary"
+    "facebook": {"peak":"10:00","peak_value":7653,"secondary":["12:00","18:00","11:00","09:00","17:00"]},
+    "instagram": {"peak":"10:00","peak_value":2582,"secondary":["12:00","18:00","19:00","11:00","09:00"]},
+    "tiktok": {"peak":"10:00","peak_value":816,"secondary":["12:00","18:00","19:00","16:00","20:00"]},
+    "youtube": {"peak":"16:00","peak_value":5648,"secondary":["17:00","18:00","15:00","10:00","14:00"]}
   },
   "schedule": [
-    {"time":"07:50","type":"story","topic":"Abertura: qual filme/série você vai ver hoje?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"07:50","type":"story","topic":"Abertura: qual filme ou série vai dominar seu domingo?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
     {"time":"08:35","type":"video","slot":1,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
     {"time":"09:40","type":"video","slot":2,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"10:20","type":"editorial_post","topic":"Kraven the Hunter chega ao Disney+","format":"carousel_or_static","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"10:20","type":"editorial_post","topic":"Veneza 83 — vencedores / Leão de Ouro","format":"results_carousel","providers":["facebook","instagram","tiktok"],"status":"REVALIDATE_OFFICIAL_RESULTS_PLUS_ASSET_RIGHTS_QA_PENDING"},
     {"time":"11:10","type":"video","slot":3,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"11:50","type":"story","topic":"Kraven: vale rever no streaming?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"11:50","type":"story","topic":"Veneza: o vencedor mereceu?","providers":["facebook","instagram"],"status":"REVALIDATE_OFFICIAL_RESULTS_PLUS_ASSET_RIGHTS_QA_PENDING"},
     {"time":"12:25","type":"video","slot":4,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"13:20","type":"editorial_post","topic":"Last Seen / Desaparecida — Apple TV","format":"static_or_2_slide_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
-    {"time":"14:15","type":"story","topic":"Thriller do dia: você atenderia essa ligação?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"13:20","type":"editorial_post","topic":"Physical 100: Italy — reação do primeiro fim de semana","format":"carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"14:15","type":"story","topic":"Project Hail Mary: ficção científica do fim de semana — vale ver?","providers":["facebook","instagram"],"status":"ASSET_RIGHTS_QA_PENDING"},
     {"time":"15:10","type":"video","slot":5,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
     {"time":"16:05","type":"video","slot":6,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"17:15","type":"editorial_post","topic":"Spider-Man: Brand New Day x The Odyssey — qual foi o evento do verão?","format":"comparison_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"17:20","type":"editorial_post","topic":"Supergirl no HBO Max — segunda vida no streaming?","format":"static_or_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
     {"time":"18:10","type":"video","slot":7,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
     {"time":"19:20","type":"video","slot":8,"providers":["facebook","instagram","tiktok","youtube"],"status":"VIDEO_SELECTION_RIGHTS_QA_PENDING"},
-    {"time":"20:20","type":"editorial_post","topic":"Veneza 83 — vencedores e Leão de Ouro","format":"results_carousel","providers":["facebook","instagram","tiktok"],"status":"REVALIDATE_RESULTS_PLUS_ASSET_RIGHTS_QA_PENDING"},
-    {"time":"21:10","type":"story","topic":"O Leão de Ouro foi justo?","providers":["facebook","instagram"],"status":"REVALIDATE_RESULTS_PLUS_ASSET_RIGHTS_QA_PENDING"}
+    {"time":"20:15","type":"editorial_post","topic":"Last Seen / Desaparecida — Apple TV","format":"static_or_2_slide_carousel","providers":["facebook","instagram","tiktok"],"status":"ASSET_RIGHTS_QA_PENDING"},
+    {"time":"21:05","type":"story","topic":"Escolha da noite: Last Seen, Colin From Accounts ou Kraven?","providers":["facebook","instagram"],"status":"KRAVEN_BR_TERRITORY_REVALIDATION_PLUS_ASSET_RIGHTS_QA_PENDING"}
   ],
   "video_lane_guidance": [
     "1 current/high-recognition title with cleared footage",
@@ -43,13 +44,18 @@
     "1 sci-fi/action lane",
     "1 festival/acclaimed lane",
     "1 evergreen high-demand lane",
-    "1 flex slot based on live demand, all deduped against 60-day ledger"
+    "1 flex slot based on live demand; all titles deduped against the canonical 60-day ledger"
   ],
   "editorial_copy_hooks": {
-    "kraven": "Kraven chegou ao Disney+. Vale dar uma segunda chance no streaming?",
-    "last_seen": "Uma ligação reacende um desaparecimento de 11 anos. Você entraria nessa busca?",
-    "box_office": "Spider-Man fez cerca de US$ 2,4 bi; The Odyssey, cerca de US$ 1,6 bi. Qual virou o verdadeiro evento do cinema em 2026?",
-    "venice": "Veneza terminou. O Leão de Ouro foi para o filme certo?"
+    "venice": "Veneza terminou. O Leão de Ouro foi para o filme certo?",
+    "physical_100_italy": "A versão italiana chegou com 100 competidores. A franquia ainda tem fôlego?",
+    "supergirl": "O cinema não transformou Supergirl em mega-hit. O streaming pode mudar a história?",
+    "last_seen": "Uma ligação reacende um desaparecimento de 11 anos. Você entraria nessa busca?"
   },
-  "publication_gate": "Do not schedule any item until the exact visual asset is tied to a documented press/reuse route and QA passes. Venice copy must be refreshed after official 12/09 awards are published."
+  "story_backup_topics": [
+    "Kraven the Hunter — use only if Brazil Disney+ availability is confirmed live on 13/09",
+    "Colin From Accounts S3 — final-season poll using Paramount press assets after terms review",
+    "Spider-Man x The Odyssey — refresh weekend box-office numbers before any numeric card"
+  ],
+  "publication_gate": "Do not schedule any item until the exact visual asset is tied to a documented press/reuse route and QA passes. Venice results, Kraven Brazil availability and weekend box-office numbers require same-day revalidation before copy/artwork freeze."
 }
