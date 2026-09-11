@@ -119,16 +119,16 @@ jobs:
           set -u
           HTTP=$(curl -sS -o /tmp/resp.json -w '%{http_code}' -X POST "$WORKER_URL/schedule" -H "Authorization: Bearer $COMMAND_TOKEN" -H 'Content-Type: application/json' --data-binary @/tmp/item.json)
           cat /tmp/resp.json
+          MSG=$(jq -c . /tmp/resp.json 2>/dev/null || cat /tmp/resp.json)
           if [ "$HTTP" != "200" ]; then
-            MSG=$(jq -c . /tmp/resp.json 2>/dev/null || cat /tmp/resp.json)
             echo "::error title=Direct publisher response::$MSG"
             exit 1
           fi
           if ! jq -e '.ok == true and (.result == "SCHEDULED" or .result == "ALREADY_EXISTS") and .channel_id == "UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/resp.json >/dev/null; then
-            MSG=$(jq -c . /tmp/resp.json 2>/dev/null || cat /tmp/resp.json)
             echo "::error title=Unexpected direct publisher receipt::$MSG"
             exit 1
           fi
+          echo "::notice title=Direct publisher receipt::$MSG"
           echo "DIRECT_RESULT=$(jq -r .result /tmp/resp.json)"
           echo "DIRECT_VIDEO_ID=$(jq -r '.video_id // .existing_video_id // empty' /tmp/resp.json)"
           echo "DIRECT_PUBLISH_AT=$(jq -r '.publish_at // empty' /tmp/resp.json)"
