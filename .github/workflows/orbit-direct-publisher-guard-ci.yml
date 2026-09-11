@@ -1,0 +1,75 @@
+name: Orbit Direct Publisher Guard CI
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/orbit-cena-certa-youtube-direct.yml'
+      - '.github/workflows/orbit-cena-certa-youtube-queue.yml'
+      - '.github/workflows/orbit-cena-certa-facebook-direct.yml'
+      - '.github/workflows/orbit-cena-certa-meta-auth-preflight.yml'
+      - '.github/workflows/orbit-cena-certa-meta-auth-probe.yml'
+      - 'cloudflare/orbit-cena-certa-auth.mjs'
+      - 'cloudflare/wrangler.orbit-cena-certa-auth.toml'
+      - '.github/workflows/orbit-direct-publisher-guard-ci.yml'
+      - '.github/workflows/orbit-deploy-cena-certa-auth-20260910.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax and invariant checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check cloudflare/orbit-cena-certa-auth.mjs
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          canonical_channel='UCq1h6RSnev5-JJQ8k4T98tg'
+          canonical_page='1314911305035494'
+          yt=Path('.github/workflows/orbit-cena-certa-youtube-direct.yml').read_text()
+          queue=Path('.github/workflows/orbit-cena-certa-youtube-queue.yml').read_text()
+          fb=Path('.github/workflows/orbit-cena-certa-facebook-direct.yml').read_text()
+          meta_preflight=Path('.github/workflows/orbit-cena-certa-meta-auth-preflight.yml').read_text()
+          meta_probe=Path('.github/workflows/orbit-cena-certa-meta-auth-probe.yml').read_text()
+          worker=Path('cloudflare/orbit-cena-certa-auth.mjs').read_text()
+          deploy=Path('.github/workflows/orbit-deploy-cena-certa-auth-20260910.yml').read_text()
+
+          queue_lock=bool(re.search(r"expected\s*!=\s*['\"]"+re.escape(canonical_channel)+r"['\"]", queue))
+          checks={
+            'youtube canonical lock': canonical_channel in yt and "expected != canonical" in yt,
+            'queue canonical lock': canonical_channel in queue and queue_lock,
+            'meta canonical lock': canonical_page in fb and "page != canonical_page" in fb,
+            'youtube serialized': 'group: orbit-cena-certa-youtube-mutation' in yt,
+            'queue serialized': 'group: orbit-cena-certa-youtube-queue-mutation' in queue,
+            'meta serialized': 'group: orbit-cena-certa-facebook-mutation' in fb,
+            'youtube marker': "marker='orbit_'" in yt,
+            'worker marker': "marker='orbit_'" in worker,
+            'youtube readback': 'READBACK_VERIFIED=true' in yt,
+            'meta readback': 'READBACK_VERIFIED=true' in fb,
+            'uncertain mutation state': "unknown_after_upload" in worker,
+            'story fail closed': "Facebook Story requires native UI" in fb,
+            'queue manual only': 'workflow_dispatch:' in queue and '\n  push:' not in queue,
+            'queue explicit item input': 'queue_file:' in queue,
+            'meta preflight manual only': 'workflow_dispatch:' in meta_preflight and '\n  push:' not in meta_preflight,
+            'meta probe manual only': 'workflow_dispatch:' in meta_probe and '\n  push:' not in meta_probe,
+            'deploy manual only': 'workflow_dispatch:' in deploy and '\n  push:' not in deploy,
+            'deploy oauth secret names aligned': 'secrets.ORBIT_YOUTUBE_CLIENT_ID' in deploy and 'secrets.ORBIT_YOUTUBE_CLIENT_SECRET' in deploy,
+            'no expired Sep10 YouTube batch': not Path('.github/workflows/orbit-cena-certa-youtube-schedule-sep10-20260910.yml').exists(),
+            'no expired Sep10 Meta batch': not Path('.github/workflows/orbit-cena-certa-facebook-batch-sep10-20260910.yml').exists(),
+            'no expired queue item': not Path('control-plane/orbit-direct-youtube/metricool-372509910-youtube.json').exists(),
+          }
+          failed=[name for name,ok in checks.items() if not ok]
+          for name,ok in checks.items():
+              print(f"{name}={'PASS' if ok else 'FAIL'}")
+          if failed:
+              raise SystemExit('GUARD_FAILED: '+', '.join(failed))
+          print('MUTATION_PERFORMED=false')
+          PY

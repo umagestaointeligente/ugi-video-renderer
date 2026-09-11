@@ -1,0 +1,52 @@
+name: Orbit Deploy Cena Certa Auth
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
+      YOUTUBE_CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'BLOCKED: UGI_ADMIN_CLOUDFLARE_API_TOKEN missing'; exit 78; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'BLOCKED: UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID missing'; exit 78; }
+          test -n "$YOUTUBE_CLIENT_ID" || { echo 'BLOCKED: ORBIT_YOUTUBE_CLIENT_ID missing'; exit 78; }
+          test -n "$YOUTUBE_CLIENT_SECRET" || { echo 'BLOCKED: ORBIT_YOUTUBE_CLIENT_SECRET missing'; exit 78; }
+      - name: Deploy isolated OAuth and publisher worker
+        shell: bash
+        working-directory: cloudflare
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 deploy --config wrangler.orbit-cena-certa-auth.toml
+      - name: Bind YouTube OAuth secrets
+        shell: bash
+        working-directory: cloudflare
+        run: |
+          set -euo pipefail
+          printf '%s' "$YOUTUBE_CLIENT_ID" | npx --yes wrangler@4 secret put YOUTUBE_CLIENT_ID --config wrangler.orbit-cena-certa-auth.toml >/dev/null
+          printf '%s' "$YOUTUBE_CLIENT_SECRET" | npx --yes wrangler@4 secret put YOUTUBE_CLIENT_SECRET --config wrangler.orbit-cena-certa-auth.toml >/dev/null
+          echo SECRET_VALUES_EXPOSED=false
+      - name: Verify health and authorization state
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://orbit-cena-certa-auth.umagestaointeligente.workers.dev'
+          curl --fail --silent --show-error "$URL/health" | tee /tmp/health.json
+          grep -q '"ok":true' /tmp/health.json
+          grep -q '"mutation_mode":"guarded"' /tmp/health.json
+          curl --fail --silent --show-error "$URL/status" | tee /tmp/status.json
+          grep -q '"authorized":true' /tmp/status.json
+          grep -q '"channel_id":"UCq1h6RSnev5-JJQ8k4T98tg"' /tmp/status.json
+          grep -q '"has_refresh_token":true' /tmp/status.json
+          echo DEPLOY_RESULT=SUCCESS

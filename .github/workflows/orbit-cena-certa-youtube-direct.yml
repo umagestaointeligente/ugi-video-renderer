@@ -1,0 +1,220 @@
+name: Orbit Cena Certa YouTube Direct
+
+on:
+  workflow_dispatch:
+    inputs:
+      item_key:
+        description: Canonical unique item key
+        required: true
+        type: string
+      media_url:
+        description: Public HTTPS MP4 URL
+        required: true
+        type: string
+      title:
+        description: YouTube title (max 100 chars)
+        required: true
+        type: string
+      description:
+        description: YouTube description/caption
+        required: true
+        type: string
+      publish_at:
+        description: Future RFC3339 UTC timestamp
+        required: true
+        type: string
+      expected_channel_id:
+        description: Hard-lock expected channel id
+        required: true
+        default: UCq1h6RSnev5-JJQ8k4T98tg
+        type: string
+  workflow_call:
+    inputs:
+      item_key:
+        required: true
+        type: string
+      media_url:
+        required: true
+        type: string
+      title:
+        required: true
+        type: string
+      description:
+        required: true
+        type: string
+      publish_at:
+        required: true
+        type: string
+      expected_channel_id:
+        required: false
+        default: UCq1h6RSnev5-JJQ8k4T98tg
+        type: string
+    secrets:
+      ORBIT_YOUTUBE_CLIENT_ID:
+        required: true
+      ORBIT_YOUTUBE_CLIENT_SECRET:
+        required: true
+      CENA_CERTA_YOUTUBE_REFRESH_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orbit-cena-certa-youtube-mutation
+  cancel-in-progress: false
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
+      REFRESH_TOKEN: ${{ secrets.CENA_CERTA_YOUTUBE_REFRESH_TOKEN }}
+      EXPECTED_CHANNEL_ID: ${{ inputs.expected_channel_id }}
+      ITEM_KEY: ${{ inputs.item_key }}
+      MEDIA_URL: ${{ inputs.media_url }}
+      VIDEO_TITLE: ${{ inputs.title }}
+      VIDEO_DESCRIPTION: ${{ inputs.description }}
+      PUBLISH_AT: ${{ inputs.publish_at }}
+    steps:
+      - name: Validate secret presence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLIENT_ID" || { echo 'BLOCKED: ORBIT_YOUTUBE_CLIENT_ID missing'; exit 78; }
+          test -n "$CLIENT_SECRET" || { echo 'BLOCKED: ORBIT_YOUTUBE_CLIENT_SECRET missing'; exit 78; }
+          test -n "$REFRESH_TOKEN" || { echo 'BLOCKED: CENA_CERTA_YOUTUBE_REFRESH_TOKEN missing'; exit 78; }
+
+      - name: Native schedule with identity and duplicate guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import datetime, hashlib, json, os, sys, time, urllib.error, urllib.parse, urllib.request
+
+          def req(url, method='GET', headers=None, data=None, timeout=180):
+              r=urllib.request.Request(url, data=data, method=method, headers=headers or {})
+              try:
+                  with urllib.request.urlopen(r, timeout=timeout) as resp:
+                      return resp.status, resp.headers, resp.read()
+              except urllib.error.HTTPError as e:
+                  body=e.read()
+                  print('HTTP_ERROR', e.code, body[:2000].decode('utf-8','replace'))
+                  raise
+
+          item=os.environ['ITEM_KEY'].strip()
+          title=os.environ['VIDEO_TITLE'].strip()
+          desc=os.environ['VIDEO_DESCRIPTION']
+          media=os.environ['MEDIA_URL'].strip()
+          expected=os.environ['EXPECTED_CHANNEL_ID'].strip()
+          canonical='UCq1h6RSnev5-JJQ8k4T98tg'
+          publish_at=os.environ['PUBLISH_AT'].strip()
+          if expected != canonical:
+              raise SystemExit('BLOCKED: expected_channel_id is not canonical Cena Certa channel')
+          if not item or not title or len(title)>100 or not media.startswith('https://'):
+              raise SystemExit('BLOCKED: invalid item/title/media input')
+          dt=datetime.datetime.fromisoformat(publish_at.replace('Z','+00:00'))
+          now=datetime.datetime.now(datetime.timezone.utc)
+          if dt <= now + datetime.timedelta(minutes=2):
+              raise SystemExit('BLOCKED: publish_at must be >2 minutes in future')
+
+          token_body=urllib.parse.urlencode({
+              'client_id':os.environ['CLIENT_ID'],
+              'client_secret':os.environ['CLIENT_SECRET'],
+              'refresh_token':os.environ['REFRESH_TOKEN'],
+              'grant_type':'refresh_token'}).encode()
+          _,_,raw=req('https://oauth2.googleapis.com/token','POST',{'Content-Type':'application/x-www-form-urlencoded'},token_body)
+          tok=json.loads(raw)['access_token']
+          auth={'Authorization':'Bearer '+tok}
+
+          _,_,raw=req('https://www.googleapis.com/youtube/v3/channels?part=id,snippet,contentDetails&mine=true',headers=auth)
+          ch=json.loads(raw).get('items') or []
+          if len(ch)!=1:
+              raise SystemExit('BLOCKED: OAuth identity did not resolve exactly one YouTube channel')
+          actual=ch[0]['id']
+          print('CHANNEL_ID='+actual)
+          print('CHANNEL_TITLE='+ch[0].get('snippet',{}).get('title',''))
+          if actual != expected:
+              raise SystemExit('BLOCKED: Cena Certa channel identity mismatch')
+
+          marker='orbit_'+hashlib.sha256(item.encode()).hexdigest()[:24]
+          uploads=ch[0]['contentDetails']['relatedPlaylists']['uploads']
+          ids=[]
+          page=''
+          for _ in range(4):
+              url='https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId='+urllib.parse.quote(uploads)
+              if page: url += '&pageToken='+urllib.parse.quote(page)
+              _,_,raw=req(url,headers=auth)
+              listing=json.loads(raw)
+              ids.extend(x['contentDetails']['videoId'] for x in listing.get('items',[]))
+              page=listing.get('nextPageToken','')
+              if not page: break
+          if ids:
+              for offset in range(0,len(ids),50):
+                  batch=ids[offset:offset+50]
+                  _,_,raw=req('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+','.join(batch),headers=auth)
+                  for v in json.loads(raw).get('items',[]):
+                      if marker in (v.get('snippet',{}).get('tags') or []):
+                          existing_at=str(v.get('status',{}).get('publishAt') or '')
+                          requested_at=dt.isoformat().replace('+00:00','Z')
+                          normalized_existing=existing_at.replace('.000Z','Z')
+                          if normalized_existing != requested_at or v.get('snippet',{}).get('title') != title:
+                              raise SystemExit('BLOCKED: item_key already exists with different immutable fields')
+                          print('IDEMPOTENT_EXISTING_VIDEO_ID='+v['id'])
+                          print('IDEMPOTENT_EXISTING_PUBLISH_AT='+existing_at)
+                          sys.exit(0)
+
+          tmp='/tmp/orbit-direct.mp4'
+          mreq=urllib.request.Request(media, headers={'User-Agent':'OrbitDirectPublisher/1.0'})
+          with urllib.request.urlopen(mreq, timeout=180) as mr, open(tmp,'wb') as f:
+              ctype=(mr.headers.get('Content-Type') or '').lower()
+              total=0
+              while True:
+                  chunk=mr.read(1024*1024)
+                  if not chunk: break
+                  f.write(chunk); total += len(chunk)
+          if total <= 0:
+              raise SystemExit('BLOCKED: empty media payload')
+          with open(tmp,'rb') as f:
+              head=f.read(12)
+          if 'video/' not in ctype and b'ftyp' not in head:
+              raise SystemExit('BLOCKED: media URL did not return a valid video payload')
+          print('MEDIA_BYTES='+str(total))
+
+          metadata={
+              'snippet':{'title':title,'description':desc,'categoryId':'24','tags':['Cena Certa',marker]},
+              'status':{'privacyStatus':'private','publishAt':publish_at,'selfDeclaredMadeForKids':False}
+          }
+          boundary='orbit_boundary_%d'%int(time.time())
+          meta=json.dumps(metadata,separators=(',',':')).encode()
+          with open(tmp,'rb') as f:
+              video=f.read()
+          body=(('--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n').encode()+meta+
+                ('\r\n--'+boundary+'\r\nContent-Type: video/mp4\r\n\r\n').encode()+video+
+                ('\r\n--'+boundary+'--\r\n').encode())
+          url='https://www.googleapis.com/upload/youtube/v3/videos?uploadType=multipart&part=snippet,status'
+          _,_,raw=req(url,'POST',{'Authorization':'Bearer '+tok,'Content-Type':'multipart/related; boundary='+boundary},body,timeout=300)
+          out=json.loads(raw)
+          vid=out.get('id')
+          if not vid:
+              raise SystemExit('BLOCKED: YouTube upload returned no video id')
+          _,_,verified_raw=req('https://www.googleapis.com/youtube/v3/videos?part=snippet,status&id='+urllib.parse.quote(vid),headers=auth)
+          verified_items=json.loads(verified_raw).get('items') or []
+          if len(verified_items)!=1:
+              raise SystemExit('UNCERTAIN_AFTER_UPLOAD: readback did not return exactly one video')
+          verified=verified_items[0]
+          v_status=verified.get('status',{})
+          v_snippet=verified.get('snippet',{})
+          if v_snippet.get('channelId') != canonical or v_status.get('privacyStatus') != 'private' or marker not in (v_snippet.get('tags') or []):
+              raise SystemExit('UNCERTAIN_AFTER_UPLOAD: readback state mismatch; do not retry without reconciliation')
+          actual_at=str(v_status.get('publishAt') or '')
+          if actual_at.replace('.000Z','Z') != dt.isoformat().replace('+00:00','Z'):
+              raise SystemExit('UNCERTAIN_AFTER_UPLOAD: publish_at mismatch; do not retry without reconciliation')
+          print('NATIVE_VIDEO_ID='+vid)
+          print('NATIVE_PUBLISH_AT='+actual_at)
+          print('NATIVE_PRIVACY_STATUS='+v_status.get('privacyStatus',''))
+          print('READBACK_VERIFIED=true')
+          print('ORBIT_ITEM_KEY='+item)
+          PY

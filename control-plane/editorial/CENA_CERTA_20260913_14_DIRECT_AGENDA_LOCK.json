@@ -1,0 +1,46 @@
+{
+  "project": "ORBIT/CENA_CERTA",
+  "route": "youtube_direct",
+  "channel_id": "UCq1h6RSnev5-JJQ8k4T98tg",
+  "timezone": "America/Sao_Paulo",
+  "dates": ["2026-09-13", "2026-09-14"],
+  "status": "EDITORIAL_LOCKED_AWAITING_ASSET_RIGHTS_QA",
+  "mutation_authorized": false,
+  "rules": {
+    "film_repeat_window_days": 60,
+    "live_action_only": true,
+    "prefer_2000_plus": true,
+    "public_banned_terms": ["trailer", "teaser", "preview", "promo"],
+    "duration_seconds_target": "45-55",
+    "upload_initial_privacy": "private",
+    "require_rights_evidence": true,
+    "require_canonical_mask": true,
+    "require_post_upload_readback": true,
+    "require_publish_at_readback": true,
+    "no_blind_retry": true,
+    "no_duplicate": true
+  },
+  "items": [
+    {"item_key":"cc-20260913-0910-spider-man-brand-new-day","publish_at_brt":"2026-09-13T09:10:00-03:00","publish_at_utc":"2026-09-13T12:10:00Z","film":"Spider-Man: Brand New Day","year":2026,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260913-1055-the-odyssey","publish_at_brt":"2026-09-13T10:55:00-03:00","publish_at_utc":"2026-09-13T13:55:00Z","film":"The Odyssey","year":2026,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260913-1220-michael","publish_at_brt":"2026-09-13T12:20:00-03:00","publish_at_utc":"2026-09-13T15:20:00Z","film":"Michael","year":2026,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260913-1445-the-batman","publish_at_brt":"2026-09-13T14:45:00-03:00","publish_at_utc":"2026-09-13T17:45:00Z","film":"The Batman","year":2022,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260913-1555-john-wick-4","publish_at_brt":"2026-09-13T15:55:00-03:00","publish_at_utc":"2026-09-13T18:55:00Z","film":"John Wick: Chapter 4","year":2023,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260913-1710-oppenheimer","publish_at_brt":"2026-09-13T17:10:00-03:00","publish_at_utc":"2026-09-13T20:10:00Z","film":"Oppenheimer","year":2023,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260913-1830-top-gun-maverick","publish_at_brt":"2026-09-13T18:30:00-03:00","publish_at_utc":"2026-09-13T21:30:00Z","film":"Top Gun: Maverick","year":2022,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260913-1950-dune-part-two","publish_at_brt":"2026-09-13T19:50:00-03:00","publish_at_utc":"2026-09-13T22:50:00Z","film":"Dune: Part Two","year":2024,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260914-0910-mission-impossible-dead-reckoning","publish_at_brt":"2026-09-14T09:10:00-03:00","publish_at_utc":"2026-09-14T12:10:00Z","film":"Mission: Impossible - Dead Reckoning","year":2023,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260914-1055-knives-out","publish_at_brt":"2026-09-14T10:55:00-03:00","publish_at_utc":"2026-09-14T13:55:00Z","film":"Knives Out","year":2019,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260914-1220-ford-v-ferrari","publish_at_brt":"2026-09-14T12:20:00-03:00","publish_at_utc":"2026-09-14T15:20:00Z","film":"Ford v Ferrari","year":2019,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260914-1445-the-fall-guy","publish_at_brt":"2026-09-14T14:45:00-03:00","publish_at_utc":"2026-09-14T17:45:00Z","film":"The Fall Guy","year":2024,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260914-1555-challengers","publish_at_brt":"2026-09-14T15:55:00-03:00","publish_at_utc":"2026-09-14T18:55:00Z","film":"Challengers","year":2024,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260914-1710-civil-war","publish_at_brt":"2026-09-14T17:10:00-03:00","publish_at_utc":"2026-09-14T20:10:00Z","film":"Civil War","year":2024,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260914-1830-glass-onion","publish_at_brt":"2026-09-14T18:30:00-03:00","publish_at_utc":"2026-09-14T21:30:00Z","film":"Glass Onion","year":2022,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"},
+    {"item_key":"cc-20260914-1950-joker","publish_at_brt":"2026-09-14T19:50:00-03:00","publish_at_utc":"2026-09-14T22:50:00Z","film":"Joker","year":2019,"asset_status":"RIGHTS_AND_RENDER_REQUIRED"}
+  ],
+  "execution_gate": {
+    "direct_queue_path": "control-plane/orbit-direct-youtube/*.json",
+    "queue_write_allowed_only_when": ["rights_pass", "anti_repeat_pass", "canonical_render_pass", "public_https_mp4_ready"],
+    "reason": "Direct publisher accepts a final public HTTPS MP4; raw source footage must never bypass canonical render/rights gates."
+  }
+}
