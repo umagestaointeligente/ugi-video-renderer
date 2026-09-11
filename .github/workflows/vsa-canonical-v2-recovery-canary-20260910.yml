@@ -65,7 +65,7 @@ jobs:
             "cta_sha256":"6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8"
           }
           JSON
-      - name: Build deterministic CTA timing repair
+      - name: Build recovery renderer with deterministic CTA and stronger semantic motion
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -74,7 +74,17 @@ jobs:
           old="""    body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_audio=work/'cta.mp3'\n    run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])\n    run(['edge-tts','--voice',voice,'--rate','+22%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])\n    bd=dur(body_audio); cd=min(4.5,max(3.0,dur(cta_audio)+0.15))\n    if dur(cta_audio)>4.5: raise SystemExit('CTA_VOICE_TOO_LONG')\n"""
           new="""    body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_raw=work/'cta_raw.mp3'; cta_audio=work/'cta.mp3'\n    run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])\n    run(['edge-tts','--voice',voice,'--rate','+18%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_raw])\n    raw_cta=dur(cta_raw); target_cta=4.15; tempo=raw_cta/target_cta\n    if tempo < 0.5 or tempo > 2.0: raise SystemExit(f'CTA_TEMPO_UNSAFE:{raw_cta}:{tempo}')\n    run(['ffmpeg','-y','-loglevel','error','-i',cta_raw,'-filter:a',f'atempo={tempo:.6f}','-ar','48000',cta_audio])\n    cta_d=dur(cta_audio); bd=dur(body_audio); cd=min(4.5,max(3.0,cta_d+0.15))\n    if cta_d>4.35 or cta_d<3.6: raise SystemExit(f'CTA_TIMING_FAIL:{cta_d}')\n"""
           if old not in src: raise SystemExit('CTA_PATCH_ANCHOR_NOT_FOUND')
-          Path('/tmp/render_canonical_v2_recovery.py').write_text(src.replace(old,new,1),encoding='utf-8')
+          src=src.replace(old,new,1)
+          oldp="""        if style=='particles':\n            for px,py,s in pts:\n                if right:\n                    xx=x+80+((px+t*0.65)%1.0)*(w-160); yy=y+220+py*(h-330)\n                else:\n                    xx=x+80+px*(w-160); yy=y+220+((py-t*0.55)%1.0)*(h-330)\n                r=int(4+5*s); d.ellipse((xx-r,yy-r,xx+r,yy+r),fill=(244,189,88))\n"""
+          newp="""        if style=='particles':\n            # Subject-semantic particle transport: ground reservoir -> uplift -> horizontal plume.\n            ground=y+h-145\n            d.rectangle((x+45,ground,x+w-45,y+h-45),fill=(108,72,38))\n            plume_x=x+120+int(t*(w-360))\n            plume_y=y+300+int(55*math.sin(t*math.pi*2))\n            d.ellipse((plume_x-150,plume_y-90,plume_x+250,plume_y+105),fill=(164,121,73),outline=(236,196,130),width=5)\n            for px,py,s in pts:\n                travel=(px+t*0.78)%1.0\n                lift=min(1.0,t*2.2 + py*0.35)\n                xx=x+70+travel*(w-140)\n                yy=ground-25-lift*(170+py*(h-420))\n                r=int(6+8*s); d.ellipse((xx-r,yy-r,xx+r,yy+r),fill=(244,189,88))\n            # Moving wind vectors make direction and mechanism obvious, not decorative.\n            for j in range(3):\n                ax=x+100+((j*250+int(t*330))%(w-260)); ay=y+240+j*145\n                d.line((ax,ay,ax+150,ay),fill=(65,205,255),width=12)\n                d.polygon([(ax+150,ay),(ax+118,ay-20),(ax+118,ay+20)],fill=(65,205,255))\n"""
+          if oldp not in src: raise SystemExit('PARTICLE_PATCH_ANCHOR_NOT_FOUND')
+          src=src.replace(oldp,newp,1)
+          # Explicitly prohibit the generic labels that caused the incident.
+          marker="x,y,w,h=VIDEO; style=mech_style(mech); left,right=split_mech(mech)"
+          repl=marker+"\n    if re.search(r'\\b(CAUSA|EFEITO)\\b',mech,re.I): raise RuntimeError('GENERIC_CAUSE_EFFECT_FORBIDDEN')"
+          if marker not in src: raise SystemExit('SEMANTIC_GATE_ANCHOR_NOT_FOUND')
+          src=src.replace(marker,repl,1)
+          Path('/tmp/render_canonical_v2_recovery.py').write_text(src,encoding='utf-8')
           PY
           python -m py_compile /tmp/render_canonical_v2_recovery.py
       - name: Render with fail-closed V2 renderer
