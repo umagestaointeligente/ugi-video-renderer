@@ -1,0 +1,56 @@
+name: UGI Sep11 Recovery Buffer Audit 2026-09-11
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-sep11-recovery-buffer-audit-20260911.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      WORKER_URL: https://lola-operacional-ugi.umagestaointeligente.workers.dev
+      UGI_LOLA_COMMAND_KEY: ${{ secrets.UGI_LOLA_COMMAND_KEY }}
+    steps:
+      - name: Read back exact Buffer IDs without mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UGI_LOLA_COMMAND_KEY:-}"
+          echo "::add-mask::$UGI_LOLA_COMMAND_KEY"
+          python - <<'PY'
+          import os,json,urllib.request,urllib.error
+          from datetime import datetime,timezone
+          BASE=os.environ['WORKER_URL'].rstrip('/'); KEY=os.environ['UGI_LOLA_COMMAND_KEY']
+          items=[
+            ('instagram','6aa465377145e39ccec66e7f','2026-09-11T21:00:00Z','MIRO-1800'),
+            ('tiktok','6aa465380ebef6a55a406352','2026-09-11T22:45:00Z','PRIMARK-1945'),
+            ('instagram','6aa465390ebef6a55a406389','2026-09-11T23:30:00Z','HEFEI-2030'),
+            ('instagram','6aa4653acb62fc78b5029e50','2026-09-12T11:30:00Z','ALTERA-0830'),
+            ('instagram','6aa4653bdf564d9b29a4db22','2026-09-12T13:15:00Z','FAA-1015'),
+            ('tiktok','6aa4653c7145e39ccec66f15','2026-09-12T14:30:00Z','KOJIMA-1130'),
+            ('instagram','6aa4653dcb62fc78b5029ea3','2026-09-12T15:00:00Z','COCACOLA-1200'),
+            ('linkedin','6aa4653eb68936ea7a44d842','2026-09-12T17:00:00Z','HSBC-1400'),
+            ('instagram','6aa46540df564d9b29a4dba9','2026-09-12T17:30:00Z','STELLANTIS-1430')]
+          def iso(v): return datetime.fromisoformat(v.replace('Z','+00:00')).astimezone(timezone.utc)
+          def get(url):
+            req=urllib.request.Request(url,headers={'x-lola-command-key':KEY,'accept':'application/json','user-agent':'UGI-Recovery-Audit/1.0'})
+            try:
+              with urllib.request.urlopen(req,timeout=45) as r: return r.status,json.loads(r.read().decode())
+            except urllib.error.HTTPError as e:
+              return e.code,{}
+          out=[]
+          for p,pid,want,label in items:
+            if p=='linkedin': h,b=get(BASE+'/api/linkedin-publication-status?postId='+pid); r=b.get('publication') or {}; st=r.get('bufferStatus') or r.get('status'); due=r.get('dueAt'); service='linkedin'
+            else: h,b=get(BASE+'/api/r45-2/buffer-status?id='+pid); r=b.get('post') or {}; st=r.get('status'); due=r.get('dueAt'); service=r.get('channelService')
+            try: dueok=abs((iso(due)-iso(want)).total_seconds())<1
+            except Exception: dueok=False
+            ok=(h==200 and b.get('ok') is True and str(st or '').lower()=='scheduled' and dueok and service==p)
+            rec={'label':label,'platform':p,'bufferPostId':pid,'status':st,'dueAt':due,'expectedDueAt':want,'service':service,'confirmed':ok}; out.append(rec); print(json.dumps(rec,ensure_ascii=False))
+          print('READBACK_9_OF_9_SCHEDULED' if all(x['confirmed'] for x in out) else 'READBACK_MISMATCH')
+          if not all(x['confirmed'] for x in out): raise SystemExit(2)
+          PY
