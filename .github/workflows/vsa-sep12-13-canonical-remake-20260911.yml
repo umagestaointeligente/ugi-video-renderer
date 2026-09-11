@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/vsa-sep12-13-canonical-remake-20260911.yml'
       - 'scripts/vsa/canonical_remake_sep12_13.py'
+      - 'scripts/vsa/canonical_remake_sep12_13_v2.py'
   workflow_dispatch:
     inputs:
       human_approved:
@@ -39,7 +40,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/vsa/canonical_remake_sep12_13.py
+          python -m py_compile scripts/vsa/canonical_remake_sep12_13.py scripts/vsa/canonical_remake_sep12_13_v2.py
           python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
           python scripts/vsa/validate_release_receipt.py --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json --self-test
           python scripts/vsa/check_workflow_compliance.py .github/workflows/vsa-sep12-13-canonical-remake-20260911.yml
@@ -94,7 +95,7 @@ jobs:
           GOLDEN=/tmp/golden/VSA_20260913_1300_HUNGA_TSUNAMI_NARRATIVE_REPAIR_V3.mp4
           test -s "$GOLDEN"
           mkdir -p /tmp/output
-          python scripts/vsa/canonical_remake_sep12_13.py \
+          python scripts/vsa/canonical_remake_sep12_13_v2.py \
             --id "$VSA_ID" \
             --golden "$GOLDEN" \
             --out-dir /tmp/output
