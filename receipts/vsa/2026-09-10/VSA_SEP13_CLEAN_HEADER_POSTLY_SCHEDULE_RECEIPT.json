@@ -1,0 +1,70 @@
+{
+  "schema": "VSA_SEP13_CLEAN_HEADER_POSTLY_SCHEDULE_RECEIPT_V1",
+  "project": "ORBIT/VSA",
+  "date_local": "2026-09-13",
+  "timezone": "America/Sao_Paulo",
+  "channel": {
+    "platform": "youtube",
+    "name": "Você Sabia Agora?",
+    "channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ"
+  },
+  "superseded_batch": {
+    "run_id": 34536086386,
+    "reason": "TITLE_OVER_TITLE caused by legacy carrier shell",
+    "scheduled_count": 0,
+    "release_eligible": false
+  },
+  "clean_header_repair": {
+    "workflow_run_id": 34548975468,
+    "workflow_conclusion": "success",
+    "workflow_commit": "0a84d59d053b8377a9da428123247a69ad95fef2",
+    "media_branch": "vsa-media-sep13-clean-20260910",
+    "media_commit": "bf7ba5e4a3a602780d228c0e5b995a423f733541",
+    "mask": {
+      "library_path": "/VSA/Canonical Assets/VSA_MASK_CANONICAL_V2.png",
+      "sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56"
+    },
+    "masters": 8,
+    "thumbnails": 8,
+    "qa_receipts": 8,
+    "clean_header_pass": "8/8",
+    "clean_cc_zone_pass": "8/8",
+    "single_title_render": "8/8",
+    "legacy_v1_body_shell_used": false,
+    "header_cover_panel_used": false
+  },
+  "canonical_anti_regression": {
+    "sync_workflow_run_id": 34549074814,
+    "sync_workflow_conclusion": "success",
+    "canon_commit": "be90c0dd14685e5bf4643c5d4d8973b87b4e1ec0",
+    "contract_mask": "VSA_MASK_CANONICAL_V2.png",
+    "runtime_clean_header_gate": true,
+    "v1_status": "HISTORICAL_ONLY_DO_NOT_RENDER"
+  },
+  "schedule": {
+    "provider": "Postly",
+    "expected": 8,
+    "confirmed_scheduled": 8,
+    "failed": 0,
+    "readback": "postly.list_scheduled_posts date=2026-09-13 timezone=America/Sao_Paulo total_count=8"
+  },
+  "items": [
+    {"time_local":"08:00","bucket":"WORLD_SCIENCE","id":"DUST_MALI","semantic_topic_id":"dust_storm_long_range_transport","title":"Como uma tempestade de poeira consegue cobrir vários países?","postly_id":"6aa35469deb57d1aaf000000","status":"scheduled"},
+    {"time_local":"10:30","bucket":"PEOPLE_CURIOSITY","id":"FERNANDA_MONTENEGRO","semantic_topic_id":"fernanda_montenegro_trust_longevity_influence","title":"Por que Fernanda Montenegro inspira tanta confiança?","postly_id":"6aa354838e5bc6a558000000","status":"scheduled"},
+    {"time_local":"13:00","bucket":"WORLD_SCIENCE","id":"HUNGA_TSUNAMI","semantic_topic_id":"hunga_tsunami_seismic_origin_detection","title":"Como sensores distantes detectaram o nascimento de um tsunami?","postly_id":"6aa35442deb5761aaf000000","status":"scheduled"},
+    {"time_local":"15:30","bucket":"PEOPLE_CURIOSITY","id":"ELTON_ENERGY","semantic_topic_id":"elton_airport_wheelchair_energy_conservation","title":"Por que Elton John usa cadeira de rodas em aeroportos?","postly_id":"6aa3549e8e5bc9a558000000","status":"scheduled"},
+    {"time_local":"18:00","bucket":"WORLD_SCIENCE","id":"EMIT_MINE","semantic_topic_id":"emit_mine_waste_spectral_detection","title":"Como a NASA encontra resíduos de minas pela cor da luz?","postly_id":"6aa354b9deb5891aaf000000","status":"scheduled"},
+    {"time_local":"19:30","bucket":"PEOPLE_CURIOSITY","id":"MARISKA_LONGEVITY","semantic_topic_id":"mariska_character_longevity_evolution","title":"Como Mariska Hargitay ficou décadas no mesmo papel?","postly_id":"6aa354d78b2a39b704000000","status":"scheduled"},
+    {"time_local":"21:00","bucket":"WORLD_SCIENCE","id":"SENTINEL_HURRICANE","semantic_topic_id":"sentinel6_ocean_heat_hurricane_intensification","title":"Como dois satélites ajudam a prever a força de um furacão?","postly_id":"6aa354f28b2a3fb704000000","status":"scheduled"},
+    {"time_local":"22:30","bucket":"PEOPLE_CURIOSITY","id":"EMICIDA_INFLUENCE","semantic_topic_id":"emicida_influence_message_persistence","title":"Por que Emicida transforma opinião em influência?","postly_id":"6aa3550ddeb59a1aaf000000","status":"scheduled"}
+  ],
+  "quality_policy": {
+    "scene_diversity": "3 distinct real moments designed per video",
+    "music": "thematic instrumental track per video",
+    "thumbnail": "custom editorial thumbnail configured per post",
+    "clean_header": "V2 clean mask + one title render only"
+  },
+  "isolation": {
+    "cena_certa_touched": false
+  }
+}
