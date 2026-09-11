@@ -11,18 +11,18 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.UGI_ADMIN_CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID }}
-      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
-      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      YOUTUBE_CLIENT_ID: ${{ secrets.ORBIT_YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.ORBIT_YOUTUBE_CLIENT_SECRET }}
     steps:
       - uses: actions/checkout@v4
       - name: Validate prerequisites
         shell: bash
         run: |
           set -euo pipefail
-          test -n "$CLOUDFLARE_API_TOKEN"
-          test -n "$CLOUDFLARE_ACCOUNT_ID"
-          test -n "$YOUTUBE_CLIENT_ID"
-          test -n "$YOUTUBE_CLIENT_SECRET"
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'BLOCKED: UGI_ADMIN_CLOUDFLARE_API_TOKEN missing'; exit 78; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'BLOCKED: UGI_ADMIN_CLOUDFLARE_ACCOUNT_ID missing'; exit 78; }
+          test -n "$YOUTUBE_CLIENT_ID" || { echo 'BLOCKED: ORBIT_YOUTUBE_CLIENT_ID missing'; exit 78; }
+          test -n "$YOUTUBE_CLIENT_SECRET" || { echo 'BLOCKED: ORBIT_YOUTUBE_CLIENT_SECRET missing'; exit 78; }
       - name: Deploy isolated OAuth and publisher worker
         shell: bash
         working-directory: cloudflare
