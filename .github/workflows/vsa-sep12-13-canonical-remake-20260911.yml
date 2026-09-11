@@ -71,13 +71,12 @@ jobs:
           python scripts/vsa/check_workflow_compliance.py .github/workflows/vsa-sep12-13-canonical-remake-20260911.yml
 
   build:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
     needs: preflight
     strategy:
       fail-fast: false
       max-parallel: 8
       matrix:
-        id: ${{ fromJSON(inputs.target == 'ALL' && '["CHANDRA_HYPERSOFT","IBERE","PEAT_FIRE","HOUDINI","EQUAL_EARTH","BUSTER_KEATON","EL_NINO","ROOSEVELT","DUST_MALI","FERNANDA_MONTENEGRO","HUNGA_TSUNAMI","ELTON_ENERGY","EMIT_MINE","MARISKA_LONGEVITY","SENTINEL_HURRICANE","EMICIDA_INFLUENCE"]' || format('["{0}"]', inputs.target)) }}
+        id: ${{ fromJSON(github.event_name == 'push' && '["ROOSEVELT"]' || (inputs.target == 'ALL' && '["CHANDRA_HYPERSOFT","IBERE","PEAT_FIRE","HOUDINI","EQUAL_EARTH","BUSTER_KEATON","EL_NINO","ROOSEVELT","DUST_MALI","FERNANDA_MONTENEGRO","HUNGA_TSUNAMI","ELTON_ENERGY","EMIT_MINE","MARISKA_LONGEVITY","SENTINEL_HURRICANE","EMICIDA_INFLUENCE"]' || format('["{0}"]', inputs.target))) }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -132,7 +131,7 @@ jobs:
           retention-days: 14
 
   review_pack:
-    if: ${{ inputs.target == 'ALL' && needs.build.result == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'ALL' && needs.build.result == 'success' }}
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -163,7 +162,7 @@ jobs:
           retention-days: 14
 
   recovery_review_pack:
-    if: ${{ inputs.target == 'ROOSEVELT' && needs.build.result == 'success' }}
+    if: ${{ (github.event_name == 'push' || inputs.target == 'ROOSEVELT') && needs.build.result == 'success' }}
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -204,7 +203,7 @@ jobs:
           retention-days: 14
 
   release_gate:
-    if: ${{ inputs.target == 'ALL' && inputs.human_approved == 'true' && needs.build.result == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'ALL' && inputs.human_approved == 'true' && needs.build.result == 'success' }}
     needs: build
     strategy:
       fail-fast: false
