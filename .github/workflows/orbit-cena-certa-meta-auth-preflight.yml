@@ -1,11 +1,6 @@
 name: Orbit Cena Certa Meta Auth Preflight
 
 on:
-  push:
-    branches:
-      - orbit/direct-publisher-v1
-    paths:
-      - .github/workflows/orbit-cena-certa-meta-auth-preflight.yml
   workflow_dispatch:
 
 permissions:
