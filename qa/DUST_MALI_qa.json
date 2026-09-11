@@ -1,0 +1,23 @@
+{
+  "id": "DUST_MALI",
+  "bucket": "WORLD_SCIENCE",
+  "master": "VSA_20260913_0800_DUST_MALI_FINAL.mp4",
+  "scene_diversity": "PASS_DESIGNED",
+  "real_blocks": 3,
+  "distinct_real_moments": 3,
+  "music_theme_match": "PASS",
+  "music": {
+    "title": "Masking the Masters",
+    "artist": "Eugenio Mininni",
+    "license": "Mixkit Stock Music Free License"
+  },
+  "thumbnail_ready": "PASS",
+  "thumbnail_file": "VSA_20260913_0800_DUST_MALI_THUMB.jpg",
+  "mask_asset": "VSA_MASK_CANONICAL_V2.png",
+  "mask_sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+  "legacy_v1_body_shell_used": false,
+  "header_cover_panel_used": false,
+  "title_render_count": 1,
+  "clean_header": "PASS",
+  "clean_cc_zone": "PASS"
+}
