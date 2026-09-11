@@ -172,7 +172,7 @@ jobs:
           times=[3,12,20,28,36,44]
           for t in times:
               subprocess.run(['ffmpeg','-y','-loglevel','error','-ss',str(t),'-i',str(out),'-frames:v','1',str(tmp/f'f{t}.png')],check=True)
-          base=np.asarray(Image.open(mask).convert('RGB'),dtype=np.float32)
+          base=np.asarray(Image.open(mask).convert('RGB').resize((1080,1920)),dtype=np.float32)
           cc_diffs=[]; title_diffs=[]
           for t in times:
               a=np.asarray(Image.open(tmp/f'f{t}.png').convert('RGB'),dtype=np.float32)
