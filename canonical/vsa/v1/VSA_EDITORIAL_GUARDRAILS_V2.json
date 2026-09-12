@@ -64,6 +64,29 @@
     "insufficient_rights_safe_footage_result": "BLOCK_REAL_FOOTAGE",
     "release_gate": "real_footage_gate=PASS"
   },
+  "longform_policy": {
+    "status": "HARD_GATE",
+    "applies_to": "VSA_LONGFORM",
+    "real_footage_first": true,
+    "real_footage_rule": "Whenever the narration refers to an observable real event, object, person, launch, spacecraft, experiment, component, test or consequence, show authentic rights-safe footage or imagery of that subject when available. Use animation for invisible mechanisms, trajectories, scale, fields, internal processes or transitions that cannot be shown directly.",
+    "required_visual_alternation": ["REAL_FOOTAGE", "EXPLANATION_OR_CAUSAL_ANIMATION", "DIFFERENT_REAL_FOOTAGE", "EXPLANATION_OR_DATA", "REAL_EVIDENCE_OR_CONSEQUENCE"],
+    "retention_arc_required": true,
+    "retention_arc": ["HIGH_IMPACT_HOOK", "STAKES", "PROBLEM", "REVEAL_1", "NEW_PROBLEM", "REVEAL_2", "REAL_PROOF", "SCIENTIFIC_PAYOFF", "FINAL_TWIST_OR_CURRENT_UPDATE", "SHORT_CTA"],
+    "pacing_rule": "The story must continuously evolve. Avoid long flat explanation blocks, repeated visual families, static exposition and narration that resolves the central question too early. Introduce a new question, risk, reveal, visual proof or consequence before attention stalls.",
+    "visual_change_guidance_seconds": [3, 5],
+    "visual_change_is_guidance_not_mechanical_cutting": true,
+    "voice": {
+      "language": "pt-BR",
+      "gender": "male",
+      "native_brazilian_portuguese_required": true,
+      "neutral_accent_required": true,
+      "marked_foreign_or_european_portuguese_accent": "FAIL",
+      "natural_pleasant_delivery_required": true,
+      "robotic_or_advertising_delivery": "FAIL",
+      "preferred_reuse": "Reuse the validated VSA Shorts voice when available; otherwise a new longform voice must pass a listening gate before publication."
+    },
+    "release_gates": ["LONGFORM_REAL_FOOTAGE_PASS", "LONGFORM_RETENTION_PASS", "VOICE_PTBR_NEUTRAL_PASS"]
+  },
   "people_biocuriosity": {
     "enabled": true,
     "content_class": "PERSON_PROFILE",
@@ -80,6 +103,9 @@
     "topic_history_gate": "PASS",
     "editorial_bucket": ["WORLD_SCIENCE", "PEOPLE_CURIOSITY"],
     "real_footage_gate_when_required": "PASS",
+    "longform_real_footage_gate_when_longform": "PASS",
+    "longform_retention_gate_when_longform": "PASS",
+    "voice_ptbr_neutral_gate_when_longform": "PASS",
     "person_visual_reference_gate_when_person_profile": "PASS",
     "person_real_video_segments_gate_when_person_profile": "PASS"
   }
