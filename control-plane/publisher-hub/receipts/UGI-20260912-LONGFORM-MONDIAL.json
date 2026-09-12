@@ -1,0 +1,106 @@
+{
+  "schema": "UGI_LONGFORM_DISTRIBUTION_RECEIPT_V1",
+  "project": "UGI — Uma Gestão Inteligente",
+  "contentId": "UGI-20260912-LONGFORM-MONDIAL",
+  "episode": "Mondial / Giovanni M. Cardoso — Histórias de Gestão",
+  "audienceDate": "2026-09-12",
+  "timezone": "America/Sao_Paulo",
+  "receiptState": "DURABLE_SCHEDULE_RECEIPT_PENDING_PLATFORM_DELIVERY_IDS",
+  "finalReceiptComplete": false,
+  "supersedes": "control-plane/publisher-hub/receipts/UGI-20260913-SUNDAY-LONGFORM-MONDIAL.json",
+  "assetEvidence": {
+    "sourceRunId": 34675311990,
+    "sourceJobId": 103504016819,
+    "sourceHeadCommit": "14d345a5f4ea7004154718cd9f3b5a52f6717096",
+    "assetCommit": "ffc5867a177813eb33d4df4cf4fa5a01515aee3a",
+    "qaState": "PASS",
+    "youtubeDurationSeconds": 829.69,
+    "linkedinDurationSeconds": 244.78,
+    "founderRealVisualCount": 4,
+    "companyRealVisualCount": 10,
+    "youtubeExactVisualReuseCount": 0,
+    "linkedinExactVisualReuseCount": 0,
+    "subtitleBurnedIn": true,
+    "factSourceCount": 9,
+    "realVisualCount": 14,
+    "youtube": {
+      "path": "public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "sha256": "3e8f57d17edd99999458782b57bfe094b8f84a4626e76d7a88d52e3d0fec8ab3",
+      "bytes": 53500693
+    },
+    "linkedin": {
+      "path": "public/ugi/editorial/2026-09-13/longform/linkedin-mondial-historias-de-gestao.mp4",
+      "sha256": "d3a2a6908c5e9c5f4e4899aaf216a7efc309472f1cb38d6e07a44eafbce38c88",
+      "bytes": 15996644
+    },
+    "thumbnail": {
+      "path": "public/ugi/editorial/2026-09-13/longform/youtube-mondial-thumbnail.jpg",
+      "sha256": "11faa5e086b9cc391b5adb47b4b818ca252f1f2c171375d819925b7b3cf2ec3f",
+      "bytes": 222977
+    }
+  },
+  "antiRepeat": {
+    "canonicalCooldownDays": 60,
+    "result": "ANTI_REPEAT_PASS",
+    "existingMetricoolScheduleBeforeInitialMutationFound": false,
+    "scheduleMovedInPlace": true,
+    "pairedCrossNetworkLongformAuthorizedByUser": true
+  },
+  "metricool": {
+    "brandId": "6935401",
+    "brandLabel": "umagestaointeligente",
+    "metricoolPrimaryRouteAttempted": true,
+    "fallbackUsed": false,
+    "fallbackReason": null,
+    "wrongChannelDetected": false,
+    "duplicateMutationRetryPerformed": false,
+    "scheduledItemsOn2026_09_12AfterMove": 2
+  },
+  "youtube": {
+    "finalAssetSha256": "3e8f57d17edd99999458782b57bfe094b8f84a4626e76d7a88d52e3d0fec8ab3",
+    "assetCommit": "ffc5867a177813eb33d4df4cf4fa5a01515aee3a",
+    "metricoolScheduleId": "374897322",
+    "metricoolUuid": "2452470850380712048",
+    "plannerUrl": "https://app.metricool.com/planner/calendar?blogId=6935401&openWithPostUuid=2452470850380712048",
+    "videoId": null,
+    "videoIdState": "NOT_YET_EXPOSED_BY_METRICOOL",
+    "channelId": "UCnDg__vBTvo3ZeRbG0D9v-A",
+    "title": "Mondial: de 1 ventilador a R$ 7 bilhões | Histórias de Gestão",
+    "scheduledAtBrt": "2026-09-12T16:00:00-03:00",
+    "scheduledAtUtc": "2026-09-12T19:00:00Z",
+    "metricoolProviderStatus": "PENDING",
+    "canonicalState": "METRICOOL_SCHEDULED_PENDING_EXTERNAL_ID",
+    "thumbnailApplied": true,
+    "visibility": "public",
+    "autoPublish": true,
+    "madeForKids": false,
+    "isAiGeneratedContentDeclared": true,
+    "readbackResult": "CONFIRMED_IN_METRICOOL_SCHEDULE_LIST_ID_374897322_PENDING"
+  },
+  "linkedin": {
+    "finalAssetSha256": "d3a2a6908c5e9c5f4e4899aaf216a7efc309472f1cb38d6e07a44eafbce38c88",
+    "assetCommit": "ffc5867a177813eb33d4df4cf4fa5a01515aee3a",
+    "metricoolScheduleId": "374897271",
+    "metricoolUuid": "-302418479823632643",
+    "plannerUrl": "https://app.metricool.com/planner/calendar?blogId=6935401&openWithPostUuid=-302418479823632643",
+    "externalPostId": null,
+    "pageUrn": "urn:li:organization:144864036",
+    "pageName": "uma-gestao-inteligente / UGI company page",
+    "scheduledAtBrt": "2026-09-12T12:00:00-03:00",
+    "scheduledAtUtc": "2026-09-12T15:00:00Z",
+    "metricoolProviderStatus": "PENDING",
+    "canonicalState": "METRICOOL_SCHEDULED_PENDING_PLATFORM_DELIVERY",
+    "autoPublish": true,
+    "readbackResult": "CONFIRMED_IN_METRICOOL_SCHEDULE_LIST_ID_374897271_PENDING"
+  },
+  "deliveryVerification": {
+    "linkedinAfter2026_09_12T12_00_BRT": "PENDING_FUTURE_READBACK",
+    "youtubeAfter2026_09_12T16_00_BRT": "PENDING_FUTURE_READBACK",
+    "requiredBeforeFinalReceiptComplete": [
+      "linkedin delivery/readback",
+      "youtube delivery/readback",
+      "youtube external Video ID",
+      "final platform statuses"
+    ]
+  }
+}
