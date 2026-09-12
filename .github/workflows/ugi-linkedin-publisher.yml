@@ -2,10 +2,8 @@ name: UGI LinkedIn Publisher
 
 on:
   workflow_dispatch:
-  # Sparse fallback windows only. Queue pushes remain immediate.
-  # The shared zero-network guard prevents any Buffer call during cooldown.
-  schedule:
-    - cron: '57 2,6,10,14,18,22 * * *'
+  # Legacy Buffer fallback: queue/config changes and manual recovery only.
+  # Metricool owns the active LinkedIn publishing route.
   push:
     branches: [main]
     paths:
