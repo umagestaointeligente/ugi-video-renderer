@@ -4,6 +4,7 @@
   "project": "ORBIT/VSA",
   "channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ",
   "channel_name": "Você Sabia Agora?",
+  "id": "PARKER_SOLAR_PROBE_THERMAL_SURVIVAL",
   "format": "LONGFORM_16_9",
   "resolution": "1280x720",
   "topic": "Como a Parker Solar Probe chega tão perto do Sol sem derreter?",
@@ -58,48 +59,69 @@
   "asset_pool": [
     {
       "id": "PARKER_PRELAUNCH_FILE",
-      "class": "REAL_MIXED_BROLL_PENDING_CLIP_AUDIT",
+      "class": "REAL_MIXED_BROLL",
       "source_page": "https://svs.gsfc.nasa.gov/13034",
       "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013034/GSFC_ParkerSolarProbe_VF.webm",
-      "credit": "NASA Goddard Space Flight Center",
-      "usage_basis": "NASA informational/editorial use policy; inspect embedded third-party material before selecting each excerpt",
-      "rights_status": "PENDING_ITEM_REVIEW"
+      "credit": "NASA's Goddard Space Flight Center",
+      "usage_basis": "NASA SVS item is credited to NASA Goddard and is not marked as third-party copyrighted; factual/editorial use with NASA acknowledgement is permitted by NASA Images and Media Usage Guidelines",
+      "rights_evidence": [
+        "https://svs.gsfc.nasa.gov/13034",
+        "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      ],
+      "rights_status": "PASS",
+      "clip_level_semantic_audit": "PENDING"
     },
     {
-      "id": "TPS_INSTALLATION",
+      "id": "TPS_2017_NASA_TIMELAPSE",
+      "class": "REAL_FOOTAGE",
+      "source_page": "https://www.nasa.gov/science-research/heliophysics/parker-solar-probe-gets-its-revolutionary-heat-shield/",
+      "source_url": "https://www.youtube.com/watch?v=PLmSU6rJUtw",
+      "credit": "NASA",
+      "usage_basis": "NASA article credits the time-lapse to NASA; official NASA Video description explicitly states this video is public domain",
+      "rights_evidence": [
+        "https://www.nasa.gov/science-research/heliophysics/parker-solar-probe-gets-its-revolutionary-heat-shield/",
+        "https://www.youtube.com/watch?v=PLmSU6rJUtw"
+      ],
+      "rights_status": "PASS",
+      "acquisition_status": "PENDING_DIRECT_FILE_ROUTE"
+    },
+    {
+      "id": "TPS_INSTALLATION_APL_2018",
       "class": "REAL_FOOTAGE",
       "source_page": "https://svs.gsfc.nasa.gov/13029",
       "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013029/ADRIESMAN1TPSInstallation.webm",
       "credit": "NASA/Johns Hopkins APL/Lee Hobson",
-      "usage_basis": "Official NASA SVS asset; individual Johns Hopkins APL credit requires item-level reuse verification",
-      "rights_status": "PENDING_ITEM_REVIEW"
+      "usage_basis": "JHU/APL media policy requires permission for reuse of images/videos; NASA hosting does not override third-party rights",
+      "rights_status": "BLOCKED_PERMISSION_REQUIRED"
     },
     {
-      "id": "SOLAR_ARRAY_TEST",
+      "id": "SOLAR_ARRAY_TEST_APL",
       "class": "REAL_FOOTAGE",
       "source_page": "https://svs.gsfc.nasa.gov/13029",
       "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013029/ADRIESMAN2SolarArrays.webm",
       "credit": "NASA/Johns Hopkins APL/Lee Hobson",
-      "usage_basis": "Official NASA SVS asset; individual Johns Hopkins APL credit requires item-level reuse verification",
-      "rights_status": "PENDING_ITEM_REVIEW"
+      "usage_basis": "JHU/APL media policy requires permission for reuse of images/videos; keep blocked unless permission or a clearer NASA-owned substitute is found",
+      "rights_status": "BLOCKED_PERMISSION_REQUIRED"
     },
     {
-      "id": "SUN_SENSOR_AUTONOMY",
+      "id": "SUN_SENSOR_AUTONOMY_APL",
       "class": "EXPLANATORY_OFFICIAL_ANIMATION",
       "source_page": "https://svs.gsfc.nasa.gov/13029",
       "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013029/ADRIESMAN3sunsensorsautonomy.webm",
       "credit": "Johns Hopkins University/APL/Steve Gribben",
-      "usage_basis": "Official NASA SVS hosted asset; Johns Hopkins APL credit requires item-level reuse verification",
-      "rights_status": "PENDING_ITEM_REVIEW"
+      "usage_basis": "JHU/APL permission required; custom causal animation package exists as substitute",
+      "rights_status": "BLOCKED_PERMISSION_REQUIRED",
+      "substitute": "custom causal animation family autonomy_attitude_correction"
     },
     {
-      "id": "PARKER_APPROACH_SUN",
+      "id": "PARKER_APPROACH_APL",
       "class": "EXPLANATORY_OFFICIAL_ANIMATION",
       "source_page": "https://svs.gsfc.nasa.gov/13029",
       "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013029/ObservingtheSun-4K.webm",
       "credit": "Johns Hopkins University/APL/Steve Gribben",
-      "usage_basis": "Official NASA SVS hosted asset; Johns Hopkins APL credit requires item-level reuse verification",
-      "rights_status": "PENDING_ITEM_REVIEW"
+      "usage_basis": "JHU/APL permission required; custom orbital/approach animation should be used instead unless permission is obtained",
+      "rights_status": "BLOCKED_PERMISSION_REQUIRED",
+      "substitute": "custom causal animation families approach and venus_gravity_assist"
     },
     {
       "id": "WISPR_CLOSEST_WITH_SUN",
@@ -107,7 +129,7 @@
       "source_page": "https://svs.gsfc.nasa.gov/14865",
       "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a014800/a014865/14865_WISPRWithSun_H264.mp4",
       "credit": "NASA/Johns Hopkins APL/Naval Research Lab",
-      "usage_basis": "Official WISPR science-data visualization; multi-institution credit requires item-level reuse verification",
+      "usage_basis": "Publicly released WISPR data is available from NRL, but this specific multi-institution NASA visualization remains pending item-level rights confirmation",
       "rights_status": "PENDING_ITEM_REVIEW"
     },
     {
@@ -116,8 +138,43 @@
       "source_page": "https://svs.gsfc.nasa.gov/14741",
       "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a014700/a014741/14741_PSP_BeaconToneReceived_YT.webm",
       "credit": "NASA/JHUAPL",
-      "usage_basis": "Official NASA SVS B-roll; item-level JHUAPL reuse verification required",
-      "rights_status": "PENDING_ITEM_REVIEW"
+      "usage_basis": "Joint JHUAPL credit; do not use until item-level permission basis is clear",
+      "rights_status": "BLOCKED_PERMISSION_REQUIRED"
+    }
+  ],
+  "music_playlist": [
+    {
+      "title": "approaching-neverland-master",
+      "artist": "John Bartmann",
+      "source_page": "https://commons.wikimedia.org/wiki/File:John_Bartmann_-_approaching-neverland-master.ogg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/aa/John_Bartmann_-_approaching-neverland-master.ogg",
+      "credit": "John Bartmann / Wikimedia Commons",
+      "usage_basis": "CC0 1.0 Universal Public Domain Dedication",
+      "rights_status": "PASS",
+      "instrumental": true,
+      "duration_seconds": 244.008979591837
+    },
+    {
+      "title": "cendence-master",
+      "artist": "John Bartmann",
+      "source_page": "https://commons.wikimedia.org/wiki/File:John_Bartmann_-_cendence-master.ogg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/6/63/John_Bartmann_-_cendence-master.ogg",
+      "credit": "John Bartmann / Wikimedia Commons",
+      "usage_basis": "CC0 1.0 Universal Public Domain Dedication",
+      "rights_status": "PASS",
+      "instrumental": true,
+      "duration_seconds": 244.008979591837
+    },
+    {
+      "title": "Nova Serenade",
+      "artist": "John Bartmann",
+      "source_page": "https://commons.wikimedia.org/wiki/File:John_Bartmann_-_Nova_Serenade.ogg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/John_Bartmann_-_Nova_Serenade.ogg",
+      "credit": "John Bartmann / Wikimedia Commons",
+      "usage_basis": "CC0 1.0 Universal Public Domain Dedication",
+      "rights_status": "PASS",
+      "instrumental": true,
+      "duration_seconds": 141.349637188209
     }
   ],
   "causal_animation_package": {
@@ -150,21 +207,21 @@
     "voice_ptbr_native_gate": "PENDING",
     "voice_neutral_accent_gate": "PENDING",
     "paulo_voice_approval_gate": "PENDING",
-    "real_footage_gate": "PENDING_ASSET_DOWNLOAD_AND_CLIP_AUDIT",
+    "real_footage_gate": "PENDING_CLIP_LEVEL_AUDIT",
     "longform_real_footage_gate": "PENDING",
     "semantic_visual_match_gate": "PENDING_FINAL_TIMELINE",
     "causal_animation_gate": "COMPONENT_READY_PENDING_MASTER_INTEGRATION",
     "no_repeated_animation_pattern_gate": "COMPONENT_READY_PENDING_MASTER_QA",
     "no_prolonged_clip_loop_gate": "ENFORCED_BY_RENDERER_PENDING_EXECUTION",
     "longform_retention_gate": "PENDING_FINAL_TIMELINE",
-    "music_composition_gate": "PENDING_TRACK_SELECTION",
-    "music_theme_match_gate": "PENDING_TRACK_SELECTION",
+    "music_composition_gate": "PLAYLIST_SELECTED_PENDING_LISTENING",
+    "music_theme_match_gate": "PENDING_LISTENING",
     "music_audibility_gate": "PENDING_AUDIO_QA",
-    "music_rights_gate": "PENDING_TRACK_RIGHTS",
-    "rights_manifest_gate": "PENDING_ITEM_REVIEW",
+    "music_rights_gate": "PASS",
+    "rights_manifest_gate": "PENDING_VISUAL_ASSETS",
     "audio_qa_gate": "PENDING_RENDER",
     "visual_qa_gate": "PENDING_RENDER",
     "paulo_final_approval_gate": "PENDING"
   },
-  "next_allowed_action": "complete voice listening gate and item-level rights review; do not render full narration, publish or schedule"
+  "next_allowed_action": "complete voice listening gate, clip-level audit of NASA-owned source file, and final visual timeline; do not render full narration, publish or schedule"
 }
