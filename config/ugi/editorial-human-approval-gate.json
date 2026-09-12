@@ -1,13 +1,13 @@
 {
-  "schema_version": "1.1",
-  "effective_at": "2026-09-12T11:30:00-03:00",
+  "schema_version": "1.2",
+  "effective_at": "2026-09-12T12:42:00-03:00",
   "project": "UGI",
   "state": "AUTONOMOUS_EXECUTION_HARD_GATED",
-  "reason": "Permanent UGI visual/editorial standard consolidated from the 2026-09-12 canonical handoff. Autonomous execution is allowed only after every hard gate passes; ambiguity remains fail-closed.",
+  "reason": "Permanent UGI visual/editorial standard reinforced on 2026-09-12. Autonomous execution is allowed only after every hard gate passes; named companies and people must be visibly and truthfully represented, and ambiguity remains fail-closed.",
   "scope": ["youtube", "linkedin", "instagram", "tiktok", "facebook"],
   "execution_policy": {
     "autonomous_execution_authorized": true,
-    "authorization_evidence": "UGI canonical handoff 2026-09-12",
+    "authorization_evidence": "UGI canonical handoff 2026-09-12 plus Paulo visual-authenticity reinforcement 2026-09-12",
     "exact_final_asset_must_be_verifiable": true,
     "blind_retry_forbidden": true,
     "ambiguous_mutation_requires_readback_before_retry_or_fallback": true,
@@ -23,13 +23,61 @@
     "zoom_only_variation_forbidden": true,
     "repeated_background_without_editorial_reason_forbidden": true,
     "real_company_person_product_event_place_or_operation_preferred_when_available_and_usable": true,
-    "fallback_when_real_visual_unavailable": "UGI original infographic/map/chart/composition with no false implication of being a real photograph",
+    "fallback_when_real_visual_unavailable": "For a named entity, fail closed or change the topic rather than substituting generic stock as if it represented the entity. For a genuinely generic subject, an original UGI infographic/map/chart/contextual composition or generated contextual illustration is allowed if it is not presented as documentary evidence.",
     "youtubeExactVisualReuseCount": 0,
     "linkedinExactVisualReuseCount": 0
+  },
+  "named_entity_visual_authenticity": {
+    "enabled": true,
+    "named_company_static_or_carousel": {
+      "requires_recognizable_real_entity_visual": true,
+      "acceptable_examples": [
+        "company headquarters or facility with identifiable signage/logo",
+        "company factory, store, operation or production line",
+        "real company product with identifiable branding",
+        "real executive/founder when the person is materially part of the story"
+      ],
+      "generic_stock_as_primary_visual_forbidden": true,
+      "text_only_or_empty_card_as_primary_visual_forbidden": true
+    },
+    "named_person_static_or_carousel": {
+      "requires_real_person_visual_when_legally_editorially_usable": true,
+      "wrong_person_or_lookalike_forbidden": true,
+      "synthetic_person_presented_as_real_forbidden": true
+    },
+    "named_company_or_person_video": {
+      "requires_real_entity_footage_or_real_entity_visuals_inside_video": true,
+      "requires_entity_visuals_at_the_relevant_narration_beats": true,
+      "generic_stock_cannot_replace_named_entity": true,
+      "logo_or_identity_should_be_visible_when_contextually_available": true,
+      "factory_or_operation_story_requires_real_factory_operation_or_production_visuals_when_available": true,
+      "person_story_requires_real_person_visuals_when_available": true,
+      "scene_to_speech_match_required": true
+    },
+    "generic_subject_rule": {
+      "applies_only_when_no_specific_company_or_person_is_the_subject": true,
+      "generated_contextual_visual_allowed": true,
+      "examples": [
+        "oil market: oil field/refinery/barrels plus market or exchange context",
+        "macroeconomy: original UGI charts, market screens, city/industry context",
+        "generic supply chain: logistics/port/factory context without falsely implying a named company"
+      ],
+      "generated_visual_must_not_be_presented_as_real_news_or_documentary_evidence": true
+    },
+    "insufficient_entity_visual_evidence_action": "FAIL_CLOSED_DO_NOT_PUBLISH"
+  },
+  "closed_caption_layout": {
+    "enabled": true,
+    "caption_must_not_obscure_primary_visual": true,
+    "preferred_layout": "slightly_reduce_primary_video_window_and_reserve_dedicated_lower_caption_band",
+    "max_lines": 2,
+    "caption_inside_critical_subject_area_forbidden": true,
+    "safe_area_pass_required": true
   },
   "mandatory_gates_before_publisher_mutation": [
     "EDITORIAL_VALUE_PASS",
     "VISUAL_SEMANTIC_PASS",
+    "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS",
     "REAL_CONTEXTUAL_VISUAL_PRIMARY_PASS",
     "VISUAL_VARIETY_PASS",
     "EXACT_VISUAL_REUSE_ZERO_PASS",
@@ -38,6 +86,7 @@
     "FORMAT_PASS",
     "MEDIA_QUALITY_PASS",
     "CLOSED_CAPTION_PASS_FOR_VIDEO",
+    "CLOSED_CAPTION_SAFE_AREA_PASS",
     "MUSIC_FIT_PASS",
     "NARRATION_QUALITY_PASS",
     "NO_STRETCH_PASS",
@@ -57,6 +106,7 @@
   },
   "notes": [
     "Technical QA alone is never sufficient for publication.",
+    "If the story names Nvidia, Mondial, Oracle, Zara, Tata, Kroger, ASML or any other identifiable company/person, the audience must be shown truthful, recognizable visuals of that actual entity whenever usable material exists.",
     "Cards, arrows, charts and motion graphics are supporting devices, not the dominant visual when suitable real/contextual material exists.",
     "No image or video may be treated as approved merely because a script, prompt or storyboard exists; the exact final asset and QA evidence must exist.",
     "A failed hard gate blocks publication; do not lower editorial quality to fill a slot.",
