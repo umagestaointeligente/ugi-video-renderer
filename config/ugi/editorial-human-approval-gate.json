@@ -1,46 +1,66 @@
 {
-  "schema_version": "1.0",
-  "effective_at": "2026-09-07T14:06:00-03:00",
+  "schema_version": "1.1",
+  "effective_at": "2026-09-12T11:30:00-03:00",
   "project": "UGI",
-  "state": "HUMAN_APPROVAL_REQUIRED",
-  "reason": "Temporary mandatory approval gate while the UGI visual/editorial standard is recalibrated after the 2026-09-07 quality incident.",
-  "scope": ["linkedin", "instagram", "tiktok"],
-  "approval_policy": {
-    "required_before_buffer_mutation": true,
-    "approver": "Paulo Oliveira",
-    "approval_channel": "current ChatGPT conversation",
-    "image": {
-      "preview_required": true,
-      "preview_type": "final_asset_preview",
-      "must_show_exact_final_file": true
-    },
-    "video": {
-      "preview_required": true,
-      "preview_type": "review_link_or_final_preview",
-      "closed_caption_visible_in_preview": true,
-      "must_show_exact_final_file": true
-    },
-    "approval_record": {
-      "required_value": "APPROVED",
-      "explicit_user_approval_required": true,
-      "approval_evidence_required": true
-    }
+  "state": "AUTONOMOUS_EXECUTION_HARD_GATED",
+  "reason": "Permanent UGI visual/editorial standard consolidated from the 2026-09-12 canonical handoff. Autonomous execution is allowed only after every hard gate passes; ambiguity remains fail-closed.",
+  "scope": ["youtube", "linkedin", "instagram", "tiktok", "facebook"],
+  "execution_policy": {
+    "autonomous_execution_authorized": true,
+    "authorization_evidence": "UGI canonical handoff 2026-09-12",
+    "exact_final_asset_must_be_verifiable": true,
+    "blind_retry_forbidden": true,
+    "ambiguous_mutation_requires_readback_before_retry_or_fallback": true,
+    "one_mutation_per_publication": true,
+    "wrong_channel_is_hard_block": true,
+    "fail_closed": true
   },
-  "mandatory_gates_before_approval": [
+  "visual_policy": {
+    "real_or_contextual_visual_is_default": true,
+    "generic_or_abstract_visual_may_support_but_not_dominate_when_real_context_exists": true,
+    "narration_beat_requires_corresponding_visual": true,
+    "same_photo_repeated_across_scenes_forbidden": true,
+    "zoom_only_variation_forbidden": true,
+    "repeated_background_without_editorial_reason_forbidden": true,
+    "real_company_person_product_event_place_or_operation_preferred_when_available_and_usable": true,
+    "fallback_when_real_visual_unavailable": "UGI original infographic/map/chart/composition with no false implication of being a real photograph",
+    "youtubeExactVisualReuseCount": 0,
+    "linkedinExactVisualReuseCount": 0
+  },
+  "mandatory_gates_before_publisher_mutation": [
     "EDITORIAL_VALUE_PASS",
     "VISUAL_SEMANTIC_PASS",
+    "REAL_CONTEXTUAL_VISUAL_PRIMARY_PASS",
+    "VISUAL_VARIETY_PASS",
+    "EXACT_VISUAL_REUSE_ZERO_PASS",
+    "ASSET_PROVENANCE_PASS",
+    "RIGHTS_LICENSE_PASS",
     "FORMAT_PASS",
     "MEDIA_QUALITY_PASS",
     "CLOSED_CAPTION_PASS_FOR_VIDEO",
+    "MUSIC_FIT_PASS",
+    "NARRATION_QUALITY_PASS",
     "NO_STRETCH_PASS",
     "NO_BAD_ZOOM_PASS",
-    "SAFE_AREA_PASS"
+    "SAFE_AREA_PASS",
+    "ANTI_REPEAT_60D_PASS",
+    "CHANNEL_IDENTITY_PASS",
+    "EXISTING_SCHEDULE_READBACK_PASS"
   ],
-  "fail_closed": true,
+  "publisher_policy": {
+    "primary": "metricool",
+    "fallback": "certified_native_direct_route_only",
+    "fallback_requires": "proven_capability_gap_or_hard_error",
+    "ambiguous_primary_result_allows_fallback": false,
+    "post_mutation_readback_required": true,
+    "metricool_brand_identity_must_be_validated_before_mutation": true
+  },
   "notes": [
-    "No image may be scheduled from a description alone; the exact final asset must be previewed.",
-    "No video may be scheduled from a script or storyboard alone; the final render must be reviewable before scheduling.",
-    "Scheduling receipt is not editorial approval.",
-    "This gate remains active until explicitly retired after the UGI standard is stable again."
+    "Technical QA alone is never sufficient for publication.",
+    "Cards, arrows, charts and motion graphics are supporting devices, not the dominant visual when suitable real/contextual material exists.",
+    "No image or video may be treated as approved merely because a script, prompt or storyboard exists; the exact final asset and QA evidence must exist.",
+    "A failed hard gate blocks publication; do not lower editorial quality to fill a slot.",
+    "Never publish UGI content to Paulo Oliveira's personal LinkedIn profile.",
+    "Scheduling evidence and platform delivery evidence are separate states."
   ]
 }
