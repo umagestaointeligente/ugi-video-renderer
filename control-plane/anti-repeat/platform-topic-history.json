@@ -2,7 +2,7 @@
   "project": "UGI",
   "component": "PLATFORM_TOPIC_HISTORY",
   "schemaVersion": "1.0",
-  "updatedAt": "2026-09-12T06:56:07.986427+00:00",
+  "updatedAt": "2026-09-12T10:53:08.612524+00:00",
   "cooldownDays": 15,
   "scope": "PER_PLATFORM",
   "status": "SEEDED_BACKFILL_IN_PROGRESS",
@@ -16,7 +16,7 @@
     "complete": false,
     "reason": "Registry introduced on 2026-09-02. Older durable receipts/manifests must be progressively backfilled. Current editorial selection must also reconcile publisher receipts, manifests and commands before lock.",
     "failClosedOnCredibleMissingHistoryRisk": true,
-    "lastReceiptSyncAt": "2026-09-12T06:56:07.986427+00:00",
+    "lastReceiptSyncAt": "2026-09-12T10:53:08.612524+00:00",
     "receiptSyncActive": true
   },
   "unresolvedRisks": [
