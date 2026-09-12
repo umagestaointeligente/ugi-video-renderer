@@ -2,9 +2,9 @@
 """Fail-closed 16:9 longform compositor for ORBIT/VSA.
 
 This renderer is intentionally isolated from the Shorts renderer. It consumes a
-fully approved narration track, captions, music and an explicit visual timeline.
-It never generates speech and never publishes/schedules. Missing approval or
-rights evidence stops before any render work begins.
+fully approved narration track, captions, a rights-safe instrumental playlist
+and an explicit visual timeline. It never generates speech and never
+publishes/schedules. Missing approval or rights evidence stops before render.
 """
 from __future__ import annotations
 
@@ -14,7 +14,6 @@ import json
 import pathlib
 import subprocess
 import urllib.request
-from collections import Counter
 
 W, H, FPS = 1280, 720, 30
 CHANNEL_ID = "UCm0UMO6lNWlr66YSIS1p4iQ"
@@ -22,6 +21,7 @@ MIN_DURATION = 8 * 60
 MAX_DURATION = 12 * 60
 MAX_VISUAL_SECONDS = 8.0
 MAX_CONSECUTIVE_SAME_CLASS = 2
+MIN_MUSIC_TRACKS = 2
 
 class GateError(RuntimeError):
     pass
@@ -45,7 +45,7 @@ def sha256(path: pathlib.Path) -> str:
     return h.hexdigest()
 
 def download(url: str, out: pathlib.Path):
-    req = urllib.request.Request(url, headers={"User-Agent": "Orbit-VSA-Longform/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Orbit-VSA-Longform/1.1"})
     with urllib.request.urlopen(req, timeout=240) as r, out.open("wb") as f:
         while True:
             chunk = r.read(1024 * 1024)
@@ -117,7 +117,6 @@ def validate_job(job: dict):
     real_moments = set()
     classes = []
     animation_families = []
-    source_counts = Counter()
 
     for idx, seg in enumerate(timeline):
         cls = str(seg.get("class") or "").upper()
@@ -129,25 +128,23 @@ def validate_job(job: dict):
             raise GateError(f"VISUAL_DURATION_FAIL:{idx}:{dur}")
         total += dur
 
-        if cls in {"REAL", "ANIMATION", "DATA", "CTA"}:
-            validate_rights(seg, f"timeline[{idx}]")
-            start = float(seg.get("start") or 0)
-            key = (seg["source_url"], round(start, 3), round(dur, 3))
-            if key in seen_moments:
-                raise GateError(f"REPEATED_SOURCE_MOMENT:{idx}")
-            seen_moments.add(key)
-            source_counts[seg["source_url"]] += 1
-            if idx and timeline[idx - 1].get("source_url") == seg.get("source_url"):
-                raise GateError(f"ADJACENT_SOURCE_REPEAT:{idx}")
-            if cls == "REAL":
-                real_moments.add(key)
-            if cls == "ANIMATION":
-                family = str(seg.get("animation_family") or "").strip()
-                if not family:
-                    raise GateError(f"ANIMATION_FAMILY_MISSING:{idx}")
-                if family in animation_families[-2:]:
-                    raise GateError(f"REPEATED_ANIMATION_PATTERN:{idx}:{family}")
-                animation_families.append(family)
+        validate_rights(seg, f"timeline[{idx}]")
+        start = float(seg.get("start") or 0)
+        key = (seg["source_url"], round(start, 3), round(dur, 3))
+        if key in seen_moments:
+            raise GateError(f"REPEATED_SOURCE_MOMENT:{idx}")
+        seen_moments.add(key)
+        if idx and timeline[idx - 1].get("source_url") == seg.get("source_url"):
+            raise GateError(f"ADJACENT_SOURCE_REPEAT:{idx}")
+        if cls == "REAL":
+            real_moments.add(key)
+        if cls == "ANIMATION":
+            family = str(seg.get("animation_family") or "").strip()
+            if not family:
+                raise GateError(f"ANIMATION_FAMILY_MISSING:{idx}")
+            if family in animation_families[-2:]:
+                raise GateError(f"REPEATED_ANIMATION_PATTERN:{idx}:{family}")
+            animation_families.append(family)
 
     if not (MIN_DURATION <= total <= MAX_DURATION):
         raise GateError(f"TIMELINE_DURATION_FAIL:{total:.3f}")
@@ -163,12 +160,24 @@ def validate_job(job: dict):
         if classes[i] != "CTA" and streak > MAX_CONSECUTIVE_SAME_CLASS:
             raise GateError(f"VISUAL_CLASS_STREAK_FAIL:{i}:{classes[i]}:{streak}")
 
-    music = job.get("music") or {}
-    validate_rights(music, "music")
-    if music.get("instrumental") is not True:
-        raise GateError("MUSIC_NOT_INSTRUMENTAL")
+    playlist = job.get("music_playlist") or []
+    if len(playlist) < MIN_MUSIC_TRACKS:
+        raise GateError(f"MUSIC_PLAYLIST_TOO_SHORT:{len(playlist)}")
+    seen_music = set()
+    for idx, music in enumerate(playlist):
+        validate_rights(music, f"music_playlist[{idx}]")
+        if music.get("instrumental") is not True:
+            raise GateError(f"MUSIC_NOT_INSTRUMENTAL:{idx}")
+        if music["source_url"] in seen_music:
+            raise GateError(f"MUSIC_TRACK_REPEAT:{idx}")
+        seen_music.add(music["source_url"])
 
-    return {"timeline_seconds": total, "real_seconds": real_seconds, "real_moments": len(real_moments)}
+    return {
+        "timeline_seconds": total,
+        "real_seconds": real_seconds,
+        "real_moments": len(real_moments),
+        "music_tracks": len(playlist),
+    }
 
 def resolve_asset(source_url: str, cache: pathlib.Path) -> pathlib.Path:
     digest = hashlib.sha256(source_url.encode("utf-8")).hexdigest()[:16]
@@ -188,6 +197,38 @@ def render_segment(seg: dict, cache: pathlib.Path, out: pathlib.Path):
         "-t", f"{dur:.3f}", "-an", "-vf", vf,
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p", str(out)
     ])
+
+def build_music_bed(job: dict, cache: pathlib.Path, outdir: pathlib.Path, needed_seconds: float) -> pathlib.Path:
+    parts = []
+    total = 0.0
+    for idx, item in enumerate(job["music_playlist"]):
+        src = resolve_asset(item["source_url"], cache)
+        dur = probe(src)
+        if dur <= 2.0:
+            raise GateError(f"MUSIC_TRACK_TOO_SHORT:{idx}:{dur:.3f}")
+        total += dur
+        standardized = outdir / f"music_{idx:02d}.wav"
+        fade = min(0.75, dur / 4.0)
+        fade_out = max(0.0, dur - fade)
+        af = (
+            "aresample=48000,aformat=sample_fmts=s16:channel_layouts=stereo,"
+            f"afade=t=in:st=0:d={fade:.3f},afade=t=out:st={fade_out:.3f}:d={fade:.3f}"
+        )
+        run([
+            "ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-vn", "-af", af,
+            "-c:a", "pcm_s16le", standardized.as_posix()
+        ])
+        parts.append(standardized)
+    if total + 0.05 < needed_seconds:
+        raise GateError(f"MUSIC_PLAYLIST_DURATION_FAIL:{total:.3f}:{needed_seconds:.3f}")
+    concat = outdir / "music_concat.txt"
+    concat.write_text("\n".join(f"file '{p}'" for p in parts) + "\n", encoding="utf-8")
+    bed = outdir / "music_bed.wav"
+    run([
+        "ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(concat),
+        "-t", f"{needed_seconds:.3f}", "-c:a", "pcm_s16le", str(bed)
+    ])
+    return bed
 
 def render(job_path: pathlib.Path, narration: pathlib.Path, captions: pathlib.Path, outdir: pathlib.Path):
     job = load_json(job_path)
@@ -215,8 +256,7 @@ def render(job_path: pathlib.Path, narration: pathlib.Path, captions: pathlib.Pa
     body = outdir / "body.mp4"
     run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(concat), "-c", "copy", str(body)])
 
-    music_url = job["music"]["source_url"]
-    music = resolve_asset(music_url, cache)
+    music_bed = build_music_bed(job, cache, outdir, narration_seconds)
     final = outdir / f"VSA_{job['id']}_LONGFORM_V4_MASTER.mp4"
     fc = (
         f"[0:v]subtitles='{captions}':force_style='FontName=DejaVu Sans,FontSize=24,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=2,Alignment=2,MarginV=34'[v];"
@@ -225,7 +265,7 @@ def render(job_path: pathlib.Path, narration: pathlib.Path, captions: pathlib.Pa
     )
     run([
         "ffmpeg", "-y", "-loglevel", "error", "-i", str(body),
-        "-i", str(narration), "-stream_loop", "-1", "-i", str(music),
+        "-i", str(narration), "-i", str(music_bed),
         "-filter_complex", fc, "-map", "[v]", "-map", "[a]", "-t", f"{narration_seconds:.3f}",
         "-r", str(FPS), "-c:v", "libx264", "-profile:v", "high", "-preset", "veryfast", "-crf", "19",
         "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(final)
@@ -236,7 +276,7 @@ def render(job_path: pathlib.Path, narration: pathlib.Path, captions: pathlib.Pa
         "project": job["project"],
         "channel_id": job["channel_id"],
         "id": job["id"],
-        "renderer": "vsa_longform_renderer_v1",
+        "renderer": "vsa_longform_renderer_v1_1",
         "resolution": f"{W}x{H}",
         "fps": FPS,
         "duration": probe(final),
@@ -244,6 +284,8 @@ def render(job_path: pathlib.Path, narration: pathlib.Path, captions: pathlib.Pa
         "timeline_segments": len(job["timeline"]),
         "distinct_real_moments": stats["real_moments"],
         "real_footage_seconds": stats["real_seconds"],
+        "music_tracks": stats["music_tracks"],
+        "music_looping": False,
         "publication": False,
         "schedule": False,
         "paulo_final_approval_gate": "PENDING",
@@ -251,7 +293,6 @@ def render(job_path: pathlib.Path, narration: pathlib.Path, captions: pathlib.Pa
     }
     (outdir / f"{job['id']}_render_receipt.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(receipt, ensure_ascii=False, indent=2))
-
 
 def main():
     ap = argparse.ArgumentParser()
