@@ -44,8 +44,8 @@ def main() -> int:
         "INSTAGRAM_RULES_ACTIVE": {"reel", "carousel", "static"}.issubset(set(runtime.get("INSTAGRAM", {}).get("formats", []))),
         "YOUTUBE_RULES_ACTIVE": runtime.get("YOUTUBE", {}).get("micro_winner_strategy") == "descendants_not_copies",
         "DISTRIBUTION_STATE_ACTIVE": isinstance(runtime.get("DISTRIBUTION_STATE_SHA256"), str) and len(runtime.get("DISTRIBUTION_STATE_SHA256", "")) == 64,
-        "BUFFER_PROVIDER_LOCK": runtime.get("DISTRIBUTION_STATE", {}).get("buffer", {}).get("publisher") == "buffer",
-        "YOUTUBE_PAUSED": "youtube" in set(runtime.get("EFFECTIVE_PAUSED_PLATFORMS", [])),
+        "PRIMARY_PROVIDER_LOCK": runtime.get("PRIMARY_PUBLISHER") == "metricool",
+        "YOUTUBE_LONGFORM_ACTIVE": "youtube" in set(runtime.get("EFFECTIVE_ACTIVE_PLATFORMS", [])),
         "PUBLICATION_NOT_TRIGGERED": True,
         "PAYMENT_NOT_TRIGGERED": True,
     }

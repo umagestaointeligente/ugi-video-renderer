@@ -17,10 +17,15 @@ class GrowthPolicyIncidentRegressionTest(unittest.TestCase):
 
     def test_operational_state_is_canonical_for_active_platforms(self) -> None:
         runtime = ugi_growth_runtime.load_runtime_policy()
-        state = runtime["DISTRIBUTION_STATE"]["buffer"]
-        self.assertEqual(runtime["EFFECTIVE_ACTIVE_PLATFORMS"], state["active_platforms"])
-        self.assertIn("youtube", runtime["EFFECTIVE_PAUSED_PLATFORMS"])
-        self.assertEqual(state["publisher"], "buffer")
+        state = runtime["DISTRIBUTION_STATE"]
+        self.assertEqual(runtime["EFFECTIVE_ACTIVE_PLATFORMS"], state["distribution_priority"])
+        self.assertEqual(runtime["EFFECTIVE_PAUSED_PLATFORMS"], [])
+        self.assertEqual(runtime["PRIMARY_PUBLISHER"], "metricool")
+        self.assertEqual(state["buffer"]["publisher"], "buffer_legacy")
+        self.assertEqual(
+            state["metricool"]["networks"]["youtube"],
+            state["channels"]["youtube"]["channel_id"],
+        )
 
     def test_terminal_delivery_classification_stays_evidence_based(self) -> None:
         now = dt.datetime.now(dt.timezone.utc)

@@ -72,24 +72,32 @@ def load_distribution_state(policy: dict) -> tuple[dict, str, str]:
         raise GrowthPolicyError(f"DISTRIBUTION_STATE_INVALID_JSON:{exc}") from exc
     if not isinstance(state, dict) or state.get("project") != "UGI":
         raise GrowthPolicyError("DISTRIBUTION_STATE_INVALID_PROJECT")
+    routing = state.get("publisher_routing", {})
+    metricool = state.get("metricool", {})
     buffer = state.get("buffer", {})
     active = buffer.get("active_platforms")
     paused = buffer.get("paused_platforms")
-    if buffer.get("publisher") != "buffer":
-        raise GrowthPolicyError("DISTRIBUTION_STATE_BUFFER_PROVIDER_LOCK")
+    if routing.get("primary") != "metricool" or metricool.get("status") != "ACTIVE_PRIMARY":
+        raise GrowthPolicyError("DISTRIBUTION_STATE_PRIMARY_PROVIDER_LOCK")
+    if buffer.get("publisher") != "buffer_legacy":
+        raise GrowthPolicyError("DISTRIBUTION_STATE_LEGACY_BUFFER_LOCK")
     if not isinstance(active, list) or not isinstance(paused, list):
         raise GrowthPolicyError("DISTRIBUTION_STATE_PLATFORM_LISTS_REQUIRED")
     active_set = {str(item).lower() for item in active}
     paused_set = {str(item).lower() for item in paused}
     allowed = {"linkedin", "instagram", "tiktok", "youtube"}
-    if not active_set or not active_set <= allowed or not paused_set <= allowed:
+    if not active_set <= allowed or not paused_set <= allowed:
         raise GrowthPolicyError("DISTRIBUTION_STATE_INVALID_PLATFORMS")
     if active_set & paused_set:
         raise GrowthPolicyError("DISTRIBUTION_STATE_ACTIVE_PAUSED_CONFLICT")
     if int(buffer.get("active_channel_count", -1)) != len(active_set):
         raise GrowthPolicyError("DISTRIBUTION_STATE_ACTIVE_COUNT_MISMATCH")
-    if "youtube" not in paused_set or buffer.get("youtube_buffer_status") != "PAUSED":
-        raise GrowthPolicyError("DISTRIBUTION_STATE_YOUTUBE_PAUSE_LOCK")
+    metricool_networks = metricool.get("networks", {})
+    if not isinstance(metricool_networks, dict) or set(metricool_networks) != allowed:
+        raise GrowthPolicyError("DISTRIBUTION_STATE_METRICOOL_NETWORKS_REQUIRED")
+    youtube = state.get("channels", {}).get("youtube", {})
+    if youtube.get("metricool_status") != "ACTIVE_LONGFORM_WEEKLY_HARD_GATED":
+        raise GrowthPolicyError("DISTRIBUTION_STATE_YOUTUBE_METRICOOL_LOCK")
     return state, hashlib.sha256(raw).hexdigest(), ref
 
 
@@ -113,8 +121,9 @@ def expose_runtime_policy(
         "DISTRIBUTION_STATE_SOURCE": distribution_state_source,
         "DISTRIBUTION_STATE_SHA256": distribution_state_sha256,
         "DISTRIBUTION_STATE": distribution_state,
-        "EFFECTIVE_ACTIVE_PLATFORMS": distribution_state["buffer"]["active_platforms"],
-        "EFFECTIVE_PAUSED_PLATFORMS": distribution_state["buffer"]["paused_platforms"],
+        "PRIMARY_PUBLISHER": distribution_state["publisher_routing"]["primary"],
+        "EFFECTIVE_ACTIVE_PLATFORMS": distribution_state["distribution_priority"],
+        "EFFECTIVE_PAUSED_PLATFORMS": [],
         "NORTH_STAR_VIEWS": policy["north_star"]["organic_views_per_content_platform"],
         "DISTRIBUTION_LADDER": policy["north_star"]["distribution_ladder"],
         "OPTIMIZATION_PRIORITY": policy["optimization_priority"],
@@ -154,8 +163,8 @@ def validate_runtime_contract(runtime: dict) -> None:
         "YOUTUBE_RULES": runtime.get("YOUTUBE", {}).get("micro_winner_strategy") == "descendants_not_copies",
         "DISTRIBUTION_STATE_ACTIVE": isinstance(runtime.get("DISTRIBUTION_STATE_SHA256"), str)
             and len(runtime.get("DISTRIBUTION_STATE_SHA256", "")) == 64,
-        "BUFFER_PROVIDER_LOCK": runtime.get("DISTRIBUTION_STATE", {}).get("buffer", {}).get("publisher") == "buffer",
-        "YOUTUBE_PAUSED": "youtube" in set(runtime.get("EFFECTIVE_PAUSED_PLATFORMS", [])),
+        "PRIMARY_PROVIDER_LOCK": runtime.get("PRIMARY_PUBLISHER") == "metricool",
+        "YOUTUBE_LONGFORM_ACTIVE": "youtube" in set(runtime.get("EFFECTIVE_ACTIVE_PLATFORMS", [])),
     }
     failures = [name for name, passed in checks.items() if not passed]
     if failures:

@@ -47,6 +47,8 @@ def parse_time(value: Any) -> dt.datetime | None:
 def validate_distribution() -> bool:
     state = load(DISTRIBUTION)
     buffer = state.get("buffer") or {}
+    routing = state.get("publisher_routing") or {}
+    metricool = state.get("metricool") or {}
     active = {str(x).lower() for x in (buffer.get("active_platforms") or [])}
     paused = {str(x).lower() for x in (buffer.get("paused_platforms") or [])}
     li = (state.get("channels") or {}).get("linkedin") or {}
@@ -59,6 +61,25 @@ def validate_distribution() -> bool:
 
     if "linkedin" in active and status == "ACTIVE":
         return True
+
+    # Metricool owns new LinkedIn mutations. This legacy Buffer adapter must
+    # become a successful zero-call no-op when the canonical route is active.
+    if (
+        routing.get("primary") == "metricool"
+        and metricool.get("status") == "ACTIVE_PRIMARY"
+        and (metricool.get("networks") or {}).get("linkedin") == li.get("metricool_page_urn")
+        and buffer.get("publisher") == "buffer_legacy"
+        and "linkedin" not in active
+        and "linkedin" in paused
+        and status == "ACTIVE_METRICOOL_APPROVED_ASSETS_ONLY"
+    ):
+        print(json.dumps({
+            "state": "SKIPPED_BY_METRICOOL_PRIMARY_ROUTE",
+            "platform": "linkedin",
+            "distributionStatus": status,
+            "bufferCalls": 0,
+        }, ensure_ascii=False))
+        return False
 
     # An explicit, internally consistent policy pause is an expected no-op.
     # It must not consume Buffer budget or create a failed scheduled run.
