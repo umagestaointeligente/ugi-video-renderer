@@ -31,8 +31,13 @@ jobs:
           python-version: '3.11'
 
       - name: Install minimal renderer dependencies
+        shell: bash
         run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
           python -m pip install --disable-pip-version-check pillow requests edge-tts
+          command -v ffmpeg
           ffmpeg -version | head -1
           python -m py_compile scripts/ugi_build_editorial_assets_20260913.py scripts/ugi_build_editorial_assets_20260913_runner.py
 
