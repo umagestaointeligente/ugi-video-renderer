@@ -1,13 +1,13 @@
 {
-  "schema_version": "1.2",
-  "effective_at": "2026-09-12T12:42:00-03:00",
+  "schema_version": "1.3",
+  "effective_at": "2026-09-12T15:16:00-03:00",
   "project": "UGI",
   "state": "AUTONOMOUS_EXECUTION_HARD_GATED",
-  "reason": "Permanent UGI visual/editorial standard reinforced on 2026-09-12. Autonomous execution is allowed only after every hard gate passes; named companies and people must be visibly and truthfully represented, and ambiguity remains fail-closed.",
+  "reason": "Permanent UGI visual/editorial standard reinforced on 2026-09-12. Autonomous execution is allowed only after every hard gate passes; named companies and people must be visibly and truthfully represented, captions must never cover the primary visual, and ambiguity remains fail-closed.",
   "scope": ["youtube", "linkedin", "instagram", "tiktok", "facebook"],
   "execution_policy": {
     "autonomous_execution_authorized": true,
-    "authorization_evidence": "UGI canonical handoff 2026-09-12 plus Paulo visual-authenticity reinforcement 2026-09-12",
+    "authorization_evidence": "UGI canonical handoff 2026-09-12 plus Paulo visual-authenticity and closed-caption reinforcement 2026-09-12",
     "exact_final_asset_must_be_verifiable": true,
     "blind_retry_forbidden": true,
     "ambiguous_mutation_requires_readback_before_retry_or_fallback": true,
@@ -72,7 +72,13 @@
     "preferred_layout": "slightly_reduce_primary_video_window_and_reserve_dedicated_lower_caption_band",
     "max_lines": 2,
     "caption_inside_critical_subject_area_forbidden": true,
-    "safe_area_pass_required": true
+    "caption_over_primary_visual_forbidden": true,
+    "caption_chunks_required": true,
+    "caption_chunk_must_change_with_narration": true,
+    "full_scene_transcript_as_single_static_block_forbidden": true,
+    "oversized_caption_font_forbidden": true,
+    "safe_area_pass_required": true,
+    "applies_to": ["instagram_reel", "tiktok_video", "linkedin_video", "youtube_short", "youtube_longform", "facebook_reel", "facebook_video"]
   },
   "mandatory_gates_before_publisher_mutation": [
     "EDITORIAL_VALUE_PASS",
@@ -87,6 +93,9 @@
     "MEDIA_QUALITY_PASS",
     "CLOSED_CAPTION_PASS_FOR_VIDEO",
     "CLOSED_CAPTION_SAFE_AREA_PASS",
+    "CLOSED_CAPTION_MAX_TWO_LINES_PASS",
+    "CLOSED_CAPTION_CHUNKED_SYNC_PASS",
+    "CLOSED_CAPTION_NOT_OVER_PRIMARY_VISUAL_PASS",
     "MUSIC_FIT_PASS",
     "NARRATION_QUALITY_PASS",
     "NO_STRETCH_PASS",
@@ -110,6 +119,7 @@
     "Cards, arrows, charts and motion graphics are supporting devices, not the dominant visual when suitable real/contextual material exists.",
     "No image or video may be treated as approved merely because a script, prompt or storyboard exists; the exact final asset and QA evidence must exist.",
     "A failed hard gate blocks publication; do not lower editorial quality to fill a slot.",
+    "Closed captions must appear in a dedicated lower band, in changing synchronized chunks of at most two lines, and may never reproduce the screenshot failure mode of a large transcript block over the primary visual.",
     "Never publish UGI content to Paulo Oliveira's personal LinkedIn profile.",
     "Scheduling evidence and platform delivery evidence are separate states."
   ]
