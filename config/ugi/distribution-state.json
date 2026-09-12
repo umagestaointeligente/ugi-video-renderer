@@ -1,68 +1,110 @@
 {
-  "schema_version": "1.0",
-  "effective_at": "2026-09-07T23:47:00-03:00",
-  "policy_overlay_effective_at": "2026-09-09T21:05:00-03:00",
+  "schema_version": "1.1",
+  "effective_at": "2026-09-12T11:30:00-03:00",
+  "policy_overlay_effective_at": "2026-09-12T11:30:00-03:00",
   "project": "UGI",
-  "state": "EDITORIAL_QA_PARTIAL_RELEASE",
+  "state": "METRICOOL_PRIMARY_HARD_GATED_DISTRIBUTION",
+  "publisher_routing": {
+    "primary": "metricool",
+    "metricool_brand_id": "6935401",
+    "metricool_brand_label": "umagestaointeligente",
+    "timezone": "America/Sao_Paulo",
+    "fallback": "certified_native_direct_route_only",
+    "fallback_condition": "PROVEN_CAPABILITY_GAP_OR_HARD_ERROR_ONLY",
+    "ambiguous_result_policy": "READBACK_BEFORE_ANY_RETRY_OR_FALLBACK",
+    "duplicate_mutation_policy": "FORBIDDEN",
+    "fail_closed": true
+  },
+  "metricool": {
+    "status": "ACTIVE_PRIMARY",
+    "validated_at": "2026-09-12",
+    "networks": {
+      "instagram": "umagestaointeligente",
+      "linkedin": "urn:li:organization:144864036",
+      "tiktok": "umagestaointelige",
+      "youtube": "UCnDg__vBTvo3ZeRbG0D9v-A"
+    },
+    "wrong_youtube_channel_guard": {
+      "allowed": "UCnDg__vBTvo3ZeRbG0D9v-A",
+      "explicitly_not_ugi": ["UCm0UMO6lNWlr66YSIS1p4iQ", "UCq1h6RSnev5-JJQ8k4T98tg"]
+    }
+  },
   "buffer": {
+    "status": "LEGACY_REFERENCE_ONLY",
     "active_channel_count": 1,
     "active_platforms": ["instagram"],
     "paused_platforms": ["linkedin", "tiktok", "youtube"],
-    "publisher": "buffer",
+    "publisher": "buffer_legacy",
     "youtube_buffer_status": "PAUSED",
-    "youtube_strategy": "PRESERVED_FOR_FUTURE_REEVALUATION",
-    "emergency_freeze_reason": "Partial release only for exact Instagram assets already approved by Paulo for 2026-09-08. LinkedIn and TikTok remain blocked until the replacement SEMICON final assets are explicitly approved."
+    "youtube_strategy": "SUPERSEDED_FOR_NEW_UGI_MUTATIONS_BY_METRICOOL_PRIMARY",
+    "emergency_freeze_reason": "Historical Buffer state preserved for evidence and legacy receipts. New UGI mutations use Metricool first under the 2026-09-12 canonical handoff."
   },
   "channels": {
     "linkedin": {
-      "status": "PAUSED_EDITORIAL_QA",
+      "status": "ACTIVE_METRICOOL_APPROVED_ASSETS_ONLY",
       "role": "authority_management_career_leadership_strategy_ai_applied_b2b_b2c_relationship",
       "page_name": "UGI — Uma Gestão Inteligente",
       "public_url": "https://www.linkedin.com/company/uma-gestao-inteligente/",
+      "metricool_page_urn": "urn:li:organization:144864036",
       "buffer_channel_type": "LinkedIn Page",
       "buffer_channel_name": "uma-gestao-inteligente",
-      "buffer_channel_id": null,
       "company_page_only": true,
       "personal_profile_publication_forbidden": true,
       "admin_auth_via_personal_profile_allowed": true,
       "posts_initial_baseline": 0,
       "baseline_maturity": "NEW_CHANNEL",
       "content_principle": "A NOTÍCIA É O GANCHO. A INTELIGÊNCIA DE GESTÃO É O PRODUTO.",
-      "mandatory_management_angle": true
+      "mandatory_management_angle": true,
+      "longform_derivative_policy": "DIFFERENTIATED_EXECUTIVE_CUT_AND_NATIVE_COPY"
     },
     "instagram": {
-      "status": "ACTIVE_APPROVED_ASSETS_ONLY",
+      "status": "ACTIVE_METRICOOL_APPROVED_ASSETS_ONLY",
       "role": "brand_identity_reach_visual_education_relationship_community_fast_insights"
     },
     "tiktok": {
-      "status": "PAUSED_EDITORIAL_QA",
+      "status": "METRICOOL_PRIMARY_WHEN_APPROVED_ASSET_EXISTS",
       "role": "discovery_cold_audience_experimentation_trends_hooks_fast_distribution_audience_acquisition"
     },
     "youtube": {
-      "buffer_status": "PAUSED",
-      "strategy_status": "NOT_ABANDONED",
+      "buffer_status": "PAUSED_LEGACY",
+      "metricool_status": "ACTIVE_LONGFORM_WEEKLY_HARD_GATED",
+      "strategy_status": "ACTIVE_WEEKLY_LONGFORM",
+      "channel_id": "UCnDg__vBTvo3ZeRbG0D9v-A",
       "content_history_preserve": true,
-      "reactivation_requires": [
-        "explicit_new_decision_or_operational_evidence",
-        "higher_strategic_fit",
-        "additional_publication_capacity_or_tooling_change",
-        "format_performance_evidence"
+      "publication_frequency_initial": "1_LONGFORM_PER_WEEK",
+      "reactivation_evidence": [
+        "explicit_user_decision_in_UGI_1_7_handoff_2026_09_12",
+        "live_metricool_brand_connection",
+        "live_youtube_analytics_readback",
+        "metricool_longform_schedule_capability"
       ]
     }
   },
-  "distribution_priority": ["linkedin", "instagram", "tiktok"],
+  "distribution_priority": ["youtube", "linkedin", "instagram", "tiktok"],
   "editorial_anti_repeat": {
     "status": "CANONICAL_HARD_GATE",
     "policy": "control-plane/policies/UGI_ANTI_REPEAT_V2.md",
     "trend_gate": "config/ugi/editorial-trend-gate-v2.5.json",
     "cooldown_days": 60,
-    "scope": "GLOBAL_INSTAGRAM_TIKTOK_LINKEDIN",
+    "scope": "UGI_GLOBAL_WITH_YOUTUBE_HISTORY_RECONCILIATION",
     "semantic_matching": true,
     "stories_count": true,
-    "same_topic_cross_network_blocked": true,
-    "same_day_cross_network_duplicate_default": "BLOCK",
+    "same_topic_cross_network_blocked_by_default": true,
+    "explicit_campaign_derivative_requires_durable_authorization": true,
     "extraordinary_exception": "EDITORIAL_REPEAT_EXCEPTION_BREAKING",
     "ambiguous_history": "FAIL_CLOSED_OR_SELECT_NEXT_CLEAN_TOPIC"
+  },
+  "editorial_visual_standard": {
+    "gate": "config/ugi/editorial-human-approval-gate.json",
+    "state": "PERMANENT_REAL_CONTEXTUAL_VISUAL_STANDARD",
+    "real_contextual_visual_default": true,
+    "generic_graphic_support_only_when_real_context_available": true,
+    "narration_beat_visual_correspondence_required": true,
+    "exact_visual_reuse_forbidden": true,
+    "source_provenance_required": true,
+    "rights_license_required": true,
+    "technical_qa_alone_is_insufficient": true,
+    "fail_closed": true
   },
   "analytics": {
     "compare_raw_platform_performance_without_context": false,
@@ -86,7 +128,7 @@
     "do_not_kill_linkedin_for_low_initial_audience": true
   },
   "linkedin_intelligence_engine": {
-    "status": "PAUSED_EDITORIAL_QA",
+    "status": "ACTIVE_HARD_GATED",
     "flow": [
       "RESEARCH",
       "DETECT_TRENDS",
@@ -110,13 +152,13 @@
   },
   "hard_invariants": [
     "Publish LinkedIn content exclusively to the UGI Company Page, never Paulo Oliveira's personal profile.",
-    "Do not reactivate YouTube in Buffer without a new explicit decision or qualifying operational evidence.",
-    "Do not delete YouTube strategy, content or history because Buffer distribution is paused.",
-    "Do not mutate existing Instagram or TikTok publications without necessity.",
-    "During EDITORIAL_QA_PARTIAL_RELEASE, only exact final assets explicitly approved by Paulo may receive a new Buffer mutation.",
-    "LinkedIn and TikTok remain paused until their exact replacement assets receive explicit human approval.",
-    "Resume a platform only after VISUAL_SEMANTIC_PASS, CLOSED_CAPTION_PASS when applicable, FORMAT_PASS and EDITORIAL_VALUE_PASS on the final file.",
-    "For new UGI editorial content, apply a 60-day semantic topic cooldown globally across Instagram, TikTok and LinkedIn; a topic used on any one of these networks blocks the same normalized topic on all three unless a durable EDITORIAL_REPEAT_EXCEPTION_BREAKING record exists.",
-    "Stories participate in the 60-day global history; changing network, format, caption, soundtrack or CONTENT_ID does not create novelty."
+    "Use Metricool as the primary route for new UGI scheduling/publication whenever the format is supported.",
+    "Use a certified direct/native fallback only after a proven capability gap or hard Metricool error.",
+    "An ambiguous mutation result never authorizes a retry; read back first.",
+    "Do not mutate existing publications without necessity and never recreate an already scheduled item.",
+    "Visual real/contextual relevance, variety, provenance, rights, narration-to-visual correspondence and exact visual reuse zero are hard editorial gates.",
+    "Technical QA alone never authorizes publication.",
+    "For new UGI editorial content, apply the canonical 60-day semantic anti-repeat policy and fail closed on credible unresolved collision risk.",
+    "Scheduling, publication and delivery are distinct states and require their own evidence."
   ]
 }
