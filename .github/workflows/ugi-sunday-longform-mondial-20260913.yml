@@ -25,19 +25,34 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install edge-tts pillow requests numpy
 
-      - name: Patch unique visual key for Eletrolar chapter
+      - name: Apply contained source and visual uniqueness fixes
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('scripts/ugi_longform_mondial_20260913.py')
           s=p.read_text(encoding='utf-8')
+
+          # The Glassdoor CDN returned HTTP 403 from the GitHub runner. Keep the
+          # fail-closed HTTP gate and replace only that source with a different
+          # real Mondial factory photograph surfaced by R7.
+          old_url='https://media.glassdoor.com/lst2x/ba/8f/2f/0f/f%C3%A3-brica-jacu%C3%A3-pe-ba-br.jpg?signature=c9ed6d8ce34adc8964cb404f9e880f46f1ab7af6008f241509e4d9910548e060'
+          new_url='https://newr7-r7-prod.web.arc-cdn.net/resizer/v2/WQYWG2PUXVNGXDZUPKFCJE3VLU.jpg?auth=d9d7d54b653ac12ebc677d47fb9ac1d54adaa3c8b020fb9953dfc2da5b746c19&height=1047&width=1600'
+          if old_url not in s:
+              raise SystemExit('FACTORY_SOURCE_PATCH_TARGET_NOT_FOUND')
+          s=s.replace(old_url,new_url,1)
+          s=s.replace('Glassdoor / Mondial - Conceicao do Jacuipe','R7 / imagem de fabrica Mondial',1)
+
+          # One support visual key was accidentally used twice. Replace the
+          # second occurrence with a unique original management card.
           old='("showcase", "Da feira pequena ao grande estande"'
           new='("card_eletrolar", "Da feira pequena ao grande estande"'
           if old not in s:
-              raise SystemExit('EXPECTED_PATCH_TARGET_NOT_FOUND')
+              raise SystemExit('UNIQUE_VISUAL_PATCH_TARGET_NOT_FOUND')
           s=s.replace(old,new,1)
+
           p.write_text(s,encoding='utf-8')
+          print('FACTORY_SOURCE_REPLACEMENT=PASS')
           print('UNIQUE_VISUAL_PATCH=PASS')
           PY
 
@@ -51,7 +66,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, hashlib
+          import json
           from pathlib import Path
           p=Path('public/ugi/editorial/2026-09-13/longform')
           qa=json.loads((p/'qa.json').read_text())
