@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'scripts/ugi_build_editorial_assets_20260913.py'
+      - 'scripts/ugi_build_editorial_assets_20260913_runner.py'
       - '.github/workflows/ugi-editorial-assets-20260913.yml'
 
 permissions:
@@ -35,12 +36,12 @@ jobs:
           ffmpeg -version | head -1
 
       - name: Build hard-gated UGI Sep13 assets
-        run: python scripts/ugi_build_editorial_assets_20260913.py
+        run: python scripts/ugi_build_editorial_assets_20260913_runner.py
 
       - name: Assert QA pass before any distribution
         run: |
           python - <<'PY'
-          import json, pathlib, sys
+          import json, pathlib
           p=pathlib.Path('public/ugi/editorial/2026-09-13/daily/qa.json')
           q=json.loads(p.read_text(encoding='utf-8'))
           assert q['state']=='PASS', q
