@@ -43,6 +43,11 @@ jobs:
               'https://www.gov.br/suframa/pt-br/assuntos/noticias/suframa-conhece-estrutura-e-planos-de-expansao-da-mondial-no-pim/VisitaempresaMondialCopia.jpeg/%40%40images/95e7f387-4610-4954-80d3-ad568b9ede24.jpeg',
               'https://static.sbt.com.br/noticias/images/content/20210604055805.jpeg',
               'MANAUS_SOURCE'
+            ),
+            (
+              'https://media.licdn.com/dms/image/v2/D4E22AQFT9ly9yidWog/feedshare-shrink_2048_1536/B4EZUe7xa8HcAs-/0/1739980742564?e=2147483647&t=qYx8ADm6DI75l51aq0LiScdiXtqRbKda196xfiqx6Y8&v=beta',
+              'https://www.gov.br/suframa/pt-br/assuntos/noticias/suframa-conhece-planos-de-crescimento-e-expansao-da-aiwa-mondial/WhatsAppImage20240911at18.35.20Copia.jpeg',
+              'FACTORY_ENTRANCE_SOURCE'
             )
           ]
           for old_url,new_url,label in replacements:
@@ -51,6 +56,7 @@ jobs:
               s=s.replace(old_url,new_url,1)
           s=s.replace('Glassdoor / Mondial - Conceicao do Jacuipe','R7 / imagem de fabrica Mondial',1)
           s=s.replace('Suframa, 2026','SBT News / antiga fabrica Sony em Manaus',1)
+          s=s.replace('LinkedIn / visita a fabrica Mondial','Suframa / linha SMD Aiwa-Mondial em Manaus',1)
 
           old='("showcase", "Da feira pequena ao grande estande"'
           new='("card_eletrolar", "Da feira pequena ao grande estande"'
@@ -61,6 +67,7 @@ jobs:
           p.write_text(s,encoding='utf-8')
           print('FACTORY_SOURCE_REPLACEMENT=PASS')
           print('MANAUS_SOURCE_REPLACEMENT=PASS')
+          print('FACTORY_ENTRANCE_SOURCE_REPLACEMENT=PASS')
           print('UNIQUE_VISUAL_PATCH=PASS')
           PY
 
