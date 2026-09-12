@@ -1,0 +1,73 @@
+name: UGI Editorial Assets 2026-09-13
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/ugi_build_editorial_assets_20260913.py'
+      - '.github/workflows/ugi-editorial-assets-20260913.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-editorial-assets-20260913
+  cancel-in-progress: false
+
+jobs:
+  build-qa-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install minimal renderer dependencies
+        run: |
+          python -m pip install --disable-pip-version-check pillow requests edge-tts
+          ffmpeg -version | head -1
+
+      - name: Build hard-gated UGI Sep13 assets
+        run: python scripts/ugi_build_editorial_assets_20260913.py
+
+      - name: Assert QA pass before any distribution
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          p=pathlib.Path('public/ugi/editorial/2026-09-13/daily/qa.json')
+          q=json.loads(p.read_text(encoding='utf-8'))
+          assert q['state']=='PASS', q
+          assert q['metricoolMutationAuthorized'] is True, q
+          assert q['counts']=={'instagram_story':4,'instagram_reel':2,'linkedin_image':1,'tiktok_video':2,'instagram_carousel_slide':6}, q['counts']
+          for f in q['files']:
+              v=f['visualQa']
+              assert v['NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS'] is True
+              assert v['REAL_CONTEXTUAL_VISUAL_PASS'] is True
+              assert v['RIGHTS_PROVENANCE_PASS'] is True
+              assert v['EXACT_VISUAL_REUSE_COUNT']==0
+              assert v['GENERIC_STOCK_PRIMARY'] is False
+              if f['path'].endswith('.mp4'):
+                  assert v['CC_DEDICATED_LOWER_BAND_PASS'] is True
+                  assert f['bytes'] > 100000
+          print('UGI_SEP13_QA_PASS')
+          PY
+
+      - name: Commit immutable finals
+        run: |
+          git config user.name 'ugi-editorial-bot'
+          git config user.email 'ugi-editorial-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-13/daily
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit'
+            exit 0
+          fi
+          git commit -m 'assets(ugi): Sep13 editorial finals [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
