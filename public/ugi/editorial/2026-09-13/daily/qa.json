@@ -33,8 +33,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-mondial-historias-de-gestao.mp4",
-      "sha256": "4f02f555a28150e81fc8aec681e98120d5cc12a641b3e08e46303e7055d56180",
-      "bytes": 1753515,
+      "sha256": "ae9cc90fa253a82b5734050f97fff2a5e0178962b61e6de13c9369dcec873854",
+      "bytes": 3275297,
       "kind": "instagram_reel",
       "entity": "Mondial",
       "visualQa": {
@@ -60,7 +60,7 @@
           }
         ],
         "format": {
-          "duration": "53.122667"
+          "duration": "80.898667"
         }
       }
     },
@@ -82,8 +82,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/tiktok-zara-inditex-1200.mp4",
-      "sha256": "793e8b4a3fa6475af1cd355ea7fa3be03f09166e5489ea6739295f74d3b199d7",
-      "bytes": 2622499,
+      "sha256": "cf4490d1cbd516e6e2eb16cb56617d6ae74a72531d46c199b5d3cec6db0f5322",
+      "bytes": 3206108,
       "kind": "tiktok_video",
       "entity": "Zara / Inditex",
       "visualQa": {
@@ -109,7 +109,7 @@
           }
         ],
         "format": {
-          "duration": "43.497333"
+          "duration": "48.700000"
         }
       }
     },
@@ -243,8 +243,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-american-eagle-1800.mp4",
-      "sha256": "3726970db6acf26c32c428c5f0d6118d1dc077c22a88721ca82979a58f1c5835",
-      "bytes": 2600164,
+      "sha256": "ca4ee02001fd8718a51ae87e28d7640645a4b293d2523bd13a9ff09e639d03c0",
+      "bytes": 2966168,
       "kind": "instagram_reel",
       "entity": "American Eagle",
       "visualQa": {
@@ -270,14 +270,14 @@
           }
         ],
         "format": {
-          "duration": "44.253971"
+          "duration": "49.187305"
         }
       }
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/tiktok-nvidia-anthropic-1945.mp4",
-      "sha256": "8827cff3a9c66417df12a4e0f1ceb8c157ddc1a6e12c32d291e6c20f3345930a",
-      "bytes": 1459872,
+      "sha256": "31ae2460c06d555398d01398b188e644aa44db0501dc81b5d072407b0e6e8a1f",
+      "bytes": 2765604,
       "kind": "tiktok_video",
       "entity": "Nvidia / Anthropic",
       "visualQa": {
@@ -303,7 +303,7 @@
           }
         ],
         "format": {
-          "duration": "36.317969"
+          "duration": "51.804687"
         }
       }
     },
