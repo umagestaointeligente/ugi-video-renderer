@@ -1,0 +1,327 @@
+{
+  "schema": "UGI_EDITORIAL_QA_V4",
+  "date": "2026-09-13",
+  "state": "PASS",
+  "hardGateFailures": [],
+  "finalCount": 15,
+  "counts": {
+    "instagram_story": 4,
+    "instagram_reel": 2,
+    "linkedin_image": 1,
+    "tiktok_video": 2,
+    "instagram_carousel_slide": 6
+  },
+  "namedEntityVisualAuthenticityPass": true,
+  "antiRepeatReview": "PASS_NO_CREDIBLE_60D_COLLISION; registry backfill remains partial",
+  "metricoolMutationAuthorized": true,
+  "files": [
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-story-kroger-0830.jpg",
+      "sha256": "da5c0ff5f12bf2a1d8f9339ca8c97a131ba03a9afbae3eceb004f9a5ae7259ab",
+      "bytes": 481578,
+      "kind": "instagram_story",
+      "entity": "Kroger",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-mondial-historias-de-gestao.mp4",
+      "sha256": "4f02f555a28150e81fc8aec681e98120d5cc12a641b3e08e46303e7055d56180",
+      "bytes": 1753515,
+      "kind": "instagram_reel",
+      "entity": "Mondial",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "53.122667"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/linkedin-tata-governanca-1100.jpg",
+      "sha256": "4feb0e0074d2221b0ac0fd65f4246aae735bfcfed4cfa0de73677142e893fb76",
+      "bytes": 285547,
+      "kind": "linkedin_image",
+      "entity": "Tata Sons",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/tiktok-zara-inditex-1200.mp4",
+      "sha256": "793e8b4a3fa6475af1cd355ea7fa3be03f09166e5489ea6739295f74d3b199d7",
+      "bytes": 2622499,
+      "kind": "tiktok_video",
+      "entity": "Zara / Inditex",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "43.497333"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-story-ultraviolette-1300.jpg",
+      "sha256": "d0208c2094f0e21454b45c22d2e47e848386a321e261bf78843326dbd6e01b02",
+      "bytes": 458379,
+      "kind": "instagram_story",
+      "entity": "Ultraviolette",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-01.jpg",
+      "sha256": "33fde9644ddd7bf4499405df6e5015729c0ffc8146e54a2a0c0c4914d361a0bf",
+      "bytes": 256116,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-02.jpg",
+      "sha256": "1d17afca7eb79aec002ef5544cfbc9383793243e9edfbae57a912621f10dd121",
+      "bytes": 193518,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-03.jpg",
+      "sha256": "0d4acafbb9b2c6e8fbb0215e1b4312a92598721db0480414247893a94eb60bdf",
+      "bytes": 228137,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-04.jpg",
+      "sha256": "c2999a4289972fe052b30bf9ad89ad79662713d992e2bb59e7839fedb970b677",
+      "bytes": 245727,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-05.jpg",
+      "sha256": "8bc597b13aacf7bf4b9dd18d6c8e5471cd742c7abbeff7376e5f5c8ef38b2a0f",
+      "bytes": 231958,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-06.jpg",
+      "sha256": "668fb49b6ac3f23baa5e225a3aa4cd2171d5151f434fe281b5527b392bfc32d4",
+      "bytes": 187055,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-story-oracle-1730.jpg",
+      "sha256": "ef21dadd444f5a05e9db88790e93f25ac5b333669617d1a893c9757851283622",
+      "bytes": 341008,
+      "kind": "instagram_story",
+      "entity": "Oracle",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-american-eagle-1800.mp4",
+      "sha256": "3726970db6acf26c32c428c5f0d6118d1dc077c22a88721ca82979a58f1c5835",
+      "bytes": 2600164,
+      "kind": "instagram_reel",
+      "entity": "American Eagle",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "44.253971"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/tiktok-nvidia-anthropic-1945.mp4",
+      "sha256": "8827cff3a9c66417df12a4e0f1ceb8c157ddc1a6e12c32d291e6c20f3345930a",
+      "bytes": 1459872,
+      "kind": "tiktok_video",
+      "entity": "Nvidia / Anthropic",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "36.317969"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-story-asahi-diageo-2030.jpg",
+      "sha256": "16665bf6dc7d63ed36456b5d485116af93f5a182a23b0a9031c6108d0f7cb26b",
+      "bytes": 456641,
+      "kind": "instagram_story",
+      "entity": "Asahi / EABL / Diageo",
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      },
+      "probe": null
+    }
+  ]
+}

@@ -1,0 +1,846 @@
+{
+  "schema": "UGI_EDITORIAL_ASSET_PROVENANCE_V4",
+  "date": "2026-09-13",
+  "state": "FINAL_ASSETS_BUILT",
+  "factSources": {
+    "kroger": "https://www.reuters.com/business/retail-consumer/kroger-cuts-annual-sales-forecast-2026-09-11/",
+    "mondial": "https://www.mondial.com.br/nossa-historia",
+    "tata": "https://www.reuters.com/world/india/indias-central-bank-rejects-tata-sons-request-avoid-public-listing-sources-say-2026-09-12/",
+    "zara": "https://www.reuters.com/business/retail-consumer/zara-owner-inditex-looks-us-next-phase-growth-2026-09-11/",
+    "ultraviolette": "https://www.reuters.com/world/india/indian-ev-startup-ultraviolette-plans-82-million-plant-demand-surges-2026-09-10/",
+    "asml": "https://www.reuters.com/business/asml-breaks-ground-new-manufacturing-facilities-major-expansion-2026-09-08/",
+    "oracle": "https://www.reuters.com/business/retail-consumer/oracle-shares-rise-ai-cloud-backlog-beats-estimates-2026-09-11/",
+    "aeo": "https://www.reuters.com/business/retail-consumer/american-eagle-shares-slide-flat-margin-outlook-weak-core-brand-weigh-2026-09-10/",
+    "nvidia_anthropic": "https://www.reuters.com/business/nvidia-talks-invest-anthropics-mega-ipo-sources-say-2026-09-11/",
+    "asahi": "https://www.reuters.com/world/africa/kenya-approves-asahi-group-acquisition-diageo-kenya-assets-2026-09-11/"
+  },
+  "sources": {
+    "mondial_giovanni_1": {
+      "key": "mondial_giovanni_1",
+      "page": "https://github.com/umagestaointeligente/ugi-video-renderer/blob/ffc5867a177813eb33d4df4cf4fa5a01515aee3a/public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "license": "previously-approved UGI editorial source",
+      "rightsBasis": "Extracted from immutable, already-approved UGI Mondial longform master; original provenance retained in longform/source-manifest.json",
+      "semantic": "Giovanni / approved UGI longform",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/mondial_giovanni_1.jpg",
+      "sha256": "9b8100a01ad61083a38315913ef30c98dffeb4fe01eeacd53f5a97d8f608aa5d"
+    },
+    "mondial_giovanni_2": {
+      "key": "mondial_giovanni_2",
+      "page": "https://github.com/umagestaointeligente/ugi-video-renderer/blob/ffc5867a177813eb33d4df4cf4fa5a01515aee3a/public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "license": "previously-approved UGI editorial source",
+      "rightsBasis": "Extracted from immutable, already-approved UGI Mondial longform master; original provenance retained in longform/source-manifest.json",
+      "semantic": "Giovanni / approved UGI longform",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/mondial_giovanni_2.jpg",
+      "sha256": "63c3b6b9d17dd1b1b7413ff568ec8813b31c2b06d81bc8aa074f54bf427dcca5"
+    },
+    "mondial_giovanni_3": {
+      "key": "mondial_giovanni_3",
+      "page": "https://github.com/umagestaointeligente/ugi-video-renderer/blob/ffc5867a177813eb33d4df4cf4fa5a01515aee3a/public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "license": "previously-approved UGI editorial source",
+      "rightsBasis": "Extracted from immutable, already-approved UGI Mondial longform master; original provenance retained in longform/source-manifest.json",
+      "semantic": "Giovanni / approved UGI longform",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/mondial_giovanni_3.jpg",
+      "sha256": "e1d8ba494021e502f842d1ec39743a8c6f70fd25a6bd08bf1cd09fd99b9dee52"
+    },
+    "mondial_giovanni_4": {
+      "key": "mondial_giovanni_4",
+      "page": "https://github.com/umagestaointeligente/ugi-video-renderer/blob/ffc5867a177813eb33d4df4cf4fa5a01515aee3a/public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "license": "previously-approved UGI editorial source",
+      "rightsBasis": "Extracted from immutable, already-approved UGI Mondial longform master; original provenance retained in longform/source-manifest.json",
+      "semantic": "Giovanni / approved UGI longform",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/mondial_giovanni_4.jpg",
+      "sha256": "534f1b6ba24923b9ed7eacf494a5b08da6d3d0ab31bae66dbb0363d60776624f"
+    },
+    "mondial_products": {
+      "key": "mondial_products",
+      "page": "https://github.com/umagestaointeligente/ugi-video-renderer/blob/ffc5867a177813eb33d4df4cf4fa5a01515aee3a/public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "license": "previously-approved UGI editorial source",
+      "rightsBasis": "Extracted from immutable, already-approved UGI Mondial longform master; original provenance retained in longform/source-manifest.json",
+      "semantic": "Produtos Mondial / approved UGI longform",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/mondial_products.jpg",
+      "sha256": "3f486fcaf9d652b1c48ac86ba704f5a4c4c37ddda60ffe4a0f440ac8397a05e1"
+    },
+    "mondial_showroom": {
+      "key": "mondial_showroom",
+      "page": "https://github.com/umagestaointeligente/ugi-video-renderer/blob/ffc5867a177813eb33d4df4cf4fa5a01515aee3a/public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "license": "previously-approved UGI editorial source",
+      "rightsBasis": "Extracted from immutable, already-approved UGI Mondial longform master; original provenance retained in longform/source-manifest.json",
+      "semantic": "Showroom Mondial / approved UGI longform",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/mondial_showroom.jpg",
+      "sha256": "5b4b410260e4fe7610e2a5b0b72bd863388448b1a719aca2d102641d47eba121"
+    },
+    "mondial_factory": {
+      "key": "mondial_factory",
+      "page": "https://github.com/umagestaointeligente/ugi-video-renderer/blob/ffc5867a177813eb33d4df4cf4fa5a01515aee3a/public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "license": "previously-approved UGI editorial source",
+      "rightsBasis": "Extracted from immutable, already-approved UGI Mondial longform master; original provenance retained in longform/source-manifest.json",
+      "semantic": "Fabrica Mondial / approved UGI longform",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/mondial_factory.jpg",
+      "sha256": "9ca2150ae27cab36dd27c56d0d177a55301c8fe9b2fadd606185f26d2036fb6a"
+    },
+    "kroger_1": {
+      "title": "File:Kroger - Tabb (Kiln Creek), VA (37755148111).jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Kroger_-_Tabb_%28Kiln_Creek%29%2C_VA_%2837755148111%29.jpg/1920px-Kroger_-_Tabb_%28Kiln_Creek%29%2C_VA_%2837755148111%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Kroger_-_Tabb_(Kiln_Creek)%2C_VA_(37755148111).jpg",
+      "license": "CC BY 2.0",
+      "author": "Virginia Retail from Virginia, USA",
+      "semantic": "Kroger supermarket store United States",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/kroger_1.jpg",
+      "sha256": "3ee9d444b290496de08cc68e35a8c1145838fd664c8b7b5aae88edbfe7b4088c",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "kroger_2": {
+      "title": "File:Kroger Groceries Pick Up - DPLA - c7bf6494324c194b9a426c3dc6818833.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Kroger_Groceries_Pick_Up_-_DPLA_-_c7bf6494324c194b9a426c3dc6818833.jpg/1920px-Kroger_Groceries_Pick_Up_-_DPLA_-_c7bf6494324c194b9a426c3dc6818833.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Kroger_Groceries_Pick_Up_-_DPLA_-_c7bf6494324c194b9a426c3dc6818833.jpg",
+      "license": "Public domain",
+      "author": "Wikimedia Commons",
+      "semantic": "Kroger supermarket store United States",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/kroger_2.jpg",
+      "sha256": "460718c6de73c4b4d18b595bf36e9574b0fea71373f95a0e5e045f454524c3a2",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "tata_1": {
+      "title": "File:Bombay House, Tata Group Headquarters in Mumbai.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/01/Bombay_House%2C_Tata_Group_Headquarters_in_Mumbai.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Bombay_House%2C_Tata_Group_Headquarters_in_Mumbai.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "AroundTheGlobe",
+      "semantic": "Bombay House Tata headquarters Mumbai",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/tata_1.jpg",
+      "sha256": "2775301c28c54afa660b8492acb8a3b9329300523ac313d99e39f75b2405b69b",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "zara_1": {
+      "title": "File:Zaramap.png",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Zaramap.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Zaramap.png",
+      "license": "CC BY-SA 3.0",
+      "author": "Inditex_Global_Presence.png: FDV\nderivative work: Bldonne",
+      "semantic": "Zara store Inditex",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/zara_1.jpg",
+      "sha256": "26709430b0513ce895aa6b3f88a0a3b2d0c5a006b821c0eb8ebd0a1039075e00",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "zara_2": {
+      "title": "File:HK CH 中環 Central 國際金融中心商場 IFC mall shop ZARA Clothing store April 2022 Px3 01.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_01.jpg/1920px-HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_01.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "YEUNAMCHGOA 20533",
+      "semantic": "Zara clothing store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/zara_2.jpg",
+      "sha256": "3873a03b7f8b7e0091ec57f0e5ccaebb2f4bf31a0f3014dbf8ec27a9393fdaec",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "zara_3": {
+      "title": "File:HK CH 中環 Central 國際金融中心商場 IFC mall shop ZARA Clothing store April 2022 Px3 02.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_02.jpg/1920px-HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_02.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "YEUNAMCHGOA 20533",
+      "semantic": "Zara clothing store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/zara_3.jpg",
+      "sha256": "f7c6023c520cbf9a4a41ca590cb33e99f11d459221ff744d2ec3ed6306015874",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "zara_4": {
+      "title": "File:HK CH 中環 Central 國際金融中心商場 IFC mall shop ZARA Clothing store April 2022 Px3 03.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_03.jpg/1920px-HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_03.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "YEUNAMCHGOA 20533",
+      "semantic": "Zara clothing store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/zara_4.jpg",
+      "sha256": "e51a16f09fd64465276820d4b09c21d9790659a49a0e1cc5a1fc858ce317765d",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "zara_5": {
+      "title": "File:HK CH 中環 Central 國際金融中心商場 IFC mall shop ZARA Clothing store April 2022 Px3 04.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_04.jpg/1920px-HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_04.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_04.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "YEUNAMCHGOA 20533",
+      "semantic": "Zara clothing store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/zara_5.jpg",
+      "sha256": "5282c7b2ed6cab489c54e27153feda17eda23e930df90a955ec73fbf215c4ff6",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "zara_6": {
+      "title": "File:HK CH 中環 Central 國際金融中心商場 IFC mall shop ZARA Clothing store April 2022 Px3 05.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_05.jpg/1920px-HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_05.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:HK_CH_%E4%B8%AD%E7%92%B0_Central_%E5%9C%8B%E9%9A%9B%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%E5%95%86%E5%A0%B4_IFC_mall_shop_ZARA_Clothing_store_April_2022_Px3_05.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "YEUNAMCHGOA 20533",
+      "semantic": "Zara clothing store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/zara_6.jpg",
+      "sha256": "e68f5093f107aad7c162ca67425504e91a136558cd92b27e934b294048bf7b02",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "ultraviolette_1": {
+      "title": "File:Ultraviolette X-47 Desert King.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Ultraviolette_X-47_Desert_King.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Ultraviolette_X-47_Desert_King.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "MotorideSA",
+      "semantic": "Ultraviolette motorcycle",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/ultraviolette_1.jpg",
+      "sha256": "75a78273d9a79d06d8c57e16ed8bccb66622f9ec722dcd6d1bc2f16519be3644",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "ultraviolette_2": {
+      "title": "File:Ultraviolette X-47 Desert King 2026.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Ultraviolette_X-47_Desert_King_2026.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Ultraviolette_X-47_Desert_King_2026.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "MotorideSA",
+      "semantic": "Ultraviolette motorcycle",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/ultraviolette_2.jpg",
+      "sha256": "aff58cf75b9264d5759468071a76c2a84d409ffb5561f35c99378a41ec9b3cd4",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "asml_1": {
+      "title": "File:ASML headquarters Veldhoven.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/ASML_headquarters_Veldhoven.jpg/1920px-ASML_headquarters_Veldhoven.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:ASML_headquarters_Veldhoven.jpg",
+      "license": "Public domain",
+      "author": "A ansems",
+      "semantic": "ASML Veldhoven Netherlands semiconductor",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/asml_1.jpg",
+      "sha256": "a0a5e31980d367afca570e5f6a8e2f0f00b8028b3274c47f427be49fa1b56b2e",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "asml_2": {
+      "title": "File:20080825 Veldhoven ASML DSCF0349.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/20080825_Veldhoven_ASML_DSCF0349.jpg/1920px-20080825_Veldhoven_ASML_DSCF0349.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:20080825_Veldhoven_ASML_DSCF0349.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "HHahn",
+      "semantic": "ASML Veldhoven",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/asml_2.jpg",
+      "sha256": "a029d56fa71f0068728ed69cfd47b9e6703f41ac17aa2e7ad444f8157970353f",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "asml_3": {
+      "title": "File:20080825 Veldhoven ASML DSCF0350.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/20080825_Veldhoven_ASML_DSCF0350.jpg/1920px-20080825_Veldhoven_ASML_DSCF0350.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:20080825_Veldhoven_ASML_DSCF0350.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "HHahn",
+      "semantic": "ASML Veldhoven",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/asml_3.jpg",
+      "sha256": "e6613f6049fac1632299f3af7b58703988ce5e2e75f55a59b61e7383c186a135",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "asml_4": {
+      "title": "File:ASML 8 Tower.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/48/ASML_8_Tower.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:ASML_8_Tower.jpg",
+      "license": "CC BY 3.0",
+      "author": "Johfrael",
+      "semantic": "ASML Veldhoven",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/asml_4.jpg",
+      "sha256": "6a13415b0535328d82d376f8625a72e3d211d5507b289f74f85d4f069a3760e0",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "asml_5": {
+      "title": "File:124901 ASML Gebouw3-001b (1).jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/124901_ASML_Gebouw3-001b_%281%29.jpg/1920px-124901_ASML_Gebouw3-001b_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:124901_ASML_Gebouw3-001b_(1).jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "ReynaersAlu1",
+      "semantic": "ASML semiconductor",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/asml_5.jpg",
+      "sha256": "54a86273cc9b2a86418e68fbbe91e83054b5b28bd52908610a005e83a32cc2f6",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "asml_6": {
+      "title": "File:ASML 2014 EUV tool roadmap.png",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/ASML_2014_EUV_tool_roadmap.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:ASML_2014_EUV_tool_roadmap.png",
+      "license": "CC BY-SA 4.0",
+      "author": "Guiding light",
+      "semantic": "ASML semiconductor",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/asml_6.jpg",
+      "sha256": "7cbec4efa8565285cb04865c7675434ad45c803a1efbc73a70091df941bc72ce",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "oracle_1": {
+      "title": "File:The oracle (IA oracle00lans 2).pdf",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/The_oracle_%28IA_oracle00lans_2%29.pdf/page1-500px-The_oracle_%28IA_oracle00lans_2%29.pdf.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:The_oracle_(IA_oracle00lans_2).pdf",
+      "license": "Public domain",
+      "author": "Lansing High School (Lansing, Mich.)",
+      "semantic": "Oracle headquarters Austin",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/oracle_1.jpg",
+      "sha256": "a3fddaafe005357d8a25a6db58de06f729e2ec2e43653c382ddfdff68fecbfa6",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "oracle_2": {
+      "title": "File:The oracle (IA oracle1899lans).pdf",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/The_oracle_%28IA_oracle1899lans%29.pdf/page1-960px-The_oracle_%28IA_oracle1899lans%29.pdf.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:The_oracle_(IA_oracle1899lans).pdf",
+      "license": "Public domain",
+      "author": "Lansing High School (Lansing, Mich.)",
+      "semantic": "Oracle headquarters Austin",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/oracle_2.jpg",
+      "sha256": "cd630f1a8b80cc7f96d7e3ae0cb7e559caf7c3119c99c039a8ca823cd8059ec4",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "aeo_1": {
+      "title": "File:Aerie by American Eagle Store - Pittsburgh (48171704466).jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Aerie_by_American_Eagle_Store_-_Pittsburgh_%2848171704466%29.jpg/1920px-Aerie_by_American_Eagle_Store_-_Pittsburgh_%2848171704466%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Aerie_by_American_Eagle_Store_-_Pittsburgh_(48171704466).jpg",
+      "license": "CC BY-SA 2.0",
+      "author": "Tony Webster from Minneapolis, Minnesota, United States",
+      "semantic": "American Eagle Outfitters store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/aeo_1.jpg",
+      "sha256": "cb3b28b150a0c42809a513e4d39df27482ea29ad1d1b4e0707ef160e4acb7d21",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "aeo_2": {
+      "title": "File:American Eagle Outfitters Times Square NYC - Syd for Short.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/American_Eagle_Outfitters_Times_Square_NYC_-_Syd_for_Short.jpg/1920px-American_Eagle_Outfitters_Times_Square_NYC_-_Syd_for_Short.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:American_Eagle_Outfitters_Times_Square_NYC_-_Syd_for_Short.jpg",
+      "license": "CC BY 4.0",
+      "author": "Nielsoncaetanosalmeron",
+      "semantic": "American Eagle Outfitters store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/aeo_2.jpg",
+      "sha256": "807c8748c5ec5c02494878c469b901fb4d269514e89e1ca46bc4e73d5c7820b9",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "aeo_3": {
+      "title": "File:American Eagle Outfitters in SM Aura, Bonifacio Global City.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/American_Eagle_Outfitters_in_SM_Aura%2C_Bonifacio_Global_City.jpg/1920px-American_Eagle_Outfitters_in_SM_Aura%2C_Bonifacio_Global_City.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:American_Eagle_Outfitters_in_SM_Aura%2C_Bonifacio_Global_City.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Hans Olav Lien",
+      "semantic": "American Eagle Outfitters store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/aeo_3.jpg",
+      "sha256": "c6b1741e0d1ee8a7260794e083d523d257dce894baf7049a34a2b4c1b793546f",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "aeo_4": {
+      "title": "File:American Eagle Outfitters in Yuen Long.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/American_Eagle_Outfitters_in_Yuen_Long.jpg/1920px-American_Eagle_Outfitters_in_Yuen_Long.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:American_Eagle_Outfitters_in_Yuen_Long.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Peachyeung316",
+      "semantic": "American Eagle Outfitters store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/aeo_4.jpg",
+      "sha256": "be8d4bb4f91dfb6a00117aed8ea9b46de4a80645dfb058bd586e158efef842f9",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "aeo_5": {
+      "title": "File:American Eagle Outfitters store Green Oak Village Place.JPG",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/American_Eagle_Outfitters_store_Green_Oak_Village_Place.JPG/1920px-American_Eagle_Outfitters_store_Green_Oak_Village_Place.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:American_Eagle_Outfitters_store_Green_Oak_Village_Place.JPG",
+      "license": "CC BY 3.0",
+      "author": "Dwight Burdette",
+      "semantic": "American Eagle Outfitters store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/aeo_5.jpg",
+      "sha256": "a4e7f33a2c69eeb46591a463815121818957fa245b9b1cd6484373b716881622",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "aeo_6": {
+      "title": "File:American Eagle Times Square NYC at night.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/American_Eagle_Times_Square_NYC_at_night.jpg/1920px-American_Eagle_Times_Square_NYC_at_night.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:American_Eagle_Times_Square_NYC_at_night.jpg",
+      "license": "CC BY 4.0",
+      "author": "Nielsoncaetanosalmeron",
+      "semantic": "American Eagle Outfitters store",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/aeo_6.jpg",
+      "sha256": "aa062eae7d835522bb158d45c73a7b74200ec6e7f81af4bef96726fcf1072557",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "nvidia_1": {
+      "title": "File:Director Lê Nguyễn Thiên Nga and NVIDIA Founder and CEO Jensen Huang.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Director_L%C3%AA_Nguy%E1%BB%85n_Thi%C3%AAn_Nga_and_NVIDIA_Founder_and_CEO_Jensen_Huang.jpg/1920px-Director_L%C3%AA_Nguy%E1%BB%85n_Thi%C3%AAn_Nga_and_NVIDIA_Founder_and_CEO_Jensen_Huang.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Director_L%C3%AA_Nguy%E1%BB%85n_Thi%C3%AAn_Nga_and_NVIDIA_Founder_and_CEO_Jensen_Huang.jpg",
+      "license": "CC BY 4.0",
+      "author": "VQTCS",
+      "semantic": "Nvidia headquarters Santa Clara",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/nvidia_1.jpg",
+      "sha256": "534b21d4e081290fd07a6153991a578f133abb83ca399cb276e23159f419cb98",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "nvidia_2": {
+      "title": "File:NVIDIA Headquarters.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/NVIDIA_Headquarters.jpg/1920px-NVIDIA_Headquarters.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:NVIDIA_Headquarters.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Coolcaesar",
+      "semantic": "Nvidia headquarters Santa Clara",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/nvidia_2.jpg",
+      "sha256": "08b7a9213428787bebd21c53a6fa03b336f1f93e9f14c0ea99d44f7f1c6162b1",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "nvidia_3": {
+      "title": "File:Nvidia campus aerial.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Nvidia_campus_aerial.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Nvidia_campus_aerial.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Dicklyon",
+      "semantic": "Nvidia headquarters Santa Clara",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/nvidia_3.jpg",
+      "sha256": "53d85fe5499374a4574fbf923f521b68040614c005e5dbc364f167d5084a6bf4",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "anthropic_1": {
+      "title": "File:Anthropic's corporate structure, updated.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Anthropic%27s_corporate_structure%2C_updated.svg/1920px-Anthropic%27s_corporate_structure%2C_updated.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Anthropic%27s_corporate_structure%2C_updated.svg",
+      "license": "CC0",
+      "author": "Sol-314",
+      "semantic": "Anthropic AI",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/anthropic_1.jpg",
+      "sha256": "730b76f97dbd02db5b2659c72dafe0c6dbce51324fc41a3ab8a091c28251be17",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "anthropic_2": {
+      "title": "File:Anthropic corporate structure.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Anthropic_corporate_structure.svg/1920px-Anthropic_corporate_structure.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Anthropic_corporate_structure.svg",
+      "license": "CC BY 4.0",
+      "author": "Domdomegg",
+      "semantic": "Anthropic AI",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/anthropic_2.jpg",
+      "sha256": "918ad56e1389baff19b617c9875fb5c184067bf10fd0f0858e32d40ccbd9a7ab",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "asahi_1": {
+      "title": "File:ASAHI BROADCASTING GROUP HOLDINGS CORPORATION HEADQUARTERS.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/ASAHI_BROADCASTING_GROUP_HOLDINGS_CORPORATION_HEADQUARTERS.jpg/1920px-ASAHI_BROADCASTING_GROUP_HOLDINGS_CORPORATION_HEADQUARTERS.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:ASAHI_BROADCASTING_GROUP_HOLDINGS_CORPORATION_HEADQUARTERS.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Tokumeigakarinoaoshima",
+      "semantic": "Asahi Group headquarters Japan",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/asahi_1.jpg",
+      "sha256": "16c34f49f085af1ab309bfa0ea7557fbcca94ca358cec2928b7ec8b603f8cce7",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    },
+    "eabl_1": {
+      "title": "File:East African Breweries EABL 2022 Logo.png",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/East_African_Breweries_EABL_2022_Logo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:East_African_Breweries_EABL_2022_Logo.png",
+      "license": "CC0",
+      "author": "Elvis Otieno",
+      "semantic": "East African Breweries Kenya",
+      "path": "public/ugi/editorial/2026-09-13/daily/sources/eabl_1.jpg",
+      "sha256": "9b6ef1655205cc4e8352402865ef91931c460e5d17ca1bbb72f1abda518d22e7",
+      "rightsBasis": "Wikimedia Commons license metadata + named-entity title match"
+    }
+  },
+  "music": {
+    "source": "repository-approved asset",
+    "license": "repository-approved licensed asset"
+  },
+  "rules": {
+    "globalAntiRepeatDays": 60,
+    "namedEntityRealVisualRequired": true,
+    "genericStockForNamedEntityBlocked": true,
+    "narratedVideoMinDistinctSources": 5,
+    "exactVisualReuseBlocked": true,
+    "ccDedicatedLowerBand": true,
+    "captionMaxLines": 2,
+    "visualAreaEndsAtY": 1390,
+    "captionBand": {
+      "top": 1415,
+      "bottom": 1745
+    }
+  },
+  "finals": [
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-story-kroger-0830.jpg",
+      "sha256": "da5c0ff5f12bf2a1d8f9339ca8c97a131ba03a9afbae3eceb004f9a5ae7259ab",
+      "bytes": 481578,
+      "kind": "instagram_story",
+      "entity": "Kroger",
+      "sourceKeys": [
+        "kroger_1",
+        "kroger_2"
+      ],
+      "distinctSourceCount": 2,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-mondial-historias-de-gestao.mp4",
+      "sha256": "4f02f555a28150e81fc8aec681e98120d5cc12a641b3e08e46303e7055d56180",
+      "bytes": 1753515,
+      "kind": "instagram_reel",
+      "entity": "Mondial",
+      "sourceKeys": [
+        "mondial_giovanni_1",
+        "mondial_giovanni_2",
+        "mondial_giovanni_3",
+        "mondial_giovanni_4",
+        "mondial_products",
+        "mondial_showroom",
+        "mondial_factory"
+      ],
+      "distinctSourceCount": 7,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "53.122667"
+        }
+      },
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/linkedin-tata-governanca-1100.jpg",
+      "sha256": "4feb0e0074d2221b0ac0fd65f4246aae735bfcfed4cfa0de73677142e893fb76",
+      "bytes": 285547,
+      "kind": "linkedin_image",
+      "entity": "Tata Sons",
+      "sourceKeys": [
+        "tata_1"
+      ],
+      "distinctSourceCount": 1,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/tiktok-zara-inditex-1200.mp4",
+      "sha256": "793e8b4a3fa6475af1cd355ea7fa3be03f09166e5489ea6739295f74d3b199d7",
+      "bytes": 2622499,
+      "kind": "tiktok_video",
+      "entity": "Zara / Inditex",
+      "sourceKeys": [
+        "zara_1",
+        "zara_2",
+        "zara_3",
+        "zara_4",
+        "zara_5",
+        "zara_6"
+      ],
+      "distinctSourceCount": 6,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "43.497333"
+        }
+      },
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-story-ultraviolette-1300.jpg",
+      "sha256": "d0208c2094f0e21454b45c22d2e47e848386a321e261bf78843326dbd6e01b02",
+      "bytes": 458379,
+      "kind": "instagram_story",
+      "entity": "Ultraviolette",
+      "sourceKeys": [
+        "ultraviolette_1",
+        "ultraviolette_2"
+      ],
+      "distinctSourceCount": 2,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-01.jpg",
+      "sha256": "33fde9644ddd7bf4499405df6e5015729c0ffc8146e54a2a0c0c4914d361a0bf",
+      "bytes": 256116,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "sourceKeys": [
+        "asml_1"
+      ],
+      "distinctSourceCount": 1,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-02.jpg",
+      "sha256": "1d17afca7eb79aec002ef5544cfbc9383793243e9edfbae57a912621f10dd121",
+      "bytes": 193518,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "sourceKeys": [
+        "asml_2"
+      ],
+      "distinctSourceCount": 1,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-03.jpg",
+      "sha256": "0d4acafbb9b2c6e8fbb0215e1b4312a92598721db0480414247893a94eb60bdf",
+      "bytes": 228137,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "sourceKeys": [
+        "asml_3"
+      ],
+      "distinctSourceCount": 1,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-04.jpg",
+      "sha256": "c2999a4289972fe052b30bf9ad89ad79662713d992e2bb59e7839fedb970b677",
+      "bytes": 245727,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "sourceKeys": [
+        "asml_4"
+      ],
+      "distinctSourceCount": 1,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-05.jpg",
+      "sha256": "8bc597b13aacf7bf4b9dd18d6c8e5471cd742c7abbeff7376e5f5c8ef38b2a0f",
+      "bytes": 231958,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "sourceKeys": [
+        "asml_5"
+      ],
+      "distinctSourceCount": 1,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-carousel-asml-06.jpg",
+      "sha256": "668fb49b6ac3f23baa5e225a3aa4cd2171d5151f434fe281b5527b392bfc32d4",
+      "bytes": 187055,
+      "kind": "instagram_carousel_slide",
+      "entity": "ASML",
+      "sourceKeys": [
+        "asml_6"
+      ],
+      "distinctSourceCount": 1,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-story-oracle-1730.jpg",
+      "sha256": "ef21dadd444f5a05e9db88790e93f25ac5b333669617d1a893c9757851283622",
+      "bytes": 341008,
+      "kind": "instagram_story",
+      "entity": "Oracle",
+      "sourceKeys": [
+        "oracle_1",
+        "oracle_2"
+      ],
+      "distinctSourceCount": 2,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-american-eagle-1800.mp4",
+      "sha256": "3726970db6acf26c32c428c5f0d6118d1dc077c22a88721ca82979a58f1c5835",
+      "bytes": 2600164,
+      "kind": "instagram_reel",
+      "entity": "American Eagle",
+      "sourceKeys": [
+        "aeo_1",
+        "aeo_2",
+        "aeo_3",
+        "aeo_4",
+        "aeo_5",
+        "aeo_6"
+      ],
+      "distinctSourceCount": 6,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "44.253971"
+        }
+      },
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/tiktok-nvidia-anthropic-1945.mp4",
+      "sha256": "8827cff3a9c66417df12a4e0f1ceb8c157ddc1a6e12c32d291e6c20f3345930a",
+      "bytes": 1459872,
+      "kind": "tiktok_video",
+      "entity": "Nvidia / Anthropic",
+      "sourceKeys": [
+        "nvidia_1",
+        "nvidia_2",
+        "nvidia_3",
+        "anthropic_1",
+        "anthropic_2"
+      ],
+      "distinctSourceCount": 5,
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "36.317969"
+        }
+      },
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/daily/instagram-story-asahi-diageo-2030.jpg",
+      "sha256": "16665bf6dc7d63ed36456b5d485116af93f5a182a23b0a9031c6108d0f7cb26b",
+      "bytes": 456641,
+      "kind": "instagram_story",
+      "entity": "Asahi / EABL / Diageo",
+      "sourceKeys": [
+        "asahi_1",
+        "eabl_1"
+      ],
+      "distinctSourceCount": 2,
+      "probe": null,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "GENERIC_STOCK_PRIMARY": false
+      }
+    }
+  ]
+}
