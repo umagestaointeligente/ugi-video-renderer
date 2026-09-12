@@ -5,8 +5,8 @@
   "episode": "Mondial / Giovanni M. Cardoso — Histórias de Gestão",
   "audienceDate": "2026-09-12",
   "timezone": "America/Sao_Paulo",
-  "receiptState": "DURABLE_SCHEDULE_RECEIPT_LINKEDIN_DELIVERED_YOUTUBE_PENDING",
-  "finalReceiptComplete": false,
+  "receiptState": "FINAL_DELIVERY_PROVEN_LINKEDIN_AND_YOUTUBE_WITH_YOUTUBE_THUMBNAIL_WARNING",
+  "finalReceiptComplete": true,
   "supersedes": "control-plane/publisher-hub/receipts/UGI-20260913-SUNDAY-LONGFORM-MONDIAL.json",
   "assetEvidence": {
     "sourceRunId": 34675311990,
@@ -62,20 +62,25 @@
     "metricoolScheduleId": "374897322",
     "metricoolUuid": "2452470850380712048",
     "plannerUrl": "https://app.metricool.com/planner/calendar?blogId=6935401&openWithPostUuid=2452470850380712048",
-    "videoId": null,
-    "videoIdState": "NOT_YET_EXPOSED_BY_METRICOOL",
+    "videoId": "bDzb3H3KGwg",
+    "publicUrl": "https://www.youtube.com/watch?v=bDzb3H3KGwg",
+    "videoIdState": "EXTERNAL_VIDEO_ID_CONFIRMED_BY_METRICOOL_PROVIDER_READBACK",
     "channelId": "UCnDg__vBTvo3ZeRbG0D9v-A",
+    "channelIdReadback": "METRICOOL_BRAND_6935401_NETWORK_MAPPING_CONFIRMED",
     "title": "Mondial: de 1 ventilador a R$ 7 bilhões | Histórias de Gestão",
     "scheduledAtBrt": "2026-09-12T16:00:00-03:00",
     "scheduledAtUtc": "2026-09-12T19:00:00Z",
-    "metricoolProviderStatus": "PENDING",
-    "canonicalState": "METRICOOL_SCHEDULED_PENDING_EXTERNAL_ID",
-    "thumbnailApplied": true,
+    "metricoolProviderStatus": "ERROR_WITH_PUBLISHED_WARNING",
+    "metricoolDetailedStatus": "The YouTube post was published with some warnings: Could not upload video thumbnail.",
+    "canonicalState": "PUBLISHED_DELIVERY_PROVEN_WITH_THUMBNAIL_WARNING",
+    "thumbnailApplied": false,
+    "thumbnailEvidence": "CUSTOM_THUMBNAIL_UPLOAD_FAILED; VIDEO_PUBLICATION_SUCCEEDED",
     "visibility": "public",
     "autoPublish": true,
     "madeForKids": false,
     "isAiGeneratedContentDeclared": true,
-    "readbackResult": "CONFIRMED_IN_METRICOOL_SCHEDULE_LIST_ID_374897322_PENDING"
+    "readbackResult": "METRICOOL_PROVIDER_EXTERNAL_ID_AND_PUBLIC_URL_CONFIRMED; PUBLISHED_WITH_CUSTOM_THUMBNAIL_WARNING",
+    "deliveryVerifiedAtBrt": "2026-09-12T16:32:41-03:00"
   },
   "linkedin": {
     "finalAssetSha256": "d3a2a6908c5e9c5f4e4899aaf216a7efc309472f1cb38d6e07a44eafbce38c88",
@@ -97,11 +102,13 @@
   },
   "deliveryVerification": {
     "linkedinAfter2026_09_12T12_00_BRT": "DELIVERED_PUBLISHED_EXTERNAL_ID_CONFIRMED",
-    "youtubeAfter2026_09_12T16_00_BRT": "PENDING_FUTURE_READBACK",
-    "requiredBeforeFinalReceiptComplete": [
-      "youtube delivery/readback",
-      "youtube external Video ID",
-      "final platform statuses"
-    ]
+    "youtubeAfter2026_09_12T16_00_BRT": "DELIVERED_EXTERNAL_VIDEO_ID_CONFIRMED_WITH_CUSTOM_THUMBNAIL_WARNING",
+    "youtubeVideoId": "bDzb3H3KGwg",
+    "youtubePublicUrl": "https://www.youtube.com/watch?v=bDzb3H3KGwg",
+    "youtubeChannelId": "UCnDg__vBTvo3ZeRbG0D9v-A",
+    "youtubeVisibility": "public",
+    "youtubeTitle": "Mondial: de 1 ventilador a R$ 7 bilhões | Histórias de Gestão",
+    "youtubeThumbnailStatus": "CUSTOM_THUMBNAIL_UPLOAD_FAILED",
+    "requiredBeforeFinalReceiptComplete": []
   }
 }
