@@ -112,7 +112,60 @@ def robust_commons_search(prefix,query,count):
         raise RuntimeError(f'NAMED_ENTITY_VISUAL_AUTHENTICITY_FAIL:{prefix}:{len(chosen)}/{count}')
     return chosen
 
-ORIGINAL_RENDER=m.render_narrated
+def caption_chunks(text,max_words=8,max_chars=62):
+    words=text.split(); chunks=[]; cur=[]
+    for word in words:
+        trial=cur+[word]
+        if cur and (len(trial)>max_words or len(' '.join(trial))>max_chars):
+            chunks.append(' '.join(cur)); cur=[word]
+        else:
+            cur=trial
+    if cur: chunks.append(' '.join(cur))
+    if not chunks: chunks=['']
+    dummy=m.Image.new('RGB',(m.W,m.H),(0,0,0)); draw=m.ImageDraw.Draw(dummy); fnt=m.font(38,True)
+    for chunk in chunks:
+        lines=m.wrap(draw,chunk,fnt,930,99)
+        if len(lines)>2:
+            raise RuntimeError(f'CC_MAX_TWO_LINES_FAIL:{chunk}:{len(lines)}')
+    return chunks
+
+def captioned_render(name,entity,scene_keys,scenes,music_path,source_label):
+    if len(scene_keys)!=len(scenes) or len(scene_keys)<5 or len(set(scene_keys))!=len(scene_keys):
+        raise RuntimeError(f'SCENE_DIVERSITY_FAIL:{name}')
+    parts=[]
+    for i,(key,sc) in enumerate(zip(scene_keys,scenes)):
+        voice,dur=m.tts(sc['narration'],f'{name}-{i}')
+        chunks=caption_chunks(sc['narration'])
+        weights=[max(1,len(c.split())) for c in chunks]; total_weight=sum(weights)
+        visual_parts=[]
+        for j,(chunk,weight) in enumerate(zip(chunks,weights)):
+            chunk_dur=dur*weight/total_weight
+            frame=m.video_frame(key,sc['headline'],chunk,source_label)
+            jpg=m.TMP/f'{name}-{i}-cc-{j}.jpg'; frame.save(jpg,'JPEG',quality=91)
+            clip=m.TMP/f'{name}-{i}-cc-{j}.mp4'
+            subprocess.run(['ffmpeg','-y','-loop','1','-framerate','30','-i',str(jpg),'-t',f'{chunk_dur:.3f}','-c:v','libx264','-preset','veryfast','-crf','21','-pix_fmt','yuv420p',str(clip)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            visual_parts.append(clip)
+        vlst=m.TMP/f'{name}-{i}-visual-concat.txt'
+        vlst.write_text('\n'.join("file '"+str(p.resolve()).replace("'","'\\''")+"'" for p in visual_parts),encoding='utf-8')
+        visual=m.TMP/f'{name}-{i}-visual.mp4'
+        subprocess.run(['ffmpeg','-y','-f','concat','-safe','0','-i',str(vlst),'-c','copy',str(visual)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+        out=m.TMP/f'{name}-{i}.mp4'
+        subprocess.run(['ffmpeg','-y','-i',str(visual),'-i',str(voice),'-stream_loop','-1','-i',str(music_path),'-filter_complex','[1:a]volume=1.0[v];[2:a]volume=0.075[m];[v][m]amix=inputs=2:duration=first:dropout_transition=1[a]','-map','0:v:0','-map','[a]','-t',f'{dur:.3f}','-c:v','copy','-c:a','aac','-b:a','160k','-movflags','+faststart',str(out)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+        parts.append(out)
+    lst=m.TMP/f'{name}-concat.txt'; lst.write_text('\n'.join("file '"+str(p.resolve()).replace("'","'\\''")+"'" for p in parts),encoding='utf-8')
+    final=m.OUT/f'{name}.mp4'
+    subprocess.run(['ffmpeg','-y','-f','concat','-safe','0','-i',str(lst),'-c','copy','-movflags','+faststart',str(final)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    return final
+
+ORIGINAL_REC=m.rec
+
+def rec_with_caption_gates(path,keys,kind,entity=None,cc=False):
+    record=ORIGINAL_REC(path,keys,kind,entity,cc)
+    if path.suffix=='.mp4':
+        record['visualQa']['CC_MAX_TWO_LINES_PASS']=bool(cc)
+        record['visualQa']['CC_CHUNKED_SYNC_PASS']=bool(cc)
+        record['visualQa']['CC_OVER_PRIMARY_VISUAL']=False
+    return record
 
 def duration_gated_render(name,entity,scene_keys,scenes,music_path,source_label):
     scenes=[dict(s) for s in scenes]
@@ -143,7 +196,7 @@ def duration_gated_render(name,entity,scene_keys,scenes,music_path,source_label)
     extra=additions.get(name,[])
     for i,s in enumerate(scenes):
         if i < len(extra) and extra[i]: s['narration']=s['narration'].rstrip()+extra[i]
-    final=ORIGINAL_RENDER(name,entity,scene_keys,scenes,music_path,source_label)
+    final=captioned_render(name,entity,scene_keys,scenes,music_path,source_label)
     dur=float(m.probe(final)['format']['duration'])
     if name=='instagram-reel-mondial-historias-de-gestao':
         if not (75 <= dur <= 90): raise RuntimeError(f'DURATION_GATE_FAIL:{name}:{dur:.2f}:expected_75_90')
@@ -155,4 +208,5 @@ def duration_gated_render(name,entity,scene_keys,scenes,music_path,source_label)
 m.download_mondial=extract_mondial_from_approved_master
 m.commons_search=robust_commons_search
 m.render_narrated=duration_gated_render
+m.rec=rec_with_caption_gates
 m.main()
