@@ -1,0 +1,72 @@
+{
+  "schema": "UGI_LONGFORM_EPISODE_V1",
+  "date": "2026-09-13",
+  "timezone": "America/Sao_Paulo",
+  "series": "Historias de Gestao",
+  "company": "Mondial Eletrodomesticos / Grupo MK",
+  "entrepreneur": "Giovanni M. Cardoso",
+  "youtube": {
+    "title": "Como a Mondial saiu de 1 ventilador para virar uma gigante brasileira | Historias de Gestao",
+    "plannedTimeBrt": "16:00",
+    "bestTimeEvidence": "Metricool YouTube Sunday peak value at 16:00",
+    "targetDurationMinutes": [10, 15],
+    "aspectRatio": "16:9",
+    "category": "EDUCATION",
+    "madeForKids": false
+  },
+  "linkedin": {
+    "title": "De 1 ventilador a uma gigante: o que a historia da Mondial ensina sobre gestao",
+    "plannedTimeBrt": "11:00",
+    "bestTimeEvidence": "Metricool LinkedIn Sunday peak value at 11:00",
+    "targetDurationMinutes": [3, 6],
+    "aspectRatio": "16:9"
+  },
+  "storyArc": [
+    "Giovanni's early commercial exposure in his father's store in Parana",
+    "engineering and corporate career before entrepreneurship",
+    "founding in 2000 with a single 30 cm fan and a small Sorocaba operation",
+    "portfolio expansion driven by consumer needs and cost-benefit positioning",
+    "distribution scale across physical retail and ecommerce",
+    "industrial scale in Bahia and increased Brazilian production",
+    "acquisition of the former Sony factory in Manaus and expansion into electronics through Grupo MK",
+    "focus by business segment, rapid product development and high launch cadence",
+    "consumer-centred brand building and the democratic 'classe G de gente' proposition",
+    "current scale and the management principles: positive vision, focus on the essential, continuous improvement and execution"
+  ],
+  "managementLessons": [
+    "start narrow but build for scale",
+    "listen to the market before expanding the portfolio",
+    "distribution is a strategic capability, not only a sales channel",
+    "industrial flexibility can become a competitive advantage",
+    "segment focus improves accountability and speed",
+    "brand promise must align product, price, quality and after-sales",
+    "culture becomes operational when repeated in goals, routines and decisions"
+  ],
+  "factSources": [
+    "https://www.mondial.com.br/nossa-historia",
+    "https://exame.com/colunistas/empreender-liberta/reconhecer-oportunidades-empreender-e-trabalhar-da-fundacao-a-maior-grupo-eletro-portaveis-do-pais/",
+    "https://exame.com/colunistas/empreender-liberta/quando-se-olha-o-brasil-com-uma-visao-positiva-da-vontade-de-empreender-diz-fundador-da-mondial/",
+    "https://gowhere.com.br/business/giovanni-cardoso-dono-da-mondial-e-da-aiwa-fala-sobre-lideranca-industria-e-crescimento/",
+    "https://eletrolarnews.com.br/grupo-mk-projeta-faturamento-de-ate-r-9-bi/",
+    "https://eletrolarnews.com.br/giovanni-cardoso-revela-os-pilares-do-sucesso-da-mondial/",
+    "https://br.linkedin.com/in/giovanni-m-cardoso",
+    "https://br.linkedin.com/company/grupomk",
+    "https://www.gov.br/suframa/pt-br/assuntos/noticias/suframa-conhece-estrutura-e-planos-de-expansao-da-mondial-no-pim"
+  ],
+  "visualRules": {
+    "giovanniRealVisualsMinimum": 4,
+    "mondialRealVisualsMinimum": 8,
+    "exactVisualReuseWithinVideo": 0,
+    "genericStockPrimary": false,
+    "originalGraphicsAllowedOnlyAsSupport": true,
+    "allRealVisualsNeedSourceCredit": true
+  },
+  "publisher": {
+    "primary": "Metricool",
+    "brandId": "6935401",
+    "youtubeChannel": "UCnDg__vBTvo3ZeRbG0D9v-A",
+    "linkedinOrganization": "urn:li:organization:144864036",
+    "fallbackOnly": ["Buffer/direct"]
+  },
+  "state": "AUTHORIZED_FOR_PRODUCTION_AND_METRICOOL_SCHEDULING_AFTER_QA"
+}
