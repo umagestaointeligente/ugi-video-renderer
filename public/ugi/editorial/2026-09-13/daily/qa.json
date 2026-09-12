@@ -33,8 +33,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-mondial-historias-de-gestao.mp4",
-      "sha256": "ae9cc90fa253a82b5734050f97fff2a5e0178962b61e6de13c9369dcec873854",
-      "bytes": 3275297,
+      "sha256": "246a3d870d30808624a8622fb8c81f28cc75209e1c2e921a16778fa1a71e58ff",
+      "bytes": 4035841,
       "kind": "instagram_reel",
       "entity": "Mondial",
       "visualQa": {
@@ -43,7 +43,10 @@
         "EXACT_VISUAL_REUSE_COUNT": 0,
         "RIGHTS_PROVENANCE_PASS": true,
         "CC_DEDICATED_LOWER_BAND_PASS": true,
-        "GENERIC_STOCK_PRIMARY": false
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false
       },
       "probe": {
         "programs": [],
@@ -60,7 +63,7 @@
           }
         ],
         "format": {
-          "duration": "80.898667"
+          "duration": "80.980000"
         }
       }
     },
@@ -82,8 +85,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/tiktok-zara-inditex-1200.mp4",
-      "sha256": "cf4490d1cbd516e6e2eb16cb56617d6ae74a72531d46c199b5d3cec6db0f5322",
-      "bytes": 3206108,
+      "sha256": "06c4d41a9e479600994b93eadbb4d83728a3380b2f1cdfa8161d3944e4f0522e",
+      "bytes": 4367951,
       "kind": "tiktok_video",
       "entity": "Zara / Inditex",
       "visualQa": {
@@ -92,7 +95,10 @@
         "EXACT_VISUAL_REUSE_COUNT": 0,
         "RIGHTS_PROVENANCE_PASS": true,
         "CC_DEDICATED_LOWER_BAND_PASS": true,
-        "GENERIC_STOCK_PRIMARY": false
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false
       },
       "probe": {
         "programs": [],
@@ -109,7 +115,7 @@
           }
         ],
         "format": {
-          "duration": "48.700000"
+          "duration": "48.692000"
         }
       }
     },
@@ -243,8 +249,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-american-eagle-1800.mp4",
-      "sha256": "ca4ee02001fd8718a51ae87e28d7640645a4b293d2523bd13a9ff09e639d03c0",
-      "bytes": 2966168,
+      "sha256": "fa128b9385685b5fcfab07f4972e16cb9e16e24d0f8554a34ef89fdfb07f3f86",
+      "bytes": 4240320,
       "kind": "instagram_reel",
       "entity": "American Eagle",
       "visualQa": {
@@ -253,7 +259,10 @@
         "EXACT_VISUAL_REUSE_COUNT": 0,
         "RIGHTS_PROVENANCE_PASS": true,
         "CC_DEDICATED_LOWER_BAND_PASS": true,
-        "GENERIC_STOCK_PRIMARY": false
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false
       },
       "probe": {
         "programs": [],
@@ -270,14 +279,14 @@
           }
         ],
         "format": {
-          "duration": "49.187305"
+          "duration": "49.220638"
         }
       }
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/tiktok-nvidia-anthropic-1945.mp4",
-      "sha256": "31ae2460c06d555398d01398b188e644aa44db0501dc81b5d072407b0e6e8a1f",
-      "bytes": 2765604,
+      "sha256": "e7872016af0bcbf71d54c9566cf1b59d4b3279a7085b5e311f1764e4e09ea1dd",
+      "bytes": 3363850,
       "kind": "tiktok_video",
       "entity": "Nvidia / Anthropic",
       "visualQa": {
@@ -286,7 +295,10 @@
         "EXACT_VISUAL_REUSE_COUNT": 0,
         "RIGHTS_PROVENANCE_PASS": true,
         "CC_DEDICATED_LOWER_BAND_PASS": true,
-        "GENERIC_STOCK_PRIMARY": false
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false
       },
       "probe": {
         "programs": [],
