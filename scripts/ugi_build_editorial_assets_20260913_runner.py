@@ -112,6 +112,47 @@ def robust_commons_search(prefix,query,count):
         raise RuntimeError(f'NAMED_ENTITY_VISUAL_AUTHENTICITY_FAIL:{prefix}:{len(chosen)}/{count}')
     return chosen
 
+ORIGINAL_RENDER=m.render_narrated
+
+def duration_gated_render(name,entity,scene_keys,scenes,music_path,source_label):
+    scenes=[dict(s) for s in scenes]
+    additions={
+      'instagram-reel-mondial-historias-de-gestao':[
+        ' Antes de ampliar, era preciso dominar o básico.',
+        ' Isso reduz dependência e encurta o ciclo.',
+        ' Cada nova frente precisava ter dono e meta.',
+        ' A escala passou a conversar com o mercado nacional.',
+        ' Distribuição transforma produto disponível em venda real.',
+        ' Presença consistente aumenta lembrança e confiança do consumidor.',
+        ' Capacidade construída hoje sustenta o próximo salto.'
+      ],
+      'tiktok-zara-inditex-1200':[
+        ' O dado reduz a aposta.', '', '', '', '', ' E melhora a decisão de capital.'
+      ],
+      'instagram-reel-american-eagle-1800':[
+        ' A conta aparece rápido.', '', '', '', '', ' E a margem sente primeiro.'
+      ],
+      'tiktok-nvidia-anthropic-1945':[
+        ' O movimento mudaria essa relação.',
+        ' Isso cria alinhamento e dependência.',
+        ' Computação passa a ser vantagem competitiva.',
+        ' Confiança também tem preço estratégico.',
+        ' É uma relação para monitorar.'
+      ]
+    }
+    extra=additions.get(name,[])
+    for i,s in enumerate(scenes):
+        if i < len(extra) and extra[i]: s['narration']=s['narration'].rstrip()+extra[i]
+    final=ORIGINAL_RENDER(name,entity,scene_keys,scenes,music_path,source_label)
+    dur=float(m.probe(final)['format']['duration'])
+    if name=='instagram-reel-mondial-historias-de-gestao':
+        if not (75 <= dur <= 90): raise RuntimeError(f'DURATION_GATE_FAIL:{name}:{dur:.2f}:expected_75_90')
+    elif name in {'tiktok-zara-inditex-1200','instagram-reel-american-eagle-1800','tiktok-nvidia-anthropic-1945'}:
+        if not (45 <= dur <= 60): raise RuntimeError(f'DURATION_GATE_FAIL:{name}:{dur:.2f}:expected_45_60')
+    print(f'DURATION_GATE_PASS {name} {dur:.2f}s')
+    return final
+
 m.download_mondial=extract_mondial_from_approved_master
 m.commons_search=robust_commons_search
+m.render_narrated=duration_gated_render
 m.main()
