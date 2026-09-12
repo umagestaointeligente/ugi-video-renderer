@@ -1,0 +1,203 @@
+{
+  "schema": "UGI_EDITORIAL_PLAN_V4",
+  "project": "UGI — Uma Gestão Inteligente",
+  "date": "2026-09-13",
+  "timezone": "America/Sao_Paulo",
+  "state": "PLANNED_PENDING_ASSET_BUILD_QA_AND_SCHEDULE",
+  "publisherMutationPerformed": false,
+  "metricoolBrandId": "6935401",
+  "scheduleReadbackBeforePlan": {
+    "range": "2026-09-13",
+    "scheduledItemsFound": 0,
+    "result": "NO_COLLISION_FOUND"
+  },
+  "policy": {
+    "antiRepeat": "control-plane/policies/UGI_ANTI_REPEAT_V2.md",
+    "cooldownDays": 60,
+    "visualGate": "config/ugi/editorial-human-approval-gate.json",
+    "publisherPrimary": "metricool",
+    "blindRetryForbidden": true,
+    "sameDayCrossNetworkDuplicate": "BLOCK_UNLESS_EXPLICIT_CAMPAIGN_DERIVATIVE",
+    "longformMetrics": "config/ugi/longform-metrics-v1.json"
+  },
+  "instagramStoriesOfManagementDecision": {
+    "decision": "GO_NATIVE_DERIVATIVE",
+    "reason": "Histórias de Gestão can become a recurring multiplatform franchise, but Instagram should receive a platform-native vertical cut rather than an unchanged mirror of the YouTube or LinkedIn master.",
+    "mondialDerivative": {
+      "targetDurationSeconds": [75, 90],
+      "format": "vertical_reel",
+      "hook": "De um ventilador a uma empresa de bilhões: o que a Mondial fez diferente?",
+      "contentFocus": [
+        "origem com um único ventilador",
+        "fábrica e nacionalização",
+        "distribuição e escala",
+        "uma lição prática de gestão"
+      ],
+      "cta": "Veja o episódio completo de Histórias de Gestão no YouTube da UGI.",
+      "requiresNewAsset": true,
+      "sameCampaignAuthorization": "USER_REQUEST_2026-09-12"
+    }
+  },
+  "allocation": {
+    "instagram": {"reels": 2, "carousel": 1, "stories": 4, "total": 7},
+    "tiktok": {"videos": 2, "total": 2},
+    "linkedin": {"post": 1, "total": 1},
+    "youtube": {"newLongformOnSep13": 0, "measurementOnlyForSep12Mondial": true},
+    "totalCrossNetworkPosts": 10
+  },
+  "bestTimeEvidence": {
+    "instagram": {"primary": "10:00", "secondary": ["12:00", "18:00", "19:00"]},
+    "linkedin": {"primary": "11:00", "secondary": ["13:00", "10:00"]},
+    "tiktok": {"primary": "10:00", "secondary": ["12:00", "18:00", "19:00"]},
+    "youtube": {"primary": "16:00", "note": "No new Sep13 longform; use this cadence for future Sunday longforms when not published earlier."}
+  },
+  "slots": [
+    {
+      "id": "UGI-20260913-IG-STORY-KROGER-0830",
+      "timeBrt": "08:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "kroger-slower-sales-profit-protected-mix-efficiency",
+      "topic": "Kroger reduz previsão de vendas, mas mantém a meta de lucro",
+      "managementAngle": "crescimento de receita e qualidade econômica não são a mesma coisa; mix, eficiência e negócios de maior margem podem proteger resultado",
+      "source": "Reuters 2026-09-11",
+      "sourceUrl": "https://www.reuters.com/business/retail-consumer/kroger-cuts-annual-sales-forecast-2026-09-11/"
+    },
+    {
+      "id": "UGI-20260913-IG-REEL-HISTORIAS-MONDIAL-1000",
+      "timeBrt": "10:00",
+      "platform": "instagram",
+      "format": "reel_vertical",
+      "topicKey": "mondial-historias-de-gestao-multiplatform-derivative",
+      "topic": "Histórias de Gestão — Mondial: de um ventilador a uma empresa de bilhões",
+      "managementAngle": "produto, indústria, distribuição, nacionalização e disciplina de execução",
+      "source": "UGI Mondial longform source manifest + published YouTube master",
+      "requiresAssetBuild": true,
+      "targetDurationSeconds": [75, 90],
+      "campaignDerivativeAuthorized": true
+    },
+    {
+      "id": "UGI-20260913-LI-TATA-1100",
+      "timeBrt": "11:00",
+      "platform": "linkedin",
+      "format": "post_image_text",
+      "topicKey": "tata-sons-regulation-listing-governance-succession",
+      "topic": "Tata Sons: quando regulação, governança e sucessão mudam a estrutura de capital",
+      "managementAngle": "controle societário não elimina obrigações regulatórias; governança e sucessão podem transformar uma decisão financeira em decisão estratégica",
+      "source": "Reuters 2026-09-12",
+      "sourceUrl": "https://www.reuters.com/world/india/indias-central-bank-rejects-tata-sons-request-avoid-public-listing-sources-say-2026-09-12/"
+    },
+    {
+      "id": "UGI-20260913-TT-INDITEX-1200",
+      "timeBrt": "12:00",
+      "platform": "tiktok",
+      "format": "video",
+      "topicKey": "inditex-zara-selective-us-growth-online-demand-before-stores",
+      "topic": "Zara usa demanda online antes de decidir onde abrir lojas",
+      "managementAngle": "usar comportamento real do cliente como sinal para expansão física; menos lojas, maiores e mais produtivas",
+      "source": "Reuters 2026-09-11",
+      "sourceUrl": "https://www.reuters.com/business/retail-consumer/zara-owner-inditex-looks-us-next-phase-growth-2026-09-11/"
+    },
+    {
+      "id": "UGI-20260913-IG-STORY-ULTRAVIOLETTE-1300",
+      "timeBrt": "13:00",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "ultraviolette-staged-manufacturing-capacity-scale",
+      "topic": "Ultraviolette prepara fábrica que pode levar capacidade de 50 mil para até 500 mil veículos",
+      "managementAngle": "capacidade escalável reduz o risco de apostar tudo de uma vez e cria opção para acompanhar a demanda",
+      "source": "Reuters 2026-09-10",
+      "sourceUrl": "https://www.reuters.com/world/india/indian-ev-startup-ultraviolette-plans-82-million-plant-demand-surges-2026-09-10/"
+    },
+    {
+      "id": "UGI-20260913-IG-CAROUSEL-ASML-1500",
+      "timeBrt": "15:00",
+      "platform": "instagram",
+      "format": "carousel",
+      "topicKey": "asml-flow-factory-ai-demand-capacity",
+      "topic": "ASML constrói uma nova 'Flow Factory' para o gargalo físico da IA",
+      "managementAngle": "crescimento digital continua dependendo de capacidade física, logística, pessoas e infraestrutura",
+      "source": "Reuters 2026-09-08",
+      "sourceUrl": "https://www.reuters.com/business/asml-breaks-ground-new-manufacturing-facilities-major-expansion-2026-09-08/"
+    },
+    {
+      "id": "UGI-20260913-IG-STORY-ORACLE-1730",
+      "timeBrt": "17:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "oracle-ai-investment-restructuring-cash-discipline",
+      "topic": "Oracle investe pesado em IA e, ao mesmo tempo, amplia a reestruturação",
+      "managementAngle": "crescimento estratégico precisa conviver com disciplina de caixa, estrutura de custos e financiamento",
+      "source": "Reuters 2026-09-11",
+      "sourceUrl": "https://www.reuters.com/business/retail-consumer/oracle-shares-rise-ai-cloud-backlog-beats-estimates-2026-09-11/"
+    },
+    {
+      "id": "UGI-20260913-IG-REEL-AEO-1800",
+      "timeBrt": "18:00",
+      "platform": "instagram",
+      "format": "reel",
+      "topicKey": "american-eagle-brand-clarity-inventory-margin",
+      "topic": "American Eagle: quando estoque demais revela um problema maior de marca",
+      "managementAngle": "identidade de marca, previsão de demanda, sortimento e desconto precisam funcionar como um único sistema",
+      "source": "Reuters 2026-09-10",
+      "sourceUrl": "https://www.reuters.com/business/retail-consumer/american-eagle-shares-slide-flat-margin-outlook-weak-core-brand-weigh-2026-09-10/"
+    },
+    {
+      "id": "UGI-20260913-TT-NVIDIA-ANTHROPIC-1945",
+      "timeBrt": "19:45",
+      "platform": "tiktok",
+      "format": "video",
+      "topicKey": "nvidia-anthropic-anchor-investor-supplier-customer-capital-ties",
+      "topic": "Quando o seu fornecedor também quer virar investidor: Nvidia e Anthropic",
+      "managementAngle": "dependência operacional, capital e poder estratégico podem ficar entrelaçados no mesmo relacionamento",
+      "source": "Reuters 2026-09-11",
+      "sourceUrl": "https://www.reuters.com/legal/transactional/nvidia-talks-invest-anthropics-mega-ipo-sources-say-2026-09-11/"
+    },
+    {
+      "id": "UGI-20260913-IG-STORY-ASAHI-DIAGEO-2030",
+      "timeBrt": "20:30",
+      "platform": "instagram",
+      "format": "story",
+      "topicKey": "asahi-diageo-kenya-acquisition-channel-competition-condition",
+      "topic": "Uma aquisição de US$2,3 bilhões aprovada com uma condição: 20% do espaço refrigerado para concorrentes",
+      "managementAngle": "controle de canal e distribuição também pode virar tema de concorrência; crescimento por aquisição precisa considerar o ecossistema",
+      "source": "Reuters 2026-09-11",
+      "sourceUrl": "https://www.reuters.com/world/africa/kenya-approves-asahi-group-acquisition-diageo-kenya-assets-2026-09-11/"
+    }
+  ],
+  "longformMeasurementOnSep13": {
+    "episode": "Mondial / Giovanni M. Cardoso",
+    "youtubePublishedOn": "2026-09-12",
+    "linkedinPublishedOn": "2026-09-12",
+    "collectOnSep13": [
+      "youtube 24h snapshot when elapsed",
+      "linkedin 24h snapshot when elapsed",
+      "instagram derivative baseline after publication"
+    ],
+    "youtubeMetrics": [
+      "views",
+      "watchMinutes",
+      "averageViewDurationSeconds",
+      "averagePercentageViewed",
+      "likes",
+      "comments",
+      "shares",
+      "subscriberDeltaAroundPublication"
+    ]
+  },
+  "releaseGate": [
+    "ANTI_REPEAT_60D_PASS",
+    "FACT_PASS",
+    "RIGHTS_LICENSE_PASS",
+    "REAL_CONTEXTUAL_VISUAL_PRIMARY_PASS",
+    "VISUAL_VARIETY_PASS",
+    "SPEECH_VISUAL_MATCH_PASS",
+    "EXACT_VISUAL_REUSE_ZERO_PASS",
+    "MUSIC_FIT_PASS",
+    "FORMAT_PASS",
+    "CLOSED_CAPTION_PASS_FOR_NARRATED_VIDEO",
+    "EDITORIAL_VALUE_PASS",
+    "CHANNEL_IDENTITY_PASS",
+    "EXISTING_SCHEDULE_READBACK_PASS"
+  ]
+}
