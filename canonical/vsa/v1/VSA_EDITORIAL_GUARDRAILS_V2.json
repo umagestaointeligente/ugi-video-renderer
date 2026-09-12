@@ -75,6 +75,20 @@
     "pacing_rule": "The story must continuously evolve. Avoid long flat explanation blocks, repeated visual families, static exposition and narration that resolves the central question too early. Introduce a new question, risk, reveal, visual proof or consequence before attention stalls.",
     "visual_change_guidance_seconds": [3, 5],
     "visual_change_is_guidance_not_mechanical_cutting": true,
+    "animation_diversity": {
+      "status": "HARD_GATE",
+      "goal": "Explanatory animation must increase comprehension and retention, not merely decorate narration.",
+      "same_animation_grammar_back_to_back": "FAIL",
+      "same_loop_or_cycle_repeated_more_than_once": "FAIL",
+      "same_camera_move_reused_as_primary_explanation": "FAIL",
+      "repeated_orbiting_arrows_without_new_state": "FAIL",
+      "repeated_zoom_in_zoom_out_without_new_information": "FAIL",
+      "each_animation_block_requires_new_visual_logic": true,
+      "preferred_distinct_grammars": ["CROSS_SECTION", "PARTICLE_FLOW", "CAUSE_EFFECT_CHAIN", "TRAJECTORY_VECTOR", "STATE_CHANGE", "SCALE_COMPARE", "DATA_OVERLAY", "CUTAWAY", "BEFORE_AFTER", "SENSOR_FEEDBACK_LOOP"],
+      "state_progression_required": "Every explanatory block must visibly progress through at least two meaningful states: cause to effect, input to response, before to after, error to correction, or position to consequence.",
+      "integration_rule": "Alternate animation with real footage or real evidence whenever the subject is observable. Do not place long animation runs without returning to real-world proof.",
+      "release_gate": "LONGFORM_ANIMATION_DIVERSITY_PASS"
+    },
     "voice": {
       "language": "pt-BR",
       "gender": "male",
@@ -85,7 +99,7 @@
       "robotic_or_advertising_delivery": "FAIL",
       "preferred_reuse": "Reuse the validated VSA Shorts voice when available; otherwise a new longform voice must pass a listening gate before publication."
     },
-    "release_gates": ["LONGFORM_REAL_FOOTAGE_PASS", "LONGFORM_RETENTION_PASS", "VOICE_PTBR_NEUTRAL_PASS"]
+    "release_gates": ["LONGFORM_REAL_FOOTAGE_PASS", "LONGFORM_RETENTION_PASS", "LONGFORM_ANIMATION_DIVERSITY_PASS", "VOICE_PTBR_NEUTRAL_PASS"]
   },
   "people_biocuriosity": {
     "enabled": true,
@@ -105,6 +119,7 @@
     "real_footage_gate_when_required": "PASS",
     "longform_real_footage_gate_when_longform": "PASS",
     "longform_retention_gate_when_longform": "PASS",
+    "longform_animation_diversity_gate_when_longform": "PASS",
     "voice_ptbr_neutral_gate_when_longform": "PASS",
     "person_visual_reference_gate_when_person_profile": "PASS",
     "person_real_video_segments_gate_when_person_profile": "PASS"
