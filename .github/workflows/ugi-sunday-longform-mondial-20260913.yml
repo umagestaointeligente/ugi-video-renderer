@@ -1,0 +1,86 @@
+name: UGI Sunday Longform Mondial 2026-09-13
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-sunday-longform-mondial-20260913.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install render dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --upgrade pip
+          python -m pip install edge-tts pillow requests numpy
+
+      - name: Patch unique visual key for Eletrolar chapter
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/ugi_longform_mondial_20260913.py')
+          s=p.read_text(encoding='utf-8')
+          old='("showcase", "Da feira pequena ao grande estande"'
+          new='("card_eletrolar", "Da feira pequena ao grande estande"'
+          if old not in s:
+              raise SystemExit('EXPECTED_PATCH_TARGET_NOT_FOUND')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          print('UNIQUE_VISUAL_PATCH=PASS')
+          PY
+
+      - name: Render YouTube documentary and LinkedIn executive cut
+        run: |
+          set -euo pipefail
+          python scripts/ugi_longform_mondial_20260913.py
+
+      - name: Verify hard gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          p=Path('public/ugi/editorial/2026-09-13/longform')
+          qa=json.loads((p/'qa.json').read_text())
+          m=json.loads((p/'source-manifest.json').read_text())
+          assert qa['state']=='PASS'
+          assert qa['founderRealVisualCount'] >= 4
+          assert qa['companyRealVisualCount'] >= 8
+          assert qa['youtubeExactVisualReuseCount'] == 0
+          assert qa['linkedinExactVisualReuseCount'] == 0
+          assert qa['subtitleBurnedIn'] is True
+          assert 570 <= qa['youtubeDurationSeconds'] <= 960
+          assert 170 <= qa['linkedinDurationSeconds'] <= 390
+          for f in ['youtube-mondial-historias-de-gestao.mp4','linkedin-mondial-historias-de-gestao.mp4','youtube-mondial-thumbnail.jpg']:
+              q=p/f
+              assert q.exists() and q.stat().st_size>10000, f
+          assert len(m['realVisuals']) >= 12
+          assert len(m['factSources']) >= 7
+          print('UGI_LONGFORM_QA=PASS')
+          print(json.dumps(qa,ensure_ascii=False))
+          PY
+
+      - name: Commit immutable production assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-bot'
+          git config user.email 'ugi-editorial-bot@users.noreply.github.com'
+          git add scripts/ugi_longform_mondial_20260913.py public/ugi/editorial/2026-09-13/longform/
+          git commit -m 'assets(ugi): Mondial Sunday longform finals [skip ci]'
+          git push
+          echo "ASSET_COMMIT=$(git rev-parse HEAD)"
+          ls -lh public/ugi/editorial/2026-09-13/longform/
