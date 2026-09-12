@@ -5,7 +5,7 @@
   "episode": "Mondial / Giovanni M. Cardoso — Histórias de Gestão",
   "audienceDate": "2026-09-12",
   "timezone": "America/Sao_Paulo",
-  "receiptState": "DURABLE_SCHEDULE_RECEIPT_PENDING_PLATFORM_DELIVERY_IDS",
+  "receiptState": "DURABLE_SCHEDULE_RECEIPT_LINKEDIN_DELIVERED_YOUTUBE_PENDING",
   "finalReceiptComplete": false,
   "supersedes": "control-plane/publisher-hub/receipts/UGI-20260913-SUNDAY-LONGFORM-MONDIAL.json",
   "assetEvidence": {
@@ -83,21 +83,22 @@
     "metricoolScheduleId": "374897271",
     "metricoolUuid": "-302418479823632643",
     "plannerUrl": "https://app.metricool.com/planner/calendar?blogId=6935401&openWithPostUuid=-302418479823632643",
-    "externalPostId": null,
+    "externalPostId": "urn:li:ugcPost:7504555429629394944",
+    "publicUrl": "https://linkedin.com/feed/update/urn:li:ugcPost:7504555429629394944",
     "pageUrn": "urn:li:organization:144864036",
     "pageName": "uma-gestao-inteligente / UGI company page",
     "scheduledAtBrt": "2026-09-12T12:00:00-03:00",
     "scheduledAtUtc": "2026-09-12T15:00:00Z",
-    "metricoolProviderStatus": "PENDING",
-    "canonicalState": "METRICOOL_SCHEDULED_PENDING_PLATFORM_DELIVERY",
+    "metricoolProviderStatus": "PUBLISHED",
+    "canonicalState": "PUBLISHED_DELIVERY_PROVEN",
     "autoPublish": true,
-    "readbackResult": "CONFIRMED_IN_METRICOOL_SCHEDULE_LIST_ID_374897271_PENDING"
+    "readbackResult": "METRICOOL_PROVIDER_PUBLISHED_EXTERNAL_ID_CONFIRMED",
+    "deliveryVerifiedAtBrt": "2026-09-12T12:20:13-03:00"
   },
   "deliveryVerification": {
-    "linkedinAfter2026_09_12T12_00_BRT": "PENDING_FUTURE_READBACK",
+    "linkedinAfter2026_09_12T12_00_BRT": "DELIVERED_PUBLISHED_EXTERNAL_ID_CONFIRMED",
     "youtubeAfter2026_09_12T16_00_BRT": "PENDING_FUTURE_READBACK",
     "requiredBeforeFinalReceiptComplete": [
-      "linkedin delivery/readback",
       "youtube delivery/readback",
       "youtube external Video ID",
       "final platform statuses"
