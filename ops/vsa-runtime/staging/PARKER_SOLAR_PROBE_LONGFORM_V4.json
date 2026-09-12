@@ -1,0 +1,170 @@
+{
+  "schema": "VSA_LONGFORM_STAGING_V1",
+  "status": "BLOCKED_PRE_RENDER",
+  "project": "ORBIT/VSA",
+  "channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ",
+  "channel_name": "Você Sabia Agora?",
+  "format": "LONGFORM_16_9",
+  "resolution": "1280x720",
+  "topic": "Como a Parker Solar Probe chega tão perto do Sol sem derreter?",
+  "semantic_topic_id": "PARKER_SOLAR_PROBE_THERMAL_SURVIVAL",
+  "editorial_bucket": "WORLD_SCIENCE",
+  "target_duration_seconds": 540,
+  "publication": false,
+  "schedule": false,
+  "metricool_brand_id": 6935441,
+  "metricool_locked_until_paulo_final_approval": true,
+  "v3_reference": {
+    "heygen_video_id": "efd4471f249d13a07d6e0b7bb0539226",
+    "status": "REPROVED_REFERENCE_ONLY",
+    "known_failure": "12 long narration blocks sustained by looped background clips"
+  },
+  "voice": {
+    "preferred_exact_shorts_voice_id": "S18cx854VFC5LhMuVzmN",
+    "preferred_exact_shorts_voice_status": "BLOCKED_HEYGEN_INSUFFICIENT_CREDIT",
+    "canonical_runtime_voice": "pt-BR-AntonioNeural",
+    "canonical_runtime_voice_source": "ops/vsa-runtime/dynamic_renderer_v2.py",
+    "sample_required_seconds": "10-20",
+    "paulo_voice_approval_gate": "PENDING",
+    "voice_ptbr_native_gate": "PENDING_LISTENING",
+    "voice_neutral_accent_gate": "PENDING_LISTENING",
+    "full_narration_render_allowed": false
+  },
+  "story_arc": [
+    "HIGH_IMPACT_HOOK",
+    "STAKES",
+    "TEMPERATURE_VS_HEAT",
+    "THERMAL_PROTECTION_SYSTEM",
+    "SOLAR_ARRAYS_AND_COOLING",
+    "AUTONOMY_AND_SUN_SENSORS",
+    "WISPR_REAL_PROOF",
+    "VENUS_GRAVITY_ASSISTS",
+    "SOLAR_WIND_AND_SPACE_WEATHER",
+    "MISSION_IMPORTANCE",
+    "SEPTEMBER_2026_UPDATE",
+    "SHORT_CTA"
+  ],
+  "visual_policy": {
+    "real_footage_first": true,
+    "visual_change_guidance_seconds": [3, 5],
+    "max_single_visual_seconds": 8,
+    "same_source_moment_repeat": "FAIL",
+    "adjacent_same_source": "FAIL",
+    "minimum_real_footage_ratio": 0.5,
+    "minimum_distinct_real_moments": 20,
+    "animation_role": "mechanisms, trajectories, scale, fields, heat transfer, internal processes only",
+    "long_clip_loop": "FORBIDDEN"
+  },
+  "asset_pool": [
+    {
+      "id": "PARKER_PRELAUNCH_FILE",
+      "class": "REAL_MIXED_BROLL_PENDING_CLIP_AUDIT",
+      "source_page": "https://svs.gsfc.nasa.gov/13034",
+      "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013034/GSFC_ParkerSolarProbe_VF.webm",
+      "credit": "NASA Goddard Space Flight Center",
+      "usage_basis": "NASA informational/editorial use policy; inspect embedded third-party material before selecting each excerpt",
+      "rights_status": "PENDING_ITEM_REVIEW"
+    },
+    {
+      "id": "TPS_INSTALLATION",
+      "class": "REAL_FOOTAGE",
+      "source_page": "https://svs.gsfc.nasa.gov/13029",
+      "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013029/ADRIESMAN1TPSInstallation.webm",
+      "credit": "NASA/Johns Hopkins APL/Lee Hobson",
+      "usage_basis": "Official NASA SVS asset; individual Johns Hopkins APL credit requires item-level reuse verification",
+      "rights_status": "PENDING_ITEM_REVIEW"
+    },
+    {
+      "id": "SOLAR_ARRAY_TEST",
+      "class": "REAL_FOOTAGE",
+      "source_page": "https://svs.gsfc.nasa.gov/13029",
+      "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013029/ADRIESMAN2SolarArrays.webm",
+      "credit": "NASA/Johns Hopkins APL/Lee Hobson",
+      "usage_basis": "Official NASA SVS asset; individual Johns Hopkins APL credit requires item-level reuse verification",
+      "rights_status": "PENDING_ITEM_REVIEW"
+    },
+    {
+      "id": "SUN_SENSOR_AUTONOMY",
+      "class": "EXPLANATORY_OFFICIAL_ANIMATION",
+      "source_page": "https://svs.gsfc.nasa.gov/13029",
+      "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013029/ADRIESMAN3sunsensorsautonomy.webm",
+      "credit": "Johns Hopkins University/APL/Steve Gribben",
+      "usage_basis": "Official NASA SVS hosted asset; Johns Hopkins APL credit requires item-level reuse verification",
+      "rights_status": "PENDING_ITEM_REVIEW"
+    },
+    {
+      "id": "PARKER_APPROACH_SUN",
+      "class": "EXPLANATORY_OFFICIAL_ANIMATION",
+      "source_page": "https://svs.gsfc.nasa.gov/13029",
+      "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013029/ObservingtheSun-4K.webm",
+      "credit": "Johns Hopkins University/APL/Steve Gribben",
+      "usage_basis": "Official NASA SVS hosted asset; Johns Hopkins APL credit requires item-level reuse verification",
+      "rights_status": "PENDING_ITEM_REVIEW"
+    },
+    {
+      "id": "WISPR_CLOSEST_WITH_SUN",
+      "class": "REAL_SCIENCE_DATA",
+      "source_page": "https://svs.gsfc.nasa.gov/14865",
+      "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a014800/a014865/14865_WISPRWithSun_H264.mp4",
+      "credit": "NASA/Johns Hopkins APL/Naval Research Lab",
+      "usage_basis": "Official WISPR science-data visualization; multi-institution credit requires item-level reuse verification",
+      "rights_status": "PENDING_ITEM_REVIEW"
+    },
+    {
+      "id": "MISSION_CONTROL_DEC2024",
+      "class": "REAL_FOOTAGE",
+      "source_page": "https://svs.gsfc.nasa.gov/14741",
+      "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a014700/a014741/14741_PSP_BeaconToneReceived_YT.webm",
+      "credit": "NASA/JHUAPL",
+      "usage_basis": "Official NASA SVS B-roll; item-level JHUAPL reuse verification required",
+      "rights_status": "PENDING_ITEM_REVIEW"
+    }
+  ],
+  "causal_animation_package": {
+    "guide_id": "guide0602qhehf",
+    "status": "COMPLETED_COMPONENT_NOT_MASTER",
+    "families": [
+      "shield_cross_section",
+      "solar_panel_retraction",
+      "water_cooling_loop",
+      "temperature_vs_heat",
+      "autonomy_attitude_correction",
+      "venus_gravity_assist",
+      "solar_wind_to_earth",
+      "wispr_geometry"
+    ]
+  },
+  "current_update": {
+    "source": "https://science.nasa.gov/blogs/parker-solar-probe/2026/09/10/after-latest-swing-past-sun-nasas-parker-solar-probe-checks-in/",
+    "event_date": "2026-09-04",
+    "facts": [
+      "29th close approach",
+      "about 3.8 million miles from the solar surface",
+      "about 430,000 mph",
+      "WISPR targeted structures near the Sun's north pole",
+      "September 7 beacon confirmed systems normal"
+    ]
+  },
+  "gates": {
+    "topic_history_gate": "PASS_FROM_CANONICAL_HANDOFF",
+    "voice_ptbr_native_gate": "PENDING",
+    "voice_neutral_accent_gate": "PENDING",
+    "paulo_voice_approval_gate": "PENDING",
+    "real_footage_gate": "PENDING_ASSET_DOWNLOAD_AND_CLIP_AUDIT",
+    "longform_real_footage_gate": "PENDING",
+    "semantic_visual_match_gate": "PENDING_FINAL_TIMELINE",
+    "causal_animation_gate": "COMPONENT_READY_PENDING_MASTER_INTEGRATION",
+    "no_repeated_animation_pattern_gate": "COMPONENT_READY_PENDING_MASTER_QA",
+    "no_prolonged_clip_loop_gate": "ENFORCED_BY_RENDERER_PENDING_EXECUTION",
+    "longform_retention_gate": "PENDING_FINAL_TIMELINE",
+    "music_composition_gate": "PENDING_TRACK_SELECTION",
+    "music_theme_match_gate": "PENDING_TRACK_SELECTION",
+    "music_audibility_gate": "PENDING_AUDIO_QA",
+    "music_rights_gate": "PENDING_TRACK_RIGHTS",
+    "rights_manifest_gate": "PENDING_ITEM_REVIEW",
+    "audio_qa_gate": "PENDING_RENDER",
+    "visual_qa_gate": "PENDING_RENDER",
+    "paulo_final_approval_gate": "PENDING"
+  },
+  "next_allowed_action": "complete voice listening gate and item-level rights review; do not render full narration, publish or schedule"
+}
