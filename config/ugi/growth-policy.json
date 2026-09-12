@@ -8,28 +8,28 @@
   "platform_independence": {"enabled": true, "default_cross_platform_replication": false, "require_evidence_for_reuse": true},
   "distribution": {
     "state_ref": "config/ugi/distribution-state.json",
-    "active_distribution_channel_count": 3,
-    "active_platforms": ["linkedin","instagram","tiktok"],
-    "priority": ["linkedin","instagram","tiktok"],
+    "active_distribution_channel_count": 4,
+    "active_platforms": ["youtube","linkedin","instagram","tiktok"],
+    "priority": ["youtube","linkedin","instagram","tiktok"],
     "youtube_buffer_status": "PAUSED",
     "youtube_strategy_abandoned": false,
-    "reactivation_requires_new_decision_or_evidence": true
+    "reactivation_requires_new_decision_or_evidence": false
   },
   "editorial_trend_policy": "config/ugi/editorial-trend-gate-v2.4.json",
   "integration_roles": {
     "publisher": {
-      "primary": "buffer",
-      "metricool_allowed": false,
+      "primary": "metricool",
+      "metricool_allowed": true,
       "required_actions": ["schedule","publish","publication_status","publication_readback"],
-      "active_platforms": ["linkedin","instagram","tiktok"],
-      "paused_platforms": ["youtube"],
-      "hard_rule": "Metricool MUST NOT create, update, schedule, publish or retry UGI social posts. Buffer is the official publishing control plane for active UGI Buffer channels. YouTube remains paused in Buffer until a new explicit decision or qualifying evidence."
+      "active_platforms": ["youtube","linkedin","instagram","tiktok"],
+      "paused_platforms": [],
+      "hard_rule": "Metricool is the primary publishing route for approved UGI assets. Buffer is legacy-only; fallback requires a proven capability gap or hard error and readback before any retry."
     },
     "analytics": {
       "primary": "metricool",
-      "publishing_allowed": false,
+      "publishing_allowed": true,
       "allowed_actions": ["read_analytics","read_best_time_signals","read_post_performance","read_account_performance"],
-      "hard_rule": "Metricool is read-only for UGI analytics and timing intelligence."
+      "hard_rule": "Metricool provides UGI analytics, timing intelligence, scheduling and publication readback."
     },
     "native_platforms": {
       "role": "verification_and_supplemental_analytics",
@@ -56,7 +56,7 @@
   "youtube": {"buffer_status":"PAUSED","strategy_status":"PRESERVED","formats":["short_video"],"optimize":["choose_to_view","average_view_duration","average_percentage_viewed","satisfaction_engagement"],"micro_winner_strategy":"descendants_not_copies","metrics":["shown_in_feed","views","choose_to_view","retention","likes","comments","shares","downstream_traffic"],"reactivation":"evidence_based_only"},
   "creative_novelty": {"window_days":30,"compact_index_required":true,"fields":["date","platform","content_id","topic","hook","first_line","script_hash","script_summary","visual_concept","scene_summary","cta","product_id","performance"]},
   "commerce_gate": {"required_for_commercial_content":true,"sequence":["topic","matching_material","product_cover","ugi_store","checkout_destination_valid","platform_cta","publication"],"fail_closed":true,"product_topic_semantic_match":true},
-  "publication_evidence": {"distinguish_scheduled_published_verified":true,"verified_requires_readback":true,"no_unproven_pass":true,"publisher_source":"buffer","active_platforms_only":true},
+  "publication_evidence": {"distinguish_scheduled_published_verified":true,"verified_requires_readback":true,"no_unproven_pass":true,"publisher_source":"metricool","active_platforms_only":true},
   "publication_recovery": {
     "enabled": true,
     "policy": "same_asset_same_caption_no_duplicate_retry_only_on_delivery_failure",
