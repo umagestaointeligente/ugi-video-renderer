@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Fail-closed 16:9 longform compositor for ORBIT/VSA.
 
-This renderer is intentionally isolated from the Shorts renderer. It consumes a
-fully approved narration track, captions, a rights-safe instrumental playlist
-and an explicit visual timeline. It never generates speech and never
-publishes/schedules. Missing approval or rights evidence stops before render.
+Consumes a fully approved narration track, captions, a rights-safe instrumental
+playlist and an explicit visual timeline. Causal animations are generated
+internally. The renderer never generates speech and never publishes/schedules.
 """
 from __future__ import annotations
 
@@ -14,6 +13,8 @@ import json
 import pathlib
 import subprocess
 import urllib.request
+
+from longform_causal_v1 import FAMILIES as CAUSAL_FAMILIES, render_causal
 
 W, H, FPS = 1280, 720, 30
 CHANNEL_ID = "UCm0UMO6lNWlr66YSIS1p4iQ"
@@ -45,7 +46,7 @@ def sha256(path: pathlib.Path) -> str:
     return h.hexdigest()
 
 def download(url: str, out: pathlib.Path):
-    req = urllib.request.Request(url, headers={"User-Agent": "Orbit-VSA-Longform/1.1"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Orbit-VSA-Longform/1.2"})
     with urllib.request.urlopen(req, timeout=240) as r, out.open("wb") as f:
         while True:
             chunk = r.read(1024 * 1024)
@@ -70,6 +71,20 @@ def validate_rights(item: dict, label: str):
         raise GateError(f"RIGHTS_METADATA_MISSING:{label}:" + ",".join(missing))
     if item.get("rights_status") != "PASS":
         raise GateError(f"RIGHTS_NOT_PASS:{label}")
+
+def validate_internal_animation(seg: dict, idx: int):
+    if seg.get("generator") != "internal_causal_v1":
+        raise GateError(f"ANIMATION_GENERATOR_FAIL:{idx}")
+    family = str(seg.get("animation_family") or "").strip()
+    if not family:
+        raise GateError(f"ANIMATION_FAMILY_MISSING:{idx}")
+    if family not in CAUSAL_FAMILIES:
+        raise GateError(f"UNKNOWN_ANIMATION_FAMILY:{idx}:{family}")
+    if seg.get("rights_status") != "PASS_INTERNAL_GENERATED":
+        raise GateError(f"INTERNAL_ANIMATION_RIGHTS_FAIL:{idx}")
+    if not str(seg.get("label") or "").strip():
+        raise GateError(f"ANIMATION_LABEL_MISSING:{idx}")
+    return family
 
 def validate_job(job: dict):
     if job.get("project") != "ORBIT/VSA":
@@ -128,23 +143,22 @@ def validate_job(job: dict):
             raise GateError(f"VISUAL_DURATION_FAIL:{idx}:{dur}")
         total += dur
 
-        validate_rights(seg, f"timeline[{idx}]")
-        start = float(seg.get("start") or 0)
-        key = (seg["source_url"], round(start, 3), round(dur, 3))
-        if key in seen_moments:
-            raise GateError(f"REPEATED_SOURCE_MOMENT:{idx}")
-        seen_moments.add(key)
-        if idx and timeline[idx - 1].get("source_url") == seg.get("source_url"):
-            raise GateError(f"ADJACENT_SOURCE_REPEAT:{idx}")
-        if cls == "REAL":
-            real_moments.add(key)
         if cls == "ANIMATION":
-            family = str(seg.get("animation_family") or "").strip()
-            if not family:
-                raise GateError(f"ANIMATION_FAMILY_MISSING:{idx}")
+            family = validate_internal_animation(seg, idx)
             if family in animation_families[-2:]:
                 raise GateError(f"REPEATED_ANIMATION_PATTERN:{idx}:{family}")
             animation_families.append(family)
+        else:
+            validate_rights(seg, f"timeline[{idx}]")
+            start = float(seg.get("start") or 0)
+            key = (seg["source_url"], round(start, 3), round(dur, 3))
+            if key in seen_moments:
+                raise GateError(f"REPEATED_SOURCE_MOMENT:{idx}")
+            seen_moments.add(key)
+            if idx and timeline[idx - 1].get("class") != "ANIMATION" and timeline[idx - 1].get("source_url") == seg.get("source_url"):
+                raise GateError(f"ADJACENT_SOURCE_REPEAT:{idx}")
+            if cls == "REAL":
+                real_moments.add(key)
 
     if not (MIN_DURATION <= total <= MAX_DURATION):
         raise GateError(f"TIMELINE_DURATION_FAIL:{total:.3f}")
@@ -177,6 +191,7 @@ def validate_job(job: dict):
         "real_seconds": real_seconds,
         "real_moments": len(real_moments),
         "music_tracks": len(playlist),
+        "animation_families": len(set(animation_families)),
     }
 
 def resolve_asset(source_url: str, cache: pathlib.Path) -> pathlib.Path:
@@ -188,9 +203,12 @@ def resolve_asset(source_url: str, cache: pathlib.Path) -> pathlib.Path:
     return out
 
 def render_segment(seg: dict, cache: pathlib.Path, out: pathlib.Path):
+    dur = float(seg["duration"])
+    if str(seg.get("class") or "").upper() == "ANIMATION":
+        render_causal(seg["animation_family"], seg["label"], dur, out)
+        return
     src = resolve_asset(seg["source_url"], cache)
     start = float(seg.get("start") or 0)
-    dur = float(seg["duration"])
     vf = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS}"
     run([
         "ffmpeg", "-y", "-loglevel", "error", "-ss", f"{start:.3f}", "-i", str(src),
@@ -276,7 +294,7 @@ def render(job_path: pathlib.Path, narration: pathlib.Path, captions: pathlib.Pa
         "project": job["project"],
         "channel_id": job["channel_id"],
         "id": job["id"],
-        "renderer": "vsa_longform_renderer_v1_1",
+        "renderer": "vsa_longform_renderer_v1_2",
         "resolution": f"{W}x{H}",
         "fps": FPS,
         "duration": probe(final),
@@ -284,6 +302,7 @@ def render(job_path: pathlib.Path, narration: pathlib.Path, captions: pathlib.Pa
         "timeline_segments": len(job["timeline"]),
         "distinct_real_moments": stats["real_moments"],
         "real_footage_seconds": stats["real_seconds"],
+        "causal_animation_families": stats["animation_families"],
         "music_tracks": stats["music_tracks"],
         "music_looping": False,
         "publication": False,
