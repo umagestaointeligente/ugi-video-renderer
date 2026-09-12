@@ -1,0 +1,58 @@
+{
+  "schema": "UGI_LONGFORM_EDITORIAL_POLICY_V1",
+  "project": "UGI",
+  "effectiveFrom": "2026-09-12",
+  "primaryPublisher": "METRICOOL",
+  "publisherFallback": ["BUFFER_DIRECT", "PLATFORM_NATIVE"],
+  "series": {
+    "name": "Historias de Gestao",
+    "youtube": {
+      "format": "documentary",
+      "targetDurationMinutes": [10, 15],
+      "purpose": "tell a real company or entrepreneur story and derive management lessons from evidenced decisions"
+    },
+    "linkedin": {
+      "format": "executive_cut",
+      "targetDurationMinutes": [3, 6],
+      "purpose": "condensed native-video version focused on the central management decisions and lessons"
+    }
+  },
+  "hardGates": {
+    "realEntityVisualsRequired": true,
+    "founderOrEntrepreneurVisualsRequiredWhenCentralToStory": true,
+    "companyVisualsRequired": true,
+    "visualMustMatchNarrationBeat": true,
+    "exactVisualReuseWithinSameVideo": "BLOCK",
+    "sameClipReuseWithinSameVideo": "BLOCK",
+    "singleImageStretching": "BLOCK",
+    "genericStockAsPrimaryVisualWhenRealAssetExists": "BLOCK",
+    "factSourceRequired": true,
+    "sourceManifestRequired": true,
+    "rightsOrEditorialUseReviewRequired": true,
+    "musicMustFitTopic": true,
+    "captionOrPlatformCaptionSupportRequired": true,
+    "antiRepeatDays": 60
+  },
+  "visualPriority": [
+    "real founder or entrepreneur photos/videos",
+    "real company factories, offices, stores, teams and operations",
+    "real products and historical materials",
+    "real interviews and public appearances where editorial use is appropriate",
+    "original data graphics and management diagrams",
+    "generic stock only as last resort"
+  ],
+  "releaseSequence": [
+    "RESEARCH_PASS",
+    "FACT_PASS",
+    "ANTI_REPEAT_PASS",
+    "SOURCE_MANIFEST_PASS",
+    "VISUAL_ENTITY_PASS",
+    "NO_REPEAT_VISUAL_PASS",
+    "NARRATION_VISUAL_MATCH_PASS",
+    "MUSIC_FIT_PASS",
+    "FORMAT_PASS",
+    "YOUTUBE_LONGFORM_PASS",
+    "LINKEDIN_EXECUTIVE_CUT_PASS",
+    "METRICOOL_SCHEDULE_AND_READBACK_PASS"
+  ]
+}
