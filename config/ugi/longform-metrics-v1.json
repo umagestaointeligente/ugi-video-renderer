@@ -1,0 +1,93 @@
+{
+  "schema": "UGI_LONGFORM_METRICS_V1",
+  "project": "UGI — Uma Gestão Inteligente",
+  "effectiveAt": "2026-09-12T12:38:00-03:00",
+  "timezone": "America/Sao_Paulo",
+  "purpose": "Create a durable measurement framework for the weekly Histórias de Gestão longform franchise across YouTube, LinkedIn and Instagram derivatives without comparing raw cross-platform totals as if they were equivalent.",
+  "baselinePolicy": {
+    "initialEpisodes": 4,
+    "mode": "BUILD_BASELINE_BEFORE_FIXED_TARGETS",
+    "comparisonAfterBaseline": "compare each episode to the median of the previous four comparable episodes by platform and format",
+    "doNotUse": [
+      "arbitrary fixed view targets before four episodes",
+      "raw cross-platform view comparisons without context"
+    ]
+  },
+  "youtubeLongform": {
+    "snapshotWindows": ["24h", "72h", "7d", "28d"],
+    "primaryMetrics": [
+      "views",
+      "watchMinutes",
+      "averageViewDurationSeconds",
+      "averagePercentageViewed",
+      "likes",
+      "comments",
+      "shares"
+    ],
+    "derivedMetrics": {
+      "averagePercentageViewed": "averageViewDurationSeconds / videoDurationSeconds * 100"
+    },
+    "channelContextMetrics": [
+      "subscriberDeltaAroundPublication",
+      "videosPublishedInRange"
+    ],
+    "monetizationMetricsWhenApplicable": [
+      "monetizedPlaybacks",
+      "estimatedAdRevenue",
+      "estimatedRedPartnerRevenue",
+      "totalEstimatedRevenue"
+    ],
+    "currentlyAvailableViaMetricool": [
+      "videoId",
+      "watchUrl",
+      "views",
+      "watchMinutes",
+      "averageViewDuration",
+      "likes",
+      "comments",
+      "shares",
+      "title"
+    ],
+    "nativeYouTubeOptionalEnrichment": [
+      "thumbnailImpressions",
+      "impressionsClickThroughRate",
+      "audienceRetentionCurve",
+      "trafficSources"
+    ]
+  },
+  "linkedinExecutiveVideo": {
+    "snapshotWindows": ["24h", "72h", "7d"],
+    "primaryMetrics": [
+      "impressions",
+      "interactions",
+      "clicks",
+      "reactions",
+      "comments",
+      "shares",
+      "followerDelta"
+    ],
+    "role": "authority and executive relevance, not raw reach parity with YouTube"
+  },
+  "instagramStoriesOfManagement": {
+    "snapshotWindows": ["24h", "72h", "7d"],
+    "primaryMetrics": [
+      "views",
+      "reach",
+      "averageWatchTime",
+      "retention",
+      "reelsViewRateOver3Seconds",
+      "shares",
+      "saves",
+      "interactions",
+      "reposts"
+    ],
+    "role": "discovery and franchise awareness; use a native vertical derivative rather than a simple mirror of the YouTube or LinkedIn master"
+  },
+  "decisionRules": [
+    "If watch minutes rise but average percentage viewed falls materially, inspect duration/pacing before increasing length.",
+    "If average percentage viewed is healthy but total views are weak, investigate packaging/distribution before changing the editorial thesis.",
+    "If Instagram shares+saves outperform the account's recent Reel median, keep Histórias de Gestão as a recurring Instagram franchise.",
+    "If LinkedIn interactions are low but watch quality and comments are high, preserve the executive cut and avoid optimizing only for impressions.",
+    "Do not declare a winner between platforms using raw views alone."
+  ]
+}
