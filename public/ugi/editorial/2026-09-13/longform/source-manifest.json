@@ -1,0 +1,192 @@
+{
+  "schema": "UGI_LONGFORM_SOURCE_MANIFEST_V1",
+  "episode": "Mondial / Giovanni M. Cardoso",
+  "date": "2026-09-13",
+  "factSources": [
+    "https://www.mondial.com.br/nossa-historia",
+    "https://exame.com/colunistas/empreender-liberta/reconhecer-oportunidades-empreender-e-trabalhar-da-fundacao-a-maior-grupo-eletro-portaveis-do-pais/",
+    "https://exame.com/colunistas/empreender-liberta/quando-se-olha-o-brasil-com-uma-visao-positiva-da-vontade-de-empreender-diz-fundador-da-mondial/",
+    "https://gowhere.com.br/business/giovanni-cardoso-dono-da-mondial-e-da-aiwa-fala-sobre-lideranca-industria-e-crescimento/",
+    "https://eletrolarnews.com.br/grupo-mk-projeta-faturamento-de-ate-r-9-bi/",
+    "https://eletrolarnews.com.br/giovanni-cardoso-revela-os-pilares-do-sucesso-da-mondial/",
+    "https://br.linkedin.com/in/giovanni-m-cardoso",
+    "https://br.linkedin.com/company/grupomk",
+    "https://www.gov.br/suframa/pt-br/assuntos/noticias/suframa-conhece-estrutura-e-planos-de-expansao-da-mondial-no-pim"
+  ],
+  "realVisuals": [
+    {
+      "key": "giovanni_exame",
+      "sourceUrl": "https://classic.exame.com/wp-content/uploads/2024/02/Giovanni-M.-Cardoso-Cofundador-do-Grupo-MK-3_corte-horizontal.jpg",
+      "credit": "Exame, 2024",
+      "entity": "giovanni",
+      "downloadSha256": "095a0190aade85f9732eab14045da9c0fe01e9f6b4ff2346f16e8ad44b3d6e71"
+    },
+    {
+      "key": "giovanni_estadao",
+      "sourceUrl": "https://cloudfront-us-east-1.images.arcpublishing.com/estadao/QZ5WBSJKJVFNJJY5DIH2YMG7ME.jpg",
+      "credit": "Estadao",
+      "entity": "giovanni",
+      "downloadSha256": "1a035ea1a6bf1635f612b3b9d148f15c85b469cbe39a0f5dbf67c4b6a24ab92a"
+    },
+    {
+      "key": "giovanni_band",
+      "sourceUrl": "https://img.band.com.br/image/2024/07/18/mondial-aposta-em-linha-premium-de-tv-e-som-apos-comprar-fabrica-da-sony-162347.jpg",
+      "credit": "Band, Eletrolar Show 2024",
+      "entity": "giovanni",
+      "downloadSha256": "390716567726f889070a081d9541cc58bc0e678d65ae0c576f3a65d2cbd5ae62"
+    },
+    {
+      "key": "giovanni_atarde",
+      "sourceUrl": "https://cdn.atarde.com.br/img/2017/03/2017322213149740.jpg?xid=4123682",
+      "credit": "A TARDE, 2017",
+      "entity": "giovanni",
+      "downloadSha256": "7eea1106cf18b5c20f0836f3cce44d2e3035ab2ad988f17ed4ff7cd8ea6a9257"
+    },
+    {
+      "key": "factory_aerial",
+      "sourceUrl": "https://newr7-r7-prod.web.arc-cdn.net/resizer/v2/WQYWG2PUXVNGXDZUPKFCJE3VLU.jpg?auth=d9d7d54b653ac12ebc677d47fb9ac1d54adaa3c8b020fb9953dfc2da5b746c19&height=1047&width=1600",
+      "credit": "R7 / imagem de fabrica Mondial",
+      "entity": "company",
+      "downloadSha256": "71ddb2b3b9f2f6f3a5f4a85b96c5fb07cc0983c415180e83ac3f180d30e69529"
+    },
+    {
+      "key": "factory_line",
+      "sourceUrl": "https://www.jacuipenoticias.com/Noticias/marco-2020/mondial.jpg",
+      "credit": "Jacuipe Noticias",
+      "entity": "company",
+      "downloadSha256": "ff982d659edf8a3d07f20b498e84ae7123e00ccc67f2747a2603b20ea917486b"
+    },
+    {
+      "key": "suframa_manaus",
+      "sourceUrl": "https://static.sbt.com.br/noticias/images/content/20210604055805.jpeg",
+      "credit": "SBT News / antiga fabrica Sony em Manaus",
+      "entity": "company",
+      "downloadSha256": "97abc3872fd19ed4ac7d08c536c5d94a1d71288aad22534aa00a960c51ccabf4"
+    },
+    {
+      "key": "casas_bahia",
+      "sourceUrl": "https://assets.multiplan.com.br/Multiplan/filer_public/db/50/db507834-c58b-4b39-bb8a-f929894f8b34/casas-bahia.jpg?ims=x800",
+      "credit": "Multiplan / Casas Bahia",
+      "entity": "company",
+      "downloadSha256": "cda041677ccaaffd0bbfa69e4417d387c75642fef7b03d9bc697426ecb5b8854"
+    },
+    {
+      "key": "products_airfryer",
+      "sourceUrl": "https://imgs.extra.com.br/1001337253/1g.jpg",
+      "credit": "Extra - produtos Mondial",
+      "entity": "company",
+      "downloadSha256": "173abcb9ae965330568c5f6a661413c1a6da97e8941712f74ab983fdfba53ac9"
+    },
+    {
+      "key": "campaign_juliette",
+      "sourceUrl": "https://www.moneytimes.com.br/uploads/2022/02/rodrigo-e-juliette.jpg",
+      "credit": "Money Times / campanha Mondial, 2022",
+      "entity": "company",
+      "downloadSha256": "da81541a907d3a717aa4c89b7244775815c220c426c4f673a136d6be09461baa"
+    },
+    {
+      "key": "showcase",
+      "sourceUrl": "https://www.layoutcenografia.com/imagens/categorias/montagem-quiosques-preco-03.webp",
+      "credit": "Layout Cenografia - showcase Mondial",
+      "entity": "company",
+      "downloadSha256": "59c2f0a286be39e747b66a3593ba066ab044236c85bf028aeb6680a32306863a"
+    },
+    {
+      "key": "factory_atarde",
+      "sourceUrl": "https://cdn.atarde.com.br/img/Artigo-Destaque/1370000/Gigante-industrial-escolhe-a-Bahia-e-promete-impac0137047500202511291156.jpg?xid=6904789",
+      "credit": "A TARDE - complexo industrial Mondial",
+      "entity": "company",
+      "downloadSha256": "e739931dec47a46ae40d2b2763c52f8d82893883d6f4c7cc1e20aa84f16f64f4"
+    },
+    {
+      "key": "alba_visit",
+      "sourceUrl": "https://www.al.ba.gov.br/fserver/%3AimagensAlbanet%3AimgNoticia%3A34759513970_99957f1d8b_h.jpg",
+      "credit": "Assembleia Legislativa da Bahia, 2017",
+      "entity": "company",
+      "downloadSha256": "f8476156f17130061d8e4d2347908eb45391d4a25c957cd97050b8bd0201b83a"
+    },
+    {
+      "key": "alba_showroom",
+      "sourceUrl": "https://www.al.ba.gov.br/fserver/%3AimagensAlbanet%3AimgNoticia%3Amondial.jpg",
+      "credit": "Assembleia Legislativa da Bahia, 2017",
+      "entity": "company",
+      "downloadSha256": "515522993ac92aa4a4486d7f96f960e45b27911ff6071c32f0fc456de4d92a68"
+    }
+  ],
+  "visualPolicy": {
+    "exactVisualReuseWithinVideo": "BLOCK",
+    "realFounderMinimum": 4,
+    "realCompanyMinimum": 8,
+    "genericStockPrimary": false
+  },
+  "music": {
+    "type": "UGI original procedural instrumental",
+    "copyright": "original generated bed; no external music asset"
+  },
+  "voice": {
+    "engine": "Microsoft Edge TTS",
+    "voice": "pt-BR-AntonioNeural",
+    "syntheticNarration": true
+  },
+  "finals": [
+    {
+      "path": "public/ugi/editorial/2026-09-13/longform/youtube-mondial-historias-de-gestao.mp4",
+      "sha256": "3e8f57d17edd99999458782b57bfe094b8f84a4626e76d7a88d52e3d0fec8ab3",
+      "durationSeconds": 829.69,
+      "bytes": 53500693,
+      "visualKeys": [
+        "giovanni_estadao",
+        "giovanni_atarde",
+        "giovanni_exame",
+        "giovanni_band",
+        "card_start_narrow",
+        "products_airfryer",
+        "showcase",
+        "casas_bahia",
+        "factory_aerial",
+        "factory_line",
+        "card_supply_chain",
+        "suframa_manaus",
+        "card_capability",
+        "card_segments",
+        "card_launches",
+        "card_eletrolar",
+        "card_growth",
+        "card_share",
+        "card_homes",
+        "card_customer_loop",
+        "campaign_juliette",
+        "alba_visit",
+        "card_pillars",
+        "card_rowing",
+        "card_lesson_focus",
+        "card_lesson_execution",
+        "card_lesson_culture",
+        "factory_atarde",
+        "alba_showroom"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/longform/linkedin-mondial-historias-de-gestao.mp4",
+      "sha256": "d3a2a6908c5e9c5f4e4899aaf216a7efc309472f1cb38d6e07a44eafbce38c88",
+      "durationSeconds": 244.78,
+      "bytes": 15996644,
+      "visualKeys": [
+        "giovanni_exame",
+        "giovanni_estadao",
+        "products_airfryer",
+        "casas_bahia",
+        "factory_aerial",
+        "suframa_manaus",
+        "card_segments_li",
+        "card_growth_li",
+        "card_lessons_li",
+        "giovanni_band"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-13/longform/youtube-mondial-thumbnail.jpg",
+      "sha256": "11faa5e086b9cc391b5adb47b4b818ca252f1f2c171375d819925b7b3cf2ec3f"
+    }
+  ]
+}

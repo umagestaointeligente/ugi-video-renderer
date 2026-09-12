@@ -48,8 +48,8 @@ REAL_ASSETS = {
         "entity": "giovanni"
     },
     "factory_aerial": {
-        "url": "https://media.glassdoor.com/lst2x/ba/8f/2f/0f/f%C3%A3-brica-jacu%C3%A3-pe-ba-br.jpg?signature=c9ed6d8ce34adc8964cb404f9e880f46f1ab7af6008f241509e4d9910548e060",
-        "credit": "Glassdoor / Mondial - Conceicao do Jacuipe",
+        "url": "https://newr7-r7-prod.web.arc-cdn.net/resizer/v2/WQYWG2PUXVNGXDZUPKFCJE3VLU.jpg?auth=d9d7d54b653ac12ebc677d47fb9ac1d54adaa3c8b020fb9953dfc2da5b746c19&height=1047&width=1600",
+        "credit": "R7 / imagem de fabrica Mondial",
         "entity": "company"
     },
     "factory_line": {
@@ -58,8 +58,8 @@ REAL_ASSETS = {
         "entity": "company"
     },
     "suframa_manaus": {
-        "url": "https://www.gov.br/suframa/pt-br/assuntos/noticias/suframa-conhece-estrutura-e-planos-de-expansao-da-mondial-no-pim/VisitaempresaMondialCopia.jpeg/%40%40images/95e7f387-4610-4954-80d3-ad568b9ede24.jpeg",
-        "credit": "Suframa, 2026",
+        "url": "https://static.sbt.com.br/noticias/images/content/20210604055805.jpeg",
+        "credit": "SBT News / antiga fabrica Sony em Manaus",
         "entity": "company"
     },
     "casas_bahia": {
@@ -97,11 +97,6 @@ REAL_ASSETS = {
         "credit": "Assembleia Legislativa da Bahia, 2017",
         "entity": "company"
     },
-    "factory_entrance": {
-        "url": "https://media.licdn.com/dms/image/v2/D4E22AQFT9ly9yidWog/feedshare-shrink_2048_1536/B4EZUe7xa8HcAs-/0/1739980742564?e=2147483647&t=qYx8ADm6DI75l51aq0LiScdiXtqRbKda196xfiqx6Y8&v=beta",
-        "credit": "LinkedIn / visita a fabrica Mondial",
-        "entity": "company"
-    }
 }
 
 YT_SCENES = [
@@ -117,10 +112,10 @@ YT_SCENES = [
     ("factory_line", "Produzir mais no Brasil", "A nacionalizacao virou parte da estrategia. Dados divulgados pelo proprio grupo em 2025 e 2026 apontam que mais de oitenta por cento do faturamento ja vinha de produtos fabricados no Brasil. Isso nao e apenas discurso industrial. Produzir localmente pode reduzir tempo de reposicao, aumentar flexibilidade, proteger disponibilidade e permitir ajustes mais rapidos de produto quando o mercado muda."),
     ("card_supply_chain", "Licao 2: flexibilidade", "A segunda licao e que cadeia de suprimentos nao deve ser tratada apenas como custo. Ela pode ser uma fonte de vantagem competitiva. Quando cambio, frete ou demanda mudam, uma operacao mais flexivel consegue decidir entre importar, nacionalizar, ajustar capacidade ou redesenhar o mix. A Mondial usou momentos de cambio pressionado, por exemplo, para acelerar projetos de fabricacao local."),
     ("suframa_manaus", "A fabrica da Sony", "O Grupo MK deu outro passo grande ao adquirir a antiga fabrica da Sony em Manaus e expandir a operacao de eletronicos. A planta passou a produzir categorias como televisores, audio e, mais recentemente, novos segmentos. A aquisicao nao foi apenas comprar um predio. Foi incorporar capacidade industrial, pessoas, conhecimento e infraestrutura que levariam anos para serem construidos do zero."),
-    ("factory_entrance", "Capacidade antes de categoria", "Essa e uma ideia poderosa: empresas podem crescer nao apenas escolhendo novos produtos, mas acumulando capacidades que servem a varias categorias. Engenharia, moldes, injecao, qualidade, logistica, trade e pos-venda podem ser reutilizados. Quando a empresa domina essas capacidades, entrar em uma categoria nova pode ficar mais rapido e menos arriscado do que para um concorrente que precisa montar tudo do inicio."),
+    ("card_capability", "Capacidade antes de categoria", "Essa e uma ideia poderosa: empresas podem crescer nao apenas escolhendo novos produtos, mas acumulando capacidades que servem a varias categorias. Engenharia, moldes, injecao, qualidade, logistica, trade e pos-venda podem ser reutilizados. Quando a empresa domina essas capacidades, entrar em uma categoria nova pode ficar mais rapido e menos arriscado do que para um concorrente que precisa montar tudo do inicio."),
     ("card_segments", "Foco por segmento", "Em 2026, Giovanni explicou que o grupo passou a organizar a estrategia por sete, e depois oito, segmentos com times, metas e planos proprios. E uma resposta classica para um problema de crescimento: quanto maior o portfolio, maior o risco de ninguem ser realmente dono de cada oportunidade. Dividir responsabilidades cria foco, comparacao de desempenho e velocidade de decisao."),
     ("card_launches", "Mais de 100 lancamentos", "A Eletrolar News reportou que o grupo trabalha com cerca de cem lancamentos por ano e retira modelos do mercado para renovar o portfolio. A empresa tambem fala em ciclos de desenvolvimento que podem chegar a poucos meses em algumas categorias. Essa velocidade so funciona se houver processo. Inovacao sem filtro gera estoque; inovacao com meta, engenharia e canal pode virar crescimento."),
-    ("showcase", "Da feira pequena ao grande estande", "A relacao com a Eletrolar ilustra a escala conquistada. Giovanni relembra que o primeiro estande da Mondial tinha apenas nove metros quadrados. Em edicoes recentes, o grupo passou a ocupar centenas de metros quadrados e, em 2026, mais de mil metros de exposicao. O tamanho da feira nao cria o negocio, mas mostra como a empresa transformou presenca comercial em plataforma de relacionamento com o varejo."),
+    ("card_eletrolar", "Da feira pequena ao grande estande", "A relacao com a Eletrolar ilustra a escala conquistada. Giovanni relembra que o primeiro estande da Mondial tinha apenas nove metros quadrados. Em edicoes recentes, o grupo passou a ocupar centenas de metros quadrados e, em 2026, mais de mil metros de exposicao. O tamanho da feira nao cria o negocio, mas mostra como a empresa transformou presenca comercial em plataforma de relacionamento com o varejo."),
     ("card_growth", "De milhoes a bilhoes", "Os numeros mudaram muito em vinte e seis anos. Divulgacoes do grupo falam em faturamento ainda na casa de poucos milhoes no inicio e de sete bilhoes de reais em 2025, com meta de oito a nove bilhoes em 2026. O numero exato varia conforme o ano e a fonte, mas a ordem de grandeza deixa claro o que ocorreu: crescimento acumulado por muito tempo, nao um unico salto."),
     ("card_share", "Participacao de mercado", "Giovanni tambem passou a citar cerca de quarenta por cento de participacao no mercado de eletroportateis. Em categorias como air fryer, publicacoes recentes do executivo apontam participacao superior a quarenta por cento. Esses dados sao divulgacoes da propria companhia, mas ajudam a entender o nivel de escala necessario para que a marca trate distribuicao, engenharia e pos-venda como sistemas nacionais."),
     ("card_homes", "Cinco produtos por lar", "Outra medida usada pela empresa para traduzir penetracao e a media de cinco produtos Mondial por residencia brasileira. Mais uma vez, e um indicador apresentado pelo proprio grupo. Mas ele mostra o objetivo estrategico: nao vender uma compra isolada; participar de varias rotinas dentro da mesma casa, da cozinha a ventilacao e aos cuidados pessoais."),
