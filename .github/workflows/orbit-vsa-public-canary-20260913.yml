@@ -1,0 +1,181 @@
+name: Orbit VSA Canonical Public Canary 2026-09-13
+
+on:
+  push:
+    branches:
+      - infra/orbit-public-runner-canary-20260913
+    paths:
+      - '.github/workflows/orbit-vsa-public-canary-20260913.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orbit-vsa-public-canary-20260913
+  cancel-in-progress: false
+
+env:
+  MASK_URL: 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789093377716_VSA_MASK_CANONICAL_V2.png?alt=media'
+  CTA_URL: 'https://firebasestorage.googleapis.com/v0/b/postly-548c1.appspot.com/o/6aa14d404438a68c12000000%2F1789093395839_VSA_CTA_VISUAL_CANONICAL_V1.png?alt=media'
+
+jobs:
+  canonical-vsa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      RENDER_ID: VSA-ROUTE-CANARY-DUST-20260913
+    steps:
+      - name: Checkout public canonical renderer
+        uses: actions/checkout@v4
+
+      - name: Install canonical renderer dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          python -m pip install --disable-pip-version-check --quiet edge-tts pillow numpy
+
+      - name: Fetch and prove exact canonical V2 mask and CTA
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vsa/assets /tmp/vsa/src /tmp/vsa/out
+          curl -fL --retry 3 "$MASK_URL" -o /tmp/vsa/assets/mask.png
+          curl -fL --retry 3 "$CTA_URL" -o /tmp/vsa/assets/cta.png
+          echo 'ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56  /tmp/vsa/assets/mask.png' | sha256sum -c -
+          echo '6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8  /tmp/vsa/assets/cta.png' | sha256sum -c -
+
+      - name: Fetch distinct rights-safe real sources and thematic music
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 'https://commons.wikimedia.org/wiki/Special:Redirect/file/NOAA%E2%80%99s_Satellites_Track_Saharan_Dust_Blowing_Across_the_Atlantic_%28NESDIS_2025-06-04%29.webm' -o /tmp/vsa/src/real1.webm
+          curl -fL --retry 3 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Earth_from_Orbit-_Tracking_Dust_in_the_Wind_%28NESDIS_2021-02-25_2021_02_24_SaharanDustEvent_TWIW_Final_%281%29%29.webm' -o /tmp/vsa/src/real2.webm
+          curl -fL --retry 3 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saharan_Dust_Spreads_Out_Over_the_Atlantic_Ocean_%28CIRA_2024-01-29_-_labels%29.webm' -o /tmp/vsa/src/real3.webm
+          curl -fL --retry 3 'https://assets.mixkit.co/music/552/552.mp3' -o /tmp/vsa/assets/music.mp3
+          for f in /tmp/vsa/src/*.webm /tmp/vsa/assets/music.mp3; do test -s "$f"; done
+
+      - name: Build rights-safe canary topic manifest
+        run: |
+          cat > /tmp/vsa/topic.json <<'JSON'
+          {
+            "id":"DUST_MALI_PUBLIC_ROUTE_CANARY",
+            "bucket":"WORLD_SCIENCE",
+            "title":"Como uma tempestade de poeira consegue cobrir vários países?",
+            "script":"Uma tempestade de poeira não precisa nascer de uma única nuvem gigante. Em regiões secas, ventos fortes levantam partículas muito pequenas do solo. As maiores caem relativamente perto, mas a poeira fina pode permanecer suspensa por horas ou dias e viajar centenas ou milhares de quilômetros. Foi isso que chamou atenção no começo de setembro, quando uma grande pluma cobriu partes do Mali e países vizinhos. Satélites conseguem acompanhar o deslocamento porque a poeira altera a luz refletida pela superfície e pela atmosfera. Dependendo da altitude e dos ventos, ela pode cruzar fronteiras, reduzir a visibilidade e afetar a qualidade do ar muito longe da origem. O deserto parece parado, mas sua poeira pode virar um viajante continental. Agora você já sabe.",
+            "mechs":["VENTO FORTE → PARTÍCULAS SOBEM","PARTÍCULAS FINAS → MAIS TEMPO NO AR","VENTOS EM ALTITUDE → PLUMA VIAJA LONGE"],
+            "source_files":["/tmp/vsa/src/real1.webm","/tmp/vsa/src/real2.webm","/tmp/vsa/src/real3.webm"],
+            "real_starts":[2,10,4],
+            "track_file":"/tmp/vsa/assets/music.mp3",
+            "track_meta":{"title":"Masking the Masters","artist":"Eugenio Mininni","source":"Mixkit","license":"Mixkit Stock Music Free License","editorial_mood":"serious documentary / atmospheric"},
+            "thumb":"POEIRA CRUZA FRONTEIRAS?",
+            "mask_sha256":"ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+            "cta_sha256":"6c064a533784f2c09b594095646aa538e07f77955ed348656c60e5d2795fa5a8"
+          }
+          JSON
+
+      - name: Apply deterministic recovery hardening without changing canonical assets
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          src=Path('scripts/vsa/render_canonical_v2.py').read_text(encoding='utf-8')
+          old="""    body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_audio=work/'cta.mp3'\n    run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])\n    run(['edge-tts','--voice',voice,'--rate','+22%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])\n    bd=dur(body_audio); cd=min(4.5,max(3.0,dur(cta_audio)+0.15))\n    if dur(cta_audio)>4.5: raise SystemExit('CTA_VOICE_TOO_LONG')\n"""
+          new="""    body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_raw=work/'cta_raw.mp3'; cta_audio=work/'cta.mp3'\n    run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])\n    run(['edge-tts','--voice',voice,'--rate','+18%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_raw])\n    raw_cta=dur(cta_raw); target_cta=4.15; tempo=raw_cta/target_cta\n    if tempo < 0.5 or tempo > 2.0: raise SystemExit(f'CTA_TEMPO_UNSAFE:{raw_cta}:{tempo}')\n    run(['ffmpeg','-y','-loglevel','error','-i',cta_raw,'-filter:a',f'atempo={tempo:.6f}','-ar','48000',cta_audio])\n    cta_d=dur(cta_audio); bd=dur(body_audio); cd=min(4.5,max(3.0,cta_d+0.15))\n    if cta_d>4.35 or cta_d<3.6: raise SystemExit(f'CTA_TIMING_FAIL:{cta_d}')\n"""
+          if old not in src: raise SystemExit('CTA_PATCH_ANCHOR_NOT_FOUND')
+          src=src.replace(old,new,1)
+          oldp="""        if style=='particles':\n            for px,py,s in pts:\n                if right:\n                    xx=x+80+((px+t*0.65)%1.0)*(w-160); yy=y+220+py*(h-330)\n                else:\n                    xx=x+80+px*(w-160); yy=y+220+((py-t*0.55)%1.0)*(h-330)\n                r=int(4+5*s); d.ellipse((xx-r,yy-r,xx+r,yy+r),fill=(244,189,88))\n"""
+          newp="""        if style=='particles':\n            ground=y+h-145\n            d.rectangle((x+45,ground,x+w-45,y+h-45),fill=(108,72,38))\n            plume_x=x+120+int(t*(w-360))\n            plume_y=y+300+int(55*math.sin(t*math.pi*2))\n            d.ellipse((plume_x-150,plume_y-90,plume_x+250,plume_y+105),fill=(164,121,73),outline=(236,196,130),width=5)\n            for px,py,s in pts:\n                travel=(px+t*0.78)%1.0\n                lift=min(1.0,t*2.2 + py*0.35)\n                xx=x+70+travel*(w-140)\n                yy=ground-25-lift*(170+py*(h-420))\n                r=int(6+8*s); d.ellipse((xx-r,yy-r,xx+r,yy+r),fill=(244,189,88))\n            for j in range(3):\n                ax=x+100+((j*250+int(t*330))%(w-260)); ay=y+240+j*145\n                d.line((ax,ay,ax+150,ay),fill=(65,205,255),width=12)\n                d.polygon([(ax+150,ay),(ax+118,ay-20),(ax+118,ay+20)],fill=(65,205,255))\n"""
+          if oldp not in src: raise SystemExit('PARTICLE_PATCH_ANCHOR_NOT_FOUND')
+          src=src.replace(oldp,newp,1)
+          marker="x,y,w,h=VIDEO; style=mech_style(mech); left,right=split_mech(mech)"
+          repl=marker+"\n    if re.search(r'\\b(CAUSA|EFEITO)\\b',mech,re.I): raise RuntimeError('GENERIC_CAUSE_EFFECT_FORBIDDEN')"
+          if marker not in src: raise SystemExit('SEMANTIC_GATE_ANCHOR_NOT_FOUND')
+          src=src.replace(marker,repl,1)
+          Path('/tmp/render_canonical_v2_public.py').write_text(src,encoding='utf-8')
+          PY
+          python -m py_compile /tmp/render_canonical_v2_public.py
+
+      - name: Render fail closed
+        run: |
+          set -euo pipefail
+          python /tmp/render_canonical_v2_public.py \
+            --topic /tmp/vsa/topic.json \
+            --mask /tmp/vsa/assets/mask.png \
+            --cta /tmp/vsa/assets/cta.png \
+            --work /tmp/vsa/work \
+            --out "/tmp/vsa/out/${RENDER_ID}.mp4"
+          test -s "/tmp/vsa/out/${RENDER_ID}.mp4"
+
+      - name: Require complete VSA QA evidence
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib, os
+          p=pathlib.Path(f"/tmp/vsa/out/{os.environ['RENDER_ID']}_QA.json")
+          q=json.loads(p.read_text(encoding='utf-8'))
+          required=['CLEAN_HEADER_PASS','CLEAN_CC_ZONE_PASS','CAPTION_BURNIN_PASS','SCENE_DIVERSITY_PASS','ANIMATION_SEMANTIC_PASS','MUSIC_THEME_MATCH_PASS','THUMBNAIL_READY_PASS']
+          bad=[k for k in required if q.get(k) is not True]
+          if bad: raise SystemExit('QA_FAIL:'+','.join(bad))
+          print('VSA_QA=PASS')
+          print(json.dumps({k:q.get(k) for k in required},ensure_ascii=False))
+          PY
+
+      - name: Independent media QA
+        run: |
+          set -euo pipefail
+          ffprobe -v error -show_streams -show_format -of json "/tmp/vsa/out/${RENDER_ID}.mp4" > "/tmp/vsa/out/${RENDER_ID}.probe.json"
+          python - <<'PY'
+          import json,os
+          p=json.load(open(f"/tmp/vsa/out/{os.environ['RENDER_ID']}.probe.json"))
+          v=next(x for x in p['streams'] if x.get('codec_type')=='video')
+          a=next(x for x in p['streams'] if x.get('codec_type')=='audio')
+          n,d=v['avg_frame_rate'].split('/'); fps=float(n)/float(d)
+          assert int(v['width'])==1080 and int(v['height'])==1920
+          assert abs(fps-30)<0.01
+          assert v['codec_name']=='h264' and v['pix_fmt']=='yuv420p'
+          assert a['codec_name']=='aac' and int(a['sample_rate'])==48000
+          print('TECH_QA=PASS')
+          PY
+
+      - name: Upload VSA canary master to existing R2 storage route
+        run: |
+          set -euo pipefail
+          test -n "$UGI_VIDEO_UPLOAD_URL"
+          test -n "$UGI_VIDEO_UPLOAD_KEY"
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "/tmp/vsa/out/${RENDER_ID}.mp4")
+          response=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 300 \
+            -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${RENDER_ID}&platform=instagram&duration=${dur}&githubRunId=${GITHUB_RUN_ID}" \
+            -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
+            -H 'Content-Type: video/mp4' \
+            --data-binary @"/tmp/vsa/out/${RENDER_ID}.mp4")
+          printf '%s\n' "$response" > "/tmp/vsa/out/${RENDER_ID}.r2.json"
+          python - <<'PY'
+          import json,os
+          d=json.load(open(f"/tmp/vsa/out/{os.environ['RENDER_ID']}.r2.json",encoding='utf-8'))
+          assert d.get('ok') is True,d
+          asset=(d.get('assets') or {}).get('instagram') or {}
+          url=asset.get('videoUrl') or d.get('videoUrl')
+          assert isinstance(url,str) and url.startswith('https://'),d
+          print('R2_UPLOAD=PASS')
+          print('R2_HTTPS_URL=PASS')
+          PY
+
+      - name: Fail-closed safety receipt
+        run: |
+          printf '%s\n' \
+            'VSA_CANONICAL_PUBLIC_CANARY=PASS' \
+            'PUBLICATION=false' \
+            'METRICOOL_CALL=false' | tee /tmp/vsa/out/vsa-public-route-safety.txt
+
+      - name: Preserve QA proof only
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-canonical-public-canary-proof
+          path: |
+            /tmp/vsa/out/${{ env.RENDER_ID }}_QA.json
+            /tmp/vsa/out/${{ env.RENDER_ID }}.probe.json
+            /tmp/vsa/out/${{ env.RENDER_ID }}.r2.json
+            /tmp/vsa/out/vsa-public-route-safety.txt
+          retention-days: 1
+          if-no-files-found: error
