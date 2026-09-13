@@ -1,0 +1,111 @@
+{
+  "schema": "UGI_EDITORIAL_PLAN_V6_GROWTH_STORYTELLING",
+  "project": "UGI — Uma Gestão Inteligente",
+  "date": "2026-09-15",
+  "timezone": "America/Sao_Paulo",
+  "state": "PLANNED_PENDING_ASSET_BUILD_QA_AND_SCHEDULE",
+  "metricoolBrandId": "6935401",
+  "publisherMutationPerformed": false,
+  "scheduleReadbackBeforePlan": {"scheduledItemsFound":0,"result":"NO_COLLISION_FOUND"},
+  "antiRepeat": {
+    "policy":"control-plane/policies/UGI_ANTI_REPEAT_V2.md",
+    "cooldownDays":60,
+    "repoSearchResult":"NO_MATCH_FOR_SELECTED_ENTITIES",
+    "legacyRegistryQuality":"SEEDED_BACKFILL_IN_PROGRESS",
+    "decision":"ANTI_REPEAT_PASS_NO_CREDIBLE_COLLISION_FOUND"
+  },
+  "storytellingBenchmark":"config/ugi/benchmarks/FERNANDO_MIRANDA_STORYTELLING_V1.md",
+  "safeArea":"scripts/ugi_safearea_v2.py",
+  "allocation": {
+    "instagram":{"stories":4,"reels":2,"carousel":1,"total":7},
+    "tiktok":{"videos":2,"total":2},
+    "linkedin":{"post":1,"total":1},
+    "youtube":{"newLongform":0,"weeklyCadencePreserved":true},
+    "totalCrossNetworkPosts":10
+  },
+  "bestTimeEvidence": {
+    "instagram":{"10":4942,"18":4788,"12":4656,"17":4140},
+    "linkedin":{"11":2026,"10":1328,"13":1246},
+    "tiktok":{"10":1136,"18":1119,"12":1082,"17":883}
+  },
+  "slots": [
+    {
+      "timeBrt":"08:30","platform":"instagram","format":"story",
+      "topic":"Capgemini: trocar um fornecedor digital crítico pode levar mais de um ano",
+      "managementAngle":"infraestrutura digital passa a exigir plano de substituição e controle sobre dados, modelos e workloads críticos",
+      "sourceUrl":"https://www.reuters.com/business/boards-prepare-digital-infrastructure-shocks-survey-says-2026-09-08/",
+      "primaryKpi":"reach","testVariable":"specific operational time-risk in first frame"
+    },
+    {
+      "timeBrt":"10:00","platform":"instagram","format":"reel_historia_gestao",
+      "topic":"Hyundai: por que uma montadora que queria dominar seu próprio software decidiu acelerar com a Nvidia",
+      "managementAngle":"build versus partner, construção de competência interna e uso de parceiro como ponte sem abandonar a capacidade própria",
+      "sourceUrl":"https://www.reuters.com/business/autos-transportation/hyundai-motor-roll-out-in-house-driver-assist-system-2029-2026-09-13/",
+      "primaryKpi":"retention","targetDurationSeconds":[55,75],
+      "storyArc":["surprise","origin","conflict","decision","mechanism","consequence","management_lesson"]
+    },
+    {
+      "timeBrt":"11:00","platform":"linkedin","format":"post_image_text",
+      "topic":"Empresas alemãs aumentam investimento na China enquanto reduzem nos EUA",
+      "managementAngle":"alocação de capital sob incerteza geopolítica e diferença entre discurso macro e decisão empresarial real",
+      "sourceUrl":"https://www.reuters.com/world/china/german-firms-lift-china-investment-us-outlays-fall-iw-study-shows-2026-09-13/",
+      "primaryKpi":"engagement","testVariable":"strategic contradiction opening"
+    },
+    {
+      "timeBrt":"12:00","platform":"tiktok","format":"video",
+      "topic":"Stellantis: uma empresa, duas estratégias — EUA de um lado e resto do mundo do outro",
+      "managementAngle":"quando mercados, regulação e parceiros divergem, a estratégia global precisa aceitar assimetria em vez de forçar padronização",
+      "sourceUrl":"https://www.reuters.com/business/autos-transportation/stellantis-ceo-highlights-diverging-us-global-strategies-2026-09-10/",
+      "primaryKpi":"averageWatchTime","targetDurationSeconds":[45,60]
+    },
+    {
+      "timeBrt":"13:00","platform":"instagram","format":"story",
+      "topic":"Volkswagen: como a governança destravou um plano de cortes que enfrentava resistência interna",
+      "managementAngle":"decisão difícil, conselho, trabalhadores e mecanismos de governança em transformação operacional",
+      "sourceUrl":"https://www.reuters.com/business/autos-transportation/vw-goes-broke-2026-09-08/",
+      "primaryKpi":"reach","testVariable":"governance conflict in first frame"
+    },
+    {
+      "timeBrt":"15:00","platform":"instagram","format":"carousel",
+      "topic":"O xadrez bancário italiano: quando a empresa-alvo tenta virar compradora",
+      "managementAngle":"M&A defensivo, escala, capital e como uma organização pode mudar o jogo usando aquisições para evitar ser adquirida",
+      "sourceUrl":"https://www.reuters.com/legal/transactional/what-comes-next-italys-banking-deal-frenzy-2026-09-10/",
+      "primaryKpi":"saves","slides":6,"testVariable":"narrative carousel with strategic chess framing"
+    },
+    {
+      "timeBrt":"17:30","platform":"instagram","format":"story",
+      "topic":"Rio Tinto compra projeto de bauxita da Glencore e Mitsubishi",
+      "managementAngle":"portfólio, integração vertical e aquisição de ativos coerentes com capacidades existentes",
+      "sourceUrl":"https://www.reuters.com/business/retail-consumer/rio-tinto-acquire-aurukun-bauxite-project-glencore-mitsubishi-development-2026-09-08/",
+      "primaryKpi":"reach","testVariable":"portfolio fit before deal size"
+    },
+    {
+      "timeBrt":"18:00","platform":"instagram","format":"reel_historia_gestao",
+      "topic":"Baker Hughes: por que uma aquisição de US$ 13,6 bilhões mudou a projeção antes de entregar todo o resultado",
+      "managementAngle":"aquisição, integração, timing de sinergias, ciclo de LNG e diferença entre comprar receita e integrar capacidade",
+      "sourceUrl":"https://www.reuters.com/business/energy/baker-hughes-raises-annual-forecasts-after-chart-acquisition-2026-09-09/",
+      "primaryKpi":"retention","targetDurationSeconds":[55,75],
+      "storyArc":["surprise","context","conflict","decision","mechanism","consequence","management_lesson"]
+    },
+    {
+      "timeBrt":"19:45","platform":"tiktok","format":"video",
+      "topic":"Papua LNG: ter mais participação não é o mesmo que controlar a operação",
+      "managementAngle":"diferença entre propriedade econômica, operatorship, sinergia operacional e execução de projeto em joint ventures",
+      "sourceUrl":"https://www.reuters.com/business/energy/australias-santos-acquires-additional-33-interest-papua-lng-2026-09-07/",
+      "primaryKpi":"averageWatchTime","targetDurationSeconds":[45,60]
+    },
+    {
+      "timeBrt":"20:30","platform":"instagram","format":"story",
+      "topic":"Michael Dell pode tirar a Baldwin Insurance da bolsa",
+      "managementAngle":"por que investidores escolhem take-private quando acreditam que transformação e crescimento podem acontecer melhor fora da pressão trimestral do mercado",
+      "sourceUrl":"https://www.reuters.com/business/michael-dells-dfo-management-nears-take-private-deal-baldwin-insurance-group-ft-2026-09-13/",
+      "primaryKpi":"reach","testVariable":"why-take-private curiosity gap"
+    }
+  ],
+  "releaseGate": [
+    "FACT_PASS","ANTI_REPEAT_PASS","RIGHTS_LICENSE_PASS","REAL_CONTEXTUAL_VISUAL_PRIMARY_PASS",
+    "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS","EXACT_VISUAL_REUSE_ZERO_PASS","SPEECH_VISUAL_MATCH_PASS",
+    "SAFE_AREA_V2_PASS","CC_DEDICATED_LOWER_BAND_PASS","CC_MAX_TWO_LINES_PASS","CC_CHUNKED_SYNC_PASS",
+    "STORYTELLING_BENCHMARK_PASS_FOR_REELS","EXISTING_SCHEDULE_READBACK_PASS"
+  ]
+}
