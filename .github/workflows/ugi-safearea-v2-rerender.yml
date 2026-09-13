@@ -1,0 +1,73 @@
+name: UGI Safe Area V2 Rerender
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/ugi_safearea_v2.py'
+      - 'scripts/ugi_rerender_safearea_20260913_14.py'
+      - '.github/workflows/ugi-safearea-v2-rerender.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-safearea-v2-rerender
+  cancel-in-progress: false
+
+jobs:
+  rerender-qa-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install renderer dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --disable-pip-version-check pillow requests edge-tts
+          python -m py_compile scripts/ugi_safearea_v2.py scripts/ugi_rerender_safearea_20260913_14.py
+      - name: Rerender pending vertical videos
+        run: |
+          set -euo pipefail
+          python scripts/ugi_rerender_safearea_20260913_14.py
+      - name: Assert safe-area QA
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          paths=[pathlib.Path('public/ugi/editorial/2026-09-13/daily/qa.json'),pathlib.Path('public/ugi/editorial/2026-09-14/daily/qa.json')]
+          for p in paths:
+              q=json.loads(p.read_text(encoding='utf-8'))
+              assert q['state']=='PASS', q
+              assert q.get('safeAreaV2Applied') is True, q
+              checked=0
+              for f in q['files']:
+                  if f['path'].endswith('.mp4') and f['visualQa'].get('VERTICAL_SAFE_AREA_V2_PASS'):
+                      v=f['visualQa']
+                      assert v['MAIN_VISUAL_CONTAINED_NOT_CROPPED'] is True
+                      assert v['HEADLINE_WITHIN_SAFE_AREA'] is True
+                      assert v['CC_WITHIN_SAFE_AREA'] is True
+                      assert v['CC_MAX_TWO_LINES_PASS'] is True
+                      assert v['CC_OVER_PRIMARY_VISUAL'] is False
+                      checked+=1
+              assert checked>=2, (p,checked)
+          print('UGI_SAFEAREA_V2_QA_PASS')
+          PY
+      - name: Commit corrected finals
+        run: |
+          git config user.name 'ugi-editorial-bot'
+          git config user.email 'ugi-editorial-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-13/daily public/ugi/editorial/2026-09-14/daily
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit'
+            exit 0
+          fi
+          git commit -m 'assets(ugi): apply vertical safe-area v2 [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
