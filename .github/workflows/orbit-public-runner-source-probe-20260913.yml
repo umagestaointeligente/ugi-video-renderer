@@ -1,0 +1,32 @@
+name: Orbit public runner source probe 2026-09-13
+on:
+  push:
+    branches:
+      - infra/orbit-public-runner-canary-20260913
+    paths:
+      - '.github/workflows/orbit-public-runner-source-probe-20260913.yml'
+permissions:
+  contents: read
+jobs:
+  source-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Prove public hosted runner is live
+        run: |
+          set -euo pipefail
+          echo "RUNNER_OS=${RUNNER_OS}"
+          echo "PUBLIC_RUNNER_PROBE=START"
+      - name: Probe canonical GitLab source without credentials
+        env:
+          GL_REPO: https://gitlab.com/umagestaointeligente-group/umagestaointeligente-project.git
+          GL_SHA: 5ebc7f699236a73f2b6a90a808ea9bcc91c4fa6a
+        run: |
+          set -euo pipefail
+          git ls-remote "$GL_REPO" | tee /tmp/ls-remote.txt
+          grep -q "$GL_SHA" /tmp/ls-remote.txt || { echo "PINNED_SHA_NOT_VISIBLE"; exit 4; }
+          echo "CANONICAL_SOURCE_PUBLIC_READ=PASS"
+      - name: Safety receipt
+        if: always()
+        run: |
+          printf '%s\n' 'PUBLICATION=false' 'METRICOOL_CALL=false' 'SECRETS_USED=false'
