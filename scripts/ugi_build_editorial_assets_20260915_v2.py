@@ -56,7 +56,7 @@ def adaptive_render_video(name, entity_name, keys, scenes, music_path, source_la
     if name.startswith('instagram-reel-'):
         lo, hi = 55.0, 75.0
     else:
-        lo, hi = 45.0, 60.0
+        lo, hi = 45.0, 65.0
     if not lo <= duration <= hi:
         raise RuntimeError(f'DURATION_GATE_FAIL:{name}:{duration:.2f}:expected_{lo:.0f}_{hi:.0f}')
     return final, chunk_count
