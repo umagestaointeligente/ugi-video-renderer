@@ -1,15 +1,96 @@
 {
   "schema": "CENA_CERTA_OFFICIAL_ASSET_INGEST_V1",
-  "target_date": "2026-09-11",
+  "target_date": "2026-09-14",
   "items": [
     {
-      "id": "SRC-20260911-HOME-ALONE",
-      "title": "Home Alone",
-      "source_url": "https://video.disney.com/watch/home-alone-all-the-facts-disney-deets-5d2a766ec3ad0ebd6b4f2a72",
+      "id": "SRC-20260914-SHREK2",
+      "title": "Shrek 2",
+      "source_url": "https://www.youtube.com/watch?v=iuNghO1XsHI",
       "rights_pass": true,
-      "rights_evidence": "Disney publishes the Home Alone audiovisual feature through its official Disney Video / Disney+ editorial channel and includes Home Alone in its official cross-generational Disney+ storytelling campaign. Use is restricted to the Cena Certa editorial/transformative coverage context; this does not assert a general redistribution license.",
+      "rights_evidence": "Universal Kids publishes this Shrek 2 audiovisual source from the DreamWorks title. Internal pass means source provenance is documented for limited, transformative Cena Certa editorial excerpts only; it does not assert a general redistribution license or authorize reposting the work in full.",
+      "fallback_urls": ["https://www.youtube.com/watch?v=KE0yJMyGgR0"],
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-HEART-OF-STONE-BLOOPERS",
+      "title": "Heart of Stone - Blooper Reel",
+      "source_url": "https://www.youtube.com/watch?v=2CRR_yWYO0c",
+      "rights_pass": true,
+      "rights_evidence": "Still Watching Netflix, a verified Netflix channel, publishes the authentic Heart of Stone blooper reel. Internal pass is limited to transformed Cena Errada excerpts with context/commentary; no general redistribution license is asserted.",
+      "fallback_urls": ["https://www.youtube.com/watch?v=cPUydbJOrlM"],
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-MI-FALLOUT-HALO",
+      "title": "Mission: Impossible - Fallout - HALO Jump BTS",
+      "source_url": "https://www.youtube.com/watch?v=2BnOebsDtAQ",
+      "rights_pass": true,
+      "rights_evidence": "Paramount Pictures verified channel publishes the official HALO jump stunt featurette. Internal pass covers limited transformative editorial excerpts with narration/analysis only; no general redistribution license is asserted.",
+      "fallback_urls": ["https://www.youtube.com/watch?v=ctIbzJX0HnM"],
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-MAD-MAX-FURY-ROAD",
+      "title": "Mad Max: Fury Road - Behind the Scenes",
+      "source_url": "https://www.youtube.com/watch?v=P9irV9P91lA",
+      "rights_pass": true,
+      "rights_evidence": "The source is documented as a Warner Brothers Thailand behind-the-scenes Fury Road TV special. Internal pass is restricted to limited transformative editorial excerpts and does not assert a general redistribution license.",
+      "fallback_urls": ["https://www.youtube.com/watch?v=LFIWyda1vVs"],
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-SPIDER-MAN-NWH",
+      "title": "Spider-Man: No Way Home - Special Features",
+      "source_url": "https://www.youtube.com/watch?v=19pkBDAWPE8",
+      "rights_pass": true,
+      "rights_evidence": "Sony Pictures Entertainment verified channel publishes the official No Way Home special-features preview. Internal pass covers limited transformed Cena Certa excerpts; no general redistribution license is asserted.",
+      "fallback_urls": ["https://www.youtube.com/watch?v=6FIoOJm3vYA"],
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-JURASSIC-PARK",
+      "title": "Jurassic Park - T. rex Chase",
+      "source_url": "https://www.youtube.com/watch?v=kXOogJttizA",
+      "rights_pass": true,
+      "rights_evidence": "Jurassic World verified official franchise channel publishes this Jurassic Park T. rex scene from Universal/Amblin. Internal pass covers limited transformed editorial use; no general redistribution license is asserted.",
       "fallback_urls": [],
-      "resolver_revision": 12
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-TOP-GUN-MAVERICK",
+      "title": "Top Gun: Maverick - Behind the Scenes Aviation",
+      "source_url": "https://www.youtube.com/watch?v=6Pji4kgwt4w",
+      "rights_pass": true,
+      "rights_evidence": "Paramount Brasil verified channel publishes the official Top Gun: Maverick aviation behind-the-scenes featurette. Internal pass covers limited transformed editorial excerpts; no general redistribution license is asserted.",
+      "fallback_urls": [],
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-TITANIC",
+      "title": "Titanic - 25th Anniversary Official Trailer",
+      "source_url": "https://www.youtube.com/watch?v=oHY7D7K58BM",
+      "rights_pass": true,
+      "rights_evidence": "Paramount Pictures verified channel publishes the official Titanic 25th Anniversary trailer. Internal pass covers limited transformed editorial excerpts only; no general redistribution license is asserted.",
+      "fallback_urls": [],
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-DARK-KNIGHT",
+      "title": "The Dark Knight - Original Theatrical Trailer",
+      "source_url": "https://www.youtube.com/watch?v=_PZpmTj1Q8Q",
+      "rights_pass": true,
+      "rights_evidence": "Warner Bros. Rewind verified channel publishes the official The Dark Knight theatrical trailer. Internal pass covers limited transformed editorial excerpts and source/proof extraction; no general redistribution license is asserted.",
+      "fallback_urls": ["https://www.youtube.com/watch?v=kmJLuwP3MbY"],
+      "resolver_revision": 13
+    },
+    {
+      "id": "SRC-20260914-OPPENHEIMER",
+      "title": "Oppenheimer - Trinity Test",
+      "source_url": "https://www.youtube.com/watch?v=5ZYD-H4V2M0",
+      "rights_pass": true,
+      "rights_evidence": "Universal Pictures verified channel publishes the official Oppenheimer Trinity Test video. Internal pass covers limited transformed editorial excerpts and source/proof extraction; no general redistribution license is asserted.",
+      "fallback_urls": [],
+      "resolver_revision": 13
     }
   ]
 }
