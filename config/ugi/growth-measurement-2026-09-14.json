@@ -1,0 +1,44 @@
+{
+  "schema": "UGI_GROWTH_MEASUREMENT_V1",
+  "date": "2026-09-14",
+  "timezone": "America/Sao_Paulo",
+  "metricoolBrandId": "6935401",
+  "state": "SCHEDULE_CONFIRMED_MEASUREMENT_ARMED",
+  "assetCommit": "1283cbd4a05263841cfcb6ed94ea24a5f353cb8c",
+  "qaState": "PASS",
+  "principles": {
+    "noMagicThresholds": true,
+    "compareAgainstOwnChannelMedianByFormat": true,
+    "changeOnePrimaryVariablePerTest": true,
+    "doNotIncreaseVolumeBlindly": true,
+    "reviewWindows": ["24h", "7d", "28d"]
+  },
+  "networkMetricFields": {
+    "instagram_reel": ["IGRE23", "IGRE24", "IGRE27", "IGRE28", "IGRE21", "IGRE12", "IGRE29", "IGRE11", "IGRE09"],
+    "instagram_story": ["IGST10", "IGST09", "IGST08", "IGST13", "IGST12", "IGST11"],
+    "instagram_post_carousel": ["IGPO28", "IGPO14", "IGPO12", "IGPO15", "IGPO27", "IGPO29"],
+    "tiktok_video": ["TKPO07", "TKPO11", "TKPO15", "TKPO13", "TKPO10", "TKPO09", "TKPO16", "TKPO21"],
+    "linkedin_post": ["LIPO12", "LIPO09", "LIPO13", "LIPO10", "LIPO18", "LIPO9999"]
+  },
+  "schedule": [
+    {"time":"08:30","network":"instagram","format":"story","topic":"Revolut — falha de processo e verificação de origem","metricoolId":375068287,"uuid":"2150225475771058878","primaryKpi":"reach","secondaryKpis":["impressions","exits","tapsForward","tapsBack","replies"],"testVariable":"concrete failure opening"},
+    {"time":"10:00","network":"instagram","format":"reel","topic":"John Lewis — turnaround, investimento e produtividade","metricoolId":375068325,"uuid":"-4316717713043534493","primaryKpi":"retention","secondaryKpis":["views","averageWatchTime","reelViewRate3s","shares","saves","reposts","reach","interactions"],"testVariable":"paradox hook"},
+    {"time":"11:00","network":"linkedin","format":"image_post","topic":"OpenAI — timing, governança e decisão de capital","metricoolId":375068343,"uuid":"-1074678807675779197","primaryKpi":"engagement","secondaryKpis":["impressions","clicks","reactions","comments","shares"],"testVariable":"executive question framing"},
+    {"time":"12:00","network":"tiktok","format":"video","topic":"Macy's — turnaround, fechamento de lojas e foco premium","metricoolId":375068377,"uuid":"7186063867663568728","primaryKpi":"averageWatchTime","secondaryKpis":["fullVideoWatchedRate","views","reach","shares","comments","forYouShare","searchShare"],"testVariable":"counterintuitive decision first frame"},
+    {"time":"13:00","network":"instagram","format":"story","topic":"Bending Spoons + Miro — aquisição e modelo operacional","metricoolId":375068412,"uuid":"8371630923398005999","primaryKpi":"reach","secondaryKpis":["impressions","exits","tapsForward","tapsBack","replies"],"testVariable":"concrete deal value in first frame"},
+    {"time":"15:00","network":"instagram","format":"carousel","topic":"Hormuz — ponto único de falha e resiliência","metricoolId":375068491,"uuid":"3887494586540704101","primaryKpi":"saves","secondaryKpis":["shares","reach","interactions","views","follows"],"testVariable":"problem-mechanism-decision sequence"},
+    {"time":"17:30","network":"instagram","format":"story","topic":"UAE — data centers distribuídos e resiliência","metricoolId":375068522,"uuid":"-8214399460812831141","primaryKpi":"reach","secondaryKpis":["impressions","exits","tapsForward","tapsBack","replies"],"testVariable":"before-after contrast"},
+    {"time":"18:00","network":"instagram","format":"reel","topic":"HDFC Bank — sucessão, governança e regulação","metricoolId":375068580,"uuid":"-4126128088042878361","primaryKpi":"retention","secondaryKpis":["views","averageWatchTime","reelViewRate3s","shares","saves","reposts","reach","interactions"],"testVariable":"power-conflict hook"},
+    {"time":"19:45","network":"tiktok","format":"video","topic":"SPACs — capital, risco e validação de negócio","metricoolId":375068616,"uuid":"-8780805913635239998","primaryKpi":"averageWatchTime","secondaryKpis":["fullVideoWatchedRate","views","reach","shares","comments","forYouShare","searchShare"],"testVariable":"specific numbers in opening"},
+    {"time":"20:30","network":"instagram","format":"story","topic":"Apollo Global — seguros e private credit","metricoolId":375068656,"uuid":"-7784564260498486632","primaryKpi":"reach","secondaryKpis":["impressions","exits","tapsForward","tapsBack","replies"],"testVariable":"mechanism explained in one sentence"}
+  ],
+  "decisionRules": {
+    "24h":"Check entry, early retention/watch behavior, interactions and technical failures. Do not kill content early.",
+    "7d":"Compare each item only with the recent median of the same channel and format; classify hypothesis winner, neutral or loser.",
+    "28d":"Check tail, recurrence, conversion/follows and whether the winning structure should become a series.",
+    "winnerExpansion":"Repeat the winning structure with a new topic; do not blindly repost the same asset.",
+    "weakEntry":"Test packaging/hook/first frame, not all variables at once.",
+    "strongEntryWeakRetention":"Align promise and delivery; rewrite opening/progression.",
+    "strongRetentionLowReach":"Test broader angle or timing before changing the core format."
+  }
+}
