@@ -1,0 +1,151 @@
+name: Orbit Cena Certa Canonical Public Canary 2026-09-13
+
+on:
+  push:
+    branches:
+      - infra/orbit-public-runner-canary-20260913
+    paths:
+      - '.github/workflows/orbit-cena-certa-public-canary-20260913.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orbit-cena-certa-public-canary-20260913
+  cancel-in-progress: false
+
+jobs:
+  canonical-cena-certa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CID: CC-PILOTO-PAYLOAD-CANON-V1
+      UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      PYTHONPATH: ${{ github.workspace }}
+      ORBIT_X264_PRESET: veryfast
+      ORBIT_CRF: '18'
+    steps:
+      - name: Checkout isolated route
+        uses: actions/checkout@v4
+
+      - name: Install canonical media runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            ffmpeg fonts-lato fonts-dejavu-core fluidsynth fluid-soundfont-gm python3-pip >/dev/null
+          python -m pip install --disable-pip-version-check --quiet \
+            edge-tts Pillow numpy mido aiohttp
+          ffmpeg -version | head -1
+          fluidsynth --version | head -1
+
+      - name: Reconstruct and prove immutable canonical assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          ASSET_DIR=canonical/cena_certa/v1/assets
+          base64 -d "$ASSET_DIR/cena_certa_logo_v1.jpg.b64" > "$ASSET_DIR/cena_certa_logo_v1.jpg"
+          base64 -d "$ASSET_DIR/cena_certa_clapper_v1.jpg.b64" > "$ASSET_DIR/cena_certa_clapper_v1.jpg"
+          echo '539d60a8f3b98cb078153bd2c7d2461422106d0d5dcd74f3e51db824845b1353  canonical/cena_certa/v1/assets/cena_certa_logo_v1.jpg' | sha256sum -c -
+          echo '38548f663685ba3b0179652d7611c1a21ec96a2c0a2c24feb6fe8351fe9f11ee  canonical/cena_certa/v1/assets/cena_certa_clapper_v1.jpg' | sha256sum -c -
+          python canonical/cena_certa/v1/canonical_mask_guard.py \
+            --contract canonical/cena_certa/v1/contract_cena_certa_canonical_mask_v1.json
+
+      - name: Render one rights-safe golden pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python canonical/cena_certa/v1/render_canonical_v1.py \
+            --batch golden_master/batch_canonical_pilots_v1.json \
+            --limit 1 | tee cena-certa-render.log
+          test -s "output/${CID}.mp4"
+          test -s "output/${CID}.receipt.json"
+          test -s "output/${CID}-canonical-mask-report.txt"
+          grep -q 'CANONICAL_MASK_CANDIDATE_PASS' "output/${CID}-canonical-mask-report.txt"
+          python - <<'PY'
+          import json, os
+          p=f"output/{os.environ['CID']}.receipt.json"
+          r=json.load(open(p,encoding='utf-8'))
+          assert r.get('canonical')=='ORBIT_CENA_CERTA_CANONICAL_MASK_V1',r
+          assert r.get('canonical_mask_pass') is True,r
+          assert r.get('dedup_60d_pass') is True,r
+          assert r.get('publication_gate')=='HUMAN_APPROVAL_REQUIRED',r
+          print('CANONICAL_RECEIPT=PASS')
+          PY
+
+      - name: Independent technical QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          ffprobe -v error -show_streams -show_format -of json "output/${CID}.mp4" > "output/${CID}.probe.json"
+          python - <<'PY'
+          import json,os
+          p=json.load(open(f"output/{os.environ['CID']}.probe.json"))
+          v=[x for x in p['streams'] if x.get('codec_type')=='video']
+          a=[x for x in p['streams'] if x.get('codec_type')=='audio']
+          assert len(v)==1 and len(a)==1,(len(v),len(a))
+          v,a=v[0],a[0]
+          n,d=v.get('avg_frame_rate','0/1').split('/'); fps=float(n)/float(d)
+          checks={
+            'width':int(v.get('width',0))==1080,
+            'height':int(v.get('height',0))==1920,
+            'fps':abs(fps-30.0)<0.01,
+            'video_codec':v.get('codec_name')=='h264',
+            'pixel_format':v.get('pix_fmt')=='yuv420p',
+            'audio_codec':a.get('codec_name')=='aac',
+            'audio_rate':int(a.get('sample_rate',0))==48000,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          print('TECH_QA='+('PASS' if not bad else 'FAIL:'+','.join(bad)))
+          if bad: raise SystemExit(2)
+          PY
+
+      - name: Upload approved canary master to existing R2 storage route
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UGI_VIDEO_UPLOAD_URL"
+          test -n "$UGI_VIDEO_UPLOAD_KEY"
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "output/${CID}.mp4")
+          response=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 300 \
+            -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${CID}&platform=instagram&duration=${dur}&githubRunId=${GITHUB_RUN_ID}" \
+            -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
+            -H 'Content-Type: video/mp4' \
+            --data-binary @"output/${CID}.mp4")
+          printf '%s\n' "$response" > "output/${CID}.r2.json"
+          python - <<'PY'
+          import json,os
+          d=json.load(open(f"output/{os.environ['CID']}.r2.json",encoding='utf-8'))
+          assert d.get('ok') is True,d
+          asset=(d.get('assets') or {}).get('instagram') or {}
+          url=asset.get('videoUrl') or d.get('videoUrl')
+          assert isinstance(url,str) and url.startswith('https://'),d
+          print('R2_UPLOAD=PASS')
+          print('R2_HTTPS_URL=PASS')
+          PY
+
+      - name: Fail-closed safety receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' \
+            'CENA_CERTA_CANONICAL_CANARY=PASS' \
+            'PUBLICATION=false' \
+            'METRICOOL_CALL=false' \
+            'HUMAN_APPROVAL_REQUIRED=true' | tee output/cena-certa-public-route-safety.txt
+
+      - name: Preserve QA proof only
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-canonical-public-canary-proof
+          path: |
+            output/${{ env.CID }}.receipt.json
+            output/${{ env.CID }}-canonical-mask-report.txt
+            output/${{ env.CID }}.probe.json
+            output/${{ env.CID }}.r2.json
+            output/cena-certa-public-route-safety.txt
+            cena-certa-render.log
+          retention-days: 1
+          if-no-files-found: error
