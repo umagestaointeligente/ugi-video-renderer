@@ -1,0 +1,36 @@
+{
+  "schema": "ORBIT_CENA_CERTA_CANONICAL_MASK_V1",
+  "status": "HARD_LOCK_SOURCE_OF_TRUTH",
+  "canvas": {"width":1080,"height":1920,"fps":30},
+  "approved_sources": {
+    "story_attachment": {"filename":"CENA_CERTA_STORY_APPROVED_SOURCE_V1.png","source_size":[864,1536],"sha256":"256448409d6016598d4a27650bec6c35f8ecc67b4e8d294a87246e1b4c4ae4ce","canonical_role":"visual_reference_audit_only"},
+    "cta_attachment": {"filename":"CENA_CERTA_CTA_APPROVED_SOURCE_V1.png","source_size":[864,1536],"sha256":"b19d5ccb51417c6d71ea7fa672e64a9f34023954e3d76ed9b285b83bcd41745b","canonical_role":"visual_reference_audit_only"}
+  },
+  "runtime_components": {
+    "logo": {"path":"canonical/cena_certa/v1/assets/cena_certa_logo_v1.jpg","sha256":"539d60a8f3b98cb078153bd2c7d2461422106d0d5dcd74f3e51db824845b1353"},
+    "clapper": {"path":"canonical/cena_certa/v1/assets/cena_certa_clapper_v1.jpg","sha256":"38548f663685ba3b0179652d7611c1a21ec96a2c0a2c24feb6fe8351fe9f11ee"}
+  },
+  "geometry": {"master_1080x1920":{"title_reference_region":[61,94,979,220],"title_static_anchor":[61,94,289,220],"story_logo":[910,371,99,168],"film_window":[16,664,1046,602],"cc_text_bbox_reference":[219,1359,684,118],"footer":[42,1666,995,201]}},
+  "dynamic_slots": {"allowed":["TITLE_TEXT","YEAR_TEXT","CC_TEXT","FILM_CONTENT","BLURRED_FILM_BACKGROUND","NARRATION","MUSIC"],"forbidden_static_changes":["TITLE_FRAME","CLAPPER","STORY_LOGO","FILM_WINDOW_GEOMETRY","CC_ZONE_GEOMETRY","FOOTER","CTA_FRAME","CTA_TEXT","CTA_ICONS","CTA_LOGO","COLORS","BORDERS","SPACING"]},
+  "film_slot_rules": {"no_aspect_distortion":true,"no_editorial_zoom_crop":true,"fit_mode":"contain","pad_mode":"same-film blurred background","position":"center"},
+  "cc_rules": {"max_lines":2,"must_match_narration":true,"bbox_reference":[219,1359,684,118]},
+  "title_rules": {"year_required":true,"title_uppercase_style":true,"geometry_reference":[61,94,979,220]},
+  "cta_rules": {"asset_is_full_frame_immutable":true,"duration_seconds_min":4.0,"duration_seconds_max":6.0,"spoken_line":"Siga, curta e compartilhe o Cena Certa.","music_continues_to_last_frame":true},
+  "audio_rules": {"continuous_story_narration":true,"max_internal_speech_gap_seconds":0.5,"story_to_cta_gap_max_seconds":0.2,"music_must_match_scene_intensity":true,"music_no_lyrics":true,"music_forbidden_character":["metallic drone","single sustained tone","unpleasant synthetic hum"]},
+  "selection_rules": {"film_year_min":1985,"preferred_year_min":1995,"preferred_year_max":2027,"actual_published_cooldown_days":60,"trailers_teasers_previews_forbidden":true,"story_scene_alignment_required":true,"audience_relevance_required":true},
+  "visual_fingerprints": {
+    "story_title_static_anchor": {"region":[61,94,289,220],"gold_ratio":[0.065,0.105],"white_ratio":[0.045,0.08],"black_ratio":[0.68,0.78]},
+    "story_logo": {"region":[910,371,99,168],"gold_ratio":[0.18,0.30],"white_ratio":[0.055,0.12],"black_ratio":[0.52,0.68]},
+    "story_footer": {"region":[42,1666,995,201],"gold_ratio":[0.075,0.125],"white_ratio":[0.03,0.065],"black_ratio":[0.76,0.85]},
+    "cta_full": {"region":[0,0,1080,1920],"gold_ratio":[0.055,0.08],"white_ratio":[0.035,0.058],"black_ratio":[0.80,0.86]},
+    "cta_logo_top": {"region":[260,260,300,450],"gold_ratio":[0.06,0.105],"white_ratio":[0.035,0.075],"black_ratio":[0.80,0.88]},
+    "cta_copy": {"region":[120,700,840,640],"gold_ratio":[0.055,0.09],"white_ratio":[0.085,0.125],"black_ratio":[0.74,0.82]},
+    "cta_actions": {"region":[120,1280,840,320],"gold_ratio":[0.06,0.095],"white_ratio":[0.008,0.03],"black_ratio":[0.82,0.88]},
+    "cta_comment": {"region":[160,1580,760,290],"gold_ratio":[0.095,0.135],"white_ratio":[0.008,0.03],"black_ratio":[0.77,0.84]}
+  },
+  "film_border_gold_ratio_min": 0.20,
+  "fail_closed": true,
+  "version_change_policy": "Any static visual change requires a new canonical version and explicit human approval.",
+  "gold_reference_backup": {"library_folder":"/Orbit/Cena Certa/Canonical Mask V1","story_filename":"CENA_CERTA_STORY_APPROVED_SOURCE_V1.png","cta_filename":"CENA_CERTA_CTA_APPROVED_SOURCE_V1.png"},
+  "canonical_runtime_policy": {"renderers_must_consume_this_contract":true,"render_jobs_must_run_guard_before_delivery":true,"old_renderers_without_mask_v1_receipt":"STOP_SHIP","publication_requires":["CANONICAL_MASK_PASS","TECH_QA_PASS","EDITORIAL_QA_PASS","HUMAN_APPROVAL"]}
+}
