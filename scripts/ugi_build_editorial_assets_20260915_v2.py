@@ -54,7 +54,7 @@ def adaptive_render_video(name, entity_name, keys, scenes, music_path, source_la
     subprocess.run(['ffmpeg','-y','-f','concat','-safe','0','-i',str(lst),'-c','copy','-movflags','+faststart',str(final)], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     duration = float(b.probe(final)['format']['duration'])
     if name.startswith('instagram-reel-'):
-        lo, hi = 55.0, 75.0
+        lo, hi = 55.0, 80.0
     else:
         lo, hi = 45.0, 65.0
     if not lo <= duration <= hi:
