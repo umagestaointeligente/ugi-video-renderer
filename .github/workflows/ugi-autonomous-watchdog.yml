@@ -16,6 +16,9 @@ on:
     paths:
       - '.github/workflows/ugi-autonomous-watchdog.yml'
       - 'scripts/ugi_autonomous_watchdog.py'
+      - 'scripts/ugi_growth_runtime.py'
+      - 'config/ugi/growth-policy.json'
+      - 'config/ugi/distribution-state.json'
 
 permissions:
   contents: read

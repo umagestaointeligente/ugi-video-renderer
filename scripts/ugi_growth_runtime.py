@@ -53,14 +53,48 @@ def load_growth_policy() -> tuple[dict, str]:
     return policy, hashlib.sha256(raw).hexdigest()
 
 
-def load_distribution_state(policy: dict) -> tuple[dict, str, str]:
+def validate_routing_alignment(policy: dict, state: dict) -> None:
+    """Fail closed when policy and operational routing describe different providers."""
+    failures = []
+    policy_distribution = policy.get("distribution", {})
+    publisher = policy.get("integration_roles", {}).get("publisher", {})
+    analytics = policy.get("integration_roles", {}).get("analytics", {})
+    evidence = policy.get("publication_evidence", {})
+    routing = state.get("publisher_routing", {})
+    metricool = state.get("metricool", {})
+
+    checks = {
+        "POLICY_PRIMARY_METRICOOL": publisher.get("primary") == "metricool",
+        "POLICY_METRICOOL_PUBLICATION_ALLOWED": publisher.get("metricool_allowed") is True,
+        "POLICY_ANALYTICS_METRICOOL": analytics.get("primary") == "metricool",
+        "POLICY_ANALYTICS_PUBLICATION_ALLOWED": analytics.get("publishing_allowed") is True,
+        "POLICY_EVIDENCE_SOURCE_METRICOOL": evidence.get("publisher_source") == "metricool",
+        "STATE_PRIMARY_METRICOOL": routing.get("primary") == "metricool",
+        "STATE_METRICOOL_ACTIVE": metricool.get("status") == "ACTIVE_PRIMARY",
+        "STATE_FAIL_CLOSED": routing.get("fail_closed") is True,
+        "STATE_READBACK_BEFORE_RETRY": routing.get("ambiguous_result_policy")
+        == "READBACK_BEFORE_ANY_RETRY_OR_FALLBACK",
+        "STATE_DUPLICATE_MUTATION_FORBIDDEN": routing.get("duplicate_mutation_policy") == "FORBIDDEN",
+        "POLICY_STATE_PRIMARY_MATCH": publisher.get("primary") == routing.get("primary"),
+        "POLICY_STATE_ACTIVE_PLATFORMS_MATCH": policy_distribution.get("active_platforms")
+        == state.get("distribution_priority"),
+        "POLICY_ACTIVE_COUNT_MATCH": policy_distribution.get("active_distribution_channel_count")
+        == len(state.get("distribution_priority", [])),
+    }
+    failures = [name for name, passed in checks.items() if not passed]
+    if failures:
+        raise GrowthPolicyError("UGI_ROUTING_CONTRACT_FAIL " + ",".join(failures))
+
+
+def load_distribution_state(policy: dict, repo_root: Path = REPO_ROOT) -> tuple[dict, str, str]:
     """Load the operational distribution state referenced by policy, fail-closed."""
     ref = policy.get("distribution", {}).get("state_ref")
     if not isinstance(ref, str) or not ref:
         raise GrowthPolicyError("DISTRIBUTION_STATE_REQUIRED")
-    path = (REPO_ROOT / ref).resolve()
+    repo_root = repo_root.resolve()
+    path = (repo_root / ref).resolve()
     try:
-        path.relative_to(REPO_ROOT)
+        path.relative_to(repo_root)
     except ValueError as exc:
         raise GrowthPolicyError("DISTRIBUTION_STATE_OUTSIDE_REPOSITORY") from exc
     if not path.is_file():
@@ -98,6 +132,7 @@ def load_distribution_state(policy: dict) -> tuple[dict, str, str]:
     youtube = state.get("channels", {}).get("youtube", {})
     if youtube.get("metricool_status") != "ACTIVE_LONGFORM_WEEKLY_HARD_GATED":
         raise GrowthPolicyError("DISTRIBUTION_STATE_YOUTUBE_METRICOOL_LOCK")
+    validate_routing_alignment(policy, state)
     return state, hashlib.sha256(raw).hexdigest(), ref
 
 

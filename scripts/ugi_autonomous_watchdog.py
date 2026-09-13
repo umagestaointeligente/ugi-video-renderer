@@ -9,6 +9,11 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+try:
+    from .ugi_growth_runtime import GrowthPolicyError, load_distribution_state
+except ImportError:
+    from ugi_growth_runtime import GrowthPolicyError, load_distribution_state
+
 REPOSITORY = "umagestaointeligente/ugi-video-renderer"
 
 
@@ -41,18 +46,26 @@ def build_status(root: Path) -> dict:
         stop("GROWTH_POLICY_MISSING")
     policy_bytes = policy_path.read_bytes()
     policy = json.loads(policy_bytes)
-    roles = policy.get("integration_roles", {})
-    publisher = roles.get("publisher", {})
-    analytics = roles.get("analytics", {})
-    if publisher.get("primary") != "buffer" or publisher.get("metricool_allowed") is not False:
-        stop("BUFFER_PUBLICATION_LOCK")
-    if analytics.get("primary") != "metricool" or analytics.get("publishing_allowed") is not False:
-        stop("METRICOOL_READONLY_LOCK")
+    try:
+        distribution_state, _, _ = load_distribution_state(policy, repo_root=root)
+    except GrowthPolicyError as exc:
+        stop(str(exc))
     recovery = policy.get("publication_recovery", {})
-    if recovery.get("publisher") != "buffer" or recovery.get("metricool_retry_forbidden") is not True:
-        stop("RECOVERY_PROVIDER_LOCK")
     if int(recovery.get("max_attempts_total", 0)) < 1:
         stop("RECOVERY_ATTEMPT_POLICY")
+    if recovery.get("active_platforms_only") is not True or recovery.get("paused_platform_retry_forbidden") is not True:
+        stop("RECOVERY_SCOPE_LOCK")
+    required_pre_retry_checks = {
+        "verify_not_already_published",
+        "verify_no_duplicate_post_exists",
+        "verify_asset_unchanged",
+        "verify_caption_unchanged",
+        "verify_platform_is_active_distribution_channel",
+    }
+    if not required_pre_retry_checks.issubset(set(recovery.get("pre_retry_checks", []))):
+        stop("RECOVERY_IDEMPOTENCY_LOCK")
+    if recovery.get("success_stop_condition") != "published_and_verified_readback":
+        stop("RECOVERY_READBACK_LOCK")
 
     growth = load_optional(root / "control-plane" / "receipts" / "ugi-growth-engine" / "latest.json")
     buffer_today = load_optional(root / "control-plane" / "receipts" / "ugi-buffer" / "today.json")
@@ -99,9 +112,12 @@ def build_status(root: Path) -> dict:
         "repository_lock": REPOSITORY,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "status": "DEGRADED" if incidents else "HEALTHY",
-        "publication_provider": "BUFFER",
+        "publication_provider": "METRICOOL",
         "analytics_provider": "METRICOOL",
-        "metricool_publication_allowed": False,
+        "metricool_publication_allowed": True,
+        "fallback_provider": distribution_state["publisher_routing"]["fallback"],
+        "fallback_condition": distribution_state["publisher_routing"]["fallback_condition"],
+        "ambiguous_result_policy": distribution_state["publisher_routing"]["ambiguous_result_policy"],
         "public_publish_triggered": False,
         "payment_triggered": False,
         "growth_runtime_evidence_present": growth is not None,
