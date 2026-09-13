@@ -1,0 +1,453 @@
+{
+  "schema": "UGI_EDITORIAL_QA_V5",
+  "date": "2026-09-14",
+  "state": "PASS",
+  "hardGateFailures": [],
+  "finalCount": 15,
+  "counts": {
+    "instagram_story": 4,
+    "instagram_reel": 2,
+    "linkedin_image": 1,
+    "tiktok_video": 2,
+    "instagram_carousel_slide": 6
+  },
+  "antiRepeatReview": "PASS_NO_MATCH_IN_REPO_SEARCH_FOR_SELECTED_ENTITIES; 60D registry backfill remains partial",
+  "metricoolMutationAuthorized": true,
+  "files": [
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-story-revolut-0830.jpg",
+      "sha256": "17ee0d7b375b1d41b51111c5a8f4f15a7385bad932bcb7c6444bb34708b47556",
+      "bytes": 585413,
+      "kind": "instagram_story",
+      "entity": "Revolut",
+      "sourceKeys": [
+        "revolut_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-reel-john-lewis-1000.mp4",
+      "sha256": "bcb4860a0f4c9dda1fbb350edc4302abb50b48f94990a006e237771c40bbac10",
+      "bytes": 3717970,
+      "kind": "instagram_reel",
+      "entity": "John Lewis",
+      "sourceKeys": [
+        "johnlewis_1",
+        "johnlewis_2",
+        "johnlewis_3",
+        "johnlewis_4",
+        "johnlewis_5",
+        "johnlewis_6"
+      ],
+      "distinctSourceCount": 6,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "50.345333"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/linkedin-openai-governanca-1100.jpg",
+      "sha256": "0befc977b5f6801ed52e02e23e73f41f00caa5c6f86b39be8ba57afb8c7d3c78",
+      "bytes": 288910,
+      "kind": "linkedin_image",
+      "entity": "OpenAI",
+      "sourceKeys": [
+        "openai_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/tiktok-macys-turnaround-1200.mp4",
+      "sha256": "4cf21f217271f5fd2216518e1b9dd3c10e2be0630f1bb756e4ee7964ba51bbe7",
+      "bytes": 3577991,
+      "kind": "tiktok_video",
+      "entity": "Macy's",
+      "sourceKeys": [
+        "macys_1",
+        "macys_2",
+        "macys_3",
+        "macys_4",
+        "macys_5",
+        "macys_6"
+      ],
+      "distinctSourceCount": 6,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "49.374023"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-story-bending-spoons-miro-1300.jpg",
+      "sha256": "a024be2f39f37e71770069d6fe42972f89616aef3dfe1b0feff7c719db0eafa0",
+      "bytes": 184538,
+      "kind": "instagram_story",
+      "entity": "Bending Spoons / Miro",
+      "sourceKeys": [
+        "bending_1",
+        "miro_1"
+      ],
+      "distinctSourceCount": 2,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-carousel-hormuz-01.jpg",
+      "sha256": "343124fab2a5ca28595b39416538bd130546b46aa2dcb8524375a1a3378b552c",
+      "bytes": 527346,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "hormuz_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-carousel-hormuz-02.jpg",
+      "sha256": "8708589abb026de78e8b75327e7e044efe6e9f918d5201ed7c4586ebfbcf7772",
+      "bytes": 483936,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "hormuz_2"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-carousel-hormuz-03.jpg",
+      "sha256": "a255fdf5a8a8e0f7256172ca4350528e5656d97f26d80bac24432eb9c454444f",
+      "bytes": 480847,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "hormuz_3"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-carousel-hormuz-04.jpg",
+      "sha256": "e2addba4febcffce39a4d75cf2b556b7784a37e43c55cd97d8bb7e0f41e13cc4",
+      "bytes": 275809,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "hormuz_4"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-carousel-hormuz-05.jpg",
+      "sha256": "2d6e7b8874bd1667176b71b7b04057be331329550edf536d0195a458b4b53510",
+      "bytes": 173244,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "hormuz_5"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-carousel-hormuz-06.jpg",
+      "sha256": "a2983515103fa89314aa4bcaa5832880920b4e4229ab8df18ce2a01a2ba7d9e1",
+      "bytes": 372690,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "hormuz_6"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-story-uae-datacenter-1730.jpg",
+      "sha256": "913b50df0c0672e08da89629cca186b176387a1b469e6da2fb98492dcfb1e8b2",
+      "bytes": 494780,
+      "kind": "instagram_story",
+      "entity": "UAE AI infrastructure",
+      "sourceKeys": [
+        "uae_1",
+        "uae_2"
+      ],
+      "distinctSourceCount": 2,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-reel-hdfc-sucessao-1800.mp4",
+      "sha256": "ac9ee963df8500f95f601e981dfd5d07a5e3499418eb8809588134389c62a788",
+      "bytes": 3861172,
+      "kind": "instagram_reel",
+      "entity": "HDFC Bank",
+      "sourceKeys": [
+        "hdfc_1",
+        "hdfc_2",
+        "hdfc_3",
+        "hdfc_4",
+        "hdfc_5",
+        "hdfc_6"
+      ],
+      "distinctSourceCount": 6,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "50.539323"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/tiktok-spac-retorno-1945.mp4",
+      "sha256": "0c07c67bc29eb42e64a9ae4a19ca72505113f1b6361d54ac70679f479690b637",
+      "bytes": 2877824,
+      "kind": "tiktok_video",
+      "entity": null,
+      "sourceKeys": [
+        "spac_1",
+        "spac_2",
+        "spac_3",
+        "spac_4",
+        "spac_5",
+        "spac_6"
+      ],
+      "distinctSourceCount": 6,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "50.599349"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-14/daily/instagram-story-apollo-2030.jpg",
+      "sha256": "5fb7862dd5906c58cd5d3556bbe825a216c3aebac59d5884082988f7624d7b44",
+      "bytes": 157086,
+      "kind": "instagram_story",
+      "entity": "Apollo Global Management",
+      "sourceKeys": [
+        "apollo_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "GENERIC_STOCK_PRIMARY": false,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null
+      },
+      "probe": null
+    }
+  ]
+}
