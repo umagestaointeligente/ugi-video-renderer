@@ -39,8 +39,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-14/daily/instagram-reel-john-lewis-1000.mp4",
-      "sha256": "bcb4860a0f4c9dda1fbb350edc4302abb50b48f94990a006e237771c40bbac10",
-      "bytes": 3717970,
+      "sha256": "30181df97c75e935fe45dd18ba3c5dce8f1016414c5be280afc2adc83c7adbef",
+      "bytes": 2578175,
       "kind": "instagram_reel",
       "entity": "John Lewis",
       "sourceKeys": [
@@ -61,7 +61,13 @@
         "CC_DEDICATED_LOWER_BAND_PASS": true,
         "CC_MAX_TWO_LINES_PASS": true,
         "CC_CHUNKED_SYNC_PASS": true,
-        "CC_OVER_PRIMARY_VISUAL": false
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "VERTICAL_SAFE_AREA_V2_PASS": true,
+        "SAFE_X_MIN": 140,
+        "SAFE_X_MAX": 940,
+        "MAIN_VISUAL_CONTAINED_NOT_CROPPED": true,
+        "HEADLINE_WITHIN_SAFE_AREA": true,
+        "CC_WITHIN_SAFE_AREA": true
       },
       "probe": {
         "programs": [],
@@ -107,8 +113,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-14/daily/tiktok-macys-turnaround-1200.mp4",
-      "sha256": "4cf21f217271f5fd2216518e1b9dd3c10e2be0630f1bb756e4ee7964ba51bbe7",
-      "bytes": 3577991,
+      "sha256": "8f6673e3537938700cbdf51bb73499a3a5c1d67b5698d85b4c793022fc91e09d",
+      "bytes": 2192187,
       "kind": "tiktok_video",
       "entity": "Macy's",
       "sourceKeys": [
@@ -129,7 +135,13 @@
         "CC_DEDICATED_LOWER_BAND_PASS": true,
         "CC_MAX_TWO_LINES_PASS": true,
         "CC_CHUNKED_SYNC_PASS": true,
-        "CC_OVER_PRIMARY_VISUAL": false
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "VERTICAL_SAFE_AREA_V2_PASS": true,
+        "SAFE_X_MIN": 140,
+        "SAFE_X_MAX": 940,
+        "MAIN_VISUAL_CONTAINED_NOT_CROPPED": true,
+        "HEADLINE_WITHIN_SAFE_AREA": true,
+        "CC_WITHIN_SAFE_AREA": true
       },
       "probe": {
         "programs": [],
@@ -338,8 +350,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-14/daily/instagram-reel-hdfc-sucessao-1800.mp4",
-      "sha256": "ac9ee963df8500f95f601e981dfd5d07a5e3499418eb8809588134389c62a788",
-      "bytes": 3861172,
+      "sha256": "be9524db83105c6dfd3186ff5e8e7d078aeedf539ba49f80f15646a47ea2202e",
+      "bytes": 2366687,
       "kind": "instagram_reel",
       "entity": "HDFC Bank",
       "sourceKeys": [
@@ -360,7 +372,13 @@
         "CC_DEDICATED_LOWER_BAND_PASS": true,
         "CC_MAX_TWO_LINES_PASS": true,
         "CC_CHUNKED_SYNC_PASS": true,
-        "CC_OVER_PRIMARY_VISUAL": false
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "VERTICAL_SAFE_AREA_V2_PASS": true,
+        "SAFE_X_MIN": 140,
+        "SAFE_X_MAX": 940,
+        "MAIN_VISUAL_CONTAINED_NOT_CROPPED": true,
+        "HEADLINE_WITHIN_SAFE_AREA": true,
+        "CC_WITHIN_SAFE_AREA": true
       },
       "probe": {
         "programs": [],
@@ -383,8 +401,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-14/daily/tiktok-spac-retorno-1945.mp4",
-      "sha256": "0c07c67bc29eb42e64a9ae4a19ca72505113f1b6361d54ac70679f479690b637",
-      "bytes": 2877824,
+      "sha256": "7ba9da3fc1f5d950acf9ea15eee8bf8634dccbb2ee96ec551440b7a3f02f545b",
+      "bytes": 1966507,
       "kind": "tiktok_video",
       "entity": null,
       "sourceKeys": [
@@ -405,7 +423,13 @@
         "CC_DEDICATED_LOWER_BAND_PASS": true,
         "CC_MAX_TWO_LINES_PASS": true,
         "CC_CHUNKED_SYNC_PASS": true,
-        "CC_OVER_PRIMARY_VISUAL": false
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "VERTICAL_SAFE_AREA_V2_PASS": true,
+        "SAFE_X_MIN": 140,
+        "SAFE_X_MAX": 940,
+        "MAIN_VISUAL_CONTAINED_NOT_CROPPED": true,
+        "HEADLINE_WITHIN_SAFE_AREA": true,
+        "CC_WITHIN_SAFE_AREA": true
       },
       "probe": {
         "programs": [],
@@ -449,5 +473,31 @@
       },
       "probe": null
     }
-  ]
+  ],
+  "safeAreaV2Applied": true,
+  "safeAreaPolicy": {
+    "canvas": "1080x1920",
+    "safeX": [
+      140,
+      940
+    ],
+    "headlineTop": 175,
+    "visualBox": [
+      140,
+      285,
+      940,
+      1215
+    ],
+    "captionBand": [
+      140,
+      1245,
+      940,
+      1475
+    ],
+    "mainVisualMode": "contain",
+    "platforms": [
+      "instagram_reels",
+      "tiktok_vertical"
+    ]
+  }
 }

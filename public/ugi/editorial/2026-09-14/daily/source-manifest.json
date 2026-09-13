@@ -425,5 +425,19 @@
       "sha256": "f9fc1fe494c78b3c77291705341cadc302de5e60fc6bd768621a0b163aee8985",
       "rightsBasis": "Wikimedia Commons license metadata + semantic query match"
     }
+  },
+  "safeAreaV2Applied": true,
+  "safeAreaPolicy": {
+    "safeX": [
+      140,
+      940
+    ],
+    "mainVisualMode": "contain",
+    "captionBand": [
+      140,
+      1245,
+      940,
+      1475
+    ]
   }
 }

@@ -249,8 +249,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/instagram-reel-american-eagle-1800.mp4",
-      "sha256": "fa128b9385685b5fcfab07f4972e16cb9e16e24d0f8554a34ef89fdfb07f3f86",
-      "bytes": 4240320,
+      "sha256": "6a9822c35f0085954f90287364ec9171dabe5c11e82a5587ff43220be9348027",
+      "bytes": 1540917,
       "kind": "instagram_reel",
       "entity": "American Eagle",
       "visualQa": {
@@ -262,7 +262,13 @@
         "GENERIC_STOCK_PRIMARY": false,
         "CC_MAX_TWO_LINES_PASS": true,
         "CC_CHUNKED_SYNC_PASS": true,
-        "CC_OVER_PRIMARY_VISUAL": false
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "VERTICAL_SAFE_AREA_V2_PASS": true,
+        "SAFE_X_MIN": 140,
+        "SAFE_X_MAX": 940,
+        "MAIN_VISUAL_CONTAINED_NOT_CROPPED": true,
+        "HEADLINE_WITHIN_SAFE_AREA": true,
+        "CC_WITHIN_SAFE_AREA": true
       },
       "probe": {
         "programs": [],
@@ -279,14 +285,14 @@
           }
         ],
         "format": {
-          "duration": "49.220638"
+          "duration": "44.253971"
         }
       }
     },
     {
       "path": "public/ugi/editorial/2026-09-13/daily/tiktok-nvidia-anthropic-1945.mp4",
-      "sha256": "e7872016af0bcbf71d54c9566cf1b59d4b3279a7085b5e311f1764e4e09ea1dd",
-      "bytes": 3363850,
+      "sha256": "a21582e830a72a26d907f4fdfea331425d1bda6bb2c6ba4625c651a10aef8fdb",
+      "bytes": 1115556,
       "kind": "tiktok_video",
       "entity": "Nvidia / Anthropic",
       "visualQa": {
@@ -298,7 +304,13 @@
         "GENERIC_STOCK_PRIMARY": false,
         "CC_MAX_TWO_LINES_PASS": true,
         "CC_CHUNKED_SYNC_PASS": true,
-        "CC_OVER_PRIMARY_VISUAL": false
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "VERTICAL_SAFE_AREA_V2_PASS": true,
+        "SAFE_X_MIN": 140,
+        "SAFE_X_MAX": 940,
+        "MAIN_VISUAL_CONTAINED_NOT_CROPPED": true,
+        "HEADLINE_WITHIN_SAFE_AREA": true,
+        "CC_WITHIN_SAFE_AREA": true
       },
       "probe": {
         "programs": [],
@@ -315,7 +327,7 @@
           }
         ],
         "format": {
-          "duration": "51.804687"
+          "duration": "36.317969"
         }
       }
     },
@@ -335,5 +347,31 @@
       },
       "probe": null
     }
-  ]
+  ],
+  "safeAreaV2Applied": true,
+  "safeAreaPolicy": {
+    "canvas": "1080x1920",
+    "safeX": [
+      140,
+      940
+    ],
+    "headlineTop": 175,
+    "visualBox": [
+      140,
+      285,
+      940,
+      1215
+    ],
+    "captionBand": [
+      140,
+      1245,
+      940,
+      1475
+    ],
+    "mainVisualMode": "contain",
+    "platforms": [
+      "instagram_reels",
+      "tiktok_vertical"
+    ]
+  }
 }

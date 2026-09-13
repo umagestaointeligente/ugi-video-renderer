@@ -447,7 +447,13 @@
     "captionBand": {
       "top": 1415,
       "bottom": 1745
-    }
+    },
+    "verticalSafeAreaV2": true,
+    "mainVisualMode": "contain",
+    "safeX": [
+      140,
+      940
+    ]
   },
   "finals": [
     {
