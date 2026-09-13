@@ -1,0 +1,98 @@
+name: Orbit Public Render R2 Canary 2026-09-13
+on:
+  push:
+    branches:
+      - infra/orbit-public-runner-canary-20260913
+    paths:
+      - '.github/workflows/orbit-public-render-r2-canary-20260913.yml'
+permissions:
+  contents: read
+jobs:
+  render-r2-canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      RENDER_ID: ORBIT-ROUTE-CANARY-20260913
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install media tools
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          test -n "$UGI_VIDEO_UPLOAD_URL"
+          test -n "$UGI_VIDEO_UPLOAD_KEY"
+      - name: Render deterministic vertical canary
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
+          ffmpeg -hide_banner -loglevel error -y \
+            -f lavfi -i "color=c=0x07111f:s=1080x1920:r=30:d=4" \
+            -f lavfi -i "sine=frequency=440:sample_rate=48000:duration=4" \
+            -vf "drawbox=x=70:y=110:w=940:h=5:color=0xd7b55b:t=fill,drawtext=fontfile=${FONT}:text='ORBIT RENDER CANARY':fontcolor=white:fontsize=64:x=(w-tw)/2:y=760,drawtext=fontfile=${FONT}:text='PUBLICATION FALSE':fontcolor=0xd7b55b:fontsize=38:x=(w-tw)/2:y=870,format=yuv420p" \
+            -c:v libx264 -preset medium -crf 18 -profile:v high -level 4.1 -r 30 -g 60 \
+            -c:a aac -b:a 192k -ar 48000 -movflags +faststart \
+            out/${RENDER_ID}.mp4
+          test -s out/${RENDER_ID}.mp4
+      - name: Fail-closed technical QA
+        run: |
+          set -euo pipefail
+          ffprobe -v error -show_streams -show_format -of json out/${RENDER_ID}.mp4 > out/${RENDER_ID}.probe.json
+          python - <<'PY'
+          import json, os
+          p=json.load(open(f"out/{os.environ['RENDER_ID']}.probe.json"))
+          vs=[s for s in p['streams'] if s.get('codec_type')=='video']
+          au=[s for s in p['streams'] if s.get('codec_type')=='audio']
+          assert len(vs)==1 and len(au)==1,(len(vs),len(au))
+          v,a=vs[0],au[0]
+          n,d=v['avg_frame_rate'].split('/'); fps=float(n)/float(d)
+          checks={
+            'width':v.get('width')==1080,
+            'height':v.get('height')==1920,
+            'fps':abs(fps-30)<0.01,
+            'video_codec':v.get('codec_name')=='h264',
+            'pix_fmt':v.get('pix_fmt')=='yuv420p',
+            'audio_codec':a.get('codec_name')=='aac',
+            'audio_rate':int(a.get('sample_rate',0))==48000,
+          }
+          bad=[k for k,x in checks.items() if not x]
+          print('TECH_QA='+('PASS' if not bad else 'FAIL:'+','.join(bad)))
+          if bad: raise SystemExit(2)
+          PY
+      - name: Upload to existing R2 route
+        run: |
+          set -euo pipefail
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 out/${RENDER_ID}.mp4)
+          response=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 240 \
+            -X POST "${UGI_VIDEO_UPLOAD_URL%/}/api/video-upload?renderId=${RENDER_ID}&platform=instagram&duration=${dur}&githubRunId=${GITHUB_RUN_ID}" \
+            -H "Authorization: Bearer ${UGI_VIDEO_UPLOAD_KEY}" \
+            -H 'Content-Type: video/mp4' \
+            --data-binary @out/${RENDER_ID}.mp4)
+          printf '%s\n' "$response" > out/${RENDER_ID}.r2.json
+          python - <<'PY'
+          import json,os
+          d=json.load(open(f"out/{os.environ['RENDER_ID']}.r2.json"))
+          assert d.get('ok') is True,d
+          a=(d.get('assets') or {}).get('instagram') or {}
+          url=a.get('videoUrl') or d.get('videoUrl')
+          assert isinstance(url,str) and url.startswith('https://'),d
+          print('R2_UPLOAD=PASS')
+          print('VIDEO_URL='+url)
+          PY
+      - name: Safety receipt
+        run: |
+          printf '%s\n' 'PUBLICATION=false' 'METRICOOL_CALL=false' 'ROUTE_CANARY=PASS' | tee out/safety.txt
+      - name: Proof artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: orbit-public-render-r2-canary
+          path: |
+            out/${{ env.RENDER_ID }}.probe.json
+            out/${{ env.RENDER_ID }}.r2.json
+            out/safety.txt
+          retention-days: 1
+          if-no-files-found: error
