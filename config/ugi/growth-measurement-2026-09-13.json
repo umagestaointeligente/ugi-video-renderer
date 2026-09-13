@@ -1,0 +1,42 @@
+{
+  "schema": "UGI_GROWTH_MEASUREMENT_V1",
+  "date": "2026-09-13",
+  "timezone": "America/Sao_Paulo",
+  "metricoolBrandId": "6935401",
+  "state": "SCHEDULE_CONFIRMED_MEASUREMENT_ARMED",
+  "principles": {
+    "noMagicThresholds": true,
+    "compareAgainstOwnChannelMedianByFormat": true,
+    "changeOnePrimaryVariablePerTest": true,
+    "doNotIncreaseVolumeBlindly": true,
+    "reviewWindows": ["24h", "7d", "28d"]
+  },
+  "networkMetricFields": {
+    "instagram_reel": ["IGRE23", "IGRE24", "IGRE27", "IGRE28", "IGRE21", "IGRE12", "IGRE29", "IGRE11", "IGRE09"],
+    "instagram_story": ["IGST10", "IGST09", "IGST08", "IGST13", "IGST12", "IGST11"],
+    "instagram_post_carousel": ["IGPO28", "IGPO14", "IGPO12", "IGPO15", "IGPO27", "IGPO29"],
+    "tiktok_video": ["TKPO07", "TKPO11", "TKPO15", "TKPO13", "TKPO10", "TKPO09", "TKPO16", "TKPO21"],
+    "linkedin_post": ["LIPO12", "LIPO09", "LIPO13", "LIPO10", "LIPO18", "LIPO9999"]
+  },
+  "schedule": [
+    {"time":"08:30","network":"instagram","format":"story","topic":"Kroger — vendas x preservação do lucro","metricoolId":374949721,"uuid":"-2734266576058431148","primaryKpi":"reach","secondaryKpis":["impressions","exits","tapsForward","tapsBack","replies"]},
+    {"time":"10:00","network":"instagram","format":"reel","topic":"Histórias de Gestão — Mondial","metricoolId":374962425,"uuid":"7173891102436969105","primaryKpi":"retention","secondaryKpis":["views","averageWatchTime","reelViewRate3s","shares","saves","reposts","reach","interactions"]},
+    {"time":"11:00","network":"linkedin","format":"image_post","topic":"Tata Sons — governança, regulação e capital","metricoolId":374950086,"uuid":"2813499286055897868","primaryKpi":"engagement","secondaryKpis":["impressions","clicks","reactions","comments","shares"]},
+    {"time":"12:00","network":"tiktok","format":"video","topic":"Zara / Inditex — demanda digital orientando lojas","metricoolId":374962455,"uuid":"-5533348479014974691","primaryKpi":"averageWatchTime","secondaryKpis":["fullVideoWatchedRate","views","reach","shares","comments","forYouShare","searchShare"]},
+    {"time":"13:00","network":"instagram","format":"story","topic":"Ultraviolette — capacidade industrial escalável","metricoolId":374950148,"uuid":"-4245229898948917850","primaryKpi":"reach","secondaryKpis":["impressions","exits","tapsForward","tapsBack","replies"]},
+    {"time":"15:00","network":"instagram","format":"carousel","topic":"ASML — Flow Factory e gargalo físico da IA","metricoolId":374950220,"uuid":"2652474063312670113","primaryKpi":"saves","secondaryKpis":["shares","reach","interactions","views","follows"]},
+    {"time":"17:30","network":"instagram","format":"story","topic":"Oracle — IA, investimento e disciplina de custos","metricoolId":374950261,"uuid":"-5135706585479561081","primaryKpi":"reach","secondaryKpis":["impressions","exits","tapsForward","tapsBack","replies"]},
+    {"time":"18:00","network":"instagram","format":"reel","topic":"American Eagle — estoque, marca e margem","metricoolId":374962501,"uuid":"-13812102314897725","primaryKpi":"retention","secondaryKpis":["views","averageWatchTime","reelViewRate3s","shares","saves","reposts","reach","interactions"]},
+    {"time":"19:45","network":"tiktok","format":"video","topic":"Nvidia + Anthropic — fornecedor, cliente e capital","metricoolId":374962528,"uuid":"-6918551764507735734","primaryKpi":"averageWatchTime","secondaryKpis":["fullVideoWatchedRate","views","reach","shares","comments","forYouShare","searchShare"]},
+    {"time":"20:30","network":"instagram","format":"story","topic":"Asahi / Diageo / EABL — aquisição e poder de canal","metricoolId":374950329,"uuid":"537286247649529848","primaryKpi":"reach","secondaryKpis":["impressions","exits","tapsForward","tapsBack","replies"]}
+  ],
+  "decisionRules": {
+    "24h":"Check entry, early retention/watch behavior, interactions and technical failures. Do not kill content early.",
+    "7d":"Compare each item only with the recent median of the same channel and format; classify hypothesis winner, neutral or loser.",
+    "28d":"Check tail, recurrence, conversion/follows and whether the winning structure should become a series.",
+    "winnerExpansion":"Repeat the winning structure with a new topic; do not blindly repost the same asset.",
+    "weakEntry":"Test packaging/hook/first frame, not all variables at once.",
+    "strongEntryWeakRetention":"Align promise and delivery; rewrite opening/progression.",
+    "strongRetentionLowReach":"Test broader angle or timing before changing the core format."
+  }
+}
