@@ -1,20 +1,33 @@
 name: VSA Release Gate
 
-description: Fail-closed canonical release gate for Você Sabia Agora masters
+description: Fail-closed preventive release gate for the exact Você Sabia Agora final master
 
 inputs:
   receipt:
-    description: Path to VSA_VISUAL_RELEASE_RECEIPT_V1 JSON
+    description: Path to VSA_VISUAL_RELEASE_RECEIPT_V2 JSON
+    required: true
+  master:
+    description: Path to the exact final MP4 that would be sent to Metricool
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Validate VSA visual story release receipt
+    - name: Self-test preventive VSA release gate
+      shell: bash
+      run: |
+        set -euo pipefail
+        python scripts/vsa/validate_release_receipt.py \
+          --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json \
+          --self-test
+
+    - name: Validate exact VSA final master and release receipt
       shell: bash
       run: |
         set -euo pipefail
         test -s "${{ inputs.receipt }}"
+        test -s "${{ inputs.master }}"
         python scripts/vsa/validate_release_receipt.py \
           --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json \
-          --receipt "${{ inputs.receipt }}"
+          --receipt "${{ inputs.receipt }}" \
+          --master "${{ inputs.master }}"
