@@ -1,0 +1,35 @@
+{
+  "schema": "UGI_GROWTH_MEASUREMENT_V1",
+  "date": "2026-09-15",
+  "timezone": "America/Sao_Paulo",
+  "metricoolBrandId": "6935401",
+  "state": "SCHEDULE_CONFIRMED_MEASUREMENT_ARMED",
+  "assetCommit": "7833e65014fc4958d35f2fc31795b2c902a66930",
+  "qaState": "PASS",
+  "safeAreaV2": true,
+  "storytellingBenchmark": true,
+  "principles": {
+    "noMagicThresholds": true,
+    "compareAgainstOwnChannelMedianByFormat": true,
+    "changeOnePrimaryVariablePerTest": true,
+    "reviewWindows": ["24h", "7d", "28d"]
+  },
+  "schedule": [
+    {"time":"08:30","network":"instagram","format":"story","topic":"Capgemini — dependência de fornecedor digital e continuidade operacional","metricoolId":375373343,"uuid":"-2617110324350596614","primaryKpi":"reach"},
+    {"time":"10:00","network":"instagram","format":"reel","topic":"Hyundai + Nvidia — velocidade, parceria e autonomia tecnológica","metricoolId":375373378,"uuid":"302001868626478036","primaryKpi":"retention","testVariable":"storytelling surprise-conflict-decision-mechanism-lesson"},
+    {"time":"11:00","network":"linkedin","format":"image_post","topic":"Empresas alemãs / China — alocação real de capital versus discurso geopolítico","metricoolId":375373411,"uuid":"-2150304472128797091","primaryKpi":"engagement"},
+    {"time":"12:00","network":"tiktok","format":"video","topic":"Stellantis — uma empresa, duas estratégias","metricoolId":375373443,"uuid":"-3696740472314443023","primaryKpi":"averageWatchTime"},
+    {"time":"13:00","network":"instagram","format":"story","topic":"Primark — mudança de estratégia para entrega em casa","metricoolId":375373530,"uuid":"9136422278466848268","primaryKpi":"reach","antiRepeatReplacement":"Volkswagen removed before scheduling"},
+    {"time":"15:00","network":"instagram","format":"carousel","topic":"Bancos italianos — aquisição como defesa, controle e governança","metricoolId":375373625,"uuid":"2723508123800782025","primaryKpi":"saves"},
+    {"time":"17:30","network":"instagram","format":"story","topic":"Rio Tinto — aquisição de bauxita e integração vertical","metricoolId":375373682,"uuid":"-1396201523982088224","primaryKpi":"reach"},
+    {"time":"18:00","network":"instagram","format":"reel","topic":"Baker Hughes — aquisição, integração e sinergia","metricoolId":375373761,"uuid":"-1663068683981797325","primaryKpi":"retention","testVariable":"storytelling acquisition-mechanism-payoff"},
+    {"time":"19:45","network":"tiktok","format":"video","topic":"Papua LNG — participação econômica e controle operacional","metricoolId":375373829,"uuid":"143478181848172141","primaryKpi":"averageWatchTime"},
+    {"time":"20:30","network":"instagram","format":"story","topic":"Michael Dell / Baldwin Insurance — decisão de fechar capital","metricoolId":375373875,"uuid":"-5979506513744474259","primaryKpi":"reach"}
+  ],
+  "decisionRules": {
+    "24h":"Check entry, early retention/watch behavior, interactions and technical failures. Do not kill content early.",
+    "7d":"Compare each item with the recent median of the same channel and format; classify hypothesis winner, neutral or loser.",
+    "28d":"Check tail, recurrence, conversion/follows and whether the winning structure should become a series.",
+    "winnerExpansion":"Repeat the winning structure with a new topic; never blindly repost the same asset."
+  }
+}
