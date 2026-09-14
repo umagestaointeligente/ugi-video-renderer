@@ -39,7 +39,6 @@ jobs:
         run: |
           set -euo pipefail
           python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
-          python -m json.tool config/vsa/VSA_VISUAL_RELEASE_RECEIPT_TEMPLATE_V1.json >/dev/null
           test "$(python - <<'PY'
           import json
           p=json.load(open('config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json',encoding='utf-8'))
@@ -75,7 +74,8 @@ jobs:
           fi
           cat > "$GOOD" <<'YAML'
           # VSA_VISUAL_STORY_ENGINE_V1
-          # VSA_VISUAL_RELEASE_RECEIPT_V1
+          # VSA_VISUAL_RELEASE_RECEIPT_V2
+          # Metricool VSA brand lock: 6935441
           name: compliant future vsa workflow
           jobs:
             gate:
@@ -83,6 +83,7 @@ jobs:
                 - uses: ./.github/actions/vsa-release-gate
                   with:
                     receipt: /tmp/receipt.json
+                    master: /tmp/final.mp4
           YAML
           python scripts/vsa/check_workflow_compliance.py "$GOOD"
           echo 'VSA_FUTURE_WORKFLOW_BYPASS_SELF_TEST_PASS'
@@ -114,24 +115,25 @@ jobs:
           mapfile -t changed < /tmp/vsa_changed_paths.txt
           python scripts/vsa/check_workflow_compliance.py "${changed[@]}"
 
-      - name: Assert channel isolation and no secret material
+      - name: Assert VSA Metricool channel isolation and no secret material
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           import json
           p=json.load(open('config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json',encoding='utf-8'))
-          t=json.load(open('config/vsa/VSA_VISUAL_RELEASE_RECEIPT_TEMPLATE_V1.json',encoding='utf-8'))
           assert p['channel']['name'] == 'Você Sabia Agora?'
           assert p['channel']['youtube_channel_id'] == 'UCm0UMO6lNWlr66YSIS1p4iQ'
-          assert p['channel']['postly_workspace_id'] == '6aa14d4c751532e1ae000000'
-          assert p['isolation']['metricool_for_vsa'] == 'FORBIDDEN'
+          assert p['channel']['metricool_brand_id'] == 6935441
+          assert p['channel']['official_publisher'] == 'METRICOOL'
+          assert p['isolation']['metricool_for_vsa'] == 'OFFICIAL_ONLY'
+          assert p['isolation']['metricool_brand_id'] == 6935441
+          assert p['isolation']['youtube_channel_id'] == p['channel']['youtube_channel_id']
           assert p['isolation']['cena_certa_mutation'] == 'FORBIDDEN'
           assert p['isolation']['blind_retry'] == 'FORBIDDEN'
-          assert t['channel']['youtube_channel_id'] == p['channel']['youtube_channel_id']
-          print('VSA_CHANNEL_ISOLATION_POLICY_PASS')
+          print('VSA_METRICOOL_CHANNEL_ISOLATION_POLICY_PASS')
           PY
-          if grep -RniE 'CENA[_ -]?CERTA|88240|88242|METRICOOL' .github/actions/vsa-release-gate; then
+          if grep -RniE 'CENA[_ -]?CERTA|88240|88242|6809869' .github/actions/vsa-release-gate; then
             echo 'CROSS_CHANNEL_TOKEN_FOUND_IN_RELEASE_GATE'
             exit 1
           fi
@@ -148,13 +150,19 @@ jobs:
           set -euo pipefail
           printf '%s\n' \
             'VSA_VISUAL_STORY_ENGINE_V1=ACTIVE_FAIL_CLOSED' \
+            'VSA_VISUAL_RELEASE_RECEIPT_V2=REQUIRED' \
+            'METRICOOL_BRAND_ID=6935441' \
             'SHOT_MAP_REQUIRED=true' \
             'EXACT_REAL_ACTION_REQUIRED=true' \
             'GENERIC_FILLER_FORBIDDEN=true' \
-            'CC_VISIBLE_PROOF_REQUIRED=true' \
-            'SINGLE_TITLE_REQUIRED=true' \
-            'HUMAN_REVIEW_REQUIRED=true' \
+            'VOICE_PTBR_NEUTRAL_REQUIRED=true' \
+            'CANONICAL_MASK_V2_REQUIRED=true' \
+            'ENTITY_INTEGRITY_REQUIRED=true' \
+            'FRESH_BUILD_REQUIRED=true' \
+            'PRE_CTA_CONTAMINATION_BLOCKED=true' \
+            'FINAL_MASTER_HASH_TOKEN_REQUIRED=true' \
             'SCHEDULE_BEFORE_GATE_FORBIDDEN=true' \
             'FUTURE_WORKFLOW_BYPASS_BLOCKED=true' \
             'CHANNEL_ISOLATION_ASSERTED=true' \
+            'PAULO_IS_NOT_PRIMARY_QA=true' \
             'CENA_CERTA_TOUCHED=false'
