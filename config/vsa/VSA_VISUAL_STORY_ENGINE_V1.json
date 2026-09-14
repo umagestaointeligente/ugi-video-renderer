@@ -1,11 +1,12 @@
 {
   "schema": "VSA_VISUAL_STORY_ENGINE_V1",
   "status": "ACTIVE_FAIL_CLOSED",
-  "activated_at": "2026-09-11T11:00:00-03:00",
+  "activated_at": "2026-09-14T00:57:00-03:00",
   "channel": {
     "name": "Você Sabia Agora?",
     "youtube_channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ",
-    "postly_workspace_id": "6aa14d4c751532e1ae000000",
+    "metricool_brand_id": 6935441,
+    "official_publisher": "METRICOOL",
     "forbidden_cross_channel": "CENA_CERTA"
   },
   "golden_reference": {
@@ -13,7 +14,7 @@
     "run_id": 34594731572,
     "commit": "d12c0ae4a8d4847638782d84490d68adf90ee9fe",
     "artifact": "vsa-hunga-narrative-visual-repair-v3",
-    "reference_scope": "STRUCTURE_AND_QA_ONLY_DO_NOT_COPY_CONTENT"
+    "reference_scope": "STRUCTURE_AND_QA_ONLY_DO_NOT_COPY_CONTENT_OR_FRAMES"
   },
   "story_contract": {
     "narration_image_action_meaning_required": true,
@@ -29,6 +30,8 @@
     "forbid_repeated_take_as_variety": true,
     "forbid_repeated_animation_as_distinct_mechanisms": true,
     "animation_blocks_must_be_visually_distinct": true,
+    "fresh_build_only": true,
+    "forbid_prior_final_master_as_input": true,
     "if_exact_licensed_visual_is_missing": "BLOCK_ASSET"
   },
   "real_asset_required_fields": [
@@ -37,8 +40,49 @@
     "visible_action",
     "source_url",
     "license",
-    "source_timestamp_seconds"
+    "source_timestamp_seconds",
+    "expected_subject",
+    "asset_subject",
+    "asset_role"
   ],
+  "voice": {
+    "language": "pt-BR",
+    "neutral_brazilian_accent_required": true,
+    "approved_profiles": ["pt-BR-AntonioNeural"],
+    "foreign_or_european_portuguese_accent": "FAIL",
+    "new_voice_requires_listening_gate": true
+  },
+  "mask": {
+    "required": true,
+    "canonical_version": "V2",
+    "sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+    "title_layers_max": 1,
+    "caption_max_lines": 2,
+    "text_outside_safe_zones": "FAIL"
+  },
+  "entity_integrity": {
+    "status": "HARD_GATE",
+    "person_profile_target_subject_required": true,
+    "minimum_target_share_of_identifiable_human_footage": 0.70,
+    "unrelated_person_filler": "FAIL",
+    "context_person_requires_explicit_script_reference": true
+  },
+  "tail_integrity": {
+    "status": "HARD_GATE",
+    "fresh_cta_transition_required": true,
+    "legacy_or_unrelated_frame_before_cta": "FAIL",
+    "sample_window_before_cta_seconds": 2.0,
+    "sample_window_after_cta_seconds": 1.0,
+    "cta_first_frame_must_match_canonical": true
+  },
+  "retry_policy": {
+    "status": "MANDATORY",
+    "max_attempts_per_topic": 3,
+    "rebuild_from_zero_on_failure": true,
+    "preserve_slot_on_failure": true,
+    "after_third_failure": "REPLACE_TOPIC_WITH_ELIGIBLE_BACKUP",
+    "one_failed_item_must_not_block_unrelated_slots": true
+  },
   "required_gates": [
     "SHOT_MAP_PASS",
     "NARRATION_BOUNDARY_PASS",
@@ -55,7 +99,14 @@
     "THUMBNAIL_PASS",
     "CTA_CANONICAL_PASS",
     "FORMAT_PASS",
-    "AUDIO_PASS"
+    "AUDIO_PASS",
+    "VOICE_PTBR_NEUTRAL_PASS",
+    "CANONICAL_MASK_V2_PASS",
+    "ENTITY_INTEGRITY_PASS",
+    "MASTER_FRESH_BUILD_PASS",
+    "PRE_CTA_CONTAMINATION_PASS",
+    "FINAL_MASTER_QA_PASS",
+    "SCHEDULER_RELEASE_TOKEN_PASS"
   ],
   "captions": {
     "must_be_burned_and_visible_in_final_master": true,
@@ -81,16 +132,22 @@
   },
   "release": {
     "fail_closed": true,
-    "human_review_required": true,
-    "visual_narrative_alignment_must_remain_false_until_human_approval": true,
-    "release_receipt_schema": "VSA_VISUAL_RELEASE_RECEIPT_V1",
+    "human_review_required": false,
+    "preventive_machine_qa_required": true,
+    "paulo_must_not_be_primary_qa": true,
+    "release_receipt_schema": "VSA_VISUAL_RELEASE_RECEIPT_V2",
     "release_eligible_must_be_true": true,
     "schedule_requires_same_validated_receipt": true,
+    "master_sha256_must_match_release_token": true,
+    "any_master_change_invalidates_release_token": true,
     "queued_is_not_scheduled_proof": true,
     "live_scheduler_readback_required_for_scheduled_claim": true
   },
   "isolation": {
-    "metricool_for_vsa": "FORBIDDEN",
+    "metricool_for_vsa": "OFFICIAL_ONLY",
+    "metricool_brand_id": 6935441,
+    "youtube_channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ",
+    "other_publishers": "FORBIDDEN_UNLESS_USER_CHANGES_CANON",
     "blind_retry": "FORBIDDEN",
     "cena_certa_mutation": "FORBIDDEN",
     "paid_fallback_without_explicit_authorization": "FORBIDDEN"
