@@ -5,7 +5,10 @@ from __future__ import annotations
 import argparse
 import pathlib
 
-GUARD_WORKFLOW = ".github/workflows/vsa-visual-story-standard-guard.yml"
+GUARD_WORKFLOWS = {
+    ".github/workflows/vsa-visual-story-standard-guard.yml",
+    ".github/workflows/vsa-preventive-release-gate.yml",
+}
 ENGINE_MARKER = "VSA_VISUAL_STORY_ENGINE_V1"
 RECEIPT_MARKERS = ("VSA_VISUAL_RELEASE_RECEIPT_V2", "VSA_VISUAL_RELEASE_RECEIPT_V1")
 GATE_MARKER = "./.github/actions/vsa-release-gate"
@@ -23,7 +26,7 @@ ALLOWED_VSA_METRICOOL_BRAND = "6935441"
 
 def check(path: pathlib.Path) -> list[str]:
     rel = path.as_posix()
-    if rel == GUARD_WORKFLOW or not rel.startswith(".github/workflows/vsa-") or path.suffix not in {".yml", ".yaml"}:
+    if rel in GUARD_WORKFLOWS or not rel.startswith(".github/workflows/vsa-") or path.suffix not in {".yml", ".yaml"}:
         return []
     text = path.read_text(encoding="utf-8")
     low = text.lower()
@@ -59,7 +62,7 @@ def main() -> int:
     checked = 0
     for path in paths:
         if path.exists() and path.is_file():
-            relevant = path.as_posix().startswith(".github/workflows/vsa-") and path.as_posix() != GUARD_WORKFLOW
+            relevant = path.as_posix().startswith(".github/workflows/vsa-") and path.as_posix() not in GUARD_WORKFLOWS
             errors.extend(check(path))
             checked += int(relevant)
     if errors:
