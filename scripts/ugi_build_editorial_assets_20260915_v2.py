@@ -15,6 +15,22 @@ src = src.replace(
     "exxon=collect('exxon',['ExxonMobil LNG','ExxonMobil Papua New Guinea'],2,['exxon'])",
     "exxon=collect('exxon',['ExxonMobil LNG','ExxonMobil Papua New Guinea','ExxonMobil facility','ExxonMobil energy'],3,['exxon'])"
 )
+
+# Anti-repeat correction: Volkswagen had already been covered by UGI.
+# Replace it before any render/scheduling with a fresh Primark management case.
+src = src.replace(
+    " 'vw':'https://www.reuters.com/business/autos-transportation/vw-goes-broke-2026-09-08/',",
+    " 'primark':'https://www.reuters.com/business/retail-consumer/ab-foods-says-primark-offer-home-delivery-uk-2026-09-10/',"
+)
+src = src.replace(
+    "vw=collect('vw',['Volkswagen factory','Volkswagen Wolfsburg','Volkswagen logo'],1,['volkswagen'])",
+    "primark=collect('primark',['Primark store','Primark shop','Primark Oxford Street'],1,['primark'])"
+)
+src = src.replace(
+    "p=safe_card(vw,'O plano de cortes travou — até a governança mudar o jogo','Na Volkswagen, uma decisão de transformação encontrou resistência interna. O caso mostra como conselho, trabalhadores e mecanismos formais definem a velocidade da execução.','Fonte: Reuters Breakingviews • 08/09/2026','instagram-story-volkswagen-1300.jpg'); finals.append(record(p,vw,'instagram_story','Volkswagen'))",
+    "p=safe_card(primark,'A Primark resistiu ao delivery — até a conta fechar','Por anos, a Primark evitou entrega em casa. Agora, novas condições econômicas e um centro automatizado de fulfillment mudaram a decisão. Estratégia boa também sabe a hora de mudar.','Fonte factual: Reuters • 10/09/2026','instagram-story-primark-1300.jpg'); finals.append(record(p,primark,'instagram_story','Primark'))"
+)
+
 # Prevent the base file from running main before we install the adaptive duration gate.
 src = src.replace("if __name__=='__main__': main()", "")
 ns = {'__name__': 'ugi_sep15_v2', '__file__': str(BASE)}
