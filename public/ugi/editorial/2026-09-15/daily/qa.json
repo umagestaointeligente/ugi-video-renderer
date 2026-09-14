@@ -1,0 +1,485 @@
+{
+  "schema": "UGI_EDITORIAL_QA_V6",
+  "date": "2026-09-15",
+  "state": "PASS",
+  "hardGateFailures": [],
+  "counts": {
+    "instagram_story": 4,
+    "instagram_reel": 2,
+    "linkedin_image": 1,
+    "tiktok_video": 2,
+    "instagram_carousel_slide": 6
+  },
+  "finalCount": 15,
+  "antiRepeatReview": "PASS_NO_CREDIBLE_COLLISION_IN_REPO_SEARCH_AND_CURRENT_PLANS; legacy registry backfill incomplete",
+  "safeAreaV2": true,
+  "storytellingBenchmark": true,
+  "metricoolMutationAuthorized": true,
+  "files": [
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-story-capgemini-0830.jpg",
+      "sha256": "f424ee1734b8724cf2c52aafa63c4d4cb4b99ed3a53bc766d500af82349abe61",
+      "bytes": 149243,
+      "kind": "instagram_story",
+      "entity": "Capgemini",
+      "sourceKeys": [
+        "capgemini_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-reel-hyundai-historias-1000.mp4",
+      "sha256": "8bc1aefb389fcec43a61dfb9241adf2aa6a3b939c4edd718663ffe824e99c1f2",
+      "bytes": 3779668,
+      "kind": "instagram_reel",
+      "entity": "Hyundai",
+      "sourceKeys": [
+        "hyundai_1",
+        "hyundai_2",
+        "hyundai_3",
+        "hyundai_4",
+        "hyundai_5",
+        "hyundai_6",
+        "hyundai_7"
+      ],
+      "distinctSourceCount": 7,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "STORYTELLING_BENCHMARK_PASS": true
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "74.424000"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/linkedin-german-china-capital-1100.jpg",
+      "sha256": "ffb72deb349437e3ff4b4c03ed21598c1c53584b385c25dbfc7b9cecba5b01e8",
+      "bytes": 205200,
+      "kind": "linkedin_image",
+      "entity": null,
+      "sourceKeys": [
+        "germanychina_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/tiktok-stellantis-dois-mundos-1200.mp4",
+      "sha256": "51ce17892b71fe612c1283aee491e8fee9047cdae616d180cbebefe31438b9fd",
+      "bytes": 2713268,
+      "kind": "tiktok_video",
+      "entity": "Stellantis",
+      "sourceKeys": [
+        "stellantis_1",
+        "stellantis_2",
+        "stellantis_3",
+        "stellantis_4",
+        "stellantis_5",
+        "stellantis_6"
+      ],
+      "distinctSourceCount": 6,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "61.092000"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-story-primark-1300.jpg",
+      "sha256": "15daa7e4606d2f5dc69f45814fc1a6ab87b4a58eb483900312332b3a1c0c5849",
+      "bytes": 280094,
+      "kind": "instagram_story",
+      "entity": "Primark",
+      "sourceKeys": [
+        "primark_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-carousel-italy-banks-01.jpg",
+      "sha256": "c90da1ea760418ba08309111d226163c30150ae713ee5aa1514e9ad83357d1b2",
+      "bytes": 161266,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "italybanks_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-carousel-italy-banks-02.jpg",
+      "sha256": "d85291b680cc8c958e59b964aabb5def8e32c3b339d9afee9b125212c8e9dc53",
+      "bytes": 169952,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "italybanks_2"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-carousel-italy-banks-03.jpg",
+      "sha256": "09f3d3ddf77a4c9be24a91a7e40bc26bc393ced700a182b216d7a0eeec2d6983",
+      "bytes": 250161,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "italybanks_3"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-carousel-italy-banks-04.jpg",
+      "sha256": "f43004ddf1291dfa2734b470aa2c44fee1d3eadbb1ec46de0c9213b3be5557c1",
+      "bytes": 171495,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "italybanks_4"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-carousel-italy-banks-05.jpg",
+      "sha256": "6d0e1fef450a0c6ff208f9cf4152cc4098545be223fd39d1463d63ad0b0c1177",
+      "bytes": 150475,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "italybanks_5"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-carousel-italy-banks-06.jpg",
+      "sha256": "29a852080cc4869c6dbc571324685cc1ea7baecabb54e4b9c2b5a4caebb51e24",
+      "bytes": 162271,
+      "kind": "instagram_carousel_slide",
+      "entity": null,
+      "sourceKeys": [
+        "italybanks_6"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": null,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-story-rio-tinto-1730.jpg",
+      "sha256": "1a479a76d8c5eba7dd79412d9b737df96225c5ed5729088a4f400bfccfa56b30",
+      "bytes": 284445,
+      "kind": "instagram_story",
+      "entity": "Rio Tinto",
+      "sourceKeys": [
+        "riotinto_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-reel-baker-hughes-historias-1800.mp4",
+      "sha256": "d26cd3a37255ab1dba27a8b547ec13f99b7f29c89b8c710db9d50b3773f80d6c",
+      "bytes": 3738652,
+      "kind": "instagram_reel",
+      "entity": "Baker Hughes",
+      "sourceKeys": [
+        "bakerhughes_1",
+        "bakerhughes_2",
+        "bakerhughes_3",
+        "bakerhughes_4",
+        "bakerhughes_5",
+        "bakerhughes_6",
+        "bakerhughes_7"
+      ],
+      "distinctSourceCount": 7,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "STORYTELLING_BENCHMARK_PASS": true
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "77.537333"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/tiktok-papua-lng-ownership-1945.mp4",
+      "sha256": "d25ada47add3cd64a3d87f56650dbbd8b59e43774797a7590c20803f57c80a63",
+      "bytes": 2399654,
+      "kind": "tiktok_video",
+      "entity": "Papua LNG / Santos / ExxonMobil / TotalEnergies",
+      "sourceKeys": [
+        "santos_1",
+        "exxon_1",
+        "exxon_2",
+        "exxon_3",
+        "total_1",
+        "total_2"
+      ],
+      "distinctSourceCount": 6,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": true,
+        "CC_MAX_TWO_LINES_PASS": true,
+        "CC_CHUNKED_SYNC_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "65.866015"
+        }
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/daily/instagram-story-michael-dell-baldwin-2030.jpg",
+      "sha256": "653e47f0666e50119714bf55bcf4ad1b9b16f65be9b1f92bc40cfe7d840eb5af",
+      "bytes": 202428,
+      "kind": "instagram_story",
+      "entity": "Michael Dell / DFO Management",
+      "sourceKeys": [
+        "michaeldell_1"
+      ],
+      "distinctSourceCount": 1,
+      "visualQa": {
+        "NAMED_ENTITY_VISUAL_AUTHENTICITY_PASS": true,
+        "REAL_CONTEXTUAL_VISUAL_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "EXACT_VISUAL_REUSE_COUNT": 0,
+        "GENERIC_STOCK_PRIMARY": false,
+        "SAFE_AREA_V2_PASS": true,
+        "CC_DEDICATED_LOWER_BAND_PASS": null,
+        "CC_MAX_TWO_LINES_PASS": null,
+        "CC_CHUNKED_SYNC_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "STORYTELLING_BENCHMARK_PASS": null
+      },
+      "probe": null
+    }
+  ]
+}
