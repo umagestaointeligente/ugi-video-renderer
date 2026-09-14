@@ -1,0 +1,31 @@
+name: VSA Preventive Release Gate
+
+on:
+  pull_request:
+    paths:
+      - 'config/vsa/**'
+      - 'scripts/vsa/**'
+      - '.github/actions/vsa-release-gate/**'
+      - '.github/workflows/vsa-preventive-release-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preventive-negative-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse policy JSON
+        run: python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
+      - name: Compile VSA preventive gate code
+        run: |
+          python -m py_compile scripts/vsa/validate_release_receipt.py
+          python -m py_compile scripts/vsa/render_preventive_v3.py
+      - name: Prove fail-closed negative cases
+        run: |
+          python scripts/vsa/validate_release_receipt.py \
+            --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json \
+            --self-test
