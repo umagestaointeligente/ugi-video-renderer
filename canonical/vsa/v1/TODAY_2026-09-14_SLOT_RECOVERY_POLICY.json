@@ -1,0 +1,23 @@
+{
+  "date_local": "2026-09-14",
+  "timezone": "America/Sao_Paulo",
+  "channel": "Você Sabia Agora?",
+  "metricool_brand_id": 6935441,
+  "old_batch_policy": "KEEP_DRAFT_AUTOPUBLISH_FALSE_DO_NOT_REACTIVATE",
+  "slot_policy": {
+    "attempts_per_topic": 3,
+    "each_failure": "REBUILD_FROM_ZERO",
+    "third_failure": "REPLACE_WITH_ELIGIBLE_BACKUP_TOPIC",
+    "preserve_slot": true,
+    "failed_item_blocks_other_slots": false
+  },
+  "planned_slots": [
+    {"time":"08:00","kind":"SHORT","topic":"Dragonfly electrical harness on Titan-bound rotorcraft"},
+    {"time":"10:00","kind":"SHORT","topic":"replacement only if original satellite-imaging claim cannot be fact-checked with rights-safe footage"},
+    {"time":"13:00","kind":"SHORT","topic":"NASA DSS-23 34-meter Deep Space Network antenna"},
+    {"time":"15:00","kind":"SHORT","topic":"M83 Thousand-Ruby Galaxy"},
+    {"time":"16:00","kind":"LONG","topic":"Why Venus reaches peak brilliance on September 18, 2026"},
+    {"time":"19:00","kind":"SHORT","topic":"Nine newly described deep-sea sponge species in Alaska"},
+    {"time":"21:00","kind":"SHORT","topic":"SARSAT distress beacons and satellite rescue without cellular coverage"}
+  ]
+}
