@@ -1,5 +1,5 @@
 {
-  "schema": "UGI_EDITORIAL_PLAN_V7_EXACT_SUBJECT",
+  "schema": "UGI_EDITORIAL_PLAN_V8_EXACT_SUBJECT",
   "date": "2026-09-15",
   "timezone": "America/Sao_Paulo",
   "state": "EDITORIAL_LOCKED_VISUAL_PRODUCTION_BLOCKED_UNTIL_EXACT_SUBJECT_QA",
@@ -16,7 +16,8 @@
     "captionMaxLines": 2,
     "captionMayNotCoverPrimaryVisual": true,
     "antiRepeatDays": 60,
-    "publisherFailClosedUntilQa": true
+    "publisherFailClosedUntilQa": true,
+    "sameLongformMasterAcrossPlatformsForbidden": true
   },
   "daily": [
     {
@@ -24,77 +25,69 @@
       "network": "instagram",
       "format": "story",
       "topic": "Capgemini — dependência de fornecedor digital e continuidade operacional",
-      "visualContract": "Capgemini logo or office/data-infrastructure context directly tied to supplier continuity; no generic conference, fashion, protest or unrelated technology imagery",
-      "status": "KEEP_TOPIC_REPLACE_IF_VISUAL_FAILS"
+      "visualContract": "Recognizable Capgemini brand/company visual plus an original UGI continuity diagram tied to supplier dependence. No generic conference, fashion, protest or unrelated technology imagery.",
+      "status": "REBUILD_EXACT_SUBJECT"
     },
     {
       "time": "10:00",
       "network": "instagram",
       "format": "reel_historia_gestao",
-      "topic": "Hyundai + Nvidia — velocidade, parceria e autonomia tecnológica",
-      "storytelling": ["surpresa","conflito","decisao","mecanismo","consequencia","licao"],
-      "visualContract": "Current Hyundai vehicles/ADAS cockpit or Hyundai facility plus recognizable Nvidia/Drive visual. Vintage Hyundai cars unrelated to ADAS are forbidden. Each narration beat must show the named company, technology or mechanism being discussed.",
-      "status": "REBUILD_VISUALS"
+      "topic": "LEGO — a empresa quase quebrou e voltou ao núcleo",
+      "storytelling": ["surpresa","crise","decisao","mecanismo","consequencia","licao"],
+      "visualContract": "LEGO-specific real visuals and original factual UGI charts only. Generic toy stock forbidden. Current Reel must be a native 9:16 edit, not the YouTube master. Caption in dedicated lower band, max 2 lines, never over primary visual.",
+      "status": "REBUILD_AS_LEGO_NATIVE_REEL"
     },
     {
       "time": "11:00",
       "network": "linkedin",
-      "format": "post_image",
-      "topic": "Empresas alemãs / China — capital real x discurso geopolítico",
-      "visualContract": "Business/investment context showing Germany-China relationship: flags with industrial/business context, factory, trade or an original data chart. Protests/embassy demonstrations are forbidden.",
-      "status": "REBUILD_VISUAL"
+      "format": "native_video_4_5",
+      "topic": "LEGO — versão executiva: complexidade, disciplina de capital e retorno ao core",
+      "visualContract": "LEGO-specific real visuals and original factual UGI charts only. Native 4:5 executive edit. No generic corporate or toy stock. Captions in dedicated lower band, max 2 lines, never over primary visual.",
+      "status": "REBUILD_AS_LEGO_NATIVE_LINKEDIN_VIDEO"
     },
     {
       "time": "12:00",
       "network": "tiktok",
       "format": "video",
       "topic": "Stellantis — uma empresa, duas estratégias: EUA x resto do mundo",
-      "visualContract": "Current Stellantis corporate/factory context and current Jeep/Ram/Fiat/Leapmotor-related visuals. Historic Chrysler/Plymouth archive cars not tied to the current strategy are forbidden.",
-      "status": "REBUILD_VISUALS"
+      "visualContract": "Recognizable current Stellantis/Jeep/Ram/Fiat/Leapmotor context plus original UGI split-strategy diagrams. Historic Chrysler/Plymouth archive cars unrelated to the current strategy are forbidden.",
+      "status": "REBUILD_EXACT_SUBJECT"
     },
     {
       "time": "13:00",
       "network": "instagram",
       "format": "story",
       "topic": "Primark — quando mudar uma convicção estratégica",
-      "visualContract": "Operational Primark store, e-commerce/fulfillment or delivery context. Burned-out store, accident, protest or unrelated retail imagery forbidden.",
-      "status": "REBUILD_VISUAL"
+      "visualContract": "Operational Primark store/brand visual plus original UGI fulfillment/home-delivery diagram. Burned-out store, accident, protest or unrelated retail imagery forbidden.",
+      "status": "REBUILD_EXACT_SUBJECT"
     },
     {
       "time": "15:00",
       "network": "instagram",
       "format": "carousel_6",
       "topic": "Bancos italianos — aquisição como defesa",
-      "visualContract": "Each slide must show the exact bank/entity named on that slide (MPS, Mediobanca, Intesa, Banco BPM etc.) or a factual transaction diagram. Do not reuse one bank as a proxy for the whole story.",
-      "status": "AUDIT_EACH_SLIDE"
+      "visualContract": "Each slide must show the exact bank/entity named on that slide or a factual UGI transaction diagram naming those banks. Do not reuse one bank as a proxy for the whole story.",
+      "status": "REBUILD_AND_AUDIT_EACH_SLIDE"
     },
     {
       "time": "16:00",
       "network": "youtube",
-      "format": "longform_8_12_min",
+      "format": "longform_9_11_min",
       "series": "Historias de Gestao",
       "topic": "LEGO — como a empresa quase quebrou e reconstruiu o negócio voltando ao núcleo",
       "workingTitle": "A LEGO quase quebrou: a decisão que salvou uma das marcas mais famosas do mundo",
-      "hook": "Em 2004, a LEGO estava no limite: prejuízo, dívida, complexidade e negócios demais. A saída não foi inventar mais. Foi decidir o que a LEGO realmente precisava voltar a ser.",
-      "storytelling": ["gancho","origem","expansao_e_complexidade","crise_2003_2004","troca_de_lideranca","venda_legoland_e_ativos","simplificacao_supply_chain","volta_ao_core","comunidade_e_inovacao_com_regras","resultado","3_licoes_de_gestao"],
-      "visualContract": "Only LEGO-specific visuals, archival/product/factory/headquarters/LEGOLAND/leadership and original factual charts from LEGO annual reports. No generic toy stock. Narration captions in dedicated lower band, max 2 lines, never over the primary visual.",
-      "factSources": [
-        "LEGO Annual Report 2004",
-        "LEGO Annual Report 2005",
-        "LEGO official history",
-        "Strategy+Business supply-chain turnaround case",
-        "Harvard Business Review case/podcast for contextual analysis"
-      ],
-      "publishTimeBasis": "Metricool best-time peak for YouTube on 2026-09-15: 16:00",
-      "status": "SCRIPT_AND_SHOTLIST_APPROVED_FOR_PRODUCTION"
+      "storytelling": ["gancho","origem","expansao_e_complexidade","crise_2003_2004","troca_de_lideranca","venda_legoland_e_ativos","simplificacao_supply_chain","volta_ao_core","resultado","3_licoes_de_gestao"],
+      "visualContract": "Only LEGO-specific real visuals, clearly labeled archival material and original factual charts from cited LEGO reports. No generic toy stock. 16:9 master. Narration captions in dedicated lower band, max 2 lines, never over the primary visual.",
+      "factSources": ["LEGO Annual Report 2004","LEGO Annual Report 2005","LEGO official history","Strategy+Business supply-chain turnaround case","Harvard Business Review case/podcast for contextual analysis"],
+      "status": "REBUILD_EXACT_SUBJECT_LONGFORM"
     },
     {
       "time": "17:30",
       "network": "instagram",
       "format": "story",
       "topic": "Rio Tinto — aquisição de bauxita e integração vertical",
-      "visualContract": "Rio Tinto mine/bauxite/processing or recognizable Rio Tinto operation. Protest signs or unrelated political demonstrations are forbidden.",
-      "status": "REBUILD_VISUAL"
+      "visualContract": "Recognizable Rio Tinto operation/brand plus original UGI bauxite-chain diagram. Protest signs or unrelated political demonstrations are forbidden.",
+      "status": "REBUILD_EXACT_SUBJECT"
     },
     {
       "time": "18:00",
@@ -102,34 +95,27 @@
       "format": "reel_historia_gestao",
       "topic": "Baker Hughes — aquisição, integração e sinergia",
       "storytelling": ["gancho","conflito","decisao","mecanismo","sinergia","resultado","licao"],
-      "visualContract": "Baker Hughes/Chart Industries facilities, LNG/industrial equipment and deal-relevant operations only; no generic oil imagery when exact company visuals are available.",
-      "status": "AUDIT_VISUALS"
+      "visualContract": "Recognizable Baker Hughes/Chart deal-relevant visuals plus original UGI integration and synergy diagrams. Generic oil imagery is forbidden when the exact company/mechanism can be shown.",
+      "status": "REBUILD_EXACT_SUBJECT"
     },
     {
       "time": "19:45",
       "network": "tiktok",
       "format": "video",
       "topic": "Papua LNG — participação econômica não é controle operacional",
-      "visualContract": "Papua LNG/PNG energy context plus exact Santos, ExxonMobil and TotalEnergies visuals matched to the narration beat. No unrelated LNG plant used as if it were Papua LNG.",
-      "status": "AUDIT_VISUALS"
+      "visualContract": "Exact Santos, ExxonMobil and TotalEnergies entity visuals plus original UGI Papua LNG ownership/operator diagram. No unrelated LNG plant used as if it were Papua LNG.",
+      "status": "REBUILD_EXACT_SUBJECT"
     },
     {
       "time": "20:30",
       "network": "instagram",
       "format": "story",
       "topic": "Michael Dell / Baldwin Insurance — por que fechar capital pode fazer sentido",
-      "visualContract": "Michael Dell/DFO plus Baldwin Insurance/company context. Dell computer product imagery alone is not sufficient for a take-private story.",
-      "status": "AUDIT_VISUAL"
+      "visualContract": "Recognizable Michael Dell/DFO context plus explicit Baldwin Insurance/take-private diagram. Dell computer product imagery alone is forbidden.",
+      "status": "REBUILD_EXACT_SUBJECT"
     }
   ],
-  "hardFails": [
-    "VISUAL_SUBJECT_MISMATCH",
-    "NEGATIVE_CONTEXT_MISMATCH",
-    "NAMED_ENTITY_NOT_RECOGNIZABLE",
-    "NARRATION_VISUAL_BEAT_MISMATCH",
-    "CAPTION_OVER_PRIMARY_VISUAL",
-    "SAFE_AREA_FAIL",
-    "RIGHTS_OR_PROVENANCE_FAIL",
-    "ANTI_REPEAT_FAIL"
-  ]
+  "backlogMovedTo2026_09_16": ["Hyundai + Nvidia — velocidade, parceria e autonomia tecnológica","Empresas alemãs / China — capital real x discurso geopolítico"],
+  "hardFails": ["VISUAL_SUBJECT_MISMATCH","NEGATIVE_CONTEXT_MISMATCH","NAMED_ENTITY_NOT_RECOGNIZABLE","NARRATION_VISUAL_BEAT_MISMATCH","CAPTION_OVER_PRIMARY_VISUAL","SAFE_AREA_FAIL","RIGHTS_OR_PROVENANCE_FAIL","ANTI_REPEAT_FAIL","GENERIC_PROXY_VISUAL_FAIL","UNRELATED_ARCHIVAL_VISUAL_FAIL"],
+  "releaseRule": "autoPublish=true is forbidden for every Sep15 item until the rebuilt asset has an exact-subject QA receipt."
 }
