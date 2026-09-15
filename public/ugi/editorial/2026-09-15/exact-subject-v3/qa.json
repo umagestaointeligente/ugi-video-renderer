@@ -1,0 +1,1464 @@
+{
+  "schema": "UGI_EDITORIAL_QA_V7_EXACT_SUBJECT",
+  "date": "2026-09-15",
+  "state": "PASS",
+  "hardGateFailures": [],
+  "counts": {
+    "instagram_story": 4,
+    "instagram_reel": 2,
+    "linkedin_video": 1,
+    "tiktok_video": 2,
+    "instagram_carousel_slide": 6,
+    "youtube_video": 1
+  },
+  "expectedCounts": {
+    "instagram_story": 4,
+    "instagram_reel": 2,
+    "linkedin_video": 1,
+    "tiktok_video": 2,
+    "instagram_carousel_slide": 6,
+    "youtube_video": 1
+  },
+  "finalCount": 16,
+  "exactSubjectGate": "config/ugi/exact-subject-visual-gate-v1.json",
+  "safeAreaV2": true,
+  "noAiImageGeneration": true,
+  "metricoolMutationAuthorized": true,
+  "files": [
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-story-capgemini-0830.jpg",
+      "sha256": "e9093b8c89603a907dbb566181d6a7b57d4c9f736a0dffa6418106e6d67af784",
+      "bytes": 133082,
+      "kind": "instagram_story",
+      "entity": "Capgemini",
+      "sourceKeys": [
+        "capgemini_1",
+        "capgemini_continuity"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "capgemini_1",
+          "title": "File:Capgemini 201x logo.svg",
+          "receipt": {
+            "mustAny": [
+              "capgemini"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "capgemini_continuity",
+          "title": "DEPENDÊNCIA DIGITAL: O RISCO NÃO É SÓ O FORNECEDOR",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-story-primark-1300.jpg",
+      "sha256": "91d5dd63ddc7c83907f81d9b237a899f73ed94d54dc5b9af94247aa3e2218f83",
+      "bytes": 160405,
+      "kind": "instagram_story",
+      "entity": "Primark",
+      "sourceKeys": [
+        "primark_1",
+        "primark_delivery"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "primark_1",
+          "title": "File:2017-11-29 Primark, MAR Shopping Algarve (1).JPG",
+          "receipt": {
+            "mustAny": [
+              "primark"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "primark_delivery",
+          "title": "PRIMARK: A CONVICÇÃO MUDOU QUANDO A CONTA MUDOU",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-story-rio-tinto-1730.jpg",
+      "sha256": "72d0eb3ba2f3868458efc74009c9cb3fcbc1ef412e7b51bdf41dad2c0c4232f4",
+      "bytes": 174775,
+      "kind": "instagram_story",
+      "entity": "Rio Tinto",
+      "sourceKeys": [
+        "riotinto_1",
+        "rio_bauxite"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "riotinto_1",
+          "title": "File:Logo Rio Tinto Company Limited.JPG",
+          "receipt": {
+            "mustAny": [
+              "rio tinto",
+              "riotinto"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "rio_bauxite",
+          "title": "RIO TINTO: INTEGRAÇÃO VERTICAL",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-story-michael-dell-baldwin-2030.jpg",
+      "sha256": "028709466b03f0755309f10b0f7468b6122b854c3c074c979f31528d3b859de2",
+      "bytes": 142786,
+      "kind": "instagram_story",
+      "entity": "Michael Dell / Baldwin Insurance",
+      "sourceKeys": [
+        "michaeldell_1",
+        "dell_takeprivate"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "michaeldell_1",
+          "title": "File:Lunch with Michael Dell.jpg",
+          "receipt": {
+            "mustAny": [
+              "michael dell"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "dell_takeprivate",
+          "title": "TAKE-PRIVATE: O QUE MUDA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-01.jpg",
+      "sha256": "d088e8a600143ce979141c33a0a0799351c65ca939ea4e08d53e1210b75a2f65",
+      "bytes": 100823,
+      "kind": "instagram_carousel_slide",
+      "entity": "Bancos italianos",
+      "sourceKeys": [
+        "mps_1"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "mps_1",
+          "title": "File:1 Benedetto di Bindo. Blessed James of Bevagna, c. 1415 Fondazione Monte dei Paschi, Siena..jpg",
+          "receipt": {
+            "mustAny": [
+              "monte dei paschi",
+              "mps"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-02.jpg",
+      "sha256": "9a10b91d0a5c7baa6ef00ede2c68bdc519e78aa2e2eb6afbb8d26072f4ee81dd",
+      "bytes": 137532,
+      "kind": "instagram_carousel_slide",
+      "entity": "Bancos italianos",
+      "sourceKeys": [
+        "mediobanca_1"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "mediobanca_1",
+          "title": "File:Francesco-Gaetano-Caltagirone,-Alberto-Nagel-(Mediobanca-S.p.A.),-Gabriele-Galateri-(Generali)-e-Federico-Ghizzoni-(Unicredit).jpg",
+          "receipt": {
+            "mustAny": [
+              "mediobanca"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-03.jpg",
+      "sha256": "bbafb6c730f678337434987528c0d4eef0ed248a871aec4d5fdc5869a7da8427",
+      "bytes": 100232,
+      "kind": "instagram_carousel_slide",
+      "entity": "Bancos italianos",
+      "sourceKeys": [
+        "bank_tx_1"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "bank_tx_1",
+          "title": "MPS → MEDIOBANCA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-04.jpg",
+      "sha256": "18ae6d1e89fdbf1b701faf53092fd21dda81b2752252a257adaf4450b9ccbc42",
+      "bytes": 171017,
+      "kind": "instagram_carousel_slide",
+      "entity": "Bancos italianos",
+      "sourceKeys": [
+        "intesa_1"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "intesa_1",
+          "title": "File:- ITALY - Intesa Sanpaolo filiale.JPG",
+          "receipt": {
+            "mustAny": [
+              "intesa"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-05.jpg",
+      "sha256": "3041ab3aea4ad403d8b98d1c11417c9ccc915f613524783ead7d45c785addf18",
+      "bytes": 91026,
+      "kind": "instagram_carousel_slide",
+      "entity": "Bancos italianos",
+      "sourceKeys": [
+        "bank_tx_2"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "bank_tx_2",
+          "title": "INTESA → MPS?",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-06.jpg",
+      "sha256": "863b25a37c5f0f3bf618fcf4cfb8d190df51e02d2eaef872046f4c19b52e4494",
+      "bytes": 102344,
+      "kind": "instagram_carousel_slide",
+      "entity": "Bancos italianos",
+      "sourceKeys": [
+        "bank_tx_3"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "bank_tx_3",
+          "title": "DEFESA TAMBÉM PODE SER COMPRAR",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-reel-lego-historias-1000.mp4",
+      "sha256": "b2c068cf143ef9cb52bfbb014eb708c6168e20bc583428ebb80e98a3c05f561c",
+      "bytes": 2052102,
+      "kind": "instagram_reel",
+      "entity": "LEGO",
+      "sourceKeys": [
+        "lego_1",
+        "lego_loss",
+        "lego_complexity",
+        "lego_leadership",
+        "lego_legoland",
+        "lego_supply",
+        "lego_core",
+        "lego_lessons"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "83.975325"
+        }
+      },
+      "chunkCount": 22,
+      "visualReview": [
+        {
+          "key": "lego_1",
+          "title": "File:1x3 grey Lego brick.jpg",
+          "receipt": {
+            "mustAny": [
+              "lego",
+              "legoland"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj",
+              "fire station"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "lego_loss",
+          "title": "2004: A LEGO NO LIMITE",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_complexity",
+          "title": "QUANDO VARIEDADE VIRA CUSTO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_leadership",
+          "title": "2004: MUDANÇA DE LIDERANÇA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_legoland",
+          "title": "2005: VENDA DOS PARQUES LEGOLAND",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_supply",
+          "title": "SIMPLIFICAR PARA VOLTAR A CRESCER",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_core",
+          "title": "O NÚCLEO QUE VOLTOU AO CENTRO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_lessons",
+          "title": "3 LIÇÕES DE GESTÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/linkedin-lego-executivo-1100.mp4",
+      "sha256": "f9c271d915501a23fbdda0467b8d5f19d451dae0f114f6a1b947c5ea4459e4cd",
+      "bytes": 3642316,
+      "kind": "linkedin_video",
+      "entity": "LEGO",
+      "sourceKeys": [
+        "lego_2",
+        "lego_loss",
+        "lego_complexity",
+        "lego_leadership",
+        "lego_legoland",
+        "lego_cash",
+        "lego_supply",
+        "lego_core",
+        "lego_lessons"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1350
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "164.975325"
+        }
+      },
+      "chunkCount": 31,
+      "visualReview": [
+        {
+          "key": "lego_2",
+          "title": "File:230204-N-TG517-042 - Naval Museum hosts 12th Annual Brick by Brick; LEGO Shipbuilding event in Norfolk.jpg",
+          "receipt": {
+            "mustAny": [
+              "lego",
+              "legoland"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj",
+              "fire station"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "lego_loss",
+          "title": "2004: A LEGO NO LIMITE",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_complexity",
+          "title": "QUANDO VARIEDADE VIRA CUSTO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_leadership",
+          "title": "2004: MUDANÇA DE LIDERANÇA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_legoland",
+          "title": "2005: VENDA DOS PARQUES LEGOLAND",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_cash",
+          "title": "DE DÍVIDA PARA LIQUIDEZ",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_supply",
+          "title": "SIMPLIFICAR PARA VOLTAR A CRESCER",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_core",
+          "title": "O NÚCLEO QUE VOLTOU AO CENTRO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_lessons",
+          "title": "3 LIÇÕES DE GESTÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/tiktok-stellantis-dois-mundos-1200.mp4",
+      "sha256": "c0bf60342ca34144b86b54f4a02530a3c1bb71a864819f00edd3f38c0bc6a624",
+      "bytes": 1465342,
+      "kind": "tiktok_video",
+      "entity": "Stellantis",
+      "sourceKeys": [
+        "stellantis_1",
+        "stellantis_us",
+        "stellantis_global",
+        "stellantis_mechanism",
+        "stellantis_lesson"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "58.041992"
+        }
+      },
+      "chunkCount": 11,
+      "visualReview": [
+        {
+          "key": "stellantis_1",
+          "title": "File:Area di sosta per la ricarica elettrica Stellantis Powy a Rogoredo.jpg",
+          "receipt": {
+            "mustAny": [
+              "stellantis"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "stellantis_us",
+          "title": "STELLANTIS: ESTRATÉGIA EUA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "stellantis_global",
+          "title": "STELLANTIS: RESTO DO MUNDO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "stellantis_mechanism",
+          "title": "UMA EMPRESA, DOIS SISTEMAS",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "stellantis_lesson",
+          "title": "LIÇÃO DE GESTÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-reel-baker-hughes-historias-1800.mp4",
+      "sha256": "4cf473bed9771cee2797defbbdaa7e6e04ee516f54e6e9e909a09162a5b761a0",
+      "bytes": 1840998,
+      "kind": "instagram_reel",
+      "entity": "Baker Hughes",
+      "sourceKeys": [
+        "bakerhughes_1",
+        "bh_deal",
+        "bakerhughes_2",
+        "bh_timing",
+        "bh_portfolio",
+        "bh_lesson"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "80.041992"
+        }
+      },
+      "chunkCount": 15,
+      "visualReview": [
+        {
+          "key": "bakerhughes_1",
+          "title": "File:Baker Hughes - GE - Houston Office.jpg",
+          "receipt": {
+            "mustAny": [
+              "baker hughes"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "bh_deal",
+          "title": "BAKER HUGHES + CHART INDUSTRIES",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "bakerhughes_2",
+          "title": "File:Baker Hughes logo.svg",
+          "receipt": {
+            "mustAny": [
+              "baker hughes"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "bh_timing",
+          "title": "SINERGIA TEM CALENDÁRIO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "bh_portfolio",
+          "title": "PORTFÓLIO + CICLO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "bh_lesson",
+          "title": "LIÇÃO DE GESTÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/tiktok-papua-lng-ownership-1945.mp4",
+      "sha256": "177608a4526a702f46a419e7c01f250059bce4037e11c9e9e24ccc67d5e53379",
+      "bytes": 1809178,
+      "kind": "tiktok_video",
+      "entity": "Papua LNG / Santos / ExxonMobil / TotalEnergies",
+      "sourceKeys": [
+        "santos_1",
+        "exxon_1",
+        "total_1",
+        "papua_ownership",
+        "papua_operator",
+        "papua_jv"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "60.008659"
+        }
+      },
+      "chunkCount": 13,
+      "visualReview": [
+        {
+          "key": "santos_1",
+          "title": "File:205 North Quay, Infinity Tower, Santos Place, Riverside Expressway, Brisbane, October 2023, 02.jpg",
+          "receipt": {
+            "mustAny": [
+              "santos"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "exxon_1",
+          "title": "File:ExxonMobil Logo.svg",
+          "receipt": {
+            "mustAny": [
+              "exxonmobil",
+              "exxon mobil"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "total_1",
+          "title": "File:Aerodrome-BelAir-Dinan-Trelivan-Station-TotalEnergies-byRundvald.jpg",
+          "receipt": {
+            "mustAny": [
+              "totalenergies",
+              "total energies"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "papua_ownership",
+          "title": "PAPUA LNG: EQUITY ≠ OPERAÇÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "papua_operator",
+          "title": "QUEM OPERA DEFINE A EXECUÇÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "papua_jv",
+          "title": "ARQUITETURA DA JOINT VENTURE",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/youtube-lego-historias-1600.mp4",
+      "sha256": "da6f6d8151da8eb36a58f13c939db45e64c4703812c69d3607e26d950c64746b",
+      "bytes": 15093239,
+      "kind": "youtube_video",
+      "entity": "LEGO",
+      "sourceKeys": [
+        "lego_3",
+        "lego_1",
+        "lego_4",
+        "lego_complexity",
+        "lego_loss",
+        "lego_leadership",
+        "lego_legoland",
+        "lego_cash",
+        "lego_supply",
+        "lego_core",
+        "lego_5",
+        "lego_lessons"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1920,
+            "height": 1080
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "584.967969"
+        }
+      },
+      "chunkCount": 136,
+      "visualReview": [
+        {
+          "key": "lego_3",
+          "title": "File:230204-N-TG517-084 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+          "receipt": {
+            "mustAny": [
+              "lego",
+              "legoland"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj",
+              "fire station"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "lego_1",
+          "title": "File:1x3 grey Lego brick.jpg",
+          "receipt": {
+            "mustAny": [
+              "lego",
+              "legoland"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj",
+              "fire station"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "lego_4",
+          "title": "File:230204-N-TG517-133 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+          "receipt": {
+            "mustAny": [
+              "lego",
+              "legoland"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj",
+              "fire station"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "lego_complexity",
+          "title": "QUANDO VARIEDADE VIRA CUSTO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_loss",
+          "title": "2004: A LEGO NO LIMITE",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_leadership",
+          "title": "2004: MUDANÇA DE LIDERANÇA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_legoland",
+          "title": "2005: VENDA DOS PARQUES LEGOLAND",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_cash",
+          "title": "DE DÍVIDA PARA LIQUIDEZ",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_supply",
+          "title": "SIMPLIFICAR PARA VOLTAR A CRESCER",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_core",
+          "title": "O NÚCLEO QUE VOLTOU AO CENTRO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "lego_5",
+          "title": "File:230204-N-TG517-172 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+          "receipt": {
+            "mustAny": [
+              "lego",
+              "legoland"
+            ],
+            "negativeTitleFilter": [
+              "fire",
+              "burnt",
+              "burned",
+              "protest",
+              "demonstration",
+              "demo ",
+              "accident",
+              "crash",
+              "wreck",
+              "pride",
+              "parade",
+              "placard",
+              "strike",
+              "riot",
+              "kopaj",
+              "fire station"
+            ],
+            "approved": true
+          }
+        },
+        {
+          "key": "lego_lessons",
+          "title": "3 LIÇÕES DE GESTÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    }
+  ]
+}

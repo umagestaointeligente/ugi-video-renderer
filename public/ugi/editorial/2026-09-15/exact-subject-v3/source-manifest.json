@@ -1,0 +1,1039 @@
+{
+  "schema": "UGI_EDITORIAL_SOURCE_MANIFEST_V7_EXACT_SUBJECT",
+  "date": "2026-09-15",
+  "factSources": {
+    "capgemini": "https://www.reuters.com/business/boards-prepare-digital-infrastructure-shocks-survey-says-2026-09-08/",
+    "stellantis": "https://www.reuters.com/business/autos-transportation/stellantis-ceo-highlights-diverging-us-global-strategies-2026-09-10/",
+    "primark": "https://www.reuters.com/business/retail-consumer/ab-foods-says-primark-offer-home-delivery-uk-2026-09-10/",
+    "italy_banks": "https://www.reuters.com/legal/transactional/what-comes-next-italys-banking-deal-frenzy-2026-09-10/",
+    "rio_tinto": "https://www.reuters.com/business/retail-consumer/rio-tinto-acquire-aurukun-bauxite-project-glencore-mitsubishi-development-2026-09-08/",
+    "baker_hughes": "https://www.reuters.com/business/energy/baker-hughes-raises-annual-forecasts-after-chart-acquisition-2026-09-09/",
+    "papua_lng": "https://www.reuters.com/business/energy/australias-santos-acquires-additional-33-interest-papua-lng-2026-09-07/",
+    "michael_dell": "https://www.reuters.com/business/michael-dells-dfo-management-nears-take-private-deal-baldwin-insurance-group-ft-2026-09-13/",
+    "lego_2004": "https://www.lego.com/cdn/cs/aboutus/assets/blt07abb4b8a3da3f39/Annual_Report_2004_ENG.pdf",
+    "lego_2005": "https://www.lego.com/cdn/cs/aboutus/assets/blt6eacf5a8b7af1359/Annual_Report_2005_ENG.pdf",
+    "lego_history": "https://www.lego.com/en-us/history"
+  },
+  "music": {
+    "source": "repository-approved asset",
+    "license": "repository-approved licensed asset"
+  },
+  "visualSources": {
+    "capgemini_1": {
+      "title": "File:Capgemini 201x logo.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Capgemini_201x_logo.svg/1920px-Capgemini_201x_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Capgemini_201x_logo.svg",
+      "license": "Public domain",
+      "author": "Unknown author Unknown author",
+      "semanticQuery": "Capgemini logo",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/capgemini_1.jpg",
+      "sha256": "c82fa52280037fec30c13590a29ca0f4b0e5e1e8cf5f0433e80c825e0f6a487a",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "capgemini"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "stellantis_1": {
+      "title": "File:Area di sosta per la ricarica elettrica Stellantis Powy a Rogoredo.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Area_di_sosta_per_la_ricarica_elettrica_Stellantis_Powy_a_Rogoredo.jpg/1920px-Area_di_sosta_per_la_ricarica_elettrica_Stellantis_Powy_a_Rogoredo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Area_di_sosta_per_la_ricarica_elettrica_Stellantis_Powy_a_Rogoredo.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Marcuscalabresus",
+      "semanticQuery": "Stellantis logo",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/stellantis_1.jpg",
+      "sha256": "7369b37bfa6f97e013139cc8c37804b95cf71ed050c3c7a0a4f89ffbe77afe8d",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "stellantis"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "primark_1": {
+      "title": "File:2017-11-29 Primark, MAR Shopping Algarve (1).JPG",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/2017-11-29_Primark%2C_MAR_Shopping_Algarve_%281%29.JPG/1920px-2017-11-29_Primark%2C_MAR_Shopping_Algarve_%281%29.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:2017-11-29_Primark%2C_MAR_Shopping_Algarve_(1).JPG",
+      "license": "CC BY-SA 4.0",
+      "author": "Kolforn   ( Kolforn )  \n I'd appreciate if you could mail me  (Kolforn@gmail.com)  if you want to use this picture out of the Wikimedia project scope. \n \n    \n ",
+      "semanticQuery": "Primark store",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/primark_1.jpg",
+      "sha256": "9d114e3a1f6451d4e4cb531e1926c6540787bb3d406f731b35dd9ee3d9cfdf2f",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "primark"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "riotinto_1": {
+      "title": "File:Logo Rio Tinto Company Limited.JPG",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Logo_Rio_Tinto_Company_Limited.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Logo_Rio_Tinto_Company_Limited.JPG",
+      "license": "Public domain",
+      "author": "Calapito",
+      "semanticQuery": "Rio Tinto logo",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/riotinto_1.jpg",
+      "sha256": "94df7f56147436c6e4ff4200e18846c3493559a6a6a4ab1bf33e247b970ee5de",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "rio tinto",
+          "riotinto"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "bakerhughes_1": {
+      "title": "File:Baker Hughes - GE - Houston Office.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Baker_Hughes_-_GE_-_Houston_Office.jpg/1920px-Baker_Hughes_-_GE_-_Houston_Office.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Baker_Hughes_-_GE_-_Houston_Office.jpg",
+      "license": "CC BY 2.0",
+      "author": "Tony Webster",
+      "semanticQuery": "Baker Hughes logo",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bakerhughes_1.jpg",
+      "sha256": "68801f546d446dc4b89aa0c1e503a8b1b7bb8e27d2c9169f63a691727d6bdbc1",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "baker hughes"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "bakerhughes_2": {
+      "title": "File:Baker Hughes logo.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Baker_Hughes_logo.svg/1920px-Baker_Hughes_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Baker_Hughes_logo.svg",
+      "license": "Public domain",
+      "author": "Baker Hughes",
+      "semanticQuery": "Baker Hughes logo",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bakerhughes_2.jpg",
+      "sha256": "801de7cd0898c2a73c5bfcadf4a7b45898b27af87156acbd444bcab546ef1641",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "baker hughes"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "santos_1": {
+      "title": "File:205 North Quay, Infinity Tower, Santos Place, Riverside Expressway, Brisbane, October 2023, 02.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/205_North_Quay%2C_Infinity_Tower%2C_Santos_Place%2C_Riverside_Expressway%2C_Brisbane%2C_October_2023%2C_02.jpg/1920px-205_North_Quay%2C_Infinity_Tower%2C_Santos_Place%2C_Riverside_Expressway%2C_Brisbane%2C_October_2023%2C_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:205_North_Quay%2C_Infinity_Tower%2C_Santos_Place%2C_Riverside_Expressway%2C_Brisbane%2C_October_2023%2C_02.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Kgbo",
+      "semanticQuery": "Santos Australia",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/santos_1.jpg",
+      "sha256": "1cb9dd78f7124cf33a356c86879f643c8b583d14f814539ca8d45b1a65cc28cf",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "santos"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "exxon_1": {
+      "title": "File:ExxonMobil Logo.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/ExxonMobil_Logo.svg/1920px-ExxonMobil_Logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:ExxonMobil_Logo.svg",
+      "license": "Public domain",
+      "author": "Unknown author Unknown author",
+      "semanticQuery": "ExxonMobil logo",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/exxon_1.jpg",
+      "sha256": "602048ff428a2341d9a554e39e7633c872d72d60f879d27fcb5d00137ff27b83",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "exxonmobil",
+          "exxon mobil"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "total_1": {
+      "title": "File:Aerodrome-BelAir-Dinan-Trelivan-Station-TotalEnergies-byRundvald.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Aerodrome-BelAir-Dinan-Trelivan-Station-TotalEnergies-byRundvald.jpg/1920px-Aerodrome-BelAir-Dinan-Trelivan-Station-TotalEnergies-byRundvald.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Aerodrome-BelAir-Dinan-Trelivan-Station-TotalEnergies-byRundvald.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Rundvald",
+      "semanticQuery": "TotalEnergies logo",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/total_1.jpg",
+      "sha256": "4971060c5651bd0789832f103a188e369fd2b65dd1a3ea13888733cd9fe0ca1b",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "totalenergies",
+          "total energies"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "michaeldell_1": {
+      "title": "File:Lunch with Michael Dell.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Lunch_with_Michael_Dell.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Lunch_with_Michael_Dell.jpg",
+      "license": "CC BY 2.0",
+      "author": "Joi",
+      "semanticQuery": "Michael Dell",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/michaeldell_1.jpg",
+      "sha256": "e0d949aff4852a982e43909a823050ddd966d231567ac8e1a7a4366d260883bf",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "michael dell"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "mps_1": {
+      "title": "File:1 Benedetto di Bindo. Blessed James of Bevagna, c. 1415 Fondazione Monte dei Paschi, Siena..jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/94/1_Benedetto_di_Bindo._Blessed_James_of_Bevagna%2C_c._1415_Fondazione_Monte_dei_Paschi%2C_Siena..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:1_Benedetto_di_Bindo._Blessed_James_of_Bevagna%2C_c._1415_Fondazione_Monte_dei_Paschi%2C_Siena..jpg",
+      "license": "Public domain",
+      "author": "Benedetto di Bindo",
+      "semanticQuery": "Monte dei Paschi di Siena",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/mps_1.jpg",
+      "sha256": "1cf03f1f38ac17428535395b8e183a3f48ca42d7f389e3fb2afdd35594a898b6",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "monte dei paschi",
+          "mps"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "mediobanca_1": {
+      "title": "File:Francesco-Gaetano-Caltagirone,-Alberto-Nagel-(Mediobanca-S.p.A.),-Gabriele-Galateri-(Generali)-e-Federico-Ghizzoni-(Unicredit).jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Francesco-Gaetano-Caltagirone%2C-Alberto-Nagel-%28Mediobanca-S.p.A.%29%2C-Gabriele-Galateri-%28Generali%29-e-Federico-Ghizzoni-%28Unicredit%29.jpg/1920px-Francesco-Gaetano-Caltagirone%2C-Alberto-Nagel-%28Mediobanca-S.p.A.%29%2C-Gabriele-Galateri-%28Generali%29-e-Federico-Ghizzoni-%28Unicredit%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Francesco-Gaetano-Caltagirone%2C-Alberto-Nagel-(Mediobanca-S.p.A.)%2C-Gabriele-Galateri-(Generali)-e-Federico-Ghizzoni-(Unicredit).jpg",
+      "license": "CC BY 2.0",
+      "author": "Caltagirone Group",
+      "semanticQuery": "Mediobanca",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/mediobanca_1.jpg",
+      "sha256": "ff8836d2711cf916e683f72b8184345990c30bfb7f4f732af1cf95d92324016f",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "mediobanca"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "intesa_1": {
+      "title": "File:- ITALY - Intesa Sanpaolo filiale.JPG",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/-_ITALY_-_Intesa_Sanpaolo_filiale.JPG/1920px--_ITALY_-_Intesa_Sanpaolo_filiale.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:-_ITALY_-_Intesa_Sanpaolo_filiale.JPG",
+      "license": "CC BY-SA 3.0 it",
+      "author": "Pava",
+      "semanticQuery": "Intesa Sanpaolo",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/intesa_1.jpg",
+      "sha256": "eae35bb9177f4f52a620c116207676a2a6e0d1ba00673bbf28b3f6cce310efe3",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "intesa"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj"
+        ],
+        "approved": true
+      }
+    },
+    "lego_1": {
+      "title": "File:1x3 grey Lego brick.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/1x3_grey_Lego_brick.jpg/1920px-1x3_grey_Lego_brick.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:1x3_grey_Lego_brick.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Help e choose",
+      "semanticQuery": "LEGO brick",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_1.jpg",
+      "sha256": "ddb2c32c563be43648c52bd9da72c779475c8fc4991ada1d1d01f82aa8e153af",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "lego",
+          "legoland"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj",
+          "fire station"
+        ],
+        "approved": true
+      }
+    },
+    "lego_2": {
+      "title": "File:230204-N-TG517-042 - Naval Museum hosts 12th Annual Brick by Brick; LEGO Shipbuilding event in Norfolk.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/230204-N-TG517-042_-_Naval_Museum_hosts_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event_in_Norfolk.jpg/1920px-230204-N-TG517-042_-_Naval_Museum_hosts_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event_in_Norfolk.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:230204-N-TG517-042_-_Naval_Museum_hosts_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event_in_Norfolk.jpg",
+      "license": "Public domain",
+      "author": "Max Lonzanida",
+      "semanticQuery": "LEGO brick",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_2.jpg",
+      "sha256": "0a993eda9bb898cc0a9b5474b45899ee2a668da99c59761d7254325260326b62",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "lego",
+          "legoland"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj",
+          "fire station"
+        ],
+        "approved": true
+      }
+    },
+    "lego_3": {
+      "title": "File:230204-N-TG517-084 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/230204-N-TG517-084_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg/1920px-230204-N-TG517-084_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:230204-N-TG517-084_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg",
+      "license": "Public domain",
+      "author": "Max Lonzanida",
+      "semanticQuery": "LEGO brick",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_3.jpg",
+      "sha256": "eb71761af4fb26fcc5e48f3e47c409a419f00338e70866a294bbd7c6f5d475d6",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "lego",
+          "legoland"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj",
+          "fire station"
+        ],
+        "approved": true
+      }
+    },
+    "lego_4": {
+      "title": "File:230204-N-TG517-133 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/230204-N-TG517-133_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg/1920px-230204-N-TG517-133_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:230204-N-TG517-133_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg",
+      "license": "Public domain",
+      "author": "Max Lonzanida",
+      "semanticQuery": "LEGO brick",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_4.jpg",
+      "sha256": "9081832ce4989ce81908ba0155f3278ebb646e89fab90fb85907fa8a6a2cc773",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "lego",
+          "legoland"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj",
+          "fire station"
+        ],
+        "approved": true
+      }
+    },
+    "lego_5": {
+      "title": "File:230204-N-TG517-172 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/230204-N-TG517-172_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg/1920px-230204-N-TG517-172_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:230204-N-TG517-172_-_Visitors_build_LEGO_ship_models_during_Naval_Museum%27s_12th_Annual_Brick_by_Brick%3B_LEGO_Shipbuilding_event.jpg",
+      "license": "Public domain",
+      "author": "Max Lonzanida",
+      "semanticQuery": "LEGO brick",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_5.jpg",
+      "sha256": "542694707deba9e6d37d7d51bebab58979f4849e46657287bc64f0cec18a000a",
+      "rightsBasis": "Wikimedia Commons license metadata + strict title/entity filter",
+      "exactSubjectReceipt": {
+        "mustAny": [
+          "lego",
+          "legoland"
+        ],
+        "negativeTitleFilter": [
+          "fire",
+          "burnt",
+          "burned",
+          "protest",
+          "demonstration",
+          "demo ",
+          "accident",
+          "crash",
+          "wreck",
+          "pride",
+          "parade",
+          "placard",
+          "strike",
+          "riot",
+          "kopaj",
+          "fire station"
+        ],
+        "approved": true
+      }
+    },
+    "capgemini_continuity": {
+      "title": "DEPENDÊNCIA DIGITAL: O RISCO NÃO É SÓ O FORNECEDOR",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/capgemini_continuity.jpg",
+      "sha256": "36e71eb4be71be2d2887f3fc6586946b704152fefe3d4bd92f453f55bd64a6ef",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "stellantis_us": {
+      "title": "STELLANTIS: ESTRATÉGIA EUA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/stellantis_us.jpg",
+      "sha256": "9d256728c4479b1d9a30a9ce982a48d7de0ee575c58da671bf6d2f4110cc485b",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "stellantis_global": {
+      "title": "STELLANTIS: RESTO DO MUNDO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/stellantis_global.jpg",
+      "sha256": "aa1e573f5a87f0d20963481d6a4adbd8633f3d4c73962af6c064076602da456a",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "stellantis_mechanism": {
+      "title": "UMA EMPRESA, DOIS SISTEMAS",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/stellantis_mechanism.jpg",
+      "sha256": "054431e6cdb547efb5d47813811618bc6985a02b7e0c869ffffebf88bb360f1d",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "stellantis_lesson": {
+      "title": "LIÇÃO DE GESTÃO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/stellantis_lesson.jpg",
+      "sha256": "d89b3568d7b5f6d97beb44c5c967835b00394698d563cf439f104b5b205f76fc",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "primark_delivery": {
+      "title": "PRIMARK: A CONVICÇÃO MUDOU QUANDO A CONTA MUDOU",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/primark_delivery.jpg",
+      "sha256": "f80dcb8963cf73061ed807e0f0cf6fe0d8230bf703e7cea725bf3d3f5527227a",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "rio_bauxite": {
+      "title": "RIO TINTO: INTEGRAÇÃO VERTICAL",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/rio_bauxite.jpg",
+      "sha256": "f18b6e71028b1dcaba02821df1fb0cbe1a36e3b34f23a8d64a3e68ea046e0d8e",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "bh_deal": {
+      "title": "BAKER HUGHES + CHART INDUSTRIES",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bh_deal.jpg",
+      "sha256": "e85da564c749e4e683aa3c3ec5cd297b6e104bc004fadc2ab4dde5cc62f6a205",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "bh_timing": {
+      "title": "SINERGIA TEM CALENDÁRIO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bh_timing.jpg",
+      "sha256": "74a6bebd3eef600d134e894b65b2e60547e0513201049bdd6c57f44f7f7d3e10",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "bh_portfolio": {
+      "title": "PORTFÓLIO + CICLO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bh_portfolio.jpg",
+      "sha256": "bc8d8cd2b07f6aadf2d6cbe1f0a0dbaa578f3dc059af3992c0e7c736ffcb07a2",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "bh_lesson": {
+      "title": "LIÇÃO DE GESTÃO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bh_lesson.jpg",
+      "sha256": "b3814b6d431aea18b354ce7a14a547da7b4bf705003e7b6b9d939025d3ca43d7",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "papua_ownership": {
+      "title": "PAPUA LNG: EQUITY ≠ OPERAÇÃO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/papua_ownership.jpg",
+      "sha256": "8ed37dc665c155ffec0cb03652446496971e26068acb47bc9068d40d0035fb00",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "papua_operator": {
+      "title": "QUEM OPERA DEFINE A EXECUÇÃO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/papua_operator.jpg",
+      "sha256": "1cbb5e646dbe63f4205b1db2905b60227642f078af9144b710a6433943f45c21",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "papua_jv": {
+      "title": "ARQUITETURA DA JOINT VENTURE",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/papua_jv.jpg",
+      "sha256": "1862f229ada1cc8e48d724228966d088d191d902854932070d2d1e0eb6c95567",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "dell_takeprivate": {
+      "title": "TAKE-PRIVATE: O QUE MUDA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/dell_takeprivate.jpg",
+      "sha256": "014d61e01d40bc319f39d87905f2a48f920a5dc54ccf4d5c0752a26635337420",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "bank_tx_1": {
+      "title": "MPS → MEDIOBANCA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bank_tx_1.jpg",
+      "sha256": "7c1d34c285e0c09dc23a1d50f58e2a54e3c268005cbb57853ca792e0ec4b3ad1",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "bank_tx_2": {
+      "title": "INTESA → MPS?",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bank_tx_2.jpg",
+      "sha256": "e9511bd5f1d2745a08f174e1e5e8ba5c5c60eb0f7fc0396c9a351224ac8ed472",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "bank_tx_3": {
+      "title": "DEFESA TAMBÉM PODE SER COMPRAR",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/bank_tx_3.jpg",
+      "sha256": "b90d3d4b49d5416534318f65122f2de3054201d016ddad6b62b63c342463a6f5",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "lego_loss": {
+      "title": "2004: A LEGO NO LIMITE",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_loss.jpg",
+      "sha256": "7a40bb1e2c48f4f5ea4d6c60d497b2122cc00225333b5f664a9f5fda999fd990",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "lego_complexity": {
+      "title": "QUANDO VARIEDADE VIRA CUSTO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_complexity.jpg",
+      "sha256": "2b3c1dc1f7e4d1a9474a0ff05d73d9970984e952793feee539c2b4c387bfd312",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "lego_leadership": {
+      "title": "2004: MUDANÇA DE LIDERANÇA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_leadership.jpg",
+      "sha256": "bc36b4830eb5e0febcc181c32a38aed1b60a2b9ecdd27ab597244a87e2d90c30",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "lego_legoland": {
+      "title": "2005: VENDA DOS PARQUES LEGOLAND",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_legoland.jpg",
+      "sha256": "6ec63f92266a61120a078568948066d711d2eb789e82135c5736a607e7c4ff3b",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "lego_cash": {
+      "title": "DE DÍVIDA PARA LIQUIDEZ",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_cash.jpg",
+      "sha256": "bc8e255cbbe30a352d91ad69f2f4b7c7e8146c94403a64d2c767d05cbe7b6289",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "lego_supply": {
+      "title": "SIMPLIFICAR PARA VOLTAR A CRESCER",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_supply.jpg",
+      "sha256": "c9d2d1ecb2a72aa204d5556e24903db4877d1d7cf31f716119342ce99ec36f39",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "lego_core": {
+      "title": "O NÚCLEO QUE VOLTOU AO CENTRO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_core.jpg",
+      "sha256": "a15dd52553c132ed91249db1026758996ebacd9b7a7d2baa1366fb52abde8ef9",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "lego_lessons": {
+      "title": "3 LIÇÕES DE GESTÃO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/sources/lego_lessons.jpg",
+      "sha256": "c9f37a849a42579422457208d8bc3082684b236fbc66cea4b3bd771a87ac8df5",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    }
+  }
+}
