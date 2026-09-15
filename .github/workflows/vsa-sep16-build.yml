@@ -37,19 +37,30 @@ jobs:
           from pathlib import Path
           p=Path('production/vsa/2026-09-16/build_batch.py')
           s=p.read_text(encoding='utf-8')
+
+          # Wikimedia Commons blocks anonymous redirect-style downloads on some runners.
+          # Resolve the exact original file URL via MediaWiki API using an identified UA.
+          old_commons='''def commons(filename, path):\n    url = "https://commons.wikimedia.org/wiki/Special:Redirect/file/" + urllib.parse.quote(filename, safe="")\n    return download(url, path)'''
+          new_commons='''def commons(filename, path):\n    ua = "VSA-Production/1.0 (contact: orbitmedialabs.media@gmail.com)"\n    api = "https://commons.wikimedia.org/w/api.php"\n    r = requests.get(api, params={"action":"query","format":"json","prop":"imageinfo","iiprop":"url","titles":"File:"+filename}, headers={"User-Agent":ua}, timeout=45)\n    r.raise_for_status()\n    pages = r.json().get("query",{}).get("pages",{})\n    page = next(iter(pages.values()), {})\n    infos = page.get("imageinfo") or []\n    if not infos or not infos[0].get("url"):\n        raise RuntimeError(f"COMMONS_FILE_NOT_FOUND:{filename}")\n    return download(infos[0]["url"], path, headers={"User-Agent":ua})'''
+          if old_commons not in s:
+              raise SystemExit('COMMONS_PATCH_TARGET_MISSING')
+          s=s.replace(old_commons,new_commons)
+
           # Free Pexels fallback if the existing repository secret is absent.
           s=s.replace(
               'if not key:\n        raise RuntimeError("PEXELS_API_KEY_MISSING")',
               'if not key:\n        return ytdlp(f"https://www.pexels.com/video/{video_id}/", path)'
           )
+
           # Longform must not recycle the same 9-second visual arc. Generate many distinct real moments.
           old='''    real_clips = []\n    for idx, (src, nasa_id, date_created, title) in enumerate(nasa_assets):\n        d = dur(src)\n        for j, frac in enumerate((0.12, 0.48)):\n            start = max(0, min(d - 9, d * frac))\n            p = base / f"real_{idx}_{j}.mp4"\n            normalize_clip(src, p, start, 9, label="NASA • IMAGENS DE CONTEXTO DE MISSÕES E TREINOS", landscape=True)\n            real_clips.append(p)'''
-          new='''    real_clips = []\n    for idx, (src, nasa_id, date_created, title) in enumerate(nasa_assets):\n        d = dur(src)\n        # Eight non-overlapping-ish moments per NASA source when duration allows.\n        for j, frac in enumerate((0.05,0.16,0.27,0.38,0.51,0.64,0.77,0.89)):\n            start = max(0, min(max(0,d-9.2), d * frac))\n            p = base / f"real_{idx}_{j}.mp4"\n            normalize_clip(src, p, start, min(9,max(3,d-start-0.2)), label="NASA • IMAGENS DE CONTEXTO DE MISSÕES E TREINOS", landscape=True)\n            real_clips.append(p)'''
+          new='''    real_clips = []\n    for idx, (src, nasa_id, date_created, title) in enumerate(nasa_assets):\n        d = dur(src)\n        for j, frac in enumerate((0.05,0.16,0.27,0.38,0.51,0.64,0.77,0.89)):\n            start = max(0, min(max(0,d-9.2), d * frac))\n            p = base / f"real_{idx}_{j}.mp4"\n            normalize_clip(src, p, start, min(9,max(3,d-start-0.2)), label="NASA • IMAGENS DE CONTEXTO DE MISSÕES E TREINOS", landscape=True)\n            real_clips.append(p)'''
           if old not in s:
               raise SystemExit('LONGFORM_PATCH_TARGET_MISSING')
           s=s.replace(old,new)
+
           old2='''    blocks=[]\n    # Change visual approximately every 9 seconds; alternate real evidence and mechanisms. Use distinct source moments; no identical take is intentionally repeated.\n    for i in range(12):\n        if i in (1,4,7,10): blocks.append(anims[(i//3)%len(anims)])\n        elif i==6: blocks.append(mech_norm)\n        else: blocks.append(real_clips[i % len(real_clips)])\n    # Repeat a second pass with different blocks only when narration is longer; no single clip is duplicated consecutively.\n    visual_target = max(ad, 108)\n    seq=[]; elapsed=0.0; k=0\n    while elapsed < visual_target:\n        src=blocks[k % len(blocks)]\n        # Create a unique copy; real/animation source content may recur only after the complete 12-block arc.\n        seq.append(src); elapsed += dur(src); k += 1'''
-          new2='''    # Change visual about every 9 seconds. Build one non-repeating real-evidence sequence and insert distinct mechanisms.\n    blocks=[]\n    for i,r in enumerate(real_clips):\n        blocks.append(r)\n        if i in (2,7,12,17): blocks.append(anims[(i//5)%len(anims)])\n        if i==10: blocks.append(mech_norm)\n    visual_target=max(ad,108)\n    seq=[]; elapsed=0.0\n    for src in blocks:\n        if elapsed >= visual_target: break\n        seq.append(src); elapsed += dur(src)\n    if elapsed < visual_target:\n        raise RuntimeError(f"LONGFORM_UNIQUE_VISUAL_COVERAGE_SHORT:{elapsed:.1f}/{visual_target:.1f}")'''
+          new2='''    blocks=[]\n    for i,r in enumerate(real_clips):\n        blocks.append(r)\n        if i in (2,7,12,17): blocks.append(anims[(i//5)%len(anims)])\n        if i==10: blocks.append(mech_norm)\n    visual_target=max(ad,108)\n    seq=[]; elapsed=0.0\n    for src in blocks:\n        if elapsed >= visual_target: break\n        seq.append(src); elapsed += dur(src)\n    if elapsed < visual_target:\n        raise RuntimeError(f"LONGFORM_UNIQUE_VISUAL_COVERAGE_SHORT:{elapsed:.1f}/{visual_target:.1f}")'''
           if old2 not in s:
               raise SystemExit('LONGFORM_SEQUENCE_PATCH_TARGET_MISSING')
           p.write_text(s.replace(old2,new2),encoding='utf-8')
@@ -60,6 +71,7 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
+          mkdir -p production/vsa/2026-09-16/output
           python production/vsa/2026-09-16/build_batch.py 2>&1 | tee production/vsa/2026-09-16/output/BUILD_LOG.txt
 
       - name: Persist run metadata
