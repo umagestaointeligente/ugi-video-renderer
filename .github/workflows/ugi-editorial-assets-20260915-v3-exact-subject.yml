@@ -1,0 +1,95 @@
+name: UGI Editorial Assets 2026-09-15 V3 Exact Subject
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/ugi_build_editorial_assets_20260915_v3_exact_subject.py'
+      - '.github/workflows/ugi-editorial-assets-20260915-v3-exact-subject.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ugi-editorial-assets-20260915-v3-exact-subject
+  cancel-in-progress: false
+
+jobs:
+  build-qa-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install renderer dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --disable-pip-version-check pillow requests edge-tts
+          python -m py_compile scripts/ugi_build_editorial_assets_20260913.py scripts/ugi_build_editorial_assets_20260915_v3_exact_subject.py
+      - name: Build exact-subject assets
+        id: build
+        shell: bash
+        run: |
+          set +e
+          python scripts/ugi_build_editorial_assets_20260915_v3_exact_subject.py > /tmp/ugi-sep15-v3.log 2>&1
+          rc=$?
+          cat /tmp/ugi-sep15-v3.log
+          echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
+          exit "$rc"
+      - name: Upload diagnostics on failure
+        if: failure() && steps.build.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-sep15-v3-exact-subject-diagnostics
+          path: /tmp/ugi-sep15-v3.log
+          retention-days: 1
+          if-no-files-found: error
+      - name: Assert exact-subject QA pass
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('public/ugi/editorial/2026-09-15/exact-subject-v3/qa.json')
+          q=json.loads(p.read_text(encoding='utf-8'))
+          assert q['state']=='PASS', q
+          assert q['metricoolMutationAuthorized'] is True, q
+          assert q['hardGateFailures']==[], q
+          assert q['noAiImageGeneration'] is True
+          assert q['counts']=={'instagram_story':4,'instagram_reel':2,'linkedin_video':1,'tiktok_video':2,'instagram_carousel_slide':6,'youtube_video':1}, q['counts']
+          for f in q['files']:
+              v=f['visualQa']
+              assert v['EXACT_SUBJECT_VISUAL_PASS'] is True
+              assert v['NAMED_ENTITY_RECOGNIZABLE_PASS'] is True
+              assert v['NEGATIVE_CONTEXT_MISMATCH_PASS'] is True
+              assert v['TEMPORAL_RELEVANCE_PASS'] is True
+              assert v['RIGHTS_PROVENANCE_PASS'] is True
+              assert v['NO_GENERIC_PROXY_VISUAL_PASS'] is True
+              assert v['SAFE_AREA_PLATFORM_PASS'] is True
+              assert v['EXACT_VISUAL_REUSE_COUNT']==0
+              if f['path'].endswith('.mp4'):
+                  assert v['NARRATION_VISUAL_BEAT_MATCH_PASS'] is True
+                  assert v['CC_LOWER_BAND_MAX_TWO_LINES_PASS'] is True
+                  assert v['CC_OVER_PRIMARY_VISUAL'] is False
+                  assert f['bytes'] > 100000
+          print('UGI_SEP15_V3_EXACT_SUBJECT_QA_PASS')
+          PY
+      - name: Commit immutable exact-subject finals
+        run: |
+          git config user.name 'ugi-editorial-bot'
+          git config user.email 'ugi-editorial-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-15/exact-subject-v3
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit'
+            exit 0
+          fi
+          git commit -m 'assets(ugi): Sep15 exact-subject finals v3 [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
