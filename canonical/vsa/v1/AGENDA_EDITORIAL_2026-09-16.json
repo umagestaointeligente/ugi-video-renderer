@@ -1,0 +1,163 @@
+{
+  "schema": "VSA_EDITORIAL_AGENDA_V2",
+  "generated_at_local": "2026-09-15T01:05:00-03:00",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-09-16",
+  "daily_target": 8,
+  "default_mix": {"WORLD_SCIENCE": 4, "PEOPLE_CURIOSITY": 4},
+  "official_publisher": {"name": "METRICOOL", "brand_id": 6935441, "youtube_channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ"},
+  "planner_state_at_lock": "EMPTY_FOR_2026-09-16",
+  "release_policy": {
+    "schedule_only_after_exact_master_release_token": true,
+    "fresh_build_only": true,
+    "prior_final_master_reuse_forbidden": true,
+    "max_attempts_per_topic": 3,
+    "third_failure_action": "REPLACE_TOPIC_AND_PRESERVE_SLOT",
+    "required_gates": [
+      "TOPIC_60D_PASS",
+      "FACT_SOURCE_PASS",
+      "RIGHTS_PASS",
+      "REAL_FOOTAGE_PASS",
+      "VOICE_PTBR_NEUTRAL_PASS",
+      "CANONICAL_MASK_V2_PASS",
+      "ENTITY_INTEGRITY_PASS",
+      "SCENE_DIVERSITY_PASS",
+      "MUSIC_PASS",
+      "PRE_CTA_CONTAMINATION_PASS",
+      "FINAL_MASTER_QA_PASS",
+      "SCHEDULER_RELEASE_TOKEN_PASS"
+    ]
+  },
+  "slots": [
+    {
+      "time_brt": "08:00",
+      "editorial_bucket": "WORLD_SCIENCE",
+      "content_id": "VSA-20260916-CHANDRA-HYPERSOFT",
+      "semantic_topic_id": "chandra_hypersoft_xray_sources_2026",
+      "title": "O que são os 84 objetos de raios X que não se parecem com nada conhecido?",
+      "hook": "Astrônomos encontraram uma classe inteira de objetos que emite raios X muito suaves e ultravioleta intenso.",
+      "fact_source": "https://science.nasa.gov/missions/chandra/nasas-chandra-unveils-mysterious-x-ray-objects/",
+      "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+      "rights_status": "EXACT_ASSET_MANIFEST_REQUIRED",
+      "visual_plan": "Chandra/M101 exact-source visuals -> causal spectrum animation -> different exact-source galaxy evidence -> mechanism -> annotated proof/payoff",
+      "music_class": "mystery_science_documentary"
+    },
+    {
+      "time_brt": "10:30",
+      "editorial_bucket": "PEOPLE_CURIOSITY",
+      "content_id": "VSA-20260916-JESSICA-MEIR",
+      "semantic_topic_id": "jessica_meir_extreme_biology_to_spacewalk_commander",
+      "title": "Como uma pesquisadora de animais extremos virou comandante da estação espacial?",
+      "hook": "Antes de virar astronauta, Jessica Meir estudava fisiologia de animais em ambientes extremos.",
+      "fact_source": "https://www.nasa.gov/people/jessica-u-meir/",
+      "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+      "content_class": "PERSON_PROFILE",
+      "expected_subject": "Jessica Meir",
+      "rights_status": "NASA_EXACT_ASSET_MANIFEST_REQUIRED",
+      "visual_plan": "Jessica real 1 -> contexto humano/biologia -> Jessica real 2 -> spacewalk mechanism -> Jessica real 3/current Expedition 75 -> payoff",
+      "person_target_minimum": 0.70,
+      "music_class": "human_adventure_science"
+    },
+    {
+      "time_brt": "13:00",
+      "editorial_bucket": "WORLD_SCIENCE",
+      "content_id": "VSA-20260916-CURIOSITY-5000",
+      "semantic_topic_id": "curiosity_5000_martian_sols_survival_engineering",
+      "title": "Como o Curiosity conseguiu sobreviver a 5.000 dias marcianos?",
+      "hook": "O rover passou de 5.000 sóis em Marte e já subiu mais de 1 quilômetro desde o local de pouso.",
+      "fact_source": "https://science.nasa.gov/blog/curiosity-blog-sols-4995-5001-5000-martian-days-on-mars/",
+      "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+      "rights_status": "NASA_JPL_EXACT_ASSET_MANIFEST_REQUIRED",
+      "visual_plan": "Curiosity exact real mission capture 1 -> survival/thermal-power mechanism -> distinct rover evidence 2 -> mobility mechanism -> distinct mission evidence 3/payoff",
+      "music_class": "exploration_science_documentary"
+    },
+    {
+      "time_brt": "15:30",
+      "editorial_bucket": "PEOPLE_CURIOSITY",
+      "content_id": "VSA-20260916-JOHN-GLENN-77",
+      "semantic_topic_id": "john_glenn_age77_sts95_aging_research",
+      "title": "Por que a NASA mandou John Glenn ao espaço de novo aos 77 anos?",
+      "hook": "Quase quatro décadas depois do primeiro voo, Glenn voltou ao espaço como participante de pesquisas sobre envelhecimento.",
+      "fact_source": "https://www.nasa.gov/history/40thmerc7/shepard.htm",
+      "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+      "content_class": "PERSON_PROFILE",
+      "expected_subject": "John Glenn",
+      "rights_status": "NASA_ARCHIVE_EXACT_ASSET_MANIFEST_REQUIRED",
+      "visual_plan": "Glenn STS-95 real 1 -> envelhecimento/microgravidade explanation -> Glenn real 2 -> experiment context -> Glenn real 3/payoff",
+      "person_target_minimum": 0.70,
+      "music_class": "human_legacy_science"
+    },
+    {
+      "time_brt": "18:00",
+      "editorial_bucket": "WORLD_SCIENCE",
+      "content_id": "VSA-20260916-LRAUV-SEAFLOOR",
+      "semantic_topic_id": "noaa_lrauv_seafloor_scallop_survey_2026",
+      "title": "Como um robô submarino fotografa o fundo do mar por centenas de quilômetros?",
+      "hook": "Dois veículos autônomos percorreram mais de 200 milhas náuticas e registraram mais de 68 mil imagens do fundo do mar.",
+      "fact_source": "https://www.fisheries.noaa.gov/feature-story/meet-autonomous-underwater-robot-expanding-our-ability-survey-seafloor",
+      "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+      "rights_status": "NOAA_EXACT_ASSET_MANIFEST_REQUIRED",
+      "visual_plan": "LRAUV deployment real 1 -> autonomy/navigation mechanism -> underwater mission real 2 -> camera/survey mechanism -> seafloor evidence real 3/payoff",
+      "music_class": "technology_ocean_discovery"
+    },
+    {
+      "time_brt": "19:30",
+      "editorial_bucket": "PEOPLE_CURIOSITY",
+      "content_id": "VSA-20260916-MAE-JEMISON",
+      "semantic_topic_id": "mae_jemison_physician_engineer_sts47_science_mission",
+      "title": "Como uma médica virou a primeira mulher negra a viajar ao espaço?",
+      "hook": "Mae Jemison já era médica e engenheira antes de ser selecionada pela NASA e voar na STS-47.",
+      "fact_source": "https://www.nasa.gov/former-astronaut-mae-c-jemison/",
+      "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+      "content_class": "PERSON_PROFILE",
+      "expected_subject": "Mae Jemison",
+      "rights_status": "NASA_ARCHIVE_EXACT_ASSET_MANIFEST_REQUIRED",
+      "visual_plan": "Mae real/training 1 -> trajetória medicina/engenharia -> Mae STS-47 real 2 -> science mission explanation -> Mae real 3/payoff",
+      "person_target_minimum": 0.70,
+      "music_class": "human_inspirational_science"
+    },
+    {
+      "time_brt": "21:00",
+      "editorial_bucket": "WORLD_SCIENCE",
+      "content_id": "VSA-20260916-SPERM-WHALE-DRONES",
+      "semantic_topic_id": "noaa_sperm_whale_drone_measurement_research",
+      "title": "Como drones conseguem medir cachalotes sem encostar neles?",
+      "hook": "Pesquisadores usam imagens aéreas para estimar tamanho e condição corporal de cachalotes durante levantamentos no Golfo.",
+      "fact_source": "https://www.fisheries.noaa.gov/news-and-announcements/science-blog",
+      "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+      "rights_status": "NOAA_EXACT_ASSET_MANIFEST_REQUIRED",
+      "visual_plan": "NOAA permitted sperm-whale drone real 1 -> photogrammetry explanation -> distinct whale/drone real 2 -> measurement/data mechanism -> distinct real 3/payoff",
+      "music_class": "ocean_wildlife_documentary"
+    },
+    {
+      "time_brt": "22:30",
+      "editorial_bucket": "PEOPLE_CURIOSITY",
+      "content_id": "VSA-20260916-VICTOR-GLOVER",
+      "semantic_topic_id": "victor_glover_artemis2_to_emeritus_mentor_2026",
+      "title": "O que acontece com um astronauta depois de uma missão histórica à Lua?",
+      "hook": "Depois da Artemis II, Victor Glover passou ao status de emérito e pode continuar ajudando a treinar e orientar novas equipes.",
+      "fact_source": "https://www.nasa.gov/news-release/nasa-names-two-artemis-ii-astronauts-to-emeritus-program/",
+      "status": "EDITORIAL_LOCKED_PREPRODUCTION",
+      "content_class": "PERSON_PROFILE",
+      "expected_subject": "Victor Glover",
+      "rights_status": "NASA_EXACT_ASSET_MANIFEST_REQUIRED",
+      "visual_plan": "Glover Artemis II real 1 -> mission context -> Glover real 2 -> transition/mentor role -> Glover real 3/payoff",
+      "person_target_minimum": 0.70,
+      "music_class": "human_legacy_adventure"
+    }
+  ],
+  "replacement_pool": [
+    {
+      "semantic_topic_id": "noaa_beaver_dam_analogues_coho_recovery_2026",
+      "title": "Como barragens artificiais de castor ajudaram salmões a voltar?",
+      "fact_source": "https://www.fisheries.noaa.gov/feature-story/start-beaver-dams-transform-parched-california-creeks-salmon-havens-new-research-finds",
+      "use_only_if": "RIGHTS_AND_REAL_FOOTAGE_PASS"
+    },
+    {
+      "semantic_topic_id": "nasa_ibm_lunar_foundation_model_2026",
+      "title": "Como uma IA aprende a ler a superfície da Lua?",
+      "fact_source": "https://science.nasa.gov/science-research/artificial-intelligence-lunar-foundation-model/",
+      "use_only_if": "VISUAL_CAUSAL_STORY_AND_RIGHTS_PASS"
+    }
+  ]
+}
