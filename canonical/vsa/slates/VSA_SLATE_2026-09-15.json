@@ -1,0 +1,141 @@
+{
+  "schema": "VSA_DAILY_SLATE_V1",
+  "date_local": "2026-09-15",
+  "timezone": "America/Sao_Paulo",
+  "channel": "Você Sabia Agora?",
+  "metricool_brand_id": "6935441",
+  "youtube_channel_id": "UCm0UMO6lNWlr66YSIS1p4iQ",
+  "status": "EDITORIAL_LOCKED_PRODUCTION_REQUIRED",
+  "publishing_policy": {
+    "metricool_auto_publish_allowed_before_final_master": false,
+    "existing_or_old_media_reuse_forbidden": true,
+    "raw_generator_output_may_reach_scheduler": false,
+    "release_requires_same_final_mp4_hash_that_passed_qa": true,
+    "required_gates": [
+      "VOICE_PTBR_NEUTRAL_PASS",
+      "CANONICAL_MASK_V2_PASS",
+      "CLEAN_HEADER_PASS",
+      "CLEAN_CC_ZONE_PASS",
+      "NARRATION_IMAGE_COHERENCE_PASS",
+      "ENTITY_INTEGRITY_PASS",
+      "REAL_FOOTAGE_RIGHTS_PASS",
+      "PRE_CTA_CONTAMINATION_PASS",
+      "FINAL_MASTER_QA_PASS",
+      "SCHEDULER_RELEASE_TOKEN_PASS"
+    ],
+    "failure_policy": {
+      "attempt_1": "REBUILD_FROM_ZERO",
+      "attempt_2": "REBUILD_FROM_ZERO",
+      "attempt_3": "REBUILD_FROM_ZERO",
+      "after_third_failure": "REPLACE_TOPIC_AND_PRESERVE_SLOT",
+      "one_failed_item_blocks_other_slots": false
+    }
+  },
+  "shorts_contract": {
+    "count": 4,
+    "mask": "VSA_MASK_CANONICAL_V2",
+    "mask_sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+    "cta": "VSA_CTA_VISUAL_CANONICAL_V1",
+    "voice_language": "pt-BR",
+    "voice_accent": "neutral Brazilian Portuguese only",
+    "foreign_or_british_accent": "HARD_FAIL",
+    "closed_caption_max_lines": 2,
+    "narration_image_rule": "Every visual block must depict or directly explain the spoken claim; unrelated filler is forbidden."
+  },
+  "longform_contract": {
+    "count": 1,
+    "voice_language": "pt-BR",
+    "voice_accent": "neutral Brazilian Portuguese only",
+    "real_footage_first": true,
+    "retention_arc_required": true,
+    "narration_image_rule": "Every visual block must depict or directly explain the spoken claim; unrelated filler is forbidden."
+  },
+  "slots": [
+    {
+      "time_local": "10:00",
+      "format": "SHORT",
+      "editorial_class": "SCIENCE_HOT",
+      "title": "Como um microscópio consegue enxergar estruturas de apenas 20 nanômetros?",
+      "angle": "Explicar STED de forma visual e causal, mostrando como a técnica supera a resolução da microscopia óptica convencional e por que isso importa para estudar barreiras celulares do intestino.",
+      "primary_source": "https://www.theguardian.com/society/2026/sep/14/new-microscope-discovery-hopes-incurable-inflammatory-bowel-disease-crohns-science-treatment",
+      "visual_requirements": [
+        "microscope Curie or rights-cleared equivalent real laboratory footage",
+        "causal animation of excitation/depletion and shrinking fluorescent spot",
+        "no generic charts unrelated to spoken claim",
+        "no black-background raw explainer as final master"
+      ],
+      "reserve_topic_if_rights_or_assets_fail": "Como o cérebro consegue transformar intenção de falar em voz digital?"
+    },
+    {
+      "time_local": "13:00",
+      "format": "SHORT",
+      "editorial_class": "PERSON_PROFILE_HUMAN",
+      "title": "Ary Fontoura aos 93: o que a ciência realmente pode explicar sobre envelhecer bem?",
+      "angle": "Pessoa primeiro. Usar sua rotina pública de atividade física como gancho para explicar força, autonomia e envelhecimento ativo sem atribuir causalidade individual não comprovada. Fechar com reconhecimento humano curto e respeitoso.",
+      "primary_source": "https://www.bol.uol.com.br/entretenimento/2026/02/13/ary-fontoura-biquini-neon.amp.htm",
+      "visual_requirements": [
+        "Ary Fontoura must be the dominant identifiable person whenever human footage is used",
+        "no unrelated celebrity or presenter filler",
+        "scientific animation only to explain general physiology",
+        "target-person share of identifiable human-footage time >= 0.70"
+      ],
+      "rights_rule": "If rights-safe Ary Fontoura footage cannot be proven, this topic is blocked and the reserve topic must replace it.",
+      "reserve_topic_if_rights_or_assets_fail": "Jessica Meir e a volta da Crew-12: por que o corpo precisa reaprender a gravidade?",
+      "reserve_primary_source": "https://www.nasa.gov/news-release/nasas-spacex-crew-12-to-discuss-station-mission-upcoming-return/"
+    },
+    {
+      "time_local": "15:00",
+      "format": "SHORT",
+      "editorial_class": "CURIOSITY_SCIENCE",
+      "title": "Como mergulhadores conseguem estudar recifes onde quase não chega luz?",
+      "angle": "Explicar ecossistemas mesofóticos, profundidade de 30 a 150 metros, rebreathers e por que esses recifes são difíceis de observar.",
+      "primary_source": "https://oceanexplorer.noaa.gov/expedition-2026-expeditions/",
+      "visual_requirements": [
+        "rights-cleared real reef/diver footage",
+        "depth visualization synchronized with narration",
+        "rebreather mechanism animation only when the narration explains it",
+        "no unrelated deep-sea footage presented as the exact Puerto Rico expedition"
+      ],
+      "reserve_topic_if_rights_or_assets_fail": "Como a água do oceano revela animais que ninguém viu? eDNA explicado"
+    },
+    {
+      "time_local": "17:00",
+      "format": "LONG",
+      "editorial_class": "HOT_SCIENCE_HUMAN",
+      "title": "O que acontece com o corpo quando um astronauta volta à Terra depois de meses no espaço?",
+      "angle": "Usar a preparação para o retorno da Crew-12 como gancho atual. Explicar equilíbrio, músculos, ossos, fluidos, readaptação à gravidade e recondicionamento, alternando pessoas reais e animações causais.",
+      "primary_source": "https://www.nasa.gov/news-release/nasas-spacex-crew-12-to-discuss-station-mission-upcoming-return/",
+      "secondary_source": "https://www.nasa.gov/humans-in-space/counteracting-bone-and-muscle-loss-in-microgravity/",
+      "visual_requirements": [
+        "real Crew-12/ISS/NASA footage with provenance",
+        "real footage -> explanation animation -> different real footage -> data/mechanism -> real consequence",
+        "no repeated still-photo pans used as motion",
+        "no footage unrelated to the crew or the mechanism being narrated"
+      ],
+      "reserve_topic_if_rights_or_assets_fail": "Como cientistas conseguem encontrar vida no oceano sem ver o animal?"
+    },
+    {
+      "time_local": "19:00",
+      "format": "SHORT",
+      "editorial_class": "HOT_CULTURE_BEHAVIOR",
+      "title": "Por que o Brasil virou moda no mundo agora?",
+      "angle": "Explicar o fenômeno Brazilcore como efeito de rede cultural: música, moda, cinema, turismo e redes sociais, evitando propaganda nacionalista e separando tendência observável de interpretação.",
+      "primary_source": "https://apnews.com/article/960303e792d38d5fcaf04d738ed676ef",
+      "visual_requirements": [
+        "rights-cleared Brazil culture/tourism/music/fashion footage only",
+        "visual shown must correspond to the specific claim being narrated",
+        "no celebrity shown unless named or explicitly contextualized in narration",
+        "no random carnival/beach filler for unrelated claims"
+      ],
+      "reserve_topic_if_rights_or_assets_fail": "Como uma prótese neural consegue transformar atividade cerebral em fala e linguagem corporal digital?",
+      "reserve_primary_source": "https://www.nih.gov/news-events/news-releases"
+    }
+  ],
+  "scheduler_state_required_before_release": {
+    "draft": false,
+    "autoPublish": true,
+    "only_after_all_required_gates": true,
+    "stale_or_old_media_url_forbidden": true
+  },
+  "editorial_sources_verified_on": "2026-09-14"
+}
