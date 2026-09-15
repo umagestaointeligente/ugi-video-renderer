@@ -1,0 +1,121 @@
+{
+  "schema": "UGI_LONGFORM_STORY_V1",
+  "date": "2026-09-15",
+  "series": "Histórias de Gestão",
+  "platform": "youtube",
+  "targetDurationMin": 9,
+  "targetDurationMax": 11,
+  "publishTarget": "2026-09-15T16:00:00-03:00",
+  "title": "A LEGO quase quebrou: a decisão que salvou uma das marcas mais famosas do mundo",
+  "thumbnailBrief": {
+    "noAiImageGeneration": true,
+    "text": "A LEGO QUASE QUEBROU",
+    "visual": "real LEGO-specific product/company visual with strong recognizable brand context; no generic toy stock",
+    "safeArea": "mobile-first; key subject and text inside central safe area"
+  },
+  "hook": "Em 2004, a LEGO estava no limite. A empresa que parecia sinônimo de criatividade tinha prejuízo, dívida, complexidade demais e negócios que se afastavam do seu núcleo. O movimento que começou a salvar a companhia não foi criar ainda mais coisas. Foi decidir, com brutal clareza, o que a LEGO precisava voltar a ser.",
+  "sourceContract": [
+    "LEGO Annual Report 2004",
+    "LEGO Annual Report 2005",
+    "LEGO official company history",
+    "LEGO official LEGOLAND history",
+    "Strategy+Business: Rebuilding Lego, Brick by Brick",
+    "Harvard Business Review case/podcast as secondary contextual source"
+  ],
+  "visualRules": {
+    "exactSubjectVisualRequired": true,
+    "narrationBeatMustMatchVisual": true,
+    "genericToyStockForbidden": true,
+    "captionDedicatedLowerBand": true,
+    "captionMaxLines": 2,
+    "captionOverPrimaryVisualForbidden": true,
+    "safeAreaV2Required": true,
+    "archivalVisualsMustBeClearlyArchival": true,
+    "chartsMustUseCitedSourceData": true
+  },
+  "sections": [
+    {
+      "id": 1,
+      "name": "Gancho — a marca que quase perdeu o próprio chão",
+      "targetSeconds": 45,
+      "narration": "Em 2004, a LEGO estava no limite. O grupo registrou um prejuízo líquido de cerca de 1,9 bilhão de coroas dinamarquesas, e o patrimônio caiu fortemente em relação ao ano anterior. Isso parece estranho quando a gente olha para uma marca tão conhecida. Mas a crise da LEGO ensina uma coisa importante: uma empresa pode ter produto amado, marca forte e consumidores fiéis e ainda assim construir uma operação difícil de sustentar.",
+      "visualBrief": ["LEGO-specific recognizable product close-up", "LEGO headquarters or Billund context", "factual chart from 2004 annual report showing loss/equity deterioration"]
+    },
+    {
+      "id": 2,
+      "name": "Origem — por que o núcleo sempre importou",
+      "targetSeconds": 55,
+      "narration": "A LEGO nasceu em 1932, na Dinamarca, com Ole Kirk Kristiansen. O nome vem de 'leg godt', algo como 'brinque bem'. Ao longo das décadas, a empresa encontrou no tijolo modular seu principal sistema de produto. O ponto central aqui não é nostalgia. É entender que a LEGO construiu valor em torno de um núcleo muito claro: uma peça simples, compatível, recombinável e capaz de gerar milhares de possibilidades.",
+      "visualBrief": ["Ole Kirk Kristiansen or official LEGO history visual", "early LEGO wooden toys if licensed", "classic LEGO brick and modular system"]
+    },
+    {
+      "id": 3,
+      "name": "Expansão — quando inovar começou a aumentar a complexidade",
+      "targetSeconds": 70,
+      "narration": "A partir dos anos 1990, a LEGO buscou crescer para além do brinquedo tradicional. Entrou em novas linhas, videogames, televisão, lojas e parques. Diversificar parecia uma resposta natural para um mundo em que as crianças tinham cada vez mais alternativas de entretenimento. O problema é que inovação sem disciplina pode multiplicar peças, embalagens, fornecedores, processos e estoques muito mais rápido do que a receita cresce.",
+      "visualBrief": ["licensed LEGO videogame/product line visuals", "LEGO retail/store context", "LEGOLAND archival visual clearly labeled by year", "diagram: complexity expanding from core brick to many businesses"]
+    },
+    {
+      "id": 4,
+      "name": "Crise — o custo da complexidade apareceu",
+      "targetSeconds": 70,
+      "narration": "No início dos anos 2000, os sinais ficaram difíceis de ignorar. O relatório de 2004 mostra perda líquida próxima de 1,9 bilhão de coroas dinamarquesas. A companhia também precisava reduzir dívida e vender ativos. Estudos posteriores sobre o turnaround destacaram outro problema: a variedade e a complexidade da cadeia de suprimentos tinham crescido demais. A empresa sabia criar. Mas criar não é a mesma coisa que conseguir produzir, distribuir e ganhar dinheiro com eficiência.",
+      "visualBrief": ["2004 LEGO annual report factual chart", "LEGO production/factory context", "inventory/parts complexity diagram sourced from case data without invented numbers"]
+    },
+    {
+      "id": 5,
+      "name": "Virada de liderança — Jørgen Vig Knudstorp",
+      "targetSeconds": 65,
+      "narration": "Em 2004, Jørgen Vig Knudstorp assumiu como CEO. Ele não vinha da família fundadora. A missão era menos romântica do que parece em retrospecto: estabilizar caixa, entender a origem das perdas e decidir o que precisava permanecer dentro da empresa. Uma das ideias mais importantes dessa fase foi abandonar a crença de que apenas mais inovação resolveria o problema. Primeiro, a operação precisava voltar a respirar.",
+      "visualBrief": ["Jørgen Vig Knudstorp real portrait", "LEGO leadership/company visual", "simple on-screen decision tree: caixa, foco, operação"]
+    },
+    {
+      "id": 6,
+      "name": "Decisão difícil — vender o que não era núcleo",
+      "targetSeconds": 75,
+      "narration": "Um dos movimentos mais simbólicos foi a venda dos parques LEGOLAND em 2005. O próprio relatório da LEGO explica que os parques não estavam diretamente ligados ao core business do grupo. O preço de venda foi de quase 2,8 bilhões de coroas dinamarquesas. A decisão ajudou a fortalecer o caixa. A posição financeira saiu de mais de 3 bilhões de coroas de dívida líquida remunerada em 2002 para liquidez líquida positiva de 1,292 bilhão ao fim de 2005.",
+      "visualBrief": ["LEGOLAND Billund real archival visual", "transaction timeline 2004-2005", "factual debt-to-liquidity chart from LEGO annual report figures"]
+    },
+    {
+      "id": 7,
+      "name": "Mecanismo — simplificar para voltar a crescer",
+      "targetSeconds": 80,
+      "narration": "Mas vender ativos não seria suficiente. A LEGO também redesenhou a cadeia de suprimentos, simplificou processos e passou a tratar variedade como uma decisão econômica, não apenas criativa. O objetivo era reduzir ineficiências, alinhar inovação com demanda real e recuperar escala. Essa é uma lição que vale para varejo, indústria e serviços: toda nova variedade cria custo invisível. Mais SKU, mais configuração, mais exceção e mais fornecedor podem destruir margem antes que alguém perceba.",
+      "visualBrief": ["LEGO factory/production line", "LEGO parts sorting real visual", "original supply-chain diagram: variedade -> complexidade -> custo -> serviço", "no generic factory stock"]
+    },
+    {
+      "id": 8,
+      "name": "Volta ao núcleo — brick, sistema, marca e comunidade",
+      "targetSeconds": 70,
+      "narration": "No relatório de 2005, a própria companhia descreveu os ativos que deveriam sustentar a estratégia futura: o tijolo LEGO, o sistema modular, a marca, consumidores leais e comunidades. Repare na diferença. A empresa não decidiu parar de inovar. Decidiu inovar a partir de ativos que já sabia que tinham valor. Isso muda completamente a lógica: inovação deixa de ser dispersão e vira ampliação coerente do núcleo.",
+      "visualBrief": ["classic and modern LEGO sets showing compatibility", "adult fan/community context if licensed", "LEGO brand/headquarters", "on-screen list of the five strategic assets from the annual report"]
+    },
+    {
+      "id": 9,
+      "name": "Consequência — disciplina antes de velocidade",
+      "targetSeconds": 55,
+      "narration": "A recuperação financeira de 2005 não encerrou os desafios. A própria LEGO ainda citava concorrência no varejo, produtos eletrônicos e crianças abandonando brinquedos mais cedo. Mas a empresa voltou a ter uma base financeira capaz de enfrentar esses problemas. Essa ordem importa. Antes de acelerar, ela reconstruiu capacidade de decidir.",
+      "visualBrief": ["2005 annual report positive liquidity chart", "LEGO product evolution real visuals", "no unsupported modern performance claims"]
+    },
+    {
+      "id": 10,
+      "name": "Fechamento — 3 lições de gestão",
+      "targetSeconds": 75,
+      "narration": "A história da LEGO deixa três lições. Primeira: crescimento que aumenta complexidade mais rápido que valor pode parecer inovação e ainda assim destruir resultado. Segunda: estratégia também é escolher o que não fazer — e às vezes vender um negócio querido para proteger o núcleo. Terceira: voltar ao core não significa voltar ao passado. Significa usar aquilo que a empresa faz melhor como plataforma para a próxima fase. A pergunta para qualquer gestor é simples: se você tivesse que salvar o seu negócio amanhã, saberia dizer o que é realmente indispensável?",
+      "visualBrief": ["three clean original text cards with one lesson each", "LEGO brick/build sequence visual", "final UGI branding and CTA"]
+    }
+  ],
+  "cta": "Se você gosta de histórias reais de empresas que ensinam gestão sem parecer uma aula, acompanhe a UGI. A próxima decisão que mudou um negócio pode mudar a forma como você olha para o seu.",
+  "qa": [
+    "FACT_SOURCE_PASS",
+    "EXACT_SUBJECT_VISUAL_PASS",
+    "ARCHIVAL_LABEL_PASS",
+    "RIGHTS_PROVENANCE_PASS",
+    "NO_GENERIC_PROXY_VISUAL_PASS",
+    "SAFE_AREA_V2_PASS",
+    "CC_LOWER_BAND_MAX_TWO_LINES_PASS",
+    "NARRATION_VISUAL_BEAT_MATCH_PASS",
+    "MUSIC_FIT_PASS",
+    "YOUTUBE_LONGFORM_DURATION_PASS"
+  ]
+}
