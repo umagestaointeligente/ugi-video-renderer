@@ -280,8 +280,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-01.jpg",
-      "sha256": "d088e8a600143ce979141c33a0a0799351c65ca939ea4e08d53e1210b75a2f65",
-      "bytes": 100823,
+      "sha256": "68eeccdcd0c218d9551f3317516cbc21d1085eae7664c1d257632823e6dc2617",
+      "bytes": 105153,
       "kind": "instagram_carousel_slide",
       "entity": "Bancos italianos",
       "sourceKeys": [
@@ -305,38 +305,18 @@
       "visualReview": [
         {
           "key": "mps_1",
-          "title": "File:1 Benedetto di Bindo. Blessed James of Bevagna, c. 1415 Fondazione Monte dei Paschi, Siena..jpg",
+          "title": "MONTE DEI PASCHI DI SIENA",
           "receipt": {
-            "mustAny": [
-              "monte dei paschi",
-              "mps"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "original_topic_diagram"
           }
         }
       ]
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-02.jpg",
-      "sha256": "9a10b91d0a5c7baa6ef00ede2c68bdc519e78aa2e2eb6afbb8d26072f4ee81dd",
-      "bytes": 137532,
+      "sha256": "28feb3926d95988755efae9dc413e97b6c7c3354526f804f974e030bcd1b7188",
+      "bytes": 96549,
       "kind": "instagram_carousel_slide",
       "entity": "Bancos italianos",
       "sourceKeys": [
@@ -360,29 +340,10 @@
       "visualReview": [
         {
           "key": "mediobanca_1",
-          "title": "File:Francesco-Gaetano-Caltagirone,-Alberto-Nagel-(Mediobanca-S.p.A.),-Gabriele-Galateri-(Generali)-e-Federico-Ghizzoni-(Unicredit).jpg",
+          "title": "MEDIOBANCA",
           "receipt": {
-            "mustAny": [
-              "mediobanca"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "original_topic_diagram"
           }
         }
       ]
@@ -424,8 +385,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-carousel-italy-banks-04.jpg",
-      "sha256": "18ae6d1e89fdbf1b701faf53092fd21dda81b2752252a257adaf4450b9ccbc42",
-      "bytes": 171017,
+      "sha256": "36d02e5c9803d5860b8724718477d997209cedfe3407c2fa5d7829383681e543",
+      "bytes": 99387,
       "kind": "instagram_carousel_slide",
       "entity": "Bancos italianos",
       "sourceKeys": [
@@ -449,29 +410,10 @@
       "visualReview": [
         {
           "key": "intesa_1",
-          "title": "File:- ITALY - Intesa Sanpaolo filiale.JPG",
+          "title": "INTESA SANPAOLO",
           "receipt": {
-            "mustAny": [
-              "intesa"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "original_topic_diagram"
           }
         }
       ]
@@ -548,8 +490,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-reel-lego-historias-1000.mp4",
-      "sha256": "b2c068cf143ef9cb52bfbb014eb708c6168e20bc583428ebb80e98a3c05f561c",
-      "bytes": 2052102,
+      "sha256": "987fceac132c2d7715fbd9887fb8d87abaa4670c24f9068e0c6252d759e43e5e",
+      "bytes": 2280281,
       "kind": "instagram_reel",
       "entity": "LEGO",
       "sourceKeys": [
@@ -597,31 +539,12 @@
       "visualReview": [
         {
           "key": "lego_1",
-          "title": "File:1x3 grey Lego brick.jpg",
+          "title": "File:LEGO Billund.JPG",
           "receipt": {
-            "mustAny": [
-              "lego",
-              "legoland"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj",
-              "fire station"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:LEGO Billund.JPG",
+            "resolvedTitle": "File:LEGO Billund.JPG"
           }
         },
         {
@@ -684,8 +607,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/linkedin-lego-executivo-1100.mp4",
-      "sha256": "f9c271d915501a23fbdda0467b8d5f19d451dae0f114f6a1b947c5ea4459e4cd",
-      "bytes": 3642316,
+      "sha256": "75add968e36901dbd8c736c4de941d123d84a847a6a968eaa4044baeb633da10",
+      "bytes": 3601244,
       "kind": "linkedin_video",
       "entity": "LEGO",
       "sourceKeys": [
@@ -734,31 +657,12 @@
       "visualReview": [
         {
           "key": "lego_2",
-          "title": "File:230204-N-TG517-042 - Naval Museum hosts 12th Annual Brick by Brick; LEGO Shipbuilding event in Norfolk.jpg",
+          "title": "File:Lego House Billund.jpg",
           "receipt": {
-            "mustAny": [
-              "lego",
-              "legoland"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj",
-              "fire station"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:Lego House Billund.jpg",
+            "resolvedTitle": "File:Lego House Billund.jpg"
           }
         },
         {
@@ -829,8 +733,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/tiktok-stellantis-dois-mundos-1200.mp4",
-      "sha256": "c0bf60342ca34144b86b54f4a02530a3c1bb71a864819f00edd3f38c0bc6a624",
-      "bytes": 1465342,
+      "sha256": "892c440e70d4418119abcb52a906df9989b54619a5a1138a479dd0c5f62403c6",
+      "bytes": 1175280,
       "kind": "tiktok_video",
       "entity": "Stellantis",
       "sourceKeys": [
@@ -875,29 +779,12 @@
       "visualReview": [
         {
           "key": "stellantis_1",
-          "title": "File:Area di sosta per la ricarica elettrica Stellantis Powy a Rogoredo.jpg",
+          "title": "File:Stellantis.svg",
           "receipt": {
-            "mustAny": [
-              "stellantis"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:Stellantis.svg",
+            "resolvedTitle": "File:Stellantis.svg"
           }
         },
         {
@@ -936,8 +823,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/instagram-reel-baker-hughes-historias-1800.mp4",
-      "sha256": "4cf473bed9771cee2797defbbdaa7e6e04ee516f54e6e9e909a09162a5b761a0",
-      "bytes": 1840998,
+      "sha256": "80daa09849e90436156c2015205f3fc8d6254437c190bff54dee692076b258a8",
+      "bytes": 1841727,
       "kind": "instagram_reel",
       "entity": "Baker Hughes",
       "sourceKeys": [
@@ -1071,8 +958,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/tiktok-papua-lng-ownership-1945.mp4",
-      "sha256": "177608a4526a702f46a419e7c01f250059bce4037e11c9e9e24ccc67d5e53379",
-      "bytes": 1809178,
+      "sha256": "6e0652c45d7c7826c3b43c427654e838638e7ad170d64a7de76b1523c1a770d2",
+      "bytes": 1330700,
       "kind": "tiktok_video",
       "entity": "Papua LNG / Santos / ExxonMobil / TotalEnergies",
       "sourceKeys": [
@@ -1118,29 +1005,12 @@
       "visualReview": [
         {
           "key": "santos_1",
-          "title": "File:205 North Quay, Infinity Tower, Santos Place, Riverside Expressway, Brisbane, October 2023, 02.jpg",
+          "title": "File:Santos limited corporate logo.svg",
           "receipt": {
-            "mustAny": [
-              "santos"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:Santos limited corporate logo.svg",
+            "resolvedTitle": "File:Santos limited corporate logo.svg"
           }
         },
         {
@@ -1173,30 +1043,12 @@
         },
         {
           "key": "total_1",
-          "title": "File:Aerodrome-BelAir-Dinan-Trelivan-Station-TotalEnergies-byRundvald.jpg",
+          "title": "File:TotalEnergies wordmark (2021-present).svg",
           "receipt": {
-            "mustAny": [
-              "totalenergies",
-              "total energies"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:TotalEnergies wordmark (2021-present).svg",
+            "resolvedTitle": "File:TotalEnergies wordmark (2021-present).svg"
           }
         },
         {
@@ -1227,8 +1079,8 @@
     },
     {
       "path": "public/ugi/editorial/2026-09-15/exact-subject-v3/youtube-lego-historias-1600.mp4",
-      "sha256": "da6f6d8151da8eb36a58f13c939db45e64c4703812c69d3607e26d950c64746b",
-      "bytes": 15093239,
+      "sha256": "b96f90a6e0d5b7f01fc275c81285c38596bb8058db2663e93185d7b0f9635971",
+      "bytes": 15180532,
       "kind": "youtube_video",
       "entity": "LEGO",
       "sourceKeys": [
@@ -1280,89 +1132,32 @@
       "visualReview": [
         {
           "key": "lego_3",
-          "title": "File:230204-N-TG517-084 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+          "title": "File:Legoland Indgangen.jpg",
           "receipt": {
-            "mustAny": [
-              "lego",
-              "legoland"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj",
-              "fire station"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:Legoland Indgangen.jpg",
+            "resolvedTitle": "File:Legoland Indgangen.jpg"
           }
         },
         {
           "key": "lego_1",
-          "title": "File:1x3 grey Lego brick.jpg",
+          "title": "File:LEGO Billund.JPG",
           "receipt": {
-            "mustAny": [
-              "lego",
-              "legoland"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj",
-              "fire station"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:LEGO Billund.JPG",
+            "resolvedTitle": "File:LEGO Billund.JPG"
           }
         },
         {
           "key": "lego_4",
-          "title": "File:230204-N-TG517-133 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+          "title": "File:1x3 grey Lego brick.jpg",
           "receipt": {
-            "mustAny": [
-              "lego",
-              "legoland"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj",
-              "fire station"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:1x3 grey Lego brick.jpg",
+            "resolvedTitle": "File:1x3 grey Lego brick.jpg"
           }
         },
         {
@@ -1423,31 +1218,12 @@
         },
         {
           "key": "lego_5",
-          "title": "File:230204-N-TG517-172 - Visitors build LEGO ship models during Naval Museum's 12th Annual Brick by Brick; LEGO Shipbuilding event.jpg",
+          "title": "File:Lego House, Billund 01.jpg",
           "receipt": {
-            "mustAny": [
-              "lego",
-              "legoland"
-            ],
-            "negativeTitleFilter": [
-              "fire",
-              "burnt",
-              "burned",
-              "protest",
-              "demonstration",
-              "demo ",
-              "accident",
-              "crash",
-              "wreck",
-              "pride",
-              "parade",
-              "placard",
-              "strike",
-              "riot",
-              "kopaj",
-              "fire station"
-            ],
-            "approved": true
+            "approved": true,
+            "type": "manual_exact_file",
+            "requestedTitle": "File:Lego House, Billund 01.jpg",
+            "resolvedTitle": "File:Lego House, Billund 01.jpg"
           }
         },
         {
