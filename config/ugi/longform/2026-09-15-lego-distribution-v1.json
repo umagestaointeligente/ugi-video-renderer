@@ -1,0 +1,140 @@
+{
+  "schema": "UGI_LONGFORM_CROSS_PLATFORM_V1",
+  "date": "2026-09-15",
+  "series": "Histórias de Gestão",
+  "story": "LEGO turnaround",
+  "sourceStory": "config/ugi/longform/2026-09-15-lego-story-v1.json",
+  "principle": "one story, three native edits; never repost the same master unchanged",
+  "platforms": {
+    "instagram": {
+      "publishTarget": "2026-09-15T10:00:00-03:00",
+      "format": "REEL",
+      "canvas": "1080x1920",
+      "aspectRatio": "9:16",
+      "targetDurationSeconds": [75, 90],
+      "role": "reach_and_retention",
+      "hook": "A LEGO quase quebrou — e o que começou a salvá-la não foi lançar mais produtos.",
+      "storyBeats": [
+        "2004 crisis and ~DKK 1.9bn net loss",
+        "complexity grew faster than value",
+        "leadership reset under Jørgen Vig Knudstorp",
+        "sell non-core assets including LEGOLAND",
+        "simplify supply chain and return to core assets",
+        "management lesson: growth without discipline can destroy value"
+      ],
+      "visualContract": {
+        "exactSubjectOnly": true,
+        "genericToyStockForbidden": true,
+        "realLegoVisualRequired": true,
+        "safeAreaV2": true,
+        "primaryVisualMustRemainReadable": true,
+        "captionDedicatedLowerBand": true,
+        "captionMaxLines": 2,
+        "captionOverPrimaryVisualForbidden": true,
+        "headlineInsideCentralSafeArea": true
+      },
+      "cta": "Quer a história completa? O episódio está no YouTube da UGI."
+    },
+    "linkedin": {
+      "publishTarget": "2026-09-15T11:00:00-03:00",
+      "format": "NATIVE_VIDEO",
+      "canvas": "1080x1350",
+      "aspectRatio": "4:5",
+      "targetDurationSeconds": [140, 180],
+      "role": "executive_depth_and_authority",
+      "opening": "A LEGO não se recuperou porque inovou mais. Primeiro, precisou reduzir complexidade, vender ativos e voltar a entender o que era realmente núcleo.",
+      "storyBeats": [
+        "business context and financial pressure",
+        "why complexity became an operating problem",
+        "leadership and cash stabilization",
+        "LEGOLAND divestment as capital discipline",
+        "supply-chain simplification and return to core",
+        "three executive lessons"
+      ],
+      "executiveLessons": [
+        "growth that multiplies complexity faster than value destroys margin",
+        "strategy is also deciding what not to own or operate",
+        "returning to core does not mean returning to the past; it means using distinctive capabilities as the platform for the next phase"
+      ],
+      "visualContract": {
+        "exactSubjectOnly": true,
+        "realLegoVisualRequired": true,
+        "genericCorporateStockForbidden": true,
+        "archivalVisualMustBeLabeled": true,
+        "primaryVisualMustRemainReadable": true,
+        "captionDedicatedLowerBand": true,
+        "captionMaxLines": 2,
+        "captionOverPrimaryVisualForbidden": true,
+        "safeAreaMobileFeed": true
+      },
+      "cta": "Qual ativo do seu negócio é realmente núcleo — e qual só adiciona complexidade?"
+    },
+    "youtube": {
+      "publishTarget": "2026-09-15T16:00:00-03:00",
+      "format": "VIDEO",
+      "canvas": "1920x1080",
+      "aspectRatio": "16:9",
+      "targetDurationMinutes": [9, 11],
+      "role": "full_story_watch_time_and_authority",
+      "storyStructure": [
+        "hook",
+        "origin",
+        "expansion_and_complexity",
+        "crisis",
+        "leadership_change",
+        "non_core_divestment",
+        "operating_simplification",
+        "return_to_core",
+        "consequence",
+        "three_management_lessons"
+      ],
+      "visualContract": {
+        "exactSubjectOnly": true,
+        "realLegoVisualRequired": true,
+        "genericToyStockForbidden": true,
+        "archivalVisualMustBeLabeled": true,
+        "chartsMustUseCitedSourceData": true,
+        "captionDedicatedLowerBand": true,
+        "captionMaxLines": 2,
+        "captionOverPrimaryVisualForbidden": true,
+        "noNarrationTextOverlayOnPrimaryVisual": true
+      }
+    }
+  },
+  "day15EditorialIntegration": {
+    "replaceSlots": [
+      {
+        "time": "10:00",
+        "platform": "instagram",
+        "replace": "Hyundai + Nvidia Reel",
+        "with": "LEGO Histórias de Gestão Reel",
+        "moveReplacedTopicTo": "2026-09-16 backlog"
+      },
+      {
+        "time": "11:00",
+        "platform": "linkedin",
+        "replace": "German firms / China image post",
+        "with": "LEGO executive native video",
+        "moveReplacedTopicTo": "2026-09-16 backlog"
+      }
+    ],
+    "addSlot": {
+      "time": "16:00",
+      "platform": "youtube",
+      "content": "LEGO full longform"
+    },
+    "volumeRule": "do not add Instagram or LinkedIn volume; replace existing slots to keep day comparable"
+  },
+  "releaseGates": [
+    "FACT_SOURCE_PASS",
+    "EXACT_SUBJECT_VISUAL_PASS",
+    "NARRATION_VISUAL_BEAT_MATCH_PASS",
+    "RIGHTS_PROVENANCE_PASS",
+    "NO_GENERIC_PROXY_VISUAL_PASS",
+    "SAFE_AREA_PLATFORM_PASS",
+    "CC_LOWER_BAND_MAX_TWO_LINES_PASS",
+    "NO_TEXT_OVER_PRIMARY_VISUAL_PASS",
+    "PLATFORM_NATIVE_DURATION_PASS",
+    "PLATFORM_NATIVE_ASPECT_RATIO_PASS"
+  ]
+}
