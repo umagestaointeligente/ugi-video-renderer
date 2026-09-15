@@ -1,0 +1,48 @@
+{
+  "schema": "VSA_PREVENTIVE_SELFTEST_RECEIPT_V1",
+  "executed_at_local": "2026-09-14T21:00:00-03:00",
+  "execution_environment": "chat_isolated_runner",
+  "scope": "preventive release-gate dry-run only; no media generated and no scheduler mutation",
+  "repository": "umagestaointeligente/ugi-video-renderer",
+  "tested_against": {
+    "release_validator_path": "scripts/vsa/validate_release_receipt.py",
+    "release_validator_blob_sha": "dd6aa82775d2693a9af65942251bcb5ceada88cb",
+    "policy_path": "config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json",
+    "policy_blob_sha": "8dfd5184e6d82987d72a70eb2d4b3cc897d74201",
+    "slate_path": "canonical/vsa/slates/VSA_SLATE_2026-09-15.json",
+    "slate_blob_sha": "38626a5c584f643a437a2f5c8bbe760b3068e002"
+  },
+  "positive_control": {
+    "valid_receipt_errors": [],
+    "result": "PASS"
+  },
+  "negative_cases": [
+    {"name":"foreign_accent","result":"BLOCKED","reasons":["VOICE_PROFILE_NOT_APPROVED","VOICE_PTBR_NEUTRAL_FAIL","FOREIGN_ACCENT_FAIL"]},
+    {"name":"missing_mask","result":"BLOCKED","reasons":["MASTER_CANONICAL_MASK_FAIL"]},
+    {"name":"wrong_mask_hash","result":"BLOCKED","reasons":["CANONICAL_MASK_HASH_FAIL"]},
+    {"name":"unrelated_person_elton_case","result":"BLOCKED","reasons":["SHOT_3_UNRELATED_PERSON_FOOTAGE_FAIL","PERSON_TARGET_SCREEN_SHARE_FAIL"]},
+    {"name":"legacy_moon_before_cta","result":"BLOCKED","reasons":["PRE_CTA_CONTAMINATION_FAIL","LEGACY_OR_UNRELATED_FRAME_BEFORE_CTA"]},
+    {"name":"prior_master_reuse","result":"BLOCKED","reasons":["MASTER_NOT_FRESH_BUILD","PRIOR_FINAL_MASTER_REUSE_FORBIDDEN"]},
+    {"name":"wrong_metricool_brand","result":"BLOCKED","reasons":["METRICOOL_BRAND_LOCK_FAIL"]},
+    {"name":"early_schedule","result":"BLOCKED","reasons":["SCHEDULE_MUTATED_BEFORE_GATE"]},
+    {"name":"generic_filler","result":"BLOCKED","reasons":["SHOT_1_GENERIC_FILLER_FORBIDDEN"]},
+    {"name":"caption_outside_zone","result":"BLOCKED","reasons":["CC_VISIBILITY_OR_SAFE_ZONE_PROOF_FAIL"]},
+    {"name":"title_outside_zone","result":"BLOCKED","reasons":["TITLE_SAFE_ZONE_FAIL"]},
+    {"name":"release_gate_false","result":"BLOCKED","reasons":["GATE_FAIL:FINAL_MASTER_QA_PASS"]},
+    {"name":"token_hash_mismatch","result":"BLOCKED","reasons":["RELEASE_TOKEN_MASTER_HASH_MISMATCH","FINAL_MASTER_TOKEN_HASH_MISMATCH"]},
+    {"name":"master_changed_after_qa","result":"BLOCKED","reasons":["FINAL_MASTER_HASH_MISMATCH","FINAL_MASTER_TOKEN_HASH_MISMATCH"]}
+  ],
+  "summary": {
+    "negative_cases_total": 14,
+    "negative_cases_blocked": 14,
+    "invalid_cases_accepted": 0,
+    "result": "PASS"
+  },
+  "scheduler_readback": {
+    "metricool_brand_id": 6935441,
+    "date_local": "2026-09-15",
+    "scheduled_items_seen_before_final_master": 0,
+    "result": "PASS_NO_PREMATURE_SCHEDULING"
+  },
+  "release_rule": "This dry-run proves the preventive gate logic blocks the listed regressions. It does not prove any future media master is good; each final MP4 still requires its own real final-master receipt, visual/audio QA and exact hash-bound release token before Metricool autoPublish may be enabled."
+}
