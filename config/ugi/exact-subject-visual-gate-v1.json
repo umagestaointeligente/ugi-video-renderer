@@ -1,0 +1,36 @@
+{
+  "schema": "UGI_EXACT_SUBJECT_VISUAL_GATE_V1",
+  "mode": "FAIL_CLOSED",
+  "scope": ["instagram","linkedin","tiktok","youtube"],
+  "purpose": "Prevent real-but-wrong visuals from passing editorial QA.",
+  "principle": "A visual is not approved merely because it is real, licensed or contains a related keyword. It must support the exact subject, entity and narration beat being published.",
+  "requiredChecks": {
+    "EXACT_SUBJECT_VISUAL_PASS": "The image/video materially depicts the exact company, person, product, operation, event, mechanism or factual context being discussed.",
+    "NAMED_ENTITY_RECOGNIZABLE_PASS": "When a named company/person/product is the subject, at least one primary visual must make that entity recognizable without relying on the caption.",
+    "NARRATION_VISUAL_BEAT_MATCH_PASS": "Every narrated beat must be paired with the corresponding entity/mechanism/context; generic proxy imagery is not sufficient.",
+    "NEGATIVE_CONTEXT_MISMATCH_PASS": "Reject visuals whose actual context changes the meaning: protests, fires, accidents, unrelated historical events, demonstrations or crises cannot be used as neutral company imagery.",
+    "TEMPORAL_RELEVANCE_PASS": "Historical imagery is allowed only when the narration is historical or the image is clearly labeled archival. Current-strategy stories must not be illustrated mainly with unrelated vintage products.",
+    "RIGHTS_PROVENANCE_PASS": "Source and rights must be known and acceptable.",
+    "SAFE_AREA_V2_PASS": "All important visual and text elements remain inside the mobile-safe area.",
+    "CC_LOWER_BAND_PASS": "Narration captions stay in a dedicated lower band, maximum two lines, never covering the primary visual."
+  },
+  "automaticHardFails": [
+    "keyword_match_without_subject_match",
+    "unrelated_protest_or_demonstration",
+    "fire_or_accident_used_as_neutral_brand_visual",
+    "unrelated_vintage_product_for_current_strategy",
+    "generic_stock_when_exact_entity_visual_available",
+    "visual_requires_caption_to_explain_why_it_is_relevant",
+    "caption_over_primary_visual",
+    "safe_area_crop_of_subject_or_text"
+  ],
+  "releaseRule": "Publisher mutation to autoPublish=true is forbidden unless every scheduled asset has an explicit PASS for all applicable checks above.",
+  "auditEvidence": [
+    "source title/page",
+    "license/provenance",
+    "entity/subject label",
+    "narration beat label for video",
+    "visual review receipt",
+    "safe-area receipt"
+  ]
+}
