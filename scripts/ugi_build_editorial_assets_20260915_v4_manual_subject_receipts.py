@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-import importlib.util, json, re, requests
+import importlib.util, requests
 from pathlib import Path
 from urllib.parse import quote
 
 BASE=Path(__file__).with_name('ugi_build_editorial_assets_20260915_v3_exact_subject.py')
 spec=importlib.util.spec_from_file_location('ugi15v3',BASE)
 m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+
+# Preserve the V3 collector before monkey-patching it. Calling m.strict_collect
+# from inside the override would otherwise recurse into itself.
+ORIGINAL_STRICT_COLLECT = m.strict_collect
 
 
 def exact_file(prefix, title, idx=1):
@@ -57,7 +61,7 @@ def strict_collect_v4(prefix, queries, count, must_any, reject=None):
           'File:Lego House, Billund 01.jpg'
         ]
         return [exact_file('lego',t,i+1) for i,t in enumerate(titles[:count])]
-    return m.strict_collect(prefix,queries,count,must_any,reject)
+    return ORIGINAL_STRICT_COLLECT(prefix,queries,count,must_any,reject)
 
 m.strict_collect=strict_collect_v4
 m.main()
