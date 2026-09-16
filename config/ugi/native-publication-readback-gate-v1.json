@@ -1,0 +1,40 @@
+{
+  "schema": "UGI_NATIVE_PUBLICATION_READBACK_GATE_V1",
+  "effectiveDate": "2026-09-15",
+  "status": "CANONICAL_HARD_GATE",
+  "purpose": "Do not treat scheduler acceptance or PUBLISHED status alone as proof that an audience-visible post exists on the destination network.",
+  "rules": {
+    "scheduleReceiptIsNotPublicationProof": true,
+    "metricoolPublishedIsNecessaryButNotSufficientWhenNativeEvidenceCanBeChecked": true,
+    "requiredAfterScheduledTime": [
+      "SCHEDULER_PROVIDER_STATUS_READBACK",
+      "NATIVE_POST_ID_OR_URL_WHEN_AVAILABLE",
+      "NATIVE_VISIBILITY_OR_PLATFORM_ANALYTICS_WHEN_AVAILABLE"
+    ],
+    "linkedin": {
+      "requireNativePostUrnOrUrl": true,
+      "plannerOnlyReceipt": "INSUFFICIENT"
+    },
+    "youtube": {
+      "requireVideoIdOrWatchUrl": true,
+      "plannerOnlyReceipt": "INSUFFICIENT"
+    },
+    "instagramFeedOrReel": {
+      "requireMediaIdOrPermalinkWhenAvailable": true
+    },
+    "instagramStory": {
+      "requireProviderPublishedReadbackAndSubsequentNativeAnalyticsOrMediaEvidenceWhenAvailable": true
+    },
+    "tiktok": {
+      "requireProviderPublishedReadbackAndNativePostEvidenceWhenAvailable": true
+    },
+    "ambiguousState": "DELIVERY_UNVERIFIED",
+    "blindRetryForbidden": true,
+    "duplicateProtection": true
+  },
+  "incidentRecord": {
+    "date": "2026-09-15",
+    "observation": "Metricool reported PUBLISHED for items that the owner did not see natively, including LinkedIn/Stories. Future reporting must distinguish scheduler state from native audience-visible delivery.",
+    "correctiveAction": "Keep scheduling fail-closed, use autoPublish consistently after QA, and perform a native/provider readback after the scheduled time instead of declaring success from planner status alone."
+  }
+}
