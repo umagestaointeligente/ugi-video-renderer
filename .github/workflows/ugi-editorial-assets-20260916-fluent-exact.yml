@@ -1,0 +1,68 @@
+name: UGI Editorial Assets 2026-09-16 Fluent Exact
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ugi_build_editorial_assets_20260916_v1.py'
+      - 'scripts/ugi_fluent_narration_core_v1.py'
+      - 'config/ugi/editorial/2026-09-16-plan.json'
+      - 'config/ugi/narration-fluency-gate-v1.json'
+      - '.github/workflows/ugi-editorial-assets-20260916-fluent-exact.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-qa-commit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install renderer dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --disable-pip-version-check pillow requests edge-tts
+          python -m py_compile scripts/ugi_fluent_narration_core_v1.py scripts/ugi_build_editorial_assets_20260916_v1.py
+      - name: Build Sep16 fluent exact-subject assets
+        run: |
+          set -euo pipefail
+          python scripts/ugi_build_editorial_assets_20260916_v1.py
+      - name: Assert QA pass
+        run: |
+          python - <<'PY'
+          import json
+          p='public/ugi/editorial/2026-09-16/fluent-exact-v1/qa.json'
+          q=json.load(open(p,encoding='utf-8'))
+          assert q['state']=='PASS', q
+          assert q['hardGateFailures']==[], q['hardGateFailures']
+          assert q['metricoolMutationAuthorized'] is True
+          for f in q['files']:
+              if f['kind'] in {'instagram_reel','linkedin_video','tiktok_video','youtube_short'}:
+                  a=f.get('audioQa') or {}
+                  assert a.get('TTS_ONE_CALL_PER_SCENE_PASS') is True
+                  assert a.get('NO_TTS_PER_CAPTION_CHUNK_PASS') is True
+                  assert a.get('NO_MID_SENTENCE_AUDIO_CUT_PASS') is True
+                  assert a.get('NO_NUMBER_PHRASE_SPLIT_PASS') is True
+          print('UGI_SEP16_FLUENT_EXACT_QA_PASS')
+          PY
+      - name: Commit immutable finals
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-bot'
+          git config user.email 'ugi-editorial-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-16/fluent-exact-v1
+          if git diff --cached --quiet; then
+            echo 'No new finals to commit.'
+          else
+            git commit -m 'assets(ugi): Sep16 fluent exact-subject finals [skip ci]'
+            git push origin main
+          fi
