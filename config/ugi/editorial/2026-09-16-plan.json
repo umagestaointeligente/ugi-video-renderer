@@ -1,0 +1,149 @@
+{
+  "schema": "UGI_EDITORIAL_PLAN_2026_09_16_V1",
+  "date": "2026-09-16",
+  "timezone": "America/Sao_Paulo",
+  "brandId": "6935401",
+  "state": "EDITORIAL_LOCKED_RENDER_PENDING",
+  "distribution": ["instagram", "linkedin", "tiktok", "youtube"],
+  "globalRules": {
+    "antiRepeatPolicy": "control-plane/policies/UGI_ANTI_REPEAT_V2.md",
+    "narrationFluencyGate": "config/ugi/narration-fluency-gate-v1.json",
+    "exactSubjectVisualGate": "config/ugi/exact-subject-visual-gate-v1.json",
+    "safeAreaV2": true,
+    "noAiImageGeneration": true,
+    "visualRule": "Every external visual must depict the named entity, product, operation or event actually being discussed. If a safe exact visual is unavailable, use an original UGI factual diagram naming the subject; never use a generic stock proxy.",
+    "audioRule": "One TTS synthesis per complete scene/paragraph. Subtitle chunks are display-only and must never create separate speech clips.",
+    "captionRule": "Dedicated lower band, maximum two lines, never over the primary visual.",
+    "voice": "pt-BR-AntonioNeural",
+    "voiceRate": "-4%",
+    "metricoolMutation": "ONLY_AFTER_QA_PASS"
+  },
+  "schedule": [
+    {
+      "time": "08:30",
+      "network": "instagram",
+      "format": "story",
+      "topicKey": "brookfield-reliance-worldwide-certainty-under-volatility",
+      "entities": ["Brookfield", "Reliance Worldwide"],
+      "hook": "Quando a incerteza sobe, certeza de caixa pode valer mais que esperar o cenário melhorar.",
+      "managementThesis": "A decisão de vender pode ser uma escolha de risco-retorno, não uma admissão de fraqueza.",
+      "source": "https://www.reuters.com/world/asia-pacific/australias-reliance-worldwide-agrees-brookfields-29-billion-buyout-bid-2026-09-16/"
+    },
+    {
+      "time": "10:00",
+      "network": "instagram",
+      "format": "reel",
+      "topicKey": "toyota-china-consolidation-efficiency-vs-relevance",
+      "entities": ["Toyota", "FAW Toyota", "GAC Toyota"],
+      "hook": "A Toyota pode ficar mais eficiente na China — e ainda assim continuar perdendo relevância.",
+      "managementThesis": "Cortar redundância melhora custo; não resolve sozinho uma proposta de valor que perdeu aderência.",
+      "source": "https://www.reuters.com/business/autos-transportation/toyota-revamp-hints-wider-industry-shake-up-china-2026-09-15/"
+    },
+    {
+      "time": "11:00",
+      "network": "linkedin",
+      "format": "video",
+      "topicKey": "grab-atome-buy-vs-build-speed-scale",
+      "entities": ["Grab", "Atome Financial"],
+      "hook": "A Grab decidiu comprar tempo em vez de passar anos construindo do zero.",
+      "managementThesis": "M&A pode ser racional quando o ativo comprado encurta aprendizado, perdas de construção e tempo de entrada.",
+      "source": "https://www.reuters.com/legal/transactional/grab-takes-majority-stake-atome-financial-149-billion-deal-2026-09-15/"
+    },
+    {
+      "time": "12:00",
+      "network": "tiktok",
+      "format": "video",
+      "topicKey": "novo-nordisk-culture-customer-obsession-competitive-reset",
+      "entities": ["Novo Nordisk"],
+      "hook": "Uma empresa pode liderar um mercado e perder velocidade porque parou de olhar o cliente do mesmo jeito.",
+      "managementThesis": "Cultura só muda resultado quando vira comportamento operacional, prioridade e velocidade competitiva.",
+      "source": "https://www.reuters.com/legal/litigation/novo-ceo-urges-staff-embrace-more-customer-focused-culture-2026-09-15/"
+    },
+    {
+      "time": "13:00",
+      "network": "instagram",
+      "format": "story",
+      "topicKey": "co-op-southern-coop-scale-regulatory-overlap",
+      "entities": ["Co-operative Group", "Southern Co-operative"],
+      "hook": "Crescer por aquisição também pode criar um problema: sobreposição demais.",
+      "managementThesis": "Sinergia e escala precisam ser avaliadas junto com concentração, escolha do cliente e risco regulatório.",
+      "source": "https://www.reuters.com/legal/litigation/uk-watchdog-says-co-op-group-takeover-southern-co-op-may-cut-competition-2026-09-15/"
+    },
+    {
+      "time": "15:00",
+      "network": "instagram",
+      "format": "carousel",
+      "topicKey": "mediatek-premium-mix-2nm-ai-margin",
+      "entities": ["MediaTek", "TSMC"],
+      "hook": "A MediaTek não quer apenas vender mais chips. Quer vender chips mais valiosos.",
+      "managementThesis": "Premiumização é uma decisão de mix, tecnologia e margem — não apenas aumento de preço.",
+      "source": "https://www.reuters.com/business/media-telecom/mediatek-launches-new-mobile-chip-using-tsmcs-most-advanced-technology-2026-09-15/"
+    },
+    {
+      "time": "16:00",
+      "network": "youtube",
+      "format": "short",
+      "topicKey": "honeywell-aerospace-reintegrate-outsourced-capabilities",
+      "entities": ["Honeywell Aerospace", "GE Aerospace", "CPP"],
+      "hook": "Depois de anos terceirizando, a indústria aeroespacial está comprando capacidade de volta.",
+      "managementThesis": "Verticalizar faz sentido quando um fornecedor virou gargalo estratégico e limita crescimento já contratado.",
+      "source": "https://www.reuters.com/legal/transactional/honeywell-aero-ceo-calls-planned-ge-aerospace-cpp-deal-positive-industry-2026-09-15/"
+    },
+    {
+      "time": "17:30",
+      "network": "instagram",
+      "format": "story",
+      "topicKey": "jil-sander-new-ceo-experience-transfer",
+      "entities": ["Jil Sander", "OTB", "Marco Vigano", "Moncler"],
+      "hook": "Quando uma marca troca o CEO, o currículo escolhido já conta parte da estratégia.",
+      "managementThesis": "Contratar liderança de um player adjacente pode sinalizar quais capacidades a empresa quer importar.",
+      "source": "https://www.reuters.com/business/retail-consumer/otbs-jil-sander-appoints-former-moncler-executive-marco-vigan-new-ceo-2026-09-15/"
+    },
+    {
+      "time": "18:00",
+      "network": "instagram",
+      "format": "reel",
+      "topicKey": "essar-sgn-retail-vertical-integration-distribution",
+      "entities": ["Essar", "SGN Retail", "EET Retail"],
+      "hook": "A Essar não está comprando só postos. Está comprando distribuição para a própria cadeia.",
+      "managementThesis": "Integração vertical cria valor quando aproxima capacidade de origem do ponto de venda e melhora controle econômico da cadeia.",
+      "source": "https://www.reuters.com/business/energy/essar-buys-uk-petrol-station-operator-sgn-retail-adds-118-sites-2026-09-14/"
+    },
+    {
+      "time": "19:45",
+      "network": "tiktok",
+      "format": "video",
+      "topicKey": "santander-axa-contract-liability-acquisition-diligence",
+      "entities": ["Santander", "AXA", "Genworth"],
+      "hook": "Uma cláusula escrita décadas atrás pode valer centenas de milhões depois de uma aquisição.",
+      "managementThesis": "Due diligence não termina no ativo comprado: contratos e passivos herdados podem atravessar décadas.",
+      "source": "https://www.reuters.com/legal/transactional/santander-wins-uk-appeal-over-912-million-axa-us-ppi-ruling-2026-09-15/"
+    },
+    {
+      "time": "20:30",
+      "network": "instagram",
+      "format": "story",
+      "topicKey": "axelera-ai-product-ladder-edge-enterprise-datacenter",
+      "entities": ["Axelera AI"],
+      "hook": "Um produto inicial pode ser só o primeiro degrau de uma arquitetura maior.",
+      "managementThesis": "Escala de produto melhora quando a empresa cria uma escada coerente entre casos de uso, capacidade e ticket.",
+      "source": "https://www.reuters.com/business/european-chip-startup-axelera-wins-ai-factory-supply-deals-launches-second-chip-2026-09-15/"
+    }
+  ],
+  "antiRepeatEvidence": {
+    "repoCodeSearchNoMatchesFor": [
+      "Toyota",
+      "Grab Atome",
+      "Novo Nordisk",
+      "MediaTek",
+      "Essar SGN Retail",
+      "Brookfield Reliance Worldwide",
+      "Southern Co-op Co-operative Group",
+      "Honeywell Aerospace CPP GE Aerospace",
+      "Jil Sander Marco Vigano",
+      "Santander AXA PPI",
+      "Axelera AI Europa"
+    ],
+    "registryWarning": "Legacy registry remains incomplete; render/publish must still fail closed if reconciliation surfaces a collision before mutation."
+  }
+}
