@@ -38,3 +38,4 @@ jobs:
           path: production/vsa/2026-09-16/recovery_output/
           if-no-files-found: error
           retention-days: 7
+# retry: animation-motion-v2
