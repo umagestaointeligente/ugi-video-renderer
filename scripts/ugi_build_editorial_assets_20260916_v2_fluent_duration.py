@@ -2,10 +2,10 @@
 """Sep16 build V2: preserve natural narration cadence.
 
 The V1 fluent renderer correctly decoupled captions from TTS, but inherited
-minimum duration targets that were calibrated for the old fragmented renderer.
-This wrapper keeps every word at the native pt-BR voice rate and validates a
-platform-appropriate natural duration instead of stretching speech or padding
-silence merely to hit an arbitrary number.
+minimum duration targets calibrated for the old fragmented renderer. This
+wrapper keeps every word at the native pt-BR voice rate. The QA floor only
+catches missing/truncated speech; it does not stretch narration or pad silence
+to reach an arbitrary platform duration.
 """
 import importlib.util
 from pathlib import Path
@@ -16,12 +16,9 @@ m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 
 
 def fluent_natural(name, scenes, music, source_label, canvas, lo, hi):
-    if name.startswith('linkedin-'):
-        natural_min=28
-    elif name.startswith('youtube-'):
-        natural_min=20
-    else:
-        natural_min=22
+    # Natural runtime is governed by the complete script. Eighteen seconds is
+    # only a truncation/corruption guard; no clip is slowed down or padded.
+    natural_min=18
     return m.f.render_fluent_video(
         base=m.m.b,
         out_dir=m.OUT,
