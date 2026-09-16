@@ -1,0 +1,730 @@
+{
+  "schema": "UGI_SOURCE_MANIFEST_2026_09_16_V1",
+  "factSources": {
+    "brookfield_reliance": "https://www.reuters.com/world/asia-pacific/australias-reliance-worldwide-agrees-brookfields-29-billion-buyout-bid-2026-09-16/",
+    "toyota": "https://www.reuters.com/business/autos-transportation/toyota-revamp-hints-wider-industry-shake-up-china-2026-09-15/",
+    "grab_atome": "https://www.reuters.com/legal/transactional/grab-takes-majority-stake-atome-financial-149-billion-deal-2026-09-15/",
+    "novo": "https://www.reuters.com/legal/litigation/novo-ceo-urges-staff-embrace-more-customer-focused-culture-2026-09-15/",
+    "coop": "https://www.reuters.com/legal/litigation/uk-watchdog-says-co-op-group-takeover-southern-co-op-may-cut-competition-2026-09-15/",
+    "mediatek": "https://www.reuters.com/business/media-telecom/mediatek-launches-new-mobile-chip-using-tsmcs-most-advanced-technology-2026-09-15/",
+    "honeywell": "https://www.reuters.com/legal/transactional/honeywell-aero-ceo-calls-planned-ge-aerospace-cpp-deal-positive-industry-2026-09-15/",
+    "jilsander": "https://www.reuters.com/business/retail-consumer/otbs-jil-sander-appoints-former-moncler-executive-marco-vigan-new-ceo-2026-09-15/",
+    "essar": "https://www.reuters.com/business/energy/essar-buys-uk-petrol-station-operator-sgn-retail-adds-118-sites-2026-09-14/",
+    "santander": "https://www.reuters.com/legal/transactional/santander-wins-uk-appeal-over-912-million-axa-us-ppi-ruling-2026-09-15/",
+    "axelera": "https://www.reuters.com/business/european-chip-startup-axelera-wins-ai-factory-supply-deals-launches-second-chip-2026-09-15/"
+  },
+  "music": {
+    "source": "repository-approved asset",
+    "license": "repository-approved licensed asset"
+  },
+  "visualSources": {
+    "brookfield_logo": {
+      "title": "File:Brookfield Asset Management logo.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Brookfield_Asset_Management_logo.svg/1920px-Brookfield_Asset_Management_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Brookfield_Asset_Management_logo.svg",
+      "license": "Public domain",
+      "author": "Brookfield Asset Management",
+      "semanticQuery": "Brookfield logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/brookfield_logo.jpg",
+      "sha256": "05b62e5a9358a64ddb22b796f3624853473f2db5a365f0ba70f19d84e4e650c4",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "brookfield"
+        ],
+        "resolvedTitle": "File:Brookfield Asset Management logo.svg"
+      }
+    },
+    "toyota_logo": {
+      "title": "File:Logo of TOYOTA MOBILITY SERVICE.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Logo_of_TOYOTA_MOBILITY_SERVICE.svg/1920px-Logo_of_TOYOTA_MOBILITY_SERVICE.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Logo_of_TOYOTA_MOBILITY_SERVICE.svg",
+      "license": "Public domain",
+      "author": "トヨタモビリティサービス",
+      "semanticQuery": "Toyota logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/toyota_logo.jpg",
+      "sha256": "e7e995973a5f7159c88fb03584df2a88fdb6a92f7821e1ab127d5ce2d42effb9",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "toyota"
+        ],
+        "resolvedTitle": "File:Logo of TOYOTA MOBILITY SERVICE.svg"
+      }
+    },
+    "grab_logo": {
+      "title": "File:Grab Logo.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/Grab_Logo.svg/1920px-Grab_Logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Grab_Logo.svg",
+      "license": "Public domain",
+      "author": "Grab Holdings Inc.",
+      "semanticQuery": "Grab Holdings logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/grab_logo.jpg",
+      "sha256": "3f3f2b63492613bbb9644068e0b3f88acde1f5fdb662b3679ce2329542acfe8a",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "grab"
+        ],
+        "resolvedTitle": "File:Grab Logo.svg"
+      }
+    },
+    "novo_logo": {
+      "title": "File:Logo Novo Norkisk.png",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/da/Logo_Novo_Norkisk.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Logo_Novo_Norkisk.png",
+      "license": "Public domain",
+      "author": "Unknown author Unknown author",
+      "semanticQuery": "Novo Nordisk logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/novo_logo.jpg",
+      "sha256": "c3dea5ba4094d3c16b3122ef7b44e5bd831d7d60b7dc62450b99691b880e2ba3",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "novo nordisk",
+          "novo"
+        ],
+        "resolvedTitle": "File:Logo Novo Norkisk.png"
+      }
+    },
+    "coop_logo": {
+      "title": "File:1940s Co-operative Wholesale Society chain link logo (12541909913).jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/1940s_Co-operative_Wholesale_Society_chain_link_logo_%2812541909913%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:1940s_Co-operative_Wholesale_Society_chain_link_logo_(12541909913).jpg",
+      "license": "CC BY 2.0",
+      "author": "The Co-op Group",
+      "semanticQuery": "Co-operative Group logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/coop_logo.jpg",
+      "sha256": "081f9935d22349215547d8e1c11f3d6dc82cdb9334390d1c6aad06cffb23bea2",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "co-operative",
+          "coop",
+          "co-op"
+        ],
+        "resolvedTitle": "File:1940s Co-operative Wholesale Society chain link logo (12541909913).jpg"
+      }
+    },
+    "mediatek_logo": {
+      "title": "File:MediaTek-Logo.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/MediaTek-Logo.svg/1920px-MediaTek-Logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:MediaTek-Logo.svg",
+      "license": "Public domain",
+      "author": "Unknown author Unknown author",
+      "semanticQuery": "MediaTek logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/mediatek_logo.jpg",
+      "sha256": "ba57af3df16d80154b67a06f931494249b01073c11494fdd174f4a0b03af3c9f",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "mediatek"
+        ],
+        "resolvedTitle": "File:MediaTek-Logo.svg"
+      }
+    },
+    "tsmc_logo": {
+      "title": "File:TSMC logo on Taichung factory building.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/TSMC_logo_on_Taichung_factory_building.jpg/1920px-TSMC_logo_on_Taichung_factory_building.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:TSMC_logo_on_Taichung_factory_building.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Briáxis F. Mendes (孟必思)",
+      "semanticQuery": "TSMC logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/tsmc_logo.jpg",
+      "sha256": "5125bf9f43173871b6c59806113a251250fbfbb5a9c130bad471bac49226d3d6",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "tsmc",
+          "taiwan semiconductor"
+        ],
+        "resolvedTitle": "File:TSMC logo on Taichung factory building.jpg"
+      }
+    },
+    "honeywell_logo": {
+      "title": "File:Minneapolis-Honeywell Aeronautical Division Logo (1944).png",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/54/Minneapolis-Honeywell_Aeronautical_Division_Logo_%281944%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Minneapolis-Honeywell_Aeronautical_Division_Logo_(1944).png",
+      "license": "Public domain",
+      "author": "Aeronautical Division, Minneapolis-Honeywell",
+      "semanticQuery": "Honeywell Aerospace logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/honeywell_logo.jpg",
+      "sha256": "0e62cfdba28b428e753664fa4bc5acdb148405fece6b69102e29f8d4a449e7c0",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "honeywell"
+        ],
+        "resolvedTitle": "File:Minneapolis-Honeywell Aeronautical Division Logo (1944).png"
+      }
+    },
+    "jilsander_logo": {
+      "title": "File:Jil Sander Logo.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Jil_Sander_Logo.jpg/1920px-Jil_Sander_Logo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Jil_Sander_Logo.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Jil Sander Digital",
+      "semanticQuery": "Jil Sander logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/jilsander_logo.jpg",
+      "sha256": "d88321c7b3b04f76e262627272b4df09fc034cd32681320b0459206b3d95cf88",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "jil sander"
+        ],
+        "resolvedTitle": "File:Jil Sander Logo.jpg"
+      }
+    },
+    "essar_logo": {
+      "title": "File:Essar logo.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Essar_logo.svg/1920px-Essar_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Essar_logo.svg",
+      "license": "Public domain",
+      "author": "Jovianeye",
+      "semanticQuery": "Essar logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/essar_logo.jpg",
+      "sha256": "0f7164d9e0a63e60c82425ef018fef9a9e60618b25f230617e851f88c278f413",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "essar"
+        ],
+        "resolvedTitle": "File:Essar logo.svg"
+      }
+    },
+    "santander_logo": {
+      "title": "File:Aena Santander logo.svg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Aena_Santander_logo.svg/1920px-Aena_Santander_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Aena_Santander_logo.svg",
+      "license": "Public domain",
+      "author": "Aena; vectorized by  Pbroks13",
+      "semanticQuery": "Santander logo",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/santander_logo.jpg",
+      "sha256": "a8a18b962930f6a5a1f9da59566d7111c08de8b438e9f80a2d4bac9fa214ffd3",
+      "rightsBasis": "Wikimedia Commons license metadata + exact logo/wordmark title filter",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "exact_entity_logo",
+        "entityTerms": [
+          "santander"
+        ],
+        "resolvedTitle": "File:Aena Santander logo.svg"
+      }
+    },
+    "axelera_logo": {
+      "title": "AXELERA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/axelera_logo.jpg",
+      "sha256": "a11e7ca257f76397933a84fe7138e77d32df88a7968e06993b263a64233d0903",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "brookfield_reliance_deal": {
+      "title": "BROOKFIELD → RELIANCE WORLDWIDE",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/brookfield_reliance_deal.jpg",
+      "sha256": "037528a8ce094b752afa3d91e3a0c392116765fea4782ed17e67d2998e6928ca",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "toyota_efficiency": {
+      "title": "DUAS JVs. UMA PRESSÃO POR EFICIÊNCIA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/toyota_efficiency.jpg",
+      "sha256": "1e0520be751672f5269845db8d68c40c9f878485ae13951771118d338760249c",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "toyota_relevance": {
+      "title": "EFICIÊNCIA NÃO RESOLVE RELEVÂNCIA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/toyota_relevance.jpg",
+      "sha256": "9203a078a69ed7006dc341573a199e981f157230f87c452d59aa8b9dc041c47e",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "toyota_margin": {
+      "title": "MARGEM DO SETOR SOB PRESSÃO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/toyota_margin.jpg",
+      "sha256": "744dea7076157a76e1f7a4ce17cc5bbe3a0d07288cce122c0e3c8cc180106e73",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "toyota_lesson": {
+      "title": "LIÇÃO UGI",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/toyota_lesson.jpg",
+      "sha256": "285dd63c5674073b7747b0cd6450511c5c4535cfeae75294a38de2d704c7c26a",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "grab_buy": {
+      "title": "GRAB COMPRA 60% DA ATOME",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/grab_buy.jpg",
+      "sha256": "c6ab5988e6881e5e8c0f4f38825e13c0529ead4ffa0a3d6cbf5adbd01db959da",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "grab_time": {
+      "title": "COMPRAR TEMPO PODE SER ESTRATÉGIA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/grab_time.jpg",
+      "sha256": "91c387482a06d32334591a0ebb2fc979a85d3be47f1dbf74877288456216ea5e",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "grab_scale": {
+      "title": "DISTRIBUIÇÃO + CRÉDITO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/grab_scale.jpg",
+      "sha256": "fd643da53eb001b9c214fa8d219c2ab6affb450518e9d0d90a209b3d8ec01544",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "grab_risk": {
+      "title": "MAS ESCALA TAMBÉM COMPRA RISCO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/grab_risk.jpg",
+      "sha256": "faa80d74d4a89ab2ddd046b15c87086cb16a6c0dc367c7bbde5a9dd461852b33",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "grab_lesson": {
+      "title": "LIÇÃO EXECUTIVA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/grab_lesson.jpg",
+      "sha256": "7db844917cec17f84c3d22ad33840fde27271152566aadeef07299ada319214e",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "novo_way": {
+      "title": "THE NOVO WAY",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/novo_way.jpg",
+      "sha256": "ff3dbc9a70aa44a4db43785e355f91ff3bef2476c62eae7f38e484136131957f",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "novo_market": {
+      "title": "LIDERANÇA NÃO É PERMANENTE",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/novo_market.jpg",
+      "sha256": "5fa864d2c4d0d8777d503e72cf7b0c3d5ddb7fed4613a3597876679a318950ee",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "novo_ops": {
+      "title": "CULTURA PRECISA VIRAR OPERAÇÃO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/novo_ops.jpg",
+      "sha256": "588ec1bb099e17c550f91d6799cfa89696c05c467dc548ecc4ba360a0aa699d8",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "novo_lesson": {
+      "title": "LIÇÃO UGI",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/novo_lesson.jpg",
+      "sha256": "4d7e58e828b6eab285e5aaf512264dfa9e279b2e50eac6744c407a21cc0dd31a",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "coop_overlap": {
+      "title": "ESCALA TAMBÉM CRIA SOBREPOSIÇÃO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/coop_overlap.jpg",
+      "sha256": "00b81ff41b15092a3863d0cfd0b872df33a1237613a18bcc279d43ccc435e840",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "mediatek_2nm": {
+      "title": "2 nm PARA SUBIR DE FAIXA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/mediatek_2nm.jpg",
+      "sha256": "7c0b0406847dc342b323ccbee4f5ecdef0c3c382818fc58627340eb78e96044f",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "mediatek_ai": {
+      "title": "IA NO DISPOSITIVO COMO VALOR",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/mediatek_ai.jpg",
+      "sha256": "28c2dfda0523aad76062e972ac74760dc5aeff6a20ed01c195a28937b21ffde1",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "mediatek_mix": {
+      "title": "PREMIUMIZAÇÃO É MIX",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/mediatek_mix.jpg",
+      "sha256": "648df9d9c46684b9ef0050aebb3b96739a7717766abeaee10dadecb771ab96ba",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "mediatek_dc": {
+      "title": "DO CELULAR AO DATA CENTER",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/mediatek_dc.jpg",
+      "sha256": "8b9528d5357c23183964f0dcaf1e60133143c532b3ebb935301cf20b7f1def1b",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "honey_bottleneck": {
+      "title": "O FORNECEDOR VIROU GARGALO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/honey_bottleneck.jpg",
+      "sha256": "5ccaefdab8ba876b9ca73c0ca8e6d920915fcfc8775b7627bc0196f2eae25635",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "honey_back": {
+      "title": "TRAZER CAPACIDADE DE VOLTA",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/honey_back.jpg",
+      "sha256": "aa0e00b7b11eba81f2e30daddb2103b81fb1c83ec91c4b936429451da6240209",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "honey_lesson": {
+      "title": "LIÇÃO UGI",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/honey_lesson.jpg",
+      "sha256": "5d4eca9cfaa58d0f7b09f1f7c58c57d45ba044a7f6c36e2cc1ec3bff55a5bbd8",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "jilsander_ceo": {
+      "title": "JIL SANDER TROCA O CEO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/jilsander_ceo.jpg",
+      "sha256": "a182f4cdd5c7f32e38d87f9319167515e6e763e22a4063f8f6645924aba5262f",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "essar_sites": {
+      "title": "118 POSTOS A MAIS",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/essar_sites.jpg",
+      "sha256": "291283a891b2e7d0eefa04bf5e9cb61c32caee7581f5863d445761b8a4625672",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "essar_chain": {
+      "title": "REFINARIA → VAREJO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/essar_chain.jpg",
+      "sha256": "b4676612ad5f0c634a8d007f9eaa27dfbf71f592977198dad912e9504204fb82",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "essar_scale": {
+      "title": "INTEGRAÇÃO VERTICAL",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/essar_scale.jpg",
+      "sha256": "108470e8eee080bbe1e50817f23dba9670300212cc97b54e84f0a976d9a9d679",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "essar_lesson": {
+      "title": "LIÇÃO UGI",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/essar_lesson.jpg",
+      "sha256": "a9e65f37144029b43c6cd9c8b49e5aac986338e3416ebb157b8f9861361b9c98",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "sant_contract": {
+      "title": "UMA CLÁUSULA DE 2000",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/sant_contract.jpg",
+      "sha256": "38d3a1a6712b9af54eaba0f347f4a439506101ff0cc0921fd4de64c9cc853bf5",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "sant_acq": {
+      "title": "PASSIVOS VIAJAM COM AQUISIÇÕES",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/sant_acq.jpg",
+      "sha256": "04a6dfef186ff5d0718b6197b1b6c681515fb5118282a40d17242402c8c84ec0",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "sant_dilig": {
+      "title": "DUE DILIGENCE É TAMBÉM CONTRATO",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/sant_dilig.jpg",
+      "sha256": "e48e80e3fee913ef8e6c27be876b609a62fe0cd5ed446f26112bf0d94f8b6bc4",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "sant_lesson": {
+      "title": "LIÇÃO UGI",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/sant_lesson.jpg",
+      "sha256": "0ec3df43788e4ef2f815f68eb46f22f0fa4cc7efcc4d690c24194d1c51035cb5",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    },
+    "axelera_ladder": {
+      "title": "EDGE → ENTERPRISE → DATA CENTER",
+      "url": null,
+      "page": null,
+      "license": "UGI original editorial graphic",
+      "author": "UGI",
+      "semanticQuery": "original exact-subject diagram",
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/sources/axelera_ladder.jpg",
+      "sha256": "57db969b646c3b3acf5aec6358bdb530918ceb44c49ec153dd934df62634d157",
+      "rightsBasis": "Original UGI editorial infographic built from cited factual source; no external stock",
+      "exactSubjectReceipt": {
+        "approved": true,
+        "type": "original_topic_diagram"
+      }
+    }
+  }
+}

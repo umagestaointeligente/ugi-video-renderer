@@ -1,0 +1,1292 @@
+{
+  "schema": "UGI_EDITORIAL_QA_2026_09_16_FLUENT_EXACT_V1",
+  "date": "2026-09-16",
+  "state": "PASS",
+  "hardGateFailures": [],
+  "counts": {
+    "instagram_story": 4,
+    "instagram_reel": 2,
+    "linkedin_video": 1,
+    "tiktok_video": 2,
+    "instagram_carousel_slide": 6,
+    "youtube_short": 1
+  },
+  "expectedCounts": {
+    "instagram_story": 4,
+    "instagram_reel": 2,
+    "linkedin_video": 1,
+    "tiktok_video": 2,
+    "instagram_carousel_slide": 6,
+    "youtube_short": 1
+  },
+  "finalCount": 16,
+  "narrationFluencyGate": "config/ugi/narration-fluency-gate-v1.json",
+  "exactSubjectGate": "config/ugi/exact-subject-visual-gate-v1.json",
+  "safeAreaV2": true,
+  "noAiImageGeneration": true,
+  "metricoolMutationAuthorized": true,
+  "files": [
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-story-brookfield-reliance-0830.jpg",
+      "sha256": "2117354b1ccdd2be1869fd260200c80de2b93f402a1a2bc9331b69ff210591dc",
+      "bytes": 123738,
+      "kind": "instagram_story",
+      "entity": "Brookfield / Reliance Worldwide",
+      "sourceKeys": [
+        "brookfield_logo",
+        "brookfield_reliance_deal"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "brookfield_logo",
+          "title": "File:Brookfield Asset Management logo.svg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "brookfield"
+            ],
+            "resolvedTitle": "File:Brookfield Asset Management logo.svg"
+          }
+        },
+        {
+          "key": "brookfield_reliance_deal",
+          "title": "BROOKFIELD → RELIANCE WORLDWIDE",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-story-coop-1300.jpg",
+      "sha256": "4e1abdf85bc21d25afb99a6805869e6bf42ad90ed95511296090e81a3d5eb47c",
+      "bytes": 136505,
+      "kind": "instagram_story",
+      "entity": "Co-operative Group / Southern Co-operative",
+      "sourceKeys": [
+        "coop_logo",
+        "coop_overlap"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "coop_logo",
+          "title": "File:1940s Co-operative Wholesale Society chain link logo (12541909913).jpg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "co-operative",
+              "coop",
+              "co-op"
+            ],
+            "resolvedTitle": "File:1940s Co-operative Wholesale Society chain link logo (12541909913).jpg"
+          }
+        },
+        {
+          "key": "coop_overlap",
+          "title": "ESCALA TAMBÉM CRIA SOBREPOSIÇÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-story-jilsander-1730.jpg",
+      "sha256": "304c72cd1c21136ef2cafdd73a9c9e5ce24bca883398693b3d8b40c658614c66",
+      "bytes": 121756,
+      "kind": "instagram_story",
+      "entity": "Jil Sander / Marco Vigano",
+      "sourceKeys": [
+        "jilsander_logo",
+        "jilsander_ceo"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "jilsander_logo",
+          "title": "File:Jil Sander Logo.jpg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "jil sander"
+            ],
+            "resolvedTitle": "File:Jil Sander Logo.jpg"
+          }
+        },
+        {
+          "key": "jilsander_ceo",
+          "title": "JIL SANDER TROCA O CEO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-story-axelera-2030.jpg",
+      "sha256": "f7e6a641fdacc588bc52f328bcbc2f6bd66fe6fe480587f0fb3299b7c8349d13",
+      "bytes": 128288,
+      "kind": "instagram_story",
+      "entity": "Axelera AI",
+      "sourceKeys": [
+        "axelera_logo",
+        "axelera_ladder"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "axelera_logo",
+          "title": "AXELERA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "axelera_ladder",
+          "title": "EDGE → ENTERPRISE → DATA CENTER",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-carousel-mediatek-01.jpg",
+      "sha256": "b1c533e5874e999a5c8aeed68ce27a3900021f971c77c500fedb47fdce227445",
+      "bytes": 92972,
+      "kind": "instagram_carousel_slide",
+      "entity": "MediaTek / TSMC",
+      "sourceKeys": [
+        "mediatek_logo"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "mediatek_logo",
+          "title": "File:MediaTek-Logo.svg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "mediatek"
+            ],
+            "resolvedTitle": "File:MediaTek-Logo.svg"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-carousel-mediatek-02.jpg",
+      "sha256": "091664ebbda5c1538e10853d2e56ba4ed262eba7c003f2de883088a5602f4c2b",
+      "bytes": 98136,
+      "kind": "instagram_carousel_slide",
+      "entity": "MediaTek / TSMC",
+      "sourceKeys": [
+        "mediatek_2nm"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "mediatek_2nm",
+          "title": "2 nm PARA SUBIR DE FAIXA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-carousel-mediatek-03.jpg",
+      "sha256": "dcc59e0ab25af99976f53ca4a5e4354da4e2950e749d69819f7ae8f750dac5bc",
+      "bytes": 142620,
+      "kind": "instagram_carousel_slide",
+      "entity": "MediaTek / TSMC",
+      "sourceKeys": [
+        "tsmc_logo"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "tsmc_logo",
+          "title": "File:TSMC logo on Taichung factory building.jpg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "tsmc",
+              "taiwan semiconductor"
+            ],
+            "resolvedTitle": "File:TSMC logo on Taichung factory building.jpg"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-carousel-mediatek-04.jpg",
+      "sha256": "146c075df54aaa6cb1c34714f658765e1d4cc776f92e245e32f8edd4c5872e74",
+      "bytes": 106537,
+      "kind": "instagram_carousel_slide",
+      "entity": "MediaTek / TSMC",
+      "sourceKeys": [
+        "mediatek_ai"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "mediatek_ai",
+          "title": "IA NO DISPOSITIVO COMO VALOR",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-carousel-mediatek-05.jpg",
+      "sha256": "c38757ad6691cbb20fcfb85d9031b192339d7e84e0c09980b15eaad234501701",
+      "bytes": 95061,
+      "kind": "instagram_carousel_slide",
+      "entity": "MediaTek / TSMC",
+      "sourceKeys": [
+        "mediatek_mix"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "mediatek_mix",
+          "title": "PREMIUMIZAÇÃO É MIX",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-carousel-mediatek-06.jpg",
+      "sha256": "37b9f0bc90f8ed2841ca3455c94c91da7dcdfeec742c895142220e9859736575",
+      "bytes": 111247,
+      "kind": "instagram_carousel_slide",
+      "entity": "MediaTek / TSMC",
+      "sourceKeys": [
+        "mediatek_dc"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": null,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": null,
+        "CC_OVER_PRIMARY_VISUAL": null,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": null,
+      "chunkCount": null,
+      "visualReview": [
+        {
+          "key": "mediatek_dc",
+          "title": "DO CELULAR AO DATA CENTER",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-reel-toyota-china-1000.mp4",
+      "sha256": "afd5c3d16472b751b510cae35695e4ccd8583dbdfb33289dd62891b7f5b3c94e",
+      "bytes": 597386,
+      "kind": "instagram_reel",
+      "entity": "Toyota",
+      "sourceKeys": [
+        "toyota_logo",
+        "toyota_efficiency",
+        "toyota_margin",
+        "toyota_relevance",
+        "toyota_lesson"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "28.372667"
+        }
+      },
+      "chunkCount": 5,
+      "visualReview": [
+        {
+          "key": "toyota_logo",
+          "title": "File:Logo of TOYOTA MOBILITY SERVICE.svg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "toyota"
+            ],
+            "resolvedTitle": "File:Logo of TOYOTA MOBILITY SERVICE.svg"
+          }
+        },
+        {
+          "key": "toyota_efficiency",
+          "title": "DUAS JVs. UMA PRESSÃO POR EFICIÊNCIA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "toyota_margin",
+          "title": "MARGEM DO SETOR SOB PRESSÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "toyota_relevance",
+          "title": "EFICIÊNCIA NÃO RESOLVE RELEVÂNCIA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "toyota_lesson",
+          "title": "LIÇÃO UGI",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "CAPTION_DISPLAY_DECOUPLED_FROM_TTS": true,
+        "sceneReceipts": [
+          {
+            "scene": 0,
+            "ttsCalls": 1,
+            "ttsText": "A Toyota pode simplificar sua estrutura na China e ainda assim continuar perdendo relevância para o cliente.",
+            "captionDisplayOnly": "Eficiência não é relevância.",
+            "rawTtsDuration": 7.008,
+            "renderedSceneDuration": 6.18
+          },
+          {
+            "scene": 1,
+            "ttsCalls": 1,
+            "ttsText": "Durante décadas, duas joint ventures ajudaram a Toyota a ganhar escala; agora, redes paralelas ficaram mais caras num mercado bem mais duro.",
+            "captionDisplayOnly": "Redundância custa caro.",
+            "rawTtsDuration": 9.648,
+            "renderedSceneDuration": 5.185
+          },
+          {
+            "scene": 2,
+            "ttsCalls": 1,
+            "ttsText": "A guerra de preços e a sobrecapacidade derrubaram a margem de manufatura automotiva para um vírgula cinco por cento na China.",
+            "captionDisplayOnly": "Margem do setor: 1,5%.",
+            "rawTtsDuration": 8.064,
+            "renderedSceneDuration": 7.232
+          },
+          {
+            "scene": 3,
+            "ttsCalls": 1,
+            "ttsText": "Marcas locais ganharam espaço com elétricos, híbridos e tecnologia que passaram a parecer mais relevantes para o consumidor.",
+            "captionDisplayOnly": "Custo não substitui desejo.",
+            "rawTtsDuration": 8.256,
+            "renderedSceneDuration": 2.865
+          },
+          {
+            "scene": 4,
+            "ttsCalls": 1,
+            "ttsText": "Consolidar reduz custo, mas boa gestão precisa atacar ao mesmo tempo eficiência interna e relevância externa.",
+            "captionDisplayOnly": "Corrija custo e proposta de valor.",
+            "rawTtsDuration": 7.656,
+            "renderedSceneDuration": 6.868
+          }
+        ],
+        "durationSeconds": 28.372667
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/linkedin-video-grab-atome-1100.mp4",
+      "sha256": "b5da1ddd54975d5dbb90c8cdebc7ec949f827f3c56bc75a05dc04b4f6222f874",
+      "bytes": 601066,
+      "kind": "linkedin_video",
+      "entity": "Grab / Atome Financial",
+      "sourceKeys": [
+        "grab_logo",
+        "grab_buy",
+        "grab_time",
+        "grab_scale",
+        "grab_risk",
+        "grab_lesson"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1350
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "27.066667"
+        }
+      },
+      "chunkCount": 6,
+      "visualReview": [
+        {
+          "key": "grab_logo",
+          "title": "File:Grab Logo.svg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "grab"
+            ],
+            "resolvedTitle": "File:Grab Logo.svg"
+          }
+        },
+        {
+          "key": "grab_buy",
+          "title": "GRAB COMPRA 60% DA ATOME",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "grab_time",
+          "title": "COMPRAR TEMPO PODE SER ESTRATÉGIA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "grab_scale",
+          "title": "DISTRIBUIÇÃO + CRÉDITO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "grab_risk",
+          "title": "MAS ESCALA TAMBÉM COMPRA RISCO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "grab_lesson",
+          "title": "LIÇÃO EXECUTIVA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "CAPTION_DISPLAY_DECOUPLED_FROM_TTS": true,
+        "sceneReceipts": [
+          {
+            "scene": 0,
+            "ttsCalls": 1,
+            "ttsText": "A Grab decidiu comprar sessenta por cento da Atome Financial por um bilhão e quatrocentos e noventa milhões de dólares.",
+            "captionDisplayOnly": "Comprar ou construir?",
+            "rawTtsDuration": 7.584,
+            "renderedSceneDuration": 6.785
+          },
+          {
+            "scene": 1,
+            "ttsCalls": 1,
+            "ttsText": "A aquisição amplia crédito e buy now, pay later sem obrigar a empresa a reconstruir do zero toda a infraestrutura financeira.",
+            "captionDisplayOnly": "M&A para ganhar velocidade.",
+            "rawTtsDuration": 8.28,
+            "renderedSceneDuration": 2.454
+          },
+          {
+            "scene": 2,
+            "ttsCalls": 1,
+            "ttsText": "Modelos de crédito exigem anos de dados, underwriting, cobrança e perdas até chegar a uma operação madura.",
+            "captionDisplayOnly": "Aprendizado consome tempo e caixa.",
+            "rawTtsDuration": 7.56,
+            "renderedSceneDuration": 6.769
+          },
+          {
+            "scene": 3,
+            "ttsCalls": 1,
+            "ttsText": "Como a Grab já opera em mais de novecentas cidades, a Atome pode entrar numa distribuição que já existe.",
+            "captionDisplayOnly": "Mais de 900 cidades.",
+            "rawTtsDuration": 7.128,
+            "renderedSceneDuration": 6.3
+          },
+          {
+            "scene": 4,
+            "ttsCalls": 1,
+            "ttsText": "Crédito adiciona funding, inadimplência, regulação e integração; preço alto só se justifica quando a operação entrega retorno.",
+            "captionDisplayOnly": "Escala também compra passivos.",
+            "rawTtsDuration": 9.312,
+            "renderedSceneDuration": 1.691
+          },
+          {
+            "scene": 5,
+            "ttsCalls": 1,
+            "ttsText": "Construa quando aprender internamente for vantagem; compre quando tempo, capacidade pronta e distribuição valerem mais do que começar do zero.",
+            "captionDisplayOnly": "Buy quando tempo vale mais.",
+            "rawTtsDuration": 9.48,
+            "renderedSceneDuration": 3.025
+          }
+        ],
+        "durationSeconds": 27.066667
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/tiktok-novo-way-1200.mp4",
+      "sha256": "924a56c572ed371ac4c5a848efe9b9c8349b64e693673e4706bd0b59ca73b747",
+      "bytes": 538882,
+      "kind": "tiktok_video",
+      "entity": "Novo Nordisk",
+      "sourceKeys": [
+        "novo_logo",
+        "novo_way",
+        "novo_market",
+        "novo_ops",
+        "novo_lesson"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "25.986667"
+        }
+      },
+      "chunkCount": 5,
+      "visualReview": [
+        {
+          "key": "novo_logo",
+          "title": "File:Logo Novo Norkisk.png",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "novo nordisk",
+              "novo"
+            ],
+            "resolvedTitle": "File:Logo Novo Norkisk.png"
+          }
+        },
+        {
+          "key": "novo_way",
+          "title": "THE NOVO WAY",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "novo_market",
+          "title": "LIDERANÇA NÃO É PERMANENTE",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "novo_ops",
+          "title": "CULTURA PRECISA VIRAR OPERAÇÃO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "novo_lesson",
+          "title": "LIÇÃO UGI",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "CAPTION_DISPLAY_DECOUPLED_FROM_TTS": true,
+        "sceneReceipts": [
+          {
+            "scene": 0,
+            "ttsCalls": 1,
+            "ttsText": "A Novo Nordisk abriu o mercado moderno de medicamentos para obesidade, mas perdeu velocidade competitiva para a Eli Lilly.",
+            "captionDisplayOnly": "Liderança pode evaporar.",
+            "rawTtsDuration": 8.496,
+            "renderedSceneDuration": 4.424
+          },
+          {
+            "scene": 1,
+            "ttsCalls": 1,
+            "ttsText": "O novo plano cultural destaca obsessão pelo cliente, competitividade, clareza, cuidado e integridade.",
+            "captionDisplayOnly": "Customer obsession.",
+            "rawTtsDuration": 7.992,
+            "renderedSceneDuration": 3.27
+          },
+          {
+            "scene": 2,
+            "ttsCalls": 1,
+            "ttsText": "A Eli Lilly avançou mais rápido na venda direta ao consumidor, mostrando que produto forte sem execução comercial também perde terreno.",
+            "captionDisplayOnly": "Concorrente acelerou a venda direta.",
+            "rawTtsDuration": 8.952,
+            "renderedSceneDuration": 3.648
+          },
+          {
+            "scene": 3,
+            "ttsCalls": 1,
+            "ttsText": "A cultura só muda resultado quando altera prioridade, velocidade de decisão e contato real com paciente e consumidor.",
+            "captionDisplayOnly": "Prioridade. Velocidade. Cliente.",
+            "rawTtsDuration": 8.232,
+            "renderedSceneDuration": 7.466
+          },
+          {
+            "scene": 4,
+            "ttsCalls": 1,
+            "ttsText": "Valores na parede não recuperam mercado; comportamento repetido, medido e cobrado pode recuperar velocidade.",
+            "captionDisplayOnly": "Valor escrito não recupera share.",
+            "rawTtsDuration": 7.92,
+            "renderedSceneDuration": 7.136
+          }
+        ],
+        "durationSeconds": 25.986667
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/youtube-short-honeywell-verticalizacao-1600.mp4",
+      "sha256": "b3a31a82f71507737c2deca8918be461786a77d1e1522897e044784de2b4da6a",
+      "bytes": 740255,
+      "kind": "youtube_short",
+      "entity": "Honeywell Aerospace",
+      "sourceKeys": [
+        "honeywell_logo",
+        "honey_bottleneck",
+        "honey_back",
+        "honey_lesson"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "33.441667"
+        }
+      },
+      "chunkCount": 4,
+      "visualReview": [
+        {
+          "key": "honeywell_logo",
+          "title": "File:Minneapolis-Honeywell Aeronautical Division Logo (1944).png",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "honeywell"
+            ],
+            "resolvedTitle": "File:Minneapolis-Honeywell Aeronautical Division Logo (1944).png"
+          }
+        },
+        {
+          "key": "honey_bottleneck",
+          "title": "O FORNECEDOR VIROU GARGALO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "honey_back",
+          "title": "TRAZER CAPACIDADE DE VOLTA",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "honey_lesson",
+          "title": "LIÇÃO UGI",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "CAPTION_DISPLAY_DECOUPLED_FROM_TTS": true,
+        "sceneReceipts": [
+          {
+            "scene": 0,
+            "ttsCalls": 1,
+            "ttsText": "A indústria aeroespacial está trazendo capacidades críticas de volta para dentro porque alguns fornecedores viraram gargalos de crescimento.",
+            "captionDisplayOnly": "Terceirizar virou gargalo.",
+            "rawTtsDuration": 8.64,
+            "renderedSceneDuration": 7.821
+          },
+          {
+            "scene": 1,
+            "ttsCalls": 1,
+            "ttsText": "Castings e forgings continuam entre os pontos mais difíceis para aumentar a produção de motores e atender a demanda já contratada.",
+            "captionDisplayOnly": "Castings e forgings limitam produção.",
+            "rawTtsDuration": 8.4,
+            "renderedSceneDuration": 7.614
+          },
+          {
+            "scene": 2,
+            "ttsCalls": 1,
+            "ttsText": "A Honeywell vem reintegrando tecnologias terceirizadas, enquanto a GE Aerospace decidiu comprar a CPP por quase doze bilhões de dólares.",
+            "captionDisplayOnly": "Capacidade crítica volta para dentro.",
+            "rawTtsDuration": 9.624,
+            "renderedSceneDuration": 8.808
+          },
+          {
+            "scene": 3,
+            "ttsCalls": 1,
+            "ttsText": "Terceirizar reduz ativos e complexidade; verticalizar faz sentido quando um fornecedor estratégico começa a limitar receita, prazo e qualidade.",
+            "captionDisplayOnly": "O make or buy muda com o gargalo.",
+            "rawTtsDuration": 9.984,
+            "renderedSceneDuration": 9.156
+          }
+        ],
+        "durationSeconds": 33.441667
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/instagram-reel-essar-sgn-1800.mp4",
+      "sha256": "71895f4df0294b70e386436233ecbb171bae6c14a6002a2141df82e94c72338d",
+      "bytes": 635932,
+      "kind": "instagram_reel",
+      "entity": "Essar / SGN Retail",
+      "sourceKeys": [
+        "essar_logo",
+        "essar_sites",
+        "essar_chain",
+        "essar_scale",
+        "essar_lesson"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "31.983667"
+        }
+      },
+      "chunkCount": 5,
+      "visualReview": [
+        {
+          "key": "essar_logo",
+          "title": "File:Essar logo.svg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "essar"
+            ],
+            "resolvedTitle": "File:Essar logo.svg"
+          }
+        },
+        {
+          "key": "essar_sites",
+          "title": "118 POSTOS A MAIS",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "essar_chain",
+          "title": "REFINARIA → VAREJO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "essar_scale",
+          "title": "INTEGRAÇÃO VERTICAL",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "essar_lesson",
+          "title": "LIÇÃO UGI",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "CAPTION_DISPLAY_DECOUPLED_FROM_TTS": true,
+        "sceneReceipts": [
+          {
+            "scene": 0,
+            "ttsCalls": 1,
+            "ttsText": "A Essar comprou cento e dezoito postos no Reino Unido, mas a lógica do negócio vai além de aumentar o número de endereços.",
+            "captionDisplayOnly": "Comprou distribuição.",
+            "rawTtsDuration": 7.92,
+            "renderedSceneDuration": 7.121
+          },
+          {
+            "scene": 1,
+            "ttsCalls": 1,
+            "ttsText": "Com a aquisição, a operação chega a duzentos e trinta e cinco postos e mantém a meta de oitocentos sites até dois mil e trinta e um.",
+            "captionDisplayOnly": "Meta: 800 sites até 2031.",
+            "rawTtsDuration": 8.232,
+            "renderedSceneDuration": 7.422
+          },
+          {
+            "scene": 2,
+            "ttsCalls": 1,
+            "ttsText": "O grupo também opera a refinaria de Stanlow, então a distribuição física se conecta a uma capacidade que já existe na origem.",
+            "captionDisplayOnly": "Refinaria e varejo na mesma cadeia.",
+            "rawTtsDuration": 8.328,
+            "renderedSceneDuration": 7.482
+          },
+          {
+            "scene": 3,
+            "ttsCalls": 1,
+            "ttsText": "A tese é ganhar controle sobre abastecimento e ponto de venda, mas isso também aumenta capital, execução e risco operacional.",
+            "captionDisplayOnly": "Mais cadeia, mais controle, mais risco.",
+            "rawTtsDuration": 8.736,
+            "renderedSceneDuration": 5.826
+          },
+          {
+            "scene": 4,
+            "ttsCalls": 1,
+            "ttsText": "Comprar distribuição cria valor quando fortalece a cadeia existente; sem integração, a empresa apenas fica maior.",
+            "captionDisplayOnly": "Escala sem integração é só tamanho.",
+            "rawTtsDuration": 8.04,
+            "renderedSceneDuration": 4.09
+          }
+        ],
+        "durationSeconds": 31.983667
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-16/fluent-exact-v1/tiktok-santander-axa-1945.mp4",
+      "sha256": "f8047b2f55635fab554798690df81926d88c0a93b37533759e38d83c5c28e051",
+      "bytes": 621346,
+      "kind": "tiktok_video",
+      "entity": "Santander / AXA",
+      "sourceKeys": [
+        "santander_logo",
+        "sant_contract",
+        "sant_acq",
+        "sant_dilig",
+        "sant_lesson"
+      ],
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NAMED_ENTITY_RECOGNIZABLE_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "NEGATIVE_CONTEXT_MISMATCH_PASS": true,
+        "TEMPORAL_RELEVANCE_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true,
+        "NO_GENERIC_PROXY_VISUAL_PASS": true,
+        "SAFE_AREA_PLATFORM_PASS": true,
+        "CC_LOWER_BAND_MAX_TWO_LINES_PASS": true,
+        "CC_OVER_PRIMARY_VISUAL": false,
+        "EXACT_VISUAL_REUSE_COUNT": 0
+      },
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "30.658667"
+        }
+      },
+      "chunkCount": 5,
+      "visualReview": [
+        {
+          "key": "santander_logo",
+          "title": "File:Aena Santander logo.svg",
+          "receipt": {
+            "approved": true,
+            "type": "exact_entity_logo",
+            "entityTerms": [
+              "santander"
+            ],
+            "resolvedTitle": "File:Aena Santander logo.svg"
+          }
+        },
+        {
+          "key": "sant_contract",
+          "title": "UMA CLÁUSULA DE 2000",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "sant_acq",
+          "title": "PASSIVOS VIAJAM COM AQUISIÇÕES",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "sant_dilig",
+          "title": "DUE DILIGENCE É TAMBÉM CONTRATO",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        },
+        {
+          "key": "sant_lesson",
+          "title": "LIÇÃO UGI",
+          "receipt": {
+            "approved": true,
+            "type": "original_topic_diagram"
+          }
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "CAPTION_DISPLAY_DECOUPLED_FROM_TTS": true,
+        "sceneReceipts": [
+          {
+            "scene": 0,
+            "ttsCalls": 1,
+            "ttsText": "Uma disputa entre Santander e AXA mostra como uma cláusula contratual antiga pode reaparecer depois de várias aquisições.",
+            "captionDisplayOnly": "Contrato antigo. Risco atual.",
+            "rawTtsDuration": 7.992,
+            "renderedSceneDuration": 7.196
+          },
+          {
+            "scene": 1,
+            "ttsCalls": 1,
+            "ttsText": "A corte concluiu que a indenização não cobria os atos anteriores à entrada em vigor do acordo analisado.",
+            "captionDisplayOnly": "O detalhe jurídico valia muito.",
+            "rawTtsDuration": 6.888,
+            "renderedSceneDuration": 6.113
+          },
+          {
+            "scene": 2,
+            "ttsCalls": 1,
+            "ttsText": "A AXA herdou exposição ao comprar unidades da Genworth, enquanto o Santander havia adquirido o banco que distribuía as apólices.",
+            "captionDisplayOnly": "Aquisições carregam passado.",
+            "rawTtsDuration": 8.208,
+            "renderedSceneDuration": 7.391
+          },
+          {
+            "scene": 3,
+            "ttsCalls": 1,
+            "ttsText": "Datas, indenizações, responsabilidade histórica e sequência de aquisições podem importar tanto quanto o ativo que aparece no balanço.",
+            "captionDisplayOnly": "Leia a cadeia inteira.",
+            "rawTtsDuration": 8.976,
+            "renderedSceneDuration": 8.164
+          },
+          {
+            "scene": 4,
+            "ttsCalls": 1,
+            "ttsText": "Em fusões e aquisições, uma linha escrita anos atrás pode definir centenas de milhões no futuro.",
+            "captionDisplayOnly": "O ativo comprado vem com passado.",
+            "rawTtsDuration": 6.96,
+            "renderedSceneDuration": 1.752
+          }
+        ],
+        "durationSeconds": 30.658667
+      }
+    }
+  ]
+}
