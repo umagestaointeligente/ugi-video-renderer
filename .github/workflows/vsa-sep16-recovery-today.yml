@@ -1,0 +1,46 @@
+name: VSA Sep16 Recovery Today
+on:
+  push:
+    branches: [ops/vsa-sep16-production]
+    paths:
+      - '.github/workflows/vsa-sep16-recovery-today.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/vsa-sep16-production
+      - name: Install render dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-dejavu-core jq
+          python -m pip install --upgrade pip
+          python -m pip install edge-tts Pillow numpy requests
+      - name: Patch canonical CTA duration only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/vsa/render_canonical_v2.py')
+          s=p.read_text(encoding='utf-8')
+          old="cd=min(4.5,max(3.0,dur(cta_audio)+0.15))\n    if dur(cta_audio)>4.5: raise SystemExit('CTA_VOICE_TOO_LONG')"
+          new="cd=min(6.0,max(3.0,dur(cta_audio)+0.15))\n    if dur(cta_audio)>6.0: raise SystemExit('CTA_VOICE_TOO_LONG')"
+          if old in s: p.write_text(s.replace(old,new),encoding='utf-8')
+          elif new not in s: raise SystemExit('CTA_TIMING_PATTERN_UNKNOWN')
+          PY
+      - name: Build exact-source recovery slate
+        run: |
+          set -o pipefail
+          python production/vsa/2026-09-16/recovery_today.py 2>&1 | tee production/vsa/2026-09-16/recovery_output/RECOVERY_BUILD_LOG.txt
+      - name: Upload recovery candidates and QA proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep16-recovery-today
+          path: production/vsa/2026-09-16/recovery_output/
+          if-no-files-found: error
+          retention-days: 7
