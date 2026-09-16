@@ -1,0 +1,43 @@
+{
+  "schema": "UGI_NARRATION_FLUENCY_GATE_V1",
+  "effectiveDate": "2026-09-15",
+  "status": "CANONICAL_HARD_GATE",
+  "purpose": "Prevent robotic or choppy narration caused by synthesizing subtitle fragments as separate TTS clips.",
+  "rules": {
+    "ttsUnit": "SCENE_OR_PARAGRAPH",
+    "subtitleUnit": "DISPLAY_ONLY",
+    "forbidTtsPerCaptionChunk": true,
+    "forbidMidSentenceAudioCuts": true,
+    "forbidNumberPhraseCuts": true,
+    "ttsCallsPerSceneMax": 1,
+    "captionLinesMax": 2,
+    "captionMustUseDedicatedLowerBand": true,
+    "captionMayNotOverlapPrimaryVisual": true,
+    "allowedGlobalTempoRange": [0.92, 1.08],
+    "preferredVoice": "pt-BR-AntonioNeural",
+    "preferredRate": "-4%",
+    "sceneBoundaryPauseMaxMs": 350,
+    "numericNormalization": "Write numbers as they should be spoken in PT-BR when ambiguity or punctuation could create a break.",
+    "sentenceBoundaryRule": "Every synthesized scene must end at a natural punctuation boundary.",
+    "visualNarrationRule": "Scene visual must match the exact narration beat; subtitle timing must never be used to force audio segmentation."
+  },
+  "qa": {
+    "required": [
+      "TTS_ONE_CALL_PER_SCENE_PASS",
+      "NO_TTS_PER_CAPTION_CHUNK_PASS",
+      "NO_MID_SENTENCE_AUDIO_CUT_PASS",
+      "NO_NUMBER_PHRASE_SPLIT_PASS",
+      "CAPTION_LOWER_BAND_PASS",
+      "CAPTION_MAX_TWO_LINES_PASS",
+      "NARRATION_VISUAL_BEAT_MATCH_PASS"
+    ],
+    "hardFailState": "NARRATION_FLUENCY_HARD_FAIL",
+    "publishAuthorizedOnlyWhenAllPass": true
+  },
+  "rootCauseRecord": {
+    "date": "2026-09-15",
+    "affectedBuild": "UGI Sep15 exact-subject V3/V4",
+    "cause": "render_video split narration into approximately eight-word caption fragments, synthesized each fragment with a separate TTS call, and concatenated the clips. This introduced audible micro-pauses inside sentences and around numbers.",
+    "correctiveAction": "Decouple subtitle chunks from speech synthesis. Synthesize the complete scene/paragraph once; captions remain visual-only and may be split independently."
+  }
+}
