@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/ugi_build_editorial_assets_20260916_v1.py'
+      - 'scripts/ugi_build_editorial_assets_20260916_v2_fluent_duration.py'
       - 'scripts/ugi_fluent_narration_core_v1.py'
       - 'config/ugi/editorial/2026-09-16-plan.json'
       - 'config/ugi/narration-fluency-gate-v1.json'
@@ -31,11 +32,11 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg
           python -m pip install --disable-pip-version-check pillow requests edge-tts
-          python -m py_compile scripts/ugi_fluent_narration_core_v1.py scripts/ugi_build_editorial_assets_20260916_v1.py
+          python -m py_compile scripts/ugi_fluent_narration_core_v1.py scripts/ugi_build_editorial_assets_20260916_v1.py scripts/ugi_build_editorial_assets_20260916_v2_fluent_duration.py
       - name: Build Sep16 fluent exact-subject assets
         run: |
           set -euo pipefail
-          python scripts/ugi_build_editorial_assets_20260916_v1.py
+          python scripts/ugi_build_editorial_assets_20260916_v2_fluent_duration.py
       - name: Assert QA pass
         run: |
           python - <<'PY'
