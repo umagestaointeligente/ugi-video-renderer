@@ -11,6 +11,16 @@ if old in s:
 elif new not in s:
     raise SystemExit('CTA_TIMING_PATTERN_UNKNOWN')
 
+# The generic causal-chain animation previously moved too little for the perceptual
+# motion gate. Make the nodes travel visibly in both axes while preserving meaning.
+s=p.read_text(encoding='utf-8')
+old_chain="cx=x+160+j*310; cy=y+470+int(24*math.sin(t*math.pi*2+j))"
+new_chain="cx=x+160+j*310+int(105*math.sin(t*math.pi*2+j)); cy=y+470+int(70*math.sin(t*math.pi*2+j*1.7))"
+if old_chain in s:
+    p.write_text(s.replace(old_chain,new_chain),encoding='utf-8')
+elif new_chain not in s:
+    raise SystemExit('ANIMATION_CHAIN_PATTERN_UNKNOWN')
+
 # 2) Wikimedia throttled music downloads. Replace only music acquisition with a
 # deterministic, multi-layer original composition: harmony, bass, arpeggio and rhythm.
 q=Path('production/vsa/2026-09-16/recovery_today.py')
