@@ -64,6 +64,16 @@ jobs:
           if old2 not in s:
               raise SystemExit('LONGFORM_SEQUENCE_PATCH_TARGET_MISSING')
           p.write_text(s.replace(old2,new2),encoding='utf-8')
+
+          # Keep the canonical CTA wording and neutral PT-BR voice natural.
+          # The previous 4.5 s cap rejected the approved wording even at +22% rate.
+          r=Path('scripts/vsa/render_canonical_v2.py')
+          rt=r.read_text(encoding='utf-8')
+          old_cta="cd=min(4.5,max(3.0,dur(cta_audio)+0.15))\n    if dur(cta_audio)>4.5: raise SystemExit('CTA_VOICE_TOO_LONG')"
+          new_cta="cd=min(6.0,max(3.0,dur(cta_audio)+0.15))\n    if dur(cta_audio)>6.0: raise SystemExit('CTA_VOICE_TOO_LONG')"
+          if old_cta not in rt:
+              raise SystemExit('CTA_TIMING_PATCH_TARGET_MISSING')
+          r.write_text(rt.replace(old_cta,new_cta),encoding='utf-8')
           PY
 
       - name: Build five independent fail-closed candidates
