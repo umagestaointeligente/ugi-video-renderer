@@ -1,12 +1,26 @@
 name: VSA Sep16 Recovery Today
+
 on:
+  workflow_dispatch:
   push:
     branches:
       - ops/vsa-sep16-production
     paths:
       - '.github/workflows/vsa-sep16-recovery-today.yml'
+      - 'production/vsa/2026-09-16/recovery_today.py'
+      - 'production/vsa/2026-09-16/patch_recovery_runtime.py'
+      - 'scripts/vsa/render_canonical_v2.py'
+      - 'scripts/vsa/render_preventive_v3.py'
+
+# Keep runtime Python in versioned .py files. Inline Python heredocs previously
+# invalidated this workflow before GitHub could create any jobs.
 permissions:
   contents: read
+
+concurrency:
+  group: vsa-sep16-recovery-today
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,6 +30,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ops/vsa-sep16-production
+
+      - name: Validate recovery Python inputs
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            production/vsa/2026-09-16/recovery_today.py \
+            production/vsa/2026-09-16/patch_recovery_runtime.py \
+            scripts/vsa/render_canonical_v2.py \
+            scripts/vsa/render_preventive_v3.py
+
       - name: Install render dependencies
         run: |
           set -euo pipefail
@@ -23,13 +47,21 @@ jobs:
           sudo apt-get install -y ffmpeg fonts-dejavu-core jq
           python -m pip install --upgrade pip
           python -m pip install edge-tts Pillow numpy requests
+
       - name: Apply fail-closed runtime patches
-        run: python production/vsa/2026-09-16/patch_recovery_runtime.py
+        run: |
+          set -euo pipefail
+          python production/vsa/2026-09-16/patch_recovery_runtime.py
+          python -m py_compile \
+            production/vsa/2026-09-16/recovery_today.py \
+            scripts/vsa/render_canonical_v2.py
+
       - name: Build exact-source recovery slate
         run: |
-          set -o pipefail
+          set -euo pipefail
           mkdir -p production/vsa/2026-09-16/recovery_output
           python production/vsa/2026-09-16/recovery_today.py 2>&1 | tee production/vsa/2026-09-16/recovery_output/RECOVERY_BUILD_LOG.txt
+
       - name: Upload recovery candidates and QA proof
         if: always()
         uses: actions/upload-artifact@v4
@@ -38,4 +70,3 @@ jobs:
           path: production/vsa/2026-09-16/recovery_output/
           if-no-files-found: error
           retention-days: 7
-# retry: animation-motion-v2
