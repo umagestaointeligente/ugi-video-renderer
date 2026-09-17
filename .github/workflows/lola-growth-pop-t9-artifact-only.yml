@@ -19,26 +19,41 @@ jobs:
       - name: Install FFmpeg
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
-      - name: Render isolated T9 canary
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core curl
+      - name: Fetch CC0 phone visual
         run: |
-          mkdir -p out
-          ffmpeg -y -f lavfi -i color=c=0x111111:s=1080x1920:r=30:d=32 \
-            -vf "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='VOCE DIGITAVA SEM OLHAR?':fontcolor=white:fontsize=70:x=(w-text_w)/2:y=250:enable='between(t,0,4)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='2  ABC    3  DEF':fontcolor=white:fontsize=64:x=(w-text_w)/2:y=760:enable='between(t,0,10)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='4  GHI    5  JKL    6  MNO':fontcolor=white:fontsize=56:x=(w-text_w)/2:y=900:enable='between(t,2,14)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='7 PQRS    8 TUV    9 WXYZ':fontcolor=white:fontsize=56:x=(w-text_w)/2:y=1040:enable='between(t,4,18)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='ERA MEMORIA MUSCULAR.':fontcolor=white:fontsize=64:x=(w-text_w)/2:y=520:enable='between(t,12,23)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='QUAL PALAVRA VOCE ESCREVIA SEM OLHAR?':fontcolor=white:fontsize=52:x=(w-text_w)/2:y=1320:enable='between(t,23,32)'" \
-            -c:v libx264 -preset veryfast -pix_fmt yuv420p -movflags +faststart -an out/lola-pop-t9-canary.mp4
+          mkdir -p assets out
+          curl -fL --retry 3 'https://upload.wikimedia.org/wikipedia/commons/0/03/%D0%9D%D0%BE%D0%B2%D1%8B%D0%B9_Nokia_3310.png' -o assets/nokia3310-cc0.png
+          test -s assets/nokia3310-cc0.png
+      - name: Render T9 V2 master candidate
+        run: |
+          ffmpeg -y -loop 1 -i assets/nokia3310-cc0.png -f lavfi -i 'sine=frequency=180:sample_rate=48000:duration=32' -t 32 \
+            -filter_complex "[0:v]scale=900:-1,format=rgba[phone];color=c=0x0d0f12:s=1080x1920:r=30:d=32[bg];[bg][phone]overlay=(W-w)/2:390:shortest=1[base];[base]drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='VOCE AINDA CONSEGUE?':fontcolor=white:fontsize=72:x=(w-text_w)/2:y=150:enable='between(t,0,3)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='SEM OLHAR: ONDE FICA O S?':fontcolor=white:fontsize=55:x=(w-text_w)/2:y=160:enable='between(t,3,8)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='7  PQRS':fontcolor=white:fontsize=78:x=(w-text_w)/2:y=1450:enable='between(t,8,14)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='A GENTE NAO DECORAVA. O DEDO DECORAVA.':fontcolor=white:fontsize=44:x=(w-text_w)/2:y=150:enable='between(t,14,23)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='QUAL PALAVRA VOCE DIGITAVA SEM OLHAR?':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=1450:enable='between(t,23,32)'[v];[1:a]volume=0.025,afade=t=in:st=0:d=0.3,afade=t=out:st=31:d=1[a]" \
+            -map '[v]' -map '[a]' -c:v libx264 -preset veryfast -pix_fmt yuv420p -r 30 -c:a aac -b:a 128k -movflags +faststart out/lola-pop-t9-v2-master-candidate.mp4
       - name: Fail-closed technical QA
         run: |
-          test -s out/lola-pop-t9-canary.mp4
-          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,r_frame_rate,pix_fmt -show_entries format=duration -of default=nw=1 out/lola-pop-t9-canary.mp4 | tee out/probe.txt
-          grep -q 'codec_name=h264' out/probe.txt
-          grep -q 'width=1080' out/probe.txt
-          grep -q 'height=1920' out/probe.txt
-          grep -q 'pix_fmt=yuv420p' out/probe.txt
-          grep -q 'r_frame_rate=30/1' out/probe.txt
+          test -s out/lola-pop-t9-v2-master-candidate.mp4
+          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,r_frame_rate,pix_fmt -show_entries format=duration -of default=nw=1 out/lola-pop-t9-v2-master-candidate.mp4 | tee out/probe-video.txt
+          ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,sample_rate -of default=nw=1 out/lola-pop-t9-v2-master-candidate.mp4 | tee out/probe-audio.txt
+          grep -q 'codec_name=h264' out/probe-video.txt
+          grep -q 'width=1080' out/probe-video.txt
+          grep -q 'height=1920' out/probe-video.txt
+          grep -q 'pix_fmt=yuv420p' out/probe-video.txt
+          grep -q 'r_frame_rate=30/1' out/probe-video.txt
+          grep -q 'codec_name=aac' out/probe-audio.txt
+      - name: Write provenance receipt
+        run: |
+          cat > out/provenance.txt <<'EOF'
+          Visual: Wikimedia Commons file Novo Nokia 3310.png
+          Source: https://commons.wikimedia.org/wiki/File:Новый_Nokia_3310.png
+          License: CC0 1.0 Universal / Public Domain Dedication
+          Purpose: LOLA Pop T9 V2 isolated master candidate
+          Publication: disabled in this workflow
+          EOF
       - name: Upload artifact only
         uses: actions/upload-artifact@v4
         with:
-          name: lola-pop-t9-canary
+          name: lola-pop-t9-v2-master-candidate
           path: out/
           retention-days: 1
           if-no-files-found: error
