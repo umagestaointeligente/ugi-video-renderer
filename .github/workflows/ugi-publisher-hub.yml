@@ -12,15 +12,8 @@ on:
         required: false
         default: '0'
         type: string
-  # Queue pushes remain immediate. Scheduled runs are sparse recovery windows.
-  # Buffer-backed work is additionally protected by the zero-network circuit
-  # guard, so an OPEN cooldown consumes zero Buffer calls.
-  schedule:
-    - cron: '47 2,6,10,14,18,22 * * *'
-  push:
-    branches: [main]
-    paths:
-      - 'control-plane/publisher-hub/queue/*.json'
+  # Legacy Buffer fallback is manual-only while Metricool is the active primary.
+  # No schedule or queue push may activate this retired route.
 
 permissions:
   contents: write
@@ -100,7 +93,7 @@ jobs:
 
       - name: Re-evaluate Buffer budget after canary
         id: buffer_guard_after
-        if: always()
+        if: success()
         shell: bash
         run: |
           set -euo pipefail
@@ -132,14 +125,14 @@ jobs:
           echo "BUFFER_NEXT_PROBE_AT=${{ steps.buffer_guard_after.outputs.next_probe_at }}"
 
       - name: Sync proven Buffer receipts into per-platform 15d topic history
-        if: always()
+        if: success()
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/ugi_topic_history_sync.py
 
       - name: Persist Publisher Hub render state, receipts, anti-repeat, circuit and status
-        if: always()
+        if: success()
         shell: bash
         run: |
           set -euo pipefail
