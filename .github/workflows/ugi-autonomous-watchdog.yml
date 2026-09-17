@@ -16,6 +16,9 @@ on:
     paths:
       - '.github/workflows/ugi-autonomous-watchdog.yml'
       - 'scripts/ugi_autonomous_watchdog.py'
+      - 'scripts/ugi_growth_runtime.py'
+      - 'config/ugi/growth-policy.json'
+      - 'config/ugi/distribution-state.json'
 
 permissions:
   contents: read
@@ -62,7 +65,7 @@ jobs:
               --jq '.[] | select(.title == "'"$title"'") | .title')"
             if [ -z "$present" ]; then
               gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" \
-                --body "STATUS=DEGRADED; INCIDENT=${incident}; PUBLICATION_PROVIDER=BUFFER; METRICOOL_PUBLICATION_ALLOWED=false; PUBLICATION_TRIGGERED=false; RUN_ID=${GITHUB_RUN_ID}"
+                --body "STATUS=DEGRADED; INCIDENT=${incident}; PUBLICATION_PROVIDER=METRICOOL; METRICOOL_PUBLICATION_ALLOWED=true; PUBLICATION_TRIGGERED=false; RUN_ID=${GITHUB_RUN_ID}"
             fi
           done < <(jq -r '.incidents[].class' output/ugi/autonomous-watchdog.json)
 
