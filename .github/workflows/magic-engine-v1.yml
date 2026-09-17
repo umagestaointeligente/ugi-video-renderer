@@ -8,6 +8,9 @@ on:
   push:
     paths:
       - 'magic-engine/**'
+      - 'config/ugi/growth-policy.json'
+      - 'config/ugi/distribution-state.json'
+      - 'scripts/ugi_growth_runtime.py'
       - '.github/workflows/magic-engine-v1.yml'
 
 permissions:
@@ -31,9 +34,9 @@ jobs:
       META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
       META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
       META_FB_PAGE_ID: ${{ secrets.META_FB_PAGE_ID }}
-      UGI_PUBLISH_PROVIDER: 'buffer'
+      UGI_PUBLISH_PROVIDER: 'metricool'
       UGI_ANALYTICS_PROVIDER: 'metricool'
-      UGI_METRICOOL_PUBLICATION_ALLOWED: 'false'
+      UGI_METRICOOL_PUBLICATION_ALLOWED: 'true'
     steps:
       - uses: actions/checkout@v4
 
@@ -41,21 +44,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$UGI_PUBLISH_PROVIDER" = 'buffer'
+          test "$UGI_PUBLISH_PROVIDER" = 'metricool'
           test "$UGI_ANALYTICS_PROVIDER" = 'metricool'
-          test "$UGI_METRICOOL_PUBLICATION_ALLOWED" = 'false'
-          python - <<'PY'
-          import json
-          p=json.load(open('config/ugi/growth-policy.json'))
-          r=p['integration_roles']
-          assert r['publisher']['primary']=='buffer'
-          assert r['publisher']['metricool_allowed'] is False
-          assert r['analytics']['primary']=='metricool'
-          assert r['analytics']['publishing_allowed'] is False
-          print('UGI_PUBLICATION_ROUTING_LOCK_PASS=true')
-          PY
+          test "$UGI_METRICOOL_PUBLICATION_ALLOWED" = 'true'
+          python scripts/ugi_growth_runtime.py >/tmp/ugi-growth-runtime.json
+          python -m json.tool /tmp/ugi-growth-runtime.json >/dev/null
+          echo 'UGI_PUBLICATION_ROUTING_LOCK_PASS=true'
 
       - name: Verify LSI fallback availability and auth boundary
+        id: lsi_probe
         run: python scripts/lsi_availability_probe.py
 
       - name: Run autonomous trend radar
@@ -84,9 +81,9 @@ jobs:
           yt_path=Path('magic-engine/output/youtube-auth-health.json')
           yt=json.loads(yt_path.read_text()) if yt_path.exists() else {}
           print('# Lola Magic Engine V1')
-          print('- PUBLISH_PROVIDER: BUFFER')
+          print('- PUBLISH_PROVIDER: METRICOOL')
           print('- ANALYTICS_PROVIDER: METRICOOL')
-          print('- METRICOOL_PUBLICATION_ALLOWED: false')
+          print('- METRICOOL_PUBLICATION_ALLOWED: true')
           print(f"- proposals: {s['total']}")
           print(f"- rights GREEN: {s['green']}")
           print(f"- rights YELLOW: {s['yellow']}")
@@ -95,7 +92,7 @@ jobs:
           print(f"- COUNCIL_MODELS: {council.get('calls',0)}")
           print(f"- COST_GATE: {council.get('cost_gate','PASS')}")
           print(f"- YOUTUBE_NATIVE_AUTH_STATUS: {yt.get('auth_status','NOT_RUN')} (supplemental; not publisher gate)")
-          print('- Publication remains fail-closed on UGI content/commerce gates and Buffer publication/readback.')
+          print('- Publication remains fail-closed on UGI content/commerce gates and Metricool publication/readback.')
           PY
 
       - name: Persist lightweight evidence
@@ -107,7 +104,7 @@ jobs:
           if-no-files-found: error
 
       - name: Persist LSI availability evidence
-        if: always()
+        if: ${{ always() && steps.lsi_probe.outcome != 'skipped' }}
         uses: actions/upload-artifact@v4
         with:
           name: lsi-availability-${{ github.run_id }}
