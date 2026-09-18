@@ -219,7 +219,8 @@ def render_story(name,canvas,scenes,music):
         musicfile=music[phase]
         if sources[key]['path'].endswith('.mp4'):
             motion_seconds += dur
-            vf = f"scale={canvas[0]}:{canvas[1]}:force_original_aspect_ratio=increase,crop={canvas[0]}:{canvas[1]},drawbox=x=0:y={int(canvas[1]*0.78)}:w={canvas[0]}:h={int(canvas[1]*0.15)}:color=black@0.72:t=fill,drawtext=fontfile={BOLD}:text='{s['caption'].replace(':','\\:').replace("'","\\'")}':fontcolor=white:fontsize={34 if canvas[0]==1080 else 42}:x=(w-text_w)/2:y={int(canvas[1]*0.81)}"
+            caption_escaped = s['caption'].replace('\\','\\\\').replace(':','\\:').replace("'","\\'")
+            vf = f"scale={canvas[0]}:{canvas[1]}:force_original_aspect_ratio=increase,crop={canvas[0]}:{canvas[1]},drawbox=x=0:y={int(canvas[1]*0.78)}:w={canvas[0]}:h={int(canvas[1]*0.15)}:color=black@0.72:t=fill,drawtext=fontfile={BOLD}:text='{caption_escaped}':fontcolor=white:fontsize={34 if canvas[0]==1080 else 42}:x=(w-text_w)/2:y={int(canvas[1]*0.81)}"
             subprocess.run(['ffmpeg','-y','-stream_loop','-1','-i',str(ROOT/sources[key]['path']),'-i',str(voice),'-stream_loop','-1','-i',str(musicfile),'-filter_complex',f"[0:v]{vf}[v];[1:a]volume=1.0[vo];[2:a]volume=0.05,afade=t=in:st=0:d=0.5,afade=t=out:st={max(0,dur-0.7):.2f}:d=0.7[mu];[vo][mu]amix=inputs=2:duration=first:dropout_transition=0.2[a]",'-map','[v]','-map','[a]','-t',f'{dur:.3f}','-r','30','-c:v','libx264','-preset','veryfast','-crf','21','-pix_fmt','yuv420p','-c:a','aac','-b:a','160k','-movflags','+faststart',str(out)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
         else:
             frame=still_frame(key,s['headline'],s['caption'],canvas); jpg=TMP/f'{name}-{i:02d}.jpg'; frame.save(jpg,'JPEG',quality=91)
@@ -229,7 +230,8 @@ def render_story(name,canvas,scenes,music):
     final=OUT/f'{name}.mp4'
     subprocess.run(['ffmpeg','-y','-f','concat','-safe','0','-i',str(lst),'-c','copy','-movflags','+faststart',str(final)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     actual=float(probe(final)['format']['duration']); share=motion_seconds/actual if actual else 0
-    finals.append({'path':str(final.relative_to(ROOT)),'kind':'video','sha256':sha256(final),'durationSeconds':actual,'motionShare':share,'sceneReceipts':receipts,'audioQa':{'TTS_ONE_CALL_PER_SCENE_PASS':True,'NO_TTS_PER_CAPTION_CHUNK_PASS':True,'NO_MID_SENTENCE_AUDIO_CUT_PASS':True,'NO_NUMBER_PHRASE_SPLIT_PASS':True,'MUSIC_PHASE_MATCH_PASS':True},'visualQa':{'EXACT_SUBJECT_VISUAL_PASS':True,'NARRATION_VISUAL_BEAT_MATCH_PASS':True,'REAL_FOOTAGE_PASS':share>=0.25,'NO_REPORTER_VISUAL_PASS':True,'SAFE_AREA_V2_PASS':True,'CAPTION_MAX_2_LINES_PASS':True}})
+    rights_ok=all(sources[s['key']].get('rightsBasis') for s in scenes)
+    finals.append({'path':str(final.relative_to(ROOT)),'kind':'video','sha256':sha256(final),'durationSeconds':actual,'motionShare':share,'sceneReceipts':receipts,'audioQa':{'TTS_ONE_CALL_PER_SCENE_PASS':True,'NO_TTS_PER_CAPTION_CHUNK_PASS':True,'NO_MID_SENTENCE_AUDIO_CUT_PASS':True,'NO_NUMBER_PHRASE_SPLIT_PASS':True,'MUSIC_PHASE_MATCH_PASS':True},'visualQa':{'EXACT_SUBJECT_VISUAL_PASS':True,'NARRATION_VISUAL_BEAT_MATCH_PASS':True,'REAL_FOOTAGE_PASS':share>=0.25,'NO_REPORTER_VISUAL_PASS':True,'SAFE_AREA_V2_PASS':True,'CAPTION_MAX_2_LINES_PASS':True,'RIGHTS_PROVENANCE_PASS':rights_ok}})
     return final,share,actual
 
 def main():
@@ -342,6 +344,8 @@ def main():
 
     hard=[]
     for f in finals:
+        for key in f.get('sourceKeys',[]):
+            if not sources.get(key,{}).get('rightsBasis'): hard.append(f"{f['path']}:RIGHTS_PROVENANCE_MISSING:{key}")
         if f['kind']=='video':
             for k,v in f['audioQa'].items():
                 if k.endswith('_PASS') and v is not True: hard.append(f"{f['path']}:{k}")
