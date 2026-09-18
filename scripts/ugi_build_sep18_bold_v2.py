@@ -166,42 +166,44 @@ def make_music_variants():
     return out
 
 def youtube_clips():
-    # Prefer real motion hosted on BOLD's own official site. This avoids
-    # substituting generic footage and does not depend on YouTube extraction.
+    # Real motion from BOLD's own official website. Parse broad Shopify video
+    # references, including MP4 and HLS, instead of assuming a YouTube handle.
     page='https://www.boldsnacks.com.br/en-latam/pages/bold-salva/salva-gostoso'
     r=requests.get(page,headers=UA,timeout=90); r.raise_for_status()
     raw=html.unescape(r.text).replace('\\/','/')
     urls=[]
-    patterns=[
-      r"https://cdn\\.shopify\\.com/videos/[^\"'<> ]+?\\.mp4(?:\\?[^\"'<> ]*)?",
-      r"https://[^\"'<> ]+?\\.mp4(?:\\?[^\"'<> ]*)?",
-      r"//cdn\\.shopify\\.com/videos/[^\"'<> ]+?\\.mp4(?:\\?[^\"'<> ]*)?"
+    pats=[
+      r"https?://cdn\\.shopify\\.com/videos/[^\"'<> ]+",
+      r"//cdn\\.shopify\\.com/videos/[^\"'<> ]+",
+      r"https?://[^\"'<> ]+\\.(?:mp4|m3u8|webm)(?:\\?[^\"'<> ]*)?"
     ]
-    for pat in patterns:
+    for pat in pats:
         for u in re.findall(pat,raw,re.I):
             if u.startswith('//'): u='https:'+u
+            # strip common JSON/HTML trailing punctuation
+            u=u.rstrip('\\\\,;)}]')
             if u not in urls: urls.append(u)
     chosen=[]
-    for idx,u in enumerate(urls[:24]):
-        src=TMP/f'bold-site-{idx:02d}.mp4'
+    for idx,u in enumerate(urls[:30]):
+        clip=SRC/f'bold_motion_{len(chosen)+1:02d}.mp4'
         try:
-            rr=requests.get(u,headers=UA,timeout=120,stream=True); rr.raise_for_status()
-            with open(src,'wb') as fh:
-                for chunk in rr.iter_content(1024*1024):
-                    if chunk: fh.write(chunk)
-            if src.stat().st_size < 100000: raise RuntimeError('video-too-small')
-            dur=float(probe(src)['format']['duration'])
-            st=max(0,min(dur*0.12,max(0,dur-8)))
-            take=max(4,min(8,dur-st))
-            clip=SRC/f'bold_motion_{len(chosen)+1:02d}.mp4'
-            subprocess.run(['ffmpeg','-y','-ss',f'{st:.2f}','-i',str(src),'-t',f'{take:.2f}','-an','-c:v','libx264','-preset','veryfast','-crf','22','-pix_fmt','yuv420p',str(clip)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            # Let ffmpeg handle MP4/HLS/WebM uniformly and preserve real motion.
+            subprocess.run([
+              'ffmpeg','-y','-headers',f'User-Agent: Mozilla/5.0\\r\\nReferer: {page}\\r\\n',
+              '-ss','1','-i',u,'-t','7','-an',
+              '-vf','scale=1280:-2:force_original_aspect_ratio=decrease',
+              '-c:v','libx264','-preset','veryfast','-crf','22','-pix_fmt','yuv420p',str(clip)
+            ],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=120)
+            if not clip.exists() or clip.stat().st_size<80000: raise RuntimeError('clip-too-small')
             k=f'bold_motion_{len(chosen)+1:02d}'
             sources[k]={'url':u,'page':page,'path':str(clip.relative_to(ROOT)),'sha256':sha256(clip),'rightsBasis':'short transformative excerpt from BOLD official website'}
             chosen.append(k)
         except Exception:
-            src.unlink(missing_ok=True)
+            clip.unlink(missing_ok=True)
         if len(chosen)>=10: break
-    if len(chosen)<6: raise RuntimeError(f'BOLD_OFFICIAL_MOTION_FAIL:{len(chosen)}:candidates={len(urls)}')
+    if len(chosen)<6:
+        # Expose only counts, not raw page content, in the CI error.
+        raise RuntimeError(f'BOLD_OFFICIAL_MOTION_FAIL:{len(chosen)}:candidates={len(urls)}')
     return chosen
 
 def still_frame(key,headline,caption,canvas):
