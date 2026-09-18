@@ -1,0 +1,175 @@
+{
+  "schema": "UGI_EDITORIAL_2026_09_18_BOLD_STORY_PACKAGE_V1",
+  "date": "2026-09-18",
+  "timezone": "America/Sao_Paulo",
+  "brandId": "6935401",
+  "antiRepeat": {
+    "windowDays": 60,
+    "boldSearchResult": "NO_MATCH_IN_CURRENT_REPO_INDEX",
+    "rule": "FAIL_CLOSED_ON_ANY_CREDIBLE_COLLISION"
+  },
+  "package": {
+    "story": {
+      "subject": "BOLD Snacks",
+      "factualCorrection": "Use Grupo Ferrero/Ferrero do Brasil. Do not call the buyer Ferrara. Ferrara is an affiliated company in the broader Ferrero ecosystem, but the announced buyer of BOLD is Grupo Ferrero.",
+      "narrativeArc": [
+        "origem e primeira tese ligada a performance/crossfit",
+        "primeira tentativa com suplementos e falta de tração",
+        "pivot para barras de proteína e reposicionamento colorido",
+        "marketing digital, creators e o hábito de aquecer a barra no micro-ondas",
+        "pandemia, aceleração de demanda e rupturas de estoque",
+        "verticalização industrial e expansão da fábrica em Divinópolis",
+        "escala nacional e ampliação de portfólio",
+        "acordo/aquisição pelo Grupo Ferrero e novo capítulo"
+      ],
+      "benchmark": "Fernando Miranda storytelling mechanics: surpresa -> origem -> conflito -> decisão -> mecanismo -> consequência -> lição de gestão",
+      "visualContract": {
+        "hardRule": "NARRATION_BEAT_MUST_MATCH_REAL_VISUAL",
+        "mustUse": [
+          "Gabriel Ferreira quando a narração falar do fundador",
+          "BOLD real products/packaging when the narration talks about product/positioning",
+          "BOLD Divinópolis factory/exterior/operations when talking about verticalization and scale",
+          "real BOLD production/process footage when discussing production",
+          "real BOLD team/community/retail presence when discussing growth",
+          "Ferrero/BOLD official acquisition material when discussing the transaction"
+        ],
+        "forbidden": [
+          "reporters on screen",
+          "generic stock food/factory footage standing in for BOLD",
+          "black background + static logo as primary scene",
+          "single-image video",
+          "unrelated executives or creators",
+          "AI-generated images presented as real",
+          "caption covering principal visual"
+        ],
+        "minimumDistinctVisualBeats": {
+          "instagram": 8,
+          "tiktok": 8,
+          "linkedin": 10,
+          "youtube": 24
+        },
+        "requireRealVideoFootage": true,
+        "stillImageRule": "Stills may support the story, but at least 35% of longform screen time and at least 25% of shortform screen time must be real motion footage when rights/provenance are acceptable."
+      },
+      "audioContract": {
+        "voice": "young male neutral pt-BR",
+        "tts": "one complete narration beat per scene; captions never segment TTS",
+        "noMidSentenceCuts": true,
+        "noNumberPhraseSplits": true,
+        "music": [
+          {
+            "phase": "origem",
+            "mood": "curiosity, ambition, construction",
+            "style": "light modern instrumental, warm, no vocals"
+          },
+          {
+            "phase": "dificuldades_pandemia",
+            "mood": "pressure, uncertainty, operational tension",
+            "style": "restrained tension/percussive instrumental, no vocals"
+          },
+          {
+            "phase": "expansao_consolidacao_ferrero",
+            "mood": "scale, achievement, resolution",
+            "style": "uplifting modern/cinematic instrumental, no vocals"
+          }
+        ],
+        "transitions": "crossfade 0.8-1.5s; no abrupt music changes",
+        "ducking": "music audible but always below narration"
+      },
+      "captionContract": {
+        "maxLines": 2,
+        "lowerDedicatedBand": true,
+        "neverControlsTTS": true,
+        "safeAreaV2": true
+      },
+      "variants": {
+        "instagram": {
+          "durationSeconds": "75-95",
+          "format": "1080x1920 9:16",
+          "angle": "hook + pivot + pandemic/scale + Ferrero + lesson"
+        },
+        "tiktok": {
+          "durationSeconds": "60-80",
+          "format": "1080x1920 9:16",
+          "angle": "faster hook, tighter transitions, same factual arc"
+        },
+        "linkedin": {
+          "durationSeconds": "150-210",
+          "format": "1080x1350 4:5",
+          "angle": "executive version: product-market fit, operations, verticalization, brand building, transaction"
+        },
+        "youtube": {
+          "durationSeconds": "540-720",
+          "format": "1920x1080 16:9",
+          "angle": "complete story with chapters and 3 management lessons"
+        }
+      },
+      "sources": [
+        "https://www.ferrero.com/br/pt/node/235",
+        "https://exame.com/revista-exame/a-proteina-que-virou-sobremesa/",
+        "https://www.boldsnacks.com.br/pages/sobre-nos",
+        "https://www.divinopolis.mg.gov.br/portal/noticias/0/3/17277/bold-snacks-e-homenageada-como-orgulho-divinopolitano",
+        "https://cdldivinopolis.com.br/c/noticias/marca-de-barras-de-proteina-investe-r-35-milhoes-em-fabrica-em-divinopolis",
+        "https://pt.linkedin.com/posts/gabriel-ferreira-5098b4104_hoje-%C3%A9-um-dia-muito-especial-para-a-hist%C3%B3ria-activity-7440112723931291648-4nsc",
+        "https://pt.linkedin.com/posts/bold-snacks_boldsnacks-cultura-valores-activity-7216169023292489728-yIsW"
+      ]
+    },
+    "complementaryPost": {
+      "network": "linkedin",
+      "subject": "iFood: R$ 24 bilhões de investimento no Brasil até março de 2027",
+      "angle": "Como uma plataforma amplia o mercado ao expandir simultaneamente logística, categorias, tecnologia e serviços financeiros",
+      "source": "Reuters, 2026-09-16",
+      "visual": "real iFood operation/company ecosystem visual; no generic delivery stock image"
+    }
+  },
+  "schedule": [
+    {
+      "time": "10:00",
+      "network": "instagram",
+      "type": "REEL",
+      "subject": "BOLD Snacks — da primeira tentativa ao crescimento nacional e ao Grupo Ferrero"
+    },
+    {
+      "time": "11:00",
+      "network": "linkedin",
+      "type": "POST",
+      "subject": "iFood — investimento de R$ 24 bi e expansão do ecossistema"
+    },
+    {
+      "time": "13:00",
+      "network": "linkedin",
+      "type": "VIDEO",
+      "subject": "BOLD Snacks — versão executiva da história"
+    },
+    {
+      "time": "16:00",
+      "network": "youtube",
+      "type": "VIDEO",
+      "subject": "BOLD Snacks — história completa"
+    },
+    {
+      "time": "18:00",
+      "network": "tiktok",
+      "type": "VIDEO",
+      "subject": "BOLD Snacks — versão curta de alta retenção"
+    }
+  ],
+  "releaseGate": {
+    "required": [
+      "FACT_CHECK_PASS",
+      "ANTI_REPEAT_60D_PASS",
+      "EXACT_SUBJECT_VISUAL_PASS",
+      "REAL_FOOTAGE_PASS",
+      "NARRATION_VISUAL_BEAT_MATCH_PASS",
+      "NARRATION_FLUENCY_PASS",
+      "MUSIC_PHASE_MATCH_PASS",
+      "SAFE_AREA_V2_PASS",
+      "CAPTION_MAX_2_LINES_PASS",
+      "NO_REPORTER_VISUAL_PASS",
+      "RIGHTS_PROVENANCE_PASS"
+    ],
+    "behavior": "FAIL_CLOSED",
+    "publicationRoute": "Metricool only",
+    "readbackRequired": true
+  }
+}
