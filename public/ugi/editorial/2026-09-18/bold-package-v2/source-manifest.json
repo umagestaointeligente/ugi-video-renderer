@@ -1,0 +1,224 @@
+{
+  "factSources": {
+    "bold_ferrero": "https://www.ferrero.com/br/pt/node/235",
+    "bold_site": "https://www.boldsnacks.com.br/pages/sobre-nos",
+    "bold_exame": "https://exame.com/revista-exame/a-proteina-que-virou-sobremesa/",
+    "bold_founder_post": "https://pt.linkedin.com/posts/gabriel-ferreira-5098b4104_5-anos-de-cnpj-da-bold-snacks-hoje-parece-activity-6987905766858854400-DhxP",
+    "bold_factory_post": "https://pt.linkedin.com/posts/bold-snacks_boldsnacks-cultura-valores-activity-7216169023292489728-yIsW",
+    "ifood": "https://www.reuters.com/business/retail-consumer/delivery-app-ifood-invest-47-billion-brazil-through-march-2027-2026-09-16/",
+    "embraer": "https://www.embraer.com/media-center/pt/?detail=32157&mediatype=NEWS",
+    "petrobras": "https://agencia.petrobras.com.br/w/negocio/petrobras-assina-oito-contratos-de-partilha-de-produ%C3%A7%C3%A3o-na-costa-do-marfim",
+    "boticario": "https://exame.com/negocios/no-boticario-quem-faz-maquiagem-e-outros-servicos-gasta-70-mais-a-rede-quer-escalar-a-formula/"
+  },
+  "visualSources": {
+    "bold_founder": {
+      "url": "https://classic.exame.com/wp-content/uploads/2024/02/ED1260_PRIMA_4.jpg",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_founder.jpg",
+      "sha256": "7e63deebaf182dda739094ef8920dc3a3fffb8e5149149a747c6fdc0383b4da1",
+      "rightsBasis": "editorial excerpt / official-or-identified source"
+    },
+    "bold_factory": {
+      "url": "https://media.licdn.com/dms/image/v2/D4D22AQH-Xvibou1k6g/feedshare-shrink_800/feedshare-shrink_800/0/1720468763886?e=2147483647&t=mfjTPyr-agHU7GPhh942SBFbSt_01v8vCGDssKQ-ons&v=beta",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_factory.jpg",
+      "sha256": "a16b27593679efe808bcd391d687c4b9359d55bfd52c909656a126ba146bc992",
+      "rightsBasis": "editorial excerpt / official-or-identified source"
+    },
+    "bold_factory_leaders": {
+      "url": "https://media.licdn.com/dms/image/v2/D4D22AQF06zUyfkfC9w/feedshare-shrink_800/B4DZpzjsYfKQAo-/0/1762875340048?e=2147483647&t=U894NxUpyVLJLE32IffY4TuxSD8oSHRvd4YVNreyjOI&v=beta",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_factory_leaders.jpg",
+      "sha256": "e1a4404aac7a91cd11ee9a3394938c376f10c26baf34640b72aadf2a21a353bd",
+      "rightsBasis": "editorial excerpt / official-or-identified source"
+    },
+    "boticario_store": {
+      "url": "https://loucas-por-beleza.belezanaweb.com.br/loucas/wordpress/prod/sites/7/2022/11/08180925/210812_O-Boticario_-Flagship-Shopping-Morumbi_001_Ricardo-Bassetti_4730-scaled.jpg",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/boticario_store.jpg",
+      "sha256": "2cb8d0884e0ec34989c5644f17903cae6a0dd75281368c34651916f66cde0e95",
+      "rightsBasis": "editorial excerpt / official-or-identified source"
+    },
+    "embraer_freighter": {
+      "url": "https://www.embraer.com/media/ww3hz0t1/e-freighter_loader_048.jpg?v=1dc37d46ed2b790",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/embraer_freighter.jpg",
+      "sha256": "6f540d43bf8b24623276e38c74f9944aa47fce110837d87954e77d966ccf69ad",
+      "rightsBasis": "editorial excerpt / official-or-identified source"
+    },
+    "petrobras_signing": {
+      "url": "https://agencia.petrobras.com.br/documents/10623376/0/Petrobras%20assina%20oito%20contratos%20de%20partilha%20de%20produ%C3%A7%C3%A3o%20na%20Costa%20do%20Marfim%20-%20Foto1/71da3692-cf03-058f-1cf0-850492153ccc?download=true",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/petrobras_signing.jpg",
+      "sha256": "0e9fa46247bc794a0b04d6d2d314b14d5d379c8193e8def42a6a162f6c43030a",
+      "rightsBasis": "editorial excerpt / official-or-identified source"
+    },
+    "bold_ferrero": {
+      "url": "https://www.ferrero.com/br/sites/ferrero_br/files/2026-03/bold_snacks_1200x600.jpg.jpeg?t=1788346035",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_ferrero.jpg",
+      "sha256": "0b12a981347491ad6c0dbf200832eab9317f612919eee07b1c17fca1de13d954",
+      "rightsBasis": "official company/press page image; editorial excerpt"
+    },
+    "bold_product_01": {
+      "url": "http://www.boldsnacks.com.br/cdn/shop/files/01-bold-caixa-mix_fe63378f-e7c2-4e38-a230-2c04b3afc3b0.png?v=1777484706",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_product_01.jpg",
+      "sha256": "aa5707424ceaa6ce0481545c3ed43d2f3a62b2851ad61e6a0555f420890be7b5",
+      "rightsBasis": "official company/press page image; editorial excerpt"
+    },
+    "bold_product_02": {
+      "url": "http://www.boldsnacks.com.br/cdn/shop/files/01-bold-14g-doce-de-leite.png?v=1767106727",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_product_02.jpg",
+      "sha256": "7791d23cb66b6bef29b45c83d4d20a0210277087294f7c8063df2d622dd4c706",
+      "rightsBasis": "official company/press page image; editorial excerpt"
+    },
+    "bold_product_03": {
+      "url": "http://www.boldsnacks.com.br/cdn/shop/files/01-bold-cookies-cream_fb866fa7-3d3d-451e-8fe2-46802f3d4c53.png?v=1767104766",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_product_03.jpg",
+      "sha256": "5723a521ed9986f0983ba6af2091d637a359899b4d21362a1b6753e1a7f96b56",
+      "rightsBasis": "official company/press page image; editorial excerpt"
+    },
+    "bold_product_04": {
+      "url": "http://www.boldsnacks.com.br/cdn/shop/files/01-crunch-brigadeiro.png?v=1767963813",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_product_04.jpg",
+      "sha256": "af19dbf771a4a1d474a186f97081e92c7ad57d3a71a9ab576ca2ff4361bcad14",
+      "rightsBasis": "official company/press page image; editorial excerpt"
+    },
+    "ifood_logo": {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/IFood_logo.svg/1920px-IFood_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/ifood_logo.jpg",
+      "sha256": "2bd3f245ec9bbfeb246cc5d954b632391bf73b52b45adf96451049fde6bbc272",
+      "rightsBasis": "Wikimedia Commons: Public domain"
+    },
+    "boticario_diag": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/boticario_diag.jpg",
+      "sha256": "89148d9cf3fa32819bb83dec7a25d5195a28560bee541bad5eb735f051cc7b6c",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "ifood_diag": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/ifood_diag.jpg",
+      "sha256": "f989fe39b59a0fe4920dfe044c03ba2cbb1557a4ba1937635c9cfb48acafc501",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "embraer_diag": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/embraer_diag.jpg",
+      "sha256": "445582efacef1fa1e7606bb51729d225828204cfcb0d9814465bde80e2066378",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "petrobras_diag": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/petrobras_diag.jpg",
+      "sha256": "5f4d5a7892050c3cf5b4953cd9d542321e05c267a7db1c8cb7aa64e106b7a472",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "bold_origin": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_origin.jpg",
+      "sha256": "ed926d7bc51533775896c6a148243e0145d29885e4f3ba25d98e2c13f483501d",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "bold_pivot": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_pivot.jpg",
+      "sha256": "28d12526e544916f6aa455141fd3a2509f6e58ee242bde6a614131c79490902c",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "bold_micro": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_micro.jpg",
+      "sha256": "b9ea7ecd018d8814266fb13a3bd242722a8c552a7375fbd717d2e3bec8e75f02",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "bold_pandemic": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_pandemic.jpg",
+      "sha256": "1d40e8e5b1845976f0067bcfc23d56b932f221df8bd3aecbd6972a12fea2a33a",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "bold_scale": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_scale.jpg",
+      "sha256": "abaaf73bbc3874bd364c695f0a01f9653956e99c2026c79392001cd61ee8be99",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "bold_ferrero_diag": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_ferrero_diag.jpg",
+      "sha256": "5225af19795d392f3dec676d6cb20f3d25c63425981d074aae47aa78e1e8e15e",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "bold_lessons": {
+      "url": null,
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_lessons.jpg",
+      "sha256": "0f1d4b5fcca6a02efcfe236cb2ec1c131246dd88179a32c3099cde85463416ee",
+      "rightsBasis": "UGI original factual infographic"
+    },
+    "bold_motion_01": {
+      "url": "https://pt.linkedin.com/posts/bold-snacks_bold-na-arnold-2024-activity-7186814632576118784-gGN4",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_01.mp4",
+      "sha256": "3fdbeee2ac274f3e9e0a2e5a59b96b5336fafeb163061a5c6b7e71fe630e31fa",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    },
+    "bold_motion_02": {
+      "url": "https://pt.linkedin.com/posts/bold-snacks_bold-na-arnold-2024-activity-7186814632576118784-gGN4",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_02.mp4",
+      "sha256": "7efea4c95b5703317c3f56ba06fcadabdbd3708f2e9ed6ca32dcba89b1b5661f",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    },
+    "bold_motion_03": {
+      "url": "https://pt.linkedin.com/posts/bold-snacks_bold-na-arnold-2024-activity-7186814632576118784-gGN4",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_03.mp4",
+      "sha256": "c1c456b4f95becb20b004df420f4940f7b8d7a4efb260a16f8849a0dc51b11b1",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    },
+    "bold_motion_04": {
+      "url": "https://pt.linkedin.com/posts/bold-snacks_wheybold-timebold-activity-7316554418391330816-QRmN",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_04.mp4",
+      "sha256": "2218ea8a9a00ab164b128db4c4a5586f1d86da7140db3d690cca2459358cc7ed",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    },
+    "bold_motion_05": {
+      "url": "https://pt.linkedin.com/posts/bold-snacks_wheybold-timebold-activity-7316554418391330816-QRmN",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_05.mp4",
+      "sha256": "44d4f78e43870854ef064b38ac16a3f3ae6e4b1d1f587f00c0ded6df2a3d04b7",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    },
+    "bold_motion_06": {
+      "url": "https://pt.linkedin.com/posts/bold-snacks_wheybold-timebold-activity-7316554418391330816-QRmN",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_06.mp4",
+      "sha256": "14b1c20832060e3c6cbe9488d20ad2a954bbc20456b8fe69fc3d6a1a5855add2",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    },
+    "bold_motion_07": {
+      "url": "https://pt.linkedin.com/posts/lmartinsgestordemanuten%C3%A7%C3%A3o_na-bold-somos-leves-o-ambiente-%C3%A9-acolhedor-activity-7325269893212172289-Fa8d",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_07.mp4",
+      "sha256": "28ad78da6c313d5081a3f0723b1ef0b82f993e29a3a0760a4e07385bca7c1b00",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    },
+    "bold_motion_08": {
+      "url": "https://pt.linkedin.com/posts/lmartinsgestordemanuten%C3%A7%C3%A3o_na-bold-somos-leves-o-ambiente-%C3%A9-acolhedor-activity-7325269893212172289-Fa8d",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_08.mp4",
+      "sha256": "014cbfe9c4053065bcce44faf66ceeb90f8f707b79395e9b8782f92ecb12613b",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    },
+    "bold_motion_09": {
+      "url": "https://pt.linkedin.com/posts/lmartinsgestordemanuten%C3%A7%C3%A3o_na-bold-somos-leves-o-ambiente-%C3%A9-acolhedor-activity-7325269893212172289-Fa8d",
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/sources/bold_motion_09.mp4",
+      "sha256": "a0362ec6b537d4ae2873e6fcc9db70e58d829da5aee43564b640863b9fc6704b",
+      "rightsBasis": "short transformative editorial excerpt from a public BOLD company-origin LinkedIn video",
+      "title": "BOLD public company-origin video"
+    }
+  },
+  "music": {
+    "base": "assets/music/innovation/dreamstate_library-modern-tech-corporate-theme-469710 (1).mp3",
+    "phaseProcessing": [
+      "origin",
+      "tension",
+      "resolution"
+    ]
+  }
+}

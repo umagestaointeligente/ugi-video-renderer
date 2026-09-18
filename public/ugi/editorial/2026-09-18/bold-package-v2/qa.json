@@ -1,0 +1,487 @@
+{
+  "schema": "UGI_SEP18_BOLD_PLUS4_V2",
+  "date": "2026-09-18",
+  "state": "PASS",
+  "hardGateFailures": [],
+  "antiRepeat60d": true,
+  "safeAreaV2": true,
+  "noAiImageGeneration": true,
+  "realFootageRequired": true,
+  "narrationFluencyRequired": true,
+  "musicPhaseMatchRequired": true,
+  "metricoolMutationAuthorized": true,
+  "finals": [
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/instagram-boticario-0830-01.jpg",
+      "kind": "carousel_slide",
+      "sha256": "5d35b7fef9bea04c19e2babdadcc6dfe44caa5017bf8288b0c0d7c402d285229",
+      "sourceKeys": [
+        "boticario_store"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/instagram-boticario-0830-02.jpg",
+      "kind": "carousel_slide",
+      "sha256": "aff5ea2571da65f5fff9b9fc86b6f36c23da516622966340e891ff5f01e1375b",
+      "sourceKeys": [
+        "boticario_diag"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/instagram-boticario-0830-03.jpg",
+      "kind": "carousel_slide",
+      "sha256": "12cf2ef834a768142b25f6d84d3455c6d640d3ffde3f85fbada05d02671abcb8",
+      "sourceKeys": [
+        "boticario_store"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/linkedin-ifood-1100.jpg",
+      "kind": "image",
+      "sha256": "b5ab1949ab482c0a833f2f77613e25bc6338dcb59fbd266369bfd0143af1dc95",
+      "sourceKeys": [
+        "ifood_logo"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/linkedin-embraer-1430.jpg",
+      "kind": "image",
+      "sha256": "bf1469195c1165f0159593c1dc858999e519f0417553b20ebb452af91dc48ec4",
+      "sourceKeys": [
+        "embraer_freighter"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/instagram-petrobras-1700-01.jpg",
+      "kind": "carousel_slide",
+      "sha256": "029fcd2254440f63cd2813f1bb8794fd8a42e7279adabb2ca5e3607313d72a49",
+      "sourceKeys": [
+        "petrobras_signing"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/instagram-petrobras-1700-02.jpg",
+      "kind": "carousel_slide",
+      "sha256": "91fd54f9a2c097f11b88e627a8c762be6573b5fb6b5773697a0465ad85690845",
+      "sourceKeys": [
+        "petrobras_diag"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/instagram-petrobras-1700-03.jpg",
+      "kind": "carousel_slide",
+      "sha256": "21392ef8fcf0351d76e375efb5129027af3f09a7cecacb34723a30b0494c1c41",
+      "sourceKeys": [
+        "petrobras_signing"
+      ]
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/instagram-reel-bold-1000.mp4",
+      "kind": "video",
+      "sha256": "6052a230072bacaa157065b0417e6b42864113f52b76ab5d5eaf0339378a8ea2",
+      "durationSeconds": 65.180664,
+      "motionShare": 0.650990606662123,
+      "sceneReceipts": [
+        {
+          "scene": 0,
+          "key": "bold_motion_01",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 9.192
+        },
+        {
+          "scene": 1,
+          "key": "bold_pivot",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 12.672
+        },
+        {
+          "scene": 2,
+          "key": "bold_motion_02",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 10.344
+        },
+        {
+          "scene": 3,
+          "key": "bold_motion_03",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 12.048
+        },
+        {
+          "scene": 4,
+          "key": "bold_motion_04",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 0.36
+        },
+        {
+          "scene": 5,
+          "key": "bold_ferrero",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 9.96
+        },
+        {
+          "scene": 6,
+          "key": "bold_motion_06",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 10.128
+        },
+        {
+          "scene": 7,
+          "key": "bold_motion_07",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 0.36
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "MUSIC_PHASE_MATCH_PASS": true
+      },
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "REAL_FOOTAGE_PASS": true,
+        "NO_REPORTER_VISUAL_PASS": true,
+        "SAFE_AREA_V2_PASS": true,
+        "CAPTION_MAX_2_LINES_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/linkedin-video-bold-1300.mp4",
+      "kind": "video",
+      "sha256": "7f1839d53d6d87365788f9de50893006cc60a592f7742a1d2b767f7e4bdefb6a",
+      "durationSeconds": 168.160677,
+      "motionShare": 0.6229756080251746,
+      "sceneReceipts": [
+        {
+          "scene": 0,
+          "key": "bold_founder",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 13.464
+        },
+        {
+          "scene": 1,
+          "key": "bold_motion_01",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 12.336
+        },
+        {
+          "scene": 2,
+          "key": "bold_pivot",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 18.0
+        },
+        {
+          "scene": 3,
+          "key": "bold_motion_02",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 14.592
+        },
+        {
+          "scene": 4,
+          "key": "bold_pandemic",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 16.848
+        },
+        {
+          "scene": 5,
+          "key": "bold_motion_03",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 16.104
+        },
+        {
+          "scene": 6,
+          "key": "bold_motion_04",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 17.88
+        },
+        {
+          "scene": 7,
+          "key": "bold_motion_05",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 15.336
+        },
+        {
+          "scene": 8,
+          "key": "bold_ferrero",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 14.904
+        },
+        {
+          "scene": 9,
+          "key": "bold_motion_06",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 14.784
+        },
+        {
+          "scene": 10,
+          "key": "bold_motion_07",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 13.728
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "MUSIC_PHASE_MATCH_PASS": true
+      },
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "REAL_FOOTAGE_PASS": true,
+        "NO_REPORTER_VISUAL_PASS": true,
+        "SAFE_AREA_V2_PASS": true,
+        "CAPTION_MAX_2_LINES_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/youtube-bold-longform-1600.mp4",
+      "kind": "video",
+      "sha256": "0c07ae0ec7b2d587b5395910676610f8b5078cb378897db02c4d50bf487f6ef1",
+      "durationSeconds": 343.464648,
+      "motionShare": 0.3851575432007779,
+      "sceneReceipts": [
+        {
+          "scene": 0,
+          "key": "bold_founder",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 22.632
+        },
+        {
+          "scene": 1,
+          "key": "bold_origin",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 20.088
+        },
+        {
+          "scene": 2,
+          "key": "bold_motion_01",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 14.928
+        },
+        {
+          "scene": 3,
+          "key": "bold_pivot",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 21.6
+        },
+        {
+          "scene": 4,
+          "key": "bold_product_01",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 15.504
+        },
+        {
+          "scene": 5,
+          "key": "bold_micro",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 20.736
+        },
+        {
+          "scene": 6,
+          "key": "bold_motion_02",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 18.624
+        },
+        {
+          "scene": 7,
+          "key": "bold_pandemic",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 20.52
+        },
+        {
+          "scene": 8,
+          "key": "bold_motion_03",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 21.336
+        },
+        {
+          "scene": 9,
+          "key": "bold_factory",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 17.616
+        },
+        {
+          "scene": 10,
+          "key": "bold_motion_04",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 20.592
+        },
+        {
+          "scene": 11,
+          "key": "bold_factory_leaders",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 18.024
+        },
+        {
+          "scene": 12,
+          "key": "bold_motion_05",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 17.856
+        },
+        {
+          "scene": 13,
+          "key": "bold_ferrero",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 15.984
+        },
+        {
+          "scene": 14,
+          "key": "bold_ferrero_diag",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 17.328
+        },
+        {
+          "scene": 15,
+          "key": "bold_motion_06",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 20.088
+        },
+        {
+          "scene": 16,
+          "key": "bold_lessons",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 20.952
+        },
+        {
+          "scene": 17,
+          "key": "bold_motion_07",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 18.864
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "MUSIC_PHASE_MATCH_PASS": true
+      },
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "REAL_FOOTAGE_PASS": true,
+        "NO_REPORTER_VISUAL_PASS": true,
+        "SAFE_AREA_V2_PASS": true,
+        "CAPTION_MAX_2_LINES_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true
+      }
+    },
+    {
+      "path": "public/ugi/editorial/2026-09-18/bold-package-v2/tiktok-bold-1800.mp4",
+      "kind": "video",
+      "sha256": "5c5c9866ebeffe284eda0bea3c176d3eed52857a2b148a739299f53435d48ae2",
+      "durationSeconds": 67.775325,
+      "motionShare": 0.8615524897888723,
+      "sceneReceipts": [
+        {
+          "scene": 0,
+          "key": "bold_motion_01",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 7.968
+        },
+        {
+          "scene": 1,
+          "key": "bold_motion_02",
+          "phase": "origin",
+          "ttsCalls": 1,
+          "duration": 9.024
+        },
+        {
+          "scene": 2,
+          "key": "bold_motion_03",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 11.352
+        },
+        {
+          "scene": 3,
+          "key": "bold_motion_04",
+          "phase": "tension",
+          "ttsCalls": 1,
+          "duration": 12.432
+        },
+        {
+          "scene": 4,
+          "key": "bold_ferrero",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 9.264
+        },
+        {
+          "scene": 5,
+          "key": "bold_motion_06",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 9.288
+        },
+        {
+          "scene": 6,
+          "key": "bold_motion_07",
+          "phase": "resolution",
+          "ttsCalls": 1,
+          "duration": 8.328
+        }
+      ],
+      "audioQa": {
+        "TTS_ONE_CALL_PER_SCENE_PASS": true,
+        "NO_TTS_PER_CAPTION_CHUNK_PASS": true,
+        "NO_MID_SENTENCE_AUDIO_CUT_PASS": true,
+        "NO_NUMBER_PHRASE_SPLIT_PASS": true,
+        "MUSIC_PHASE_MATCH_PASS": true
+      },
+      "visualQa": {
+        "EXACT_SUBJECT_VISUAL_PASS": true,
+        "NARRATION_VISUAL_BEAT_MATCH_PASS": true,
+        "REAL_FOOTAGE_PASS": true,
+        "NO_REPORTER_VISUAL_PASS": true,
+        "SAFE_AREA_V2_PASS": true,
+        "CAPTION_MAX_2_LINES_PASS": true,
+        "RIGHTS_PROVENANCE_PASS": true
+      }
+    }
+  ]
+}
