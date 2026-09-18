@@ -1,0 +1,217 @@
+{
+  "schema": "VSA_SEP18_RELEASE_MANIFEST_V1",
+  "date": "2026-09-18",
+  "brandId": 6935441,
+  "youtubeChannelId": "UCm0UMO6lNWlr66YSIS1p4iQ",
+  "scheduler_mutated": false,
+  "generated_at": "2026-09-18T01:13:43Z",
+  "all_release_eligible": true,
+  "results": [
+    {
+      "name": "VSA_20260918_RONALDO_JUMP",
+      "format": "SHORT",
+      "title": "Por que Cristiano Ronaldo consegue subir tanto no cabeceio?",
+      "master": "/home/runner/work/ugi-video-renderer/ugi-video-renderer/production/vsa/2026-09-18/output/VSA_20260918_RONALDO_JUMP_FINAL.mp4",
+      "sha256": "8e5648bd996f39a8c3c240781c214d29d6de159298e002bf3afad7e1699ea1b1",
+      "duration": 65.933333,
+      "qa": "PASS",
+      "release_token": "PASS",
+      "voice": "pt-BR-AntonioNeural",
+      "mask_sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+      "sources": [
+        {
+          "title": "CRISTIANO RONALDO'S first Real Madrid training session of the new season!.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:CRISTIANO_RONALDO'S_first_Real_Madrid_training_session_of_the_new_season!.webm",
+          "license": "CC BY 3.0",
+          "rights_basis": "CC BY 3.0; Commons human license review confirmed 2023-09-03",
+          "credit": "Real Madrid"
+        },
+        {
+          "title": "Cristiano Ronaldo na corrida ao Euro2024.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:Cristiano_Ronaldo_na_corrida_ao_Euro2024.webm",
+          "license": "CC BY 3.0",
+          "rights_basis": "CC BY 3.0; Commons human license review confirmed 2023-12-13",
+          "credit": "Agencia LUSA"
+        },
+        {
+          "title": "Ronaldo tem “feeling” de que Portugal pode ser campeão.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:Ronaldo_tem_%E2%80%9Cfeeling%E2%80%9D_de_que_Portugal_pode_ser_campe%C3%A3o.webm",
+          "license": "CC BY 3.0",
+          "rights_basis": "CC BY 3.0; Commons human license review confirmed 2023-12-13",
+          "credit": "Agencia LUSA"
+        }
+      ],
+      "media_url": "https://litter.catbox.moe/wf7wm8.mp4",
+      "staging_readback": "PASS",
+      "network": "youtube",
+      "draft": false,
+      "autoPublish": true
+    },
+    {
+      "name": "VSA_20260918_ZODIACAL_LIGHT",
+      "format": "SHORT",
+      "title": "Por que uma pirâmide de luz aparece antes do amanhecer?",
+      "master": "/home/runner/work/ugi-video-renderer/ugi-video-renderer/production/vsa/2026-09-18/output/VSA_20260918_ZODIACAL_LIGHT_FINAL.mp4",
+      "sha256": "8f6bcd707d4edb38125f4b68526226625c985e6cca515d4fac9d900525bd8afd",
+      "duration": 60.902,
+      "qa": "PASS",
+      "release_token": "PASS",
+      "voice": "pt-BR-AntonioNeural",
+      "mask_sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+      "sources": [
+        {
+          "title": "ESOcast 82.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:ESOcast_82.webm",
+          "license": "CC BY 4.0",
+          "rights_basis": "ESO media reuse terms; CC BY 4.0 with clear visible credit",
+          "credit": "ESO"
+        },
+        {
+          "title": "ESOcast 82.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:ESOcast_82.webm",
+          "license": "CC BY 4.0",
+          "rights_basis": "ESO media reuse terms; CC BY 4.0 with clear visible credit",
+          "credit": "ESO"
+        },
+        {
+          "title": "ESOcast 82.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:ESOcast_82.webm",
+          "license": "CC BY 4.0",
+          "rights_basis": "ESO media reuse terms; CC BY 4.0 with clear visible credit",
+          "credit": "ESO"
+        }
+      ],
+      "media_url": "https://litter.catbox.moe/8i035k.mp4",
+      "staging_readback": "PASS",
+      "network": "youtube",
+      "draft": false,
+      "autoPublish": true
+    },
+    {
+      "name": "VSA_20260918_DOG_FACE",
+      "format": "SHORT",
+      "title": "Por que seu cachorro presta tanta atenção ao seu rosto?",
+      "master": "/home/runner/work/ugi-video-renderer/ugi-video-renderer/production/vsa/2026-09-18/output/VSA_20260918_DOG_FACE_FINAL.mp4",
+      "sha256": "6cfeecdca55fd485b02080be2044d64cd8a2e3c9896279f0a47bb51a45fd6556",
+      "duration": 64.133333,
+      "qa": "PASS",
+      "release_token": "PASS",
+      "voice": "pt-BR-AntonioNeural",
+      "mask_sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+      "sources": [
+        {
+          "title": "18th Military Police Brigade Military Working Dog Training (993811).webm",
+          "url": "https://commons.wikimedia.org/wiki/File:18th_Military_Police_Brigade_Military_Working_Dog_Training_(993811).webm",
+          "license": "Public domain",
+          "rights_basis": "U.S. Army work; public domain as U.S. federal government work",
+          "credit": "U.S. Army"
+        },
+        {
+          "title": "Rosie the Therapy Dog.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:Rosie_the_Therapy_Dog.webm",
+          "license": "CC BY 3.0",
+          "rights_basis": "CC BY 3.0",
+          "credit": "Queensland Police Service"
+        },
+        {
+          "title": "Puppiesplaying-tokyoarea-jan7-2020.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:Puppiesplaying-tokyoarea-jan7-2020.webm",
+          "license": "CC BY 4.0",
+          "rights_basis": "CC BY 4.0",
+          "credit": "Nesnad"
+        }
+      ],
+      "media_url": "https://litter.catbox.moe/pq46xy.mp4",
+      "staging_readback": "PASS",
+      "network": "youtube",
+      "draft": false,
+      "autoPublish": true
+    },
+    {
+      "name": "VSA_20260918_VENUS_BRIGHT",
+      "format": "SHORT",
+      "title": "Por que Vênus consegue brilhar tanto no nosso céu?",
+      "master": "/home/runner/work/ugi-video-renderer/ugi-video-renderer/production/vsa/2026-09-18/output/VSA_20260918_VENUS_BRIGHT_FINAL.mp4",
+      "sha256": "678978a5bf92ca77936a945f8fc36887034faf98c866366d883fc264a911d664",
+      "duration": 66.316,
+      "qa": "PASS",
+      "release_token": "PASS",
+      "voice": "pt-BR-AntonioNeural",
+      "mask_sha256": "ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56",
+      "sources": [
+        {
+          "title": "Time-lapse video of Venus and Jupiter conjunction.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:Time-lapse_video_of_Venus_and_Jupiter_conjunction.webm",
+          "license": "CC BY 3.0",
+          "rights_basis": "CC BY 3.0; Commons license review retained",
+          "credit": "IveGotChicken"
+        },
+        {
+          "title": "What's Up- June 2026 Skywatching Tips from NASA (JPL-20260529-WHATSUf-0001-Whats Up June 2026).webm",
+          "url": "https://commons.wikimedia.org/wiki/File:What's_Up-_June_2026_Skywatching_Tips_from_NASA_(JPL-20260529-WHATSUf-0001-Whats_Up_June_2026).webm",
+          "license": "Public domain",
+          "rights_basis": "NASA/JPL-Caltech U.S. federal government work; public domain unless otherwise noted; Commons structured data marks public domain",
+          "credit": "NASA/JPL-Caltech"
+        },
+        {
+          "title": "What's Up- June 2026 Skywatching Tips from NASA (JPL-20260529-WHATSUf-0001-Whats Up June 2026).webm",
+          "url": "https://commons.wikimedia.org/wiki/File:What's_Up-_June_2026_Skywatching_Tips_from_NASA_(JPL-20260529-WHATSUf-0001-Whats_Up_June_2026).webm",
+          "license": "Public domain",
+          "rights_basis": "NASA/JPL-Caltech U.S. federal government work; public domain unless otherwise noted; Commons structured data marks public domain",
+          "credit": "NASA/JPL-Caltech"
+        }
+      ],
+      "media_url": "https://litter.catbox.moe/yvujmh.mp4",
+      "staging_readback": "PASS",
+      "network": "youtube",
+      "draft": false,
+      "autoPublish": true
+    },
+    {
+      "name": "VSA_20260918_HEAT_DOME_LONG",
+      "format": "LONG",
+      "title": "Como uma cúpula de calor consegue prender o calor por dias?",
+      "master": "/home/runner/work/ugi-video-renderer/ugi-video-renderer/production/vsa/2026-09-18/output/VSA_20260918_HEAT_DOME_LONG_FINAL.mp4",
+      "sha256": "9f4dfcaa8e25abfee8ca55dab50350749798a07b98562177ebc60e37ac2b279a",
+      "duration": 129.633333,
+      "qa": "PASS",
+      "release_token": "PASS",
+      "voice": "pt-BR-AntonioNeural",
+      "sources": [
+        {
+          "title": "Extreme Heat.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:Extreme_Heat.webm",
+          "license": "Public domain",
+          "rights_basis": "CDC U.S. federal government work; public domain",
+          "credit": "CDC"
+        },
+        {
+          "title": "How to Stay Cool in Extreme Heat.webm",
+          "url": "https://commons.wikimedia.org/wiki/File:How_to_Stay_Cool_in_Extreme_Heat.webm",
+          "license": "Public domain",
+          "rights_basis": "CDC U.S. federal government work; public domain",
+          "credit": "CDC"
+        },
+        {
+          "title": "Lake Manly Slowly Evaporates in Death Valley (CIRA 2026-03-24 - nolabels portrait).webm",
+          "url": "https://commons.wikimedia.org/wiki/File:Lake_Manly_Slowly_Evaporates_in_Death_Valley_(CIRA_2026-03-24_-_nolabels_portrait).webm",
+          "license": "Public domain",
+          "rights_basis": "NOAA U.S. federal government material; public domain",
+          "credit": "CSU/CIRA & NOAA/NESDIS"
+        },
+        {
+          "title": "2023 Was the Hottest Year on Record (SVS14502).webm",
+          "url": "https://commons.wikimedia.org/wiki/File:2023_Was_the_Hottest_Year_on_Record_(SVS14502).webm",
+          "license": "Public domain",
+          "rights_basis": "NASA U.S. federal government work; Commons PD NASA",
+          "credit": "NASA Scientific Visualization Studio"
+        }
+      ],
+      "media_url": "https://litter.catbox.moe/ciasr6.mp4",
+      "staging_readback": "PASS",
+      "network": "youtube",
+      "draft": false,
+      "autoPublish": true
+    }
+  ]
+}
