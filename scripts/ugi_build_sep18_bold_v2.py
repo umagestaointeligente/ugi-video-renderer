@@ -286,7 +286,8 @@ def render_story(name,canvas,scenes,music):
     subprocess.run(['ffmpeg','-y','-f','concat','-safe','0','-i',str(lst),'-c','copy','-movflags','+faststart',str(final)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     actual=float(probe(final)['format']['duration']); share=motion_seconds/actual if actual else 0
     rights_ok=all(sources[s['key']].get('rightsBasis') for s in scenes)
-    finals.append({'path':str(final.relative_to(ROOT)),'kind':'video','sha256':sha256(final),'durationSeconds':actual,'motionShare':share,'sceneReceipts':receipts,'audioQa':{'TTS_ONE_CALL_PER_SCENE_PASS':True,'NO_TTS_PER_CAPTION_CHUNK_PASS':True,'NO_MID_SENTENCE_AUDIO_CUT_PASS':True,'NO_NUMBER_PHRASE_SPLIT_PASS':True,'MUSIC_PHASE_MATCH_PASS':True},'visualQa':{'EXACT_SUBJECT_VISUAL_PASS':True,'NARRATION_VISUAL_BEAT_MATCH_PASS':True,'REAL_FOOTAGE_PASS':share>=0.25,'NO_REPORTER_VISUAL_PASS':True,'SAFE_AREA_V2_PASS':True,'CAPTION_MAX_2_LINES_PASS':True,'RIGHTS_PROVENANCE_PASS':rights_ok}})
+    min_motion=0.35 if name.startswith('youtube-') else 0.25
+    finals.append({'path':str(final.relative_to(ROOT)),'kind':'video','sha256':sha256(final),'durationSeconds':actual,'motionShare':share,'sceneReceipts':receipts,'audioQa':{'TTS_ONE_CALL_PER_SCENE_PASS':True,'NO_TTS_PER_CAPTION_CHUNK_PASS':True,'NO_MID_SENTENCE_AUDIO_CUT_PASS':True,'NO_NUMBER_PHRASE_SPLIT_PASS':True,'MUSIC_PHASE_MATCH_PASS':True},'visualQa':{'EXACT_SUBJECT_VISUAL_PASS':True,'NARRATION_VISUAL_BEAT_MATCH_PASS':True,'REAL_FOOTAGE_PASS':share>=min_motion,'NO_REPORTER_VISUAL_PASS':True,'SAFE_AREA_V2_PASS':True,'CAPTION_MAX_2_LINES_PASS':True,'RIGHTS_PROVENANCE_PASS':rights_ok}})
     return final,share,actual
 
 def main():
@@ -368,9 +369,9 @@ def main():
       {'key':motion[6] if len(motion)>6 else motion[0],'phase':'resolution','headline':'DE DIVINÓPOLIS PARA UM GRUPO GLOBAL','caption':'Uma história brasileira de construção.','narration':'A BOLD termina este capítulo como uma marca brasileira que saiu de uma tentativa que não funcionou, encontrou um product-market fit mais amplo, transformou comunidade em inteligência, escalou a operação e chamou a atenção de um dos maiores grupos de alimentos do mundo. E agora começa a próxima fase.'}
     ]
 
-    ig=[long_scenes[i] for i in [0,2,3,5,7,9,13,16]]
-    li=[long_scenes[i] for i in [0,1,3,5,7,8,9,11,13,14,16]]
-    tk=[long_scenes[i] for i in [0,2,5,7,9,13,16]]
+    ig=[long_scenes[i] for i in [2,3,6,8,10,13,15,17]]
+    li=[long_scenes[i] for i in [0,2,3,6,7,8,10,12,13,15,17]]
+    tk=[long_scenes[i] for i in [2,6,8,10,13,15,17]]
 
     # Shorten narrations per social variant while retaining beat mapping
     def shorten(s,max_words):
@@ -384,7 +385,7 @@ def main():
     p,sh,d=render_story('linkedin-video-bold-1300',(1080,1350),li,music)
     if not 120<=d<=240 or sh<0.25: raise RuntimeError(f'LI_GATE:{d}:{sh}')
     p,sh,d=render_story('youtube-bold-longform-1600',(1920,1080),long_scenes,music)
-    if not 240<=d<=480 or sh<0.25: raise RuntimeError(f'YT_GATE:{d}:{sh}')
+    if not 240<=d<=480 or sh<0.35: raise RuntimeError(f'YT_GATE:{d}:{sh}')
     p,sh,d=render_story('tiktok-bold-1800',(1080,1920),tk,music)
     if not 50<=d<=95 or sh<0.25: raise RuntimeError(f'TK_GATE:{d}:{sh}')
 
