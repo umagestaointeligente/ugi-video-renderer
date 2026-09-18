@@ -1,4 +1,5 @@
 name: VSA Sep18 Production
+# trigger: production contract armed after workflow creation
 
 on:
   workflow_dispatch:
