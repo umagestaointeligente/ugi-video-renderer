@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import hashlib, importlib.util, json, pathlib, requests, shutil, subprocess, sys, time, wave
+import hashlib, importlib.util, json, pathlib, requests, shutil, subprocess, sys, time, wave, urllib.parse
 import numpy as np
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -40,14 +40,31 @@ def sha(p):
         for b in iter(lambda:f.read(1024*1024),b""): h.update(b)
     return h.hexdigest()
 
-def dl(url,path,retries=3):
+def clean_media_url(url):
+    p=urllib.parse.urlsplit(url)
+    q=[(k,v) for k,v in urllib.parse.parse_qsl(p.query,keep_blank_values=True) if not k.lower().startswith("utm_")]
+    return urllib.parse.urlunsplit((p.scheme,p.netloc,p.path,urllib.parse.urlencode(q),""))
+
+def dl(url,path,retries=6):
     path=pathlib.Path(path)
     if path.exists() and path.stat().st_size > 1000:
         return path
+    url=clean_media_url(url)
     err=None
+    delays=[8,16,28,45,65,90]
+    headers={
+      "User-Agent":"VSA-Production/1.6 (rights-verified educational publisher)",
+      "Referer":"https://commons.wikimedia.org/",
+      "Accept":"video/webm,video/mp4,video/*;q=0.9,*/*;q=0.5"
+    }
     for n in range(retries):
+        retry_after=0
         try:
-            with requests.get(url,stream=True,timeout=180,headers={"User-Agent":"VSA-Production/2026-09-18"},allow_redirects=True) as r:
+            with requests.get(url,stream=True,timeout=180,headers=headers,allow_redirects=True) as r:
+                if r.status_code == 429:
+                    try: retry_after=int(r.headers.get("Retry-After") or 0)
+                    except Exception: retry_after=0
+                    raise RuntimeError("HTTP_429_RATE_LIMIT")
                 r.raise_for_status()
                 tmp=path.with_suffix(path.suffix+".part")
                 with open(tmp,"wb") as f:
@@ -57,16 +74,18 @@ def dl(url,path,retries=3):
                 tmp.replace(path)
                 return path
         except Exception as e:
-            err=e; time.sleep(3+n*3)
+            err=e
+            time.sleep(max(retry_after,delays[min(n,len(delays)-1)]))
     raise RuntimeError(f"DOWNLOAD_FAIL:{url}:{err}")
 
 def commons_checked(filename,path,rights_basis,credit):
     api="https://commons.wikimedia.org/w/api.php"
+    headers={"User-Agent":"VSA-Production/1.6 (rights-verified educational publisher)"}
     params={
       "action":"query","format":"json","prop":"imageinfo|categories",
       "iiprop":"url|extmetadata","cllimit":"max","titles":"File:"+filename
     }
-    r=requests.get(api,params=params,headers={"User-Agent":"VSA-Production/2026-09-18"},timeout=90)
+    r=requests.get(api,params=params,headers=headers,timeout=90)
     r.raise_for_status()
     page=next(iter(r.json().get("query",{}).get("pages",{}).values()),{})
     info=(page.get("imageinfo") or [{}])[0]
@@ -81,13 +100,39 @@ def commons_checked(filename,path,rights_basis,credit):
     lic_text=(lic+" "+usage).lower()
     if not any(k in lic_text for k in ("cc by","creative commons attribution","public domain","cc0")):
         raise RuntimeError("RIGHTS_LICENSE_NOT_WHITELISTED:"+filename+":"+lic_text)
-    p=dl(info["url"],path)
+
+    # Rights are validated against the original file page. Media transport prefers
+    # an official TimedMediaHandler derivative so large originals do not trip CDN throttles.
+    vparams={
+      "action":"query","format":"json","prop":"videoinfo",
+      "viprop":"derivatives|size|mediatype","titles":"File:"+filename
+    }
+    vr=requests.get(api,params=vparams,headers=headers,timeout=90)
+    vr.raise_for_status()
+    vpage=next(iter(vr.json().get("query",{}).get("pages",{}).values()),{})
+    vi=(vpage.get("videoinfo") or [{}])[0]
+    derivs=vi.get("derivatives") or []
+    candidates=[]
+    for d in derivs:
+        src=d.get("src") or d.get("url")
+        try: h=int(d.get("height") or 0)
+        except Exception: h=0
+        typ=str(d.get("type") or "").lower()
+        if src and h>=360 and ("video" in typ or src.lower().endswith((".webm",".mp4",".ogv"))):
+            candidates.append((h,src,d))
+    chosen=None
+    if candidates:
+        candidates.sort(key=lambda x: (0 if x[0] <= 1080 else 1, abs(x[0]-720), x[0]))
+        chosen=candidates[0]
+    media_url=chosen[1] if chosen else info["url"]
+    p=dl(media_url,path)
     if dur(p) < 5.0: raise RuntimeError("SOURCE_TOO_SHORT:"+filename)
     return {
       "path":p, "nasa_id":filename, "title":filename,
       "url":"https://commons.wikimedia.org/wiki/File:"+requests.utils.quote(filename.replace(" ","_"),safe="()'!,-_."),
-      "direct_url":info["url"], "license":lic or usage, "rights_basis":rights_basis,
-      "credit":credit, "categories":cats
+      "direct_url":media_url, "original_url":info["url"], "license":lic or usage,
+      "rights_basis":rights_basis, "credit":credit, "categories":cats,
+      "derivative_height":chosen[0] if chosen else None
     }
 
 def patch_renderer():
