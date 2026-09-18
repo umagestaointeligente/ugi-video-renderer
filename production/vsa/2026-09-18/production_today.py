@@ -20,6 +20,8 @@ VOICE = "pt-BR-AntonioNeural"
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
+COMMONS_CACHE = {}
+
 spec = importlib.util.spec_from_file_location("sep16base", ROOT / "production/vsa/2026-09-16/recovery_today.py")
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
@@ -78,16 +80,51 @@ def dl(url,path,retries=6):
             time.sleep(max(retry_after,delays[min(n,len(delays)-1)]))
     raise RuntimeError(f"DOWNLOAD_FAIL:{url}:{err}")
 
-def commons_checked(filename,path,rights_basis,credit):
+def commons_key(name):
+    return name.replace("_"," ").strip().lower()
+
+def commons_api_json(params,retries=7):
     api="https://commons.wikimedia.org/w/api.php"
     headers={"User-Agent":"VSA-Production/1.6 (rights-verified educational publisher)"}
+    delays=[10,20,35,55,80,110,150]
+    err=None
+    for n in range(retries):
+        retry_after=0
+        try:
+            r=requests.get(api,params=params,headers=headers,timeout=120)
+            if r.status_code == 429:
+                try: retry_after=int(r.headers.get("Retry-After") or 0)
+                except Exception: retry_after=0
+                raise RuntimeError("COMMONS_API_429")
+            r.raise_for_status()
+            return r.json()
+        except Exception as e:
+            err=e
+            time.sleep(max(retry_after,delays[min(n,len(delays)-1)]))
+    raise RuntimeError("COMMONS_API_FAIL:"+str(err))
+
+def commons_prefetch(filenames):
+    titles="|".join("File:"+x for x in filenames)
     params={
-      "action":"query","format":"json","prop":"imageinfo|categories",
-      "iiprop":"url|extmetadata","cllimit":"max","titles":"File:"+filename
+      "action":"query","format":"json","prop":"imageinfo|categories|videoinfo",
+      "iiprop":"url|extmetadata","viprop":"derivatives|size|mediatype",
+      "cllimit":"max","titles":titles
     }
-    r=requests.get(api,params=params,headers=headers,timeout=90)
-    r.raise_for_status()
-    page=next(iter(r.json().get("query",{}).get("pages",{}).values()),{})
+    data=commons_api_json(params)
+    pages=data.get("query",{}).get("pages",{})
+    for page in pages.values():
+        title=str(page.get("title") or "")
+        if title.lower().startswith("file:"):
+            COMMONS_CACHE[commons_key(title[5:])] = page
+    missing=[x for x in filenames if commons_key(x) not in COMMONS_CACHE]
+    if missing:
+        raise RuntimeError("COMMONS_BATCH_MISSING:"+repr(missing))
+    print(json.dumps({"commons_prefetch":"PASS","files":len(filenames)},ensure_ascii=False),flush=True)
+
+def commons_checked(filename,path,rights_basis,credit):
+    page=COMMONS_CACHE.get(commons_key(filename))
+    if not page:
+        raise RuntimeError("COMMONS_PREFETCH_REQUIRED:"+filename)
     info=(page.get("imageinfo") or [{}])[0]
     if not info.get("url"): raise RuntimeError("COMMONS_FILE_NOT_FOUND:"+filename)
     cats=[str(x.get("title","")).lower() for x in page.get("categories",[])]
@@ -101,16 +138,7 @@ def commons_checked(filename,path,rights_basis,credit):
     if not any(k in lic_text for k in ("cc by","creative commons attribution","public domain","cc0")):
         raise RuntimeError("RIGHTS_LICENSE_NOT_WHITELISTED:"+filename+":"+lic_text)
 
-    # Rights are validated against the original file page. Media transport prefers
-    # an official TimedMediaHandler derivative so large originals do not trip CDN throttles.
-    vparams={
-      "action":"query","format":"json","prop":"videoinfo",
-      "viprop":"derivatives|size|mediatype","titles":"File:"+filename
-    }
-    vr=requests.get(api,params=vparams,headers=headers,timeout=90)
-    vr.raise_for_status()
-    vpage=next(iter(vr.json().get("query",{}).get("pages",{}).values()),{})
-    vi=(vpage.get("videoinfo") or [{}])[0]
+    vi=(page.get("videoinfo") or [{}])[0]
     derivs=vi.get("derivatives") or []
     candidates=[]
     for d in derivs:
@@ -126,6 +154,8 @@ def commons_checked(filename,path,rights_basis,credit):
         chosen=candidates[0]
     media_url=chosen[1] if chosen else info["url"]
     p=dl(media_url,path)
+    # Deliberately pace CDN access after each successfully verified media object.
+    time.sleep(3)
     if dur(p) < 5.0: raise RuntimeError("SOURCE_TOO_SHORT:"+filename)
     return {
       "path":p, "nasa_id":filename, "title":filename,
@@ -355,6 +385,23 @@ def main():
     if sha(cta)!=CTA_SHA: raise RuntimeError("CTA_HASH_FAIL")
     patch_renderer()
     music=make_music(ASSETS/"vsa_sep18_music.m4a")
+
+    commons_files=[
+      "CRISTIANO RONALDO'S first Real Madrid training session of the new season!.webm",
+      "Cristiano Ronaldo na corrida ao Euro2024.webm",
+      "Ronaldo tem “feeling” de que Portugal pode ser campeão.webm",
+      "ESOcast 82.webm",
+      "18th Military Police Brigade Military Working Dog Training (993811).webm",
+      "Rosie the Therapy Dog.webm",
+      "Puppiesplaying-tokyoarea-jan7-2020.webm",
+      "Time-lapse video of Venus and Jupiter conjunction.webm",
+      "What's Up- June 2026 Skywatching Tips from NASA (JPL-20260529-WHATSUf-0001-Whats Up June 2026).webm",
+      "Extreme Heat.webm",
+      "How to Stay Cool in Extreme Heat.webm",
+      "Lake Manly Slowly Evaporates in Death Valley (CIRA 2026-03-24 - nolabels portrait).webm",
+      "2023 Was the Hottest Year on Record (SVS14502).webm"
+    ]
+    commons_prefetch(commons_files)
 
     r1=commons_checked("CRISTIANO RONALDO'S first Real Madrid training session of the new season!.webm",ASSETS/"ronaldo_training.webm","CC BY 3.0; Commons human license review confirmed 2023-09-03","Real Madrid")
     r2=commons_checked("Cristiano Ronaldo na corrida ao Euro2024.webm",ASSETS/"ronaldo_euro.webm","CC BY 3.0; Commons human license review confirmed 2023-12-13","Agencia LUSA")
