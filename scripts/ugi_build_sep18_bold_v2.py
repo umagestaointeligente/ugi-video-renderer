@@ -31,7 +31,8 @@ DIRECT={
  'bold_factory':'https://media.licdn.com/dms/image/v2/D4D22AQH-Xvibou1k6g/feedshare-shrink_800/feedshare-shrink_800/0/1720468763886?e=2147483647&t=mfjTPyr-agHU7GPhh942SBFbSt_01v8vCGDssKQ-ons&v=beta',
  'bold_factory_leaders':'https://media.licdn.com/dms/image/v2/D4D22AQF06zUyfkfC9w/feedshare-shrink_800/B4DZpzjsYfKQAo-/0/1762875340048?e=2147483647&t=U894NxUpyVLJLE32IffY4TuxSD8oSHRvd4YVNreyjOI&v=beta',
  'boticario_store':'https://loucas-por-beleza.belezanaweb.com.br/loucas/wordpress/prod/sites/7/2022/11/08180925/210812_O-Boticario_-Flagship-Shopping-Morumbi_001_Ricardo-Bassetti_4730-scaled.jpg',
- 'embraer_freighter':'https://www.embraer.com/media/ww3hz0t1/e-freighter_loader_048.jpg?v=1dc37d46ed2b790'
+ 'embraer_freighter':'https://www.embraer.com/media/ww3hz0t1/e-freighter_loader_048.jpg?v=1dc37d46ed2b790',
+ 'petrobras_signing':'https://agencia.petrobras.com.br/documents/10623376/0/Petrobras%20assina%20oito%20contratos%20de%20partilha%20de%20produ%C3%A7%C3%A3o%20na%20Costa%20do%20Marfim%20-%20Foto1/71da3692-cf03-058f-1cf0-850492153ccc?download=true'
 }
 
 def font(sz,b=False): return ImageFont.truetype(BOLD if b else FONT,sz)
@@ -257,7 +258,7 @@ def main():
     bot='boticario_store'
     ifood=commons_logo('ifood_logo','iFood logo',['ifood'])
     emb='embraer_freighter'
-    petro=og_image('petrobras_signing',FACT['petrobras'])
+    petro='petrobras_signing'
 
     # factual diagrams
     bot_diag=info('boticario_diag','EXPERIÊNCIA QUE APARECE NO CAIXA',['Ticket médio 70% maior entre clientes que usam as experiências','Frequência de visita aproximadamente 2x maior','Escala planejada para centenas de espaços Studio Boti'],'Fonte factual: EXAME / O Boticário • set/2026')
