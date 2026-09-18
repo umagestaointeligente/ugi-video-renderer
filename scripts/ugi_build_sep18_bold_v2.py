@@ -173,9 +173,9 @@ def youtube_clips():
     raw=html.unescape(r.text).replace('\\/','/')
     urls=[]
     patterns=[
-      r'https://cdn\\.shopify\\.com/videos/[^"\\'<> ]+?\\.mp4(?:\\?[^"\\'<> ]*)?',
-      r'https://[^"\\'<> ]+?\\.mp4(?:\\?[^"\\'<> ]*)?',
-      r'//cdn\\.shopify\\.com/videos/[^"\\'<> ]+?\\.mp4(?:\\?[^"\\'<> ]*)?'
+      r"https://cdn\\.shopify\\.com/videos/[^\"'<> ]+?\\.mp4(?:\\?[^\"'<> ]*)?",
+      r"https://[^\"'<> ]+?\\.mp4(?:\\?[^\"'<> ]*)?",
+      r"//cdn\\.shopify\\.com/videos/[^\"'<> ]+?\\.mp4(?:\\?[^\"'<> ]*)?"
     ]
     for pat in patterns:
         for u in re.findall(pat,raw,re.I):
