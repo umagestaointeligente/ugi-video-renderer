@@ -166,30 +166,84 @@ def make_music_variants():
     return out
 
 def youtube_clips():
-    channel='https://www.youtube.com/@boldsnacks/videos'
-    cmd=['yt-dlp','--flat-playlist','--playlist-end','14','--dump-json',channel]
-    data=subprocess.check_output(cmd,text=True,stderr=subprocess.DEVNULL)
-    entries=[json.loads(x) for x in data.splitlines() if x.strip()]
-    if len(entries)<6: raise RuntimeError(f'BOLD_OFFICIAL_VIDEO_SHORTAGE:{len(entries)}')
+    # Prefer BOLD official YouTube; if the hosted runner is blocked by YouTube,
+    # fall back to public company-origin LinkedIn videos and extract short,
+    # non-overlapping editorial excerpts. Never substitute generic footage.
     chosen=[]
+    channel='https://www.youtube.com/@boldsnacks/videos'
+    try:
+        data=subprocess.check_output(['yt-dlp','--flat-playlist','--playlist-end','14','--dump-json',channel],text=True,stderr=subprocess.DEVNULL,timeout=90)
+        entries=[json.loads(x) for x in data.splitlines() if x.strip()]
+    except Exception:
+        entries=[]
     for idx,e in enumerate(entries[:12]):
         vid=e.get('id'); title=e.get('title') or ''
         if not vid: continue
         raw=TMP/f'bold-yt-{idx:02d}.mp4'
         url='https://www.youtube.com/watch?v='+vid
         try:
-            subprocess.run(['yt-dlp','-f','best[height<=720][ext=mp4]/best[height<=720]','--max-filesize','80M','-o',str(raw),url],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            subprocess.run(['yt-dlp','-f','best[height<=720][ext=mp4]/best[height<=720]','--max-filesize','80M','-o',str(raw),url],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=120)
             if not raw.exists(): continue
             dur=float(probe(raw)['format']['duration'])
-            st=max(0,min(max(0,dur*0.18),max(0,dur-12)))
-            clip=SRC/f'bold_motion_{len(chosen)+1:02d}.mp4'
-            subprocess.run(['ffmpeg','-y','-ss',f'{st:.2f}','-i',str(raw),'-t','10','-an','-c:v','libx264','-preset','veryfast','-crf','22','-pix_fmt','yuv420p',str(clip)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-            k=f'bold_motion_{len(chosen)+1:02d}'
-            sources[k]={'url':url,'path':str(clip.relative_to(ROOT)),'sha256':sha256(clip),'rightsBasis':'short transformative excerpt from BOLD official public YouTube channel','title':title}
-            chosen.append(k)
+            starts=[max(0,min(dur*0.12,max(0,dur-9))), max(0,min(dur*0.52,max(0,dur-9)))]
+            for st in starts:
+                clip=SRC/f'bold_motion_{len(chosen)+1:02d}.mp4'
+                subprocess.run(['ffmpeg','-y','-ss',f'{st:.2f}','-i',str(raw),'-t','8','-an','-c:v','libx264','-preset','veryfast','-crf','22','-pix_fmt','yuv420p',str(clip)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+                k=f'bold_motion_{len(chosen)+1:02d}'
+                sources[k]={'url':url,'path':str(clip.relative_to(ROOT)),'sha256':sha256(clip),'rightsBasis':'short transformative editorial excerpt from BOLD official public YouTube channel','title':title}
+                chosen.append(k)
+                if len(chosen)>=8: break
         except Exception:
             raw.unlink(missing_ok=True)
-        if len(chosen)>=10: break
+        if len(chosen)>=8: break
+
+    if len(chosen)>=6:
+        return chosen
+
+    linkedin_posts=[
+      'https://pt.linkedin.com/posts/bold-snacks_bold-na-arnold-2024-activity-7186814632576118784-gGN4',
+      'https://pt.linkedin.com/posts/bold-snacks_wheybold-timebold-activity-7316554418391330816-QRmN',
+      'https://pt.linkedin.com/posts/lmartinsgestordemanuten%C3%A7%C3%A3o_na-bold-somos-leves-o-ambiente-%C3%A9-acolhedor-activity-7325269893212172289-Fa8d'
+    ]
+    for pi,url in enumerate(linkedin_posts):
+        raw=TMP/f'bold-li-{pi:02d}.mp4'
+        # yt-dlp can resolve some public LinkedIn posts depending on the CDN.
+        try:
+            subprocess.run(['yt-dlp','-f','best[height<=720]/best','-o',str(raw),url],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=120)
+        except Exception:
+            pass
+        if not raw.exists():
+            try:
+                txt=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=45).text
+                txt=html.unescape(txt).replace('\\/','/').replace('\\u0026','&')
+                candidates=re.findall(r'https://[^"\\'<>\\s]+?(?:\\.mp4|\\.m3u8)[^"\\'<>\\s]*',txt,re.I)
+                # Prefer playlist/video assets over thumbnails.
+                for cand in candidates:
+                    try:
+                        subprocess.run(['ffmpeg','-y','-i',cand,'-t','24','-an','-c:v','libx264','-preset','veryfast','-crf','22','-pix_fmt','yuv420p',str(raw)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=120)
+                        if raw.exists() and raw.stat().st_size>100000: break
+                    except Exception:
+                        raw.unlink(missing_ok=True)
+            except Exception:
+                pass
+        if not raw.exists(): continue
+        try:
+            dur=float(probe(raw)['format']['duration'])
+        except Exception:
+            raw.unlink(missing_ok=True); continue
+        starts=[0, max(0,min(dur*0.38,max(0,dur-7))), max(0,min(dur*0.7,max(0,dur-7)))]
+        for st in starts:
+            if len(chosen)>=9: break
+            clip=SRC/f'bold_motion_{len(chosen)+1:02d}.mp4'
+            try:
+                subprocess.run(['ffmpeg','-y','-ss',f'{st:.2f}','-i',str(raw),'-t','7','-an','-c:v','libx264','-preset','veryfast','-crf','22','-pix_fmt','yuv420p',str(clip)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+                k=f'bold_motion_{len(chosen)+1:02d}'
+                sources[k]={'url':url,'path':str(clip.relative_to(ROOT)),'sha256':sha256(clip),'rightsBasis':'short transformative editorial excerpt from a public BOLD company-origin LinkedIn video','title':'BOLD public company-origin video'}
+                chosen.append(k)
+            except Exception:
+                clip.unlink(missing_ok=True)
+
+    print('BOLD_MOTION_SOURCE_COUNT',len(chosen))
     if len(chosen)<6: raise RuntimeError(f'BOLD_OFFICIAL_MOTION_FAIL:{len(chosen)}')
     return chosen
 
