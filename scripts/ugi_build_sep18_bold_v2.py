@@ -216,7 +216,7 @@ def youtube_clips():
             try:
                 txt=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=45).text
                 txt=html.unescape(txt).replace('\\/','/').replace('\\u0026','&')
-                candidates=re.findall(r'https://[^"\\'<>\\s]+?(?:\\.mp4|\\.m3u8)[^"\\'<>\\s]*',txt,re.I)
+                candidates=re.findall(r"https://[^\\\"'<>\\s]+?(?:\\.mp4|\\.m3u8)[^\\\"'<>\\s]*",txt,re.I)
                 # Prefer playlist/video assets over thumbnails.
                 for cand in candidates:
                     try:
