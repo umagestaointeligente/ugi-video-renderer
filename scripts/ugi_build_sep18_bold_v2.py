@@ -238,15 +238,19 @@ def main():
     # Real still sources
     for k,u in DIRECT.items(): download(k,u)
     bold_press=og_image('bold_ferrero',FACT['bold_ferrero'])
-    # product visuals from official BOLD site
-    home=requests.get('https://www.boldsnacks.com.br/',headers=UA,timeout=90).text
-    imgs=re.findall(r'https://cdn\.shopify\.com/[^"\' ]+\.(?:jpg|jpeg|png|webp)(?:\?[^"\' ]*)?',home,re.I)
+    # Exact product visuals from official BOLD product pages via og:image.
+    product_pages=[
+      'https://www.boldsnacks.com.br/products/bold-caixa-mix',
+      'https://www.boldsnacks.com.br/products/bold-doce-de-leite-40g',
+      'https://www.boldsnacks.com.br/products/bold-cookies-cream',
+      'https://www.boldsnacks.com.br/products/bold-crunch-brigadeiro'
+    ]
     prod=[]
-    for u in dict.fromkeys(imgs):
-        if len(prod)>=4: break
+    for page in product_pages:
         try:
-            k=f'bold_product_{len(prod)+1:02d}'; download(k,html.unescape(u),'official BOLD storefront product image'); prod.append(k)
-        except Exception: pass
+            k=f'bold_product_{len(prod)+1:02d}'; prod.append(og_image(k,page))
+        except Exception:
+            continue
     if len(prod)<2: raise RuntimeError('BOLD_PRODUCT_SOURCE_SHORTAGE')
 
     # Independent-post sources
