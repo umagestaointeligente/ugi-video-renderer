@@ -1,0 +1,69 @@
+name: UGI Sep18 BOLD Plus4
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ugi_build_sep18_bold_v2.py'
+      - 'config/ugi/editorial/2026-09-18-bold-story-package-v1.json'
+      - '.github/workflows/ugi-sep18-bold-plus4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-qa-commit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install renderer
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --disable-pip-version-check pillow requests edge-tts yt-dlp
+          python -m py_compile scripts/ugi_build_sep18_bold_v2.py
+      - name: Build Sep18 package
+        run: |
+          set -euo pipefail
+          python scripts/ugi_build_sep18_bold_v2.py
+      - name: Assert QA
+        run: |
+          python - <<'PY'
+          import json
+          p='public/ugi/editorial/2026-09-18/bold-package-v2/qa.json'
+          q=json.load(open(p,encoding='utf-8'))
+          assert q['state']=='PASS',q
+          assert q['hardGateFailures']==[],q['hardGateFailures']
+          assert q['metricoolMutationAuthorized'] is True
+          assert q['antiRepeat60d'] is True
+          assert q['safeAreaV2'] is True
+          assert q['realFootageRequired'] is True
+          vids=[x for x in q['finals'] if x['kind']=='video']
+          assert len(vids)==4, len(vids)
+          for v in vids:
+              assert v['visualQa']['REAL_FOOTAGE_PASS'] is True
+              assert v['visualQa']['NARRATION_VISUAL_BEAT_MATCH_PASS'] is True
+              assert v['audioQa']['TTS_ONE_CALL_PER_SCENE_PASS'] is True
+              assert v['audioQa']['MUSIC_PHASE_MATCH_PASS'] is True
+          print('UGI_SEP18_BOLD_PLUS4_QA_PASS')
+          PY
+      - name: Commit finals
+        run: |
+          set -euo pipefail
+          git config user.name 'ugi-editorial-bot'
+          git config user.email 'ugi-editorial-bot@users.noreply.github.com'
+          git add public/ugi/editorial/2026-09-18/bold-package-v2
+          if git diff --cached --quiet; then
+            echo 'No new finals.'
+          else
+            git commit -m 'assets(ugi): Sep18 BOLD plus4 finals [skip ci]'
+            git push origin main
+          fi
