@@ -344,7 +344,7 @@ def main():
     results.append(render_short(
       "VSA_20260918_ZODIACAL_LIGHT","Por que uma pirâmide de luz aparece antes do amanhecer?","WORLD_SCIENCE",
       "Perto do equinócio de setembro, observadores em locais realmente escuros podem ver uma faixa triangular de luz apontando para cima antes do amanhecer. Parece uma aurora, mas não é. O nome é luz zodiacal. O brilho nasce quando a luz do Sol é espalhada por minúsculas partículas de poeira que ocupam a região interna do Sistema Solar. Como grande parte dessa poeira se concentra perto do plano das órbitas dos planetas, o brilho acompanha a eclíptica e pode formar uma coluna inclinada no céu. A época do ano importa porque a geometria da eclíptica em relação ao horizonte pode deixar essa faixa mais fácil de perceber. E o céu precisa estar bem escuro: poluição luminosa apaga rapidamente o contraste. Então aquela falsa aurora não vem da atmosfera da Terra. É luz solar revelando poeira entre os planetas. Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.",
-      "ZODIACAL_LIGHT",[z,z,z],
+      "Luz zodiacal",[z,z,z],
       [("Luz zodiacal","TARGET_SUBJECT","Céu do Atacama","luz zodiacal real sobre observatórios do ESO",False,False),
        ("Luz zodiacal","TARGET_SUBJECT","Geometria no céu","outro momento real da faixa luminosa zodiacal",False,False),
        ("Luz zodiacal","TARGET_SUBJECT","Prova observacional","terceiro momento real e distinto do fenômeno",False,False)],
@@ -362,7 +362,7 @@ def main():
     results.append(render_short(
       "VSA_20260918_VENUS_BRIGHT","Por que Vênus consegue brilhar tanto no nosso céu?","WORLD_SCIENCE",
       "Em setembro de 2026, a NASA destacou Vênus em uma fase de brilho especialmente intenso. Mas como um planeta sem luz própria consegue chamar tanta atenção? Primeiro, Vênus é relativamente próximo da Terra. Segundo, seu planeta inteiro está coberto por nuvens muito refletivas, que devolvem uma grande fração da luz do Sol. E existe um terceiro detalhe: a fase. Assim como a Lua, Vênus mostra fases diferentes. Quando ele se aproxima da Terra, seu disco aparente cresce, mas a parte iluminada que vemos diminui. O brilho máximo acontece em um equilíbrio entre tamanho aparente, distância e fração iluminada. Por isso Vênus pode superar qualquer estrela no céu noturno, embora continue apenas refletindo luz solar. Quando você vê aquele ponto muito brilhante perto do horizonte, a explicação está em geometria orbital, nuvens e distância. Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.",
-      "VENUS_BRIGHTNESS",[v1,v2,v2],
+      "Vênus",[v1,v2,v2],
       [("Vênus e Júpiter","EXPLICIT_CONTEXT","Observação real do céu","Vênus aparece em time-lapse real do céu",False,True),
        ("Vênus","TARGET_SUBJECT","Skywatching NASA","material NASA mostra Vênus e sua posição no céu",False,False),
        ("Vênus","TARGET_SUBJECT","Geometria observacional","outro momento distinto do material NASA sobre Vênus",False,False)],
