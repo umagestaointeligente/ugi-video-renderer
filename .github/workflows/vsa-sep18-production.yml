@@ -3,16 +3,6 @@ name: VSA Sep18 Production
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - ops/vsa-sep18-production
-    paths:
-      - '.github/workflows/vsa-sep18-production.yml'
-      - 'production/vsa/2026-09-18/production_today.py'
-      - 'scripts/vsa/render_canonical_v2.py'
-      - 'scripts/vsa/render_preventive_v3.py'
-      - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
-      - 'scripts/vsa/validate_release_receipt.py'
   pull_request:
     branches:
       - main
