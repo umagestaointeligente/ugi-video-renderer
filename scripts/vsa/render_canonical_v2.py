@@ -235,10 +235,14 @@ def main():
     if exp_mask and sha256(a.mask)!=exp_mask: raise SystemExit('MASK_HASH_FAIL')
     if exp_cta and sha256(a.cta)!=exp_cta: raise SystemExit('CTA_HASH_FAIL')
     base=work/'base.jpg'; make_base(a.mask,t['title'],t['bucket'],base)
-    # CTA belongs exclusively to the canonical end card. Strip legacy script CTA
-    # variants so narration cannot say it once in-body and again on the CTA.
+    # CTA belongs exclusively to the canonical end card.
+    # Remove any legacy spoken CTA from the body before TTS.
     body_text=t['script'].strip()
-    cta_tail=re.compile(r'(?:\s*Agora\s+voc[eê]\s+j[aá]\s+sabe[.!?]?\s*)?(?:Curta\s*,?\s*compartilhe(?:\s+e)?\s+siga(?:\s+o)?\s+(?:Voc[eê]\s+Sabia\s+Agora|Cena\s+Certa)[.!?]?\s*)
+    cta_tail=re.compile(r'(?:\\s*Agora\\s+voc[eê]\\s+j[aá]\\s+sabe[.!?]?\\s*)?(?:Curta\\s*,?\\s*compartilhe(?:\\s+e)?\\s+siga(?:\\s+o)?\\s+(?:Voc[eê]\\s+Sabia\\s+Agora|Cena\\s+Certa)[.!?]?\\s*)$',re.I)
+    body_text=cta_tail.sub('',body_text).strip()
+    if re.search(r'(curta\\s*,?\\s*compartilhe|agora\\s+voc[eê]\\s+j[aá]\\s+sabe)',body_text[-220:],re.I):
+        raise SystemExit('CTA_DUPLICATION_FAIL')
+    voice=t.get('voice','pt-BR-AntonioNeural')
     body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_audio=work/'cta.mp3'
     run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])
     run(['edge-tts','--voice',voice,'--rate','+22%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])
