@@ -95,8 +95,8 @@ def render_short(name,title,bucket,script,expected,items,rows,mechs,anim_specs,m
       shot_anim(4,"Mecanismo 2",mechs[1],mechs[1],link),
       shot_real(5,"Payoff real","Terceiro momento real",manifests[2]["visible_action"],"Prova final","PROOF",link,manifests[2])
     ]
-    if bucket!="PEOPLE_CURIOSITY":
-        shots.append(shot_anim(6,"Síntese causal",mechs[2],mechs[2],link))
+    # Canonical VSA sequence ends on real proof. A causal animation may
+    # never be the final body scene without a subsequent real consequence.
     topic={
       "title":title,"thumb":title,"bucket":bucket,"script":script,"voice":VOICE,
       "mechs":mechs,"animation_specs":anim_specs,
