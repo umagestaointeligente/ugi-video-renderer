@@ -2,6 +2,7 @@
 # VSA_VISUAL_RELEASE_RECEIPT_V2
 # Metricool VSA brand lock: 6935441
 name: VSA Sep19 Production
+# trigger after CTA fix
 # validation trigger after PR creation
 
 on:
