@@ -335,12 +335,19 @@ def main():
 
     results.append(build_moon_long({"mona":mo1,"llcd":mo2,"earthmoon":mo3,"moon":mo4},music_action,meta_action))
 
+    # Production validation is local and fail-closed. External temporary hosting
+    # is not a release gate and must never authorize publishing from CI.
     for r in results:
-        r["media_url"]=sep18.stage_media(r["master"])
-        r["staging_readback"]="PASS"; r["network"]="youtube"; r["draft"]=False; r["autoPublish"]=True
+        r["media_url"]=None
+        r["staging_readback"]="NOT_RUN"
+        r["network"]="youtube"
+        r["draft"]=True
+        r["autoPublish"]=False
+        r["publish_authorized"]=False
 
     manifest={"schema":"VSA_SEP19_RELEASE_MANIFEST_V1","date":"2026-09-19","brandId":6935441,
       "youtubeChannelId":"UCm0UMO6lNWlr66YSIS1p4iQ","scheduler_mutated":False,
+      "publication_authorized":False,
       "generated_at":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),
       "preventive_fixes":{
         "generic_second_animation_forbidden":True,
