@@ -234,7 +234,7 @@ def main():
       "NASA astronaut Reid Wiseman will serve as the commander for NASA’s Artemis II mission (jsc2026m000058).webm",
       "Earth from Orbit- Vernal Equinox (NESDIS 2022-03-25 2022 03 24 VernalEquinox UHD NO TEXT).webm",
       "NOAA Satellites Observe the Autumnal Equinox (NESDIS 2025-09-22).webm",
-      "NOAA Satellites Watch the Arrival of Spring from Above (NESDIS 2025-03-20 20240319-20250320 g16 abi fd geocolor swayingterminator-video-speed).webm",
+      "Sunrise To Sunset Aboard The ISS.ogv",
       "Animation of the anatomy and physiology of the human brain AS.webm",
       "Anatomical animation by Frank Armitage.webm",
       "NeuroMat completo semlegenda por dentro do cerebro.webm",
@@ -251,7 +251,7 @@ def main():
     reid=sep18.commons_checked(filenames[0],ASSETS/"reid.webm","NASA official media; PD NASA on Commons; low Content-ID risk","NASA Johnson Space Center")
     eq1=sep18.commons_checked(filenames[1],ASSETS/"eq1.webm","NOAA/NESDIS U.S. federal government work; public domain","NOAA/NESDIS")
     eq2=sep18.commons_checked(filenames[2],ASSETS/"eq2.webm","NOAA U.S. federal government work; public domain","NOAA")
-    eq3=sep18.commons_checked(filenames[3],ASSETS/"eq3.webm","NOAA U.S. federal government work; public domain","NOAA")
+    eq3=sep18.commons_checked(filenames[3],ASSETS/"eq3.ogv","NASA U.S. federal government work; public domain","NASA")
     br1=sep18.commons_checked(filenames[4],ASSETS/"brain1.webm","Uploader-created CC BY 4.0 brain anatomy animation; low Content-ID risk","Wikimedia Commons contributor")
     br2=sep18.commons_checked(filenames[5],ASSETS/"brain2.webm","NIH-assessed public domain educational animation","NIH / Frank Armitage")
     br3=sep18.commons_checked(filenames[6],ASSETS/"brain3.webm","CEPID NeuroMat own work; CC BY-SA 4.0","CEPID NeuroMat / USP")
@@ -290,7 +290,7 @@ def main():
       "EQUINOX",[eq1,eq2,eq3],
       [("EQUINOX","TARGET_SUBJECT","Terra vista por satélite","terminador terrestre muda ao longo das estações",False,False),
        ("EQUINOX","TARGET_SUBJECT","Equinócio de setembro","satélite NOAA mostra o terminador quase norte-sul",False,False),
-       ("EQUINOX","TARGET_SUBJECT","Mudança sazonal","NOAA mostra a geometria da iluminação da Terra",False,False)],
+       ("EQUINOX","TARGET_SUBJECT","Nascer do Sol orbital","vídeo real da ISS mostra a luz solar atravessando a atmosfera no horizonte",False,False)],
       ["EIXO INCLINADO + ÓRBITA → ESTAÇÕES","ATMOSFERA REFRATA A LUZ → SOL PARECE MAIS ALTO","DISCO SOLAR TEM TAMANHO → NASCER E PÔR NÃO SÃO INSTANTÂNEOS"],
       [
        {"visual_type":"orbit_phase","visual_subject":"Terra orbitando o Sol com eixo inclinado","action":"a Terra percorre a órbita mantendo a inclinação do eixo","claim":"EIXO INCLINADO + ÓRBITA → ESTAÇÕES"},
