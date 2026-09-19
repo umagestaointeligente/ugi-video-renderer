@@ -245,7 +245,7 @@ def main():
     voice=t.get('voice','pt-BR-AntonioNeural')
     body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_audio=work/'cta.mp3'
     run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])
-    run(['edge-tts','--voice',voice,'--rate','+22%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])
+    run(['edge-tts','--voice',voice,'--rate','+24%','--text','Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])
     bd=dur(body_audio); cd=min(4.5,max(3.0,dur(cta_audio)+0.15))
     if dur(cta_audio)>4.5: raise SystemExit('CTA_VOICE_TOO_LONG')
     mechs=t['mechs']; sources=t['source_files']; starts=t.get('real_starts',[0,0,0]);
