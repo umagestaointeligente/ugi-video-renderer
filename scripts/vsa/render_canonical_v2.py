@@ -156,11 +156,22 @@ def make_anim(base,mech,spec,length,out_path,seed=1):
                 d.ellipse((ex-42,ey-42,ex+42,ey+42),fill=col)
 
         elif typ=='light_path':
-            cy=y+430; d.line((x+90,cy,x+430,cy),fill=(255,225,80),width=8)
-            d.rounded_rectangle((x+430,y+330,x+570,y+530),radius=22,outline=(65,205,255),width=7)
-            outy=cy-int(145*math.sin(t*math.pi/2))
-            d.line((x+570,cy,x+w-95,outy),fill=(80,205,255),width=8)
-            d.ellipse((x+480,y+380,x+520,y+420),fill=(255,190,45))
+            # Refraction/light-path animation: the incoming ray visibly bends
+            # through a moving atmospheric layer instead of a nearly static line.
+            cy=y+430
+            layer_top=y+285+int(35*math.sin(t*math.pi*2))
+            layer_bottom=y+575+int(25*math.sin(t*math.pi*2))
+            d.rounded_rectangle((x+390,layer_top,x+650,layer_bottom),radius=34,fill=(8,55,95),outline=(65,205,255),width=7)
+            for k in range(4):
+                yy=layer_top+45+k*55+int(18*math.sin(t*math.pi*2+k))
+                d.line((x+405,yy,x+635,yy),fill=(35,120+20*k,180+12*k),width=4)
+            entry_y=cy+int(95*math.sin(t*math.pi*2))
+            d.line((x+80,entry_y,x+410,cy),fill=(255,225,80),width=10)
+            bend=180*math.sin(t*math.pi)
+            p1=(x+410,cy); p2=(x+535,cy-int(bend*.35)); p3=(x+650,cy-int(bend*.75)); p4=(x+w-90,cy-int(bend))
+            d.line((p1,p2,p3,p4),fill=(80,205,255),width=10)
+            px=x+430+int(200*t); py=cy-int(bend*(t*.8))
+            d.ellipse((px-24,py-24,px+24,py+24),fill=(255,190,45),outline=(255,245,180),width=4)
 
         elif typ=='orientation_axes':
             # Dynamic spatial-reference animation: large axis rotation + moving body
