@@ -167,11 +167,16 @@ def make_anim(base,mech,spec,length,out_path,seed=1):
                 d.line((x+405,yy,x+635,yy),fill=(35,120+20*k,180+12*k),width=4)
             entry_y=cy+int(95*math.sin(t*math.pi*2))
             d.line((x+80,entry_y,x+410,cy),fill=(255,225,80),width=10)
-            bend=180*math.sin(t*math.pi)
-            p1=(x+410,cy); p2=(x+535,cy-int(bend*.35)); p3=(x+650,cy-int(bend*.75)); p4=(x+w-90,cy-int(bend))
-            d.line((p1,p2,p3,p4),fill=(80,205,255),width=10)
-            px=x+430+int(200*t); py=cy-int(bend*(t*.8))
-            d.ellipse((px-24,py-24,px+24,py+24),fill=(255,190,45),outline=(255,245,180),width=4)
+            bend=285*math.sin(t*math.pi*2)
+            p1=(x+410,cy); p2=(x+525,cy-int(bend*.30)); p3=(x+665,cy-int(bend*.72)); p4=(x+w-85,cy-int(bend))
+            d.line((p1,p2,p3,p4),fill=(80,205,255),width=14)
+            # Broad translucent-looking guide band makes the refraction change
+            # legible in perceptual-hash QA and, more importantly, on phones.
+            guide=55+int(45*(0.5+0.5*math.sin(t*math.pi*2)))
+            d.line((x+655,cy-int(bend*.72)-guide,x+w-90,cy-int(bend)-guide),fill=(25,110,175),width=8)
+            px=x+425+int(255*t); py=cy-int(bend*(0.25+0.65*t))
+            rr=30+int(14*(0.5+0.5*math.sin(t*math.pi*4)))
+            d.ellipse((px-rr,py-rr,px+rr,py+rr),fill=(255,190,45),outline=(255,245,180),width=5)
 
         elif typ=='orientation_axes':
             # Dynamic spatial-reference animation: large axis rotation + moving body
