@@ -2,37 +2,28 @@
 # VSA_VISUAL_RELEASE_RECEIPT_V2
 # Metricool VSA brand lock: 6935441
 name: VSA Sep19 Production
-# trigger after CTA fix
-# validation trigger after PR creation
-
+# Validation only: pull-request synchronization is the single automatic trigger.
+# workflow_dispatch remains available for an explicit run on a selected ref.
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - ops/vsa-sep19-production
-    paths:
-      - '.github/workflows/vsa-sep19-production.yml'
-      - 'production/vsa/2026-09-19/production_today.py'
-      - 'scripts/vsa/render_canonical_v2.py'
-      - 'scripts/vsa/render_preventive_v3.py'
-      - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
-      - 'scripts/vsa/validate_release_receipt.py'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/vsa-sep19-production.yml'
       - 'production/vsa/2026-09-19/production_today.py'
+      - 'production/vsa/2026-09-18/production_today.py'
       - 'scripts/vsa/render_canonical_v2.py'
       - 'scripts/vsa/render_preventive_v3.py'
       - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
       - 'scripts/vsa/validate_release_receipt.py'
+      - '.github/actions/vsa-release-gate/**'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: vsa-sep19-production
+  group: vsa-sep19-production-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -40,10 +31,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 55
     steps:
-      - name: Checkout isolated Sep19 branch
+      - name: Checkout exact event ref
         uses: actions/checkout@v4
-        with:
-          ref: ops/vsa-sep19-production
 
       - name: Validate preventive contract
         run: |
@@ -99,16 +88,6 @@ jobs:
         with:
           receipt: production/vsa/2026-09-19/output/VSA_20260919_LEIDENFROST_FINAL_RELEASE_V2.json
           master: production/vsa/2026-09-19/output/VSA_20260919_LEIDENFROST_FINAL.mp4
-
-      - name: Persist release manifest for operator readback
-        run: |
-          set -euo pipefail
-          git config user.name "vsa-production-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add production/vsa/2026-09-19/RELEASE_MANIFEST.json
-          git diff --cached --quiet && exit 0
-          git commit -m "chore(vsa): persist Sep19 release manifest [skip ci]"
-          git push origin HEAD:ops/vsa-sep19-production
 
       - name: Upload masters and QA evidence
         if: always()
