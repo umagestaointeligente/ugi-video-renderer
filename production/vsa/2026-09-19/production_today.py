@@ -145,7 +145,7 @@ def build_moon_long(src,music,track_meta):
         raise RuntimeError("LONG_CTA_DUPLICATION_SOURCE_FAIL")
     voice=WORK/"moon_long_body.mp3"; vtt=WORK/"moon_long_body.vtt"; cta_voice=WORK/"moon_long_cta.mp3"
     run(["edge-tts","--voice",VOICE,"--rate","+2%","--text",script,"--write-media",voice,"--write-subtitles",vtt])
-    run(["edge-tts","--voice",VOICE,"--rate","+22%","--text","Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.","--write-media",cta_voice])
+    run(["edge-tts","--voice",VOICE,"--rate","+24%","--text","Curta, compartilhe e siga o Você Sabia Agora.","--write-media",cta_voice])
     bd=dur(voice); cd=max(3.0,min(6.0,dur(cta_voice)+0.15))
     if dur(cta_voice)>6.0: raise RuntimeError("LONG_CTA_VOICE_TOO_LONG")
     plan=[
