@@ -1,0 +1,123 @@
+# VSA_VISUAL_STORY_ENGINE_V1
+# VSA_VISUAL_RELEASE_RECEIPT_V2
+# Metricool VSA brand lock: 6935441
+name: VSA Sep19 Production
+# trigger after CTA fix
+# validation trigger after PR creation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ops/vsa-sep19-production
+    paths:
+      - '.github/workflows/vsa-sep19-production.yml'
+      - 'production/vsa/2026-09-19/production_today.py'
+      - 'scripts/vsa/render_canonical_v2.py'
+      - 'scripts/vsa/render_preventive_v3.py'
+      - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
+      - 'scripts/vsa/validate_release_receipt.py'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/vsa-sep19-production.yml'
+      - 'production/vsa/2026-09-19/production_today.py'
+      - 'scripts/vsa/render_canonical_v2.py'
+      - 'scripts/vsa/render_preventive_v3.py'
+      - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
+      - 'scripts/vsa/validate_release_receipt.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vsa-sep19-production
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Checkout isolated Sep19 branch
+        uses: actions/checkout@v4
+        with:
+          ref: ops/vsa-sep19-production
+
+      - name: Validate preventive contract
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            production/vsa/2026-09-19/production_today.py \
+            production/vsa/2026-09-18/production_today.py \
+            scripts/vsa/render_canonical_v2.py \
+            scripts/vsa/render_preventive_v3.py \
+            scripts/vsa/validate_release_receipt.py
+          grep -q "ANIMATION_SPEC_CARDINALITY_FAIL" scripts/vsa/render_canonical_v2.py
+          grep -q "ANIMATION_VISUAL_DIVERSITY_FAIL" scripts/vsa/render_canonical_v2.py
+          grep -q "CTA_DUPLICATION_FAIL" scripts/vsa/render_canonical_v2.py
+          grep -q "CONTENT_ID_RISK_FAIL" scripts/vsa/render_preventive_v3.py
+          grep -q "PERSON_TARGET_SCREEN_SHARE_FAIL" scripts/vsa/render_preventive_v3.py
+
+      - name: Install zero-cost render dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-dejavu-core curl jq
+          python -m pip install --upgrade pip
+          python -m pip install edge-tts Pillow numpy requests
+
+      - name: Build fresh five-item Sep19 slate
+        run: |
+          set -euo pipefail
+          python production/vsa/2026-09-19/production_today.py 2>&1 | tee production/vsa/2026-09-19/BUILD_LOG.txt
+          test -s production/vsa/2026-09-19/RELEASE_MANIFEST.json
+          jq -e '.all_release_eligible == true and (.results|length)==5 and .scheduler_mutated == false' production/vsa/2026-09-19/RELEASE_MANIFEST.json
+          jq -e '.preventive_fixes.generic_second_animation_forbidden == true and .preventive_fixes.single_final_cta_only == true and .preventive_fixes.person_content_id_risk_low_required == true' production/vsa/2026-09-19/RELEASE_MANIFEST.json
+
+      - name: Canonical gate — Reid Wiseman Short
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/2026-09-19/output/VSA_20260919_REID_WISEMAN_FINAL_RELEASE_V2.json
+          master: production/vsa/2026-09-19/output/VSA_20260919_REID_WISEMAN_FINAL.mp4
+
+      - name: Canonical gate — Equinox Short
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/2026-09-19/output/VSA_20260919_EQUINOX_FINAL_RELEASE_V2.json
+          master: production/vsa/2026-09-19/output/VSA_20260919_EQUINOX_FINAL.mp4
+
+      - name: Canonical gate — Brain Short
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/2026-09-19/output/VSA_20260919_TWO_BRAIN_ORIGINS_FINAL_RELEASE_V2.json
+          master: production/vsa/2026-09-19/output/VSA_20260919_TWO_BRAIN_ORIGINS_FINAL.mp4
+
+      - name: Canonical gate — Leidenfrost Short
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/2026-09-19/output/VSA_20260919_LEIDENFROST_FINAL_RELEASE_V2.json
+          master: production/vsa/2026-09-19/output/VSA_20260919_LEIDENFROST_FINAL.mp4
+
+      - name: Persist release manifest for operator readback
+        run: |
+          set -euo pipefail
+          git config user.name "vsa-production-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add production/vsa/2026-09-19/RELEASE_MANIFEST.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(vsa): persist Sep19 release manifest [skip ci]"
+          git push origin HEAD:ops/vsa-sep19-production
+
+      - name: Upload masters and QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep19-production
+          path: |
+            production/vsa/2026-09-19/output/
+            production/vsa/2026-09-19/BUILD_LOG.txt
+            production/vsa/2026-09-19/RELEASE_MANIFEST.json
+          if-no-files-found: error
+          retention-days: 7
