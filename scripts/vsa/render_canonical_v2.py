@@ -266,15 +266,15 @@ def main():
         raise SystemExit('CTA_DUPLICATION_FAIL')
     voice=t.get('voice','pt-BR-AntonioNeural')
     body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_audio=work/'cta.mp3'
-    run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])
+    run(['edge-tts','--voice',voice,'--rate','-6%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])
     run(['edge-tts','--voice',voice,'--rate','+24%','--text','Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])
     bd=dur(body_audio); cd=min(4.5,max(3.0,dur(cta_audio)+0.15))
     if dur(cta_audio)>4.5: raise SystemExit('CTA_VOICE_TOO_LONG')
     mechs=t['mechs']; sources=t['source_files']; starts=t.get('real_starts',[0,0,0]);
     if len(mechs)<2 or len(sources)<1: raise SystemExit('SEMANTIC_INPUT_FAIL')
     people=t['bucket']=='PEOPLE_CURIOSITY'
-    pattern=['real','anim','real','anim','real'] if people else ['real','anim','real','anim','real','anim']
-    weights=[.22,.16,.22,.16,.24] if people else [.18,.14,.18,.14,.18,.18]
+    pattern=['real','anim','real','anim','real']
+    weights=[.22,.16,.22,.16,.24] if people else [.23,.18,.22,.18,.19]
     required_anim=sum(1 for x in pattern if x=='anim')
     anim_specs=t.get('animation_specs') or []
     if len(anim_specs)<required_anim: raise SystemExit(f'ANIMATION_SPEC_CARDINALITY_FAIL:{len(anim_specs)}<{required_anim}')
