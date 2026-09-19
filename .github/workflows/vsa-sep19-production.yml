@@ -1,3 +1,6 @@
+# VSA_VISUAL_STORY_ENGINE_V1
+# VSA_VISUAL_RELEASE_RECEIPT_V2
+# Metricool VSA brand lock: 6935441
 name: VSA Sep19 Production
 # validation trigger after PR creation
 
@@ -71,6 +74,30 @@ jobs:
           test -s production/vsa/2026-09-19/RELEASE_MANIFEST.json
           jq -e '.all_release_eligible == true and (.results|length)==5 and .scheduler_mutated == false' production/vsa/2026-09-19/RELEASE_MANIFEST.json
           jq -e '.preventive_fixes.generic_second_animation_forbidden == true and .preventive_fixes.single_final_cta_only == true and .preventive_fixes.person_content_id_risk_low_required == true' production/vsa/2026-09-19/RELEASE_MANIFEST.json
+
+      - name: Canonical gate — Reid Wiseman Short
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/2026-09-19/output/VSA_20260919_REID_WISEMAN_FINAL_RELEASE_V2.json
+          master: production/vsa/2026-09-19/output/VSA_20260919_REID_WISEMAN_FINAL.mp4
+
+      - name: Canonical gate — Equinox Short
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/2026-09-19/output/VSA_20260919_EQUINOX_FINAL_RELEASE_V2.json
+          master: production/vsa/2026-09-19/output/VSA_20260919_EQUINOX_FINAL.mp4
+
+      - name: Canonical gate — Brain Short
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/2026-09-19/output/VSA_20260919_TWO_BRAIN_ORIGINS_FINAL_RELEASE_V2.json
+          master: production/vsa/2026-09-19/output/VSA_20260919_TWO_BRAIN_ORIGINS_FINAL.mp4
+
+      - name: Canonical gate — Leidenfrost Short
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/2026-09-19/output/VSA_20260919_LEIDENFROST_FINAL_RELEASE_V2.json
+          master: production/vsa/2026-09-19/output/VSA_20260919_LEIDENFROST_FINAL.mp4
 
       - name: Persist release manifest for operator readback
         run: |
