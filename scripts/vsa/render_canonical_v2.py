@@ -140,11 +140,36 @@ def make_anim(base,mech,spec,length,out_path,seed=1):
             d.rounded_rectangle((x+150,y+570,x+w-150,y+620),radius=22,fill=(230,95,55))
 
         elif typ=='layer_cross_section':
-            cx=x+w//2; cy=y+440
-            for rr,col in [(260,(20,90,150)),(195,(40,130,185)),(125,(65,175,210)),(58,(255,185,60))]:
-                d.ellipse((cx-rr,cy-rr,cx+rr,cy+rr),outline=col,width=14)
-            rr=45+int(165*t)
-            d.arc((cx-rr,cy-rr,cx+rr,cy+rr),190,350,fill=(255,220,75),width=8)
+            subject=(str(spec.get('visual_subject') or '')+' '+str(spec.get('action') or '')).lower()
+            if 'vapor' in subject or 'gota' in subject or 'superfície' in subject:
+                # Leidenfrost cross-section: hot surface, visible vapor cushion,
+                # and a droplet that rises/falls as the vapor layer changes.
+                surf=y+600
+                d.rounded_rectangle((x+90,surf,x+w-90,surf+70),radius=18,fill=(210,85,45))
+                lift=45+int(115*(0.5+0.5*math.sin(t*math.pi*2)))
+                drop_cy=surf-120-lift
+                drop_w=260+int(45*math.sin(t*math.pi*2))
+                drop_h=125-int(25*math.sin(t*math.pi*2))
+                d.ellipse((x+w//2-drop_w//2,drop_cy-drop_h//2,x+w//2+drop_w//2,drop_cy+drop_h//2),
+                          fill=(35,145,210),outline=(80,225,255),width=7)
+                # Animated vapor jets make the causal layer unmistakable.
+                for k in range(7):
+                    xx=x+230+k*95
+                    phase=t*math.pi*2+k*.7
+                    top=surf-35-lift-int(35*math.sin(phase))
+                    d.line((xx,surf-8,xx+int(25*math.sin(phase)),top),fill=(225,245,255),width=9)
+                    d.ellipse((xx-10,top-10,xx+10,top+10),fill=(245,250,255))
+                d.line((x+145,surf-20,x+w-145,surf-20),fill=(255,190,55),width=6)
+            else:
+                # General layered anatomy/structure view with visibly changing
+                # layer radii and a scanning arc.
+                cx=x+w//2+int(55*math.sin(t*math.pi*2)); cy=y+440
+                pulse=int(55*math.sin(t*math.pi*2))
+                for rr,col in [(260,(20,90,150)),(195,(40,130,185)),(125,(65,175,210)),(58,(255,185,60))]:
+                    r=max(35,rr+pulse)
+                    d.ellipse((cx-r,cy-r,cx+r,cy+r),outline=col,width=14)
+                rr=65+int(190*t)
+                d.arc((cx-rr,cy-rr,cx+rr,cy+rr),170,355,fill=(255,220,75),width=10)
 
         elif typ=='branching':
             rootx=x+w//2; top=y+220; mid=y+420
