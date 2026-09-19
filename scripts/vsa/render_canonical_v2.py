@@ -163,12 +163,18 @@ def make_anim(base,mech,spec,length,out_path,seed=1):
             d.ellipse((x+480,y+380,x+520,y+420),fill=(255,190,45))
 
         elif typ=='orientation_axes':
-            cx=x+w//2; cy=y+430; ang=(t-.5)*1.1
+            # Dynamic spatial-reference animation: large axis rotation + moving body
+            # so the viewer can perceive orientation change on a phone screen.
+            cx=x+w//2+int(95*math.sin(t*math.pi*2)); cy=y+430+int(38*math.cos(t*math.pi*2))
+            ang=(t-.5)*2.8
             d.ellipse((cx-70,cy-45,cx+70,cy+45),outline=(80,210,255),width=6)
-            d.line((cx-310,cy,cx+310,cy),fill=(120,150,180),width=5)
-            ax=math.cos(ang)*270; ay=math.sin(ang)*270
-            d.line((cx-ax,cy-ay,cx+ax,cy+ay),fill=(255,190,45),width=8)
-            d.line((cx,cy-210,cx,cy+210),fill=(85,220,145),width=5)
+            d.line((x+120,y+430,x+w-120,y+430),fill=(120,150,180),width=5)
+            ax=math.cos(ang)*290; ay=math.sin(ang)*290
+            d.line((cx-ax,cy-ay,cx+ax,cy+ay),fill=(255,190,45),width=10)
+            bx=math.cos(ang+math.pi/2)*205; by=math.sin(ang+math.pi/2)*205
+            d.line((cx-bx,cy-by,cx+bx,cy+by),fill=(85,220,145),width=7)
+            px=cx+math.cos(t*math.pi*2)*155; py=cy+math.sin(t*math.pi*2)*155
+            d.ellipse((px-22,py-22,px+22,py+22),fill=(255,95,85))
 
         elif typ=='cell_split':
             cx=x+w//2; cy=y+300; d.ellipse((cx-58,cy-58,cx+58,cy+58),fill=(80,180,220))
