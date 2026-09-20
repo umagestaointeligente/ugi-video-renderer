@@ -35,6 +35,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  inspect-grand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
+      - name: Download and sample Itaipu + Belo Monte
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/grand
+          curl -fL --retry 5 --retry-delay 2             'https://upload.wikimedia.org/wikipedia/commons/transcoded/9/97/A_Itaipu_Binacional_maior_usina_hidrel%C3%A9trica_do_mundo%2C_tem_novo_Diretor-Geral.webm/A_Itaipu_Binacional_maior_usina_hidrel%C3%A9trica_do_mundo%2C_tem_novo_Diretor-Geral.webm.720p.vp9.webm'             -o /tmp/grand/itaipu.webm
+          curl -fL --retry 5 --retry-delay 2             'https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b4/14%C2%AA_turbina_da_Usina_de_Belo_Monte_entra_em_funcionamento.webm/14%C2%AA_turbina_da_Usina_de_Belo_Monte_entra_em_funcionamento.webm.720p.vp9.webm'             -o /tmp/grand/belo.webm
+          mkdir -p /tmp/grand/out
+          for t in 8 16 24 32 40 48 56 64 72 80 88 96 104; do
+            ffmpeg -y -loglevel error -ss "$t" -i /tmp/grand/itaipu.webm -frames:v 1 "/tmp/grand/out/itaipu_${t}.jpg"
+          done
+          for t in 12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204; do
+            ffmpeg -y -loglevel error -ss "$t" -i /tmp/grand/belo.webm -frames:v 1 "/tmp/grand/out/belo_${t}.jpg"
+          done
+          ffmpeg -y -loglevel error -i /tmp/grand/itaipu.webm             -vf "fps=1/7,scale=320:-2,tile=4x4:padding=4:margin=4" -frames:v 1 /tmp/grand/out/itaipu_contact.jpg
+          ffmpeg -y -loglevel error -ss 105 -i /tmp/grand/belo.webm             -vf "fps=1/7,scale=320:-2,tile=4x4:padding=4:margin=4" -frames:v 1 /tmp/grand/out/belo_contact_late.jpg
+      - name: Upload grand hydro frame evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-grand-hydro-frame-evidence
+          path: /tmp/grand/out/
+          if-no-files-found: error
+          retention-days: 7
+
   render-pilot:
     runs-on: ubuntu-latest
     timeout-minutes: 35
