@@ -4,6 +4,7 @@
 # NON-PUBLISHING PILOT. Any future release-capable path MUST use:
 # ./.github/actions/vsa-release-gate
 name: VSA Hydroelectric Assisted Pilot
+# trigger: hydroelectric pilot render
 
 on:
   workflow_dispatch:
