@@ -1,0 +1,105 @@
+{
+  "schema": "VSA_ASSISTED_ANIMATION_CAPABILITIES_V1",
+  "status": "PILOT_FAIL_CLOSED",
+  "verified_at": "2026-09-19",
+  "stage_name": "ANIMAÇÃO EXPLICATIVA ASSISTIDA",
+  "defaults": {
+    "usage_mode": "manual_pilot_only",
+    "production_enabled": false,
+    "automatic_publication": false,
+    "max_incremental_cost_brl": 0.0,
+    "max_attempts_per_scene": 3,
+    "human_approval_required": true,
+    "publication_allowed": false,
+    "fallback": "current_pipeline"
+  },
+  "format_contract": {
+    "aspect_ratio": "9:16",
+    "target_width": 1080,
+    "target_height": 1920,
+    "target_fps": 30,
+    "preferred_duration_seconds": [3, 5],
+    "maximum_normal_duration_seconds": 6,
+    "minimum_input_width": 720,
+    "minimum_input_height": 1280,
+    "caption_safe_area": "preserve central-lower VSA caption zone; no generated text"
+  },
+  "tools": {
+    "zsky": {
+      "label": "ZSky AI",
+      "official_url": "https://zsky.ai/",
+      "terms_url": "https://zsky.ai/terms",
+      "pricing_url": "https://zsky.ai/pricing",
+      "usage_mode": "manual_pilot_only",
+      "production_enabled": false,
+      "automatic_publication": false,
+      "automated_access_allowed": false,
+      "private_api_allowed": false,
+      "zero_cost_generation_available": true,
+      "card_required_for_free": false,
+      "commercial_use_free": true,
+      "free_video_watermark_present": true,
+      "free_output_fit_for_vsa_production": false,
+      "current_blocker": "rejected_watermark",
+      "notes": "Official free tier currently adds a MADE WITH / zsky.ai wordmark plate. VSA policy forbids removing, hiding or cropping it, so free output is pilot/research only and must fall back for production."
+    },
+    "steve_ai": {
+      "label": "Steve AI",
+      "official_url": "https://www.steve.ai/",
+      "pricing_url": "https://app.steve.ai/pricing",
+      "commercial_rights_url": "https://support.steve.ai/en/articles/8295555-can-i-monetize-the-videos-i-create-with-steve-ai",
+      "usage_mode": "manual_pilot_only",
+      "production_enabled": false,
+      "automatic_publication": false,
+      "automated_access_allowed": false,
+      "private_api_allowed": false,
+      "free_account_available": true,
+      "free_downloadable_video": false,
+      "commercial_use_free": false,
+      "free_output_fit_for_vsa_production": false,
+      "current_blocker": "rejected_rights",
+      "notes": "Official pricing currently shows no downloadable video format on Free, and Steve AI support states commercial monetization rights come with paid plans. Under the R$0 rule, output is pilot/research only and must fall back for production."
+    },
+    "current_pipeline": {
+      "label": "VSA current visual pipeline",
+      "usage_mode": "production_current",
+      "production_enabled": true,
+      "automatic_publication": false,
+      "automated_access_allowed": true,
+      "zero_cost_required": true,
+      "free_output_fit_for_vsa_production": true,
+      "current_blocker": null
+    }
+  },
+  "routing_rules": {
+    "prefer_real_footage_when_better": true,
+    "public_figure_real_scene": "current_pipeline",
+    "zsky_candidate_tags": [
+      "machine", "natural_phenomenon", "scientific_process", "non_graphic_anatomy",
+      "historical_reconstruction", "planetary_motion", "internal_structure", "animated_map",
+      "object_transformation", "scale_comparison", "place_reconstruction", "physical_mechanism",
+      "cinematic_concept"
+    ],
+    "steve_candidate_tags": [
+      "2d_explainer", "storyboard", "illustrated_character", "educational_situation",
+      "simple_comparison", "illustrated_timeline", "sequence", "animated_infographic",
+      "leo_character", "youth_light_humor"
+    ]
+  },
+  "hard_rejects": [
+    "payment_required",
+    "credits_consumed",
+    "trial_with_future_charge",
+    "card_required",
+    "watermark_present",
+    "download_blocked",
+    "commercial_rights_unclear",
+    "commercial_use_not_allowed",
+    "low_quality",
+    "inaccurate",
+    "discontinuity",
+    "duplicate_animation",
+    "public_figure_proxy",
+    "unapproved_automation"
+  ]
+}
