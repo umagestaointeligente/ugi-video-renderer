@@ -80,6 +80,22 @@ jobs:
           cp /tmp/hydro/manual_package.md production/vsa/pilots/hydroelectric/output/MANUAL_PACKAGE.md
           cp /tmp/hydro/render.log production/vsa/pilots/hydroelectric/output/RENDER_LOG.txt
 
+      - name: Inspect grand hydro source footage
+        run: |
+          set -euo pipefail
+          OUT=production/vsa/pilots/hydroelectric/output
+          mkdir -p /tmp/grand
+          curl -fL --retry 5 --retry-delay 2             'https://upload.wikimedia.org/wikipedia/commons/transcoded/9/97/A_Itaipu_Binacional_maior_usina_hidrel%C3%A9trica_do_mundo%2C_tem_novo_Diretor-Geral.webm/A_Itaipu_Binacional_maior_usina_hidrel%C3%A9trica_do_mundo%2C_tem_novo_Diretor-Geral.webm.720p.vp9.webm'             -o /tmp/grand/itaipu.webm
+          curl -fL --retry 5 --retry-delay 2             'https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b4/14%C2%AA_turbina_da_Usina_de_Belo_Monte_entra_em_funcionamento.webm/14%C2%AA_turbina_da_Usina_de_Belo_Monte_entra_em_funcionamento.webm.720p.vp9.webm'             -o /tmp/grand/belo.webm
+          for t in 16 24 32 40 48 56 64 72 80 88 96; do
+            ffmpeg -y -loglevel error -ss "$t" -i /tmp/grand/itaipu.webm -frames:v 1 "$OUT/itaipu_${t}.jpg"
+          done
+          for t in 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192; do
+            ffmpeg -y -loglevel error -ss "$t" -i /tmp/grand/belo.webm -frames:v 1 "$OUT/belo_${t}.jpg"
+          done
+          ffmpeg -y -loglevel error -i /tmp/grand/itaipu.webm             -vf "fps=1/7,scale=320:-2,tile=4x4:padding=4:margin=4" -frames:v 1 "$OUT/itaipu_contact.jpg"
+          ffmpeg -y -loglevel error -ss 112 -i /tmp/grand/belo.webm             -vf "fps=1/7,scale=320:-2,tile=4x4:padding=4:margin=4" -frames:v 1 "$OUT/belo_contact_late.jpg"
+
       - name: Inspect final format
         run: |
           set -euo pipefail
