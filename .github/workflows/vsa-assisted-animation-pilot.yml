@@ -1,3 +1,8 @@
+# VSA_VISUAL_STORY_ENGINE_V1
+# VSA_VISUAL_RELEASE_RECEIPT_V2
+# Metricool VSA brand lock: 6935441
+# NON-PUBLISHING PILOT. Any future release-capable path MUST use:
+# ./.github/actions/vsa-release-gate
 name: VSA Assisted Animation Pilot
 
 on:
