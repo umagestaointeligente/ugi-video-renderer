@@ -29,7 +29,6 @@ SCRIPT=(
 )
 
 COMMONS = {
- "belo": ("14ª turbina da Usina de Belo Monte entra em funcionamento.webm","TV BrasilGov / Wikimedia Commons","CC BY 3.0"),
  "bistra": ("Hydro power plant Bistra.webm","Sounds of Changes / Wikimedia Commons","CC BY 3.0"),
  "music": ("Soft Corporate by MusicLFiles.ogg","MusicLFiles / Wikimedia Commons","CC BY 4.0"),
 }
@@ -310,7 +309,6 @@ def main():
     shutil.rmtree(WORK,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True)
     WORK.mkdir(parents=True);OUT.mkdir(parents=True)
     mask=download(MASK_URL,AS/"mask.png");cta=download(CTA_URL,AS/"cta.png")
-    belo=commons_download(COMMONS["belo"][0],AS/"belo.webm")
     bistra=commons_download(COMMONS["bistra"][0],AS/"bistra.webm")
     music=commons_download(COMMONS["music"][0],AS/"music.ogg")
 
@@ -327,9 +325,9 @@ def main():
     scenes=[]
     p=WORK/"s01_real.mp4";fit_real(bistra,10,lens[0],base,p);scenes.append(p)
     p=WORK/"s02_penstock.mp4";anim_penstock(base,lens[1],p);scenes.append(p)
-    p=WORK/"s03_real.mp4";fit_real(bistra,42,lens[2],base,p);scenes.append(p)
+    p=WORK/"s03_real.mp4";fit_real(bistra,25,lens[2],base,p);scenes.append(p)
     p=WORK/"s04_turbine.mp4";anim_turbine(base,lens[3],p);scenes.append(p)
-    p=WORK/"s05_real.mp4";fit_real(belo,42,lens[4],base,p);scenes.append(p)
+    p=WORK/"s05_real.mp4";fit_real(bistra,42,lens[4],base,p);scenes.append(p)
     p=WORK/"s06_generator.mp4";anim_generator(base,lens[5],p);scenes.append(p)
     p=WORK/"s07_real.mp4";fit_real(bistra,58,lens[6],base,p);scenes.append(p)
 
@@ -370,9 +368,10 @@ def main():
         "reason":"ZSky free video watermark blocks VSA production under current zero-cost policy",
         "specific_scenes":["penstock_flow","turbine_rotation","generator_induction"]},
       "real_footage":[
-        {"file":COMMONS["belo"][0],"credit":COMMONS["belo"][1],"license":COMMONS["belo"][2]},
-        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2]},
-        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2],"second_distinct_moment":True}],
+        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2],"source_start_seconds":10},
+        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2],"source_start_seconds":25},
+        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2],"source_start_seconds":42},
+        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2],"source_start_seconds":58}],
       "music":{"file":COMMONS["music"][0],"credit":COMMONS["music"][1],"license":COMMONS["music"][2]},
       "animation_distinctness_pass":True,"cta_single_pass":True,"format":{"width":1080,"height":1920,"fps":30}
     }
