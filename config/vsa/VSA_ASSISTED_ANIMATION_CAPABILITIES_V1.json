@@ -7,18 +7,24 @@
     "usage_mode": "manual_pilot_only",
     "production_enabled": false,
     "automatic_publication": false,
-    "max_incremental_cost_brl": 0.0,
+    "max_incremental_cost_brl": 0,
     "max_attempts_per_scene": 3,
     "human_approval_required": true,
     "publication_allowed": false,
-    "fallback": "current_pipeline"
+    "fallback": "current_pipeline",
+    "external_premium_visual_policy": "USE_IF_ZERO_COST_VERIFIED",
+    "require_preflight_zero_credit_consumption": true,
+    "fallback_if_credit_required": "current_pipeline"
   },
   "format_contract": {
     "aspect_ratio": "9:16",
     "target_width": 1080,
     "target_height": 1920,
     "target_fps": 30,
-    "preferred_duration_seconds": [3, 5],
+    "preferred_duration_seconds": [
+      3,
+      5
+    ],
     "maximum_normal_duration_seconds": 6,
     "minimum_input_width": 720,
     "minimum_input_height": 1280,
@@ -69,21 +75,48 @@
       "zero_cost_required": true,
       "free_output_fit_for_vsa_production": true,
       "current_blocker": null
+    },
+    "higgsfield_3d_jutsu": {
+      "label": "Higgsfield 3D Jutsu / Blender",
+      "usage_mode": "conditional_pilot",
+      "production_enabled": false,
+      "automatic_publication": false,
+      "zero_cost_preflight_required": true,
+      "credit_consumption_allowed": false,
+      "fallback": "current_pipeline",
+      "status": "USE_IF_ZERO_COST_VERIFIED",
+      "notes": "Use only when the current session/tool path explicitly verifies zero monetary cost and zero credit consumption. If a render or generation would consume credits, require payment, or depend on trial credits, fall back to the current VSA visual pipeline."
     }
   },
   "routing_rules": {
     "prefer_real_footage_when_better": true,
     "public_figure_real_scene": "current_pipeline",
     "zsky_candidate_tags": [
-      "machine", "natural_phenomenon", "scientific_process", "non_graphic_anatomy",
-      "historical_reconstruction", "planetary_motion", "internal_structure", "animated_map",
-      "object_transformation", "scale_comparison", "place_reconstruction", "physical_mechanism",
+      "machine",
+      "natural_phenomenon",
+      "scientific_process",
+      "non_graphic_anatomy",
+      "historical_reconstruction",
+      "planetary_motion",
+      "internal_structure",
+      "animated_map",
+      "object_transformation",
+      "scale_comparison",
+      "place_reconstruction",
+      "physical_mechanism",
       "cinematic_concept"
     ],
     "steve_candidate_tags": [
-      "2d_explainer", "storyboard", "illustrated_character", "educational_situation",
-      "simple_comparison", "illustrated_timeline", "sequence", "animated_infographic",
-      "leo_character", "youth_light_humor"
+      "2d_explainer",
+      "storyboard",
+      "illustrated_character",
+      "educational_situation",
+      "simple_comparison",
+      "illustrated_timeline",
+      "sequence",
+      "animated_infographic",
+      "leo_character",
+      "youth_light_humor"
     ]
   },
   "hard_rejects": [
