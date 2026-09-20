@@ -79,7 +79,7 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/vsa/test_assisted_animation_stage.py 2>&1 | tee /tmp/vsa-assisted-tests.log
-          test "$(grep -c '^test_[0-9][0-9]_' scripts/vsa/test_assisted_animation_stage.py)" -eq 16
+          test "$(grep -Ec '^[[:space:]]+def test_[0-9][0-9]_' scripts/vsa/test_assisted_animation_stage.py)" -eq 16
 
       - name: Generate real visual-plan example
         run: |
