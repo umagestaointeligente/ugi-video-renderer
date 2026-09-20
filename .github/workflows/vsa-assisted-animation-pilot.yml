@@ -47,6 +47,8 @@ jobs:
         run: |
           set -euo pipefail
           python --version
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
           ffmpeg -version | head -n 1
           python -m pip install --disable-pip-version-check Pillow
 
