@@ -8,6 +8,15 @@ name: VSA Hydroelectric Assisted Pilot
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/vsa-hydroelectric-assisted-pilot.yml'
+      - 'production/vsa/pilots/hydroelectric/render_pilot.py'
+      - 'examples/vsa/assisted_animation/hydroelectric_pilot_request.json'
+      - 'scripts/vsa/assisted_animation_stage.py'
+      - 'config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json'
   push:
     branches:
       - feat/vsa-assisted-animation-zsky-steve-v1
