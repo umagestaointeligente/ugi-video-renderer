@@ -213,7 +213,7 @@ def main():
  shutil.rmtree(WORK,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);WORK.mkdir();OUT.mkdir()
  mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png")
  if sha(mask)!=MASK_SHA:raise RuntimeError("MASK_SHA_FAIL")
- music=dl("https://cdn.filmmusic.io/storage/user_upload/filmmusic/music/mp3low/5eff5085e7a891593790597.mp3",AS/"music.mp3");dl(EARTH_URL,AS/"earth.mp4")
+ music=dl("https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/f1f3904c-153f-4d51-9ffe-a8974cf30ea0.mp3",AS/"music.mp3");dl(EARTH_URL,AS/"earth.mp4")
  commons_video("37. Haftanın En İyi Golü (2021-22 Süper Lig) - Mario Balotelli (Adana Demirspor).webm",AS/"balotelli.webm")
  commons_video("Suni Williams Space Station Tour - Zarya and Zvezda.webm",AS/"suni.webm")
  for slug,u in ANIMS.items():dl(u,AS/(slug+"_3d.mp4"))
