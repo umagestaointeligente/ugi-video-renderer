@@ -329,7 +329,7 @@ def main():
       "real_footage":[
         {"file":COMMONS["belo"][0],"credit":COMMONS["belo"][1],"license":COMMONS["belo"][2]},
         {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2]},
-        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2],"second_distinct_moment":true}],
+        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2],"second_distinct_moment":True}],
       "music":{"file":COMMONS["music"][0],"credit":COMMONS["music"][1],"license":COMMONS["music"][2]},
       "animation_distinctness_pass":True,"cta_single_pass":True,"format":{"width":1080,"height":1920,"fps":30}
     }
