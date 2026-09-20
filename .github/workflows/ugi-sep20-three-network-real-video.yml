@@ -22,7 +22,7 @@ jobs:
           O=public/ugi/editorial/2026-09-20/network-pack
           mkdir -p "$O/src"
           yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/checkout.mp4" "https://www.pexels.com/video/people-paying-at-the-counter-in-the-supermarket-4249560/"
-          yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/store.mp4" "https://www.pexels.com/pt-br/video/corredor-movimentado-do-supermercado-com-compradores-37101039/"
+          yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/store.mp4" "https://www.pexels.com/video/food-man-woman-shopping-4122971/"
           yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/warehouse.mp4" "https://www.pexels.com/video/automated-warehouse-with-robotics-in-action-32386624/"
           cat > "$O/ig.txt" <<'TXT'
           A fila não começa no caixa. Quando o cliente para aqui, o problema muitas vezes nasceu antes: escala errada, processo lento, ruptura, preço sem clareza ou uma jornada que obriga o consumidor a esperar. No varejo, fila é um sintoma visível de decisões invisíveis. O melhor gestor não pergunta apenas como acelerar o caixa. Ele pergunta por que o cliente precisou esperar. Cada minuto de atrito disputa espaço com a próxima compra. Antes de colocar mais tecnologia na loja, encontre o gargalo que realmente está roubando tempo do cliente.
