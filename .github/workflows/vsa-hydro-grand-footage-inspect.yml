@@ -4,6 +4,7 @@
 # NON-PUBLISHING INSPECTION. Any future release-capable path MUST use:
 # ./.github/actions/vsa-release-gate
 name: VSA Grand Hydro Footage Inspect
+# trigger: inspect v1
 
 on:
   workflow_dispatch:
