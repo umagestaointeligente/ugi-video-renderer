@@ -1,0 +1,88 @@
+# VSA_VISUAL_STORY_ENGINE_V1
+# VSA_VISUAL_RELEASE_RECEIPT_V2
+# Metricool VSA brand lock: 6935441
+# NON-PUBLISHING PILOT. Any future release-capable path MUST use:
+# ./.github/actions/vsa-release-gate
+name: VSA Hydroelectric Assisted Pilot
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/vsa-assisted-animation-zsky-steve-v1
+    paths:
+      - '.github/workflows/vsa-hydroelectric-assisted-pilot.yml'
+      - 'production/vsa/pilots/hydroelectric/render_pilot.py'
+      - 'examples/vsa/assisted_animation/hydroelectric_pilot_request.json'
+      - 'scripts/vsa/assisted_animation_stage.py'
+      - 'config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vsa-hydroelectric-assisted-pilot
+  cancel-in-progress: true
+
+jobs:
+  render-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout isolated pilot branch
+        uses: actions/checkout@v4
+
+      - name: Install zero-cost runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check Pillow requests edge-tts
+
+      - name: Compile pilot code
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            scripts/vsa/assisted_animation_stage.py \
+            production/vsa/pilots/hydroelectric/render_pilot.py
+
+      - name: Generate assisted visual plan
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hydro
+          python scripts/vsa/assisted_animation_stage.py plan \
+            --request examples/vsa/assisted_animation/hydroelectric_pilot_request.json \
+            --out /tmp/hydro/visual_plan.json \
+            --package /tmp/hydro/manual_package.md
+          jq -e '.publication_allowed == false and .automatic_publication == false' /tmp/hydro/visual_plan.json
+          jq -e '[.scenes[] | select(.tool_candidate=="zsky")] | length >= 3' /tmp/hydro/visual_plan.json
+          jq -e '[.scenes[] | select(.tool_candidate=="zsky") | .production_route] | all(.=="current_pipeline")' /tmp/hydro/visual_plan.json
+
+      - name: Render real-footage plus specific explanatory animations
+        run: |
+          set -euo pipefail
+          python production/vsa/pilots/hydroelectric/render_pilot.py 2>&1 | tee /tmp/hydro/render.log
+          test -s production/vsa/pilots/hydroelectric/output/VSA_PILOTO_HIDRELETRICA_ASSISTED_V1.mp4
+          test -s production/vsa/pilots/hydroelectric/output/PILOT_RECEIPT.json
+          jq -e '.publication_allowed == false and .metricool_mutated == false and .animation_distinctness_pass == true and .cta_single_pass == true' production/vsa/pilots/hydroelectric/output/PILOT_RECEIPT.json
+          jq -e '.assisted_animation.production_route == "current_pipeline"' production/vsa/pilots/hydroelectric/output/PILOT_RECEIPT.json
+          cp /tmp/hydro/visual_plan.json production/vsa/pilots/hydroelectric/output/VISUAL_PLAN.json
+          cp /tmp/hydro/manual_package.md production/vsa/pilots/hydroelectric/output/MANUAL_PACKAGE.md
+          cp /tmp/hydro/render.log production/vsa/pilots/hydroelectric/output/RENDER_LOG.txt
+
+      - name: Inspect final format
+        run: |
+          set -euo pipefail
+          ffprobe -v error -select_streams v:0 \
+            -show_entries stream=width,height,avg_frame_rate,codec_name,pix_fmt \
+            -of json production/vsa/pilots/hydroelectric/output/VSA_PILOTO_HIDRELETRICA_ASSISTED_V1.mp4 \
+            | tee production/vsa/pilots/hydroelectric/output/FFPROBE.json
+          jq -e '.streams[0].width == 1080 and .streams[0].height == 1920 and .streams[0].codec_name == "h264" and .streams[0].pix_fmt == "yuv420p"' production/vsa/pilots/hydroelectric/output/FFPROBE.json
+
+      - name: Upload pilot for Paulo review
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-hydroelectric-assisted-pilot
+          path: production/vsa/pilots/hydroelectric/output/
+          if-no-files-found: error
+          retention-days: 7
