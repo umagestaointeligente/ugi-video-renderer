@@ -23,7 +23,7 @@ TOPICS={
  "equinocio":{
   "title":"Por que o dia e a noite quase empatam no equinócio? #shorts",
   "header":["POR QUE O DIA E A NOITE","QUASE EMPATAM?"],
-  "description":"A primavera de 2026 começa no Brasil em 22 de setembro, às 21h05 (horário de Brasília). Mas por que o equinócio deixa o dia e a noite quase iguais? #VocêSabiaAgora #Ciência #Equinócio #Primavera\\n\\nImagens da Terra: NASA, domínio público. Reconstrução 3D educativa produzida pelo VSA.",
+  "description":"A primavera de 2026 começa no Brasil em 22 de setembro, às 21h05 (horário de Brasília). Mas por que o equinócio deixa o dia e a noite quase iguais? #VocêSabiaAgora #Ciência #Equinócio #Primavera\\n\\nImagens da Terra: NASA, domínio público. Reconstrução 3D educativa produzida pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
   "content_class":"SCIENCE_EXPLAINER","expected_subject":"EQUINOCIO_2026",
   "real":"earth.mp4","source_url":"https://eol.jsc.nasa.gov/BeyondThePhotography/CrewEarthObservationsVideos/AutomaticallyGenerated/ISS075-E-81420-85033-20260822-Day.mp4","license":"NASA_PUBLIC_DOMAIN",
   "scenes":[
@@ -38,7 +38,7 @@ TOPICS={
  "bola_curva":{
   "title":"Por que a bola faz curva numa cobrança de falta? #shorts",
   "header":["POR QUE A BOLA","FAZ CURVA?"],
-  "description":"Com o futebol entre os assuntos mais buscados no Brasil, vale olhar a física por trás de uma cobrança de falta: o efeito Magnus. #VocêSabiaAgora #Futebol #Física #EfeitoMagnus\\n\\nFootage real: beIN SPORTS Türkiye / Wikimedia Commons, CC BY 3.0. Reconstrução 3D educativa produzida pelo VSA.",
+  "description":"Com o futebol entre os assuntos mais buscados no Brasil, vale olhar a física por trás de uma cobrança de falta: o efeito Magnus. #VocêSabiaAgora #Futebol #Física #EfeitoMagnus\\n\\nFootage real: beIN SPORTS Türkiye / Wikimedia Commons, CC BY 3.0. Reconstrução 3D educativa produzida pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
   "content_class":"SCIENCE_EXPLAINER","expected_subject":"COBRANCA_DE_FALTA",
   "real":"balotelli.webm","source_url":"https://commons.wikimedia.org/wiki/File:37._Haftan%C4%B1n_En_%C4%B0yi_Gol%C3%BC_(2021-22_S%C3%BCper_Lig)_-_Mario_Balotelli_(Adana_Demirspor).webm","license":"CC_BY_3.0",
   "scenes":[
@@ -53,7 +53,7 @@ TOPICS={
  "suni_cabelo":{
   "title":"Por que o cabelo da Suni Williams flutua no espaço? #shorts",
   "header":["POR QUE O CABELO","FLUTUA NO ESPAÇO?"],
-  "description":"O cabelo da astronauta Suni Williams mostra uma das coisas mais contraintuitivas da órbita: não é ausência de gravidade. É queda livre contínua. #VocêSabiaAgora #Espaço #NASA #SuniWilliams\\n\\nFootage: Sunita Williams/NASA, domínio público. Reconstrução 3D educativa produzida pelo VSA.",
+  "description":"O cabelo da astronauta Suni Williams mostra uma das coisas mais contraintuitivas da órbita: não é ausência de gravidade. É queda livre contínua. #VocêSabiaAgora #Espaço #NASA #SuniWilliams\\n\\nFootage: Sunita Williams/NASA, domínio público. Reconstrução 3D educativa produzida pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
   "content_class":"PERSON_PROFILE","expected_subject":"SUNITA_WILLIAMS",
   "real":"suni.webm","source_url":"https://commons.wikimedia.org/wiki/File:Suni_Williams_Space_Station_Tour_-_Zarya_and_Zvezda.webm","license":"NASA_PUBLIC_DOMAIN",
   "scenes":[
@@ -213,7 +213,7 @@ def main():
  shutil.rmtree(WORK,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);WORK.mkdir();OUT.mkdir()
  mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png")
  if sha(mask)!=MASK_SHA:raise RuntimeError("MASK_SHA_FAIL")
- music=commons_music(AS/"music.ogg");dl(EARTH_URL,AS/"earth.mp4")
+ music=dl("https://cdn.filmmusic.io/storage/user_upload/filmmusic/music/mp3low/5eff5085e7a891593790597.mp3",AS/"music.mp3");dl(EARTH_URL,AS/"earth.mp4")
  commons_video("37. Haftanın En İyi Golü (2021-22 Süper Lig) - Mario Balotelli (Adana Demirspor).webm",AS/"balotelli.webm")
  commons_video("Suni Williams Space Station Tour - Zarya and Zvezda.webm",AS/"suni.webm")
  for slug,u in ANIMS.items():dl(u,AS/(slug+"_3d.mp4"))
