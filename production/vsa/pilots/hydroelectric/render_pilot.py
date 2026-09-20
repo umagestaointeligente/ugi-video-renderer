@@ -240,6 +240,50 @@ def srt_time(s):
     ms=int(round(s*1000));h=ms//3600000;ms%=3600000;m=ms//60000;ms%=60000;sec=ms//1000;ms%=1000
     return f"{h:02d}:{m:02d}:{sec:02d},{ms:03d}"
 
+def ass_time(s):
+    h=int(s//3600); s-=h*3600; m=int(s//60); s-=m*60
+    return f"{h}:{m:02d}:{s:05.2f}"
+
+def make_ass(text,total,outp):
+    words=text.split(); chunks=[]; cur=[]
+    for w in words:
+        cur.append(w)
+        if len(cur)>=7 or (len(" ".join(cur))>37 and len(cur)>=5):
+            chunks.append(" ".join(cur)); cur=[]
+    if cur: chunks.append(" ".join(cur))
+    weights=[max(1,len(c.split())) for c in chunks]; sw=sum(weights); t=0.0
+    header="""[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Default,DejaVu Sans,38,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,2,0,5,70,70,70,1
+
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+"""
+    lines=[header]
+    for c,wt in zip(chunks,weights):
+        d=total*wt/sw; end=t+d
+        # Force max two readable lines in the canonical CC panel.
+        parts=[]; current=""
+        for word in c.split():
+            test=(current+" "+word).strip()
+            if len(test)<=31: current=test
+            else:
+                if current: parts.append(current)
+                current=word
+        if current: parts.append(current)
+        if len(parts)>2: parts=[parts[0]," ".join(parts[1:])]
+        txt=r"\N".join(parts[:2]).replace("{","").replace("}","")
+        lines.append(f"Dialogue: 0,{ass_time(t)},{ass_time(end)},Default,,0,0,0,,{{\\an5\\pos(540,1438)}}{txt}\n")
+        t=end
+    pathlib.Path(outp).write_text("".join(lines),encoding="utf-8")
+
 def make_srt(text,total,outp):
     words=text.split(); chunks=[];cur=[]
     for w in words:
@@ -281,22 +325,21 @@ def main():
     weights=[.14,.14,.14,.14,.14,.15,.15]; lens=[bd*w for w in weights]
     lens[-1]+=bd-sum(lens)
     scenes=[]
-    p=WORK/"s01_real.mp4";fit_real(belo,8,lens[0],base,p);scenes.append(p)
+    p=WORK/"s01_real.mp4";fit_real(bistra,10,lens[0],base,p);scenes.append(p)
     p=WORK/"s02_penstock.mp4";anim_penstock(base,lens[1],p);scenes.append(p)
-    p=WORK/"s03_real.mp4";fit_real(bistra,10,lens[2],base,p);scenes.append(p)
+    p=WORK/"s03_real.mp4";fit_real(bistra,42,lens[2],base,p);scenes.append(p)
     p=WORK/"s04_turbine.mp4";anim_turbine(base,lens[3],p);scenes.append(p)
-    p=WORK/"s05_real.mp4";fit_real(bistra,42,lens[4],base,p);scenes.append(p)
+    p=WORK/"s05_real.mp4";fit_real(belo,42,lens[4],base,p);scenes.append(p)
     p=WORK/"s06_generator.mp4";anim_generator(base,lens[5],p);scenes.append(p)
-    p=WORK/"s07_real.mp4";fit_real(belo,42,lens[6],base,p);scenes.append(p)
+    p=WORK/"s07_real.mp4";fit_real(bistra,58,lens[6],base,p);scenes.append(p)
 
     concat=WORK/"body_concat.txt";concat.write_text("\n".join(f"file '{x}'" for x in scenes)+"\n",encoding="utf-8")
     raw=WORK/"body_raw.mp4"
     run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",concat,"-t",f"{bd:.3f}","-an",
          "-c:v","libx264","-preset","veryfast","-crf","19","-pix_fmt","yuv420p",raw])
-    srt=WORK/"captions.srt";make_srt(SCRIPT,bd,srt)
-    cap=WORK/"body_cap.mp4"; esc=str(srt).replace("'","\\'").replace(":","\\:")
-    style="FontName=DejaVu Sans,FontSize=38,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=2,Shadow=0,Alignment=2,MarginL=70,MarginR=70,MarginV=430"
-    run(["ffmpeg","-y","-loglevel","error","-i",raw,"-vf",f"subtitles='{esc}':force_style='{style}'","-an",
+    ass=WORK/"captions.ass";make_ass(SCRIPT,bd,ass)
+    cap=WORK/"body_cap.mp4"; esc=str(ass).replace("'","\\'").replace(":","\\:")
+    run(["ffmpeg","-y","-loglevel","error","-i",raw,"-vf",f"subtitles='{esc}'","-an",
          "-c:v","libx264","-preset","veryfast","-crf","19",cap])
 
     cta_vid=WORK/"cta.mp4"
