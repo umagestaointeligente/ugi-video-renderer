@@ -31,7 +31,6 @@ SCRIPT=(
 COMMONS = {
  "belo": ("14ª turbina da Usina de Belo Monte entra em funcionamento.webm","TV BrasilGov / Wikimedia Commons","CC BY 3.0"),
  "bistra": ("Hydro power plant Bistra.webm","Sounds of Changes / Wikimedia Commons","CC BY 3.0"),
- "geppert": ("Wasserkraftwerk Fa. Geppert.webm","Peter Ortner / Wikimedia Commons","CC BY-SA 3.0"),
  "music": ("Soft Corporate by MusicLFiles.ogg","MusicLFiles / Wikimedia Commons","CC BY 4.0"),
 }
 
@@ -269,7 +268,6 @@ def main():
     mask=download(MASK_URL,AS/"mask.png");cta=download(CTA_URL,AS/"cta.png")
     belo=commons_download(COMMONS["belo"][0],AS/"belo.webm")
     bistra=commons_download(COMMONS["bistra"][0],AS/"bistra.webm")
-    geppert=commons_download(COMMONS["geppert"][0],AS/"geppert.webm")
     music=commons_download(COMMONS["music"][0],AS/"music.ogg")
 
     base=WORK/"base.jpg";make_base(mask,"COMO UMA HIDRELÉTRICA GERA ELETRICIDADE?",base)
@@ -287,7 +285,7 @@ def main():
     p=WORK/"s02_penstock.mp4";anim_penstock(base,lens[1],p);scenes.append(p)
     p=WORK/"s03_real.mp4";fit_real(bistra,10,lens[2],base,p);scenes.append(p)
     p=WORK/"s04_turbine.mp4";anim_turbine(base,lens[3],p);scenes.append(p)
-    p=WORK/"s05_real.mp4";fit_real(geppert,3,lens[4],base,p);scenes.append(p)
+    p=WORK/"s05_real.mp4";fit_real(bistra,42,lens[4],base,p);scenes.append(p)
     p=WORK/"s06_generator.mp4";anim_generator(base,lens[5],p);scenes.append(p)
     p=WORK/"s07_real.mp4";fit_real(belo,42,lens[6],base,p);scenes.append(p)
 
@@ -331,7 +329,7 @@ def main():
       "real_footage":[
         {"file":COMMONS["belo"][0],"credit":COMMONS["belo"][1],"license":COMMONS["belo"][2]},
         {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2]},
-        {"file":COMMONS["geppert"][0],"credit":COMMONS["geppert"][1],"license":COMMONS["geppert"][2]}],
+        {"file":COMMONS["bistra"][0],"credit":COMMONS["bistra"][1],"license":COMMONS["bistra"][2],"second_distinct_moment":true}],
       "music":{"file":COMMONS["music"][0],"credit":COMMONS["music"][1],"license":COMMONS["music"][2]},
       "animation_distinctness_pass":True,"cta_single_pass":True,"format":{"width":1080,"height":1920,"fps":30}
     }
