@@ -68,11 +68,38 @@ def download(url,path,retries=5):
 
 def commons_download(filename,path):
     api="https://commons.wikimedia.org/w/api.php"
+    headers={"User-Agent":"VSA-Hydroelectric-Pilot/1.0"}
+    is_video=filename.lower().endswith((".webm",".ogv",".mp4"))
+    if is_video:
+        params={"action":"query","format":"json","prop":"videoinfo","viprop":"url|derivatives","titles":"File:"+filename}
+        r=requests.get(api,params=params,headers=headers,timeout=60); r.raise_for_status()
+        page=next(iter(r.json()["query"]["pages"].values()))
+        vi=(page.get("videoinfo") or [{}])[0]
+        derivs=vi.get("derivatives") or []
+        candidates=[]
+        for d in derivs:
+            u=d.get("src") or d.get("url")
+            if not u: continue
+            width=int(d.get("width") or 0)
+            typ=str(d.get("type") or "").lower()
+            if "webm" in typ or ".webm" in u.lower() or "mp4" in typ or ".mp4" in u.lower():
+                candidates.append((abs(width-1280),-width,u))
+        candidates.sort()
+        urls=[u for _,__,u in candidates[:6]]
+        original=str(vi.get("url") or "").split("?",1)[0]
+        if original: urls.append(original)
+        errors=[]
+        for u in urls:
+            try:
+                pathlib.Path(path).unlink(missing_ok=True)
+                return download(u,path,retries=2)
+            except Exception as e:
+                errors.append(str(e))
+        raise RuntimeError("COMMONS_VIDEO_ALL_ROUTES_FAILED:"+filename+":"+repr(errors[-4:]))
     params={"action":"query","format":"json","prop":"imageinfo","iiprop":"url","titles":"File:"+filename}
-    r=requests.get(api,params=params,headers={"User-Agent":"VSA-Hydroelectric-Pilot/1.0"},timeout=60)
-    r.raise_for_status()
+    r=requests.get(api,params=params,headers=headers,timeout=60); r.raise_for_status()
     page=next(iter(r.json()["query"]["pages"].values()))
-    url=page["imageinfo"][0]["url"]
+    url=str(page["imageinfo"][0]["url"]).split("?",1)[0]
     return download(url,path)
 
 def make_base(mask,title,out):
