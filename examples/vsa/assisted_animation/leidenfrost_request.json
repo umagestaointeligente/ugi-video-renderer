@@ -1,0 +1,35 @@
+{
+  "video_id": "leidenfrost_pilot",
+  "topic_title": "Por que uma gota de água dança numa panela muito quente?",
+  "narration_status": "approved",
+  "public_figure": false,
+  "real_footage_available": false,
+  "approved_script": "Quando a panela passa de certa temperatura, a base da gota vaporiza quase instantaneamente. O vapor fica preso entre o líquido e o metal e sustenta a gota sem contato direto. Para explicar a ideia em 2D, Léo mostra uma comparação entre contato direto e uma camada de vapor. Com menos atrito, a gota desliza pela superfície até perder energia e evaporar.",
+  "scene_hints": [
+    {
+      "match": "base da gota vaporiza",
+      "tool_candidate": "zsky",
+      "visual_tag": "scientific_process",
+      "duration_seconds": 5,
+      "visual_purpose": "Ver a formação do vapor exatamente na interface entre gota e metal.",
+      "scene_description": "Macro científico de uma gota de água sobre metal muito quente; a parte inferior vira vapor e cria separação física.",
+      "camera_motion": "macro lateral suave, quase fixa, acompanhando a interface"
+    },
+    {
+      "match": "sustenta a gota",
+      "tool_candidate": "zsky",
+      "visual_tag": "physical_mechanism",
+      "duration_seconds": 5,
+      "visual_purpose": "Entender que a camada de vapor reduz o contato direto com a panela."
+    },
+    {
+      "match": "Léo mostra",
+      "tool_candidate": "steve_ai",
+      "requires_leo": true,
+      "visual_tag": "2d_explainer",
+      "duration_seconds": 4,
+      "visual_purpose": "Comparar visualmente contato direto versus sustentação por vapor.",
+      "scene_description": "Léo ilustrado aponta para dois diagramas 2D: à esquerda a gota tocando o metal; à direita a gota separada por uma camada de vapor. Léo não fala."
+    }
+  ]
+}
