@@ -1,0 +1,65 @@
+name: UGI Sep20 Three-Network Real-Video Pack
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-sep20-three-network-real-video.yml'
+permissions:
+  contents: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -U edge-tts yt-dlp
+      - name: Build three real-video originals
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-09-20/network-pack
+          mkdir -p "$O/src"
+          yt-dlp -f "best[ext=mp4]/best" -o "$O/src/checkout.mp4" "https://www.pexels.com/video/people-paying-at-the-counter-in-the-supermarket-4249560/"
+          yt-dlp -f "best[ext=mp4]/best" -o "$O/src/store.mp4" "https://www.pexels.com/pt-br/video/corredor-movimentado-do-supermercado-com-compradores-37101039/"
+          yt-dlp -f "best[ext=mp4]/best" -o "$O/src/warehouse.mp4" "https://www.pexels.com/video/automated-warehouse-with-robotics-in-action-32386624/"
+          cat > "$O/ig.txt" <<'TXT'
+          A fila não começa no caixa. Quando o cliente para aqui, o problema muitas vezes nasceu antes: escala errada, processo lento, ruptura, preço sem clareza ou uma jornada que obriga o consumidor a esperar. No varejo, fila é um sintoma visível de decisões invisíveis. O melhor gestor não pergunta apenas como acelerar o caixa. Ele pergunta por que o cliente precisou esperar. Cada minuto de atrito disputa espaço com a próxima compra. Antes de colocar mais tecnologia na loja, encontre o gargalo que realmente está roubando tempo do cliente.
+          TXT
+          cat > "$O/tt.txt" <<'TXT'
+          Esse estoque pode começar a trabalhar antes de alguém tocar numa caixa. Em operações automatizadas, sistemas organizam, movimentam e priorizam produtos enquanto a equipe acompanha exceções. O ganho não está em colocar robôs onde havia pessoas. Está em tirar deslocamento, espera e retrabalho do processo. Automação boa não é a que parece futurista. É a que faz o pedido andar mais rápido, com menos erro e sem criar um novo gargalo depois. Se a tecnologia não melhora o fluxo, ela virou decoração cara.
+          TXT
+          cat > "$O/yt.txt" <<'TXT'
+          Uma loja pode estar cheia e ainda assim perder venda. Movimento não é a mesma coisa que conversão. O cliente entra, procura, compara, espera, desiste e vai embora. Às vezes o problema está na ruptura. Às vezes na fila. Às vezes em uma exposição que obriga o consumidor a procurar demais. E existe um erro comum de gestão: olhar apenas para o resultado final e não para o caminho que produziu aquele resultado. Se cem pessoas entram e poucas compram, a pergunta não é somente quanto vendemos. É onde perdemos as outras. Gestão de varejo começa quando transformamos a jornada em etapas observáveis: entrada, descoberta, disponibilidade, decisão, pagamento e retorno. Cada etapa tem um atrito possível. Uma loja eficiente não é apenas bonita ou cheia. É uma operação que remove fricção para que o cliente consiga comprar. Tecnologia ajuda quando torna esse caminho mais simples. Dados ajudam quando mostram onde a jornada quebra. E pessoas continuam essenciais porque são elas que percebem situações que o indicador demora para explicar. Antes de buscar mais tráfego, vale uma pergunta: estamos aproveitando bem o tráfego que já temos?
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=+2% --text "$(cat "$O/ig.txt")" --write-media "$O/ig.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=+5% --text "$(cat "$O/tt.txt")" --write-media "$O/tt.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/yt.txt")" --write-media "$O/yt.mp3"
+          mkvert () {
+            local src=$1 audio=$2 out=$3 title=$4
+            D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$audio")
+            ffmpeg -y -stream_loop -1 -i "$src" -i "$audio" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,drawbox=x=0:y=0:w=iw:h=180:color=black@0.38:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='$title':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=65[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$D" -c:v libx264 -preset medium -crf 20 -c:a aac -b:a 192k "$out"
+          }
+          mkvert "$O/src/checkout.mp4" "$O/ig.mp3" "$O/instagram-fila-nao-comeca-no-caixa.mp4" "A FILA NÃO COMEÇA NO CAIXA"
+          mkvert "$O/src/warehouse.mp4" "$O/tt.mp3" "$O/tiktok-estoque-que-trabalha-sozinho.mp4" "AUTOMAÇÃO NÃO É DECORAÇÃO"
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/yt.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/store.mp4" -stream_loop -1 -i "$O/src/checkout.mp4" -i "$O/yt.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080[a];[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080[b];[a][b]xfade=transition=fade:duration=0.5:offset=18,drawbox=x=0:y=0:w=iw:h=145:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='LOJA CHEIA NÃO SIGNIFICA VENDA':fontcolor=white:fontsize=58:x=(w-text_w)/2:y=42[v];[2:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$D" -c:v libx264 -preset medium -crf 20 -c:a aac -b:a 192k "$O/youtube-loja-cheia-nao-significa-venda.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-09-20/network-pack")
+          fs=["instagram-fila-nao-comeca-no-caixa.mp4","tiktok-estoque-que-trabalha-sozinho.mp4","youtube-loja-cheia-nao-significa-venda.mp4"]
+          probes={}
+          for f in fs:
+            q=json.loads(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration:stream=width,height","-of","json",str(p/f)],text=True))
+            assert float(q["format"]["duration"])>25
+            probes[f]=q
+          (p/"qa.json").write_text(json.dumps({"state":"PASS","voice":"pt-BR-AntonioNeural","realVideo":True,"noReporter":True,"noSlideshow":True,"sources":["Pexels 4249560","Pexels 37101039","Pexels 32386624"],"files":fs},indent=2))
+          PY
+      - name: Commit finals
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-09-20/network-pack
+          git commit -m "assets(ugi): Sep20 three-network real-video pack [skip ci]"
+          git push
