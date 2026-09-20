@@ -1,0 +1,97 @@
+name: VSA Assisted Animation Pilot
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/vsa-assisted-animation-pilot.yml'
+      - 'config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json'
+      - 'scripts/vsa/assisted_animation_stage.py'
+      - 'scripts/vsa/test_assisted_animation_stage.py'
+      - 'examples/vsa/assisted_animation/**'
+      - 'docs/vsa/VSA_ASSISTED_ANIMATION_PILOT_V1.md'
+  push:
+    branches:
+      - feat/vsa-assisted-animation-zsky-steve-v1
+    paths:
+      - '.github/workflows/vsa-assisted-animation-pilot.yml'
+      - 'config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json'
+      - 'scripts/vsa/assisted_animation_stage.py'
+      - 'scripts/vsa/test_assisted_animation_stage.py'
+      - 'examples/vsa/assisted_animation/**'
+      - 'docs/vsa/VSA_ASSISTED_ANIMATION_PILOT_V1.md'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vsa-assisted-animation-pilot
+  cancel-in-progress: true
+
+jobs:
+  validate-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout isolated pilot branch
+        uses: actions/checkout@v4
+
+      - name: Verify runtime
+        run: |
+          set -euo pipefail
+          python --version
+          ffmpeg -version | head -n 1
+          python -m pip install --disable-pip-version-check Pillow
+
+      - name: Compile pilot modules
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            scripts/vsa/assisted_animation_stage.py \
+            scripts/vsa/test_assisted_animation_stage.py
+
+      - name: Enforce zero-cost and no-publication registry
+        run: |
+          set -euo pipefail
+          jq -e '.defaults.max_incremental_cost_brl == 0' config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json
+          jq -e '.defaults.production_enabled == false' config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json
+          jq -e '.defaults.automatic_publication == false' config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json
+          jq -e '.tools.zsky.production_enabled == false and .tools.zsky.automatic_publication == false' config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json
+          jq -e '.tools.steve_ai.production_enabled == false and .tools.steve_ai.automatic_publication == false' config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json
+
+      - name: Enforce manual-only external-tool boundary
+        run: |
+          set -euo pipefail
+          ! grep -Eiq 'selenium|playwright|puppeteer|headless|requests\.|httpx|createScheduledPost|Metricool__|youtube.*upload' scripts/vsa/assisted_animation_stage.py
+          jq -e '.tools.zsky.automated_access_allowed == false and .tools.zsky.private_api_allowed == false' config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json
+          jq -e '.tools.steve_ai.automated_access_allowed == false and .tools.steve_ai.private_api_allowed == false' config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json
+
+      - name: Run the 16 mandatory tests
+        run: |
+          set -euo pipefail
+          python scripts/vsa/test_assisted_animation_stage.py 2>&1 | tee /tmp/vsa-assisted-tests.log
+          test "$(grep -c '^test_[0-9][0-9]_' scripts/vsa/test_assisted_animation_stage.py)" -eq 16
+
+      - name: Generate real visual-plan example
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vsa-assisted-example
+          python scripts/vsa/assisted_animation_stage.py plan \
+            --request examples/vsa/assisted_animation/leidenfrost_request.json \
+            --out /tmp/vsa-assisted-example/leidenfrost_plan.json \
+            --package /tmp/vsa-assisted-example/leidenfrost_manual_package.md
+          jq -e '.scene_count >= 2 and .scene_count <= 4' /tmp/vsa-assisted-example/leidenfrost_plan.json
+          jq -e '.production_enabled == false and .automatic_publication == false and .publication_allowed == false' /tmp/vsa-assisted-example/leidenfrost_plan.json
+          jq -e '[.scenes[].tool_candidate] | index("zsky") != null' /tmp/vsa-assisted-example/leidenfrost_plan.json
+          jq -e '[.scenes[].tool_candidate] | index("steve_ai") != null' /tmp/vsa-assisted-example/leidenfrost_plan.json
+          cp /tmp/vsa-assisted-tests.log /tmp/vsa-assisted-example/test_results.txt
+
+      - name: Upload pilot evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-assisted-animation-pilot-evidence
+          path: /tmp/vsa-assisted-example/
+          if-no-files-found: error
+          retention-days: 7
