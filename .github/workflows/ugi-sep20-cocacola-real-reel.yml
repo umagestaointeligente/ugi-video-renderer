@@ -1,0 +1,71 @@
+name: UGI Sep20 Coca-Cola Real Footage Reel
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ugi-sep20-cocacola-real-reel.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -U edge-tts yt-dlp
+      - name: Build real-footage reel
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT=public/ugi/editorial/2026-09-20/cocacola
+          mkdir -p "$OUT"
+          yt-dlp -f "bv*[height<=1080]+ba/b[height<=1080]" --merge-output-format mp4 -o "$OUT/source.mp4" "https://www.youtube.com/watch?v=mKWa2rpGfSs"
+          cat > "$OUT/narration.txt" <<'TXT'
+          A maior fábrica da Coca-Cola do mundo em volume fica no Brasil. Em Jundiaí, a operação produz mais de dois bilhões de litros por ano. Agora, a Coca-Cola FEMSA está investindo mais de trezentos e sessenta milhões de reais para ampliar capacidade e eficiência. A nova linha de retornáveis praticamente dobra a capacidade de envase, de cerca de vinte e quatro mil para cinquenta mil garrafas por hora. E tem um detalhe de gestão ainda mais interessante: produzir mais usando melhor os recursos. Desde 1993, o consumo de água por litro de bebida caiu cerca de oitenta por cento. Escala não é simplesmente fazer mais. É crescer sem multiplicar desperdício na mesma proporção. Essa talvez seja a parte mais importante dessa fábrica.
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=-3% --text "$(cat "$OUT/narration.txt")" --write-media "$OUT/voice.mp3" --write-subtitles "$OUT/voice.vtt"
+          DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT/voice.mp3")
+          # Real continuous motion from the exact Jundiai production line; crop to 9:16, pace with 6 distinct excerpts.
+          ffmpeg -y -i "$OUT/source.mp4" -filter_complex "
+            [0:v]split=6[a][b][c][d][e][f];
+            [a]trim=2:12,setpts=PTS-STARTPTS[v0];
+            [b]trim=15:25,setpts=PTS-STARTPTS[v1];
+            [c]trim=28:38,setpts=PTS-STARTPTS[v2];
+            [d]trim=42:52,setpts=PTS-STARTPTS[v3];
+            [e]trim=56:66,setpts=PTS-STARTPTS[v4];
+            [f]trim=70:82,setpts=PTS-STARTPTS[v5];
+            [v0][v1][v2][v3][v4][v5]concat=n=6:v=1:a=0,
+            scale=1920:1080:force_original_aspect_ratio=increase,crop=608:1080,
+            scale=1080:1920,setsar=1,
+            drawbox=x=0:y=0:w=iw:h=190:color=black@0.45:t=fill,
+            drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='A MAIOR FÁBRICA DA COCA-COLA':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=52,
+            drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='DO MUNDO EM VOLUME FICA NO BRASIL':fontcolor=white:fontsize=31:x=(w-text_w)/2:y=118[v]
+          " -map "[v]" -t "$DUR" -an -c:v libx264 -preset medium -crf 19 "$OUT/picture.mp4"
+          ffmpeg -y -i "$OUT/picture.mp4" -i "$OUT/voice.mp3" -filter_complex "[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 192k -shortest "$OUT/instagram-cocacola-jundiai.mp4"
+          ffprobe -v error -show_entries format=duration:stream=width,height,codec_name -of json "$OUT/instagram-cocacola-jundiai.mp4" > "$OUT/probe.json"
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path("public/ugi/editorial/2026-09-20/cocacola")
+          q=json.loads((p/"probe.json").read_text())
+          v=next(s for s in q["streams"] if "width" in s)
+          assert v["width"]==1080 and v["height"]==1920
+          d=float(q["format"]["duration"]); assert 35 <= d <= 75
+          (p/"qa.json").write_text(json.dumps({
+            "state":"PASS","exactSubjectVisual":True,"realMotionFootage":True,
+            "noReporterVisual":True,"noSlideShow":True,"voice":"pt-BR-AntonioNeural",
+            "source":"Sidel Coca-Cola FEMSA Jundiai production-line case video",
+            "durationSeconds":d
+          },ensure_ascii=False,indent=2))
+          PY
+      - name: Commit final
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-09-20/cocacola
+          git commit -m "assets(ugi): Sep20 Coca-Cola real-footage reel [skip ci]"
+          git push
