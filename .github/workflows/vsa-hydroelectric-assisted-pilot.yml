@@ -13,7 +13,7 @@ on:
       - main
     paths:
       - '.github/workflows/vsa-hydroelectric-assisted-pilot.yml'
-      - 'production/vsa/pilots/hydroelectric/render_pilot.py'
+      - 'production/vsa/pilots/hydro_grand_v2/render_grand_hydro.py'
       - 'examples/vsa/assisted_animation/hydroelectric_pilot_request.json'
       - 'scripts/vsa/assisted_animation_stage.py'
       - 'config/vsa/VSA_ASSISTED_ANIMATION_CAPABILITIES_V1.json'
@@ -86,7 +86,7 @@ jobs:
           set -euo pipefail
           python -m py_compile \
             scripts/vsa/assisted_animation_stage.py \
-            production/vsa/pilots/hydroelectric/render_pilot.py
+            production/vsa/pilots/hydro_grand_v2/render_grand_hydro.py
 
       - name: Generate assisted visual plan
         run: |
@@ -100,40 +100,25 @@ jobs:
           jq -e '[.scenes[] | select(.tool_candidate=="zsky")] | length >= 3' /tmp/hydro/visual_plan.json
           jq -e '[.scenes[] | select(.tool_candidate=="zsky") | .production_route] | all(.=="current_pipeline")' /tmp/hydro/visual_plan.json
 
-      - name: Render real-footage plus specific explanatory animations
+      - name: Render grand zero-credit real plus 3D hydro pilot
         run: |
           set -euo pipefail
-          python production/vsa/pilots/hydroelectric/render_pilot.py 2>&1 | tee /tmp/hydro/render.log
-          test -s production/vsa/pilots/hydroelectric/output/VSA_PILOTO_HIDRELETRICA_ASSISTED_V1.mp4
-          test -s production/vsa/pilots/hydroelectric/output/PILOT_RECEIPT.json
-          jq -e '.publication_allowed == false and .metricool_mutated == false and .animation_distinctness_pass == true and .cta_single_pass == true' production/vsa/pilots/hydroelectric/output/PILOT_RECEIPT.json
-          jq -e '.assisted_animation.production_route == "current_pipeline"' production/vsa/pilots/hydroelectric/output/PILOT_RECEIPT.json
-          cp /tmp/hydro/visual_plan.json production/vsa/pilots/hydroelectric/output/VISUAL_PLAN.json
-          cp /tmp/hydro/manual_package.md production/vsa/pilots/hydroelectric/output/MANUAL_PACKAGE.md
-          cp /tmp/hydro/render.log production/vsa/pilots/hydroelectric/output/RENDER_LOG.txt
-
-      - name: Inspect grand hydro source footage
-        run: |
-          set -euo pipefail
-          OUT=production/vsa/pilots/hydroelectric/output
-          mkdir -p /tmp/grand
-          curl -fL --retry 5 --retry-delay 2             'https://upload.wikimedia.org/wikipedia/commons/transcoded/9/97/A_Itaipu_Binacional_maior_usina_hidrel%C3%A9trica_do_mundo%2C_tem_novo_Diretor-Geral.webm/A_Itaipu_Binacional_maior_usina_hidrel%C3%A9trica_do_mundo%2C_tem_novo_Diretor-Geral.webm.720p.vp9.webm'             -o /tmp/grand/itaipu.webm
-          curl -fL --retry 5 --retry-delay 2             'https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b4/14%C2%AA_turbina_da_Usina_de_Belo_Monte_entra_em_funcionamento.webm/14%C2%AA_turbina_da_Usina_de_Belo_Monte_entra_em_funcionamento.webm.720p.vp9.webm'             -o /tmp/grand/belo.webm
-          for t in 16 24 32 40 48 56 64 72 80 88 96; do
-            ffmpeg -y -loglevel error -ss "$t" -i /tmp/grand/itaipu.webm -frames:v 1 "$OUT/itaipu_${t}.jpg"
-          done
-          for t in 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192; do
-            ffmpeg -y -loglevel error -ss "$t" -i /tmp/grand/belo.webm -frames:v 1 "$OUT/belo_${t}.jpg"
-          done
-          ffmpeg -y -loglevel error -i /tmp/grand/itaipu.webm             -vf "fps=1/7,scale=320:-2,tile=4x4:padding=4:margin=4" -frames:v 1 "$OUT/itaipu_contact.jpg"
-          ffmpeg -y -loglevel error -ss 112 -i /tmp/grand/belo.webm             -vf "fps=1/7,scale=320:-2,tile=4x4:padding=4:margin=4" -frames:v 1 "$OUT/belo_contact_late.jpg"
+          python production/vsa/pilots/hydro_grand_v2/render_grand_hydro.py 2>&1 | tee /tmp/hydro/render.log
+          OUT=production/vsa/pilots/hydro_grand_v2/output
+          test -s "$OUT/VSA_HIDRELETRICA_GRAND_ZERO_CREDIT_V2.mp4"
+          test -s "$OUT/RECEIPT.json"
+          jq -e '.publication_allowed == false and .metricool_mutated == false and .cta_single_pass == true' "$OUT/RECEIPT.json"
+          jq -e '.explanatory_animation.credit_cost_verified_before == .explanatory_animation.credit_cost_verified_after' "$OUT/RECEIPT.json"
+          cp /tmp/hydro/visual_plan.json "$OUT/VISUAL_PLAN.json"
+          cp /tmp/hydro/manual_package.md "$OUT/MANUAL_PACKAGE.md"
+          cp /tmp/hydro/render.log "$OUT/RENDER_LOG.txt"
 
       - name: Inspect final format
         run: |
           set -euo pipefail
           ffprobe -v error -select_streams v:0 \
             -show_entries stream=width,height,avg_frame_rate,codec_name,pix_fmt \
-            -of json production/vsa/pilots/hydroelectric/output/VSA_PILOTO_HIDRELETRICA_ASSISTED_V1.mp4 \
+            -of json production/vsa/pilots/hydro_grand_v2/output/VSA_HIDRELETRICA_GRAND_ZERO_CREDIT_V2.mp4 \
             | tee production/vsa/pilots/hydroelectric/output/FFPROBE.json
           jq -e '.streams[0].width == 1080 and .streams[0].height == 1920 and .streams[0].codec_name == "h264" and .streams[0].pix_fmt == "yuv420p"' production/vsa/pilots/hydroelectric/output/FFPROBE.json
 
@@ -141,6 +126,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vsa-hydroelectric-assisted-pilot
-          path: production/vsa/pilots/hydroelectric/output/
+          path: production/vsa/pilots/hydro_grand_v2/output/
           if-no-files-found: error
           retention-days: 7
