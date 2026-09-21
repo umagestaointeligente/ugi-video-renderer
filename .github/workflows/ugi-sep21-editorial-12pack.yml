@@ -19,12 +19,12 @@ jobs:
           O=public/ugi/editorial/2026-09-21; mkdir -p "$O/src"
           get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
           cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/warehouse.mp4"
-          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/meeting.mp4"
-          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/recycling.mp4"
-          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/sorting.mp4"
+          get meeting https://www.pexels.com/video/businesspeople-working-as-a-team-5726125/
+          get recycling https://www.pexels.com/video/a-man-working-in-a-recycling-plant-3214639/
+          cp "$O/src/recycling.mp4" "$O/src/sorting.mp4"
           cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/checkout.mp4"
           cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/supermarket.mp4"
-          cp public/ugi/editorial/2026-09-20/network-pack/src/warehouse.mp4 "$O/src/automation.mp4"
+          get automation https://www.pexels.com/video/database-storage-of-a-server-5028622/
           cp public/ugi/editorial/2026-09-20/network-pack/src/warehouse.mp4 "$O/src/conveyor.mp4"
           cat > "$O/scripts.json" <<'JSON'
           {
