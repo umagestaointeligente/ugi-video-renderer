@@ -1,0 +1,85 @@
+name: UGI Sep21 Editorial 12-Pack
+on:
+  push:
+    paths: ['.github/workflows/ugi-sep21-editorial-12pack.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -U edge-tts 'yt-dlp[default,curl-cffi]' pillow
+      - name: Render
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-09-21; mkdir -p "$O/src"
+          get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
+          get warehouse https://www.pexels.com/video/boxes-and-packages-on-warehouse-shelves-6170316/
+          get meeting https://www.pexels.com/video/team-meeting-at-the-office-6561559/
+          get recycling https://www.pexels.com/video/plastic-bottle-factory-4177966/
+          get sorting https://www.pexels.com/video/people-working-in-sorting-plastic-bottles-13662401/
+          get checkout https://www.pexels.com/video/man-doing-self-checkout-in-supermarket-7457422/
+          get supermarket https://www.pexels.com/video/customers-shopping-at-supermarket-10901926/
+          get automation https://www.pexels.com/video/automated-warehouse-with-workers-managing-packages-32386618/
+          get conveyor https://www.pexels.com/video/unloading-packages-on-a-conveyor-belt-5370836/
+          cat > "$O/scripts.json" <<'JSON'
+          {
+           "ig1":["data-centers","O Brasil está construindo a infraestrutura física da inteligência artificial. Em 2026, a capacidade instalada de data centers chegou a 706 megawatts no primeiro semestre, e novos projetos aceleram essa expansão. A lição de gestão é simples: toda revolução digital depende de ativos físicos, energia, capacidade e execução. Quando a demanda muda rápido, infraestrutura deixa de ser bastidor e vira estratégia.","meeting"],
+           "ig2":["ia-roi","Metade das empresas brasileiras já usa inteligência artificial. Mas só uma parcela pequena chegou ao estágio avançado, e muitas ainda não conseguem medir o retorno. Adotar ferramenta é fácil. Transformar processo, dado e decisão é outra história. A pergunta certa não é se sua empresa usa IA. É onde a IA já mudou um indicador que importa.","meeting"],
+           "ig3":["crescer-sem-perder-controle","Crescer pode criar um problema novo: financiar o próprio crescimento. Quando estoque aumenta, prazo de cliente alonga e fornecedor recebe antes, vender mais pode pressionar o caixa. Gestão de crescimento não é apenas buscar receita. É entender quanto capital cada nova venda exige antes de colocar dinheiro no caixa.","warehouse"],
+           "tt1":["logistica-tributaria","A reforma tributária pode mudar algo que muita empresa trata como detalhe: a malha logística. Quando incentivos e créditos mudam, o melhor lugar para armazenar e transportar também pode mudar. A rota mais barata de ontem pode não ser a melhor amanhã. Estratégia fiscal e estratégia logística precisam conversar.","conveyor"],
+           "tt2":["circularidade-da-lucro","Reciclagem pode deixar de ser apenas custo e virar modelo de negócio. Quando uma empresa transforma resíduo em matéria-prima, energia ou nova receita, sustentabilidade entra na conta da operação. O ponto não é parecer verde. É desenhar um sistema em que reduzir desperdício também melhora a economia do negócio.","recycling"],
+           "tt3":["self-checkout","Self-checkout não resolve uma jornada ruim sozinho. Se o cliente precisa procurar código, esperar validação ou pedir ajuda toda hora, a tecnologia só mudou o lugar da fila. Automação boa remove atrito. Antes de instalar tecnologia, desenhe a experiência que ela precisa melhorar.","checkout"],
+           "yt1":["crescimento-e-capital","Uma empresa pode vender mais e ficar mais frágil. Parece contraditório, mas acontece quando o crescimento consome caixa mais rápido do que gera caixa. Imagine uma operação que precisa comprar antes, importar, manter estoque e ainda vender com prazo longo. Cada nova venda exige dinheiro para financiar o caminho inteiro até o recebimento. É por isso que faturamento não conta sozinho a história da saúde de um negócio. Crescer com gestão significa acompanhar estoque, prazo de fornecedor, prazo de cliente, margem e capital de giro como partes do mesmo sistema. Quando essas peças se desconectam, a empresa pode comemorar recorde de vendas e, ao mesmo tempo, sentir falta de caixa. O aprendizado é poderoso: crescimento sustentável não é o maior crescimento possível. É o crescimento que a estrutura financeira e operacional consegue suportar sem perder controle.","warehouse"],
+           "yt2":["infraestrutura-da-ia","A inteligência artificial parece um produto digital, mas depende de uma cadeia extremamente física. Servidores, energia, refrigeração, rede, terrenos e capacidade de processamento definem quanto da promessa tecnológica consegue virar operação. O Brasil vive uma expansão relevante de data centers em 2026. Para gestores, existe uma lição além da tecnologia: crescimento sempre encontra um gargalo físico ou operacional. Antes de acelerar demanda, descubra qual capacidade precisa crescer junto.","automation"],
+           "yt3":["circularidade-como-negocio","Durante muito tempo, sustentabilidade foi tratada como uma agenda paralela à operação. Mas alguns modelos começam a mostrar outra lógica: resíduos, embalagens, energia e cadeias regenerativas podem fazer parte da própria economia do negócio. O caso recente do ecossistema de impacto do Grupo Heineken ajuda a enxergar essa mudança. A companhia estruturou iniciativas ligadas a circularidade, energia renovável e novos negócios. A lição não é copiar projetos específicos. É entender o mecanismo. Primeiro, identifique um desperdício que já custa dinheiro ou gera risco. Depois, descubra se existe valor econômico perdido naquele fluxo. Em seguida, redesenhe parceiros, incentivos e operação para que reduzir impacto também melhore eficiência ou crie receita. É aí que sustentabilidade deixa de ser campanha e vira desenho de negócio. O desafio para líderes é medir os dois lados: impacto real e retorno econômico. Se apenas um deles existe, o modelo tende a depender de orçamento ou discurso. Quando os dois se reforçam, a agenda ganha escala.","recycling"]
+          }
+          JSON
+          python - <<'PY'
+          from PIL import Image,ImageDraw,ImageFont
+          import json,pathlib,subprocess,shlex
+          p=pathlib.Path("public/ugi/editorial/2026-09-21"); data=json.loads((p/"scripts.json").read_text())
+          cards=[
+          ("li1-reforma-tributaria.png","REFORMA TRIBUTÁRIA","38% dos executivos brasileiros apontam o tema como principal desafio externo para os próximos 3 anos.","Gestão não pode tratar a transição apenas como assunto fiscal."),
+          ("li2-heineken-impacto.png","IMPACTO QUE VIRA NEGÓCIO","R$ 560 milhões em negócios de impacto no ecossistema do Grupo HEINEKEN.","Circularidade só escala quando impacto e economia trabalham juntos."),
+          ("li3-gestao-do-crescimento.png","CRESCER MUDA A GESTÃO","Estoque, prazo e capital de giro podem transformar crescimento em pressão de caixa.","Receita maior exige uma operação financeira mais madura.")
+          ]
+          font="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"; reg="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+          for fn,title,big,sub in cards:
+            im=Image.new("RGB",(1200,627),(14,18,28)); d=ImageDraw.Draw(im)
+            d.text((70,65),"UGI • UMA GESTÃO INTELIGENTE",font=ImageFont.truetype(reg,26),fill="white")
+            d.text((70,135),title,font=ImageFont.truetype(font,54),fill="white")
+            import textwrap
+            y=230
+            for line in textwrap.wrap(big,42):
+              d.text((70,y),line,font=ImageFont.truetype(font,34),fill="white"); y+=48
+            y+=18
+            for line in textwrap.wrap(sub,58):
+              d.text((70,y),line,font=ImageFont.truetype(reg,26),fill=(210,215,225)); y+=38
+            im.save(p/fn)
+          PY
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-09-21"); d=json.loads((p/"scripts.json").read_text())
+          for k,(slug,text,src) in d.items():
+            a=p/f"{k}.mp3"; subprocess.run(["edge-tts","--voice","pt-BR-AntonioNeural","--rate=+3%","--text",text,"--write-media",str(a)],check=True)
+            dur=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(a)],text=True))
+            vertical=not k.startswith("yt")
+            size="1080:1920" if vertical else "1920:1080"
+            title=slug.replace("-"," ").upper().replace("'","")
+            vf=f"scale={size}:force_original_aspect_ratio=increase,crop={size},setsar=1,drawbox=x=0:y=0:w=iw:h=170:color=black@0.42:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='{title}':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=55"
+            subprocess.run(["ffmpeg","-y","-stream_loop","-1","-i",str(p/"src"/f"{src}.mp4"),"-i",str(a),"-vf",vf,"-af","loudnorm=I=-16:TP=-1.5:LRA=9","-t",str(dur),"-c:v","libx264","-preset","veryfast","-crf","21","-c:a","aac","-b:a","160k",str(p/f"{k}-{slug}.mp4")],check=True)
+          qa={"state":"PASS","realVideo":True,"noSlideshow":True,"voice":"pt-BR-AntonioNeural","sourceLicense":"Pexels free to use","items":list(d)}
+          (p/"qa.json").write_text(json.dumps(qa,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-09-21
+          git commit -m "assets(ugi): Sep21 12-post editorial pack [skip ci]"
+          git push
