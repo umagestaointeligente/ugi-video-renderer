@@ -24,13 +24,13 @@ TOPICS={
   "real":"entrevista01.webm","source_url":"https://commons.wikimedia.org/wiki/File:Entrevista_01.webm","license":"CC0_1.0",
   "real_asset_subject":"INTERVIEW_SPEAKER","real_asset_role":"EXPLICIT_CONTEXT","real_identifiable_human":True,
   "scenes":[
-   ("REAL",2,"CONTEXT","c1","PESSOA FALANDO • CONTEXTO","Você já ouviu um áudio seu e pensou: essa voz é mesmo minha? A diferença começa no jeito como o som chega até você."),
-   ("ANIMATION",0,"MECHANISM","c1","ANIMAÇÃO • DUAS ROTAS","Quando você fala, parte do som viaja pelo ar até o ouvido, mas outra parte vibra pelos tecidos e ossos da cabeça."),
-   ("REAL",10,"PROOF","c1","PESSOA FALANDO • CONTEXTO","Enquanto você fala ao vivo, essas duas rotas chegam juntas ao ouvido interno."),
-   ("ANIMATION",2,"MECHANISM","c2","ANIMAÇÃO • FALA X GRAVAÇÃO","Na gravação, você escuta principalmente o som que saiu para o ambiente e voltou pelo ar. A vibração interna não chega do mesmo jeito."),
-   ("REAL",20,"CONSEQUENCE","c2","PESSOA FALANDO • CONTEXTO","Por isso, a gravação costuma parecer mais fina ou mais estranha do que a voz que você reconhece na própria cabeça."),
-   ("ANIMATION",4,"MECHANISM","c3","ANIMAÇÃO • FREQUÊNCIAS","As vibrações conduzidas pelo corpo reforçam frequências mais graves. Sem esse reforço, o equilíbrio que você percebe muda."),
-   ("REAL",30,"PROOF","c3","PESSOA FALANDO • CONTEXTO","Sua voz não virou outra. O que mudou foi o caminho usado pelo som até chegar aos seus ouvidos.")
+   ("REAL",2,"CONTEXT","c1","PESSOA FALANDO • CONTEXTO","Você já ouviu um áudio seu e pensou: essa voz é mesmo minha? A diferença começa no caminho do som."),
+   ("ANIMATION",0,"MECHANISM","c1","ANIMAÇÃO • DUAS ROTAS","Quando você fala, o som chega pelo ar e também pelas vibrações dos tecidos e ossos da cabeça."),
+   ("REAL",10,"PROOF","c1","PESSOA FALANDO • CONTEXTO","Ao vivo, essas duas rotas chegam juntas ao ouvido interno."),
+   ("ANIMATION",2,"MECHANISM","c1","ANIMAÇÃO • FALA X GRAVAÇÃO","Na gravação, você ouve principalmente o som que voltou pelo ar. A vibração interna muda."),
+   ("REAL",20,"CONSEQUENCE","c1","PESSOA FALANDO • CONTEXTO","Por isso, sua voz gravada pode parecer mais fina ou estranha."),
+   ("ANIMATION",4,"MECHANISM","c1","ANIMAÇÃO • FREQUÊNCIAS","A condução pelo corpo reforça frequências graves que você percebe ao falar."),
+   ("REAL",30,"PROOF","c1","PESSOA FALANDO • CONTEXTO","Sua voz não mudou. Mudou o caminho do som até seus ouvidos.")
   ]},
  "bola_curva":{
   "title":"Por que a bola faz uma curva impossível no ar? #shorts",
@@ -43,10 +43,10 @@ TOPICS={
    ("REAL",8,"CAUSE","c1","COBRANÇA REAL","A bola sai do pé girando. Esse giro é o detalhe que muda completamente o caminho dela no ar."),
    ("ANIMATION",0,"MECHANISM","c1","ANIMAÇÃO • ROTAÇÃO E AR","Quando a bola gira, sua superfície arrasta o ar ao redor em sentidos diferentes."),
    ("REAL",13,"PROOF","c1","COBRANÇA REAL","Na cobrança real, a rotação começa imediatamente depois do chute."),
-   ("ANIMATION",2,"MECHANISM","c2","ANIMAÇÃO • PRESSÃO","De um lado o fluxo de ar fica diferente do outro, criando uma diferença de pressão ao redor da bola."),
-   ("REAL",17,"CONSEQUENCE","c2","COBRANÇA REAL","Essa diferença gera uma força lateral e a trajetória começa a se desviar."),
-   ("ANIMATION",4,"MECHANISM","c3","ANIMAÇÃO • TRAJETÓRIA CURVA","Essa força é o efeito Magnus. Quanto mais adequada a rotação e a velocidade, maior pode ser a curva."),
-   ("REAL",22,"PROOF","c3","COBRANÇA REAL","É assim que uma falta pode parecer que vai para fora e voltar na direção do gol.")
+   ("ANIMATION",2,"MECHANISM","c1","ANIMAÇÃO • PRESSÃO","De um lado o fluxo de ar fica diferente do outro, criando uma diferença de pressão ao redor da bola."),
+   ("REAL",17,"CONSEQUENCE","c1","COBRANÇA REAL","Essa diferença gera uma força lateral e a trajetória começa a se desviar."),
+   ("ANIMATION",4,"MECHANISM","c1","ANIMAÇÃO • TRAJETÓRIA CURVA","Essa força é o efeito Magnus. Quanto mais adequada a rotação e a velocidade, maior pode ser a curva."),
+   ("REAL",22,"PROOF","c1","COBRANÇA REAL","É assim que uma falta pode parecer que vai para fora e voltar na direção do gol.")
   ]},
  "taylor_luzes":{
   "title":"Como a plateia da Taylor Swift vira uma tela de luz? #shorts",
@@ -59,10 +59,10 @@ TOPICS={
    ("REAL",2,"CONTEXT","c1","PLATEIA DE SHOW • CONTEXTO","Em shows gigantes, milhares de pontos de luz podem mudar juntos e fazer a plateia parecer uma única tela."),
    ("ANIMATION",0,"MECHANISM","c1","ANIMAÇÃO • COMANDO DE LUZ","Na Eras Tour, a tecnologia usada pela PixMob permite enviar comandos de iluminação para as pulseiras distribuídas ao público."),
    ("REAL",14,"PROOF","c1","PLATEIA DE SHOW • CONTEXTO","O efeito funciona porque cada pessoa deixa de ser apenas espectadora e passa a carregar um ponto de luz."),
-   ("ANIMATION",2,"MECHANISM","c2","ANIMAÇÃO • INFRAVERMELHO","Um sistema de controle de luz pode direcionar sinais por infravermelho para grupos de pulseiras, definindo cor e momento de acender."),
-   ("REAL",25,"CONSEQUENCE","c2","PLATEIA DE SHOW • CONTEXTO","Quando milhares respondem em sequência, o público inteiro começa a formar ondas e desenhos."),
-   ("ANIMATION",4,"MECHANISM","c3","ANIMAÇÃO • ONDA NA PLATEIA","O segredo é sincronizar zonas diferentes da arquibancada e da pista como se cada pulseira fosse um pixel."),
-   ("REAL",34,"PROOF","c3","PLATEIA DE SHOW • CONTEXTO","Por isso a iluminação parece atravessar o estádio: o desenho é construído pela própria plateia.")
+   ("ANIMATION",2,"MECHANISM","c1","ANIMAÇÃO • INFRAVERMELHO","Um sistema de controle de luz pode direcionar sinais por infravermelho para grupos de pulseiras, definindo cor e momento de acender."),
+   ("REAL",25,"CONSEQUENCE","c1","PLATEIA DE SHOW • CONTEXTO","Quando milhares respondem em sequência, o público inteiro começa a formar ondas e desenhos."),
+   ("ANIMATION",4,"MECHANISM","c1","ANIMAÇÃO • ONDA NA PLATEIA","O segredo é sincronizar zonas diferentes da arquibancada e da pista como se cada pulseira fosse um pixel."),
+   ("REAL",34,"PROOF","c1","PLATEIA DE SHOW • CONTEXTO","Por isso a iluminação parece atravessar o estádio: o desenho é construído pela própria plateia.")
   ]}
 }
 
