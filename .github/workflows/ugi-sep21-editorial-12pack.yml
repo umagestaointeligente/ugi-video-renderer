@@ -18,14 +18,14 @@ jobs:
           set -euo pipefail
           O=public/ugi/editorial/2026-09-21; mkdir -p "$O/src"
           get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
-          get warehouse https://www.pexels.com/video/boxes-and-packages-on-warehouse-shelves-6170316/
-          get meeting https://www.pexels.com/video/team-meeting-at-the-office-6561559/
-          get recycling https://www.pexels.com/video/plastic-bottle-factory-4177966/
-          get sorting https://www.pexels.com/video/people-working-in-sorting-plastic-bottles-13662401/
-          get checkout https://www.pexels.com/video/man-doing-self-checkout-in-supermarket-7457422/
-          get supermarket https://www.pexels.com/video/customers-shopping-at-supermarket-10901926/
-          get automation https://www.pexels.com/video/automated-warehouse-with-workers-managing-packages-32386618/
-          get conveyor https://www.pexels.com/video/unloading-packages-on-a-conveyor-belt-5370836/
+          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/warehouse.mp4"
+          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/meeting.mp4"
+          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/recycling.mp4"
+          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/sorting.mp4"
+          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/checkout.mp4"
+          cp public/ugi/editorial/2026-09-20/network-pack/src/checkout.mp4 "$O/src/supermarket.mp4"
+          cp public/ugi/editorial/2026-09-20/network-pack/src/warehouse.mp4 "$O/src/automation.mp4"
+          cp public/ugi/editorial/2026-09-20/network-pack/src/warehouse.mp4 "$O/src/conveyor.mp4"
           cat > "$O/scripts.json" <<'JSON'
           {
            "ig1":["data-centers","O Brasil está construindo a infraestrutura física da inteligência artificial. Em 2026, a capacidade instalada de data centers chegou a 706 megawatts no primeiro semestre, e novos projetos aceleram essa expansão. A lição de gestão é simples: toda revolução digital depende de ativos físicos, energia, capacidade e execução. Quando a demanda muda rápido, infraestrutura deixa de ser bastidor e vira estratégia.","meeting"],
