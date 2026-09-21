@@ -231,7 +231,7 @@ def make_anim(slug,out,taylor_photo=None):
       d.ellipse((x-9,y-9,x+9,y+9),fill=(80,210,255) if active else (75,75,95))
     d.text((165,760),"zonas sincronizadas criam ondas e desenhos",font=fs,fill="white")
   im.save(tmp/f"{n:04d}.jpg",quality=92)
- run(["ffmpeg","-y","-loglevel","error","-framerate",str(fps),"-i",tmp/"%04d.jpg","-t","6","-r","30","-c:v","libx264","-pix_fmt","yuv420p",out])
+ run(["ffmpeg","-y","-loglevel","error","-framerate",str(fps),"-i",tmp/"%04d.jpg","-t","6","-r","30","-vf","pad=ceil(iw/2)*2:ceil(ih/2)*2","-c:v","libx264","-pix_fmt","yuv420p",out])
 
 
 def make_base(mask,header,out):
