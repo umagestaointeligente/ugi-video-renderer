@@ -51,9 +51,9 @@ TOPICS={
  "taylor_luzes":{
   "title":"Como a plateia da Taylor Swift vira uma tela de luz? #shorts",
   "header":["COMO A PLATEIA VIRA","UMA TELA DE LUZ?"],
-  "description":"Na The Eras Tour, pulseiras de LED da PixMob ajudaram a transformar a plateia em parte do espetáculo, com comandos de iluminação enviados e sincronizados durante o show. #VocêSabiaAgora #TaylorSwift #Tecnologia #Shows\n\nContexto visual de show: DJ mixes music while people enjoy beats / Wikimedia Commons, CC BY-SA 4.0. Foto de Taylor Swift na Eras Tour: Emazasm / Wikimedia Commons, CC BY 4.0. Animações causais produzidas pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
+  "description":"Na The Eras Tour, pulseiras de LED da PixMob ajudaram a transformar a plateia em parte do espetáculo, com comandos de iluminação enviados e sincronizados durante o show. #VocêSabiaAgora #TaylorSwift #Tecnologia #Shows\n\nContexto visual de show: Charlwood Music Festival 2026 Surrey England / Wikimedia Commons, CC BY-SA 4.0. Foto de Taylor Swift na Eras Tour: Emazasm / Wikimedia Commons, CC BY 4.0. Animações causais produzidas pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
   "content_class":"SCIENCE_EXPLAINER","expected_subject":"CONCERT_LED_WRISTBAND_CONTROL",
-  "real":"concert_crowd.webm","source_url":"https://commons.wikimedia.org/wiki/File:DJ_mixes_music_while_people_enjoy_beats.webm","license":"CC_BY_SA_4.0",
+  "real":"concert_crowd.webm","source_url":"https://commons.wikimedia.org/wiki/File:Charlwood_Music_Festival_2026_Surrey_England.webm","license":"CC_BY_SA_4.0",
   "real_asset_subject":"MODERN_CONCERT_AUDIENCE","real_asset_role":"EXPLICIT_CONTEXT","real_identifiable_human":False,
   "scenes":[
    ("REAL",2,"CONTEXT","c1","PLATEIA DE SHOW • CONTEXTO","Em shows gigantes, milhares de pontos de luz podem mudar juntos e fazer a plateia parecer uma única tela."),
@@ -343,7 +343,7 @@ def main():
  music=dl("https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/f1f3904c-153f-4d51-9ffe-a8974cf30ea0.mp3",AS/"music.mp3");dl(EARTH_URL,AS/"earth.mp4")
  commons_video("Entrevista 01.webm",AS/"entrevista01.webm")
  commons_video("37. Haftanın En İyi Golü (2021-22 Süper Lig) - Mario Balotelli (Adana Demirspor).webm",AS/"balotelli.webm")
- commons_video("DJ mixes music while people enjoy beats.webm",AS/"concert_crowd.webm")
+ commons_video("Charlwood Music Festival 2026 Surrey England.webm",AS/"concert_crowd.webm")
  taylor=commons_image("Taylor swift.jpg",AS/"taylor_eras.jpg")
  for slug in TOPICS:
   make_anim(slug,AS/(slug+"_3d.mp4"),taylor if slug=="taylor_luzes" else None)
