@@ -2,6 +2,7 @@
 # VSA_VISUAL_RELEASE_RECEIPT_V2
 # Metricool VSA brand lock: 6935441
 # NON-PUBLISHING PRODUCTION. Scheduling happens only after exact-master readback.
+# retry-source-fix-1
 name: VSA Sep22 Triple Production
 
 on:
