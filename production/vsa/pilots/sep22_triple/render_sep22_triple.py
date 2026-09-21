@@ -345,10 +345,10 @@ def main():
  mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png")
  if sha(mask)!=MASK_SHA:raise RuntimeError("MASK_SHA_FAIL")
  music=dl("https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/f1f3904c-153f-4d51-9ffe-a8974cf30ea0.mp3",AS/"music.mp3");dl(EARTH_URL,AS/"earth.mp4")
- commons_direct("Entrevista 01.webm",AS/"entrevista01.webm")
- commons_direct("37. Haftanın En İyi Golü (2021-22 Süper Lig) - Mario Balotelli (Adana Demirspor).webm",AS/"balotelli.webm")
- commons_direct("Charlwood Music Festival 2026 Surrey England.webm",AS/"concert_crowd.webm")
- taylor=commons_direct("Eras Tour - Minneapolis, Minnesota - acoustic set 3.jpg",AS/"taylor_eras.jpg")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/be01fccd-0053-4077-a16f-5d94fb9c5561.webm",AS/"entrevista01.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/039c19fd-d3ad-42b6-a52a-e166be6a7f3c.webm",AS/"balotelli.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/0317c7f0-a3fa-4914-8eff-9e9b2104bd54.webm",AS/"concert_crowd.webm")
+ taylor=dl("https://cdn.creativeclaw.co/u/2f9dfa63/images/b687b2d9-ffcb-4558-a6df-ae6de85db4bf.jpg",AS/"taylor_eras.jpg")
  for slug in TOPICS:
   make_anim(slug,AS/(slug+"_3d.mp4"),taylor if slug=="taylor_luzes" else None)
  metas=[render(slug,t,mask,cta,music) for slug,t in TOPICS.items()]
