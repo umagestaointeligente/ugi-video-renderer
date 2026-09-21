@@ -308,7 +308,7 @@ def render(slug,topic,mask,cta,music):
 
 def main():
  shutil.rmtree(WORK,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);WORK.mkdir();OUT.mkdir()
- mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png");music=commons_music(AS/"music.mp3")
+ mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png");music=dl("https://cdn.creativeclaw.co/u/2f9dfa63/audio/8cf48ce7-2837-482e-aa66-7e892fef8653.wav",AS/"music.wav")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/ae233375-1e16-4f58-8b40-d6d4469fb923.webm",AS/"flip.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/865255a3-0504-41bf-b0be-8f47ed2fab13.webm",AS/"lightning.webm")
  a1=dl("https://cdn.creativeclaw.co/u/2f9dfa63/images/995ddac8-5220-474f-be33-5029ec761b21.jpg",AS/"anitta1.jpg")
