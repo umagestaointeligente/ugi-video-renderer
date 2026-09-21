@@ -51,7 +51,7 @@ TOPICS={
  "taylor_luzes":{
   "title":"Como a plateia da Taylor Swift vira uma tela de luz? #shorts",
   "header":["COMO A PLATEIA VIRA","UMA TELA DE LUZ?"],
-  "description":"Na The Eras Tour, pulseiras de LED da PixMob ajudaram a transformar a plateia em parte do espetáculo, com comandos de iluminação enviados e sincronizados durante o show. #VocêSabiaAgora #TaylorSwift #Tecnologia #Shows\n\nContexto visual de show: Charlwood Music Festival 2026 Surrey England / Wikimedia Commons, CC BY-SA 4.0. Foto de Taylor Swift na Eras Tour: Emazasm / Wikimedia Commons, CC BY 4.0. Animações causais produzidas pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
+  "description":"Na The Eras Tour, pulseiras de LED da PixMob ajudaram a transformar a plateia em parte do espetáculo, com comandos de iluminação enviados e sincronizados durante o show. #VocêSabiaAgora #TaylorSwift #Tecnologia #Shows\n\nContexto visual de show: Charlwood Music Festival 2026 Surrey England / Wikimedia Commons, CC BY-SA 4.0. Foto de Taylor Swift na Eras Tour: Michael Hicks / Wikimedia Commons, CC BY 2.0. Animações causais produzidas pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
   "content_class":"SCIENCE_EXPLAINER","expected_subject":"CONCERT_LED_WRISTBAND_CONTROL",
   "real":"concert_crowd.webm","source_url":"https://commons.wikimedia.org/wiki/File:Charlwood_Music_Festival_2026_Surrey_England.webm","license":"CC_BY_SA_4.0",
   "real_asset_subject":"MODERN_CONCERT_AUDIENCE","real_asset_role":"EXPLICIT_CONTEXT","real_identifiable_human":False,
@@ -96,6 +96,10 @@ def commons_video(name,p):
    return dl(u,p)
   except Exception:pass
  raise RuntimeError("COMMONS_DOWNLOAD_FAIL "+name)
+def commons_direct(name,p):
+ u="https://commons.wikimedia.org/wiki/Special:Redirect/file/"+requests.utils.quote(name,safe="")
+ return dl(u,p)
+
 def commons_music(p):
  api="https://commons.wikimedia.org/w/api.php"
  q={"action":"query","format":"json","prop":"imageinfo","iiprop":"url","titles":"File:Soft Corporate by MusicLFiles.ogg"}
@@ -341,10 +345,10 @@ def main():
  mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png")
  if sha(mask)!=MASK_SHA:raise RuntimeError("MASK_SHA_FAIL")
  music=dl("https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/f1f3904c-153f-4d51-9ffe-a8974cf30ea0.mp3",AS/"music.mp3");dl(EARTH_URL,AS/"earth.mp4")
- commons_video("Entrevista 01.webm",AS/"entrevista01.webm")
- commons_video("37. Haftanın En İyi Golü (2021-22 Süper Lig) - Mario Balotelli (Adana Demirspor).webm",AS/"balotelli.webm")
- commons_video("Charlwood Music Festival 2026 Surrey England.webm",AS/"concert_crowd.webm")
- taylor=commons_image("Taylor swift.jpg",AS/"taylor_eras.jpg")
+ commons_direct("Entrevista 01.webm",AS/"entrevista01.webm")
+ commons_direct("37. Haftanın En İyi Golü (2021-22 Süper Lig) - Mario Balotelli (Adana Demirspor).webm",AS/"balotelli.webm")
+ commons_direct("Charlwood Music Festival 2026 Surrey England.webm",AS/"concert_crowd.webm")
+ taylor=commons_direct("Eras Tour - Minneapolis, Minnesota - acoustic set 3.jpg",AS/"taylor_eras.jpg")
  for slug in TOPICS:
   make_anim(slug,AS/(slug+"_3d.mp4"),taylor if slug=="taylor_luzes" else None)
  metas=[render(slug,t,mask,cta,music) for slug,t in TOPICS.items()]
