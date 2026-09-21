@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import pathlib, subprocess, json, hashlib, shutil, requests
+import pathlib, subprocess, json, hashlib, shutil, requests, math
 
 ROOT=pathlib.Path(__file__).resolve().parents[4]
 HERE=pathlib.Path(__file__).resolve().parent
@@ -14,56 +14,55 @@ CTA_URL="https://cdn.creativeclaw.co/u/2f9dfa63/images/1ed1ba73-b792-44fc-8ae1-d
 MASK_SHA="ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56"
 CTA_LINES=["Agora você já sabe.","Curta, compartilhe e siga o Você Sabia Agora."]
 EARTH_URL="https://eol.jsc.nasa.gov/BeyondThePhotography/CrewEarthObservationsVideos/AutomaticallyGenerated/ISS075-E-81420-85033-20260822-Day.mp4"
-ANIMS={
- "equinocio":"https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/d39315f9-d75e-43ed-8202-af65cda8113e.mp4",
- "bola_curva":"https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/d05a1a71-4b26-4a1d-8ec7-bda25ecfc588.mp4",
- "suni_cabelo":"https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/30f59fee-01b2-4c77-a847-64484857c48b.mp4",
-}
+ANIMS={}
 TOPICS={
- "equinocio":{
-  "title":"Por que o dia e a noite quase empatam no equinócio? #shorts",
-  "header":["POR QUE O DIA E A NOITE","QUASE EMPATAM?"],
-  "description":"A primavera de 2026 começa no Brasil em 22 de setembro, às 21h05 (horário de Brasília). Mas por que o equinócio deixa o dia e a noite quase iguais? #VocêSabiaAgora #Ciência #Equinócio #Primavera\\n\\nImagens da Terra: NASA, domínio público. Reconstrução 3D educativa produzida pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
-  "content_class":"SCIENCE_EXPLAINER","expected_subject":"EQUINOCIO_2026",
-  "real":"earth.mp4","source_url":"https://eol.jsc.nasa.gov/BeyondThePhotography/CrewEarthObservationsVideos/AutomaticallyGenerated/ISS075-E-81420-85033-20260822-Day.mp4","license":"NASA_PUBLIC_DOMAIN",
+ "flip_vertical":{
+  "title":"Como esse navio consegue ficar em pé no oceano? #shorts",
+  "header":["COMO ESSE NAVIO","FICA EM PÉ NO MAR?"],
+  "description":"A plataforma de pesquisa FLIP foi projetada para girar cerca de 90 graus no oceano ao encher tanques de lastro na popa. #VocêSabiaAgora #Curiosidades #Engenharia #Oceano\n\nFootage: U.S. Navy / Wikimedia Commons, domínio público. Animações causais produzidas pelo VSA.",
+  "content_class":"SCIENCE_EXPLAINER","expected_subject":"RP_FLIP_BALLAST_SYSTEM",
+  "real":"flip.webm","source_url":"https://commons.wikimedia.org/wiki/File:Video_of_RP_FLIP_transitioning_to_vertical_(120630-N-PO203-001).webm","license":"PUBLIC_DOMAIN_US_NAVY",
+  "real_asset_subject":"RP_FLIP","real_asset_role":"TARGET_SUBJECT","real_identifiable_human":False,
   "scenes":[
-   ("REAL",8,"CONTEXT","c1","TERRA • NASA","A primavera no Brasil começa em 22 de setembro, às nove e cinco da noite. Esse instante tem nome: equinócio."),
-   ("ANIMATION",0,"MECHANISM","c1","3D • EQUINÓCIO","Nesse momento, o centro do Sol cruza o plano do equador da Terra."),
-   ("REAL",34,"PROOF","c1","TERRA • NASA","Como o eixo da Terra é inclinado, ao longo do ano um hemisfério recebe mais luz do que o outro."),
-   ("ANIMATION",2,"MECHANISM","c2","3D • ILUMINAÇÃO","No equinócio, o eixo não aponta para o Sol nem para longe dele. A iluminação fica quase equilibrada entre norte e sul."),
-   ("REAL",66,"PROOF","c2","TERRA • NASA","Por isso, o dia e a noite ficam perto de doze horas em boa parte do planeta."),
-   ("ANIMATION",4,"MECHANISM","c3","3D • EIXO DA TERRA","Mas não são exatamente iguais. A refração da atmosfera e o tamanho aparente do Sol deixam o dia um pouco maior."),
-   ("REAL",102,"CONSEQUENCE","c3","TERRA • NASA","Depois desse ponto, aqui no Hemisfério Sul, os dias continuam aumentando até o verão.")
+   ("REAL",1,"CAUSE","c1","FLIP REAL • HORIZONTAL","Isso parece um navio comum, mas ele foi projetado para fazer algo absurdo: girar quase noventa graus no meio do oceano."),
+   ("ANIMATION",0,"MECHANISM","c1","ANIMAÇÃO • TANQUES DE LASTRO","A transformação começa quando tanques enormes na popa recebem água do mar e ficam muito mais pesados."),
+   ("REAL",13,"PROOF","c1","FLIP REAL • COMEÇANDO A GIRAR","Com o peso concentrado atrás, a popa afunda e toda a estrutura começa a girar lentamente."),
+   ("ANIMATION",2,"MECHANISM","c1","ANIMAÇÃO • CENTRO DE MASSA","O centro de massa desce enquanto a parte longa da plataforma aponta para baixo, aumentando a estabilidade."),
+   ("REAL",29,"CONSEQUENCE","c1","FLIP REAL • QUASE VERTICAL","A maior parte dos trezentos e trinta e cinco pés da estrutura fica submersa, deixando só uma pequena parte acima da água."),
+   ("ANIMATION",4,"MECHANISM","c1","ANIMAÇÃO • ESTABILIDADE VERTICAL","Na vertical, ondas da superfície movimentam muito menos a área onde os instrumentos trabalham."),
+   ("REAL",47,"PROOF","c1","FLIP REAL • VERTICAL","Por isso a FLIP conseguia fazer medições no oceano com uma estabilidade que um navio convencional não teria.")
   ]},
- "bola_curva":{
-  "title":"Por que a bola faz curva numa cobrança de falta? #shorts",
-  "header":["POR QUE A BOLA","FAZ CURVA?"],
-  "description":"Com o futebol entre os assuntos mais buscados no Brasil, vale olhar a física por trás de uma cobrança de falta: o efeito Magnus. #VocêSabiaAgora #Futebol #Física #EfeitoMagnus\\n\\nFootage real: beIN SPORTS Türkiye / Wikimedia Commons, CC BY 3.0. Reconstrução 3D educativa produzida pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
-  "content_class":"SCIENCE_EXPLAINER","expected_subject":"COBRANCA_DE_FALTA",
-  "real":"balotelli.webm","source_url":"https://commons.wikimedia.org/wiki/File:37._Haftan%C4%B1n_En_%C4%B0yi_Gol%C3%BC_(2021-22_S%C3%BCper_Lig)_-_Mario_Balotelli_(Adana_Demirspor).webm","license":"CC_BY_3.0",
+ "trovao_atraso":{
+  "title":"Por que você vê o relâmpago antes de ouvir o trovão? #shorts",
+  "header":["POR QUE O TROVÃO","CHEGA DEPOIS?"],
+  "description":"A luz viaja muito mais rápido que o som. Por isso vemos o relâmpago quase imediatamente, mas o trovão demora a chegar. #VocêSabiaAgora #Curiosidades #Ciência #Relâmpago\n\nFootage: W.carter / Wikimedia Commons, CC BY-SA 4.0. Animações causais produzidas pelo VSA.",
+  "content_class":"SCIENCE_EXPLAINER","expected_subject":"LIGHTNING_THUNDER_DELAY",
+  "real":"lightning.webm","source_url":"https://commons.wikimedia.org/wiki/File:Lightning_-_condensed_version.webm","license":"CC_BY_SA_4.0",
+  "real_asset_subject":"LIGHTNING_STORM","real_asset_role":"TARGET_SUBJECT","real_identifiable_human":False,
   "scenes":[
-   ("REAL",8,"CAUSE","c1","COBRANÇA REAL","Quando o pé acerta a bola fora do centro, ela sai girando. É aí que a curva começa."),
-   ("ANIMATION",0,"MECHANISM","c1","3D • ROTAÇÃO","Ao girar, a superfície da bola arrasta o ar ao redor dela."),
-   ("REAL",13,"PROOF","c1","COBRANÇA REAL","No vídeo real, dá para ver que a bola já deixa o pé com rotação e velocidade."),
-   ("ANIMATION",2,"MECHANISM","c2","3D • PRESSÃO","De um lado, o ar se move mais rápido. Do outro, mais devagar. Isso cria uma diferença de pressão."),
-   ("REAL",17,"CONSEQUENCE","c2","COBRANÇA REAL","Essa diferença gera uma força lateral chamada efeito Magnus, desviando a trajetória."),
-   ("ANIMATION",4,"MECHANISM","c3","3D • EFEITO MAGNUS","Com rotação suficiente, a bola consegue contornar a barreira e voltar na direção do gol."),
-   ("REAL",22,"PROOF","c3","COBRANÇA REAL","Por isso uma falta pode começar indo para fora e terminar onde o goleiro não alcança.")
+   ("REAL",1,"CAUSE","c1","RELÂMPAGO REAL","Você vê o clarão e só alguns segundos depois escuta o trovão. Os dois nasceram praticamente no mesmo instante."),
+   ("ANIMATION",0,"MECHANISM","c1","ANIMAÇÃO • LUZ X SOM","A diferença está na velocidade: a luz atravessa o caminho quase instantaneamente, enquanto o som avança pelo ar muito mais devagar."),
+   ("REAL",9,"PROOF","c1","RELÂMPAGO REAL","Por isso seus olhos recebem o clarão muito antes de seus ouvidos receberem a onda sonora."),
+   ("ANIMATION",2,"MECHANISM","c1","ANIMAÇÃO • ONDA SONORA","O trovão é uma onda de pressão criada quando o ar ao redor do raio aquece e se expande violentamente."),
+   ("REAL",17,"CONSEQUENCE","c1","RELÂMPAGO REAL","Quanto mais longe estiver a descarga, maior será o intervalo entre o clarão e o som."),
+   ("ANIMATION",4,"MECHANISM","c1","ANIMAÇÃO • DISTÂNCIA","Como regra aproximada, três segundos de diferença representam cerca de um quilômetro de distância."),
+   ("REAL",25,"PROOF","c1","RELÂMPAGO REAL","Então contar os segundos entre o clarão e o trovão dá uma estimativa rápida de quão longe a tempestade está.")
   ]},
- "suni_cabelo":{
-  "title":"Por que o cabelo da Suni Williams flutua no espaço? #shorts",
-  "header":["POR QUE O CABELO","FLUTUA NO ESPAÇO?"],
-  "description":"O cabelo da astronauta Suni Williams mostra uma das coisas mais contraintuitivas da órbita: não é ausência de gravidade. É queda livre contínua. #VocêSabiaAgora #Espaço #NASA #SuniWilliams\\n\\nFootage: Sunita Williams/NASA, domínio público. Reconstrução 3D educativa produzida pelo VSA. Música: Soft Corporate — MusicLFiles, CC BY 4.0.",
-  "content_class":"PERSON_PROFILE","expected_subject":"SUNITA_WILLIAMS",
-  "real":"suni.webm","source_url":"https://commons.wikimedia.org/wiki/File:Suni_Williams_Space_Station_Tour_-_Zarya_and_Zvezda.webm","license":"NASA_PUBLIC_DOMAIN",
+ "anitta_inear":{
+  "title":"Por que artistas como Anitta usam retorno no ouvido? #shorts",
+  "header":["POR QUE ANITTA USA","RETORNO NO OUVIDO?"],
+  "description":"Em grandes shows, o retorno intra-auricular ajuda o artista a ouvir uma mixagem própria com voz, instrumentos e referências mesmo com o palco extremamente alto. #VocêSabiaAgora #Anitta #Música #Tecnologia\n\nImagens: PinkBeachPlanet, Multishow e Rúben Daniel Baía / Wikimedia Commons, CC BY-SA 4.0 e CC BY 3.0. Animações causais produzidas pelo VSA.",
+  "content_class":"SCIENCE_EXPLAINER","expected_subject":"IN_EAR_MONITOR_SYSTEM",
+  "real":"anitta_context.mp4","source_url":"https://commons.wikimedia.org/wiki/File:Beach-Please-2024-anitta-main-stage-show.jpg | https://commons.wikimedia.org/wiki/File:Anitta_no_Rock_in_Rio_2022.jpg | https://commons.wikimedia.org/wiki/File:Anitta_Me_Gusta_no_Rock_in_Rio_Lisboa.jpg","license":"CC_BY_SA_4.0_AND_CC_BY_3.0",
+  "real_asset_subject":"ANITTA_PERFORMING","real_asset_role":"EXPLICIT_CONTEXT","real_identifiable_human":True,
   "scenes":[
-   ("REAL",4,"CAUSE","c1","SUNITA WILLIAMS • NASA","Já reparou como o cabelo da astronauta Suni Williams parece ter vida própria dentro da estação espacial?"),
-   ("ANIMATION",0,"MECHANISM","c1","3D • QUEDA LIVRE","Não é porque a gravidade sumiu. A estação, a Suni e cada fio de cabelo estão todos caindo ao redor da Terra juntos."),
-   ("REAL",22,"PROOF","c1","SUNITA WILLIAMS • NASA","No vídeo real, o cabelo não aponta para um chão. Ele se espalha em várias direções."),
-   ("ANIMATION",2,"MECHANISM","c2","3D • MICROGRAVIDADE","Como tudo acelera praticamente da mesma forma, não existe um piso sustentando o corpo. É isso que cria a microgravidade."),
-   ("REAL",46,"CONSEQUENCE","c2","SUNITA WILLIAMS • NASA","O mesmo comportamento aparece no corpo e nos objetos soltos dentro da estação."),
-   ("ANIMATION",4,"MECHANISM","c3","3D • ÓRBITA","Na prática, eles estão em queda livre contínua enquanto avançam rápido o bastante para continuar orbitando a Terra."),
-   ("REAL",74,"PROOF","c3","SUNITA WILLIAMS • NASA","Então o cabelo flutuando é uma pista visual da queda livre que mantém a estação em órbita.")
+   ("REAL",0,"CONTEXT","c1","ANITTA • PALCO","Num show enorme, artistas como Anitta precisam cantar no tempo certo mesmo cercados por caixas, banda, plateia e eco."),
+   ("ANIMATION",0,"MECHANISM","c1","ANIMAÇÃO • SOM DO PALCO","Se dependessem só do som que volta pelo palco, cada fonte chegaria com volumes e pequenos atrasos diferentes."),
+   ("REAL",2.1,"PROOF","c1","ANITTA • PERFORMANCE","É por isso que o artista precisa de uma referência de áudio muito mais controlada."),
+   ("ANIMATION",2,"MECHANISM","c1","ANIMAÇÃO • MIXAGEM NO OUVIDO","A mesa cria uma mixagem exclusiva e envia voz, instrumentos e outras referências diretamente para o fone intra-auricular."),
+   ("REAL",4.2,"CONSEQUENCE","c1","ANITTA • PERFORMANCE","O cantor consegue ouvir com clareza aquilo que precisa, mesmo quando o público está fazendo muito barulho."),
+   ("ANIMATION",4,"MECHANISM","c1","ANIMAÇÃO • TEMPO E CUES","O retorno também pode levar clique e sinais de produção que ajudam a manter entradas, coreografia e banda sincronizadas."),
+   ("REAL",0.5,"PROOF","c1","ANITTA • PALCO","Para quem vê de fora é só um fone pequeno. Para o show, ele funciona como uma central de referência dentro do ouvido.")
   ]}
 }
 
@@ -97,11 +96,109 @@ def commons_video(name,p):
    return dl(u,p)
   except Exception:pass
  raise RuntimeError("COMMONS_DOWNLOAD_FAIL "+name)
+def commons_direct(name,p):
+ u="https://commons.wikimedia.org/wiki/Special:Redirect/file/"+requests.utils.quote(name,safe="")
+ return dl(u,p)
+
 def commons_music(p):
  api="https://commons.wikimedia.org/w/api.php"
  q={"action":"query","format":"json","prop":"imageinfo","iiprop":"url","titles":"File:Soft Corporate by MusicLFiles.ogg"}
  page=next(iter(requests.get(api,params=q,headers={"User-Agent":"VSA-Sep21/1.0"},timeout=60).json()["query"]["pages"].values()))
  return dl(page["imageinfo"][0]["url"],p)
+
+
+def commons_image(name,p):
+ api="https://commons.wikimedia.org/w/api.php"
+ q={"action":"query","format":"json","prop":"imageinfo","iiprop":"url","titles":"File:"+name}
+ page=next(iter(requests.get(api,params=q,headers={"User-Agent":"VSA-Sep21/1.0"},timeout=60).json()["query"]["pages"].values()))
+ return dl(page["imageinfo"][0]["url"],p)
+
+def make_anim(slug,out,taylor_photo=None):
+ from PIL import Image,ImageDraw,ImageFont
+ fps=15; total=6*fps
+ tmp=WORK/("animframes_"+slug); shutil.rmtree(tmp,ignore_errors=True); tmp.mkdir(parents=True)
+ fb=ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",34)
+ fs=ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",24)
+ for n in range(total):
+  t=n/fps; seg=min(2,int(t//2)); u=(t-seg*2)/2.0
+  im=Image.new("RGB",(975,845),(10,18,32)); d=ImageDraw.Draw(im)
+  d.rounded_rectangle((18,18,957,827),radius=28,outline=(90,120,160),width=3)
+  if slug=="flip_vertical":
+   if seg==0:
+    d.text((45,38),"TANQUES DE LASTRO ENCHENDO",font=fb,fill="white")
+    d.rectangle((150,360,820,455),fill=(210,215,220),outline="white",width=4)
+    d.rectangle((620,375,790,440),fill=(30,90,150),outline=(80,210,255),width=3)
+    fill=int(60*u); d.rectangle((625,435-fill,785,435),fill=(40,150,230))
+    d.text((600,490),"ÁGUA DO MAR",font=fs,fill=(80,210,255))
+    d.line((700,180,700,330),fill=(80,210,255),width=10); d.polygon([(700,335),(680,300),(720,300)],fill=(80,210,255))
+   elif seg==1:
+    d.text((45,38),"O CENTRO DE MASSA DESCE",font=fb,fill="white")
+    ang=-int(75*u); cx,cy=490,430; L=560
+    x1=cx-int(math.cos(math.radians(ang))*L/2); y1=cy-int(math.sin(math.radians(ang))*L/2)
+    x2=cx+int(math.cos(math.radians(ang))*L/2); y2=cy+int(math.sin(math.radians(ang))*L/2)
+    d.line((x1,y1,x2,y2),fill=(225,225,230),width=34)
+    mx=cx+int(math.cos(math.radians(ang))*150); my=cy+int(math.sin(math.radians(ang))*150)
+    d.ellipse((mx-22,my-22,mx+22,my+22),fill=(255,190,70))
+    d.text((70,700),"peso na popa → rotação",font=fs,fill="white")
+   else:
+    d.text((45,38),"VERTICAL = MENOS EFEITO DAS ONDAS",font=fb,fill="white")
+    d.line((490,160,490,710),fill=(225,225,230),width=34)
+    for x in range(70,900,80):
+     y=260+int(20*math.sin((x/70)+t*4)); d.arc((x,y,x+90,y+35),180,360,fill=(80,210,255),width=4)
+    d.rectangle((430,140,550,260),outline=(255,190,70),width=5)
+    d.text((250,750),"instrumentos ficam mais estáveis",font=fs,fill="white")
+  elif slug=="trovao_atraso":
+   if seg==0:
+    d.text((45,38),"LUZ X SOM: VELOCIDADES MUITO DIFERENTES",font=fb,fill="white")
+    d.text((80,190),"LUZ",font=fs,fill=(255,220,80)); d.text((80,500),"SOM",font=fs,fill=(80,210,255))
+    lx=170+int(700*min(1,u*5)); sx=170+int(700*u*.22)
+    d.line((170,240,lx,240),fill=(255,220,80),width=12); d.line((170,550,sx,550),fill=(80,210,255),width=12)
+   elif seg==1:
+    d.text((45,38),"O AR AQUECE E SE EXPANDE",font=fb,fill="white")
+    cx,cy=490,430; d.line((cx,160,cx,690),fill=(255,230,120),width=18)
+    for r in [80+int(120*u),150+int(170*u),220+int(220*u)]: d.ellipse((cx-r,cy-r,cx+r,cy+r),outline=(80,210,255),width=5)
+    d.text((250,740),"onda de pressão = trovão",font=fs,fill="white")
+   else:
+    d.text((45,38),"3 SEGUNDOS ≈ 1 QUILÔMETRO",font=fb,fill="white")
+    d.ellipse((120,350,180,410),fill=(255,220,80)); d.text((75,430),"RAIO",font=fs,fill="white")
+    d.ellipse((800,350,860,410),fill=(225,225,230)); d.text((735,430),"VOCÊ",font=fs,fill="white")
+    x=190+int(590*u); d.line((190,380,x,380),fill=(80,210,255),width=8)
+    d.text((320,625),"1... 2... 3...",font=fb,fill=(255,220,80))
+  else:
+   if seg==0:
+    d.text((45,38),"NO PALCO, O SOM CHEGA DE TODO LADO",font=fb,fill="white")
+    cx,cy=500,430; d.ellipse((455,385,545,475),outline="white",width=5)
+    for x,y in [(120,240),(850,230),(120,650),(850,650)]:
+     d.rectangle((x-45,y-55,x+45,y+55),outline=(80,210,255),width=4); d.line((x,y,cx,cy),fill=(80,210,255),width=3)
+    d.text((280,720),"volumes + atrasos diferentes",font=fs,fill="white")
+   elif seg==1:
+    d.text((45,38),"MIXAGEM EXCLUSIVA → IN-EAR",font=fb,fill="white")
+    d.rounded_rectangle((100,230,360,610),25,outline=(80,210,255),width=4)
+    for i,label in enumerate(["VOZ","BANDA","CLICK"]):
+     y=300+i*90; d.text((140,y),label,font=fs,fill="white"); d.rectangle((235,y+5,320,y+28),fill=(80,210,255))
+    d.line((370,420,700,420),fill=(255,190,70),width=9); d.arc((680,300,860,540),70,290,fill=(255,190,70),width=12)
+   else:
+    d.text((45,38),"CLICK + CUES MANTÊM O SHOW SINCRONIZADO",font=fb,fill="white")
+    for i in range(8):
+     x=100+i*95; h=60+int(100*abs(math.sin(t*4+i))); d.rectangle((x,520-h,x+45,520),fill=(80,210,255))
+    beat=min(3,int(u*4))
+    for i in range(4): d.ellipse((250+i*120,650,285+i*120,685),fill=(255,220,80) if i==beat else (80,80,95))
+    d.text((280,735),"tempo • entradas • coreografia",font=fs,fill="white")
+  im.save(tmp/f"{n:04d}.jpg",quality=92)
+ run(["ffmpeg","-y","-loglevel","error","-framerate",str(fps),"-i",tmp/"%04d.jpg","-t","6","-r","30","-vf","pad=ceil(iw/2)*2:ceil(ih/2)*2","-c:v","libx264","-pix_fmt","yuv420p",out])
+
+def make_anitta_reel(images,out):
+ from PIL import Image
+ clips=[]
+ for i,p in enumerate(images):
+  im=Image.open(p).convert("RGB")
+  canvas=Image.new("RGB",(1080,1920),(12,12,18)); im.thumbnail((980,1500),Image.Resampling.LANCZOS)
+  canvas.paste(im,((1080-im.width)//2,(1920-im.height)//2))
+  jpg=WORK/f"anitta_{i}.jpg";canvas.save(jpg,quality=94)
+  clip=WORK/f"anitta_{i}.mp4";run(["ffmpeg","-y","-loglevel","error","-loop","1","-i",jpg,"-t","2.1","-vf","fps=30,format=yuv420p","-an","-c:v","libx264","-preset","veryfast","-crf","20",clip]);clips.append(clip)
+ lst=WORK/"anitta_list.txt";lst.write_text("\n".join(f"file '{p}'" for p in clips)+"\n")
+ run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",lst,"-an","-c:v","libx264","-preset","veryfast","-crf","20","-pix_fmt","yuv420p",out])
+
 
 def make_base(mask,header,out):
  from PIL import Image,ImageDraw,ImageFont
@@ -190,7 +287,7 @@ def render(slug,topic,mask,cta,music):
   times.append((cursor,cursor+vd,text));cursor+=length
   row={"id":f"s{i}","narration":text,"media_type":kind,"visual_role":role,"visual_description":label,"visible_action":label,"semantic_claim":text,"semantic_match":"EXACT","causal_link_id":link,"topic_only_match":False,"generic_filler":False,"reused_take_as_variety":False}
   if kind=="REAL":
-   row["asset"]={"event":slug,"semantic_role":role,"visible_action":label,"source_url":topic["source_url"],"license":topic["license"],"source_timestamp_seconds":float(start),"rights_verified":True,"expected_subject":topic["expected_subject"],"asset_subject":topic["expected_subject"],"asset_role":"TARGET_SUBJECT","identifiable_human":slug in ("bola_curva","suni_cabelo"),"duration_seconds":length,"explicit_script_reference":True}
+   row["asset"]={"event":slug,"semantic_role":role,"visible_action":label,"source_url":topic["source_url"],"license":topic["license"],"source_timestamp_seconds":float(start),"rights_verified":True,"expected_subject":topic["expected_subject"],"asset_subject":topic.get("real_asset_subject",topic["expected_subject"]),"asset_role":topic.get("real_asset_role","TARGET_SUBJECT"),"identifiable_human":topic.get("real_identifiable_human",False),"duration_seconds":length,"explicit_script_reference":True}
   rows.append(row)
  vl=wd/"v.txt";vl.write_text("\n".join(f"file '{p}'" for p in vids)+"\n");body=wd/"body.mp4";run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",vl,"-an","-c:v","libx264","-preset","veryfast","-crf","20","-pix_fmt","yuv420p",body])
  al=wd/"a.txt";al.write_text("\n".join(f"file '{p}'" for p in asegs)+"\n");bodya=wd/"body.wav";run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",al,"-c:a","pcm_s16le","-ar","48000",bodya])
@@ -211,13 +308,15 @@ def render(slug,topic,mask,cta,music):
 
 def main():
  shutil.rmtree(WORK,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);WORK.mkdir();OUT.mkdir()
- mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png")
- if sha(mask)!=MASK_SHA:raise RuntimeError("MASK_SHA_FAIL")
- music=dl("https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/f1f3904c-153f-4d51-9ffe-a8974cf30ea0.mp3",AS/"music.mp3");dl(EARTH_URL,AS/"earth.mp4")
- commons_video("37. Haftanın En İyi Golü (2021-22 Süper Lig) - Mario Balotelli (Adana Demirspor).webm",AS/"balotelli.webm")
- commons_video("Suni Williams Space Station Tour - Zarya and Zvezda.webm",AS/"suni.webm")
- for slug,u in ANIMS.items():dl(u,AS/(slug+"_3d.mp4"))
+ mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png");music=commons_music(AS/"music.mp3")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/ae233375-1e16-4f58-8b40-d6d4469fb923.webm",AS/"flip.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/865255a3-0504-41bf-b0be-8f47ed2fab13.webm",AS/"lightning.webm")
+ a1=dl("https://cdn.creativeclaw.co/u/2f9dfa63/images/995ddac8-5220-474f-be33-5029ec761b21.jpg",AS/"anitta1.jpg")
+ a2=dl("https://cdn.creativeclaw.co/u/2f9dfa63/images/5fb93191-886b-483d-994f-154688ae7add.jpg",AS/"anitta2.jpg")
+ a3=dl("https://cdn.creativeclaw.co/u/2f9dfa63/images/c506595a-4242-48e9-a185-bfa61c73ed59.jpg",AS/"anitta3.jpg")
+ make_anitta_reel([a1,a2,a3],AS/"anitta_context.mp4")
+ for slug in TOPICS: make_anim(slug,AS/(slug+"_3d.mp4"))
  metas=[render(slug,t,mask,cta,music) for slug,t in TOPICS.items()]
- (OUT/"MANIFEST.json").write_text(json.dumps(metas,ensure_ascii=False,indent=2)+"\n")
  print(json.dumps(metas,ensure_ascii=False,indent=2))
+
 if __name__=="__main__":main()
