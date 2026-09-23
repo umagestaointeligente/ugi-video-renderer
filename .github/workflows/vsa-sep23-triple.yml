@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - ops/vsa-sep23-three-production
+      - fix/vsa-sep23-duration-gate
     paths:
       - '.github/workflows/vsa-sep23-triple.yml'
       - 'production/vsa/pilots/sep23_triple/render_sep23_triple.py'
@@ -83,7 +84,6 @@ jobs:
           set -euo pipefail
           OUT=production/vsa/pilots/sep23_triple/output
           for slug in por_sol_vermelho ondas_quebram rick_acidente; do
-            ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
             python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP23.mp4"
             jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
           done
