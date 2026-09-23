@@ -25,7 +25,7 @@ jobs:
           items=[
           ("linkedin-vilarejo.jpg","https://odia.ig.com.br/_midias/png/2024/10/07/vilarejo_praia_set_2024_foto_cezar_fernandes_37-34219532.png",(1200,627),"GRUPO VILAREJO","R$ 90 MI PARA SAIR DO RIO E CRESCER NO SUDESTE"),
           ("instagram-mari-mascavo.jpg","https://f.i.uol.com.br/fotografia/2025/08/27/175632449068af628a85a63_1756324490_3x2_rt.jpg",(1080,1350),"MARI SAAD • MASCAVO","SER SÓCIO MAJORITÁRIO É O MESMO QUE CONTROLAR?"),
-          ("tiktok-melia.jpg","https://cdn.luxuryhotel.world/file/hotcdn/hotel/cover-small/16304_1762956258.jpg",(1080,1920),"MELIÁ HOTELS","DE 12 PARA 30 HOTÉIS NO BRASIL")
+          ("tiktok-melia.jpg","https://a0.muscache.com/im/pictures/miso/Hosting-1065196087644093976/original/08088e73-3b61-4525-a148-29137fd502e5.jpeg?im_w=720",(1080,1920),"MELIÁ HOTELS","DE 12 PARA 30 HOTÉIS NO BRASIL")
           ]
           for fn,url,size,kicker,title in items:
             r=requests.get(url,timeout=30,headers={"User-Agent":"Mozilla/5.0"}); r.raise_for_status()
