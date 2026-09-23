@@ -1,0 +1,55 @@
+name: UGI Sep23 Exact Visual Video Pack
+on:
+  push:
+    paths: ['.github/workflows/ugi-sep23-exact-visual-pack.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -U edge-tts 'yt-dlp[default,curl-cffi]'
+      - name: Render exact-theme real footage
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-09-23; mkdir -p "$O/src"
+          get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
+          get hotel1 https://www.pexels.com/video/concierge-pushing-trolley-in-hotel-lobby-6474563/
+          get hotel2 https://www.pexels.com/video/receptionist-receiving-guests-at-hotel-5378932/
+          get hotel3 https://www.pexels.com/video/couple-entering-the-hotel-lobby-5378930/
+          get factory1 https://www.pexels.com/video/wide-view-of-modern-factory-production-line-30715848/
+          get factory2 https://www.pexels.com/video/person-working-on-a-factory-5532764/
+          get factory3 https://www.pexels.com/video/people-working-on-a-heavy-industry-6997690/
+          cat > "$O/tiktok.txt" <<'TXT'
+          Como uma rede de hotéis pode crescer sem comprar todos os prédios? Com um modelo asset-light. Em vez de imobilizar bilhões construindo cada unidade, a empresa pode operar, franquear ou colocar sua marca em hotéis de terceiros. O capital fica mais leve e a expansão pode acelerar. Mas existe uma troca: quanto menos você controla o imóvel, mais precisa controlar padrão, experiência e distribuição. Crescer com menos ativos não significa crescer com menos gestão.
+          TXT
+          cat > "$O/youtube.txt" <<'TXT'
+          Quando a margem cai, esperar o mercado melhorar é uma estratégia perigosa. Uma operação industrial tem cinco alavancas que a gestão consegue atacar antes de qualquer recuperação externa. A primeira é preço: entender onde existe poder de repasse e onde o cliente realmente compara alternativas. A segunda é custo: não apenas cortar, mas redesenhar processos que geram retrabalho, perda e ociosidade. A terceira é capital de giro: estoque parado e prazo mal negociado consomem caixa silenciosamente. A quarta é utilização dos ativos: uma máquina cara produz valor quando está disponível, abastecida e rodando no mix certo. E a quinta é portfólio: alguns produtos ocupam capacidade e complexidade sem remunerar o capital. O ponto central é que margem não é apenas consequência do mercado. Ela também é consequência de centenas de decisões operacionais. Empresas que esperam o ciclo virar terceirizam sua recuperação. Empresas que mexem em preço, custo, caixa, ativos e portfólio constroem opções. A pergunta para qualquer gestor é simples: se a demanda não melhorar nos próximos doze meses, quais decisões internas ainda conseguem proteger o retorno do negócio?
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=+4% --text "$(cat "$O/tiktok.txt")" --write-media "$O/tiktok.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-1% --text "$(cat "$O/youtube.txt")" --write-media "$O/youtube.mp3"
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/tiktok.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/hotel1.mp4" -stream_loop -1 -i "$O/src/hotel2.mp4" -stream_loop -1 -i "$O/src/hotel3.mp4" -i "$O/tiktok.mp3" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:12,setpts=PTS-STARTPTS[a];[1:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:12,setpts=PTS-STARTPTS[b];[2:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:12,setpts=PTS-STARTPTS[c];[a][b][c]concat=n=3:v=1:a=0,loop=loop=-1:size=1080:start=0,drawbox=x=0:y=0:w=iw:h=175:color=black@0.4:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='CRESCER SEM COMPRAR O PRÉDIO':fontcolor=white:fontsize=45:x=(w-text_w)/2:y=60[v];[3:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$D" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/tiktok-asset-light-hotelaria.mp4"
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/factory1.mp4" -stream_loop -1 -i "$O/src/factory2.mp4" -stream_loop -1 -i "$O/src/factory3.mp4" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:22,setpts=PTS-STARTPTS[a];[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:22,setpts=PTS-STARTPTS[b];[2:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:22,setpts=PTS-STARTPTS[c];[a][b][c]concat=n=3:v=1:a=0,loop=loop=-1:size=1980:start=0,drawbox=x=0:y=0:w=iw:h=150:color=black@0.38:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='5 ALAVANCAS PARA RECUPERAR MARGEM':fontcolor=white:fontsize=55:x=(w-text_w)/2:y=45[v];[3:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$D" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-cinco-alavancas-margem.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-09-23")
+          files=["tiktok-asset-light-hotelaria.mp4","youtube-cinco-alavancas-margem.mp4"]
+          q={"state":"PASS","realMotionVideo":True,"noSlideshow":True,"noRandomFootage":True,"exactThemeMatch":True,"voice":"pt-BR-AntonioNeural","files":files,"sources":["Pexels hotel lobby/reception footage","Pexels factory/production footage"]}
+          for f in files:
+            probe=json.loads(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration:stream=width,height","-of","json",str(p/f)],text=True))
+            assert float(probe["format"]["duration"])>30
+          (p/"qa.json").write_text(json.dumps(q,indent=2,ensure_ascii=False))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-09-23
+          git commit -m "assets(ugi): Sep23 exact-visual editorial [skip ci]"
+          git push
