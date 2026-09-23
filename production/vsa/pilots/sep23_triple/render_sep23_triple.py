@@ -289,7 +289,7 @@ def render(slug,topic,mask,cta,music):
  real=AS/topic["real"];anim=AS/(slug+"_3d.mp4")
  vids=[];asegs=[];times=[];rows=[];cursor=0.0
  for i,(kind,start,role,link,label,text) in enumerate(topic["scenes"],1):
-  voice=wd/f"v{i}.mp3";run(["edge-tts","--voice",VOICE,"--rate=-2%","--text",text,"--write-media",voice]);vd=duration(voice);length=vd+.10
+  voice=wd/f"v{i}.mp3";rate="+1%" if slug=="rick_acidente" else "-2%";run(["edge-tts","--voice",VOICE,"--rate",rate,"--text",text,"--write-media",voice]);vd=duration(voice);length=vd+.10
   sv=wd/f"s{i}.mp4";scene_video(base,real,str(start),f"{length:.3f}",label,kind,sv) if kind=="REAL" else scene_video(base,anim,str(start),f"{length:.3f}",label,kind,sv)
   vids.append(sv);seg=wd/f"a{i}.wav"
   run(["ffmpeg","-y","-loglevel","error","-i",voice,"-f","lavfi","-t","0.10","-i","anullsrc=r=48000:cl=mono","-filter_complex","[0:a][1:a]concat=n=2:v=0:a=1[a]","-map","[a]","-ar","48000",seg]);asegs.append(seg)
