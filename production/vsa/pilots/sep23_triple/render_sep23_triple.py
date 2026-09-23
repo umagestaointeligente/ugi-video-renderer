@@ -56,7 +56,7 @@ TOPICS={
   "real":"helicopter.webm","source_url":"https://commons.wikimedia.org/wiki/File:Landing_of_a_helicopter_(video).webm","license":"CC_BY_SA_2.0",
   "real_asset_subject":"ILLUSTRATIVE_BELL_HELICOPTER","real_asset_role":"ILLUSTRATIVE_CONTEXT","real_identifiable_human":False,
   "scenes":[
-   ("REAL",2,"CONTEXT","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Rick Sollo, da dupla Rick e Renner, estava num Bell 430 entre Porto Belo e São Joaquim, em Santa Catarina."),
+   ("REAL",2,"CONTEXT","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Rick Sollo, da dupla Rick e Renner, estava num Bell 430 entre Porto Belo e São Joaquim."),
    ("ANIMATION",0,"MECHANISM","rick","ANIMAÇÃO • ROTA DO VOO","O helicóptero perdeu contato na Serra Catarinense. As buscas se concentraram em Urubici."),
    ("REAL",14,"PROOF","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Os destroços foram achados no dia seguinte. Cinco pessoas morreram. Renner não estava a bordo."),
    ("ANIMATION",2,"MECHANISM","rick","ANIMAÇÃO • FATO X HIPÓTESE","Ainda não há causa oficial. O mau tempo nas buscas, sozinho, não explica a queda."),
