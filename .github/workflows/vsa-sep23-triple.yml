@@ -78,12 +78,29 @@ jobs:
             test "$(sha256sum /tmp/${slug}_*.png | awk '{print $1}' | sort -u | wc -l)" -eq 3
           done
 
+      - name: Canonical release gate por_sol_vermelho
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/pilots/sep23_triple/output/por_sol_vermelho/RELEASE_RECEIPT.json
+          master: production/vsa/pilots/sep23_triple/output/por_sol_vermelho/VSA_por_sol_vermelho_SEP23.mp4
+
+      - name: Canonical release gate ondas_quebram
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/pilots/sep23_triple/output/ondas_quebram/RELEASE_RECEIPT.json
+          master: production/vsa/pilots/sep23_triple/output/ondas_quebram/VSA_ondas_quebram_SEP23.mp4
+
+      - name: Canonical release gate rick_acidente
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/pilots/sep23_triple/output/rick_acidente/RELEASE_RECEIPT.json
+          master: production/vsa/pilots/sep23_triple/output/rick_acidente/VSA_rick_acidente_SEP23.mp4
+
       - name: Gate exact masters
         run: |
           set -euo pipefail
           OUT=production/vsa/pilots/sep23_triple/output
           for slug in por_sol_vermelho ondas_quebram rick_acidente; do
-            ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
             python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP23.mp4"
             jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
           done
