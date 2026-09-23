@@ -53,15 +53,17 @@ jobs:
           grep -q 'ANIMAÇÃO • FUNDO FREIA' "$R"
           grep -q 'ANIMAÇÃO • FATO X HIPÓTESE' "$R"
           grep -q 'MASK_SHA="ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56"' "$R"
+          grep -q 'Renner não estava no helicóptero' "$R"
+          grep -q 'não existe uma causa oficial divulgada' "$R"
 
       - name: Render three fresh final masters
         run: |
           set -euo pipefail
           python production/vsa/pilots/sep23_triple/render_sep23_triple.py | tee /tmp/vsa_sep23_render.log
           OUT=production/vsa/pilots/sep23_triple/output
-          test -s "$OUT/voz_gravada/VSA_voz_gravada_SEP22.mp4"
-          test -s "$OUT/bola_curva/VSA_bola_curva_SEP22.mp4"
-          test -s "$OUT/taylor_luzes/VSA_taylor_luzes_SEP22.mp4"
+          test -s "$OUT/por_sol_vermelho/VSA_por_sol_vermelho_SEP23.mp4"
+          test -s "$OUT/ondas_quebram/VSA_ondas_quebram_SEP23.mp4"
+          test -s "$OUT/rick_acidente/VSA_rick_acidente_SEP23.mp4"
           cp /tmp/vsa_sep23_render.log "$OUT/RENDER_LOG.txt"
 
       - name: Prove animation segments are visually distinct
@@ -82,7 +84,7 @@ jobs:
           OUT=production/vsa/pilots/sep23_triple/output
           for slug in por_sol_vermelho ondas_quebram rick_acidente; do
             ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
-            python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP22.mp4"
+            python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP23.mp4"
             jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
           done
 
