@@ -10,7 +10,6 @@ on:
   push:
     branches:
       - ops/vsa-sep23-three-production
-      - fix/vsa-sep23-duration-gate
     paths:
       - '.github/workflows/vsa-sep23-triple.yml'
       - 'production/vsa/pilots/sep23_triple/render_sep23_triple.py'
