@@ -56,13 +56,13 @@ TOPICS={
   "real":"helicopter.webm","source_url":"https://commons.wikimedia.org/wiki/File:Landing_of_a_helicopter_(video).webm","license":"CC_BY_SA_2.0",
   "real_asset_subject":"ILLUSTRATIVE_BELL_HELICOPTER","real_asset_role":"ILLUSTRATIVE_CONTEXT","real_identifiable_human":False,
   "scenes":[
-   ("REAL",2,"CONTEXT","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Rick Sollo, da dupla Rick e Renner, estava num Bell 430 que voava de Porto Belo para São Joaquim, em Santa Catarina."),
-   ("ANIMATION",0,"MECHANISM","rick","ANIMAÇÃO • ROTA DO VOO","A aeronave perdeu contato na Serra Catarinense. As buscas se concentraram em Urubici."),
-   ("REAL",14,"PROOF","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Os destroços foram encontrados no dia seguinte. Cinco pessoas morreram. Renner não estava no helicóptero."),
-   ("ANIMATION",2,"MECHANISM","rick","ANIMAÇÃO • FATO X HIPÓTESE","Ainda não há causa oficial. O mau tempo enfrentado nas buscas não prova que o clima causou a queda."),
-   ("REAL",28,"CONSEQUENCE","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Cenipa e Seripa Cinco analisam os destroços e a sequência do voo."),
-   ("ANIMATION",4,"MECHANISM","rick","ANIMAÇÃO • INVESTIGAÇÃO","A investigação pode avaliar clima, sistemas, operação e fatores humanos antes de concluir o que ocorreu."),
-   ("REAL",40,"PROOF","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Até lá, o mais responsável é esperar. Nossos sentimentos às famílias e aos amigos de todas as vítimas.")
+   ("REAL",2,"CONTEXT","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Rick Sollo, da dupla Rick e Renner, estava num Bell 430 entre Porto Belo e São Joaquim, em Santa Catarina."),
+   ("ANIMATION",0,"MECHANISM","rick","ANIMAÇÃO • ROTA DO VOO","O helicóptero perdeu contato na Serra Catarinense. As buscas se concentraram em Urubici."),
+   ("REAL",14,"PROOF","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Os destroços foram achados no dia seguinte. Cinco pessoas morreram. Renner não estava a bordo."),
+   ("ANIMATION",2,"MECHANISM","rick","ANIMAÇÃO • FATO X HIPÓTESE","Ainda não há causa oficial. O mau tempo nas buscas, sozinho, não explica a queda."),
+   ("REAL",28,"CONSEQUENCE","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Cenipa e Seripa Cinco analisam destroços e a sequência do voo."),
+   ("ANIMATION",4,"MECHANISM","rick","ANIMAÇÃO • INVESTIGAÇÃO","A investigação pode avaliar clima, sistemas, operação e fatores humanos antes de concluir."),
+   ("REAL",40,"PROOF","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Até lá, o responsável é esperar. Nossos sentimentos às famílias e amigos de todas as vítimas.")
   ]}
 }
 
@@ -307,7 +307,7 @@ def render(slug,topic,mask,cta,music):
  mix=wd/"mix.m4a";af="[0:a]aresample=48000,asplit=2[n1][n2];[1:a]aresample=48000,volume=.10,aloop=loop=-1:size=2147483647[m];[m][n1]sidechaincompress=threshold=.035:ratio=8:attack=20:release=250[d];[n2][d]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=10[a]";run(["ffmpeg","-y","-loglevel","error","-i",alla,"-i",music,"-filter_complex",af,"-map","[a]","-ar","48000",mix])
  final=od/f"VSA_{slug}_SEP23.mp4";run(["ffmpeg","-y","-loglevel","error","-i",visual,"-i",mix,"-map","0:v","-map","1:a","-c:v","copy","-c:a","aac","-b:a","192k","-shortest","-movflags","+faststart",final])
  probe=json.loads(cap(["ffprobe","-v","error","-show_streams","-show_format","-of","json",final]));fd=float(probe["format"]["duration"]);v=next(x for x in probe["streams"] if x.get("codec_type")=="video")
- if not(45<=fd<=55) or int(v["width"])!=1080 or int(v["height"])!=1920 or v["codec_name"]!="h264" or v["pix_fmt"]!="yuv420p":raise RuntimeError("FORMAT_OR_DURATION_FAIL")
+ print("DURATION_CHECK",slug,fd);\n if not(45<=fd<=55) or int(v["width"])!=1080 or int(v["height"])!=1920 or v["codec_name"]!="h264" or v["pix_fmt"]!="yuv420p":raise RuntimeError("FORMAT_OR_DURATION_FAIL")
  contact=od/"CONTACT.jpg";run(["ffmpeg","-y","-loglevel","error","-i",final,"-vf","fps=1/5,scale=270:480,tile=4x3:padding=4:margin=4","-frames:v","1",contact])
  thumb=od/"THUMBNAIL.jpg";run(["ffmpeg","-y","-loglevel","error","-ss","1","-i",final,"-frames:v","1",thumb])
  samples=[{"t":round(fd*x,1),"visible":True,"inside_safe_zone":True} for x in (.18,.48,.75)]
