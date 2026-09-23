@@ -61,8 +61,8 @@ TOPICS={
    ("REAL",14,"PROOF","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Os destroços foram achados no dia seguinte. Cinco pessoas morreram. Renner não estava a bordo."),
    ("ANIMATION",2,"MECHANISM","rick","ANIMAÇÃO • FATO X HIPÓTESE","Ainda não há causa oficial. O mau tempo nas buscas, sozinho, não explica a queda."),
    ("REAL",28,"CONSEQUENCE","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Cenipa e Seripa Cinco analisam destroços e a sequência do voo."),
-   ("ANIMATION",4,"MECHANISM","rick","ANIMAÇÃO • INVESTIGAÇÃO","A investigação pode avaliar clima, sistemas, operação e fatores humanos antes de concluir."),
-   ("REAL",40,"PROOF","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Até lá, o responsável é esperar. Nossos sentimentos às famílias e amigos de todas as vítimas.")
+   ("ANIMATION",4,"MECHANISM","rick","ANIMAÇÃO • INVESTIGAÇÃO","A investigação avalia clima, sistemas, operação e fatores humanos antes de concluir."),
+   ("REAL",40,"PROOF","rick","HELICÓPTERO BELL • IMAGEM ILUSTRATIVA","Até lá, é preciso esperar. Nossos sentimentos às famílias e amigos das vítimas.")
   ]}
 }
 
