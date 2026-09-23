@@ -1,0 +1,16 @@
+{
+  "state": "PASS",
+  "realMotionVideo": true,
+  "noSlideshow": true,
+  "noRandomFootage": true,
+  "exactThemeMatch": true,
+  "voice": "pt-BR-AntonioNeural",
+  "files": [
+    "tiktok-asset-light-hotelaria.mp4",
+    "youtube-cinco-alavancas-margem.mp4"
+  ],
+  "sources": [
+    "Pexels hotel lobby/reception footage",
+    "Pexels factory/production footage"
+  ]
+}
