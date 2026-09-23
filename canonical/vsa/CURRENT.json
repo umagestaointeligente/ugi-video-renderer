@@ -11,5 +11,9 @@
   "runtime": "ops/vsa-runtime/runtime.py",
   "isolation_test": "ops/vsa-runtime/test_isolation.py",
   "recovery_trigger": "RECOVERY::ORBIT::VSA::CANONICAL_V1",
-  "hard_rule": "Fail closed if target channel is not explicitly VSA. Never write to Cena Certa paths/accounts/schedules. Do not release any VSA master without CLEAN_HEADER_PASS and CLEAN_CC_ZONE_PASS."
+  "hard_rule": "Fail closed if target channel is not explicitly VSA. Never write to Cena Certa paths/accounts/schedules. Do not release any VSA master without CLEAN_HEADER_PASS and CLEAN_CC_ZONE_PASS.",
+  "video_toolchain": "canonical/tooling/VIDEO_TOOLCHAIN_CURRENT.json",
+  "preferred_compositor": "HyperFrames",
+  "preferred_compositor_status": "PILOT_ONLY_NOT_PRODUCTION_DEFAULT",
+  "required_skill": "orbit-hyperframes-video"
 }
