@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core
-          python -m pip install -U edge-tts 'yt-dlp[default,curl-cffi]'
+          python -m pip install -U edge-tts 'yt-dlp[default,curl-cffi]' pillow requests
       - name: Render exact-theme real footage
         shell: bash
         run: |
@@ -24,6 +24,28 @@ jobs:
           get factory1 https://www.pexels.com/video/wide-view-of-modern-factory-production-line-30715848/
           get factory2 https://www.pexels.com/video/person-working-on-a-factory-5532764/
           get factory3 https://www.pexels.com/video/people-working-on-a-heavy-industry-6997690/
+          python - <<'PY'
+          import requests,pathlib
+          from PIL import Image,ImageDraw,ImageFont
+          from io import BytesIO
+          p=pathlib.Path("public/ugi/editorial/2026-09-23")
+          items=[
+           ("linkedin-tupy.jpg","https://static.ndmais.com.br/2024/10/planta-de-joinville-1300x866.jpg",(1200,627),"TUPY • JOINVILLE","MARGEM NÃO VOLTA POR DECRETO"),
+           ("instagram-mari-mascavo.jpg","https://f.i.uol.com.br/fotografia/2025/08/27/175632449068af628a85a63_1756324490_3x2_rt.jpg",(1080,1350),"MARI SAAD • MASCAVO","SER SÓCIO MAJORITÁRIO É O MESMO QUE CONTROLAR?")
+          ]
+          bold="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+          for fn,url,size,kicker,title in items:
+            im=Image.open(BytesIO(requests.get(url,timeout=30).content)).convert("RGB")
+            ratio=max(size[0]/im.width,size[1]/im.height); im=im.resize((int(im.width*ratio),int(im.height*ratio)))
+            x=(im.width-size[0])//2;y=(im.height-size[1])//2;im=im.crop((x,y,x+size[0],y+size[1]))
+            d=ImageDraw.Draw(im,"RGBA"); d.rectangle((0,size[1]*.58,size[0],size[1]),fill=(0,0,0,175))
+            d.text((50,int(size[1]*.64)),kicker,font=ImageFont.truetype(bold,30),fill="white")
+            import textwrap
+            yy=int(size[1]*.72)
+            for line in textwrap.wrap(title,34):
+              d.text((50,yy),line,font=ImageFont.truetype(bold,46),fill="white"); yy+=55
+            im.save(p/fn,quality=92)
+          PY
           cat > "$O/tiktok.txt" <<'TXT'
           Como uma rede de hotéis pode crescer sem comprar todos os prédios? Com um modelo asset-light. Em vez de imobilizar bilhões construindo cada unidade, a empresa pode operar, franquear ou colocar sua marca em hotéis de terceiros. O capital fica mais leve e a expansão pode acelerar. Mas existe uma troca: quanto menos você controla o imóvel, mais precisa controlar padrão, experiência e distribuição. Crescer com menos ativos não significa crescer com menos gestão.
           TXT
