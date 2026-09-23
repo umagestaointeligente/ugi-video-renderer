@@ -20,7 +20,7 @@ jobs:
           get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
           get hotel1 https://www.pexels.com/video/concierge-pushing-trolley-in-hotel-lobby-6474563/
           get hotel2 https://www.pexels.com/video/receptionist-receiving-guests-at-hotel-5378932/
-          get hotel3 https://www.pexels.com/video/couple-entering-the-hotel-lobby-5378930/
+          cp "$O/src/hotel1.mp4" "$O/src/hotel3.mp4"
           get factory1 https://www.pexels.com/video/wide-view-of-modern-factory-production-line-30715848/
           get factory2 https://www.pexels.com/video/person-working-on-a-factory-5532764/
           get factory3 https://www.pexels.com/video/people-working-on-a-heavy-industry-6997690/
