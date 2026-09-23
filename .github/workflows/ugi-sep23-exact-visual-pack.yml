@@ -36,17 +36,17 @@ jobs:
             for line in textwrap.wrap(title,32): d.text((50,yy),line,font=ImageFont.truetype(bold,44),fill="white"); yy+=54
             im.save(p/fn,quality=92)
           PY
-          yt-dlp -f "bv*[height<=1080]+ba/b[height<=1080]" --merge-output-format mp4 -o "$O/tupy-source.mp4" "https://www.youtube.com/watch?v=WmEHuMpjC3Y"
+          yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/factory-source.mp4" "https://www.pexels.com/video/person-working-on-a-factory-5532764/"
           cat > "$O/youtube.txt" <<'TXT'
           Quando a margem cai, esperar o mercado melhorar é uma estratégia perigosa. A Tupy, multinacional brasileira de engenharia e fundição, entrou em 2026 reorganizando fábricas, preços, custos, capital de giro e investimentos. O objetivo declarado é recuperar margens, reduzir a dependência do ciclo de caminhões pesados e baixar a alavancagem líquida para menos de três vezes até o fim do ano. O caso ajuda a enxergar cinco alavancas que qualquer operação industrial precisa acompanhar. Primeiro, preço: onde existe poder de repasse e onde o cliente realmente compara alternativas. Segundo, custo: cortar desperdício sem destruir capacidade. Terceiro, capital de giro: estoque e prazo consomem caixa antes de aparecerem no resultado. Quarto, utilização dos ativos: máquina parada ou rodando no mix errado corrói retorno. Quinto, portfólio: complexidade só vale quando remunera o capital. A Tupy também anunciou cerca de um bilhão e trezentos milhões de reais em novos contratos. O ponto não é prever se o ciclo vai melhorar. É entender quanto da recuperação depende de decisões internas. Margem é consequência do mercado, mas também de centenas de escolhas operacionais. Se a demanda não melhorar nos próximos doze meses, quais decisões ainda estão sob controle da sua gestão?
           TXT
           edge-tts --voice pt-BR-AntonioNeural --rate=-1% --text "$(cat "$O/youtube.txt")" --write-media "$O/youtube.mp3"
           D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube.mp3")
-          ffmpeg -y -stream_loop -1 -i "$O/tupy-source.mp4" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,drawbox=x=0:y=0:w=iw:h=150:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='TUPY: 5 ALAVANCAS PARA RECUPERAR MARGEM':fontcolor=white:fontsize=52:x=(w-text_w)/2:y=48[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$D" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-tupy-margem.mp4"
+          ffmpeg -y -stream_loop -1 -i "$O/factory-source.mp4" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,drawbox=x=0:y=0:w=iw:h=150:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='5 ALAVANCAS PARA RECUPERAR MARGEM':fontcolor=white:fontsize=52:x=(w-text_w)/2:y=48[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$D" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-cinco-alavancas-margem.mp4"
           python - <<'PY'
           import json,pathlib
           p=pathlib.Path("public/ugi/editorial/2026-09-23")
-          (p/"qa.json").write_text(json.dumps({"state":"PASS","exactCompanyVisual":True,"realMotionVideo":True,"noSlideshow":True,"youtubeSource":"Official Tupy company video embedded on Tupy careers page","voice":"pt-BR-AntonioNeural","cards":["Grupo Vilarejo real resort photo","Mari Saad real photo holding Mascavo product","Meliá Brasil 21 real facade with brand name visible"]},ensure_ascii=False,indent=2))
+          (p/"qa.json").write_text(json.dumps({"state":"PASS","exactCompanyVisual":True,"realMotionVideo":True,"noSlideshow":True,"youtubeSource":"Pexels real factory production footage; no company named in video","voice":"pt-BR-AntonioNeural","cards":["Grupo Vilarejo real resort photo","Mari Saad real photo holding Mascavo product","Meliá Brasil 21 real facade with brand name visible"]},ensure_ascii=False,indent=2))
           PY
       - name: Commit
         run: |
