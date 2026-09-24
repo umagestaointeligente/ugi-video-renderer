@@ -1,0 +1,59 @@
+name: UGI Sep24 Real Exact Pack
+on:
+  push:
+    paths: ['.github/workflows/ugi-sep24-real-exact-pack.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -U edge-tts pillow requests
+      - name: Build
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-09-24; mkdir -p "$O"
+          python - <<'PY'
+          import requests,pathlib,textwrap
+          from PIL import Image,ImageDraw,ImageFont
+          from io import BytesIO
+          p=pathlib.Path("public/ugi/editorial/2026-09-24"); bold="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+          items=[
+           ("linkedin-ngcash.jpg","https://classic.exame.com/wp-content/uploads/2024/05/ng.cash-foto2.jpg?ims=750x/filters:quality(75):format(webp)",(1200,627),"NG.CASH","US$ 15 MI PARA TRANSFORMAR REGULAÇÃO EM EXPANSÃO"),
+           ("instagram-mombak.jpg","https://media.licdn.com/dms/image/v2/D4D22AQEY3OACDrxN1w/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1691184667258?e=2147483647&t=vJL7MpQTgWzlPhFCrX-Ql8NYhOz4TI36v2jyPtslRpM&v=beta",(1080,1350),"MOMBAK","QUANDO RESTAURAR FLORESTA VIRA PRODUTO GLOBAL")
+          ]
+          for fn,url,size,kicker,title in items:
+            r=requests.get(url,timeout=30,headers={"User-Agent":"Mozilla/5.0"}); r.raise_for_status()
+            im=Image.open(BytesIO(r.content)).convert("RGB"); ratio=max(size[0]/im.width,size[1]/im.height); im=im.resize((int(im.width*ratio),int(im.height*ratio)))
+            x=(im.width-size[0])//2;y=(im.height-size[1])//2;im=im.crop((x,y,x+size[0],y+size[1]))
+            d=ImageDraw.Draw(im,"RGBA"); d.rectangle((0,int(size[1]*.58),size[0],size[1]),fill=(0,0,0,178))
+            d.text((50,int(size[1]*.64)),kicker,font=ImageFont.truetype(bold,30),fill="white"); yy=int(size[1]*.72)
+            for line in textwrap.wrap(title,33): d.text((50,yy),line,font=ImageFont.truetype(bold,43),fill="white"); yy+=53
+            im.save(p/fn,quality=92)
+          PY
+          cat > "$O/tiktok.txt" <<'TXT'
+          E se o ativo mais valioso de uma empresa de passagens deixar de ser o site onde a compra termina? A Buson já distribui passagens pelo WhatsApp e até pelo ChatGPT. Agora a operação faz parte da Terra Mobility, grupo que recebeu cerca de duzentos milhões de reais para investir em software, inteligência artificial e novas aquisições. A tese é simples: estar onde a intenção de compra começa. Quando o consumidor muda de canal, distribuição deixa de significar levar pessoas ao seu aplicativo. Significa levar seu estoque até onde as pessoas já estão.
+          TXT
+          cat > "$O/youtube.txt" <<'TXT'
+          Uma empresa brasileira de restauração florestal está transformando árvores em uma infraestrutura econômica global. A Mombak levantou o primeiro fechamento de seu segundo fundo para reflorestamento da Amazônia, que pretende chegar a cento e cinquenta milhões de dólares. O fundo também terá acesso a uma linha de crédito de duzentos milhões de reais do Fundo Clima, operada pelo BNDES. Mas o movimento mais interessante está do outro lado da cadeia. A Salesforce assinou um acordo plurianual para comprar créditos de remoção de carbono da Mombak. Google, Microsoft e McLaren Racing já estavam entre os compradores. O primeiro fundo da empresa captou cento e vinte milhões de dólares e financiou projetos em quinze fazendas amazônicas, onde quase quinze milhões de árvores nativas foram plantadas. O que existe por trás dessa história é uma aula sobre criação de mercado. A Mombak não vende simplesmente árvores. Ela estrutura projetos, mede remoção de carbono e transforma um resultado ambiental em um ativo que empresas globais estão dispostas a comprar. Para a gestão, a pergunta é poderosa: qual problema que hoje parece custo, obrigação ou externalidade poderia ser transformado em produto se fosse possível medir seu resultado com credibilidade? Sustentabilidade ganha outra escala quando impacto, tecnologia, capital e demanda passam a funcionar dentro do mesmo modelo econômico.
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=+4% --text "$(cat "$O/tiktok.txt")" --write-media "$O/tiktok.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-1% --text "$(cat "$O/youtube.txt")" --write-media "$O/youtube.mp3"
+          # real footage already validated in repository: buses/travel channel is represented by real transport footage; forest by real recycling/green operations is NOT acceptable, so build YouTube from real Mombak photos with motion is forbidden -> use still only for non-video. Therefore YouTube becomes NG.CASH office-story using real NG.CASH image plus motion would still be slideshow. Fail closed.
+          # TikTok uses existing real people/transport video only if exact transport subject; use store video is prohibited. Fail closed unless exact source exists.
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path("public/ugi/editorial/2026-09-24")
+          (p/"qa.json").write_text(json.dumps({"state":"PARTIAL","staticExactCompany":["linkedin-ngcash.jpg","instagram-mombak.jpg"],"videoState":"BLOCKED_NO_EXACT_REAL_FOOTAGE","noRandomFallback":True},indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-09-24
+          git commit -m "assets(ugi): Sep24 exact static media fail-closed video [skip ci]"
+          git push
