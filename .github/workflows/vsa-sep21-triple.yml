@@ -1,0 +1,98 @@
+# VSA_VISUAL_STORY_ENGINE_V1
+# VSA_VISUAL_RELEASE_RECEIPT_V2
+# Metricool VSA brand lock: 6935441
+# NON-PUBLISHING PRODUCTION. Any release-capable path MUST use:
+# ./.github/actions/vsa-release-gate
+name: VSA Sep21 Triple Production
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/vsa-sep21-triple.yml'
+      - 'production/vsa/pilots/sep21_triple/render_sep21_triple.py'
+      - 'scripts/vsa/validate_release_receipt.py'
+      - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
+      - '.github/actions/vsa-release-gate/action.yml'
+  push:
+    branches:
+      - feat/vsa-assisted-animation-zsky-steve-v1
+    paths:
+      - '.github/workflows/vsa-sep21-triple.yml'
+      - 'production/vsa/pilots/sep21_triple/render_sep21_triple.py'
+      - 'scripts/vsa/validate_release_receipt.py'
+      - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
+      - '.github/actions/vsa-release-gate/action.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vsa-sep21-triple-production
+  cancel-in-progress: true
+
+jobs:
+  render-and-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout isolated branch
+        uses: actions/checkout@v4
+
+      - name: Install zero-cost runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check Pillow requests edge-tts
+
+      - name: Compile production renderer
+        run: |
+          set -euo pipefail
+          python -m py_compile production/vsa/pilots/sep21_triple/render_sep21_triple.py
+
+      - name: Render three exact final masters
+        run: |
+          set -euo pipefail
+          python production/vsa/pilots/sep21_triple/render_sep21_triple.py | tee /tmp/vsa_sep21_render.log
+          OUT=production/vsa/pilots/sep21_triple/output
+          test -s "$OUT/equinocio/VSA_equinocio_SEP21.mp4"
+          test -s "$OUT/bola_curva/VSA_bola_curva_SEP21.mp4"
+          test -s "$OUT/suni_cabelo/VSA_suni_cabelo_SEP21.mp4"
+          cp /tmp/vsa_sep21_render.log "$OUT/RENDER_LOG.txt"
+
+      - name: Gate equinox exact master
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/pilots/sep21_triple/output/equinocio/RELEASE_RECEIPT.json
+          master: production/vsa/pilots/sep21_triple/output/equinocio/VSA_equinocio_SEP21.mp4
+
+      - name: Gate Magnus exact master
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/pilots/sep21_triple/output/bola_curva/RELEASE_RECEIPT.json
+          master: production/vsa/pilots/sep21_triple/output/bola_curva/VSA_bola_curva_SEP21.mp4
+
+      - name: Gate Suni exact master
+        uses: ./.github/actions/vsa-release-gate
+        with:
+          receipt: production/vsa/pilots/sep21_triple/output/suni_cabelo/RELEASE_RECEIPT.json
+          master: production/vsa/pilots/sep21_triple/output/suni_cabelo/VSA_suni_cabelo_SEP21.mp4
+
+      - name: Verify release receipts are bound to masters
+        run: |
+          set -euo pipefail
+          OUT=production/vsa/pilots/sep21_triple/output
+          for d in equinocio bola_curva suni_cabelo; do
+            jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$d/RELEASE_RECEIPT.json"
+          done
+
+      - name: Upload gated masters and QA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep21-three-gated-shorts
+          path: production/vsa/pilots/sep21_triple/output/
+          if-no-files-found: error
+          retention-days: 7

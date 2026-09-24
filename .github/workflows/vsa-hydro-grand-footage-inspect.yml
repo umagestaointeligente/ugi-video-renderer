@@ -1,0 +1,56 @@
+# VSA_VISUAL_STORY_ENGINE_V1
+# VSA_VISUAL_RELEASE_RECEIPT_V2
+# Metricool VSA brand lock: 6935441
+# NON-PUBLISHING INSPECTION. Any future release-capable path MUST use:
+# ./.github/actions/vsa-release-gate
+name: VSA Grand Hydro Footage Inspect
+# trigger: inspect v1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/vsa-assisted-animation-zsky-steve-v1
+    paths:
+      - '.github/workflows/vsa-hydro-grand-footage-inspect.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
+      - name: Download licensed grand hydro footage
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hydro
+          curl -fL --retry 5 --retry-delay 2             'https://upload.wikimedia.org/wikipedia/commons/transcoded/9/97/A_Itaipu_Binacional_maior_usina_hidrel%C3%A9trica_do_mundo%2C_tem_novo_Diretor-Geral.webm/A_Itaipu_Binacional_maior_usina_hidrel%C3%A9trica_do_mundo%2C_tem_novo_Diretor-Geral.webm.720p.vp9.webm'             -o /tmp/hydro/itaipu.webm
+          curl -fL --retry 5 --retry-delay 2             'https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b4/14%C2%AA_turbina_da_Usina_de_Belo_Monte_entra_em_funcionamento.webm/14%C2%AA_turbina_da_Usina_de_Belo_Monte_entra_em_funcionamento.webm.720p.vp9.webm'             -o /tmp/hydro/belo.webm
+          ffprobe -v error -show_entries format=duration -of default=nw=1 /tmp/hydro/itaipu.webm > /tmp/hydro/itaipu_probe.txt
+          ffprobe -v error -show_entries format=duration -of default=nw=1 /tmp/hydro/belo.webm > /tmp/hydro/belo_probe.txt
+      - name: Make timestamped contact sheets
+        run: |
+          set -euo pipefail
+          ffmpeg -y -loglevel error -i /tmp/hydro/itaipu.webm             -vf "fps=1/8,scale=384:-2,drawtext=text='%{pts\\:hms}':x=10:y=10:fontsize=25:fontcolor=white:borderw=2:bordercolor=black,tile=4x4:padding=6:margin=6"             -frames:v 1 /tmp/hydro/itaipu_contact_00.jpg
+          ffmpeg -y -loglevel error -ss 64 -i /tmp/hydro/itaipu.webm             -vf "fps=1/6,scale=384:-2,drawtext=text='t+64s':x=10:y=10:fontsize=25:fontcolor=white:borderw=2:bordercolor=black,tile=4x2:padding=6:margin=6"             -frames:v 1 /tmp/hydro/itaipu_contact_64.jpg
+          ffmpeg -y -loglevel error -i /tmp/hydro/belo.webm             -vf "fps=1/12,scale=384:-2,drawtext=text='%{pts\\:hms}':x=10:y=10:fontsize=25:fontcolor=white:borderw=2:bordercolor=black,tile=4x4:padding=6:margin=6"             -frames:v 1 /tmp/hydro/belo_contact_00.jpg
+          ffmpeg -y -loglevel error -ss 150 -i /tmp/hydro/belo.webm             -vf "fps=1/8,scale=384:-2,drawtext=text='t+150s':x=10:y=10:fontsize=25:fontcolor=white:borderw=2:bordercolor=black,tile=4x3:padding=6:margin=6"             -frames:v 1 /tmp/hydro/belo_contact_150.jpg
+      - name: Extract candidate stills
+        run: |
+          set -euo pipefail
+          for t in 24 40 56 72 88; do ffmpeg -y -loglevel error -ss "$t" -i /tmp/hydro/itaipu.webm -frames:v 1 "/tmp/hydro/itaipu_${t}.jpg"; done
+          for t in 36 60 84 108 132 156 180; do ffmpeg -y -loglevel error -ss "$t" -i /tmp/hydro/belo.webm -frames:v 1 "/tmp/hydro/belo_${t}.jpg"; done
+      - name: Upload inspection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-grand-hydro-footage-inspect
+          path: /tmp/hydro/*.jpg
+          if-no-files-found: error
+          retention-days: 7
