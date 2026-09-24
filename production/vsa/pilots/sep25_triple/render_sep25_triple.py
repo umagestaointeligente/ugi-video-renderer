@@ -24,7 +24,7 @@ TOPICS={
   "real":"airplane_window.webm","source_url":"https://commons.wikimedia.org/wiki/File:Airplane_inside_while_taking_off.webm","license":"WIKIMEDIA_COMMONS_LICENSED",
   "real_asset_subject":"AIRCRAFT_CABIN_WINDOW_CONTEXT","real_asset_role":"EXPLICIT_CONTEXT","real_identifiable_human":False,
   "scenes":[
-   ("REAL",2,"CONTEXT","air","JANELA DE AVIÃO • VÍDEO REAL","Se você olhar bem para a janela de um avião, pode encontrar um furinho minúsculo. Ele não é defeito."),
+   ("REAL",2,"CONTEXT","air","JANELA DE AVIÃO • VÍDEO REAL","Na janela de muitos aviões há um furinho minúsculo. E ele não é defeito."),
    ("ANIMATION",0,"MECHANISM","air","ANIMAÇÃO • TRÊS CAMADAS","A janela costuma ter várias camadas. O pequeno orifício fica em uma das camadas internas do conjunto."),
    ("REAL",26,"PROOF","air","CABINE EM VOO • VÍDEO REAL","Durante o voo, a cabine permanece pressurizada enquanto o ar do lado de fora fica muito menos denso."),
    ("ANIMATION",2,"MECHANISM","air","ANIMAÇÃO • PRESSÃO CONTROLADA","O furo permite equilibrar a pressão no espaço entre as camadas, deixando o conjunto trabalhar como foi projetado."),
@@ -56,9 +56,9 @@ TOPICS={
   "real":"samba.webm","source_url":"https://commons.wikimedia.org/wiki/File:Rio_de_Janeiro,_Copacabana_Beach,_samba.webm","license":"CC_BY_2.0",
   "real_asset_subject":"REAL_SAMBA_CONTEXT","real_asset_role":"EXPLICIT_CONTEXT","real_identifiable_human":True,
   "scenes":[
-   ("REAL",0,"CONTEXT","samba","SAMBA NO RIO • VÍDEO REAL","Paolla Oliveira foi anunciada como nova rainha de bateria da Imperatriz Leopoldinense para o Carnaval de 2027."),
-   ("ANIMATION",0,"MECHANISM","samba","ANIMAÇÃO • POSIÇÃO NO DESFILE","A rainha desfila à frente dos ritmistas e funciona como uma figura de conexão visual entre bateria, escola e público."),
-   ("REAL",3,"PROOF","samba","SAMBA NO RIO • VÍDEO REAL","Mas existe uma diferença importante: rainha de bateria não é quem determina musicalmente o andamento do samba."),
+   ("REAL",0,"CONTEXT","samba","SAMBA NO RIO • VÍDEO REAL","Paolla Oliveira será rainha de bateria da Imperatriz Leopoldinense no Carnaval de 2027."),
+   ("ANIMATION",0,"MECHANISM","samba","ANIMAÇÃO • POSIÇÃO NO DESFILE","A rainha desfila à frente dos ritmistas e cria conexão visual entre bateria, escola e público."),
+   ("REAL",3,"PROOF","samba","SAMBA NO RIO • VÍDEO REAL","Mas rainha de bateria não determina musicalmente o andamento do samba."),
    ("ANIMATION",2,"MECHANISM","samba","ANIMAÇÃO • QUEM CONDUZ O RITMO","Quem conduz os ritmistas é o mestre de bateria. A rainha acompanha o pulso, dança e interage com o conjunto."),
    ("REAL",6,"CONSEQUENCE","samba","SAMBA NO RIO • VÍDEO REAL","Por isso, presença, leitura do ritmo e sintonia com os ritmistas importam tanto quanto a imagem do posto."),
    ("ANIMATION",4,"MECHANISM","samba","ANIMAÇÃO • CONEXÃO VISUAL","Gestos e movimento ajudam a criar diálogo visual com a bateria e com o público, sem substituir a condução do mestre."),
