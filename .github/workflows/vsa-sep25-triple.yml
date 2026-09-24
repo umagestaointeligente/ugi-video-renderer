@@ -61,9 +61,9 @@ jobs:
           set -euo pipefail
           python production/vsa/pilots/sep25_triple/render_sep25_triple.py | tee /tmp/vsa_sep25_render.log
           OUT=production/vsa/pilots/sep25_triple/output
-          test -s "$OUT/por_sol_vermelho/VSA_por_sol_vermelho_SEP23.mp4"
-          test -s "$OUT/ondas_quebram/VSA_ondas_quebram_SEP23.mp4"
-          test -s "$OUT/rick_acidente/VSA_rick_acidente_SEP23.mp4"
+          test -s "$OUT/furinho_aviao/VSA_furinho_aviao_SEP25.mp4"
+          test -s "$OUT/beija_flor_re/VSA_beija_flor_re_SEP25.mp4"
+          test -s "$OUT/paolla_bateria/VSA_paolla_bateria_SEP25.mp4"
           cp /tmp/vsa_sep25_render.log "$OUT/RENDER_LOG.txt"
 
       - name: Prove animation segments are visually distinct
@@ -84,7 +84,7 @@ jobs:
           OUT=production/vsa/pilots/sep25_triple/output
           for slug in furinho_aviao beija_flor_re paolla_bateria; do
             ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
-            python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP23.mp4"
+            python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP25.mp4"
             jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
           done
 
