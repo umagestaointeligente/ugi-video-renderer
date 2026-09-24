@@ -1,0 +1,91 @@
+name: VSA Sep16 Publish Approved Masters
+
+on:
+  push:
+    branches:
+      - ops/vsa-sep16-production
+    paths:
+      - production/vsa/2026-09-16/RELEASE_APPROVED.json
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/vsa-sep16-production
+
+      - name: Validate approval contract
+        id: approval
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('production/vsa/2026-09-16/RELEASE_APPROVED.json')
+          x=json.loads(p.read_text())
+          if x.get('manual_visual_review') != 'PASS': raise SystemExit('MANUAL_VISUAL_REVIEW_NOT_PASS')
+          if x.get('voice_review') != 'PASS': raise SystemExit('VOICE_REVIEW_NOT_PASS')
+          if not isinstance(x.get('approved'),list) or not x['approved']: raise SystemExit('NO_APPROVED_MASTERS')
+          if not str(x.get('source_run_id','')).isdigit(): raise SystemExit('SOURCE_RUN_ID_INVALID')
+          for a in x['approved']:
+              if not str(a.get('file','')).endswith('_FINAL.mp4'): raise SystemExit('NON_FINAL_FILE_IN_APPROVAL')
+              if len(str(a.get('sha256',''))) != 64: raise SystemExit('APPROVAL_SHA_INVALID')
+          print('approval contract valid')
+          PY
+          echo "run_id=$(jq -r .source_run_id production/vsa/2026-09-16/RELEASE_APPROVED.json)" >> "$GITHUB_OUTPUT"
+          echo "tag=$(jq -r '.tag // "vsa-sep16-2026"' production/vsa/2026-09-16/RELEASE_APPROVED.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Download exact reviewed artifact
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vsa-reviewed
+          gh run download "${{ steps.approval.outputs.run_id }}" --repo "${GITHUB_REPOSITORY}" --name vsa-sep16-candidates --dir /tmp/vsa-reviewed
+          find /tmp/vsa-reviewed -maxdepth 2 -type f -printf '%P\n' | sort
+
+      - name: Verify exact approved SHA-256 values
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,pathlib
+          approval=json.loads(pathlib.Path('production/vsa/2026-09-16/RELEASE_APPROVED.json').read_text())
+          root=pathlib.Path('/tmp/vsa-reviewed')
+          for item in approval['approved']:
+              p=root/item['file']
+              if not p.is_file(): raise SystemExit(f"APPROVED_FILE_MISSING:{p}")
+              h=hashlib.sha256(p.read_bytes()).hexdigest()
+              if h != item['sha256']: raise SystemExit(f"APPROVED_SHA_MISMATCH:{p.name}:{h}")
+              print('SHA_PASS',p.name,h)
+          PY
+
+      - name: Create or update public release with only approved masters
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.approval.outputs.tag }}"
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target ops/vsa-sep16-production --title "VSA 16-09-2026 Approved Masters" --notes "Fail-closed VSA masters approved after machine QA and visual/voice review. Only files listed in RELEASE_APPROVED.json are release-eligible."
+          fi
+          python - <<'PY' > /tmp/upload_list.txt
+          import json,pathlib
+          x=json.loads(pathlib.Path('production/vsa/2026-09-16/RELEASE_APPROVED.json').read_text())
+          root=pathlib.Path('/tmp/vsa-reviewed')
+          for a in x['approved']:
+              f=a['file']; stem=f[:-10] if f.endswith('_FINAL.mp4') else pathlib.Path(f).stem
+              for p in sorted(root.glob(stem+'*')):
+                  if p.is_file(): print(p)
+          PY
+          while IFS= read -r f; do
+            gh release upload "$TAG" "$f" --repo "$GITHUB_REPOSITORY" --clobber
+          done < /tmp/upload_list.txt
+
+      - name: Emit release manifest
+        run: |
+          TAG="${{ steps.approval.outputs.tag }}"
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,url,assets > /tmp/release_manifest.json
+          cat /tmp/release_manifest.json
