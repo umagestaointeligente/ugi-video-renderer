@@ -54,7 +54,7 @@ jobs:
           grep -q 'ANIMAÇÃO • QUEM CONDUZ O RITMO' "$R"
           grep -q 'MASK_SHA="ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56"' "$R"
           grep -q '17 de outubro' "$R"
-          grep -q 'não é quem determina musicalmente' "$R"
+          grep -q 'não determina musicalmente' "$R"
 
       - name: Render three fresh final masters
         run: |
