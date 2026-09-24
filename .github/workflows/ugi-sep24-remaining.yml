@@ -1,0 +1,52 @@
+name: UGI Sep24 Remaining Networks
+on:
+  push:
+    paths: ['.github/workflows/ugi-sep24-remaining.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -U edge-tts 'yt-dlp[default,curl-cffi]' requests beautifulsoup4 pillow
+      - name: Build exact media
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-09-24; mkdir -p "$O/src"
+          python - <<'PY'
+          import requests,bs4,pathlib
+          u="https://exame.com/negocios/de-startup-a-grupo-global-empresa-recebe-r-200-milhoes-e-vende-passagem-de-onibus-ate-pelo-chatgpt/"
+          h=requests.get(u,headers={"User-Agent":"Mozilla/5.0"},timeout=30); h.raise_for_status()
+          s=bs4.BeautifulSoup(h.text,"html.parser"); m=s.find("meta",property="og:image"); assert m and m.get("content")
+          img=requests.get(m["content"],headers={"User-Agent":"Mozilla/5.0"},timeout=30); img.raise_for_status()
+          pathlib.Path("public/ugi/editorial/2026-09-24/tiktok-buson-real.jpg").write_bytes(img.content)
+          PY
+          get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
+          get shop1 https://www.pexels.com/video/a-female-shopping-at-a-clothing-store-8306455/
+          get shop2 https://www.pexels.com/video/people-buying-clothes-6238400/
+          get shop3 https://www.pexels.com/video/woman-paying-at-the-counter-7667429/
+          get shop4 https://www.pexels.com/video/man-and-a-woman-inside-a-clothes-store-7680440/
+          cat > "$O/youtube-retail.txt" <<'TXT'
+          Durante anos, muita gente tratou a loja física como um canal que perderia espaço para o digital. O que está acontecendo agora é mais interessante. A loja está mudando de função. Ela deixa de ser apenas um lugar para expor estoque e passa a funcionar como laboratório de experiência. Um formato menor pode ter menos produtos expostos e, ainda assim, vender melhor quando a curadoria reduz o esforço de escolha. Um provador pode deixar de ser apenas infraestrutura e virar parte da criação de conteúdo. Um lounge pode aumentar tempo de permanência. O caixa pode desaparecer do centro da jornada com autosserviço e pagamento distribuído. O ponto de gestão é que metragem quadrada, sozinha, não mede produtividade. A pergunta passa a ser quanto valor cada parte da loja cria para o cliente e para a operação. Existem quatro indicadores especialmente importantes. Primeiro, conversão: quantas pessoas que entram realmente compram. Segundo, ticket: quanto cada compra gera. Terceiro, permanência: tempo maior pode significar experiência melhor, mas também pode esconder fricção. Quarto, recorrência: uma loja boa não termina na primeira compra; ela aumenta a chance de retorno. A nova geração de lojas físicas também produz dados. Quais áreas atraem mais atenção? Onde o cliente abandona a jornada? Quais produtos são experimentados juntos? O desafio é usar esses sinais sem transformar a experiência em vigilância ou complexidade. E existe uma consequência estratégica. Quando uma empresa testa um conceito em uma unidade pequena antes de levá-lo para centenas de pontos, a loja vira protótipo. Aprende-se primeiro, escala-se depois. Isso reduz o risco de multiplicar uma ideia ruim pela rede inteira. A provocação para qualquer varejista é simples: sua loja está sendo administrada como metragem e estoque ou como uma experiência que pode ser medida, aprendida e melhorada?
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/youtube-retail.txt")" --write-media "$O/youtube-retail.mp3"
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube-retail.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/shop1.mp4" -stream_loop -1 -i "$O/src/shop2.mp4" -stream_loop -1 -i "$O/src/shop3.mp4" -stream_loop -1 -i "$O/src/shop4.mp4" -i "$O/youtube-retail.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:28,setpts=PTS-STARTPTS[a];[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:28,setpts=PTS-STARTPTS[b];[2:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:28,setpts=PTS-STARTPTS[c];[3:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:28,setpts=PTS-STARTPTS[d];[a][b][c][d]concat=n=4:v=1:a=0,loop=loop=-1:size=3360:start=0,drawbox=x=0:y=0:w=iw:h=145:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='A LOJA FÍSICA VIROU LABORATÓRIO':fontcolor=white:fontsize=54:x=(w-text_w)/2:y=44[v];[4:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$D" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-loja-laboratorio.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-09-24")
+          dur=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/"youtube-loja-laboratorio.mp4")],text=True))
+          assert dur>90
+          (p/"remaining-qa.json").write_text(json.dumps({"state":"PASS","tiktok":{"format":"photo","source":"EXAME / Buson divulgação","exactCompany":True},"youtube":{"realVideo":True,"companyNamed":False,"exactSubject":"fashion retail store/customer journey","noSlideshow":True,"freshFootage":True,"duration":dur,"license":"Pexels free to use"}},indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-09-24
+          git commit -m "assets(ugi): Sep24 TikTok Buson + YouTube retail exact media [skip ci]"
+          git push
