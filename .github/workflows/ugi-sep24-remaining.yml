@@ -25,11 +25,10 @@ jobs:
           img=requests.get(m["content"],headers={"User-Agent":"Mozilla/5.0"},timeout=30); img.raise_for_status()
           pathlib.Path("public/ugi/editorial/2026-09-24/tiktok-buson-real.jpg").write_bytes(img.content)
           PY
-          get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
-          get shop1 https://www.pexels.com/video/a-female-shopping-at-a-clothing-store-8306455/
-          get shop2 https://www.pexels.com/video/people-buying-clothes-6238400/
-          get shop3 https://www.pexels.com/video/woman-paying-at-the-counter-7667429/
-          get shop4 https://www.pexels.com/video/man-and-a-woman-inside-a-clothes-store-7680440/
+          curl -L --fail -o "$O/src/shop1.mp4" "https://videos.pexels.com/video-files/8306455/8306455-uhd_2160_4096_25fps.mp4"
+          curl -L --fail -o "$O/src/shop2.mp4" "https://videos.pexels.com/video-files/6238400/6238400-hd_1080_1920_25fps.mp4"
+          curl -L --fail -o "$O/src/shop3.mp4" "https://videos.pexels.com/video-files/7667429/7667429-uhd_4096_2160_25fps.mp4"
+          curl -L --fail -o "$O/src/shop4.mp4" "https://videos.pexels.com/video-files/7680440/7680440-uhd_4096_2160_25fps.mp4"
           cat > "$O/youtube-retail.txt" <<'TXT'
           Durante anos, muita gente tratou a loja física como um canal que perderia espaço para o digital. O que está acontecendo agora é mais interessante. A loja está mudando de função. Ela deixa de ser apenas um lugar para expor estoque e passa a funcionar como laboratório de experiência. Um formato menor pode ter menos produtos expostos e, ainda assim, vender melhor quando a curadoria reduz o esforço de escolha. Um provador pode deixar de ser apenas infraestrutura e virar parte da criação de conteúdo. Um lounge pode aumentar tempo de permanência. O caixa pode desaparecer do centro da jornada com autosserviço e pagamento distribuído. O ponto de gestão é que metragem quadrada, sozinha, não mede produtividade. A pergunta passa a ser quanto valor cada parte da loja cria para o cliente e para a operação. Existem quatro indicadores especialmente importantes. Primeiro, conversão: quantas pessoas que entram realmente compram. Segundo, ticket: quanto cada compra gera. Terceiro, permanência: tempo maior pode significar experiência melhor, mas também pode esconder fricção. Quarto, recorrência: uma loja boa não termina na primeira compra; ela aumenta a chance de retorno. A nova geração de lojas físicas também produz dados. Quais áreas atraem mais atenção? Onde o cliente abandona a jornada? Quais produtos são experimentados juntos? O desafio é usar esses sinais sem transformar a experiência em vigilância ou complexidade. E existe uma consequência estratégica. Quando uma empresa testa um conceito em uma unidade pequena antes de levá-lo para centenas de pontos, a loja vira protótipo. Aprende-se primeiro, escala-se depois. Isso reduz o risco de multiplicar uma ideia ruim pela rede inteira. A provocação para qualquer varejista é simples: sua loja está sendo administrada como metragem e estoque ou como uma experiência que pode ser medida, aprendida e melhorada?
           TXT
