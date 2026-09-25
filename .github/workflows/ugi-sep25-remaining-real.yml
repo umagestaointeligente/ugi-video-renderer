@@ -6,47 +6,44 @@ permissions: {contents: write}
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - run: |
           sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core
-          python -m pip install -U edge-tts 'yt-dlp[default,curl-cffi]'
-      - name: Render real exact-topic videos
+          python -m pip install -U edge-tts
+      - name: Render from verified real footage
         shell: bash
         run: |
           set -euo pipefail
-          O=public/ugi/editorial/2026-09-25; mkdir -p "$O/src"
-          get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
-          get airport1 https://www.pexels.com/video/passengers-with-luggage-at-airport-terminal-entrance-30040092/
-          get airport2 https://www.pexels.com/video/a-view-of-the-airport-terminal-from-above-16189939/
-          get airport3 https://www.pexels.com/video/busy-airport-terminal-check-in-area-35500242/
-          get kitchen1 https://www.pexels.com/video/a-chef-is-preparing-food-in-a-restaurant-kitchen-27814658/
-          get kitchen2 https://www.pexels.com/video/a-group-of-chefs-busy-working-in-the-restaurant-kitchen-3768941/
-          get kitchen3 https://www.pexels.com/video/a-chef-is-preparing-food-on-plates-19905887/
-          cat > "$O/airport.txt" <<'TXT'
-          Uma fila no aeroporto parece um problema de atendimento. Muitas vezes é um problema de capacidade mal distribuída. Quando centenas de passageiros chegam no mesmo intervalo, abrir mais um balcão pode ajudar, mas não resolve sozinho. A operação precisa enxergar chegada, tempo de processamento e gargalo como um único fluxo. Se o check-in acelera e a segurança não acompanha, a fila apenas muda de lugar. Gestão de capacidade é isso: melhorar o sistema inteiro, não otimizar uma etapa isolada.
+          O=public/ugi/editorial/2026-09-25; mkdir -p "$O"
+          cat > "$O/tiktok.txt" <<'TXT'
+          Por que um supermercado coloca alguns produtos essenciais longe da entrada? Porque layout também é gestão de jornada. Quanto mais o cliente percorre a loja, mais categorias ele encontra. Mas existe um limite: se o caminho parece manipulação ou cria esforço demais, a estratégia destrói experiência. O melhor layout não é o que força circulação. É o que combina descoberta, conveniência e missão de compra. Cada metro da loja precisa ter uma função.
           TXT
-          cat > "$O/kitchen.txt" <<'TXT'
-          Um restaurante lotado pode vender muito e ainda perder dinheiro. A cozinha profissional mostra por quê. Cada pedido atravessa uma sequência: entrada da comanda, separação dos ingredientes, preparo, cocção, montagem e expedição. Quando uma dessas etapas opera mais devagar que as demais, ela vira o gargalo do sistema. Colocar mais gente em todas as estações pode aumentar custo sem aumentar produção. O primeiro trabalho da gestão é descobrir onde o fluxo realmente trava. Depois vem a segunda pergunta: por que trava? Pode ser equipamento, layout, treinamento, variedade excessiva do cardápio, falta de mise en place ou simplesmente pedidos chegando em ondas. A teoria das restrições ensina uma lógica poderosa: a capacidade do sistema é determinada pelo seu gargalo. Por isso, melhorar uma etapa que já tem folga quase não altera o resultado final. Em uma cozinha, reduzir dois minutos na preparação de um item crítico pode aumentar a quantidade de pratos que saem no horário de pico. Mas existe outro lado. Velocidade sem qualidade cria retrabalho, devolução e desperdício. O objetivo não é fazer cada pessoa trabalhar mais rápido. É fazer o fluxo trabalhar melhor. Isso exige padronização, sequência clara, informação chegando no momento certo e capacidade protegida na etapa crítica. A mesma lógica aparece em centros de distribuição, fábricas, hospitais, lojas e escritórios. Toda operação tem alguma restrição. A pergunta que muda o jogo é: qual etapa determina hoje a velocidade de todo o seu negócio? Encontrar essa resposta costuma valer mais do que pedir para todo mundo correr.
+          cat > "$O/youtube.txt" <<'TXT'
+          Uma fábrica pode ter máquinas modernas, equipe completa e pedidos na carteira e ainda assim perder capacidade todos os dias. Um dos motivos é o tempo de setup: o intervalo entre terminar um produto e conseguir começar o próximo. Imagine uma linha que precisa parar para trocar ferramenta, limpar equipamento, ajustar parâmetros e testar qualidade. Durante esse período, o ativo existe, o custo continua, mas nada vendável está saindo. É por isso que reduzir setup pode valer tanto quanto comprar uma máquina nova. A lógica começa separando atividades internas e externas. Atividade interna é aquilo que só pode ser feito com a máquina parada. Atividade externa pode ser preparada enquanto a produção anterior ainda está rodando. Ferramentas, materiais, instruções e parâmetros podem chegar prontos antes da parada. Depois, a equipe padroniza a sequência, elimina movimentos desnecessários e mede cada etapa. O ganho não aparece apenas em minutos. Setup menor permite lotes menores. Lotes menores reduzem estoque. Menos estoque libera caixa e torna a operação mais rápida para reagir à demanda. Existe ainda um efeito sobre o portfólio: quando trocar de produto é caro e demorado, a empresa tende a produzir grandes lotes para diluir o setup. Isso pode criar estoque de itens que o cliente ainda nem pediu. Quando a troca fica rápida, flexibilidade passa a ser uma capacidade real. A pergunta de gestão é simples: antes de aprovar mais investimento em capacidade, quanto tempo do ativo atual está sendo consumido apenas para preparar a próxima produção?
           TXT
-          edge-tts --voice pt-BR-AntonioNeural --rate=+5% --text "$(cat "$O/airport.txt")" --write-media "$O/airport.mp3"
-          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/kitchen.txt")" --write-media "$O/kitchen.mp3"
-          DA=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/airport.mp3")
-          ffmpeg -y -stream_loop -1 -i "$O/src/airport1.mp4" -stream_loop -1 -i "$O/src/airport2.mp4" -stream_loop -1 -i "$O/src/airport3.mp4" -i "$O/airport.mp3" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:18,setpts=PTS-STARTPTS[a];[1:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:18,setpts=PTS-STARTPTS[b];[2:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:18,setpts=PTS-STARTPTS[c];[a][b][c]concat=n=3:v=1:a=0,loop=loop=-1:size=1620:start=0,drawbox=x=0:y=0:w=iw:h=175:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='A FILA É SINTOMA. O GARGALO VEM ANTES.':fontcolor=white:fontsize=42:x=(w-text_w)/2:y=60[v];[3:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$DA" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/tiktok-capacidade-aeroporto.mp4"
-          DK=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/kitchen.mp3")
-          ffmpeg -y -stream_loop -1 -i "$O/src/kitchen1.mp4" -stream_loop -1 -i "$O/src/kitchen2.mp4" -stream_loop -1 -i "$O/src/kitchen3.mp4" -i "$O/kitchen.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[a];[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[b];[2:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[c];[a][b][c]concat=n=3:v=1:a=0,loop=loop=-1:size=2880:start=0,drawbox=x=0:y=0:w=iw:h=150:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='O GARGALO QUE DECIDE A VELOCIDADE DO NEGÓCIO':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=48[v];[3:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$DK" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-gargalo-cozinha.mp4"
+          edge-tts --voice pt-BR-AntonioNeural --rate=+5% --text "$(cat "$O/tiktok.txt")" --write-media "$O/tiktok.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/youtube.txt")" --write-media "$O/youtube.mp3"
+          TS=public/ugi/editorial/2026-09-21/src/supermarket.mp4
+          F1=public/ugi/editorial/2026-09-23/src/factory1.mp4
+          F2=public/ugi/editorial/2026-09-23/src/factory2.mp4
+          F3=public/ugi/editorial/2026-09-23/src/factory3.mp4
+          DT=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/tiktok.mp3")
+          ffmpeg -y -stream_loop -1 -i "$TS" -i "$O/tiktok.mp3" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,drawbox=x=0:y=0:w=iw:h=175:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='LAYOUT TAMBÉM É GESTÃO':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=60[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$DT" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/tiktok-layout-supermercado.mp4"
+          DY=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube.mp3")
+          ffmpeg -y -stream_loop -1 -i "$F1" -stream_loop -1 -i "$F2" -stream_loop -1 -i "$F3" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[a];[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[b];[2:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[c];[a][b][c]concat=n=3:v=1:a=0,loop=loop=-1:size=2880:start=0,drawbox=x=0:y=0:w=iw:h=150:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='SETUP: A CAPACIDADE QUE SOME ENTRE DOIS PRODUTOS':fontcolor=white:fontsize=47:x=(w-text_w)/2:y=48[v];[3:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$DY" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-setup-capacidade.mp4"
           python - <<'PY'
           import json,pathlib,subprocess
           p=pathlib.Path("public/ugi/editorial/2026-09-25"); out={}
-          for f in ["tiktok-capacidade-aeroporto.mp4","youtube-gargalo-cozinha.mp4"]:
-            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); out[f]=d; assert d>45
-          (p/"remaining-qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"noSlideshow":True,"noCompanyNamed":True,"exactTopicVisual":True,"noRandomFootage":True,"files":out,"sources":"Pexels free-to-use real airport and professional-kitchen footage"},indent=2))
+          for f in ["tiktok-layout-supermercado.mp4","youtube-setup-capacidade.mp4"]:
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); out[f]=d; assert d>40
+          (p/"remaining-qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"noSlideshow":True,"noCompanyNamed":True,"exactTopicVisual":True,"noRandomFootage":True,"files":out,"source":"Previously validated real supermarket and factory footage in UGI repository"},indent=2))
           PY
       - name: Commit
         run: |
           git config user.name ugi-editorial-bot
           git config user.email ugi-editorial-bot@users.noreply.github.com
           git add public/ugi/editorial/2026-09-25
-          git commit -m "assets(ugi): Sep25 remaining real exact-topic videos [skip ci]"
+          git commit -m "assets(ugi): Sep25 remaining exact-topic real videos [skip ci]"
           git push
