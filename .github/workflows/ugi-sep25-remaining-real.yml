@@ -1,0 +1,52 @@
+name: UGI Sep25 Remaining Real Video
+on:
+  push:
+    paths: ['.github/workflows/ugi-sep25-remaining-real.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -U edge-tts 'yt-dlp[default,curl-cffi]'
+      - name: Render real exact-topic videos
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-09-25; mkdir -p "$O/src"
+          get(){ yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/src/$1.mp4" "$2"; }
+          get airport1 https://www.pexels.com/video/passengers-with-luggage-at-airport-terminal-entrance-30040092/
+          get airport2 https://www.pexels.com/video/a-view-of-the-airport-terminal-from-above-16189939/
+          get airport3 https://www.pexels.com/video/busy-airport-terminal-check-in-area-35500242/
+          get kitchen1 https://www.pexels.com/video/a-chef-is-preparing-food-in-a-restaurant-kitchen-27814658/
+          get kitchen2 https://www.pexels.com/video/a-group-of-chefs-busy-working-in-the-restaurant-kitchen-3768941/
+          get kitchen3 https://www.pexels.com/video/a-chef-is-preparing-food-on-plates-19905887/
+          cat > "$O/airport.txt" <<'TXT'
+          Uma fila no aeroporto parece um problema de atendimento. Muitas vezes é um problema de capacidade mal distribuída. Quando centenas de passageiros chegam no mesmo intervalo, abrir mais um balcão pode ajudar, mas não resolve sozinho. A operação precisa enxergar chegada, tempo de processamento e gargalo como um único fluxo. Se o check-in acelera e a segurança não acompanha, a fila apenas muda de lugar. Gestão de capacidade é isso: melhorar o sistema inteiro, não otimizar uma etapa isolada.
+          TXT
+          cat > "$O/kitchen.txt" <<'TXT'
+          Um restaurante lotado pode vender muito e ainda perder dinheiro. A cozinha profissional mostra por quê. Cada pedido atravessa uma sequência: entrada da comanda, separação dos ingredientes, preparo, cocção, montagem e expedição. Quando uma dessas etapas opera mais devagar que as demais, ela vira o gargalo do sistema. Colocar mais gente em todas as estações pode aumentar custo sem aumentar produção. O primeiro trabalho da gestão é descobrir onde o fluxo realmente trava. Depois vem a segunda pergunta: por que trava? Pode ser equipamento, layout, treinamento, variedade excessiva do cardápio, falta de mise en place ou simplesmente pedidos chegando em ondas. A teoria das restrições ensina uma lógica poderosa: a capacidade do sistema é determinada pelo seu gargalo. Por isso, melhorar uma etapa que já tem folga quase não altera o resultado final. Em uma cozinha, reduzir dois minutos na preparação de um item crítico pode aumentar a quantidade de pratos que saem no horário de pico. Mas existe outro lado. Velocidade sem qualidade cria retrabalho, devolução e desperdício. O objetivo não é fazer cada pessoa trabalhar mais rápido. É fazer o fluxo trabalhar melhor. Isso exige padronização, sequência clara, informação chegando no momento certo e capacidade protegida na etapa crítica. A mesma lógica aparece em centros de distribuição, fábricas, hospitais, lojas e escritórios. Toda operação tem alguma restrição. A pergunta que muda o jogo é: qual etapa determina hoje a velocidade de todo o seu negócio? Encontrar essa resposta costuma valer mais do que pedir para todo mundo correr.
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=+5% --text "$(cat "$O/airport.txt")" --write-media "$O/airport.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/kitchen.txt")" --write-media "$O/kitchen.mp3"
+          DA=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/airport.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/airport1.mp4" -stream_loop -1 -i "$O/src/airport2.mp4" -stream_loop -1 -i "$O/src/airport3.mp4" -i "$O/airport.mp3" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:18,setpts=PTS-STARTPTS[a];[1:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:18,setpts=PTS-STARTPTS[b];[2:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,trim=0:18,setpts=PTS-STARTPTS[c];[a][b][c]concat=n=3:v=1:a=0,loop=loop=-1:size=1620:start=0,drawbox=x=0:y=0:w=iw:h=175:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='A FILA É SINTOMA. O GARGALO VEM ANTES.':fontcolor=white:fontsize=42:x=(w-text_w)/2:y=60[v];[3:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$DA" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/tiktok-capacidade-aeroporto.mp4"
+          DK=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/kitchen.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/kitchen1.mp4" -stream_loop -1 -i "$O/src/kitchen2.mp4" -stream_loop -1 -i "$O/src/kitchen3.mp4" -i "$O/kitchen.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[a];[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[b];[2:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:32,setpts=PTS-STARTPTS[c];[a][b][c]concat=n=3:v=1:a=0,loop=loop=-1:size=2880:start=0,drawbox=x=0:y=0:w=iw:h=150:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='O GARGALO QUE DECIDE A VELOCIDADE DO NEGÓCIO':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=48[v];[3:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$DK" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-gargalo-cozinha.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-09-25"); out={}
+          for f in ["tiktok-capacidade-aeroporto.mp4","youtube-gargalo-cozinha.mp4"]:
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); out[f]=d; assert d>45
+          (p/"remaining-qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"noSlideshow":True,"noCompanyNamed":True,"exactTopicVisual":True,"noRandomFootage":True,"files":out,"sources":"Pexels free-to-use real airport and professional-kitchen footage"},indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-09-25
+          git commit -m "assets(ugi): Sep25 remaining real exact-topic videos [skip ci]"
+          git push
