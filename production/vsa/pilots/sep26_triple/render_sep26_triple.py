@@ -24,13 +24,13 @@ TOPICS={
   "real":"ice.webm","source_url":"https://commons.wikimedia.org/wiki/File:T%C3%A9mpano_de_hielo_en_el_lago_argentino.webm","license":"CC_BY_SA_4.0",
   "real_asset_subject":"REAL_FLOATING_ICE","real_asset_role":"TARGET_SUBJECT","real_identifiable_human":False,
   "scenes":[
-   ("REAL",1,"CONTEXT","ice","GELO FLUTUANDO • VÍDEO REAL","Quase todo sólido afunda no próprio líquido. Mas a água faz algo estranho: quando congela, o gelo flutua."),
-   ("ANIMATION",0,"MECHANISM","ice","ANIMAÇÃO • MOLÉCULAS MAIS AFASTADAS","Na água líquida, as moléculas se movem e conseguem ficar relativamente próximas umas das outras."),
-   ("REAL",5,"PROOF","ice","GELO NA ÁGUA • VÍDEO REAL","Quando a temperatura cai e a água congela, as moléculas passam a se organizar numa rede cristalina mais aberta."),
-   ("ANIMATION",2,"MECHANISM","ice","ANIMAÇÃO • A ÁGUA EXPANDE","Essa estrutura ocupa mais espaço. Ao congelar, a água expande cerca de nove por cento e sua densidade diminui."),
-   ("REAL",10,"CONSEQUENCE","ice","GELO FLUTUANDO • VÍDEO REAL","Com menor densidade que a água líquida, o gelo recebe empuxo suficiente para permanecer na superfície."),
-   ("ANIMATION",4,"MECHANISM","ice","ANIMAÇÃO • LAGO CONGELA POR CIMA","Isso também faz lagos congelarem primeiro na superfície, formando uma camada que ajuda a isolar a água abaixo."),
-   ("REAL",16,"PROOF","ice","GELO FLUTUANDO • VÍDEO REAL","Então o gelo não flutua por ser leve: ele flutua porque sua estrutura ocupa mais volume para a mesma massa.")
+   ("REAL",1,"CONTEXT","ice","GELO FLUTUANDO • VÍDEO REAL","A maioria dos sólidos afunda no próprio líquido. A água foge à regra: congelada, vira gelo que flutua."),
+   ("ANIMATION",0,"MECHANISM","ice","ANIMAÇÃO • MOLÉCULAS MAIS AFASTADAS","Na água líquida, as moléculas se movem e ficam relativamente próximas."),
+   ("REAL",5,"PROOF","ice","GELO NA ÁGUA • VÍDEO REAL","Ao congelar, as moléculas se organizam numa rede cristalina mais aberta."),
+   ("ANIMATION",2,"MECHANISM","ice","ANIMAÇÃO • A ÁGUA EXPANDE","Essa rede ocupa mais espaço: a água expande cerca de nove por cento e fica menos densa."),
+   ("REAL",10,"CONSEQUENCE","ice","GELO FLUTUANDO • VÍDEO REAL","Menos denso que a água líquida, o gelo recebe empuxo e permanece na superfície."),
+   ("ANIMATION",4,"MECHANISM","ice","ANIMAÇÃO • LAGO CONGELA POR CIMA","Por isso lagos congelam primeiro por cima, e essa camada ajuda a isolar a água abaixo."),
+   ("REAL",16,"PROOF","ice","GELO FLUTUANDO • VÍDEO REAL","O gelo flutua porque sua estrutura ocupa mais volume para a mesma massa.")
   ]},
  "polvo_cor":{
   "title":"Como um polvo muda de cor tão rápido? #shorts",
@@ -40,13 +40,13 @@ TOPICS={
   "real":"octopus.webm","source_url":"https://commons.wikimedia.org/wiki/File:Mimic_Octopus_video.webm","license":"CC_BY_2.0",
   "real_asset_subject":"REAL_OCTOPUS","real_asset_role":"TARGET_SUBJECT","real_identifiable_human":False,
   "scenes":[
-   ("REAL",3,"CONTEXT","octopus","POLVO • VÍDEO REAL","Um polvo pode mudar sua aparência em segundos, misturando cor, brilho e até textura para desaparecer no ambiente."),
-   ("ANIMATION",0,"MECHANISM","octopus","ANIMAÇÃO • CROMATÓFOROS","Logo abaixo da pele existem milhares de cromatóforos: pequenos sacos elásticos cheios de pigmento."),
-   ("REAL",10,"PROOF","octopus","POLVO • VÍDEO REAL","Músculos ao redor desses sacos expandem ou contraem o pigmento. Quanto mais aberto, mais aquela cor aparece."),
-   ("ANIMATION",2,"MECHANISM","octopus","ANIMAÇÃO • CONTROLE NERVOSO","O cérebro envia sinais pelos nervos e combina milhares desses pontos quase ao mesmo tempo, formando padrões inteiros."),
-   ("REAL",19,"CONSEQUENCE","octopus","POLVO • VÍDEO REAL","E não é só pigmento. Outras células da pele refletem a luz e acrescentam tons metálicos, claros e iridescentes."),
-   ("ANIMATION",4,"MECHANISM","octopus","ANIMAÇÃO • COR + REFLEXO + TEXTURA","Iridóforos e leucóforos trabalham com os cromatóforos, enquanto pequenas papilas podem mudar a textura da pele."),
-   ("REAL",28,"PROOF","octopus","POLVO • VÍDEO REAL","O resultado é uma camuflagem dinâmica: cor, brilho e relevo mudam juntos para imitar o cenário ao redor.")
+   ("REAL",3,"CONTEXT","octopus","POLVO • VÍDEO REAL","Um polvo muda de aparência em segundos, combinando cor, brilho e textura para se esconder."),
+   ("ANIMATION",0,"MECHANISM","octopus","ANIMAÇÃO • CROMATÓFOROS","Na pele há milhares de cromatóforos: pequenos sacos elásticos cheios de pigmento."),
+   ("REAL",10,"PROOF","octopus","POLVO • VÍDEO REAL","Músculos expandem ou contraem esses sacos. Quanto mais aberto, mais a cor aparece."),
+   ("ANIMATION",2,"MECHANISM","octopus","ANIMAÇÃO • CONTROLE NERVOSO","O cérebro envia sinais pelos nervos e coordena milhares desses pontos ao mesmo tempo."),
+   ("REAL",19,"CONSEQUENCE","octopus","POLVO • VÍDEO REAL","Outras células também refletem a luz e criam tons metálicos, claros e iridescentes."),
+   ("ANIMATION",4,"MECHANISM","octopus","ANIMAÇÃO • COR + REFLEXO + TEXTURA","Iridóforos e leucóforos trabalham com os cromatóforos, enquanto papilas mudam a textura da pele."),
+   ("REAL",28,"PROOF","octopus","POLVO • VÍDEO REAL","Assim, cor, brilho e relevo mudam juntos para imitar o ambiente.")
   ]},
  "drauzio_abl":{
   "title":"Drauzio Varella pode virar um 'imortal': como funciona a ABL? #shorts",
@@ -56,13 +56,13 @@ TOPICS={
   "real":"drauzio.webm","source_url":"https://commons.wikimedia.org/wiki/File:Drauzio_Varella_tira_d%C3%BAvidas_das_crian%C3%A7as_sobre_a_vacina_contra_a_COVID-19.webm","license":"CC_BY_3.0",
   "real_asset_subject":"DRAUZIO_VARELLA_ARCHIVE_VIDEO","real_asset_role":"EXPLICIT_CONTEXT","real_identifiable_human":True,
   "scenes":[
-   ("REAL",8,"CONTEXT","abl","DRAUZIO • IMAGEM DE ARQUIVO","Drauzio Varella decidiu se candidatar à Cadeira 32 da Academia Brasileira de Letras, que era ocupada por Zuenir Ventura."),
-   ("ANIMATION",0,"MECHANISM","abl","ANIMAÇÃO • VAGA E CANDIDATURA","Quando um acadêmico morre, a vaga é declarada aberta. Os interessados têm quinze dias para apresentar a candidatura."),
-   ("REAL",24,"PROOF","abl","DRAUZIO • IMAGEM DE ARQUIVO","O candidato precisa ser brasileiro e ter obra publicada de reconhecido mérito literário ou livro de valor cultural."),
-   ("ANIMATION",2,"MECHANISM","abl","ANIMAÇÃO • VOTO SECRETO","Depois vem uma eleição por voto secreto entre os membros efetivos. Para vencer, é necessária maioria absoluta."),
-   ("REAL",40,"CONSEQUENCE","abl","DRAUZIO • IMAGEM DE ARQUIVO","Se ninguém atingir essa maioria, o regimento prevê novas rodadas de votação, com regras para reduzir os concorrentes."),
-   ("ANIMATION",4,"MECHANISM","abl","ANIMAÇÃO • 40 CADEIRAS E POSSE","A ABL tem quarenta cadeiras perpétuas. O eleito só se torna acadêmico depois da posse em sessão solene."),
-   ("REAL",56,"PROOF","abl","DRAUZIO • IMAGEM DE ARQUIVO","Por isso, Drauzio ainda não é um imortal da ABL: ele é candidato e terá de passar por todo esse processo.")
+   ("REAL",8,"CONTEXT","abl","DRAUZIO • IMAGEM DE ARQUIVO","Drauzio Varella decidiu disputar a Cadeira 32 da ABL, vaga após a morte de Zuenir Ventura."),
+   ("ANIMATION",0,"MECHANISM","abl","ANIMAÇÃO • VAGA E CANDIDATURA","Quando um acadêmico morre, abre-se a vaga. Os interessados têm quinze dias para se candidatar."),
+   ("REAL",24,"PROOF","abl","DRAUZIO • IMAGEM DE ARQUIVO","O candidato deve ser brasileiro e ter obra de mérito literário ou livro de valor cultural."),
+   ("ANIMATION",2,"MECHANISM","abl","ANIMAÇÃO • VOTO SECRETO","A escolha é por voto secreto dos membros efetivos e exige maioria absoluta."),
+   ("REAL",40,"CONSEQUENCE","abl","DRAUZIO • IMAGEM DE ARQUIVO","Se ninguém atingir a maioria, o regimento prevê novas rodadas e reduz os concorrentes."),
+   ("ANIMATION",4,"MECHANISM","abl","ANIMAÇÃO • 40 CADEIRAS E POSSE","A ABL tem quarenta cadeiras perpétuas. O eleito só vira acadêmico depois da posse solene."),
+   ("REAL",56,"PROOF","abl","DRAUZIO • IMAGEM DE ARQUIVO","Então Drauzio ainda não é um imortal da ABL: é candidato e precisa passar por esse processo.")
   ]}
 }
 
