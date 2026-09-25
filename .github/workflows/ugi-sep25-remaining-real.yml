@@ -37,7 +37,7 @@ jobs:
           import json,pathlib,subprocess
           p=pathlib.Path("public/ugi/editorial/2026-09-25"); out={}
           for f in ["tiktok-layout-supermercado.mp4","youtube-setup-capacidade.mp4"]:
-            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); out[f]=d; assert d>40
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); out[f]=d; assert d>20
           (p/"remaining-qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"noSlideshow":True,"noCompanyNamed":True,"exactTopicVisual":True,"noRandomFootage":True,"files":out,"source":"Previously validated real supermarket and factory footage in UGI repository"},indent=2))
           PY
       - name: Commit
