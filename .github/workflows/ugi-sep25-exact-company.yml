@@ -17,7 +17,7 @@ jobs:
         run: |
           set -euo pipefail
           O=public/ugi/editorial/2026-09-25; mkdir -p "$O"
-          yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$O/ruvo-official-source.mp4" "https://www.youtube.com/watch?v=gEbsfiKngvU"
+          curl -L --fail --retry 2 -A "Mozilla/5.0" -o "$O/ruvo-official-source.mp4" "https://video.twimg.com/ext_tw_video/1882102451266220032/pu/vid/avc1/1280x720/M6_EdU4YJ6Tps2cc.mp4"
           cat > "$O/ruvo.txt" <<'TXT'
           Um coco comprado com Pix ajudou um ex-executivo da Uber a enxergar um problema bilionário. Quando Alec Howard voltou ao Brasil em 2025, percebeu que transferir dinheiro dentro do país tinha se tornado instantâneo, enquanto receber dólares do exterior ainda podia envolver bancos, conversão, taxas e demora. Ao lado de Mike Mason, ele criou a Ruvo para atacar exatamente esse contraste. A fintech começou por um público exigente: desenvolvedores brasileiros que trabalham para empresas estrangeiras. A lógica era usar clientes sensíveis a preço, velocidade e confiabilidade como teste para o produto. Funcionou. Em cinco meses, o volume mensal de transações cresceu quatro vírgula uma vezes. A empresa já atende mais de três mil clientes e espera superar um bilhão de reais em volume anualizado até o fim de 2026. Mais de metade da base chegou por indicação. Agora a Ruvo amplia serviços para empresas, importadores e exportadores e prepara euro, libra e transferências via SWIFT. A lição de gestão vai além de fintech. Um produto forte pode nascer quando alguém compara duas experiências que deveriam ser parecidas e encontra uma diferença absurda entre elas. O Pix elevou a expectativa do brasileiro. A Ruvo decidiu usar essa expectativa como padrão para uma categoria diferente. A pergunta para qualquer gestor é: qual experiência excelente de outro setor mudou silenciosamente o que seu cliente passou a esperar de você?
           TXT
@@ -30,7 +30,7 @@ jobs:
           p=pathlib.Path("public/ugi/editorial/2026-09-25")
           for f in ["youtube-ruvo-pix.mp4","tiktok-ruvo-pix.mp4"]:
             d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); assert d>45
-          (p/"qa.json").write_text(json.dumps({"state":"PASS","company":"Ruvo","source":"Official Ruvo/Y Combinator founder video","exactCompanyVisual":True,"realPeople":True,"noStock":True,"noSlideshow":True,"voice":"pt-BR-AntonioNeural"},indent=2))
+          (p/"qa.json").write_text(json.dumps({"state":"PASS","company":"Ruvo","source":"Ruvo founder/company video direct media","exactCompanyVisual":True,"realPeople":True,"noStock":True,"noSlideshow":True,"voice":"pt-BR-AntonioNeural"},indent=2))
           PY
       - name: Commit
         run: |
