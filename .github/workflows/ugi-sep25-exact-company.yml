@@ -1,0 +1,41 @@
+name: UGI Sep25 Exact Company Video
+on:
+  push:
+    paths: ['.github/workflows/ugi-sep25-exact-company.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -U edge-tts 'yt-dlp[default,curl-cffi]'
+      - name: Ruvo exact-company video
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-09-25; mkdir -p "$O"
+          yt-dlp -f "bv*+ba/b" --merge-output-format mp4 -o "$O/ruvo-official-source.mp4" "https://www.youtube.com/watch?v=gEbsfiKngvU"
+          cat > "$O/ruvo.txt" <<'TXT'
+          Um coco comprado com Pix ajudou um ex-executivo da Uber a enxergar um problema bilionário. Quando Alec Howard voltou ao Brasil em 2025, percebeu que transferir dinheiro dentro do país tinha se tornado instantâneo, enquanto receber dólares do exterior ainda podia envolver bancos, conversão, taxas e demora. Ao lado de Mike Mason, ele criou a Ruvo para atacar exatamente esse contraste. A fintech começou por um público exigente: desenvolvedores brasileiros que trabalham para empresas estrangeiras. A lógica era usar clientes sensíveis a preço, velocidade e confiabilidade como teste para o produto. Funcionou. Em cinco meses, o volume mensal de transações cresceu quatro vírgula uma vezes. A empresa já atende mais de três mil clientes e espera superar um bilhão de reais em volume anualizado até o fim de 2026. Mais de metade da base chegou por indicação. Agora a Ruvo amplia serviços para empresas, importadores e exportadores e prepara euro, libra e transferências via SWIFT. A lição de gestão vai além de fintech. Um produto forte pode nascer quando alguém compara duas experiências que deveriam ser parecidas e encontra uma diferença absurda entre elas. O Pix elevou a expectativa do brasileiro. A Ruvo decidiu usar essa expectativa como padrão para uma categoria diferente. A pergunta para qualquer gestor é: qual experiência excelente de outro setor mudou silenciosamente o que seu cliente passou a esperar de você?
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=-1% --text "$(cat "$O/ruvo.txt")" --write-media "$O/ruvo.mp3"
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/ruvo.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/ruvo-official-source.mp4" -i "$O/ruvo.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,drawbox=x=0:y=0:w=iw:h=150:color=black@0.32:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='RUVO: O PIX COMO PADRÃO DE EXPERIÊNCIA':fontcolor=white:fontsize=50:x=(w-text_w)/2:y=48[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$D" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-ruvo-pix.mp4"
+          ffmpeg -y -i "$O/youtube-ruvo-pix.mp4" -vf "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920" -t 58 -c:v libx264 -preset veryfast -crf 20 -c:a copy "$O/tiktok-ruvo-pix.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-09-25")
+          for f in ["youtube-ruvo-pix.mp4","tiktok-ruvo-pix.mp4"]:
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); assert d>45
+          (p/"qa.json").write_text(json.dumps({"state":"PASS","company":"Ruvo","source":"Official Ruvo/Y Combinator founder video","exactCompanyVisual":True,"realPeople":True,"noStock":True,"noSlideshow":True,"voice":"pt-BR-AntonioNeural"},indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-09-25
+          git commit -m "assets(ugi): Sep25 Ruvo exact-company videos [skip ci]"
+          git push
