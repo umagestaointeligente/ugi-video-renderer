@@ -1,8 +1,56 @@
 name: Cena Certa Sep26 Publish Pack
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cena-certa-sep26-publish-pack.yml
+      - scripts/cena_certa_sep26_pack.py
+      - ops/cena-certa-sep26/manifest.json
+      - assets/cena-certa-logo.png.b64
   workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
 jobs:
-  placeholder:
+  render:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
     steps:
-      - run: echo READY
+      - uses: actions/checkout@v4
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg curl fonts-dejavu-core >/dev/null
+          python -m pip install -q edge-tts
+      - name: Render QA and deliver
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_sep26_pack.py
+      - name: Create evidence issue
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          {
+            echo "CENA_CERTA_SEP26_PACK=PASS"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo
+            echo '~~~json'
+            cat out/cena-certa-sep26/delivery-summary.json
+            echo '~~~'
+          } > /tmp/cc-issue.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-SEP26-PACK] $GITHUB_RUN_ID" --body-file /tmp/cc-issue.md
+      - name: Preserve proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-sep26-pack-${{ github.run_id }}
+          path: out/cena-certa-sep26/
+          retention-days: 7
+          if-no-files-found: warn
