@@ -79,3 +79,5 @@ jobs:
           if-no-files-found: warn
 
 # recovery-retrigger: logo-fallback-v2
+
+# recovery-retrigger: seek-extract-v3
