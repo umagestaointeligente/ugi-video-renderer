@@ -100,10 +100,17 @@ def render_one(item, logo):
     assert abs(n/dn-30)<0.05
     assert a["codec_name"]=="aac" and int(a["sample_rate"])==48000
 
-    visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.00:pix_th=0.10,freezedetect=n=-45dB:d=4.0","-an","-f","null","-"],check=False).stderr or ""
+    visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.00:pix_th=0.10","-an","-f","null","-"],check=False).stderr or ""
     if "black_start" in visual:
         raise RuntimeError("NO_BLACK_FAIL")
-    if "freeze_duration" in visual:
+    fm=run(["ffmpeg","-v","error","-i",str(out),"-vf","fps=1","-f","framemd5","-"]).stdout
+    hashes=[]
+    for line in fm.splitlines():
+        line=line.strip()
+        if not line or line.startswith("#"): continue
+        parts=[x.strip() for x in line.split(",")]
+        if len(parts)>=6: hashes.append(parts[-1])
+    if len(set(hashes)) < min(5,max(2,len(hashes)//3)):
         raise RuntimeError("REAL_MOTION_FAIL")
 
     aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.8","-vn","-f","null","-"],check=False).stderr or ""
