@@ -1,0 +1,76 @@
+name: Cena Certa Sep26 Humor Transcript
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cena-certa-sep26-humor-transcript.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  transcribe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg >/dev/null
+          python -m pip install -q --upgrade yt-dlp faster-whisper
+      - name: Download official sources
+        run: |
+          set -euo pipefail
+          mkdir -p out/src
+          yt-dlp --no-warnings -f "bv*+ba/b" --merge-output-format mp4 -o "out/src/mister.%(ext)s" "https://globoplay.globo.com/v/4707587/"
+          yt-dlp --no-warnings -f "bv*+ba/b" --merge-output-format mp4 -o "out/src/deus.%(ext)s" "https://globoplay.globo.com/v/6600863/"
+          ls -lh out/src
+      - name: Transcribe PT-BR with timestamps
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+from faster_whisper import WhisperModel
+from pathlib import Path
+model=WhisperModel("tiny",device="cpu",compute_type="int8")
+for stem in ["mister","deus"]:
+    src=next(Path("out/src").glob(stem+".*"))
+    segs,info=model.transcribe(str(src),language="pt",vad_filter=True,beam_size=3)
+    lines=[]
+    for s in segs:
+        txt=s.text.strip()
+        if txt:
+            lines.append(f"{s.start:06.2f} --> {s.end:06.2f} | {txt}")
+    Path(f"out/{stem}-transcript.txt").write_text("\n".join(lines),encoding="utf-8")
+PY
+      - name: Detect scene cuts and audio peaks
+        run: |
+          set -euo pipefail
+          for stem in mister deus; do
+            f=$(find out/src -maxdepth 1 -type f -name "$stem.*" | head -1)
+            ffmpeg -hide_banner -i "$f" -vf "select='gt(scene,0.35)',showinfo" -an -f null - 2> "out/$stem-scenes.log" || true
+            ffmpeg -hide_banner -i "$f" -af "astats=metadata=1:reset=1,ametadata=print:key=lavfi.astats.Overall.RMS_level" -vn -f null - 2> "out/$stem-audio.log" || true
+          done
+      - name: Create evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "CENA_CERTA_HUMOR_TRANSCRIPT"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo
+            echo "## Mister Brau - Falha Nossa"
+            cat out/mister-transcript.txt
+            echo
+            echo "## Deus Salve o Rei - Falha Nossa"
+            cat out/deus-transcript.txt
+          } > out/issue.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-HUMOR-TRANSCRIPT] $GITHUB_RUN_ID" --body-file out/issue.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-humor-transcript-${{ github.run_id }}
+          path: out/
+          retention-days: 7
