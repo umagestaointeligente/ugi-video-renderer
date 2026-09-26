@@ -1,0 +1,70 @@
+name: Cena Certa Sep26 Humor Discovery
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cena-certa-sep26-humor-discovery.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          python -m pip install -q --upgrade yt-dlp
+      - name: Test official Falha Nossa sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          cat > out/sources.tsv <<'EOF'
+          mister-brau|https://globoplay.globo.com/v/4707587/
+          deus-salve-o-rei|https://globoplay.globo.com/v/6600863/
+          EOF
+          : > out/report.txt
+          while IFS='|' read -r name url; do
+            echo "### $name" >> out/report.txt
+            yt-dlp --no-warnings --dump-single-json "$url" > "out/$name.json" 2> "out/$name.err" || true
+            if [ -s "out/$name.json" ]; then
+              python - "$name" >> out/report.txt <<'PY'
+import json,sys,os
+name=sys.argv[1]
+j=json.load(open(f"out/{name}.json",encoding="utf-8"))
+print("PASS=1")
+print("ID="+str(j.get("id")))
+print("TITLE="+str(j.get("title")))
+print("DURATION="+str(j.get("duration")))
+print("EXT="+str(j.get("ext")))
+print("WEBPAGE_URL="+str(j.get("webpage_url")))
+print("EXTRACTOR="+str(j.get("extractor")))
+print("LICENSE="+str(j.get("license")))
+PY
+            else
+              echo "PASS=0" >> out/report.txt
+              tail -50 "out/$name.err" >> out/report.txt || true
+            fi
+            echo >> out/report.txt
+          done < out/sources.tsv
+      - name: Evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "CENA_CERTA_HUMOR_DISCOVERY"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            cat out/report.txt
+          } > out/issue.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-HUMOR-DISCOVERY] $GITHUB_RUN_ID" --body-file out/issue.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-humor-discovery-${{ github.run_id }}
+          path: out/
+          retention-days: 7
