@@ -31,28 +31,22 @@ jobs:
       - name: Transcribe PT-BR with timestamps
         run: |
           set -euo pipefail
-          python - <<'PY'
-from faster_whisper import WhisperModel
-from pathlib import Path
-model=WhisperModel("tiny",device="cpu",compute_type="int8")
-for stem in ["mister","deus"]:
-    src=next(Path("out/src").glob(stem+".*"))
-    segs,info=model.transcribe(str(src),language="pt",vad_filter=True,beam_size=3)
-    lines=[]
-    for s in segs:
-        txt=s.text.strip()
-        if txt:
-            lines.append(f"{s.start:06.2f} --> {s.end:06.2f} | {txt}")
-    Path(f"out/{stem}-transcript.txt").write_text("\n".join(lines),encoding="utf-8")
-PY
-      - name: Detect scene cuts and audio peaks
-        run: |
-          set -euo pipefail
-          for stem in mister deus; do
-            f=$(find out/src -maxdepth 1 -type f -name "$stem.*" | head -1)
-            ffmpeg -hide_banner -i "$f" -vf "select='gt(scene,0.35)',showinfo" -an -f null - 2> "out/$stem-scenes.log" || true
-            ffmpeg -hide_banner -i "$f" -af "astats=metadata=1:reset=1,ametadata=print:key=lavfi.astats.Overall.RMS_level" -vn -f null - 2> "out/$stem-audio.log" || true
-          done
+          cat > /tmp/transcribe.py <<'PY'
+          from faster_whisper import WhisperModel
+          from pathlib import Path
+          model=WhisperModel("tiny",device="cpu",compute_type="int8")
+          for stem in ["mister","deus"]:
+              src=next(Path("out/src").glob(stem+".*"))
+              segs,info=model.transcribe(str(src),language="pt",vad_filter=True,beam_size=3)
+              lines=[]
+              for s in segs:
+                  txt=s.text.strip()
+                  if txt:
+                      lines.append(f"{s.start:06.2f} --> {s.end:06.2f} | {txt}")
+              Path(f"out/{stem}-transcript.txt").write_text("\n".join(lines),encoding="utf-8")
+          PY
+          sed -i 's/^          //' /tmp/transcribe.py
+          python /tmp/transcribe.py
       - name: Create evidence issue
         env:
           GH_TOKEN: ${{ github.token }}
