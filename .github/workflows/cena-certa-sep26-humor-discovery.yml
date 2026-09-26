@@ -15,53 +15,38 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - name: Install runtime
+      - name: Install yt-dlp
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Inspect Mister Brau
         run: |
-          set -euo pipefail
-          python -m pip install -q --upgrade yt-dlp
-      - name: Test official Falha Nossa sources
-        shell: bash
-        run: |
-          set -euo pipefail
           mkdir -p out
-          cat > out/sources.tsv <<'EOF'
-          mister-brau|https://globoplay.globo.com/v/4707587/
-          deus-salve-o-rei|https://globoplay.globo.com/v/6600863/
-          EOF
-          : > out/report.txt
-          while IFS='|' read -r name url; do
-            echo "### $name" >> out/report.txt
-            yt-dlp --no-warnings --dump-single-json "$url" > "out/$name.json" 2> "out/$name.err" || true
-            if [ -s "out/$name.json" ]; then
-              python - "$name" >> out/report.txt <<'PY'
-import json,sys,os
-name=sys.argv[1]
-j=json.load(open(f"out/{name}.json",encoding="utf-8"))
-print("PASS=1")
-print("ID="+str(j.get("id")))
-print("TITLE="+str(j.get("title")))
-print("DURATION="+str(j.get("duration")))
-print("EXT="+str(j.get("ext")))
-print("WEBPAGE_URL="+str(j.get("webpage_url")))
-print("EXTRACTOR="+str(j.get("extractor")))
-print("LICENSE="+str(j.get("license")))
-PY
-            else
-              echo "PASS=0" >> out/report.txt
-              tail -50 "out/$name.err" >> out/report.txt || true
-            fi
-            echo >> out/report.txt
-          done < out/sources.tsv
-      - name: Evidence
+          yt-dlp --no-warnings --dump-single-json "https://globoplay.globo.com/v/4707587/" > out/mister.json 2> out/mister.err || true
+          if test -s out/mister.json; then
+            jq '{id,title,duration,ext,webpage_url,extractor,license}' out/mister.json > out/mister-summary.json
+          else
+            printf '{"pass":false}\n' > out/mister-summary.json
+          fi
+      - name: Inspect Deus Salve o Rei
+        run: |
+          yt-dlp --no-warnings --dump-single-json "https://globoplay.globo.com/v/6600863/" > out/deus.json 2> out/deus.err || true
+          if test -s out/deus.json; then
+            jq '{id,title,duration,ext,webpage_url,extractor,license}' out/deus.json > out/deus-summary.json
+          else
+            printf '{"pass":false}\n' > out/deus-summary.json
+          fi
+      - name: Create evidence issue
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          {
-            echo "CENA_CERTA_HUMOR_DISCOVERY"
-            echo "RUN_ID=$GITHUB_RUN_ID"
-            cat out/report.txt
-          } > out/issue.md
-          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-HUMOR-DISCOVERY] $GITHUB_RUN_ID" --body-file out/issue.md
+          printf 'CENA_CERTA_HUMOR_DISCOVERY\nRUN_ID=%s\n\nMISTER_BRAU\n' "$GITHUB_RUN_ID" > out/issue.txt
+          cat out/mister-summary.json >> out/issue.txt
+          printf '\nMISTER_ERR\n' >> out/issue.txt
+          tail -20 out/mister.err >> out/issue.txt || true
+          printf '\nDEUS_SALVE_O_REI\n' >> out/issue.txt
+          cat out/deus-summary.json >> out/issue.txt
+          printf '\nDEUS_ERR\n' >> out/issue.txt
+          tail -20 out/deus.err >> out/issue.txt || true
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-HUMOR-DISCOVERY] $GITHUB_RUN_ID" --body-file out/issue.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
