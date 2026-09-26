@@ -144,8 +144,8 @@ def upload(item, path):
     p=run(cmd)
     raw=p.stdout.strip()
     obj=json.loads(raw)
-    if obj.get("status")!="ready":
-        raise RuntimeError(f"R2_NOT_READY {raw}")
+    if obj.get("ok") is not True:
+        raise RuntimeError(f"R2_UPLOAD_FAIL {raw}")
     (OUT/f"{item['id']}.r2.json").write_text(json.dumps(obj,ensure_ascii=False,indent=2),encoding="utf-8")
     return obj
 
