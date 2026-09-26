@@ -1,0 +1,97 @@
+# VSA_VISUAL_STORY_ENGINE_V1
+# VSA_VISUAL_RELEASE_RECEIPT_V2
+# Metricool VSA brand lock: 6935441
+# NON-PUBLISHING PRODUCTION. Scheduling happens only after exact-master readback.
+# retry-source-fix-1
+name: VSA Sep27 Triple Production
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ops/vsa-sep27-three-production
+    paths:
+      - '.github/workflows/vsa-sep27-triple.yml'
+      - 'production/vsa/pilots/sep27_triple/render_sep27_triple.py'
+      - 'scripts/vsa/validate_release_receipt.py'
+      - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
+      - '.github/actions/vsa-release-gate/action.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vsa-sep27-triple-production
+  cancel-in-progress: true
+
+jobs:
+  render-and-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout isolated branch
+        uses: actions/checkout@v4
+
+      - name: Install zero-cost runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --disable-pip-version-check Pillow requests edge-tts
+
+      - name: Compile production renderer
+        run: |
+          set -euo pipefail
+          python -m py_compile production/vsa/pilots/sep27_triple/render_sep27_triple.py
+
+      - name: Editorial hard gates before render
+        run: |
+          set -euo pipefail
+          R=production/vsa/pilots/sep27_triple/render_sep27_triple.py
+          test "$(grep -o 'Agora você já sabe\.' "$R" | wc -l)" -eq 1
+          grep -q 'ANIMAÇÃO • GOTÍCULAS MINÚSCULAS' "$R"
+          grep -q 'ANIMAÇÃO • TROCA EM CONTRACORRENTE' "$R"
+          grep -q 'ANIMAÇÃO • MONITORAMENTO ANTES DO SHOW' "$R"
+          grep -q 'MASK_SHA="ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56"' "$R"
+          grep -q 'REAL_ASSET_DUPLICATE_FAIL' "$R"
+          grep -q 'CELEBRITY_CONTEXT_FAIL' "$R"
+
+      - name: Render three fresh final masters
+        run: |
+          set -euo pipefail
+          python production/vsa/pilots/sep27_triple/render_sep27_triple.py | tee /tmp/vsa_sep27_render.log
+          OUT=production/vsa/pilots/sep27_triple/output
+          test -s "$OUT/nuvem_nao_cai/VSA_nuvem_nao_cai_SEP27.mp4"
+          test -s "$OUT/pes_pinguim/VSA_pes_pinguim_SEP27.mp4"
+          test -s "$OUT/ed_show_clima/VSA_ed_show_clima_SEP27.mp4"
+          cp /tmp/vsa_sep27_render.log "$OUT/RENDER_LOG.txt"
+
+      - name: Prove animation segments are visually distinct
+        run: |
+          set -euo pipefail
+          AS=production/vsa/pilots/sep27_triple/assets
+          for slug in nuvem_nao_cai pes_pinguim ed_show_clima; do
+            rm -f /tmp/${slug}_*.png
+            ffmpeg -loglevel error -ss 0.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_0.png"
+            ffmpeg -loglevel error -ss 2.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_1.png"
+            ffmpeg -loglevel error -ss 4.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_2.png"
+            test "$(sha256sum /tmp/${slug}_*.png | awk '{print $1}' | sort -u | wc -l)" -eq 3
+          done
+
+      - name: Gate exact masters
+        run: |
+          set -euo pipefail
+          OUT=production/vsa/pilots/sep27_triple/output
+          for slug in nuvem_nao_cai pes_pinguim ed_show_clima; do
+            ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
+            python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP27.mp4"
+            jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
+          done
+
+      - name: Upload gated masters and QA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-sep27-three-gated-shorts
+          path: production/vsa/pilots/sep27_triple/output/
+          if-no-files-found: error
+          retention-days: 7
