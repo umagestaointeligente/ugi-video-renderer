@@ -109,7 +109,16 @@ def main():
         visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.10","-an","-f","null","-"],check=False).stderr
         if "black_start" in visual: raise RuntimeError("NO_BLACK_FAIL")
         audio=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.8","-vn","-f","null","-"],check=False).stderr
-        if "silence_start" in "\n".join(audio.splitlines()[-12:]): raise RuntimeError("SILENT_TAIL_FAIL")
+        events=[]
+        for ln in audio.splitlines():
+            if "silence_start:" in ln:
+                try: events.append(("start", float(ln.split("silence_start:")[1].split()[0])))
+                except Exception: pass
+            if "silence_end:" in ln:
+                try: events.append(("end", float(ln.split("silence_end:")[1].split()[0])))
+                except Exception: pass
+        if events and events[-1][0]=="start" and total-events[-1][1] > 0.8:
+            raise RuntimeError("SILENT_TAIL_FAIL")
         sha=hashlib.sha256(out.read_bytes()).hexdigest()
         rec={
           "id":item["id"],"title":item["title"],"source":item["source"],"source_id":item["source_id"],
