@@ -69,11 +69,11 @@ TOPICS={
    "ed_message":{"file":"ed_message.webm","source_url":"https://commons.wikimedia.org/wiki/File:Promotion_message_from_Ed_Sheeran_in_2019.webm","license":"CC_BY_3.0","asset_subject":"ED_SHEERAN_OFFICIAL_MESSAGE","asset_role":"CELEBRITY_CONTEXT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","ed_tour",12,"CONTEXT","event","ED SHEERAN EM CONTEXTO DE TURNÊ • VÍDEO REAL","Ed Sheeran teve shows deste fim de semana no Gillette Stadium cancelados; segundo a CNN, por mau tempo."),
-   ("ANIMATION","anim",0,"MECHANISM","event","ANIMAÇÃO • MONITORAMENTO ANTES DO SHOW","Em grandes eventos, a decisão começa antes da chuva: equipes monitoram previsão, radar e aproximação de tempestades."),
+   ("REAL","ed_tour",12,"CONTEXT","event","ED SHEERAN EM CONTEXTO DE TURNÊ • VÍDEO REAL","Ed Sheeran teve shows no Gillette Stadium cancelados neste fim de semana; segundo a CNN, por mau tempo."),
+   ("ANIMATION","anim",0,"MECHANISM","event","ANIMAÇÃO • MONITORAMENTO ANTES DO SHOW","Em grandes eventos, a decisão começa cedo: equipes monitoram previsão, radar e tempestades próximas."),
    ("REAL","storm",3,"PROOF","event","TEMPESTADE • VÍDEO REAL","O objetivo não é esperar o perigo chegar, mas ganhar tempo para proteger milhares de pessoas."),
-   ("ANIMATION","anim",2,"MECHANISM","event","ANIMAÇÃO • TEMPO PARA EVACUAR","O plano calcula quanto tempo o público precisa para chegar a áreas seguras e quais riscos acionam atraso ou evacuação."),
-   ("REAL","stadium",2,"CONSEQUENCE","event","ESTÁDIO CHEIO • VÍDEO REAL","Vento forte também importa, porque palcos, torres, telões e estruturas temporárias têm limites de segurança."),
+   ("ANIMATION","anim",2,"MECHANISM","event","ANIMAÇÃO • TEMPO PARA EVACUAR","O plano calcula o tempo para levar o público a áreas seguras e quais riscos acionam atraso ou evacuação."),
+   ("REAL","stadium",2,"CONSEQUENCE","event","ESTÁDIO CHEIO • VÍDEO REAL","Vento forte também importa: palcos, torres, telões e estruturas temporárias têm limites de segurança."),
    ("ANIMATION","anim",4,"MECHANISM","event","ANIMAÇÃO • LIMITE DE SEGURANÇA","Se o risco ultrapassa o limite previsto, o evento pode ser adiado ou cancelado antes de a situação piorar."),
    ("REAL","ed_message",1,"PROOF","event","ED SHEERAN • VÍDEO OFICIAL","No caso de Ed, a prioridade divulgada foi a segurança do público e das equipes envolvidas.")
   ]}
