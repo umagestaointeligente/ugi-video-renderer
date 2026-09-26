@@ -1,0 +1,49 @@
+name: Cena Certa Sep26 Humor CC Discovery
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cena-certa-sep26-humor-cc-discovery.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install yt-dlp
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Search Brazilian humor
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          : > out/results.jsonl
+          for q in             "Multishow Os Suburbanos erros de gravação"             "Multishow Lady Night bastidores humor"             "Multishow A Vila erros de gravação"             "Multishow Dona Jô erros de gravação"             "Multishow humor bastidores erros de gravação"; do
+            yt-dlp --no-warnings --skip-download --dump-json "ytsearch10:$q" >> out/results.jsonl 2>> out/errors.log || true
+          done
+          jq -c '{id,title,channel,channel_id,duration,license,webpage_url,description}' out/results.jsonl > out/summary.jsonl || true
+      - name: Create evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "CENA_CERTA_HUMOR_CC_DISCOVERY"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo
+            echo "RESULTS"
+            head -80 out/summary.jsonl
+            echo
+            echo "ERRORS"
+            tail -30 out/errors.log || true
+          } > out/issue.txt
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-HUMOR-CC-DISCOVERY] $GITHUB_RUN_ID" --body-file out/issue.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-humor-cc-discovery-${{ github.run_id }}
+          path: out/
+          retention-days: 7
