@@ -37,17 +37,16 @@ jobs:
         run: |
           set -euo pipefail
           TAG=cena-certa-sep26-recovery
-          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
-            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Sep26 Recovery" --notes "Approved QA masters for Metricool ingestion."
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Sep26 Recovery" --notes "Approved QA masters for Metricool ingestion."
           gh release upload "$TAG" out/cena-certa-sep26/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
           python - <<'PY'
-import json, pathlib
-base="https://github.com/umagestaointeligente/ugi-video-renderer/releases/download/cena-certa-sep26-recovery/"
-out={}
-for p in pathlib.Path("out/cena-certa-sep26").glob("*.mp4"):
-    out[p.stem]=base+p.name
-pathlib.Path("out/cena-certa-sep26/public-media.json").write_text(json.dumps(out,indent=2),encoding="utf-8")
-PY
+          import json, pathlib
+          base="https://github.com/umagestaointeligente/ugi-video-renderer/releases/download/cena-certa-sep26-recovery/"
+          out={}
+          for p in pathlib.Path("out/cena-certa-sep26").glob("*.mp4"):
+              out[p.stem]=base+p.name
+          pathlib.Path("out/cena-certa-sep26/public-media.json").write_text(json.dumps(out,indent=2),encoding="utf-8")
+          PY
       - name: Create evidence issue
         if: success()
         env:
@@ -58,13 +57,11 @@ PY
             echo "CENA_CERTA_SEP26_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
             echo
-            echo 'PUBLIC_MEDIA:'
+            echo "PUBLIC_MEDIA:"
             cat out/cena-certa-sep26/public-media.json
             echo
-            echo 'DELIVERY_SUMMARY:'
-            echo '~~~json'
+            echo "DELIVERY_SUMMARY:"
             cat out/cena-certa-sep26/delivery-summary.json
-            echo '~~~'
           } > /tmp/cc-issue.md
           gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-SEP26-PACK] $GITHUB_RUN_ID" --body-file /tmp/cc-issue.md
       - name: Preserve proof
