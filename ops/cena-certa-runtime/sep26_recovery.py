@@ -158,23 +158,28 @@ def render(vid,item):
     logo=decode_logo(); overlay=make_overlay(item,logo); cta=make_cta(logo)
     n=6; seg=max(2.8,min(6.0,vd/n)); room=max(0.1,src_dur-seg-.1)
     starts=[room*f for f in (.06,.22,.38,.54,.70,.84)]
-    fs=[f"[0:v]split={n}"+ "".join(f"[s{i}]" for i in range(n))]
-    labs=[]
+    clips=[]
     for i,st in enumerate(starts):
-        fs.append(f"[s{i}]trim=start={st:.3f}:duration={seg:.3f},setpts=PTS-STARTPTS[c{i}]"); labs.append(f"[c{i}]")
-    fs.append("".join(labs)+f"concat=n={n}:v=1:a=0,trim=duration={vd:.3f},setpts=PTS-STARTPTS[story]")
-    fs += [
-      "[story]split=2[bg0][fg0]",
+        cp=WORK/f"clip-{i}.mp4"
+        run(["ffmpeg","-y","-loglevel","error","-ss",f"{st:.3f}","-i",str(source),"-t",f"{seg:.3f}",
+             "-vf","scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2:black,setsar=1,fps=30",
+             "-an","-c:v","libx264","-preset","ultrafast","-crf","20","-pix_fmt","yuv420p",str(cp)])
+        clips.append(cp)
+    cl=WORK/"clips.txt"; cl.write_text("".join(f"file '{x.resolve()}'\\n" for x in clips))
+    montage=WORK/"montage.mp4"
+    run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",str(cl),"-c","copy",str(montage)])
+    ass_esc=str(ass.resolve()).replace("\\","/").replace(":","\\:")
+    fs=[
+      "[0:v]trim=duration="+f"{vd:.3f}"+",setpts=PTS-STARTPTS,split=2[bg0][fg0]",
       "[bg0]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,gblur=sigma=28,eq=brightness=-0.23:saturation=0.78[bg]",
       "[fg0]scale=1040:1040:force_original_aspect_ratio=decrease[fg]",
       "[bg][fg]overlay=(W-w)/2:(H-h)/2[base]",
       "[1:v]format=rgba[ov]",
-      "[base][ov]overlay=0:0[v0]"
+      "[base][ov]overlay=0:0[v0]",
+      f"[v0]subtitles='{ass_esc}'[vout]"
     ]
-    ass_esc=str(ass.resolve()).replace("\\","/").replace(":","\\:")
-    fs.append(f"[v0]subtitles='{ass_esc}'[vout]")
     story=WORK/"story.mp4"
-    run(["ffmpeg","-y","-loglevel","error","-i",str(source),"-loop","1","-i",str(overlay),
+    run(["ffmpeg","-y","-loglevel","error","-i",str(montage),"-loop","1","-i",str(overlay),
          "-filter_complex",";".join(fs),"-map","[vout]","-an","-r","30","-c:v","libx264","-preset","veryfast","-crf","18","-pix_fmt","yuv420p",str(story)])
     storyav=WORK/"story-av.mp4"
     run(["ffmpeg","-y","-loglevel","error","-i",str(story),"-i",str(voice),"-map","0:v","-map","1:a","-c:v","copy","-c:a","aac","-b:a","192k","-ar","48000","-shortest",str(storyav)])
