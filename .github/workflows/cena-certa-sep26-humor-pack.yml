@@ -1,0 +1,54 @@
+name: Cena Certa Sep26 Humor Pack
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cena-certa-sep26-humor-pack.yml
+      - scripts/cena_certa_sep26_humor_pack.py
+      - assets/cena-certa-logo.png.b64
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          python -m pip install -q --upgrade yt-dlp
+      - name: Render humor masters
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_sep26_humor_pack.py
+      - name: Publish masters as release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=cena-certa-sep26-humor
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Sep26 Humor" --notes "Brazilian humor masters for Metricool."
+          gh release upload "$TAG" out/cena-certa-sep26-humor/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+      - name: Create evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "CENA_CERTA_SEP26_HUMOR_PACK=PASS"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo
+            cat out/cena-certa-sep26-humor/summary.json
+          } > out/cena-certa-sep26-humor/issue.txt
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-SEP26-HUMOR-PACK] $GITHUB_RUN_ID" --body-file out/cena-certa-sep26-humor/issue.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-sep26-humor-${{ github.run_id }}
+          path: out/cena-certa-sep26-humor/
+          retention-days: 7
