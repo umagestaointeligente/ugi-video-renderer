@@ -1,0 +1,55 @@
+{
+  "schema": "CENA_CERTA_SEP26_RECOVERY_PACK_V1",
+  "timezone": "America/Sao_Paulo",
+  "anti_repeat_verified_at": "2026-09-26T00:20:00-03:00",
+  "items": [
+    {
+      "id": "CC-SEP26-TT-LOQUE",
+      "network": "tiktok",
+      "title": "Lo que tú quieras oír",
+      "year": 2006,
+      "source": "https://upload.wikimedia.org/wikipedia/commons/d/da/Lo_que_t%C3%BA_Quieras_O%C3%ADr.webm",
+      "license": "CC BY 2.5",
+      "start_frac": 0.18,
+      "hook": "A mensagem que muda tudo",
+      "script": "Ela escuta uma mensagem que parece comum, até perceber que a voz diz exatamente o que ela queria ouvir. Em Lo que tú quieras oír, uma simples gravação muda a forma como ela enxerga a própria vida. O detalhe mais forte não está apenas no que é dito, mas no que ela escolhe acreditar.",
+      "music": "https://assets.mixkit.co/music/480/480.mp3"
+    },
+    {
+      "id": "CC-SEP26-IG-PERSONAL",
+      "network": "instagram",
+      "title": "Personal Space",
+      "year": 2013,
+      "source": "https://upload.wikimedia.org/wikipedia/commons/d/de/Personal_Space_%28a_short_dance_film%29.webm",
+      "license": "CC BY-SA 3.0",
+      "start_frac": 0.22,
+      "hook": "A história acontece sem uma palavra",
+      "script": "Aqui não tem diálogo. A história acontece no espaço entre os corpos. Em Personal Space, cada movimento aproxima e afasta ao mesmo tempo, como se a dança fosse uma conversa que ninguém consegue dizer em voz alta. Repare como o enquadramento muda a sensação da cena.",
+      "music": "https://assets.mixkit.co/music/77/77.mp3"
+    },
+    {
+      "id": "CC-SEP26-YT-PROTECTOR",
+      "network": "youtube",
+      "title": "Protector",
+      "year": 2024,
+      "source": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Sci-Fi_Micro_Short_Film_%22Protector_%22_%28Polaris_Pictures%29.webm",
+      "license": "CC BY 3.0",
+      "start_frac": 0.12,
+      "hook": "Ele só precisa proteger uma pessoa",
+      "script": "Ele não precisa salvar o mundo inteiro. Só precisa decidir quem merece ser protegido quando tudo parece dar errado. Protector começa pequeno e transforma poucos segundos em uma escolha de vida ou morte. O que você faria no lugar dele?",
+      "music": "https://assets.mixkit.co/music/634/634.mp3"
+    },
+    {
+      "id": "CC-SEP26-FB-VIOOL",
+      "network": "facebook",
+      "title": "Viool in de nacht",
+      "year": 2012,
+      "source": "https://upload.wikimedia.org/wikipedia/commons/5/53/Viool_in_de_nacht_%28a_short_dance_film%29.webm",
+      "license": "CC BY-SA 3.0",
+      "start_frac": 0.2,
+      "hook": "Uma história sem diálogo — e você entende",
+      "script": "Uma violinista e uma bailarina transformam a noite em uma história sem palavras. Em Viool in de nacht, a música conduz a cena, mas é o corpo que conta o conflito. Aos poucos, o espaço parece ficar menor, a tensão cresce e cada movimento ganha outro peso. É um curta que funciona mais pela atmosfera do que pela explicação.",
+      "music": "https://assets.mixkit.co/music/480/480.mp3"
+    }
+  ]
+}
