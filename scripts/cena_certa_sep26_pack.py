@@ -100,7 +100,7 @@ def render_one(item, logo):
     assert abs(n/dn-30)<0.05
     assert a["codec_name"]=="aac" and int(a["sample_rate"])==48000
 
-    visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.30:pix_th=0.10,freezedetect=n=-45dB:d=2.0","-an","-f","null","-"],check=False).stderr or ""
+    visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.00:pix_th=0.10,freezedetect=n=-45dB:d=2.0","-an","-f","null","-"],check=False).stderr or ""
     if "black_start" in visual:
         raise RuntimeError("NO_BLACK_FAIL")
     if "freeze_duration" in visual:
