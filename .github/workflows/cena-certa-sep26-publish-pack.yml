@@ -10,7 +10,7 @@ on:
       - assets/cena-certa-logo.png.b64
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   issues: write
 jobs:
   render:
@@ -31,6 +31,23 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/cena_certa_sep26_pack.py
+      - name: Publish approved masters as release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=cena-certa-sep26-recovery
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Sep26 Recovery" --notes "Approved QA masters for Metricool ingestion."
+          gh release upload "$TAG" out/cena-certa-sep26/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+          python - <<'PY'
+import json, pathlib
+base="https://github.com/umagestaointeligente/ugi-video-renderer/releases/download/cena-certa-sep26-recovery/"
+out={}
+for p in pathlib.Path("out/cena-certa-sep26").glob("*.mp4"):
+    out[p.stem]=base+p.name
+pathlib.Path("out/cena-certa-sep26/public-media.json").write_text(json.dumps(out,indent=2),encoding="utf-8")
+PY
       - name: Create evidence issue
         if: success()
         env:
@@ -41,6 +58,10 @@ jobs:
             echo "CENA_CERTA_SEP26_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
             echo
+            echo 'PUBLIC_MEDIA:'
+            cat out/cena-certa-sep26/public-media.json
+            echo
+            echo 'DELIVERY_SUMMARY:'
             echo '~~~json'
             cat out/cena-certa-sep26/delivery-summary.json
             echo '~~~'
