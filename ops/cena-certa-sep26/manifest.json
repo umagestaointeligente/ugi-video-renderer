@@ -28,28 +28,28 @@
       "music": "local-original"
     },
     {
-      "id": "CC-SEP26-YT-PROTECTOR",
+      "id": "CC-SEP26-YT-ANTIMEMETICS",
       "network": "youtube",
-      "title": "Protector",
+      "title": "There Is No Antimemetics Division",
       "year": 2024,
-      "source": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Sci-Fi_Micro_Short_Film_%22Protector_%22_%28Polaris_Pictures%29.webm",
-      "license": "CC BY 3.0",
-      "start_frac": 0.12,
-      "hook": "Ele só precisa proteger uma pessoa",
-      "script": "Ele não precisa salvar o mundo inteiro. Só precisa decidir quem merece ser protegido quando tudo parece dar errado. Protector começa pequeno e transforma poucos segundos em uma escolha de vida ou morte. O que você faria no lugar dele?",
-      "music": "https://assets.mixkit.co/music/634/634.mp3"
+      "source": "https://upload.wikimedia.org/wikipedia/commons/1/13/There_Is_No_Antimemetics_Division.webm",
+      "license": "CC BY-SA 3.0",
+      "start_frac": 0.18,
+      "hook": "O perigo é esquecer que ele existe",
+      "script": "O problema aqui não é apenas enfrentar uma ameaça. É lembrar que ela existe. Em There Is No Antimemetics Division, informação, memória e medo se misturam até ninguém ter certeza do que é real. A cena prende porque o perigo cresce justamente quando os personagens tentam entender o que esqueceram.",
+      "music": "local-original"
     },
     {
-      "id": "CC-SEP26-FB-VIOOL",
+      "id": "CC-SEP26-FB-MINOS",
       "network": "facebook",
-      "title": "Viool in de nacht",
-      "year": 2012,
-      "source": "https://upload.wikimedia.org/wikipedia/commons/5/53/Viool_in_de_nacht_%28a_short_dance_film%29.webm",
-      "license": "CC BY-SA 3.0",
-      "start_frac": 0.2,
-      "hook": "Uma história sem diálogo — e você entende",
-      "script": "Uma violinista e uma bailarina transformam a noite em uma história sem palavras. Em Viool in de nacht, a música conduz a cena, mas é o corpo que conta o conflito. Aos poucos, o espaço parece ficar menor, a tensão cresce e cada movimento ganha outro peso. É um curta que funciona mais pela atmosfera do que pela explicação.",
-      "music": "https://assets.mixkit.co/music/480/480.mp3"
+      "title": "The Minos Paradox",
+      "year": 2025,
+      "source": "https://upload.wikimedia.org/wikipedia/commons/8/8c/The_Minos_Paradox_-_A_Sci-Fi_Mythological_Short_Film%2C_Cinematic_Unreal_Engine_5.webm",
+      "license": "CC BY 3.0",
+      "start_frac": 0.22,
+      "hook": "E se o labirinto tivesse sido criado para você?",
+      "script": "The Minos Paradox pega o mito do labirinto e transforma a perseguição em ficção científica. Cada corredor parece oferecer uma saída, mas também aproxima o personagem de uma ameaça maior. O interessante é como a história usa um mito antigo para criar tensão com uma linguagem completamente moderna.",
+      "music": "local-original"
     }
   ]
 }
