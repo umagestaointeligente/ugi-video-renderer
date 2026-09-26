@@ -1,85 +1,33 @@
 name: Cena Certa Sep26 Format Recovery Discovery
-
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
-      - '.github/workflows/cena-certa-sep26-format-recovery-discovery.yml'
+      - .github/workflows/cena-certa-sep26-format-recovery-discovery.yml
   workflow_dispatch:
-
-permissions:
-  contents: read
-  issues: write
-
 jobs:
-  transcript-discovery:
+  discover:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - name: Install yt-dlp
         run: python -m pip install -q --upgrade yt-dlp
-      - name: Pull PT-BR/PT subtitles and metadata
+      - name: Inspect sources
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p out
-          cat > out/sources.tsv <<'EOF'
-          os-suburbanos-martinho|https://www.youtube.com/watch?v=qW3q-h1myUE
-          lady-night-leandro|https://www.youtube.com/watch?v=aZcc0FXRs4w
-          familia-paraiso-leleco|https://www.youtube.com/watch?v=bHZ0EeqW7sw
-          colonia-bahls|https://www.youtube.com/watch?v=iFBYJdG8l9I
-          EOF
-          : > out/report.md
-          while IFS='|' read -r name url; do
-            echo "## $name" >> out/report.md
-            yt-dlp --no-warnings --skip-download --write-subs --write-auto-subs               --sub-langs "pt-BR,pt,pt.*" --convert-subs vtt               --print "TITLE=%(title)s" --print "DURATION=%(duration)s"               --print "ID=%(id)s" --print "CHANNEL=%(channel)s"               -o "out/${name}.%(ext)s" "$url" > "out/${name}.meta.txt" 2>&1 || true
-            cat "out/${name}.meta.txt" >> out/report.md
-            echo >> out/report.md
-            vtt=$(find out -maxdepth 1 -type f -name "${name}*.vtt" | head -n1 || true)
+          for spec in "colonia|iFBYJdG8l9I" "lady|aZcc0FXRs4w" "porchat|VVyMUeLuq6Q" "suburbanos|3o3S_miD8W4"; do
+            name="${spec%%|*}"
+            id="${spec##*|}"
+            echo "===== ${name} / ${id} ====="
+            yt-dlp --no-warnings --skip-download --write-auto-subs --write-subs --sub-langs "pt-BR,pt,pt.*" --sub-format vtt --print "TITLE=%(title)s" --print "DURATION=%(duration)s" -o "out/${name}.%(ext)s" "https://www.youtube.com/watch?v=${id}" || true
+            vtt="$(find out -maxdepth 1 -type f -name "${name}*.vtt" | head -n1 || true)"
             if [ -n "$vtt" ]; then
-              python - "$vtt" >> out/report.md <<'PY'
-import re,sys
-p=sys.argv[1]
-seen=set(); count=0; cur='00:00:00'
-for line in open(p,encoding='utf-8',errors='ignore'):
-    line=line.strip()
-    if not line or line.startswith(('WEBVTT','Kind:','Language:','NOTE')):
-        continue
-    if '-->' in line:
-        cur=line.split(' --> ')[0].split('.')[0]
-        continue
-    line=re.sub(r'<[^>]+>','',line)
-    line=re.sub(r'\s+',' ',line).strip()
-    if not line or line in seen: continue
-    seen.add(line)
-    print(f"{cur} | {line}")
-    count += 1
-    if count >= 160: break
-PY
+              grep -Ev '^(WEBVTT|Kind:|Language:|$)' "$vtt" | head -n 220 || true
             else
-              echo "NO_PT_SUBTITLE" >> out/report.md
+              echo "NO_PT_SUBTITLE"
             fi
-            echo >> out/report.md
-          done < out/sources.tsv
-      - name: Create evidence issue
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          {
-            echo "DISCOVERY=PASS"
-            echo "RUN_ID=$GITHUB_RUN_ID"
-            echo "PURPOSE=scene-selection-only; no publication; no Metricool mutation"
-            cat out/report.md
-          } > out/issue.md
-          gh issue create --repo "$GITHUB_REPOSITORY"             --title "[CENA-CERTA-SEP26-FORMAT-DISCOVERY] $GITHUB_RUN_ID"             --body-file out/issue.md
-      - name: Preserve transcript evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cena-certa-sep26-format-discovery-${{ github.run_id }}
-          path: out/
-          retention-days: 7
-          if-no-files-found: warn
+          done
