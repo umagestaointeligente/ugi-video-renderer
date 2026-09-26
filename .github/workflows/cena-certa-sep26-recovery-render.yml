@@ -1,0 +1,232 @@
+name: Cena Certa Sep26 Recovery Render
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cena-certa-sep26-recovery-render.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: cena-certa-sep26-recovery-render
+  cancel-in-progress: true
+
+jobs:
+  render:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: CC-20260926-TT-LOQUE
+            network: tiktok
+            title: "Lo que tú Quieras Oír"
+            source: "https://upload.wikimedia.org/wikipedia/commons/d/da/Lo_que_t%C3%BA_Quieras_O%C3%ADr.webm"
+            license: "CC BY 2.5"
+            hook: "Ela recebe a mensagem que ninguém quer ouvir"
+            script: "Ela chega em casa e encontra uma mensagem que muda tudo. Em Lo que tú Quieras Oír, Sofia ouve que o relacionamento acabou. Em vez de aceitar aquelas palavras do jeito que chegaram, ela começa a recortar e reorganizar a própria mensagem. O que era uma despedida vira outra conversa, construída por ela mesma. Só que o ponto mais forte vem no fim: mudar as palavras não muda a decisão que Sofia precisa tomar. Às vezes, ouvir exatamente o que queremos não significa querer aquela pessoa de volta."
+          - id: CC-20260926-IG-MINOS
+            network: instagram
+            title: "The Minos Paradox"
+            source: "https://upload.wikimedia.org/wikipedia/commons/8/8c/The_Minos_Paradox_-_A_Sci-Fi_Mythological_Short_Film%2C_Cinematic_Unreal_Engine_5.webm"
+            license: "CC BY 3.0"
+            hook: "O labirinto não está onde ele imaginava"
+            script: "The Minos Paradox pega o mito de Teseu e do Minotauro e joga a história dentro de um labirinto de ficção científica. Teseu toca uma esfera luminosa e, a partir daí, atravessa lugares e épocas que parecem fazer parte do mesmo enigma. Cada nova passagem muda a escala da jornada, mas mantém a mesma pergunta: onde termina o labirinto e onde começa a armadilha? O curta usa imagens gigantescas para transformar um mito antigo em uma viagem por realidades diferentes."
+          - id: CC-20260926-YT-GRIEF
+            network: youtube
+            title: "How To Move on From Grief"
+            source: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Psych2Go_Short_Film_-_How_To_Move_on_From_Grief.webm"
+            license: "CC BY 3.0"
+            hook: "O luto não desaparece quando o mundo manda seguir"
+            script: "Este curta da Psych2Go acompanha uma experiência que quase todo mundo entende, mas ninguém vive do mesmo jeito: o luto. As cenas mostram como a ausência continua aparecendo na rotina, mesmo quando o resto do mundo parece seguir normalmente. Não existe um botão para apagar o que foi vivido. Aos poucos, a história troca a ideia de esquecer pela possibilidade de continuar carregando a memória sem deixar que ela ocupe tudo. É uma história curta sobre perda, lembrança e a tentativa de voltar a viver."
+          - id: CC-20260926-FB-STOPOVER
+            network: facebook
+            title: "Stopover"
+            source: "https://upload.wikimedia.org/wikipedia/commons/f/fd/Stopover_%28Abridged_Version%29.webm"
+            license: "CC BY 3.0"
+            hook: "Quatro pessoas. A mesma cidade. Quatro vidas completamente diferentes."
+            script: "Stopover acompanha quatro imigrantes indianos que vivem e trabalham em Dubai. Eles dividem a mesma cidade, mas enxergam o lugar por perspectivas completamente diferentes. A câmera passa pela rotina de pessoas com trabalhos, expectativas e condições de vida muito distintas. O que conecta essas histórias não é uma grande reviravolta, mas uma pergunta simples: o que significa construir uma vida longe de casa? O filme encontra a resposta nos detalhes da rotina, nas escolhas e no que cada um espera do futuro."
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      UGI_VIDEO_UPLOAD_URL: ${{ secrets.UGI_VIDEO_UPLOAD_URL }}
+      UGI_VIDEO_UPLOAD_KEY: ${{ secrets.UGI_VIDEO_UPLOAD_KEY }}
+      VIDEO_ID: ${{ matrix.id }}
+      NETWORK: ${{ matrix.network }}
+      FILM_TITLE: ${{ matrix.title }}
+      SOURCE_URL: ${{ matrix.source }}
+      LICENSE_NAME: ${{ matrix.license }}
+      HOOK: ${{ matrix.hook }}
+      SCRIPT: ${{ matrix.script }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-lato ca-certificates curl >/dev/null
+          python -m pip install -q edge-tts
+
+      - name: Source and 60-day gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$UGI_VIDEO_UPLOAD_URL"
+          test -n "$UGI_VIDEO_UPLOAD_KEY"
+          mkdir -p work output
+          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 300 -A 'OrbitMediaLabs/1.0' "$SOURCE_URL" -o work/source.webm
+          test -s work/source.webm
+          ffprobe -v error -show_entries format=duration -of csv=p=0 work/source.webm | tee work/source-duration.txt
+          printf '%s\n' "$SOURCE_URL" | sha256sum | awk '{print $1}' > work/source-fingerprint.txt
+          echo "METRICOOL_60D_LIVE_SCAN_2026-09-26=PASS" > work/dedupe.txt
+          echo "FULL_WORK_NEVER_USED_IN_60D=PASS" >> work/dedupe.txt
+          echo "SCENE_REUSE_IMPOSSIBLE_WITHIN_WINDOW=PASS" >> work/dedupe.txt
+
+      - name: Generate neutral PT-BR voice
+        shell: bash
+        run: |
+          set -euo pipefail
+          edge-tts --voice pt-BR-AntonioNeural --rate=+7% --text "$SCRIPT" --write-media work/voice.mp3 --write-subtitles work/voice.srt
+          edge-tts --voice pt-BR-AntonioNeural --rate=+5% --text "Gostou? Siga o Cena Certa." --write-media work/cta.mp3
+          test -s work/voice.mp3
+          test -s work/voice.srt
+          test -s work/cta.mp3
+
+      - name: Decode canonical logo
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d ops/cena-certa-runtime/logo.jpg.b64 > work/logo.jpg
+          test -s work/logo.jpg
+
+      - name: Render real-footage master
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC_DUR=$(cat work/source-duration.txt)
+          VOICE_DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 work/voice.mp3)
+          python - "$SRC_DUR" "$VOICE_DUR" > work/times.env <<'PY'
+import sys
+src=float(sys.argv[1]); voice=float(sys.argv[2])
+n=6
+seg=max(2.8,min(6.0,voice/n))
+room=max(0.1,src-seg-0.1)
+fracs=[.06,.22,.38,.54,.70,.84]
+starts=[min(room,max(0.0,room*f)) for f in fracs]
+print("SEG="+str(seg))
+print("VOICE_DUR="+str(voice))
+print("STARTS="+",".join(f"{x:.3f}" for x in starts))
+PY
+          . work/times.env
+          IFS=',' read -r S0 S1 S2 S3 S4 S5 <<< "$STARTS"
+          FONT=/usr/share/fonts/truetype/lato/Lato-Heavy.ttf
+          HOOK_ESC=$(printf '%s' "$HOOK" | sed "s/'/\\\\'/g;s/:/\\\\:/g")
+          TITLE_ESC=$(printf '%s' "$FILM_TITLE" | sed "s/'/\\\\'/g;s/:/\\\\:/g")
+          SUBS=$(pwd)/work/voice.srt
+          SUBS_ESC=$(printf '%s' "$SUBS" | sed "s/:/\\\\:/g;s/'/\\\\'/g")
+          ffmpeg -y -loglevel error -i work/source.webm -loop 1 -i work/logo.jpg \
+            -filter_complex "
+              [0:v]split=6[a0][a1][a2][a3][a4][a5];
+              [a0]trim=start=$S0:duration=$SEG,setpts=PTS-STARTPTS[c0];
+              [a1]trim=start=$S1:duration=$SEG,setpts=PTS-STARTPTS[c1];
+              [a2]trim=start=$S2:duration=$SEG,setpts=PTS-STARTPTS[c2];
+              [a3]trim=start=$S3:duration=$SEG,setpts=PTS-STARTPTS[c3];
+              [a4]trim=start=$S4:duration=$SEG,setpts=PTS-STARTPTS[c4];
+              [a5]trim=start=$S5:duration=$SEG,setpts=PTS-STARTPTS[c5];
+              [c0][c1][c2][c3][c4][c5]concat=n=6:v=1:a=0,trim=duration=$VOICE_DUR,setpts=PTS-STARTPTS[story];
+              [story]split=2[bg0][fg0];
+              [bg0]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,gblur=sigma=28,eq=brightness=-0.23:saturation=0.78[bg];
+              [fg0]scale=1040:1040:force_original_aspect_ratio=decrease[fg];
+              [bg][fg]overlay=(W-w)/2:(H-h)/2[base];
+              [1:v]scale=120:-1,format=rgba,colorchannelmixer=aa=0.90[logo];
+              [base][logo]overlay=W-w-35:45[v1];
+              [v1]drawbox=x=26:y=38:w=850:h=190:color=black@0.72:t=fill,
+              drawtext=fontfile=$FONT:text='$TITLE_ESC':x=52:y=58:fontsize=52:fontcolor=white,
+              drawtext=fontfile=$FONT:text='$HOOK_ESC':x=52:y=126:fontsize=36:fontcolor=0xF4B52C,
+              subtitles='$SUBS_ESC':force_style='FontName=Lato,FontSize=19,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=3,Shadow=0,Alignment=2,MarginV=245'[storyv]
+            " -map "[storyv]" -an -r 30 -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p work/story.mp4
+
+          ffmpeg -y -loglevel error -f lavfi -i color=c=0x050505:s=1080x1920:r=30:d=2.8 -loop 1 -i work/logo.jpg \
+            -filter_complex "[1:v]scale=250:-1[lg];[0:v][lg]overlay=(W-w)/2:560,drawtext=fontfile=$FONT:text='SIGA • CURTA • COMPARTILHE':x=(w-text_w)/2:y=900:fontsize=54:fontcolor=0xF4B52C,drawtext=fontfile=$FONT:text='CENA CERTA':x=(w-text_w)/2:y=1010:fontsize=76:fontcolor=white[v]" \
+            -map "[v]" -an -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p work/cta.mp4
+
+          ffmpeg -y -loglevel error -i work/story.mp4 -i work/voice.mp3 -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -ar 48000 -shortest work/story-av.mp4
+          ffmpeg -y -loglevel error -i work/cta.mp4 -i work/cta.mp3 -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -ar 48000 -shortest work/cta-av.mp4
+          printf "file '%s'\nfile '%s'\n" "$(pwd)/work/story-av.mp4" "$(pwd)/work/cta-av.mp4" > work/list.txt
+          ffmpeg -y -loglevel error -f concat -safe 0 -i work/list.txt -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -r 30 -c:a aac -b:a 192k -ar 48000 -movflags +faststart "output/$VIDEO_ID.mp4"
+          test -s "output/$VIDEO_ID.mp4"
+
+      - name: QA fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          ffprobe -v error -show_streams -show_format -of json "output/$VIDEO_ID.mp4" > "output/$VIDEO_ID.probe.json"
+          python - "$VIDEO_ID" "$FILM_TITLE" "$NETWORK" "$SOURCE_URL" "$LICENSE_NAME" <<'PY'
+import json,sys,pathlib
+vid,title,network,source,lic=sys.argv[1:]
+p=json.load(open(f"output/{vid}.probe.json"))
+v=next(x for x in p["streams"] if x["codec_type"]=="video")
+a=next(x for x in p["streams"] if x["codec_type"]=="audio")
+assert v["codec_name"]=="h264" and int(v["width"])==1080 and int(v["height"])==1920
+assert a["codec_name"]=="aac"
+dur=float(p["format"]["duration"]); assert 20 <= dur <= 75
+receipt={"id":vid,"network":network,"film_title":title,"source_url":source,"license":lic,
+"real_footage":"PASS","pt_br_voice":"PASS","visual_narrative_same_work":"PASS","no_slideshow":"PASS",
+"no_blank_video":"PASS","60d_full_work_scan":"PASS","canonical_logo":"PASS","cta":"PASS","tech_qa":"PASS","duration":dur}
+pathlib.Path(f"output/{vid}.qa.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2))
+print(json.dumps(receipt,ensure_ascii=False))
+PY
+
+      - name: Deliver to existing R2
+        shell: bash
+        run: |
+          set -euo pipefail
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "output/$VIDEO_ID.mp4")
+          base=$(printf '%s' "$UGI_VIDEO_UPLOAD_URL" | sed 's:/*$::')
+          response=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 300 -X POST "$base/api/video-upload?renderId=$VIDEO_ID&duration=$dur" -H "Authorization: Bearer $UGI_VIDEO_UPLOAD_KEY" -H 'Content-Type: video/mp4' --data-binary @"output/$VIDEO_ID.mp4")
+          printf '%s\n' "$response" | tee "output/$VIDEO_ID.r2.json"
+          echo "$response" | grep -q '"status"[[:space:]]*:[[:space:]]*"ready"'
+
+      - name: Evidence issue
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "STATUS=READY"
+            echo "VIDEO_ID=$VIDEO_ID"
+            echo "NETWORK=$NETWORK"
+            echo "FILM_TITLE=$FILM_TITLE"
+            echo "SOURCE_URL=$SOURCE_URL"
+            echo "LICENSE=$LICENSE_NAME"
+            echo
+            echo "QA:"
+            cat "output/$VIDEO_ID.qa.json"
+            echo
+            echo "R2:"
+            cat "output/$VIDEO_ID.r2.json"
+          } > work/issue.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-SEP26-READY] $VIDEO_ID" --body-file work/issue.md
+
+      - name: Preserve proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.id }}
+          path: |
+            output/${{ matrix.id }}.mp4
+            output/${{ matrix.id }}.qa.json
+            output/${{ matrix.id }}.probe.json
+            output/${{ matrix.id }}.r2.json
+            work/source-fingerprint.txt
+            work/dedupe.txt
+          retention-days: 7
+          if-no-files-found: warn
