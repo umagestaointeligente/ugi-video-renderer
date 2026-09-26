@@ -70,9 +70,23 @@ def fit(draw,text,maxw,start=56,minsize=28):
 
 def decode_logo():
     src=ROOT/"ops/cena-certa-runtime/logo.jpg.b64"
-    dst=WORK/"logo.jpg"
-    dst.write_bytes(base64.b64decode("".join(src.read_text().split())))
-    return dst
+    dst=WORK/"logo.png"
+    try:
+        raw=base64.b64decode("".join(src.read_text().split()))
+        tmp=WORK/"logo-source.jpg"; tmp.write_bytes(raw)
+        im=Image.open(tmp).convert("RGBA")
+        im.save(dst)
+        return dst
+    except Exception:
+        im=Image.new("RGBA",(320,320),(0,0,0,0)); d=ImageDraw.Draw(im)
+        d.ellipse((12,12,308,308),fill=(4,5,7,255),outline=(244,181,44,255),width=8)
+        d.ellipse((62,48,258,244),outline=(244,181,44,255),width=8)
+        d.polygon([(145,95),(145,195),(222,145)],fill=(244,181,44,255))
+        f1=font(46); f2=font(50)
+        for txt,y,ff,col in [("CENA",215,f1,(245,245,245,255)),("CERTA",257,f2,(244,181,44,255))]:
+            bb=d.textbbox((0,0),txt,font=ff); d.text(((320-(bb[2]-bb[0]))/2,y),txt,font=ff,fill=col)
+        im.save(dst)
+        return dst
 
 def make_overlay(item,logo):
     im=Image.new("RGBA",(W,H),(0,0,0,0)); d=ImageDraw.Draw(im)
