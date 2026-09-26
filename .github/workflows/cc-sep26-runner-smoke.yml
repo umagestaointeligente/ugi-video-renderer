@@ -1,0 +1,12 @@
+name: CC Sep26 Runner Smoke
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cc-sep26-runner-smoke.yml
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo PASS
