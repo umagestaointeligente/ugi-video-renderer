@@ -63,10 +63,10 @@ TOPICS={
   "content_class":"NEWS_EXPLAINER","expected_subject":"ED_SHEERAN_WEATHER_EVENT_SAFETY",
   "celebrity_name":"Ed Sheeran",
   "assets":{
-   "ed_tour":{"file":"ed_tour.webm","source_url":"https://commons.wikimedia.org/wiki/File:Ed_Sheeran_pōwhiri_in_New_Zealand.webm","license":"CC_BY_3.0","asset_subject":"ED_SHEERAN_TOUR_STADIUM_CONTEXT","asset_role":"CELEBRITY_CONTEXT","identifiable_human":True,"celebrity_visible":True},
+   "ed_tour":{"file":"ed_tour.webm","source_url":"https://commons.wikimedia.org/wiki/File:Ed_Sheeran_pōwhiri_in_New_Zealand.webm","license":"CC_BY_3.0","asset_subject":"ED_SHEERAN_WEATHER_EVENT_SAFETY","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
    "storm":{"file":"storm.webm","source_url":"https://commons.wikimedia.org/wiki/File:Storm_clouds_moving_in_Yantarny,_Kaliningrad_Oblast.webm","license":"CC_BY_3.0","asset_subject":"REAL_STORM_CLOUDS","asset_role":"WEATHER_CONTEXT","identifiable_human":False,"celebrity_visible":False},
-   "stadium":{"file":"stadium.webm","source_url":"https://commons.wikimedia.org/wiki/File:Stadium_Pan_as_South_Florida_USF_Bulls_Beat_Notre_Dame_Irish.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_LARGE_STADIUM_CROWD","asset_role":"VENUE_CONTEXT","identifiable_human":True,"celebrity_visible":False},
-   "ed_message":{"file":"ed_message.webm","source_url":"https://commons.wikimedia.org/wiki/File:Promotion_message_from_Ed_Sheeran_in_2019.webm","license":"CC_BY_3.0","asset_subject":"ED_SHEERAN_OFFICIAL_MESSAGE","asset_role":"CELEBRITY_CONTEXT","identifiable_human":True,"celebrity_visible":True}
+   "stadium":{"file":"stadium.webm","source_url":"https://commons.wikimedia.org/wiki/File:Stadium_Pan_as_South_Florida_USF_Bulls_Beat_Notre_Dame_Irish.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_LARGE_STADIUM_CROWD","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
+   "ed_message":{"file":"ed_message.webm","source_url":"https://commons.wikimedia.org/wiki/File:Promotion_message_from_Ed_Sheeran_in_2019.webm","license":"CC_BY_3.0","asset_subject":"ED_SHEERAN_WEATHER_EVENT_SAFETY","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
    ("REAL","ed_tour",12,"CONTEXT","event","ED SHEERAN EM CONTEXTO DE TURNÊ • VÍDEO REAL","Ed Sheeran teve shows no Gillette Stadium cancelados neste fim de semana; segundo a CNN, por mau tempo."),
