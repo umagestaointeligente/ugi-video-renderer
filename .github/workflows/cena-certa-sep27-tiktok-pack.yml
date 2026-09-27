@@ -1,0 +1,54 @@
+name: Cena Certa Sep27 TikTok Pack
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cena-certa-sep27-tiktok-pack.yml
+      - scripts/cena_certa_sep27_tiktok_pack.py
+      - assets/cena-certa-logo.png.b64
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          python -m pip install -q --upgrade yt-dlp edge-tts
+      - name: Render and QA
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_sep27_tiktok_pack.py
+      - name: Publish masters as release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=cena-certa-sep27-tiktok
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Sep27 TikTok" --notes "2 humor BR + 1 experiment, QA approved."
+          gh release upload "$TAG" out/cena-certa-sep27/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+      - name: Create evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "CENA_CERTA_SEP27_TIKTOK_PACK=PASS"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo
+            cat out/cena-certa-sep27/summary.json
+          } > out/cena-certa-sep27/issue.txt
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-SEP27-TIKTOK-PACK] $GITHUB_RUN_ID" --body-file out/cena-certa-sep27/issue.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-sep27-tiktok-${{ github.run_id }}
+          path: out/cena-certa-sep27/
+          retention-days: 7
