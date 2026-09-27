@@ -45,7 +45,7 @@ TOPICS={
    "peng1":{"file":"peng1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Adélie_penguin_(Pygoscelis_adeliae)_in_Antarctica.webm","license":"CC_BY_3.0","asset_subject":"REAL_ADELIE_PENGUIN","asset_role":"TARGET_SUBJECT","identifiable_human":False},
    "peng2":{"file":"peng2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Emperor_penguins_–_the_biggest_of_all.webm","license":"CC_BY_3.0","asset_subject":"REAL_EMPEROR_PENGUINS","asset_role":"TARGET_SUBJECT","identifiable_human":False},
    "peng3":{"file":"peng3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Gentoo_penguins_(Pygoscelis_papua)_in_Antarctica.webm","license":"CC_BY_3.0","asset_subject":"REAL_GENTOO_PENGUINS","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "peng4":{"file":"peng4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Emperor_penguin,_Coulman_Island,_Antarctica.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_EMPEROR_PENGUIN_COULMAN","asset_role":"TARGET_SUBJECT","identifiable_human":False}
+   "peng4":{"file":"peng4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Close_Encounters_of_the_Emperor_Penguin_Kind.webm","license":"CC_BY_3.0","asset_subject":"REAL_EMPEROR_PENGUIN_CLOSE_ENCOUNTER","asset_role":"TARGET_SUBJECT","identifiable_human":False}
   },
   "scenes":[
    ("REAL","peng1",1,"CONTEXT","penguin","PINGUIM NA ANTÁRTICA • VÍDEO REAL","Pinguins ficam sobre gelo por horas. Então por que os pés deles não congelam?"),
@@ -357,7 +357,7 @@ def main():
   "peng1.webm":"https://cdn.creativeclaw.co/u/2f9dfa63/videos/1d4300f2-b8f4-4b63-8635-579ebf0af14a.webm",
   "peng2.webm":"https://cdn.creativeclaw.co/u/2f9dfa63/videos/d0e3dc87-71ff-43d4-afd4-2d630147bfe8.webm",
   "peng3.webm":"https://cdn.creativeclaw.co/u/2f9dfa63/videos/3e34c1fd-0559-4802-978b-1d8f3d47194a.webm",
-  "peng4.webm":"https://cdn.creativeclaw.co/u/2f9dfa63/videos/13614dd2-1add-459b-89c7-f26542e653e6.webm",
+  "peng4.webm":"https://cdn.creativeclaw.co/u/2f9dfa63/videos/7e6d61e4-8321-45f7-8328-68338e058cc5.webm",
   "ed_tour.webm":"https://cdn.creativeclaw.co/u/2f9dfa63/videos/d1ac4152-6c98-4bf9-9515-748ce0e4a8ae.webm",
   "ed_message.webm":"https://cdn.creativeclaw.co/u/2f9dfa63/videos/bb463add-3916-4451-a481-77b53720d97b.webm",
   "storm.webm":"https://cdn.creativeclaw.co/u/2f9dfa63/videos/969289fa-e56e-493c-a01e-ed8fdc6f5c38.webm",
