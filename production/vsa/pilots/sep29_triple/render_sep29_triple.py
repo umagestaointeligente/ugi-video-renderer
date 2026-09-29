@@ -23,18 +23,18 @@ TOPICS={
   "content_class":"SCIENCE_EXPLAINER","expected_subject":"SOAP_BUBBLE_SPHERE_SURFACE_TENSION",
   "assets":{
    "bubble1":{"file":"bubble1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Soap_bubbles_being_formed_by_a_bubble_wand_-_slow_motion_-_2022_July_28.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_BUBBLE_FORMING","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "bubble2":{"file":"bubble2.ogv","source_url":"https://commons.wikimedia.org/wiki/File:Mechanical_bubble_blower_(001).ogv","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_MECHANICAL_BUBBLE_BLOWER","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "bubble3":{"file":"bubble3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Мыльная_пленка_под_микроскопом.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_FILM_MICROSCOPE","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "bubble4":{"file":"bubble4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Тонкая_пленка_мыльного_пузыря_1.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_FILM_MICROSCOPE_SECOND","asset_role":"TARGET_SUBJECT","identifiable_human":False}
+   "bubble2":{"file":"bubble2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Мыльная_пленка_под_микроскопом.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_FILM_MICROSCOPE","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "bubble3":{"file":"bubble3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Тонкая_пленка_мыльного_пузыря_1.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_FILM_MICROSCOPE_SECOND","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "bubble4":{"file":"bubble4.webm","source_url":"https://commons.wikimedia.org/wiki/File:A_freezing_soap_bubble_in_McGregor,_Minnesota.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_FREEZING_SOAP_BUBBLE","asset_role":"TARGET_SUBJECT","identifiable_human":False}
   },
   "scenes":[
    ("REAL","bubble1",0,"CONTEXT","bubble","BOLHA NASCENDO • VÍDEO REAL","Bolhas podem nascer deformadas, mas livres no ar quase sempre viram esferas. Por quê?"),
    ("ANIMATION","anim",0,"MECHANISM","bubble","ANIMAÇÃO • FILME DE ÁGUA E SABÃO","A película é água com sabão. O detergente estabiliza o filme e modifica sua tensão superficial."),
-   ("REAL","bubble2",1,"PROOF","bubble","BOLHAS • VÍDEO REAL","Essa tensão puxa a película para diminuir sua área, como uma pele elástica tentando encolher."),
+   ("REAL","bubble2",1,"PROOF","bubble","PELÍCULA AO MICROSCÓPIO • VÍDEO REAL","Essa tensão puxa a película para diminuir sua área, como uma pele elástica tentando encolher."),
    ("ANIMATION","anim",2,"MECHANISM","bubble","ANIMAÇÃO • MENOR ÁREA","Para guardar o mesmo volume de ar, nenhuma forma usa menos superfície que uma esfera."),
-   ("REAL","bubble3",2,"CONSEQUENCE","bubble","PELÍCULA AO MICROSCÓPIO • VÍDEO REAL","Cantos e pontas exigiriam mais área e tendem a desaparecer quando a bolha está livre."),
+   ("REAL","bubble3",2,"CONSEQUENCE","bubble","OUTRA PELÍCULA • VÍDEO REAL","Cantos e pontas exigiriam mais área e tendem a desaparecer quando a bolha está livre."),
    ("ANIMATION","anim",4,"MECHANISM","bubble","ANIMAÇÃO • FORÇAS EM EQUILÍBRIO","A pressão interna empurra para fora, enquanto a tensão da película puxa para dentro em todas as direções."),
-   ("REAL","bubble4",3,"PROOF","bubble","FILME DA BOLHA • VÍDEO REAL","Quando essas forças se equilibram, a forma redonda vence — até o filme afinar demais e estourar.")
+   ("REAL","bubble4",2,"PROOF","bubble","BOLHA CONGELANDO • VÍDEO REAL","Quando essas forças se equilibram, a forma redonda vence — até o filme mudar ou afinar demais.")
   ]},
  "morcego_invertido":{
   "title":"Por que morcegos dormem de cabeça para baixo? #shorts",
@@ -56,26 +56,26 @@ TOPICS={
    ("ANIMATION","anim",4,"MECHANISM","bat","ANIMAÇÃO • SOLTA, CAI E VOA","Eles soltam os pés, caem por um instante e usam a gravidade para abrir espaço para as asas."),
    ("REAL","bat4",5,"PROOF","bat","MORCEGOS AO ANOITECER • VÍDEO REAL","Assim, ficar de cabeça para baixo resolve descanso, segurança e uma saída rápida para o voo.")
   ]},
- "ricky_nfl_rio":{
-  "title":"Como Ricky Martin e Pedro Sampaio montaram o show da NFL no Maracanã? #shorts",
-  "header":["COMO COUBERAM TANTOS HITS","NO INTERVALO DA NFL?"],
-  "description":"Ricky Martin e Pedro Sampaio se apresentaram no intervalo do NFL Rio Game no Maracanã em 27 de setembro de 2026. O show misturou funk, pop latino e outros ritmos em formato de medley e marcou a estreia ao vivo de 'Pikito Pikito'. #VocêSabiaAgora #RickyMartin #PedroSampaio #NFLBrasil\n\nVídeos de Ricky Martin: Festival de Viña del Mar / Wikimedia Commons, CC BY 3.0. Maracanã: Rwjabour / Wikimedia Commons, CC BY-SA 4.0. Fontes factuais: NFL, Folha, CNN Brasil e ge.",
-  "content_class":"NEWS_EXPLAINER","expected_subject":"RICKY_MARTIN_NFL_RIO_HALFTIME_2026",
-  "celebrity_name":"Ricky Martin",
+ "madonna_vma_recorde":{
+  "title":"Como Madonna voltou ao VMA e quebrou um recorde aos 68? #shorts",
+  "header":["COMO MADONNA VOLTOU","AO VMA E FEZ HISTÓRIA?"],
+  "description":"Madonna voltou a se apresentar no VMA após 23 anos e, aos 68, tornou-se a pessoa mais velha a vencer um prêmio na história da premiação. Em 2026, ela recebeu 13 indicações e terminou a noite com sete troféus. #VocêSabiaAgora #Madonna #VMA #Música\n\nVídeos de arquivo de Madonna: Wikimedia Commons, CC BY/CC BY-SA. Fontes factuais: CNN Brasil e MTV/VMA.",
+  "content_class":"NEWS_EXPLAINER","expected_subject":"MADONNA_VMA_2026_RECORD",
+  "celebrity_name":"Madonna",
   "assets":{
-   "ricky1":{"file":"ricky1.ogv","source_url":"https://commons.wikimedia.org/wiki/File:La_Bomba_-_Ricky_Martin,_Viña_del_Mar_International_Song_Festival_(2014).ogv","license":"CC_BY_3.0","asset_subject":"RICKY_MARTIN_NFL_RIO_HALFTIME_2026","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
-   "maracana":{"file":"maracana.webm","source_url":"https://commons.wikimedia.org/wiki/File:Maracanã_Timelapse_-_saída_do_público_do_jogo_entre_Brasil_vs_Honduras.webm","license":"CC_BY_SA_4.0","asset_subject":"MARACANA_STADIUM_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
-   "ricky2":{"file":"ricky2.ogv","source_url":"https://commons.wikimedia.org/wiki/File:Loaded_-_Ricky_Martin,_Viña_del_Mar_International_Song_Festival_(2014).ogv","license":"CC_BY_3.0","asset_subject":"RICKY_MARTIN_NFL_RIO_HALFTIME_2026","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
-   "ricky3":{"file":"ricky3.ogv","source_url":"https://commons.wikimedia.org/wiki/File:Vuelve,_Ricky_Martin,_Viña_del_Mar_International_Song_Festival_(2014).ogv","license":"CC_BY_3.0","asset_subject":"RICKY_MARTIN_NFL_RIO_HALFTIME_2026","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
+   "mad1":{"file":"mad1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Ray_of_Light_live_@_Copacabana_2024.webm","license":"CC_BY_4.0","asset_subject":"MADONNA_VMA_2026_RECORD","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
+   "stage":{"file":"stage.webm","source_url":"https://commons.wikimedia.org/wiki/File:Madonna_Super_Bowl_2012_set_up.webm","license":"CC_BY_3.0","asset_subject":"MADONNA_STAGE_PRODUCTION_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
+   "mad2":{"file":"mad2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Madonna-Ray-of-Light2.webm","license":"CC_BY_SA_4.0","asset_subject":"MADONNA_VMA_2026_RECORD","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
+   "mad3":{"file":"mad3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Madonna_speaks_out_in_Russia_about_anti-gay_law.webm","license":"CC_BY_3.0","asset_subject":"MADONNA_VMA_2026_RECORD","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","ricky1",20,"CONTEXT","show","RICKY MARTIN • ARQUIVO DE SHOW","Ricky Martin e Pedro Sampaio levaram um mini show ao intervalo da NFL no Maracanã, no Rio."),
-   ("ANIMATION","anim",0,"MECHANISM","show","ANIMAÇÃO • FORMATO MEDLEY","Para caber no intervalo, o espetáculo usou medley: trechos de músicas conectados por transições rápidas."),
-   ("REAL","maracana",5,"PROOF","show","MARACANÃ • VÍDEO REAL","Pedro abriu com funk e Ricky entrou com Livin' La Vida Loca, mantendo o ritmo sem longas pausas."),
-   ("ANIMATION","anim",2,"MECHANISM","show","ANIMAÇÃO • COREOGRAFIA POR ZONAS","A coreografia distribuía artistas, dançarinos e cheerleaders em zonas do campo para acelerar as trocas."),
-   ("REAL","ricky2",30,"CONSEQUENCE","show","RICKY MARTIN • ARQUIVO DE SHOW","Assim, cada mudança de música já encontrava o próximo bloco visual pronto para entrar."),
-   ("ANIMATION","anim",4,"MECHANISM","show","ANIMAÇÃO • COLABORAÇÃO NO CLÍMAX","O clímax juntou os dois em Pikito Pikito, lançada no próprio evento e transformada em parte do espetáculo."),
-   ("REAL","ricky3",40,"PROOF","show","RICKY MARTIN • ARQUIVO DE SHOW","O resultado misturou funk, pop latino, samba e reggaeton dentro de um único show de intervalo.")
+   ("REAL","mad1",1,"CONTEXT","vma","MADONNA • ARQUIVO DE SHOW","Aos 68 anos, Madonna se tornou a pessoa mais velha a vencer um VMA e voltou ao palco da premiação depois de 23 anos."),
+   ("ANIMATION","anim",0,"MECHANISM","vma","ANIMAÇÃO • 23 ANOS DE INTERVALO","A linha do tempo liga 2003, sua apresentação anterior no VMA, a 2026, quando ela voltou a se apresentar."),
+   ("REAL","stage",10,"PROOF","vma","MONTAGEM DE MEGASHOW • VÍDEO REAL","Ao longo da carreira, Madonna também ficou associada a grandes produções de palco, como seu show de intervalo do Super Bowl."),
+   ("ANIMATION","anim",2,"MECHANISM","vma","ANIMAÇÃO • 13 INDICAÇÕES → 7 PRÊMIOS","Em 2026, ela chegou ao VMA com treze indicações e terminou a noite levando sete troféus."),
+   ("REAL","mad2",8,"CONSEQUENCE","vma","MADONNA • ARQUIVO DE SHOW","Entre as vitórias estavam Artista do Ano, Melhor Dance, Melhor Álbum e Melhor Colaboração."),
+   ("ANIMATION","anim",4,"MECHANISM","vma","ANIMAÇÃO • RECORDE DE IDADE","Aos 68, a vitória também criou um novo recorde de idade entre os vencedores da história do VMA."),
+   ("REAL","mad3",120,"PROOF","vma","MADONNA • ARQUIVO DE SHOW","Com esses prêmios, Madonna chegou a vinte e seis vitórias competitivas no VMA ao longo da carreira.")
   ]}
 }
 
@@ -194,36 +194,34 @@ def make_anim(slug,out):
     d.text((250,720),"a queda cria espaço para iniciar o voo",font=fs,fill="white")
   else:
    if seg==0:
-    d.text((45,38),"MEDLEY: VÁRIOS BLOCOS, POUCAS PAUSAS",font=fb,fill="white")
-    labels=["FUNK","TRANSIÇÃO","RICKY","DUETO","FINAL"]
-    widths=[150,110,150,150,130]
-    x=95
-    for i,(lab,w) in enumerate(zip(labels,widths)):
-     d.rounded_rectangle((x,300,x+w,470),20,outline=(80+25*i,170,220-20*i),width=5)
-     d.text((x+12,365),lab,font=fr,fill="white"); x+=w+18
-    marker=100+int(760*u); d.line((marker,245,marker,525),fill=(255,190,70),width=7)
-    d.text((240,620),"trechos curtos conectados em sequência",font=fs,fill="white")
+    d.text((45,38),"2003 → 2026: 23 ANOS ATÉ O RETORNO",font=fb,fill="white")
+    d.line((120,420,855,420),fill=(100,160,200),width=8)
+    for x,label in [(170,"2003"),(800,"2026")]:
+     d.ellipse((x-28,392,x+28,448),fill=(255,190,70))
+     d.text((x-42,490),label,font=fs,fill="white")
+    pos=170+int(630*u); d.ellipse((pos-16,404,pos+16,436),fill=(100,220,160))
+    d.text((260,625),"retorno ao palco do VMA",font=fs,fill=(100,220,160))
    elif seg==1:
-    d.text((45,38),"COREOGRAFIA DISTRIBUÍDA PELO CAMPO",font=fb,fill="white")
-    d.rounded_rectangle((70,170,905,680),25,outline=(100,170,120),width=5)
-    d.line((487,170,487,680),fill=(100,170,120),width=4)
-    zones=[(210,300,"ARTISTA"),(480,420,"DANÇA"),(720,300,"CHEER"),(700,560,"PRÓXIMO")]
-    for i,(x,y,lab) in enumerate(zones):
-     rr=45+int(10*abs(math.sin(t*3+i)))
-     d.ellipse((x-rr,y-rr,x+rr,y+rr),outline=(80,180,255),width=5)
-     d.text((x-38,y-10),lab,font=fr,fill="white")
-    d.text((230,735),"cada zona prepara a próxima entrada",font=fs,fill="white")
+    d.text((45,38),"13 INDICAÇÕES → 7 TROFÉUS",font=fb,fill="white")
+    for i in range(13):
+     x=100+(i%7)*120; y=230+(i//7)*120
+     fill=(255,190,70) if i<7 else (70,105,135)
+     d.rounded_rectangle((x,y,x+75,y+78),12,fill=fill)
+    d.text((185,545),"7 VITÓRIAS",font=fs,fill=(255,190,70))
+    d.text((535,545),"6 NÃO VENCIDAS",font=fs,fill=(150,170,190))
+    d.line((120,680,850,680),fill=(100,220,160),width=7)
+    d.text((290,720),"uma noite de sete prêmios",font=fs,fill="white")
    else:
-    d.text((45,38),"DOIS ARTISTAS → UMA ESTREIA NO CLÍMAX",font=fb,fill="white")
-    d.rounded_rectangle((90,220,360,430),25,outline=(80,180,255),width=5)
-    d.text((150,300),"RICKY",font=fs,fill="white")
-    d.rounded_rectangle((615,220,885,430),25,outline=(100,220,150),width=5)
-    d.text((650,300),"PEDRO",font=fs,fill="white")
-    cx,cy=490,610
-    d.line((360,330,cx,cy),fill=(80,180,255),width=9); d.line((615,330,cx,cy),fill=(100,220,150),width=9)
-    d.rounded_rectangle((300,560,680,700),24,outline=(255,190,70),width=6)
-    d.text((350,610),"PIKITO PIKITO",font=fs,fill="white")
-    d.text((320,745),"lançamento dentro do próprio show",font=fr,fill=(255,190,70))
+    d.text((45,38),"68 ANOS: NOVO RECORDE DE IDADE",font=fb,fill="white")
+    d.line((120,500,850,500),fill=(90,140,185),width=9)
+    ticks=[(220,"40"),(390,"50"),(560,"60"),(730,"68")]
+    for x,lab in ticks:
+     d.line((x,470,x,530),fill=(210,210,220),width=5)
+     d.text((x-18,555),lab,font=fs,fill="white")
+    pulse=36+int(12*abs(math.sin(t*4)))
+    d.ellipse((730-pulse,500-pulse,730+pulse,500+pulse),outline=(255,190,70),width=8)
+    d.text((590,650),"MADONNA • 68",font=fs,fill=(255,190,70))
+    d.text((250,720),"pessoa mais velha a vencer um VMA",font=fr,fill="white")
   im.save(tmp/f"{n:04d}.jpg",quality=92)
  run(["ffmpeg","-y","-loglevel","error","-framerate",str(fps),"-i",tmp/"%04d.jpg","-t","6","-r","30","-vf","pad=ceil(iw/2)*2:ceil(ih/2)*2","-c:v","libx264","-pix_fmt","yuv420p",out])
 
@@ -344,18 +342,18 @@ def main():
  mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png")
  if sha(mask)!=MASK_SHA:raise RuntimeError("MASK_SHA_FAIL")
  music=dl("https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/f1f3904c-153f-4d51-9ffe-a8974cf30ea0.mp3",AS/"music.mp3")
- commons_video("Soap bubbles being formed by a bubble wand - slow motion - 2022 July 28.webm",AS/"bubble1.webm")
- commons_video("Mechanical bubble blower (001).ogv",AS/"bubble2.ogv")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7278acfa-a0ab-4f81-a5cd-0f7ac0dc9014.webm",AS/"bubble3.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/d39c2f17-85cb-4393-b7b5-4aacb0da6ecd.webm",AS/"bubble4.webm")
- commons_video("Bats in the Tunnel.webm",AS/"bat1.webm")
- commons_video("Bat climbing a wall.webm",AS/"bat2.webm")
- commons_video("Congress Street Bridge Bat Flight Austin.webm",AS/"bat3.webm")
- commons_video("Bats in Flight at Dusk in Texas.webm",AS/"bat4.webm")
- commons_video("La Bomba - Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky1.ogv")
- commons_video("Loaded - Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky2.ogv")
- commons_video("Vuelve, Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky3.ogv")
- commons_video("Maracanã Timelapse - saída do público do jogo entre Brasil vs Honduras.webm",AS/"maracana.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/35c3872a-2c30-4bf8-805a-88a87e649201.webm",AS/"bubble1.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7278acfa-a0ab-4f81-a5cd-0f7ac0dc9014.webm",AS/"bubble2.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/d39c2f17-85cb-4393-b7b5-4aacb0da6ecd.webm",AS/"bubble3.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/ba1d48d5-51ae-4db6-b227-e3744f441246.webm",AS/"bubble4.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/ae0c0c36-37a6-484f-a5fd-5290e0197738.webm",AS/"bat1.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/53a1749c-42d8-449e-b971-5685bb4ff8f8.webm",AS/"bat2.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/40c19486-2295-4947-8d32-6b07ffb483fe.webm",AS/"bat3.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/592cede4-45bf-487a-bfcf-f2b5776d6317.webm",AS/"bat4.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7d26858a-18cf-494b-b2ed-f9862490b433.webm",AS/"mad1.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/84f43eed-73e8-4763-9564-e41090f6f43d.webm",AS/"stage.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/d189a0b8-a11d-45b6-911a-db78a23fdc18.webm",AS/"mad2.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/ad45b727-fdd0-4911-b0a9-81c9f45891e0.webm",AS/"mad3.webm")
  for slug,t in TOPICS.items():
   real_keys=[s[1] for s in t["scenes"] if s[0]=="REAL"]
   real_files=[t["assets"][k]["file"] for k in real_keys]
