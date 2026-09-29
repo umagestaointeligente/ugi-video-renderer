@@ -69,13 +69,13 @@ TOPICS={
    "mad3":{"file":"mad3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Madonna_speaks_out_in_Russia_about_anti-gay_law.webm","license":"CC_BY_3.0","asset_subject":"MADONNA_VMA_2026_RECORD","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","mad1",1,"CONTEXT","vma","MADONNA • ARQUIVO DE SHOW","Aos 68 anos, Madonna se tornou a pessoa mais velha a vencer um VMA e voltou ao palco da premiação depois de 23 anos."),
-   ("ANIMATION","anim",0,"MECHANISM","vma","ANIMAÇÃO • 23 ANOS DE INTERVALO","A linha do tempo liga 2003, sua apresentação anterior no VMA, a 2026, quando ela voltou a se apresentar."),
-   ("REAL","stage",10,"PROOF","vma","MONTAGEM DE MEGASHOW • VÍDEO REAL","Ao longo da carreira, Madonna também ficou associada a grandes produções de palco, como seu show de intervalo do Super Bowl."),
-   ("ANIMATION","anim",2,"MECHANISM","vma","ANIMAÇÃO • 13 INDICAÇÕES → 7 PRÊMIOS","Em 2026, ela chegou ao VMA com treze indicações e terminou a noite levando sete troféus."),
-   ("REAL","mad2",8,"CONSEQUENCE","vma","MADONNA • ARQUIVO DE SHOW","Entre as vitórias estavam Artista do Ano, Melhor Dance, Melhor Álbum e Melhor Colaboração."),
-   ("ANIMATION","anim",4,"MECHANISM","vma","ANIMAÇÃO • RECORDE DE IDADE","Aos 68, a vitória também criou um novo recorde de idade entre os vencedores da história do VMA."),
-   ("REAL","mad3",120,"PROOF","vma","MADONNA • ARQUIVO DE SHOW","Com esses prêmios, Madonna chegou a vinte e seis vitórias competitivas no VMA ao longo da carreira.")
+   ("REAL","mad1",1,"CONTEXT","vma","MADONNA • ARQUIVO DE SHOW","Aos 68, Madonna virou a pessoa mais velha a vencer um VMA e voltou ao palco da premiação depois de 23 anos."),
+   ("ANIMATION","anim",0,"MECHANISM","vma","ANIMAÇÃO • 23 ANOS DE INTERVALO","A linha do tempo liga 2003 à volta em 2026: vinte e três anos entre apresentações no VMA."),
+   ("REAL","stage",10,"PROOF","vma","MONTAGEM DE MEGASHOW • VÍDEO REAL","Sua carreira também passou por mega-palcos, como o show de intervalo do Super Bowl."),
+   ("ANIMATION","anim",2,"MECHANISM","vma","ANIMAÇÃO • 13 INDICAÇÕES → 7 PRÊMIOS","Em 2026, foram treze indicações e sete troféus."),
+   ("REAL","mad2",8,"CONSEQUENCE","vma","MADONNA • ARQUIVO DE SHOW","Ela venceu, entre outros, Artista do Ano, Melhor Dance, Álbum e Colaboração."),
+   ("ANIMATION","anim",4,"MECHANISM","vma","ANIMAÇÃO • RECORDE DE IDADE","Aos 68, a vitória criou o recorde de pessoa mais velha a vencer um VMA."),
+   ("REAL","mad3",120,"PROOF","vma","MADONNA • ARQUIVO DE SHOW","Com a nova noite, Madonna chegou a vinte e seis vitórias competitivas no VMA.")
   ]}
 }
 
