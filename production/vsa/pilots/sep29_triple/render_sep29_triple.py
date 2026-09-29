@@ -24,17 +24,17 @@ TOPICS={
   "assets":{
    "bubble1":{"file":"bubble1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Soap_bubbles_being_formed_by_a_bubble_wand_-_slow_motion_-_2022_July_28.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_BUBBLE_FORMING","asset_role":"TARGET_SUBJECT","identifiable_human":False},
    "bubble2":{"file":"bubble2.ogv","source_url":"https://commons.wikimedia.org/wiki/File:Mechanical_bubble_blower_(001).ogv","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_MECHANICAL_BUBBLE_BLOWER","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "bubble3":{"file":"bubble3.ogv","source_url":"https://commons.wikimedia.org/wiki/File:Mechanical_bubble_blower_(002).ogv","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_MECHANICAL_BUBBLE_BLOWER_SECOND","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "bubble4":{"file":"bubble4.ogv","source_url":"https://commons.wikimedia.org/wiki/File:Une_petite_bulle_de_savon_éclate_en_ralenti_x40.ogv","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_BUBBLE_POPPING_SLOW_MOTION","asset_role":"TARGET_SUBJECT","identifiable_human":False}
+   "bubble3":{"file":"bubble3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Мыльная_пленка_под_микроскопом.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_FILM_MICROSCOPE","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "bubble4":{"file":"bubble4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Тонкая_пленка_мыльного_пузыря_1.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOAP_FILM_MICROSCOPE_SECOND","asset_role":"TARGET_SUBJECT","identifiable_human":False}
   },
   "scenes":[
    ("REAL","bubble1",0,"CONTEXT","bubble","BOLHA NASCENDO • VÍDEO REAL","Bolhas podem nascer deformadas, mas livres no ar quase sempre viram esferas. Por quê?"),
    ("ANIMATION","anim",0,"MECHANISM","bubble","ANIMAÇÃO • FILME DE ÁGUA E SABÃO","A película é água com sabão. O detergente estabiliza o filme e modifica sua tensão superficial."),
    ("REAL","bubble2",1,"PROOF","bubble","BOLHAS • VÍDEO REAL","Essa tensão puxa a película para diminuir sua área, como uma pele elástica tentando encolher."),
    ("ANIMATION","anim",2,"MECHANISM","bubble","ANIMAÇÃO • MENOR ÁREA","Para guardar o mesmo volume de ar, nenhuma forma usa menos superfície que uma esfera."),
-   ("REAL","bubble3",2,"CONSEQUENCE","bubble","BOLHAS • VÍDEO REAL","Cantos e pontas exigiriam mais área e tendem a desaparecer quando a bolha está livre."),
+   ("REAL","bubble3",2,"CONSEQUENCE","bubble","PELÍCULA AO MICROSCÓPIO • VÍDEO REAL","Cantos e pontas exigiriam mais área e tendem a desaparecer quando a bolha está livre."),
    ("ANIMATION","anim",4,"MECHANISM","bubble","ANIMAÇÃO • FORÇAS EM EQUILÍBRIO","A pressão interna empurra para fora, enquanto a tensão da película puxa para dentro em todas as direções."),
-   ("REAL","bubble4",1,"PROOF","bubble","BOLHA EM CÂMERA LENTA • VÍDEO REAL","Quando essas forças se equilibram, a forma redonda vence — até o filme afinar demais e estourar.")
+   ("REAL","bubble4",3,"PROOF","bubble","FILME DA BOLHA • VÍDEO REAL","Quando essas forças se equilibram, a forma redonda vence — até o filme afinar demais e estourar.")
   ]},
  "morcego_invertido":{
   "title":"Por que morcegos dormem de cabeça para baixo? #shorts",
@@ -346,8 +346,8 @@ def main():
  music=dl("https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/f1f3904c-153f-4d51-9ffe-a8974cf30ea0.mp3",AS/"music.mp3")
  commons_video("Soap bubbles being formed by a bubble wand - slow motion - 2022 July 28.webm",AS/"bubble1.webm")
  commons_video("Mechanical bubble blower (001).ogv",AS/"bubble2.ogv")
- commons_video("Mechanical bubble blower (002).ogv",AS/"bubble3.ogv")
- commons_video("Une petite bulle de savon éclate en ralenti x40.ogv",AS/"bubble4.ogv")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7278acfa-a0ab-4f81-a5cd-0f7ac0dc9014.webm",AS/"bubble3.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/d39c2f17-85cb-4393-b7b5-4aacb0da6ecd.webm",AS/"bubble4.webm")
  commons_video("Bats in the Tunnel.webm",AS/"bat1.webm")
  commons_video("Bat climbing a wall.webm",AS/"bat2.webm")
  commons_video("Congress Street Bridge Bat Flight Austin.webm",AS/"bat3.webm")
