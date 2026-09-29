@@ -124,7 +124,18 @@ def main():
 
     for item in manifest["items"]:
         wd=WORK/item["id"]; wd.mkdir(parents=True,exist_ok=True)
-        run(["yt-dlp","--no-warnings","-f","bv*+ba/b","--merge-output-format","mp4","-o",str(wd/"source.%(ext)s"),item["source"]])
+        last=None
+        for attempt in range(1,5):
+            try:
+                run(["yt-dlp","--no-warnings","--retries","5","--fragment-retries","5","--retry-sleep","3","-f","bv*+ba/b","--merge-output-format","mp4","-o",str(wd/"source.%(ext)s"),item["source"]])
+                last=None
+                break
+            except Exception as exc:
+                last=exc
+                import time
+                time.sleep(4*attempt)
+        if last is not None:
+            raise last
         src=next(wd.glob("source.*"))
         out,src_d,total=render(item,src,logo,core)
         sha=hashlib.sha256(out.read_bytes()).hexdigest()
