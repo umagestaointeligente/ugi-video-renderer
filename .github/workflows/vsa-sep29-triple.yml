@@ -51,7 +51,7 @@ jobs:
           test "$(grep -o 'Agora você já sabe\.' "$R" | wc -l)" -eq 1
           grep -q 'ANIMAÇÃO • MENOR ÁREA' "$R"
           grep -q 'ANIMAÇÃO • TRAVA PASSIVA' "$R"
-          grep -q 'ANIMAÇÃO • FORMATO MEDLEY' "$R"
+          grep -q 'ANIMAÇÃO • 23 ANOS DE INTERVALO' "$R"
           grep -q 'MASK_SHA="ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56"' "$R"
           grep -q 'REAL_ASSET_DUPLICATE_FAIL' "$R"
           grep -q 'CELEBRITY_CONTEXT_FAIL' "$R"
@@ -63,14 +63,14 @@ jobs:
           OUT=production/vsa/pilots/sep29_triple/output
           test -s "$OUT/bolha_redonda/VSA_bolha_redonda_SEP29.mp4"
           test -s "$OUT/morcego_invertido/VSA_morcego_invertido_SEP29.mp4"
-          test -s "$OUT/ricky_nfl_rio/VSA_ricky_nfl_rio_SEP29.mp4"
+          test -s "$OUT/madonna_vma_recorde/VSA_madonna_vma_recorde_SEP29.mp4"
           cp /tmp/vsa_sep29_render.log "$OUT/RENDER_LOG.txt"
 
       - name: Prove animation segments are visually distinct
         run: |
           set -euo pipefail
           AS=production/vsa/pilots/sep29_triple/assets
-          for slug in bolha_redonda morcego_invertido ricky_nfl_rio; do
+          for slug in bolha_redonda morcego_invertido madonna_vma_recorde; do
             rm -f /tmp/${slug}_*.png
             ffmpeg -loglevel error -ss 0.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_0.png"
             ffmpeg -loglevel error -ss 2.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_1.png"
@@ -82,7 +82,7 @@ jobs:
         run: |
           set -euo pipefail
           OUT=production/vsa/pilots/sep29_triple/output
-          for slug in bolha_redonda morcego_invertido ricky_nfl_rio; do
+          for slug in bolha_redonda morcego_invertido madonna_vma_recorde; do
             ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
             python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP29.mp4"
             jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
