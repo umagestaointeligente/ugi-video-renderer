@@ -1,0 +1,140 @@
+{
+  "schema": "CENA_CERTA_SEP29_REAL_SCENES_V1",
+  "timezone": "America/Sao_Paulo",
+  "strategy": "recognizable_brazilian_real_scenes_original_ptbr_audio",
+  "anti_repeat_verified_at": "2026-09-28T22:00:00-03:00",
+  "items": [
+    {
+      "id": "CC-SEP29-TT-UM-LUGAR",
+      "network": "tiktok",
+      "kind": "humor",
+      "slot": "2026-09-29T10:00:00-03:00",
+      "title": "Um Lugar ao Sol — Falha Nossa",
+      "source": "https://globoplay.globo.com/v/10170601/",
+      "source_id": "10170601",
+      "hook": "UM LUGAR AO SOL: quando ninguém segura a cena 😂",
+      "cta": "QUAL ERRO FOI MELHOR? 😂"
+    },
+    {
+      "id": "CC-SEP29-TT-SALVE",
+      "network": "tiktok",
+      "kind": "humor",
+      "slot": "2026-09-29T12:00:00-03:00",
+      "title": "Salve-se Quem Puder — Falha Nossa",
+      "source": "https://globoplay.globo.com/v/10170598/",
+      "source_id": "10170598",
+      "hook": "SALVE-SE QUEM PUDER: a cena desandou 😂",
+      "cta": "ESSA RISADA TE PEGOU? 😂"
+    },
+    {
+      "id": "CC-SEP29-TT-ADRIANA",
+      "network": "tiktok",
+      "kind": "scene",
+      "slot": "2026-09-29T18:00:00-03:00",
+      "title": "Pedro vê Adriana produzida e a elogia",
+      "source": "https://globoplay.globo.com/v/14998159/",
+      "source_id": "14998159",
+      "hook": "23 segundos que resumem a nova fase de Adriana",
+      "cta": "VOCÊ ESTÁ ACOMPANHANDO?"
+    },
+    {
+      "id": "CC-SEP29-IG-FERNANDO",
+      "network": "instagram",
+      "kind": "scene",
+      "slot": "2026-09-29T10:00:00-03:00",
+      "title": "Fernando não gosta de ver Mau Mau com Felipe",
+      "source": "https://globoplay.globo.com/v/14997870/",
+      "source_id": "14997870",
+      "hook": "O incômodo aparece antes de qualquer explicação",
+      "cta": "VOCÊ PERCEBEU O CIÚME?"
+    },
+    {
+      "id": "CC-SEP29-IG-FESTA",
+      "network": "instagram",
+      "kind": "scene",
+      "slot": "2026-09-29T12:00:00-03:00",
+      "title": "Mau Mau e Felipe descobrem a verdade sobre Fernando",
+      "source": "https://globoplay.globo.com/v/14997876/",
+      "source_id": "14997876",
+      "hook": "A conversa muda quando Fernando deixa uma pista",
+      "cta": "O QUE VOCÊ ENTENDEU DA CENA?"
+    },
+    {
+      "id": "CC-SEP29-IG-CAROL",
+      "network": "instagram",
+      "kind": "scene",
+      "slot": "2026-09-29T18:00:00-03:00",
+      "title": "Carolina e Fábia comentam sobre Felipe e Mau Mau",
+      "source": "https://globoplay.globo.com/v/14997894/",
+      "source_id": "14997894",
+      "hook": "A mãe percebe uma coisa que ainda ninguém falou",
+      "cta": "VOCÊ TERIA PERCEBIDO?"
+    },
+    {
+      "id": "CC-SEP29-YT-MAUMAU",
+      "network": "youtube",
+      "kind": "scene",
+      "slot": "2026-09-29T10:00:00-03:00",
+      "title": "Mau Mau admite que está confuso sobre Fernando",
+      "source": "https://globoplay.globo.com/v/14997922/",
+      "source_id": "14997922",
+      "hook": "Ele finalmente admite que está confuso",
+      "cta": "E AGORA?"
+    },
+    {
+      "id": "CC-SEP29-YT-PEDRO",
+      "network": "youtube",
+      "kind": "scene",
+      "slot": "2026-09-29T15:00:00-03:00",
+      "title": "Pedro se preocupa com a nova fase de Adriana",
+      "source": "https://globoplay.globo.com/v/14998251/",
+      "source_id": "14998251",
+      "hook": "Pedro percebe que Adriana mudou",
+      "cta": "VOCÊ CONCORDA COM ELE?"
+    },
+    {
+      "id": "CC-SEP29-YT-CASSINO",
+      "network": "youtube",
+      "kind": "scene",
+      "slot": "2026-09-29T17:00:00-03:00",
+      "title": "Pedro questiona Adriana sobre o flagra no cassino",
+      "source": "https://globoplay.globo.com/v/14956992/",
+      "source_id": "14956992",
+      "hook": "Uma pergunta coloca Adriana contra a parede",
+      "cta": "ELA FOI LONGE DEMAIS?"
+    },
+    {
+      "id": "CC-SEP29-FB-DIVORCIO",
+      "network": "facebook",
+      "kind": "scene",
+      "slot": "2026-09-29T10:00:00-03:00",
+      "title": "Fábia procura Ademir para cuidar do divórcio",
+      "source": "https://globoplay.globo.com/v/14996045/",
+      "source_id": "14996045",
+      "hook": "Fábia procura justamente Ademir para o divórcio",
+      "cta": "VOCÊ CONFIARIA NELE?"
+    },
+    {
+      "id": "CC-SEP29-FB-TOM",
+      "network": "facebook",
+      "kind": "scene",
+      "slot": "2026-09-29T12:00:00-03:00",
+      "title": "Pilar pensa em contratar Tom para outro serviço",
+      "source": "https://globoplay.globo.com/v/14996060/",
+      "source_id": "14996060",
+      "hook": "Pilar tem outro plano para Tom",
+      "cta": "O QUE ELA ESTÁ PLANEJANDO?"
+    },
+    {
+      "id": "CC-SEP29-FB-FABIA",
+      "network": "facebook",
+      "kind": "scene",
+      "slot": "2026-09-29T17:00:00-03:00",
+      "title": "Fábia decide enfrentar a revelação de Pilar",
+      "source": "https://globoplay.globo.com/v/14988846/",
+      "source_id": "14988846",
+      "hook": "Fábia decide parar de ter medo da verdade",
+      "cta": "VOCÊ FARIA O MESMO?"
+    }
+  ]
+}
