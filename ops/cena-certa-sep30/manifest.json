@@ -1,0 +1,142 @@
+{
+  "schema": "CENA_CERTA_SEP30_FORMAT_RESET_V1",
+  "timezone": "America/Sao_Paulo",
+  "anti_repeat_verified_at": "2026-09-29T23:25:00-03:00",
+  "strategy": {
+    "tiktok": "2 humor BR Falha Nossa + 1 conflito atual reconhecível",
+    "instagram": "cena emocional/relação reconhecível, 1 minuto, áudio original",
+    "youtube": "microcena completa 14–26s, sem CTA final",
+    "facebook": "nostalgia + micro-história de 45–60s"
+  },
+  "items": [
+    {
+      "id": "CC-SEP30-TT-AMERICA",
+      "network": "tiktok",
+      "kind": "humor",
+      "slot": "2026-09-30T10:00:00-03:00",
+      "title": "América — Falha Nossa",
+      "source": "https://globoplay.globo.com/v/2282199/",
+      "source_id": "2282199",
+      "hook": "AMÉRICA: quando ninguém consegue segurar a cena 😂",
+      "cta": "QUAL ERRO FOI MELHOR? 😂"
+    },
+    {
+      "id": "CC-SEP30-TT-OCLONE",
+      "network": "tiktok",
+      "kind": "humor",
+      "slot": "2026-09-30T12:00:00-03:00",
+      "title": "O Clone — Falha Nossa",
+      "source": "https://globoplay.globo.com/v/1445504/",
+      "source_id": "1445504",
+      "hook": "O CLONE: até o elenco perde a linha 😂",
+      "cta": "ESSA RISADA TE PEGOU? 😂"
+    },
+    {
+      "id": "CC-SEP30-TT-CARMINHA",
+      "network": "tiktok",
+      "kind": "scene",
+      "slot": "2026-09-30T18:00:00-03:00",
+      "title": "Carminha pula no pescoço de Nina",
+      "source": "https://globoplay.globo.com/v/14971362/",
+      "source_id": "14971362",
+      "hook": "Carminha parte para cima de Nina",
+      "cta": "VOCÊ LEMBRAVA DESSA CENA?"
+    },
+    {
+      "id": "CC-SEP30-IG-CARMINHA-ROUBO",
+      "network": "instagram",
+      "kind": "scene",
+      "slot": "2026-09-30T10:00:00-03:00",
+      "title": "Nina vê Carminha roubando mercadorias e assume a culpa",
+      "source": "https://globoplay.globo.com/v/14555837/",
+      "source_id": "14555837",
+      "hook": "Nina vê tudo — e decide assumir a culpa",
+      "cta": "POR QUE ELA FEZ ISSO?"
+    },
+    {
+      "id": "CC-SEP30-IG-ISABEL",
+      "network": "instagram",
+      "kind": "scene",
+      "slot": "2026-09-30T12:00:00-03:00",
+      "title": "Isabel descobre sua verdadeira mãe",
+      "source": "https://globoplay.globo.com/v/3802076/",
+      "source_id": "3802076",
+      "hook": "Ela descobre quem é sua verdadeira mãe",
+      "cta": "VOCÊ LEMBRAVA DESSA REVELAÇÃO?"
+    },
+    {
+      "id": "CC-SEP30-IG-BRUNO",
+      "network": "instagram",
+      "kind": "scene",
+      "slot": "2026-09-30T18:00:00-03:00",
+      "title": "Bruno Gissoni viveu um rapaz romântico em Avenida Brasil",
+      "source": "https://globoplay.globo.com/v/4184050/",
+      "source_id": "4184050",
+      "hook": "Uma declaração que quase ninguém lembra",
+      "cta": "ESSA CENA ENVELHECEU BEM?"
+    },
+    {
+      "id": "CC-SEP30-YT-MARIABO",
+      "network": "youtube",
+      "kind": "micro",
+      "slot": "2026-09-30T10:00:00-03:00",
+      "title": "Maria Bo se declara para Lance",
+      "source": "https://globoplay.globo.com/v/4183571/",
+      "source_id": "4183571",
+      "hook": "14 segundos. Uma declaração inteira."
+    },
+    {
+      "id": "CC-SEP30-YT-RAVI",
+      "network": "youtube",
+      "kind": "micro",
+      "slot": "2026-09-30T15:00:00-03:00",
+      "title": "Ravi se declara para Camila",
+      "source": "https://globoplay.globo.com/v/4183565/",
+      "source_id": "4183565",
+      "hook": "Ravi vai direto ao ponto"
+    },
+    {
+      "id": "CC-SEP30-YT-AGOSTINHO",
+      "network": "youtube",
+      "kind": "micro",
+      "slot": "2026-09-30T17:00:00-03:00",
+      "title": "Agostinho se declara para Bebel",
+      "source": "https://globoplay.globo.com/v/4183558/",
+      "source_id": "4183558",
+      "hook": "Agostinho sendo Agostinho em 22 segundos"
+    },
+    {
+      "id": "CC-SEP30-FB-CARLOTA",
+      "network": "facebook",
+      "kind": "scene",
+      "slot": "2026-09-30T10:00:00-03:00",
+      "title": "Carlota manda boneco de vodu para Sandra",
+      "source": "https://globoplay.globo.com/v/3802141/",
+      "source_id": "3802141",
+      "hook": "Carlota leva a vingança para outro nível",
+      "cta": "VOCÊ LEMBRAVA DISSO?"
+    },
+    {
+      "id": "CC-SEP30-FB-VITORIA",
+      "network": "facebook",
+      "kind": "scene",
+      "slot": "2026-09-30T12:00:00-03:00",
+      "title": "Vitória tranca Sandra no quarto no dia do noivado",
+      "source": "https://globoplay.globo.com/v/3802157/",
+      "source_id": "3802157",
+      "hook": "No dia do noivado, Vitória faz isso",
+      "cta": "O QUE VOCÊ FARIA?"
+    },
+    {
+      "id": "CC-SEP30-FB-SEVERO",
+      "network": "facebook",
+      "kind": "scene",
+      "slot": "2026-09-30T17:00:00-03:00",
+      "title": "Severo e Magnólia tentam se dar bem",
+      "source": "https://globoplay.globo.com/v/3802033/",
+      "source_id": "3802033",
+      "hook": "Severo e Magnólia tentando tirar vantagem",
+      "cta": "ESSA DUPLA ERA BOA DEMAIS?"
+    }
+  ]
+}
