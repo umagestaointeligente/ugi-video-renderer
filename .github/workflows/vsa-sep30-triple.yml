@@ -61,9 +61,9 @@ jobs:
           set -euo pipefail
           python production/vsa/pilots/sep30_triple/render_sep30_triple.py | tee /tmp/vsa_sep30_render.log
           OUT=production/vsa/pilots/sep30_triple/output
-          test -s "$OUT/bolha_redonda/VSA_bolha_redonda_SEP30.mp4"
-          test -s "$OUT/morcego_invertido/VSA_morcego_invertido_SEP30.mp4"
-          test -s "$OUT/madonna_vma_recorde/VSA_madonna_vma_recorde_SEP30.mp4"
+          test -s "$OUT/gelo_flutua/VSA_gelo_flutua_SEP30.mp4"
+          test -s "$OUT/leidenfrost/VSA_leidenfrost_SEP30.mp4"
+          test -s "$OUT/ricky_medley/VSA_ricky_medley_SEP30.mp4"
           cp /tmp/vsa_sep30_render.log "$OUT/RENDER_LOG.txt"
 
       - name: Prove animation segments are visually distinct
