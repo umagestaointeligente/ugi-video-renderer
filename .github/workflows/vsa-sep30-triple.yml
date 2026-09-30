@@ -51,7 +51,7 @@ jobs:
           test "$(grep -o 'Agora você já sabe\.' "$R" | wc -l)" -eq 1
           grep -q 'ANIMAÇÃO • REDE ABERTA DO GELO' "$R"
           grep -q 'ANIMAÇÃO • COLCHÃO DE VAPOR' "$R"
-          grep -q 'ANIMAÇÃO • MEDLEY EM BLOCOS' "$R"
+          grep -q 'ANIMAÇÃO • ÂNGULOS DE VISÃO' "$R"
           grep -q 'MASK_SHA="ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56"' "$R"
           grep -q 'REAL_ASSET_DUPLICATE_FAIL' "$R"
           grep -q 'CELEBRITY_CONTEXT_FAIL' "$R"
@@ -63,14 +63,14 @@ jobs:
           OUT=production/vsa/pilots/sep30_triple/output
           test -s "$OUT/gelo_flutua/VSA_gelo_flutua_SEP30.mp4"
           test -s "$OUT/leidenfrost/VSA_leidenfrost_SEP30.mp4"
-          test -s "$OUT/ricky_medley/VSA_ricky_medley_SEP30.mp4"
+          test -s "$OUT/lady_gaga_stage/VSA_lady_gaga_stage_SEP30.mp4"
           cp /tmp/vsa_sep30_render.log "$OUT/RENDER_LOG.txt"
 
       - name: Prove animation segments are visually distinct
         run: |
           set -euo pipefail
           AS=production/vsa/pilots/sep30_triple/assets
-          for slug in gelo_flutua leidenfrost ricky_medley; do
+          for slug in gelo_flutua leidenfrost lady_gaga_stage; do
             rm -f /tmp/${slug}_*.png
             ffmpeg -loglevel error -ss 0.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_0.png"
             ffmpeg -loglevel error -ss 2.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_1.png"
@@ -82,7 +82,7 @@ jobs:
         run: |
           set -euo pipefail
           OUT=production/vsa/pilots/sep30_triple/output
-          for slug in gelo_flutua leidenfrost ricky_medley; do
+          for slug in gelo_flutua leidenfrost lady_gaga_stage; do
             ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
             python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_SEP30.mp4"
             jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
