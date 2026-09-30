@@ -45,7 +45,7 @@ TOPICS={
    "leid1":{"file":"leid1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Effet_Leidenfrost.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_LEIDENFROST_DROPLETS_HOT_PAN","asset_role":"TARGET_SUBJECT","identifiable_human":False},
    "leid2":{"file":"leid2.webm","source_url":"https://commons.wikimedia.org/wiki/File:18._Лајденфростов_ефект.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_LEIDENFROST_HEATED_SPHERE","asset_role":"TARGET_SUBJECT","identifiable_human":False},
    "leid3":{"file":"leid3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Effet_leidenfrost.ogv","license":"CC_BY_SA_3.0","asset_subject":"REAL_LEIDENFROST_DROPLET_SECOND_SOURCE","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "leid4":{"file":"leid4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Underwater-Leidenfrost-nanochemistry-for-creation-of-size-tailored-zinc-peroxide-cancer-ncomms15319-s3.ogv","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_LEIDENFROST_LAB_VARIATION","asset_role":"TARGET_SUBJECT","identifiable_human":False}
+   "leid4":{"file":"leid4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Thermal_Vision_video_of_a_kettle_of_water_being_boiled.webm","license":"CC_BY_SA","asset_subject":"REAL_BOILING_WATER_THERMAL_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False}
   },
   "scenes":[
    ("REAL","leid1",1,"CONTEXT","leid","GOTAS EM SUPERFÍCIE QUENTE • VÍDEO REAL","Quando a panela está quente demais, a gota pode parar de ferver no lugar e começar a deslizar."),
@@ -54,7 +54,7 @@ TOPICS={
    ("ANIMATION","anim",2,"MECHANISM","leid","ANIMAÇÃO • COLCHÃO DE VAPOR","O colchão de vapor sustenta a gota e reduz bastante o contato direto e a transferência de calor."),
    ("REAL","leid3",1,"CONSEQUENCE","leid","OUTRA DEMONSTRAÇÃO • VÍDEO REAL","Com pouco atrito, a gota fica extremamente móvel e parece patinar ou dançar sobre a superfície."),
    ("ANIMATION","anim",4,"MECHANISM","leid","ANIMAÇÃO • FLUXO MOVE A GOTA","Se o vapor escapa mais por um lado, ele empurra a gota; quando a superfície esfria, o colchão desaparece."),
-   ("REAL","leid4",5,"PROOF","leid","VARIAÇÃO EM LABORATÓRIO • VÍDEO REAL","O mesmo princípio aparece em experimentos diferentes: vapor separando temporariamente o líquido de uma região muito quente.")
+   ("REAL","leid4",20,"CONSEQUENCE","leid","ÁGUA EM EBULIÇÃO • VÍDEO TÉRMICO REAL","Quando a superfície esfria e a camada isolante de vapor deixa de se sustentar, a água volta a ter contato e ebulição mais comuns.")
   ]},
  "ricky_medley":{
   "title":"Como Ricky Martin emenda vários hits no mesmo show? #shorts",
@@ -348,7 +348,7 @@ def main():
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/415e314f-0b7b-4fb2-a0ee-38df94cad1d5.webm",AS/"leid1.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/b8853fe4-3dd8-403d-9c95-27755944c1b5.webm",AS/"leid2.webm")
  commons_video("Effet leidenfrost.ogv",AS/"leid3.webm")
- commons_video("Underwater-Leidenfrost-nanochemistry-for-creation-of-size-tailored-zinc-peroxide-cancer-ncomms15319-s3.ogv",AS/"leid4.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7a20c08a-d1bb-4143-ac99-876c46a1cf24.webm",AS/"leid4.webm")
  commons_video("La Bomba - Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky1.webm")
  commons_video("Loaded - Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky2.webm")
  commons_video("Eres el amor de mi vida and Fuego contra fuego - Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky3.webm")
