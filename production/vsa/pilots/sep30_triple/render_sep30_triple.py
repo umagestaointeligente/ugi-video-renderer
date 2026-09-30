@@ -45,7 +45,7 @@ TOPICS={
    "oob1":{"file":"oob1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Science_off_the_Sphere-_Goo!.webm","license":"PUBLIC_DOMAIN_NASA","asset_subject":"REAL_CORNSTARCH_WATER_SHEAR_THICKENING_NASA","asset_role":"TARGET_SUBJECT","identifiable_human":True},
    "oob2":{"file":"oob2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Flow_of_Non-Newtonian_Fluid_A_876.ogv","license":"CC_BY_SA_4.0","asset_subject":"REAL_STARCH_WATER_NON_NEWTONIAN_FLOW","asset_role":"TARGET_SUBJECT","identifiable_human":False},
    "oob3":{"file":"oob3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Non-Newtonian_Fluid_A28.ogv","license":"CC_BY_SA_4.0","asset_subject":"REAL_STARCH_WATER_NON_NEWTONIAN_DEMO","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "oob4":{"file":"oob4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Flow_of_Non-Newtonian_Fluid_A_565.ogv","license":"CC_BY_SA_4.0","asset_subject":"REAL_STARCH_WATER_FLOW_SECOND_DEMO","asset_role":"TARGET_SUBJECT","identifiable_human":False}
+   "oob4":{"file":"oob4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Adaptnetic_Structures.webm","license":"CC_BY_SA_3.0","asset_subject":"REAL_OTHER_NON_NEWTONIAN_SUSPENSION_RESPONSE","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False}
   },
   "scenes":[
    ("REAL","oob1",60,"CONTEXT","oob","AMIDO + ÁGUA • EXPERIMENTO NASA","Água com amido pode escorrer devagar como líquido e, quando recebe um impacto rápido, ficar muito mais resistente."),
@@ -54,7 +54,7 @@ TOPICS={
    ("ANIMATION","anim",2,"MECHANISM","oob","ANIMAÇÃO • IMPACTO APERTA A REDE","Num impacto, as partículas são forçadas umas contra as outras tão rápido que formam contatos e uma rede temporária."),
    ("REAL","oob3",1,"CONSEQUENCE","oob","RESPOSTA AO TOQUE • VÍDEO REAL","Essa rede aumenta muito a resistência ao fluxo: por instantes, a mistura responde quase como um sólido."),
    ("ANIMATION","anim",4,"MECHANISM","oob","ANIMAÇÃO • FORÇA SAI, REDE DESMONTA","Quando a força diminui, os contatos se desfazem, as partículas voltam a se reorganizar e o material torna a fluir."),
-   ("REAL","oob4",2,"PROOF","oob","FLUXO VOLTA • OUTRO VÍDEO REAL","Por isso o mesmo material pode parecer duro num golpe e, segundos depois, escorrer novamente entre os dedos.")
+   ("REAL","oob4",4,"PROOF","oob","OUTRA SUSPENSÃO NÃO NEWTONIANA • VÍDEO REAL","Outras suspensões não newtonianas também mudam a resposta quando recebem força; o mecanismo exato depende da composição do material.")
   ]},
  "lady_gaga_stage":{
   "title":"Como Lady Gaga adapta uma performance para públicos gigantes? #shorts",
@@ -348,7 +348,7 @@ def main():
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/6aedb415-b5f4-4939-8b78-450d1a2ab280.webm",AS/"oob1.webm")
  commons_video("Flow of Non-Newtonian Fluid A 876.ogv",AS/"oob2.webm")
  commons_video("Non-Newtonian Fluid A28.ogv",AS/"oob3.webm")
- commons_video("Flow of Non-Newtonian Fluid A 565.ogv",AS/"oob4.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/c70fd558-921c-431b-a029-7aa1eddf3662.webm",AS/"oob4.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/fd141287-57e0-491f-b1de-7716b489fc84.webm",AS/"gaga1.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/4e70d702-a3d5-418f-a62f-7f1d66887e6b.webm",AS/"gaga2.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/437f8c15-2c18-4cf6-9a36-34ee97fb59cb.webm",AS/"gaga3.webm")
