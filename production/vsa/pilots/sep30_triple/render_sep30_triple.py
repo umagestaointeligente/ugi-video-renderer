@@ -36,25 +36,25 @@ TOPICS={
    ("ANIMATION","anim",4,"MECHANISM","ice","ANIMAÇÃO • EMPUXO × PESO","O gelo afunda só até deslocar água suficiente para o empuxo equilibrar o próprio peso."),
    ("REAL","ice4",2,"PROOF","ice","GELO NO OCEANO • VÍDEO REAL NOAA","É o mesmo princípio do cubo no copo: parte fica submersa e uma fração permanece acima da superfície.")
   ]},
- "leidenfrost":{
-  "title":"Por que uma gota de água dança numa panela muito quente? #shorts",
-  "header":["POR QUE A GOTA","DANÇA NA PANELA?"],
-  "description":"Numa superfície muito quente, uma fina camada de vapor pode se formar sob a gota e reduzir o contato direto com o metal: é o efeito Leidenfrost. #VocêSabiaAgora #Curiosidades #Física #Leidenfrost\n\nFontes: UCSC Physics Demonstration Room e Berkeley Lab. Vídeos reais distintos: Wikimedia Commons.",
-  "content_class":"SCIENCE_EXPLAINER","expected_subject":"LEIDENFROST_VAPOR_CUSHION",
+ "oobleck_impact":{
+  "title":"Por que água com amido endurece quando você bate? #shorts",
+  "header":["POR QUE ÁGUA + AMIDO","ENDURECE COM IMPACTO?"],
+  "description":"A mistura de água e amido é um fluido não newtoniano: sob deformação rápida, sua resistência ao fluxo aumenta drasticamente. #VocêSabiaAgora #Curiosidades #Física #Oobleck\n\nFontes: MIT OpenCourseWare, American Physical Society e NASA. Vídeos reais distintos: NASA e Wikimedia Commons.",
+  "content_class":"SCIENCE_EXPLAINER","expected_subject":"OOBLECK_SHEAR_THICKENING",
   "assets":{
-   "leid1":{"file":"leid1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Effet_Leidenfrost.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_LEIDENFROST_DROPLETS_HOT_PAN","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "leid2":{"file":"leid2.webm","source_url":"https://commons.wikimedia.org/wiki/File:18._Лајденфростов_ефект.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_LEIDENFROST_HEATED_SPHERE","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "leid3":{"file":"leid3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Water_Droplets_on_water.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_WATER_DROPLET_COHESION_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False},
-   "leid4":{"file":"leid4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Thermal_Vision_video_of_a_kettle_of_water_being_boiled.webm","license":"CC_BY_SA","asset_subject":"REAL_BOILING_WATER_THERMAL_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False}
+   "oob1":{"file":"oob1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Science_off_the_Sphere-_Goo!.webm","license":"PUBLIC_DOMAIN_NASA","asset_subject":"REAL_CORNSTARCH_WATER_SHEAR_THICKENING_NASA","asset_role":"TARGET_SUBJECT","identifiable_human":True},
+   "oob2":{"file":"oob2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Flow_of_Non-Newtonian_Fluid_A_876.ogv","license":"CC_BY_SA_4.0","asset_subject":"REAL_STARCH_WATER_NON_NEWTONIAN_FLOW","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "oob3":{"file":"oob3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Non-Newtonian_Fluid_A28.ogv","license":"CC_BY_SA_4.0","asset_subject":"REAL_STARCH_WATER_NON_NEWTONIAN_DEMO","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "oob4":{"file":"oob4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Flow_of_Non-Newtonian_Fluid_A_565.ogv","license":"CC_BY_SA_4.0","asset_subject":"REAL_STARCH_WATER_FLOW_SECOND_DEMO","asset_role":"TARGET_SUBJECT","identifiable_human":False}
   },
   "scenes":[
-   ("REAL","leid1",1,"CONTEXT","leid","GOTAS EM SUPERFÍCIE QUENTE • VÍDEO REAL","Quando a panela está quente demais, a gota pode parar de ferver no lugar e começar a deslizar."),
-   ("ANIMATION","anim",0,"MECHANISM","leid","ANIMAÇÃO • VAPORIZAÇÃO NA BASE","A parte inferior recebe calor tão rápido que água vira vapor antes de toda a gota tocar o metal."),
-   ("REAL","leid2",4,"PROOF","leid","CAMADA DE VAPOR • EXPERIMENTO REAL","Esse vapor se acumula entre líquido e superfície e cria uma separação física muito fina."),
-   ("ANIMATION","anim",2,"MECHANISM","leid","ANIMAÇÃO • COLCHÃO DE VAPOR","O colchão de vapor sustenta a gota e reduz bastante o contato direto e a transferência de calor."),
-   ("REAL","leid3",1,"CONTEXT","leid","GOTAS COESAS • VÍDEO REAL","A tensão superficial mantém pequenas porções de água coesas como gotas; no Leidenfrost, essa coesão ajuda a gota a permanecer compacta enquanto se move."),
-   ("ANIMATION","anim",4,"MECHANISM","leid","ANIMAÇÃO • FLUXO MOVE A GOTA","Se o vapor escapa mais por um lado, ele empurra a gota; quando a superfície esfria, o colchão desaparece."),
-   ("REAL","leid4",20,"CONSEQUENCE","leid","ÁGUA EM EBULIÇÃO • VÍDEO TÉRMICO REAL","Quando a superfície esfria e a camada isolante de vapor deixa de se sustentar, a água volta a ter contato e ebulição mais comuns.")
+   ("REAL","oob1",60,"CONTEXT","oob","AMIDO + ÁGUA • EXPERIMENTO NASA","Água com amido pode escorrer devagar como líquido e, quando recebe um impacto rápido, ficar muito mais resistente."),
+   ("ANIMATION","anim",0,"MECHANISM","oob","ANIMAÇÃO • PARTÍCULAS EM SUSPENSÃO","O amido não se dissolve: partículas sólidas ficam suspensas na água e conseguem se mover umas em relação às outras."),
+   ("REAL","oob2",1,"PROOF","oob","FLUXO LENTO • VÍDEO REAL","Com movimento lento, a água lubrifica os espaços entre partículas e a mistura continua fluindo."),
+   ("ANIMATION","anim",2,"MECHANISM","oob","ANIMAÇÃO • IMPACTO APERTA A REDE","Num impacto, as partículas são forçadas umas contra as outras tão rápido que formam contatos e uma rede temporária."),
+   ("REAL","oob3",1,"CONSEQUENCE","oob","RESPOSTA AO TOQUE • VÍDEO REAL","Essa rede aumenta muito a resistência ao fluxo: por instantes, a mistura responde quase como um sólido."),
+   ("ANIMATION","anim",4,"MECHANISM","oob","ANIMAÇÃO • FORÇA SAI, REDE DESMONTA","Quando a força diminui, os contatos se desfazem, as partículas voltam a se reorganizar e o material torna a fluir."),
+   ("REAL","oob4",2,"PROOF","oob","FLUXO VOLTA • OUTRO VÍDEO REAL","Por isso o mesmo material pode parecer duro num golpe e, segundos depois, escorrer novamente entre os dedos.")
   ]},
  "lady_gaga_stage":{
   "title":"Como Lady Gaga adapta uma performance para públicos gigantes? #shorts",
@@ -168,25 +168,25 @@ def make_anim(slug,out):
     d.polygon([(485,725),(465,685),(505,685)],fill=(255,190,70))
     d.text((525,260),"EMPUXO",font=fs,fill=(100,220,160))
     d.text((525,680),"PESO",font=fs,fill=(255,190,70))
-  elif slug=="leidenfrost":
+  elif slug=="oobleck_impact":
    if seg==0:
-    d.text((45,38),"SUPERFÍCIE MUITO QUENTE",font=fb,fill="white")
+    d.text((45,38),"PARTÍCULAS DE AMIDO EM SUSPENSÃO",font=fb,fill="white")
     d.rectangle((80,620,895,700),fill=(180,75,45))
     d.ellipse((380,250,595,465),fill=(90,175,255))
     for x in range(410,580,35):
      y=560-int(60*u)
      d.line((x,610,x,y),fill=(220,235,245),width=6)
-    d.text((265,740),"a base vaporiza primeiro",font=fs,fill="white")
+    d.text((265,740),"movimento lento: partículas deslizam",font=fs,fill="white")
    elif seg==1:
-    d.text((45,38),"COLCHÃO DE VAPOR",font=fb,fill="white")
+    d.text((45,38),"IMPACTO COMPRIME A REDE",font=fb,fill="white")
     d.rectangle((80,630,895,700),fill=(180,75,45))
     d.ellipse((365,285,610,510),fill=(90,175,255))
     d.rounded_rectangle((330,520,645,610),35,fill=(205,225,235),outline=(255,255,255),width=3)
     for x in range(350,630,55):
      d.line((x,570,x+int(35*u),570),fill=(100,220,160),width=7)
-    d.text((220,745),"vapor separa gota e metal",font=fs,fill="white")
+    d.text((220,745),"contatos surgem entre partículas",font=fs,fill="white")
    else:
-    d.text((45,38),"VAPOR ESCAPA → GOTA SE MOVE",font=fb,fill="white")
+    d.text((45,38),"FORÇA DIMINUI → REDE SE DESFAZ",font=fb,fill="white")
     d.rectangle((80,650,895,710),fill=(180,75,45))
     cx=370+int(300*u)
     d.ellipse((cx-95,330,cx+95,520),fill=(90,175,255))
@@ -195,7 +195,7 @@ def make_anim(slug,out):
      d.line((cx-30,y,cx-150-int(40*u),y),fill=(220,235,245),width=6)
     d.line((cx+110,420,cx+230,420),fill=(100,220,160),width=10)
     d.polygon([(cx+250,420),(cx+215,400),(cx+215,440)],fill=(100,220,160))
-    d.text((235,760),"fluxo assimétrico gera impulso",font=fs,fill="white")
+    d.text((235,760),"partículas se reorganizam e voltam a fluir",font=fs,fill="white")
   else:
    if seg==0:
     d.text((45,38),"UM PALCO → VÁRIOS ÂNGULOS DE VISÃO",font=fb,fill="white")
@@ -345,10 +345,10 @@ def main():
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/31a64c7d-7878-4c1d-ba30-bd5c00c39ce8.webm",AS/"ice2.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/dc12bced-eb3f-4496-8507-3a7a26f7c0b5.webm",AS/"ice3.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7fe4ffdf-45a1-4a92-8dd3-c63bd750692c.webm",AS/"ice4.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/415e314f-0b7b-4fb2-a0ee-38df94cad1d5.webm",AS/"leid1.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/b8853fe4-3dd8-403d-9c95-27755944c1b5.webm",AS/"leid2.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/9a3d2766-3eb8-4c53-806a-0b52f5c732e0.webm",AS/"leid3.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7a20c08a-d1bb-4143-ac99-876c46a1cf24.webm",AS/"leid4.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/6aedb415-b5f4-4939-8b78-450d1a2ab280.webm",AS/"oob1.webm")
+ commons_video("Flow of Non-Newtonian Fluid A 876.ogv",AS/"oob2.webm")
+ commons_video("Non-Newtonian Fluid A28.ogv",AS/"oob3.webm")
+ commons_video("Flow of Non-Newtonian Fluid A 565.ogv",AS/"oob4.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/fd141287-57e0-491f-b1de-7716b489fc84.webm",AS/"gaga1.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/4e70d702-a3d5-418f-a62f-7f1d66887e6b.webm",AS/"gaga2.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/437f8c15-2c18-4cf6-9a36-34ee97fb59cb.webm",AS/"gaga3.webm")
