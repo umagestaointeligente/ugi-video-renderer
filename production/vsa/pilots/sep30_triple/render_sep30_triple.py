@@ -44,7 +44,7 @@ TOPICS={
   "assets":{
    "leid1":{"file":"leid1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Effet_Leidenfrost.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_LEIDENFROST_DROPLETS_HOT_PAN","asset_role":"TARGET_SUBJECT","identifiable_human":False},
    "leid2":{"file":"leid2.webm","source_url":"https://commons.wikimedia.org/wiki/File:18._Лајденфростов_ефект.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_LEIDENFROST_HEATED_SPHERE","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "leid3":{"file":"leid3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Effet_leidenfrost.ogv","license":"CC_BY_SA_3.0","asset_subject":"REAL_LEIDENFROST_DROPLET_SECOND_SOURCE","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "leid3":{"file":"leid3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Water_Droplets_on_water.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_WATER_DROPLET_COHESION_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False},
    "leid4":{"file":"leid4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Thermal_Vision_video_of_a_kettle_of_water_being_boiled.webm","license":"CC_BY_SA","asset_subject":"REAL_BOILING_WATER_THERMAL_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False}
   },
   "scenes":[
@@ -52,30 +52,30 @@ TOPICS={
    ("ANIMATION","anim",0,"MECHANISM","leid","ANIMAÇÃO • VAPORIZAÇÃO NA BASE","A parte inferior recebe calor tão rápido que água vira vapor antes de toda a gota tocar o metal."),
    ("REAL","leid2",4,"PROOF","leid","CAMADA DE VAPOR • EXPERIMENTO REAL","Esse vapor se acumula entre líquido e superfície e cria uma separação física muito fina."),
    ("ANIMATION","anim",2,"MECHANISM","leid","ANIMAÇÃO • COLCHÃO DE VAPOR","O colchão de vapor sustenta a gota e reduz bastante o contato direto e a transferência de calor."),
-   ("REAL","leid3",1,"CONSEQUENCE","leid","OUTRA DEMONSTRAÇÃO • VÍDEO REAL","Com pouco atrito, a gota fica extremamente móvel e parece patinar ou dançar sobre a superfície."),
+   ("REAL","leid3",1,"CONTEXT","leid","GOTAS COESAS • VÍDEO REAL","A tensão superficial mantém pequenas porções de água coesas como gotas; no Leidenfrost, essa coesão ajuda a gota a permanecer compacta enquanto se move."),
    ("ANIMATION","anim",4,"MECHANISM","leid","ANIMAÇÃO • FLUXO MOVE A GOTA","Se o vapor escapa mais por um lado, ele empurra a gota; quando a superfície esfria, o colchão desaparece."),
    ("REAL","leid4",20,"CONSEQUENCE","leid","ÁGUA EM EBULIÇÃO • VÍDEO TÉRMICO REAL","Quando a superfície esfria e a camada isolante de vapor deixa de se sustentar, a água volta a ter contato e ebulição mais comuns.")
   ]},
- "ricky_medley":{
-  "title":"Como Ricky Martin emenda vários hits no mesmo show? #shorts",
-  "header":["COMO RICKY MARTIN","EMENDA TANTOS HITS?"],
-  "description":"Shows pop podem compactar várias músicas usando medleys, transições, mudanças de arranjo e deslocamento de palco. O vídeo usa quatro arquivos reais e distintos de Ricky Martin em performance. #VocêSabiaAgora #RickyMartin #Música #Shows\n\nArquivos de Ricky Martin: Festival de Viña del Mar 2014 via Wikimedia Commons, CC BY 3.0.",
-  "content_class":"NEWS_EXPLAINER","expected_subject":"RICKY_MARTIN_LIVE_MEDLEY_STAGE_FLOW",
-  "celebrity_name":"Ricky Martin",
+ "lady_gaga_stage":{
+  "title":"Como Lady Gaga adapta uma performance para públicos gigantes? #shorts",
+  "header":["COMO LADY GAGA","MUDA UM SHOW GIGANTE?"],
+  "description":"Arena, estádio e transmissão não pedem a mesma linguagem de palco. Posição, escala do movimento, enquadramento e zonas de ação mudam conforme o formato do evento. #VocêSabiaAgora #LadyGaga #Música #Shows\n\nQuatro vídeos reais e distintos de Lady Gaga: Wikimedia Commons; CC BY/CC BY-SA e domínio público conforme a fonte.",
+  "content_class":"NEWS_EXPLAINER","expected_subject":"LADY_GAGA_STAGE_SCALE_AND_FORMAT",
+  "celebrity_name":"Lady Gaga",
   "assets":{
-   "ricky1":{"file":"ricky1.webm","source_url":"https://commons.wikimedia.org/wiki/File:La_Bomba_-_Ricky_Martin,_Viña_del_Mar_International_Song_Festival_(2014).ogv","license":"CC_BY_3.0","asset_subject":"RICKY_MARTIN_LIVE_MEDLEY_STAGE_FLOW","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
-   "ricky2":{"file":"ricky2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Loaded_-_Ricky_Martin,_Viña_del_Mar_International_Song_Festival_(2014).ogv","license":"CC_BY_3.0","asset_subject":"RICKY_MARTIN_LIVE_MEDLEY_STAGE_FLOW","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
-   "ricky3":{"file":"ricky3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Eres_el_amor_de_mi_vida_and_Fuego_contra_fuego_-_Ricky_Martin,_Viña_del_Mar_International_Song_Festival_(2014).ogv","license":"CC_BY_3.0","asset_subject":"RICKY_MARTIN_LIVE_MEDLEY_STAGE_FLOW","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
-   "ricky4":{"file":"ricky4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Vuelve,_Ricky_Martin,_Viña_del_Mar_International_Song_Festival_(2014).ogv","license":"CC_BY_3.0","asset_subject":"RICKY_MARTIN_LIVE_MEDLEY_STAGE_FLOW","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
+   "gaga1":{"file":"gaga1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Lady_Gaga_performing_Vanish_Into_You_on_The_Mayhem_Ball,_Lyon,_November_2025.webm","license":"CC_BY_SA_4.0","asset_subject":"LADY_GAGA_STAGE_SCALE_AND_FORMAT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
+   "gaga2":{"file":"gaga2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Lady_Gaga_Super_Bowl_51_HalfTime_Show_FULL_LIVE.webm","license":"CC_BY_3.0","asset_subject":"LADY_GAGA_STAGE_SCALE_AND_FORMAT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
+   "gaga3":{"file":"gaga3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Lady_Gaga_performs_%22The_Star-Spangled_Banner%22.webm","license":"PUBLIC_DOMAIN_US_FEDERAL","asset_subject":"LADY_GAGA_STAGE_SCALE_AND_FORMAT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
+   "gaga4":{"file":"gaga4.webm","source_url":"https://commons.wikimedia.org/wiki/File:SB50_Lady_GaGa_Interview.webm","license":"CC_BY_3.0","asset_subject":"LADY_GAGA_STAGE_SCALE_AND_FORMAT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","ricky1",12,"CONTEXT","ricky","RICKY MARTIN • ARQUIVO DE SHOW","Em um show cheio de sucessos, tocar cada música inteira faria o repertório explodir de duração."),
-   ("ANIMATION","anim",0,"MECHANISM","ricky","ANIMAÇÃO • MEDLEY EM BLOCOS","Uma solução é o medley: preservar trechos reconhecíveis, como abertura e refrão, e cortar partes repetidas."),
-   ("REAL","ricky2",15,"PROOF","ricky","RICKY MARTIN • OUTRO ARQUIVO REAL","Assim o público reconhece rapidamente cada hit sem precisar ouvir quatro ou cinco minutos completos."),
-   ("ANIMATION","anim",2,"MECHANISM","ricky","ANIMAÇÃO • TRANSIÇÃO DE ARRANJO","Bateria, harmonia e efeitos fazem a ponte entre músicas para a energia não cair entre uma e outra."),
-   ("REAL","ricky3",10,"CONSEQUENCE","ricky","RICKY MARTIN • PERFORMANCE REAL","Coreografia e deslocamento no palco também escondem trocas de músicos, figurinos, luz e posição."),
-   ("ANIMATION","anim",4,"MECHANISM","ricky","ANIMAÇÃO • ZONAS DE PALCO","Enquanto uma área encerra um bloco, outra já fica pronta para receber o próximo trecho do show."),
-   ("REAL","ricky4",12,"PROOF","ricky","RICKY MARTIN • QUARTO ARQUIVO REAL","O resultado parece contínuo: várias músicas, mudanças visuais e poucos segundos mortos entre os momentos mais fortes.")
+   ("REAL","gaga1",2,"CONTEXT","gaga","LADY GAGA • ARENA REAL","Em arenas gigantes, Lady Gaga precisa ser legível para quem está perto, para quem está no último setor e para as câmeras."),
+   ("ANIMATION","anim",0,"MECHANISM","gaga","ANIMAÇÃO • ÂNGULOS DE VISÃO","A posição no palco muda o ângulo e a distância para cada setor da plateia, então o espaço é dividido em zonas de atenção."),
+   ("REAL","gaga2",120,"PROOF","gaga","LADY GAGA • SUPER BOWL REAL","Num show televisionado como o Super Bowl, surge um segundo público: milhões assistindo pelos enquadramentos escolhidos pela transmissão."),
+   ("ANIMATION","anim",2,"MECHANISM","gaga","ANIMAÇÃO • ESTÁDIO + CÂMERAS","Um movimento pode funcionar para a arquibancada e desaparecer numa câmera fechada; escala, luz e enquadramento precisam conversar."),
+   ("REAL","gaga3",12,"CONSEQUENCE","gaga","LADY GAGA • PERFORMANCE VOCAL REAL","Em uma apresentação centrada na voz, como um hino, a lógica muda: menos deslocamento e um ponto visual mais estável."),
+   ("ANIMATION","anim",4,"MECHANISM","gaga","ANIMAÇÃO • ZONAS DE PALCO","Já num espetáculo coreografado, distribuir a ação por zonas renova o quadro e leva o foco visual a diferentes áreas."),
+   ("REAL","gaga4",18,"PROOF","gaga","LADY GAGA • ENTREVISTA REAL","A artista é a mesma, mas o formato muda a linguagem visual: arena, transmissão e apresentação vocal pedem escolhas de palco diferentes.")
   ]}
 }
 
@@ -198,21 +198,21 @@ def make_anim(slug,out):
     d.text((235,760),"fluxo assimétrico gera impulso",font=fs,fill="white")
   else:
    if seg==0:
-    d.text((45,38),"MEDLEY: SÓ OS TRECHOS MAIS RECONHECÍVEIS",font=fb,fill="white")
-    blocks=[("INTRO",120,330,(90,170,230)),("REFRÃO",355,610,(255,190,70)),("PONTE",635,845,(100,220,160))]
+    d.text((45,38),"UM PALCO → VÁRIOS ÂNGULOS DE VISÃO",font=fb,fill="white")
+    blocks=[("SETOR A",120,330,(90,170,230)),("PALCO",355,610,(255,190,70)),("SETOR B",635,845,(100,220,160))]
     for lab,x1,x2,col in blocks:
      d.rounded_rectangle((x1,320,x2,470),18,fill=col)
      d.text((x1+22,370),lab,font=fs,fill=(10,18,32))
     d.line((120,565,845,565),fill=(150,170,190),width=5)
     pos=120+int(725*u); d.ellipse((pos-18,547,pos+18,583),fill=(255,255,255))
-    d.text((250,690),"música longa vira bloco curto",font=fs,fill="white")
+    d.text((250,690),"posição muda o que cada setor enxerga",font=fs,fill="white")
    elif seg==1:
-    d.text((45,38),"ARRANJO FAZ A TRANSIÇÃO",font=fb,fill="white")
+    d.text((45,38),"ESTÁDIO + CÂMERAS = DOIS PÚBLICOS",font=fb,fill="white")
     for i,h in enumerate([80,150,230,130,260,190,95,210]):
      x=135+i*90; d.rectangle((x,600-h,x+52,600),fill=(90+10*i,150,220))
     d.line((130,650,835,650),fill=(255,190,70),width=7)
     pos=130+int(705*u); d.ellipse((pos-17,633,pos+17,667),fill=(100,220,160))
-    d.text((220,735),"ritmo e harmonia evitam silêncio",font=fs,fill="white")
+    d.text((220,735),"movimento precisa funcionar ao vivo e na tela",font=fs,fill="white")
    else:
     d.text((45,38),"PALCO DIVIDIDO EM ZONAS",font=fb,fill="white")
     zones=[(90,250,320,620,"A"),(370,250,600,620,"B"),(650,250,880,620,"C")]
@@ -220,7 +220,7 @@ def make_anim(slug,out):
      d.rounded_rectangle((x1,y1,x2,y2),24,outline=(100,180,230),width=6)
      d.text((x1+95,y1+150),lab,font=fb,fill="white")
     x=170+int(570*u); d.ellipse((x-30,665,x+30,725),fill=(255,190,70))
-    d.text((185,765),"uma zona termina enquanto outra já está pronta",font=fr,fill="white")
+    d.text((185,765),"deslocamento redistribui o foco visual",font=fr,fill="white")
   im.save(tmp/f"{n:04d}.jpg",quality=92)
  run(["ffmpeg","-y","-loglevel","error","-framerate",str(fps),"-i",tmp/"%04d.jpg","-t","6","-r","30","-vf","pad=ceil(iw/2)*2:ceil(ih/2)*2","-c:v","libx264","-pix_fmt","yuv420p",out])
 
@@ -347,12 +347,12 @@ def main():
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7fe4ffdf-45a1-4a92-8dd3-c63bd750692c.webm",AS/"ice4.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/415e314f-0b7b-4fb2-a0ee-38df94cad1d5.webm",AS/"leid1.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/b8853fe4-3dd8-403d-9c95-27755944c1b5.webm",AS/"leid2.webm")
- commons_video("Effet leidenfrost.ogv",AS/"leid3.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/9a3d2766-3eb8-4c53-806a-0b52f5c732e0.webm",AS/"leid3.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7a20c08a-d1bb-4143-ac99-876c46a1cf24.webm",AS/"leid4.webm")
- commons_video("La Bomba - Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky1.webm")
- commons_video("Loaded - Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky2.webm")
- commons_video("Eres el amor de mi vida and Fuego contra fuego - Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky3.webm")
- commons_video("Vuelve, Ricky Martin, Viña del Mar International Song Festival (2014).ogv",AS/"ricky4.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/fd141287-57e0-491f-b1de-7716b489fc84.webm",AS/"gaga1.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/4e70d702-a3d5-418f-a62f-7f1d66887e6b.webm",AS/"gaga2.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/437f8c15-2c18-4cf6-9a36-34ee97fb59cb.webm",AS/"gaga3.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/f51bb39f-6006-4de0-95b7-0a34409c2738.webm",AS/"gaga4.webm")
  for slug,t in TOPICS.items():
   real_keys=[s[1] for s in t["scenes"] if s[0]=="REAL"]
   real_files=[t["assets"][k]["file"] for k in real_keys]
