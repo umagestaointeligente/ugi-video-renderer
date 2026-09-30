@@ -69,13 +69,13 @@ TOPICS={
    "gaga4":{"file":"gaga4.webm","source_url":"https://commons.wikimedia.org/wiki/File:SB50_Lady_GaGa_Interview.webm","license":"CC_BY_3.0","asset_subject":"LADY_GAGA_STAGE_SCALE_AND_FORMAT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","gaga1",2,"CONTEXT","gaga","LADY GAGA • ARENA REAL","Em arenas gigantes, Lady Gaga precisa ser legível para quem está perto, para quem está no último setor e para as câmeras."),
-   ("ANIMATION","anim",0,"MECHANISM","gaga","ANIMAÇÃO • ÂNGULOS DE VISÃO","A posição no palco muda o ângulo e a distância para cada setor da plateia, então o espaço é dividido em zonas de atenção."),
-   ("REAL","gaga2",120,"PROOF","gaga","LADY GAGA • SUPER BOWL REAL","Num show televisionado como o Super Bowl, surge um segundo público: milhões assistindo pelos enquadramentos escolhidos pela transmissão."),
-   ("ANIMATION","anim",2,"MECHANISM","gaga","ANIMAÇÃO • ESTÁDIO + CÂMERAS","Um movimento pode funcionar para a arquibancada e desaparecer numa câmera fechada; escala, luz e enquadramento precisam conversar."),
-   ("REAL","gaga3",12,"CONSEQUENCE","gaga","LADY GAGA • PERFORMANCE VOCAL REAL","Em uma apresentação centrada na voz, como um hino, a lógica muda: menos deslocamento e um ponto visual mais estável."),
-   ("ANIMATION","anim",4,"MECHANISM","gaga","ANIMAÇÃO • ZONAS DE PALCO","Já num espetáculo coreografado, distribuir a ação por zonas renova o quadro e leva o foco visual a diferentes áreas."),
-   ("REAL","gaga4",18,"PROOF","gaga","LADY GAGA • ENTREVISTA REAL","A artista é a mesma, mas o formato muda a linguagem visual: arena, transmissão e apresentação vocal pedem escolhas de palco diferentes.")
+   ("REAL","gaga1",2,"CONTEXT","gaga","LADY GAGA • ARENA REAL","Em arenas gigantes, Lady Gaga precisa funcionar para quem está perto, longe e para as câmeras."),
+   ("ANIMATION","anim",0,"MECHANISM","gaga","ANIMAÇÃO • ÂNGULOS DE VISÃO","Por isso o palco é dividido em zonas: cada posição muda o ângulo visto por diferentes setores."),
+   ("REAL","gaga2",120,"PROOF","gaga","LADY GAGA • SUPER BOWL REAL","Em um show televisionado como o Super Bowl, existe outro público: quem assiste pela transmissão."),
+   ("ANIMATION","anim",2,"MECHANISM","gaga","ANIMAÇÃO • ESTÁDIO + CÂMERAS","Movimentos, luz e enquadramento precisam funcionar tanto no estádio quanto na tela."),
+   ("REAL","gaga3",12,"CONSEQUENCE","gaga","LADY GAGA • PERFORMANCE VOCAL REAL","Num hino, a lógica muda: menos deslocamento e um ponto visual mais estável."),
+   ("ANIMATION","anim",4,"MECHANISM","gaga","ANIMAÇÃO • ZONAS DE PALCO","Já num show coreografado, mudar de zona renova o quadro e redistribui o foco."),
+   ("REAL","gaga4",18,"PROOF","gaga","LADY GAGA • ENTREVISTA REAL","A artista é a mesma; o formato do evento muda a linguagem do palco.")
   ]}
 }
 
