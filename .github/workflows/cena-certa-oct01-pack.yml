@@ -14,8 +14,14 @@ permissions:
   issues: write
 jobs:
   render:
+    strategy:
+      fail-fast: false
+      matrix:
+        network: [tiktok, instagram, youtube, facebook]
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 35
+    env:
+      CENA_NETWORK: ${{ matrix.network }}
     steps:
       - uses: actions/checkout@v4
       - name: Install runtime
@@ -33,8 +39,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG=cena-certa-oct01
-          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Oct01" --notes "12 QA-approved Cena Certa masters."
+          TAG="cena-certa-oct01-${CENA_NETWORK}"
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Oct01 ${CENA_NETWORK}" --notes "QA-approved Cena Certa Oct01 ${CENA_NETWORK} masters."
           gh release upload "$TAG" out/cena-certa-oct01/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
       - name: Create evidence issue
         env:
@@ -42,14 +48,15 @@ jobs:
         run: |
           {
             echo "CENA_CERTA_OCT01_PACK=PASS"
+            echo "NETWORK=$CENA_NETWORK"
             echo "RUN_ID=$GITHUB_RUN_ID"
             echo
             cat out/cena-certa-oct01/summary.json
           } > out/cena-certa-oct01/issue.txt
-          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-OCT01-PACK] $GITHUB_RUN_ID" --body-file out/cena-certa-oct01/issue.txt
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-OCT01-${CENA_NETWORK}] $GITHUB_RUN_ID" --body-file out/cena-certa-oct01/issue.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cena-certa-oct01-${{ github.run_id }}
+          name: cena-certa-oct01-${{ matrix.network }}-${{ github.run_id }}
           path: out/cena-certa-oct01/
           retention-days: 7
