@@ -1,0 +1,26 @@
+{
+  "state": "PASS",
+  "realVideo": true,
+  "exactTopicVisual": true,
+  "noCompanyNamed": true,
+  "noRandomFootage": true,
+  "noSlideshow": true,
+  "files": {
+    "tiktok-indicador-retrovisor.mp4": 27.483333,
+    "youtube-qualidade-na-fonte.mp4": 121.754967
+  },
+  "sources": [
+    {
+      "file": "classroom.webm",
+      "source": "Wikimedia Commons",
+      "license": "CC BY-SA 4.0",
+      "author": "Rhmtdns"
+    },
+    {
+      "file": "chocolate.webm",
+      "source": "Wikimedia Commons",
+      "license": "CC BY 3.0",
+      "author": "Brigitte Norman"
+    }
+  ]
+}
