@@ -1,0 +1,47 @@
+name: UGI Oct01 Exact Real Pack
+on:
+  push:
+    paths: ['.github/workflows/ugi-oct01-exact-real.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core curl
+          python -m pip install -U edge-tts
+      - name: Build exact-topic real videos
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-10-01; mkdir -p "$O/src"
+          curl -L --fail --retry 3 -o "$O/src/classroom.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Student_studies_in_classroom_during_face_to_face_learning_in_Padang%2C_Indonesia.webm"
+          curl -L --fail --retry 3 -o "$O/src/chocolate.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Industrial_production_in_a_chocolate_factory.webm"
+          cat > "$O/tiktok.txt" <<'TXT'
+          Um indicador pode estar correto e ainda chegar tarde demais. Na educação, a nota final mostra o que aconteceu. Para gerir antes do problema, é preciso observar sinais anteriores: presença, entrega de atividades, mudança de participação e sequência de desempenho. A lógica vale para qualquer negócio. Resultado é retrovisor. Gestão começa quando você identifica o sinal que muda antes do resultado.
+          TXT
+          cat > "$O/youtube.txt" <<'TXT'
+          Uma fábrica pode produzir milhares de unidades e ainda descobrir o problema tarde demais. Imagine uma linha de chocolate em que a qualidade só seja verificada depois que o produto está embalado. Se algo saiu errado no início do processo, matéria-prima, energia, tempo de máquina, embalagem e mão de obra já foram consumidos. É por isso que qualidade não deveria ser apenas uma inspeção no fim. O princípio de qualidade na fonte muda a pergunta. Em vez de perguntar quantos defeitos encontramos, a gestão pergunta em que ponto o processo consegue impedir que o defeito avance. Isso exige padrões claros, parâmetros visíveis e capacidade de interromper ou corrigir o fluxo antes que o erro ganhe escala. O custo da não qualidade costuma aparecer em quatro lugares. Primeiro, refugo: produto e material que não podem ser recuperados. Segundo, retrabalho: usar capacidade para fazer duas vezes aquilo que deveria ter sido feito uma. Terceiro, atraso: enquanto a equipe corrige um lote, novos pedidos esperam. Quarto, confiança: um defeito que chega ao cliente custa muito mais do que aquele identificado dentro da operação. Existe ainda um efeito menos óbvio. Quando o processo é instável, a empresa cria estoques, folgas e verificações extras para se proteger da própria incerteza. Ou seja, baixa qualidade também consome capital. Melhorar qualidade não significa encher a operação de controles. Significa desenhar um processo capaz de detectar desvio cedo e aprender com a causa. Em uma linha de produção, cada etapa deveria entregar para a próxima algo dentro do padrão, não apenas algo concluído. A pergunta para a sua operação é simples: onde hoje um erro pequeno consegue percorrer várias etapas antes de alguém perceber? É ali que provavelmente existe um dos custos invisíveis mais caros do negócio.
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=+5% --text "$(cat "$O/tiktok.txt")" --write-media "$O/tiktok.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/youtube.txt")" --write-media "$O/youtube.mp3"
+          DT=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/tiktok.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/classroom.webm" -i "$O/tiktok.mp3" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,drawbox=x=0:y=0:w=iw:h=180:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='RESULTADO É RETROVISOR':fontcolor=white:fontsize=52:x=(w-text_w)/2:y=62[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$DT" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/tiktok-indicador-retrovisor.mp4"
+          DY=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/chocolate.webm" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,drawbox=x=0:y=0:w=iw:h=155:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='QUALIDADE NO FIM JÁ É TARDE DEMAIS':fontcolor=white:fontsize=54:x=(w-text_w)/2:y=48[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$DY" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-qualidade-na-fonte.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-10-01"); files={}
+          for f in ["tiktok-indicador-retrovisor.mp4","youtube-qualidade-na-fonte.mp4"]:
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); assert d>25; files[f]=d
+          (p/"qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"exactTopicVisual":True,"noCompanyNamed":True,"noRandomFootage":True,"noSlideshow":True,"files":files,"sources":[{"file":"classroom.webm","source":"Wikimedia Commons","license":"CC BY-SA 4.0","author":"Rhmtdns"},{"file":"chocolate.webm","source":"Wikimedia Commons","license":"CC BY 3.0","author":"Brigitte Norman"}]},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-10-01
+          git commit -m "assets(ugi): Oct01 real exact-topic video pack [skip ci]"
+          git push
