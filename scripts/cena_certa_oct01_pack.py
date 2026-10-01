@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import asyncio, base64, hashlib, json, pathlib, subprocess, urllib.request, time
+import asyncio, base64, hashlib, json, pathlib, subprocess, urllib.request, time, os
 import edge_tts
 
 ROOT=pathlib.Path.cwd()
