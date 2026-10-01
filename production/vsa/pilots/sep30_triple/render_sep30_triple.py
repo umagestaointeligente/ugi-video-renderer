@@ -48,7 +48,7 @@ TOPICS={
    "mag4":{"file":"mag4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Oerstedscher_Magnetnadelversuch.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_COMPASS_MAGNETIC_FIELD_RESPONSE","asset_role":"TARGET_SUBJECT","identifiable_human":False}
   },
   "scenes":[
-   ("REAL","mag1",1,"CONTEXT","mag","ÍMÃS ATRAINDO E REPELINDO • VÍDEO REAL","Dois ímãs podem grudar ou se empurrar sem encostar. O que muda é a orientação dos polos."),
+   ("REAL","mag1",9,"CONTEXT","mag","ÍMÃS ATRAINDO E REPELINDO • VÍDEO REAL","Dois ímãs podem grudar ou se empurrar sem encostar. O que muda é a orientação dos polos."),
    ("ANIMATION","anim",0,"MECHANISM","mag","ANIMAÇÃO • CAMPO COM DOIS POLOS","Cada ímã cria um campo magnético ao redor dele, orientado entre os polos norte e sul."),
    ("REAL","mag2",3,"PROOF","mag","CAMPO MAGNÉTICO VISUALIZADO • VÍDEO REAL","Um visualizador revela que o campo ocupa o espaço ao redor do ímã."),
    ("ANIMATION","anim",2,"MECHANISM","mag","ANIMAÇÃO • OPOSTOS SE CONECTAM","Com polos opostos frente a frente, os campos favorecem a aproximação dos ímãs."),
