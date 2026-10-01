@@ -1,0 +1,74 @@
+name: Cena Certa Oct01 Rights Discovery
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct01-rights-discovery.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Search rights-cleared candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          : > out/results.jsonl
+          cat > out/queries.txt <<'EOF'
+          erros de gravação brasil humor bastidores
+          bloopers brasil comedia
+          erros de gravação português brasil
+          bastidores humor brasileiro erros
+          sci fi short film creative commons
+          horror short film creative commons
+          animated short film creative commons
+          drama short film creative commons
+          korean short film creative commons
+          spanish short film creative commons
+          EOF
+          while IFS= read -r q; do
+            yt-dlp --no-warnings --skip-download --dump-json "ytsearch25:$q" >> out/results.jsonl 2>> out/errors.log || true
+          done < out/queries.txt
+          python - <<'PY'
+import json
+rows=[]
+for ln in open("out/results.jsonl",encoding="utf-8",errors="ignore"):
+    try: j=json.loads(ln)
+    except: continue
+    lic=(j.get("license") or "")
+    rows.append({
+      "id":j.get("id"),"title":j.get("title"),"channel":j.get("channel"),
+      "duration":j.get("duration"),"view_count":j.get("view_count"),
+      "like_count":j.get("like_count"),"license":lic,
+      "language":j.get("language"),"webpage_url":j.get("webpage_url"),
+      "description":(j.get("description") or "")[:240]
+    })
+# Prefer explicit CC / public domain, then most viewed.
+good=[r for r in rows if ("creative commons" in (r["license"] or "").lower() or "cc" in (r["license"] or "").lower() or "public domain" in (r["license"] or "").lower())]
+good.sort(key=lambda r:(r.get("view_count") or 0), reverse=True)
+open("out/rights-cleared.json","w",encoding="utf-8").write(json.dumps(good[:120],ensure_ascii=False,indent=2))
+PY
+      - name: Evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "CENA_CERTA_OCT01_RIGHTS_DISCOVERY"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            cat out/rights-cleared.json
+          } > out/issue.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-OCT01-RIGHTS] $GITHUB_RUN_ID" --body-file out/issue.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-oct01-rights-${{ github.run_id }}
+          path: out/
+          retention-days: 7
