@@ -48,13 +48,13 @@ TOPICS={
    "mag4":{"file":"mag4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Oerstedscher_Magnetnadelversuch.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_COMPASS_MAGNETIC_FIELD_RESPONSE","asset_role":"TARGET_SUBJECT","identifiable_human":False}
   },
   "scenes":[
-   ("REAL","mag1",1,"CONTEXT","mag","ÍMÃS ATRAINDO E REPELINDO • VÍDEO REAL","Dois ímãs podem grudar com força ou se empurrar sem encostar. O que muda é a orientação dos polos."),
-   ("ANIMATION","anim",0,"MECHANISM","mag","ANIMAÇÃO • CAMPO COM DOIS POLOS","Cada ímã cria um campo magnético ao redor dele, com direção definida entre as regiões chamadas norte e sul."),
-   ("REAL","mag2",3,"PROOF","mag","CAMPO MAGNÉTICO VISUALIZADO • VÍDEO REAL","Um visualizador de campo revela que esse efeito ocupa o espaço ao redor do ímã, não apenas sua superfície."),
-   ("ANIMATION","anim",2,"MECHANISM","mag","ANIMAÇÃO • OPOSTOS SE CONECTAM","Quando polos opostos ficam frente a frente, os campos se conectam de forma favorável e os ímãs tendem a se aproximar."),
-   ("REAL","mag3",4,"CONSEQUENCE","mag","REPULSÃO MAGNÉTICA • VÍDEO REAL","Com orientações incompatíveis, a configuração do campo gera força no sentido contrário e aparece a repulsão."),
-   ("ANIMATION","anim",4,"MECHANISM","mag","ANIMAÇÃO • AGULHA SEGUE O CAMPO","Uma bússola mostra a direção local do campo porque sua própria agulha magnética gira até se alinhar com ele."),
-   ("REAL","mag4",2,"PROOF","mag","AGULHA RESPONDENDO AO CAMPO • VÍDEO REAL","Por isso atração e repulsão não são truques: são respostas mecânicas à orientação do campo magnético.")
+   ("REAL","mag1",1,"CONTEXT","mag","ÍMÃS ATRAINDO E REPELINDO • VÍDEO REAL","Dois ímãs podem grudar ou se empurrar sem encostar. O que muda é a orientação dos polos."),
+   ("ANIMATION","anim",0,"MECHANISM","mag","ANIMAÇÃO • CAMPO COM DOIS POLOS","Cada ímã cria um campo magnético ao redor dele, orientado entre os polos norte e sul."),
+   ("REAL","mag2",3,"PROOF","mag","CAMPO MAGNÉTICO VISUALIZADO • VÍDEO REAL","Um visualizador revela que o campo ocupa o espaço ao redor do ímã."),
+   ("ANIMATION","anim",2,"MECHANISM","mag","ANIMAÇÃO • OPOSTOS SE CONECTAM","Com polos opostos frente a frente, os campos favorecem a aproximação dos ímãs."),
+   ("REAL","mag3",4,"CONSEQUENCE","mag","REPULSÃO MAGNÉTICA • VÍDEO REAL","Com polos iguais frente a frente, a força aparece no sentido contrário: repulsão."),
+   ("ANIMATION","anim",4,"MECHANISM","mag","ANIMAÇÃO • AGULHA SEGUE O CAMPO","A bússola mostra a direção local porque sua agulha magnética gira e se alinha ao campo."),
+   ("REAL","mag4",2,"PROOF","mag","AGULHA RESPONDENDO AO CAMPO • VÍDEO REAL","Atração e repulsão são respostas à orientação do campo magnético.")
   ]},
  "lady_gaga_stage":{
   "title":"Como Lady Gaga adapta uma performance para públicos gigantes? #shorts",
