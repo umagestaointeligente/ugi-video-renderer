@@ -39,13 +39,20 @@ async def make_tts(text,out):
     await c.save(str(out))
 
 def download_source(item,wd):
+    url=item["source"]
+    if "commons.wikimedia.org/wiki/Special:Redirect/file/" in url or "upload.wikimedia.org/" in url:
+        out=wd/"source.webm"
+        download(url,out)
+        if out.stat().st_size < 500000:
+            raise RuntimeError("SOURCE_TOO_SMALL")
+        return out
     last=None
     for attempt in range(1,5):
         try:
             run([
                 "yt-dlp","--no-warnings","--retries","5","--fragment-retries","5",
                 "--retry-sleep","3","-f","bv*+ba/b","--merge-output-format","mp4",
-                "-o",str(wd/"source.%(ext)s"),item["source"]
+                "-o",str(wd/"source.%(ext)s"),url
             ])
             last=None
             break
