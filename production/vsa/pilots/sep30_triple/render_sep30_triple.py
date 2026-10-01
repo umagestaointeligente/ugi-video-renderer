@@ -36,25 +36,25 @@ TOPICS={
    ("ANIMATION","anim",4,"MECHANISM","ice","ANIMAÇÃO • EMPUXO × PESO","O gelo afunda só até deslocar água suficiente para o empuxo equilibrar o próprio peso."),
    ("REAL","ice4",2,"PROOF","ice","GELO NO OCEANO • VÍDEO REAL NOAA","É o mesmo princípio do cubo no copo: parte fica submersa e uma fração permanece acima da superfície.")
   ]},
- "oobleck_impact":{
-  "title":"Por que água com amido endurece quando você bate? #shorts",
-  "header":["POR QUE ÁGUA + AMIDO","ENDURECE COM IMPACTO?"],
-  "description":"A mistura de água e amido é um fluido não newtoniano: sob deformação rápida, sua resistência ao fluxo aumenta drasticamente. #VocêSabiaAgora #Curiosidades #Física #Oobleck\n\nFontes: MIT OpenCourseWare, American Physical Society e NASA. Vídeos reais distintos: NASA e Wikimedia Commons.",
-  "content_class":"SCIENCE_EXPLAINER","expected_subject":"OOBLECK_SHEAR_THICKENING",
+ "magnetos_polos":{
+  "title":"Por que ímãs atraem de um lado e repelem do outro? #shorts",
+  "header":["POR QUE ÍMÃS","ATRAEM E REPELEM?"],
+  "description":"Ímãs criam campos magnéticos com dois polos. A orientação relativa desses campos determina se dois ímãs tendem a se aproximar ou se afastar. #VocêSabiaAgora #Curiosidades #Física #Magnetismo\n\nVídeos reais distintos: Wikimedia Commons. Fontes conceituais: OpenStax e HyperPhysics.",
+  "content_class":"SCIENCE_EXPLAINER","expected_subject":"MAGNET_POLES_ATTRACTION_REPULSION",
   "assets":{
-   "oob1":{"file":"oob1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Science_off_the_Sphere-_Goo!.webm","license":"PUBLIC_DOMAIN_NASA","asset_subject":"REAL_CORNSTARCH_WATER_SHEAR_THICKENING_NASA","asset_role":"TARGET_SUBJECT","identifiable_human":True},
-   "oob2":{"file":"oob2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Flow_of_Non-Newtonian_Fluid_A_876.ogv","license":"CC_BY_SA_4.0","asset_subject":"REAL_STARCH_WATER_NON_NEWTONIAN_FLOW","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "oob3":{"file":"oob3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Non-Newtonian_Fluid_A28.ogv","license":"CC_BY_SA_4.0","asset_subject":"REAL_STARCH_WATER_NON_NEWTONIAN_DEMO","asset_role":"TARGET_SUBJECT","identifiable_human":False},
-   "oob4":{"file":"oob4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Adaptnetic_Structures.webm","license":"CC_BY_SA_3.0","asset_subject":"REAL_OTHER_NON_NEWTONIAN_SUSPENSION_RESPONSE","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False}
+   "mag1":{"file":"mag1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Attraction_and_Repulsion_of_Magnets.webm","license":"CC_BY_3.0","asset_subject":"REAL_MAGNET_ATTRACTION_REPULSION","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "mag2":{"file":"mag2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Magnet_Viewer.webm","license":"CC_LICENSED","asset_subject":"REAL_MAGNETIC_FIELD_VIEWER","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "mag3":{"file":"mag3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Neodymium_magnet_repels_a_Toothpick.webm","license":"CC_LICENSED","asset_subject":"REAL_NEODYMIUM_MAGNET_REPULSION","asset_role":"TARGET_SUBJECT","identifiable_human":False},
+   "mag4":{"file":"mag4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Oerstedscher_Magnetnadelversuch.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_COMPASS_MAGNETIC_FIELD_RESPONSE","asset_role":"TARGET_SUBJECT","identifiable_human":False}
   },
   "scenes":[
-   ("REAL","oob1",60,"CONTEXT","oob","AMIDO + ÁGUA • EXPERIMENTO NASA","Água com amido pode escorrer devagar como líquido e, quando recebe um impacto rápido, ficar muito mais resistente."),
-   ("ANIMATION","anim",0,"MECHANISM","oob","ANIMAÇÃO • PARTÍCULAS EM SUSPENSÃO","O amido não se dissolve: partículas sólidas ficam suspensas na água e conseguem se mover umas em relação às outras."),
-   ("REAL","oob2",1,"PROOF","oob","FLUXO LENTO • VÍDEO REAL","Com movimento lento, a água lubrifica os espaços entre partículas e a mistura continua fluindo."),
-   ("ANIMATION","anim",2,"MECHANISM","oob","ANIMAÇÃO • IMPACTO APERTA A REDE","Num impacto, as partículas são forçadas umas contra as outras tão rápido que formam contatos e uma rede temporária."),
-   ("REAL","oob3",1,"CONSEQUENCE","oob","RESPOSTA AO TOQUE • VÍDEO REAL","Essa rede aumenta muito a resistência ao fluxo: por instantes, a mistura responde quase como um sólido."),
-   ("ANIMATION","anim",4,"MECHANISM","oob","ANIMAÇÃO • FORÇA SAI, REDE DESMONTA","Quando a força diminui, os contatos se desfazem, as partículas voltam a se reorganizar e o material torna a fluir."),
-   ("REAL","oob4",4,"PROOF","oob","OUTRA SUSPENSÃO NÃO NEWTONIANA • VÍDEO REAL","Outras suspensões não newtonianas também mudam a resposta quando recebem força; o mecanismo exato depende da composição do material.")
+   ("REAL","mag1",1,"CONTEXT","mag","ÍMÃS ATRAINDO E REPELINDO • VÍDEO REAL","Dois ímãs podem grudar com força ou se empurrar sem encostar. O que muda é a orientação dos polos."),
+   ("ANIMATION","anim",0,"MECHANISM","mag","ANIMAÇÃO • CAMPO COM DOIS POLOS","Cada ímã cria um campo magnético ao redor dele, com direção definida entre as regiões chamadas norte e sul."),
+   ("REAL","mag2",3,"PROOF","mag","CAMPO MAGNÉTICO VISUALIZADO • VÍDEO REAL","Um visualizador de campo revela que esse efeito ocupa o espaço ao redor do ímã, não apenas sua superfície."),
+   ("ANIMATION","anim",2,"MECHANISM","mag","ANIMAÇÃO • OPOSTOS SE CONECTAM","Quando polos opostos ficam frente a frente, os campos se conectam de forma favorável e os ímãs tendem a se aproximar."),
+   ("REAL","mag3",4,"CONSEQUENCE","mag","REPULSÃO MAGNÉTICA • VÍDEO REAL","Com orientações incompatíveis, a configuração do campo gera força no sentido contrário e aparece a repulsão."),
+   ("ANIMATION","anim",4,"MECHANISM","mag","ANIMAÇÃO • AGULHA SEGUE O CAMPO","Uma bússola mostra a direção local do campo porque sua própria agulha magnética gira até se alinhar com ele."),
+   ("REAL","mag4",2,"PROOF","mag","AGULHA RESPONDENDO AO CAMPO • VÍDEO REAL","Por isso atração e repulsão não são truques: são respostas mecânicas à orientação do campo magnético.")
   ]},
  "lady_gaga_stage":{
   "title":"Como Lady Gaga adapta uma performance para públicos gigantes? #shorts",
@@ -168,34 +168,36 @@ def make_anim(slug,out):
     d.polygon([(485,725),(465,685),(505,685)],fill=(255,190,70))
     d.text((525,260),"EMPUXO",font=fs,fill=(100,220,160))
     d.text((525,680),"PESO",font=fs,fill=(255,190,70))
-  elif slug=="oobleck_impact":
+  elif slug=="magnetos_polos":
    if seg==0:
-    d.text((45,38),"PARTÍCULAS DE AMIDO EM SUSPENSÃO",font=fb,fill="white")
-    d.rectangle((80,620,895,700),fill=(180,75,45))
-    d.ellipse((380,250,595,465),fill=(90,175,255))
-    for x in range(410,580,35):
-     y=560-int(60*u)
-     d.line((x,610,x,y),fill=(220,235,245),width=6)
-    d.text((265,740),"movimento lento: partículas deslizam",font=fs,fill="white")
+    d.text((45,38),"UM ÍMÃ → CAMPO AO REDOR",font=fb,fill="white")
+    d.rounded_rectangle((360,330,615,500),24,fill=(70,90,115))
+    d.rectangle((360,330,487,500),fill=(210,80,70)); d.rectangle((488,330,615,500),fill=(70,130,220))
+    d.text((405,385),"N",font=fb,fill="white"); d.text((535,385),"S",font=fb,fill="white")
+    for r in (95,150,205):
+     d.arc((487-r,300-r//3,487+r,530+r//3),180,360,fill=(100,220,160),width=5)
+     d.arc((487-r,300-r//3,487+r,530+r//3),0,180,fill=(255,190,70),width=5)
+    d.text((245,705),"campo ocupa o espaço ao redor",font=fs,fill="white")
    elif seg==1:
-    d.text((45,38),"IMPACTO COMPRIME A REDE",font=fb,fill="white")
-    d.rectangle((80,630,895,700),fill=(180,75,45))
-    d.ellipse((365,285,610,510),fill=(90,175,255))
-    d.rounded_rectangle((330,520,645,610),35,fill=(205,225,235),outline=(255,255,255),width=3)
-    for x in range(350,630,55):
-     d.line((x,570,x+int(35*u),570),fill=(100,220,160),width=7)
-    d.text((220,745),"contatos surgem entre partículas",font=fs,fill="white")
+    d.text((45,38),"POLOS OPOSTOS → ATRAÇÃO",font=fb,fill="white")
+    d.rectangle((120,340,330,510),fill=(210,80,70)); d.text((190,390),"N",font=fb,fill="white")
+    d.rectangle((645,340,855,510),fill=(70,130,220)); d.text((715,390),"S",font=fb,fill="white")
+    gap=210-int(130*u)
+    lx=330; rx=645-gap
+    for yy in (365,425,485):
+     d.line((lx,yy,rx,yy),fill=(100,220,160),width=7)
+    d.line((210,600,390,600),fill=(255,190,70),width=10); d.polygon([(410,600),(375,580),(375,620)],fill=(255,190,70))
+    d.line((765,600,585,600),fill=(255,190,70),width=10); d.polygon([(565,600),(600,580),(600,620)],fill=(255,190,70))
+    d.text((330,700),"força aproxima",font=fs,fill="white")
    else:
-    d.text((45,38),"FORÇA DIMINUI → REDE SE DESFAZ",font=fb,fill="white")
-    d.rectangle((80,650,895,710),fill=(180,75,45))
-    cx=370+int(300*u)
-    d.ellipse((cx-95,330,cx+95,520),fill=(90,175,255))
-    for k in range(5):
-     y=550+k*18
-     d.line((cx-30,y,cx-150-int(40*u),y),fill=(220,235,245),width=6)
-    d.line((cx+110,420,cx+230,420),fill=(100,220,160),width=10)
-    d.polygon([(cx+250,420),(cx+215,400),(cx+215,440)],fill=(100,220,160))
-    d.text((235,760),"partículas se reorganizam e voltam a fluir",font=fs,fill="white")
+    d.text((45,38),"AGULHA GIRA E SE ALINHA AO CAMPO",font=fb,fill="white")
+    cx,cy=490,430
+    d.ellipse((300,240,680,620),outline=(120,160,190),width=6)
+    ang=-1.2+2.4*u
+    dx=int(145*math.cos(ang)); dy=int(145*math.sin(ang))
+    d.line((cx-dx,cy-dy,cx+dx,cy+dy),fill=(255,190,70),width=14)
+    d.polygon([(cx+dx,cy+dy),(cx+dx-int(35*math.cos(ang-.5)),cy+dy-int(35*math.sin(ang-.5))),(cx+dx-int(35*math.cos(ang+.5)),cy+dy-int(35*math.sin(ang+.5)))],fill=(255,190,70))
+    d.text((275,700),"bússola revela a direção local",font=fs,fill="white")
   else:
    if seg==0:
     d.text((45,38),"UM PALCO → VÁRIOS ÂNGULOS DE VISÃO",font=fb,fill="white")
@@ -345,10 +347,10 @@ def main():
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/31a64c7d-7878-4c1d-ba30-bd5c00c39ce8.webm",AS/"ice2.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/dc12bced-eb3f-4496-8507-3a7a26f7c0b5.webm",AS/"ice3.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7fe4ffdf-45a1-4a92-8dd3-c63bd750692c.webm",AS/"ice4.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/6aedb415-b5f4-4939-8b78-450d1a2ab280.webm",AS/"oob1.webm")
- commons_video("Flow of Non-Newtonian Fluid A 876.ogv",AS/"oob2.webm")
- commons_video("Non-Newtonian Fluid A28.ogv",AS/"oob3.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/c70fd558-921c-431b-a029-7aa1eddf3662.webm",AS/"oob4.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/afc158c1-1b8d-4f31-bd68-3193f0908cd5.webm",AS/"mag1.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/b9747774-6e41-4484-b8da-f956b3264a06.webm",AS/"mag2.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/c60d3947-0e33-4bf5-9616-637af62a0284.webm",AS/"mag3.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/70aca9f5-ab05-47f3-9486-446ee05a8b47.webm",AS/"mag4.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/fd141287-57e0-491f-b1de-7716b489fc84.webm",AS/"gaga1.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/4e70d702-a3d5-418f-a62f-7f1d66887e6b.webm",AS/"gaga2.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/437f8c15-2c18-4cf6-9a36-34ee97fb59cb.webm",AS/"gaga3.webm")
