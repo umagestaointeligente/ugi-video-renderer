@@ -87,20 +87,36 @@ def download_source(item,cache):
     if sid in cache: return cache[sid]
     wd=WORK/"sources"/sid.replace("/","_")
     wd.mkdir(parents=True,exist_ok=True)
+    base=[
+      "yt-dlp","--no-warnings","--force-ipv4","--retries","5","--fragment-retries","5","--retry-sleep","3",
+      "-f","bv*+ba/b","--merge-output-format","mp4","-o",str(wd/"source.%(ext)s")
+    ]
+    variants=[
+      [],
+      ["--extractor-args","youtube:player_client=tv,web_safari"],
+      ["--extractor-args","youtube:player_client=tv,web_embedded;player_skip=webpage"]
+    ]
     last=None
     for attempt in range(1,5):
-        try:
-            run([
-              "yt-dlp","--no-warnings","--retries","5","--fragment-retries","5","--retry-sleep","3",
-              "-f","bv*+ba/b","--merge-output-format","mp4","-o",str(wd/"source.%(ext)s"),item["source"]
-            ])
-            last=None; break
-        except Exception as exc:
-            last=exc; time.sleep(3*attempt)
-    if last is not None: raise last
-    src=next(wd.glob("source.*"))
-    cache[sid]=src
-    return src
+        for extra in variants:
+            try:
+                # remove any partial output between client attempts
+                for p in wd.glob("source.*"):
+                    try: p.unlink()
+                    except Exception: pass
+                run(base+extra+[item["source"]])
+                srcs=list(wd.glob("source.*"))
+                if not srcs:
+                    raise RuntimeError("SOURCE_OUTPUT_MISSING")
+                src=srcs[0]
+                if src.stat().st_size < 500000:
+                    raise RuntimeError("SOURCE_TOO_SMALL")
+                cache[sid]=src
+                return src
+            except Exception as exc:
+                last=exc
+        time.sleep(3*attempt)
+    raise last
 
 def parse_vtt_time(s):
     h,m,sec=s.replace(",",".").split(":")
@@ -109,10 +125,15 @@ def parse_vtt_time(s):
 def find_keyword_time(item,src):
     wd=WORK/"subs"; wd.mkdir(parents=True,exist_ok=True)
     tpl=wd/"comp.%(ext)s"
-    run([
-      "yt-dlp","--no-warnings","--write-subs","--write-auto-subs","--sub-langs","pt-BR,pt,pt.*,en",
-      "--sub-format","vtt","--skip-download","-o",str(tpl),item["source"]
-    ],check=False)
+    sub_ok=False
+    for extra in [[],["--extractor-args","youtube:player_client=tv,web_safari"],["--extractor-args","youtube:player_client=tv,web_embedded;player_skip=webpage"]]:
+        p=run([
+          "yt-dlp","--no-warnings","--force-ipv4","--write-subs","--write-auto-subs","--sub-langs","pt-BR,pt,pt.*,en",
+          "--sub-format","vtt","--skip-download","-o",str(tpl)
+        ]+extra+[item["source"]],check=False)
+        if p.returncode==0:
+            sub_ok=True
+            break
     files=list(wd.glob("comp*.vtt"))
     wanted=norm(item["keyword"])
     cues=[]
