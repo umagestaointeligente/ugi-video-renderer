@@ -1,0 +1,55 @@
+name: Cena Certa Oct02 Recovery
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct02-recovery.yml
+      - scripts/cena_certa_oct02_recovery.py
+      - ops/cena-certa-oct02/manifest.json
+      - ops/cena-certa-oct02/history_media.json
+      - assets/cena-certa-logo.png.b64
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          python -m pip install -q --upgrade yt-dlp edge-tts
+      - name: Render, QA and 60d scene fingerprint
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct02_recovery.py
+      - name: Publish approved masters
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=cena-certa-oct02-recovery
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Oct02 Recovery" --notes "12 fail-closed masters after 60d title/source/frame reconciliation."
+          gh release upload "$TAG" out/cena-certa-oct02/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+      - name: Create evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "CENA_CERTA_OCT02_PACK=PASS"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo
+            cat out/cena-certa-oct02/summary.json
+          } > out/cena-certa-oct02/issue.txt
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-OCT02-PACK] $GITHUB_RUN_ID" --body-file out/cena-certa-oct02/issue.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-oct02-${{ github.run_id }}
+          path: out/cena-certa-oct02/
+          retention-days: 7
