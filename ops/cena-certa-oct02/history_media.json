@@ -1,6 +1,172 @@
 {
   "schema": "CENA_CERTA_HISTORY_60D_V1",
-  "generated_at": "2026-10-02T09:31:00-03:00",
-  "items": [],
-  "count": 0
+  "generated_at": "2026-10-02T09:32:00-03:00",
+  "items": [
+    {
+      "id": 370242394,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-02T19:30:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-18424109934822062401.mp4",
+      "title": "PAYLOAD (2012) | Uma escolha impossível"
+    },
+    {
+      "id": 370242496,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-02T20:10:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-9704075519888189617.mp4",
+      "title": "096 (2020) | O erro que transforma tudo"
+    },
+    {
+      "id": 370242586,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-02T21:00:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-3752523714780912050.mp4",
+      "title": "SITE 22 (2018) | O lugar onde nada deveria escapar"
+    },
+    {
+      "id": 370771696,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-03T19:50:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-17595543807193856011.mp4",
+      "title": "JANGAN TELAT! (2019) | Ela só queria chegar a tempo"
+    },
+    {
+      "id": 371624014,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-06T16:10:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-7974526632676964687.mp4",
+      "title": "Because of Him (2021) | Cena Certa"
+    },
+    {
+      "id": 371624043,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-06T18:30:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-10840054713635090227.mp4",
+      "title": "SCP: Containment Breach (2025) | Cena Certa"
+    },
+    {
+      "id": 371625892,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-06T12:15:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-16027565235668299600.mp4",
+      "title": "The Sleeping Field (2017) | Cena Certa"
+    },
+    {
+      "id": 371809088,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-07T08:30:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-10825470311129716717.mp4",
+      "title": "O sonho que pode separar uma família | Breakfast at the Bodega"
+    },
+    {
+      "id": 371809138,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-07T09:50:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-7672355699415536086.mp4",
+      "title": "Ele voltou para encontrar uma mulher que talvez nem exista | Mardelplá"
+    },
+    {
+      "id": 371809197,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-07T11:10:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-10236497785758579873.mp4",
+      "title": "Uma separação pode salvar o mundo? | Tears of Steel"
+    },
+    {
+      "id": 371809269,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-07T12:30:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-2492579999347483504.mp4",
+      "title": "Quando uma máquina percebe que também pode morrer | The Man Behind the Machine"
+    },
+    {
+      "id": 371809325,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-07T15:15:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-2631462501904101324.mp4",
+      "title": "Uma criança pode condenar uma família inteira | Pendatang"
+    },
+    {
+      "id": 371809404,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-07T16:35:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-4524168606734547818.mp4",
+      "title": "A nave que transformou uma história em realidade | Alien Grounds"
+    },
+    {
+      "id": 371809569,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-07T18:05:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-8798898904679469551.mp4",
+      "title": "A verdade depois de décadas de casamento | Abu Rami"
+    },
+    {
+      "id": 371809752,
+      "network": "facebook",
+      "status": "PUBLISHED",
+      "publicationDate": {
+        "dateTime": "2026-09-07T19:30:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "media": "https://static.metricool.com/planner/202609/6809869-file-1605009487357043497.mp4",
+      "title": "O último encontro antes da separação | Pasión Oriental"
+    }
+  ],
+  "count": 15
 }
