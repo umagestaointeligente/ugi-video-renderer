@@ -12,7 +12,7 @@ on:
       - ops/vsa-oct02-three-production
     paths:
       - '.github/workflows/vsa-oct02-triple.yml'
-      - 'production/vsa/pilots/oct02_triple/render_oct02_triple.py'
+      - 'production/vsa/pilots/oct02_triple/render_oct02_triple_v2.py'
       - 'scripts/vsa/validate_release_receipt.py'
       - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
       - '.github/actions/vsa-release-gate/action.yml'
@@ -42,12 +42,12 @@ jobs:
       - name: Compile production renderer
         run: |
           set -euo pipefail
-          python -m py_compile production/vsa/pilots/oct02_triple/render_oct02_triple.py
+          python -m py_compile production/vsa/pilots/oct02_triple/render_oct02_triple_v2.py
 
       - name: Editorial hard gates before render
         run: |
           set -euo pipefail
-          R=production/vsa/pilots/oct02_triple/render_oct02_triple.py
+          R=production/vsa/pilots/oct02_triple/render_oct02_triple_v2.py
           test "$(grep -o 'Agora você já sabe\.' "$R" | wc -l)" -eq 1
           grep -q 'ANIMAÇÃO • GÁS QUENTE SOBE' "$R"
           grep -q 'ANIMAÇÃO • POLAR × APOLAR' "$R"
@@ -59,7 +59,7 @@ jobs:
       - name: Render three fresh final masters
         run: |
           set -euo pipefail
-          python production/vsa/pilots/oct02_triple/render_oct02_triple.py | tee /tmp/vsa_oct02_render.log
+          python production/vsa/pilots/oct02_triple/render_oct02_triple_v2.py | tee /tmp/vsa_oct02_render.log
           OUT=production/vsa/pilots/oct02_triple/output
           test -s "$OUT/chama_vela/VSA_chama_vela_OCT02.mp4"
           test -s "$OUT/oleo_agua/VSA_oleo_agua_OCT02.mp4"
