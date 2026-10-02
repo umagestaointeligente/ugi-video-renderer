@@ -20,7 +20,7 @@ jobs:
       matrix:
         network: [tiktok, instagram, youtube, facebook]
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 60
     env:
       CENA_NETWORK: ${{ matrix.network }}
     steps:
