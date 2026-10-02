@@ -65,7 +65,7 @@ TOPICS={
   "assets":{
    "mick1":{"file":"mick1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Mick_Jagger_dancing_to_the_crowd,_2024-04-28.webm","license":"CC_BY_3.0","asset_subject":"MICK_JAGGER_STAGE_MOVEMENT_VISUAL_PRESENCE","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
    "mick2":{"file":"mick2.webm","source_url":"https://commons.wikimedia.org/wiki/File:031212_InPerformance_Blues_MickJagger.webm","license":"PUBLIC_DOMAIN_US_GOV","asset_subject":"MICK_JAGGER_STAGE_MOVEMENT_VISUAL_PRESENCE","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
-   "mick3":{"file":"mick3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Behind_the_Scenes-_Red,_White_and_Blues.webm","license":"PUBLIC_DOMAIN_US_GOV","asset_subject":"MICK_JAGGER_STAGE_MOVEMENT_VISUAL_PRESENCE","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
+   "mick3":{"file":"mick3.webm","source_url":"https://commons.wikimedia.org/wiki/File:Behind_the_Scenes-_Red,_White_and_Blues.webm","license":"PUBLIC_DOMAIN_US_GOV","asset_subject":"WHITE_HOUSE_BLUES_REHEARSAL_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":True,"celebrity_visible":False},
    "mick4":{"file":"mick4.webm","source_url":"https://commons.wikimedia.org/wiki/File:President_Obama_Sings_%22Sweet_Home_Chicago%22.webm","license":"PUBLIC_DOMAIN_US_GOV","asset_subject":"MICK_JAGGER_STAGE_MOVEMENT_VISUAL_PRESENCE","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
