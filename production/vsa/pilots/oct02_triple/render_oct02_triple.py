@@ -69,13 +69,13 @@ TOPICS={
    "mick4":{"file":"mick4.webm","source_url":"https://commons.wikimedia.org/wiki/File:President_Obama_Sings_%22Sweet_Home_Chicago%22.webm","license":"PUBLIC_DOMAIN_US_GOV","asset_subject":"MICK_JAGGER_STAGE_MOVEMENT_VISUAL_PRESENCE","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","mick1",1,"CONTEXT","mick","MICK JAGGER • PERFORMANCE REAL","Num palco enorme, ficar parado em um ponto faz o artista parecer pequeno para boa parte da plateia."),
-   ("ANIMATION","anim",0,"MECHANISM","mick","ANIMAÇÃO • ROTAS PELO PALCO","Por isso o deslocamento cria novas linhas de visão e leva a presença do artista a diferentes setores."),
-   ("REAL","mick2",8,"PROOF","mick","MICK JAGGER • PERFORMANCE REAL","Mick Jagger usa movimentos amplos e mudanças rápidas de posição para continuar legível à distância."),
-   ("ANIMATION","anim",2,"MECHANISM","mick","ANIMAÇÃO • GESTO PRECISA TER ESCALA","Quanto maior a distância, maior precisa ser a escala visual do gesto para ele continuar perceptível."),
-   ("REAL","mick3",8,"CONSEQUENCE","mick","MICK JAGGER • ENSAIO REAL","Nos ensaios, posição, entrada e saída também ajudam a organizar onde a atenção do público deve estar."),
-   ("ANIMATION","anim",4,"MECHANISM","mick","ANIMAÇÃO • PLATEIA + CÂMERAS","O movimento ainda precisa funcionar para dois públicos ao mesmo tempo: quem está no local e quem vê pelas câmeras."),
-   ("REAL","mick4",20,"PROOF","mick","MICK JAGGER • QUARTO VÍDEO REAL","O resultado é uma presença visual contínua: o palco parece menor porque o artista redistribui o foco ao longo da apresentação.")
+   ("REAL","mick1",1,"CONTEXT","mick","MICK JAGGER • PERFORMANCE REAL","Num palco enorme, ficar parado faz o artista parecer pequeno para boa parte da plateia."),
+   ("ANIMATION","anim",0,"MECHANISM","mick","ANIMAÇÃO • ROTAS PELO PALCO","O deslocamento cria novas linhas de visão e leva o artista a diferentes setores."),
+   ("REAL","mick2",8,"PROOF","mick","MICK JAGGER • PERFORMANCE REAL","Mick Jagger usa movimentos amplos e muda de posição para continuar visível à distância."),
+   ("ANIMATION","anim",2,"MECHANISM","mick","ANIMAÇÃO • GESTO PRECISA TER ESCALA","Quanto maior a distância, maior precisa ser o gesto para continuar perceptível."),
+   ("REAL","mick3",8,"CONSEQUENCE","mick","MICK JAGGER • ENSAIO REAL","Nos ensaios, posição e deslocamento ajudam a organizar onde fica a atenção do público."),
+   ("ANIMATION","anim",4,"MECHANISM","mick","ANIMAÇÃO • PLATEIA + CÂMERAS","O movimento precisa funcionar para quem está no local e para quem vê pelas câmeras."),
+   ("REAL","mick4",20,"PROOF","mick","MICK JAGGER • QUARTO VÍDEO REAL","O palco parece menor porque o artista redistribui o foco durante a apresentação.")
   ]}
 }
 
