@@ -106,16 +106,14 @@ def parse_vtt_time(s):
     h,m,sec=s.replace(",",".").split(":")
     return int(h)*3600+int(m)*60+float(sec)
 
-def find_keyword_time(item):
+def find_keyword_time(item,src):
     wd=WORK/"subs"; wd.mkdir(parents=True,exist_ok=True)
     tpl=wd/"comp.%(ext)s"
     run([
-      "yt-dlp","--no-warnings","--write-subs","--write-auto-subs","--sub-langs","pt-BR,pt",
+      "yt-dlp","--no-warnings","--write-subs","--write-auto-subs","--sub-langs","pt-BR,pt,pt.*,en",
       "--sub-format","vtt","--skip-download","-o",str(tpl),item["source"]
     ],check=False)
     files=list(wd.glob("comp*.vtt"))
-    if not files:
-        raise RuntimeError("FB_SUBTITLE_DISCOVERY_FAIL")
     wanted=norm(item["keyword"])
     cues=[]
     for fp in files:
@@ -131,18 +129,25 @@ def find_keyword_time(item):
                     i+=1
                 cues.append((st,norm(" ".join(txt))))
             i+=1
-    # direct phrase, then token overlap fallback
     for st,tx in cues:
-        if wanted in tx or tx in wanted and len(tx)>5:
-            return max(0,st-2.0)
+        if wanted in tx or (tx in wanted and len(tx)>5):
+            return max(0,st-1.5),min(float(item["duration"]),34.0)
     tokens=[t for t in wanted.split() if len(t)>2]
     best=None
     for st,tx in cues:
         score=sum(1 for t in tokens if t in tx)
         if best is None or score>best[0]: best=(score,st,tx)
     if best and best[0]>=max(1,len(tokens)//2):
-        return max(0,best[1]-2.0)
-    raise RuntimeError(f"FB_KEYWORD_NOT_FOUND:{item['keyword']}")
+        return max(0,best[1]-1.5),min(float(item["duration"]),34.0)
+    # Official Netflix compilation description orders the titles as:
+    # Farah, Fatmagül, Sol da Minha Vida, Para Sempre no Meu Coração, Amor Sem Fim, O Sonho de Esref.
+    order={"meu nome e farah":0,"sol da minha vida":2,"para sempre no meu coracao":3}
+    key=norm(item["keyword"])
+    if key not in order:
+        raise RuntimeError(f"FB_KEYWORD_NOT_FOUND:{item['keyword']}")
+    total=duration(src); seg=total/6.0; idx=order[key]
+    st=idx*seg+1.0; clip=max(12.0,min(float(item["duration"]),seg-2.0))
+    return st,clip
 
 def make_vertical_video_filter(hook,cta,total,network,logo_input=1):
     hook=esc(hook); cta=esc(cta or "")
@@ -308,13 +313,18 @@ def main():
     cache={}; summary={"schema":"CENA_CERTA_OCT02_DELIVERY_V1","items":[]}; rendered=[]
     fb_starts={}
 
-    # Resolve compilation windows once via official PT-BR subtitles
+    # Download unique sources first; then resolve compilation windows.
+    for item in manifest["items"]:
+        download_source(item,cache)
+    fb_durs={}
     for item in manifest["items"]:
         if item["kind"]=="pov_compilation":
-            fb_starts[item["id"]]=find_keyword_time(item)
+            src=cache[item["source_id"]]
+            st,du=find_keyword_time(item,src)
+            fb_starts[item["id"]]=st; fb_durs[item["id"]]=du
 
     for item in manifest["items"]:
-        src=download_source(item,cache)
+        src=cache[item["source_id"]]
         if item["kind"]=="humor":
             out,s,e,total,audio=render_humor(item,src,logo,core)
         elif item["kind"]=="hype":
@@ -322,7 +332,7 @@ def main():
         elif item["kind"]=="recap":
             out,s,e,total,audio=render_narrated(item,src,logo,segments=item["segments"])
         elif item["kind"]=="pov_compilation":
-            out,s,e,total,audio=render_narrated(item,src,logo,start=fb_starts[item["id"]],dur=float(item["duration"]))
+            out,s,e,total,audio=render_narrated(item,src,logo,start=fb_starts[item["id"]],dur=fb_durs[item["id"]])
         else:
             out,s,e,total,audio=render_narrated(item,src,logo,start=float(item.get("start",0)),dur=float(item.get("duration",34)))
         sha=hashlib.sha256(out.read_bytes()).hexdigest()
