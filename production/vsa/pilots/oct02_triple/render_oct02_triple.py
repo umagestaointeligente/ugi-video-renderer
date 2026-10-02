@@ -48,13 +48,13 @@ TOPICS={
    "oil4":{"file":"oil4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Salvinia_Effect_Automatic_floating_Bionic_Oil_Adsorbtion_Device_BOA_-_©_W._Barthlott,_M._Moosmann_&_M._Mail_2020,_University_of_Bonn.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_OIL_ADSORPTION_FROM_WATER","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False}
   },
   "scenes":[
-   ("REAL","oil1",1,"CONTEXT","oil","ÓLEO + ÁGUA SENDO AGITADOS • VÍDEO REAL","Você pode agitar óleo e água com força: por alguns segundos eles parecem misturados."),
-   ("ANIMATION","anim",0,"MECHANISM","oil","ANIMAÇÃO • POLAR × APOLAR","Mas a água é polar e prefere interagir com água; as moléculas do óleo são majoritariamente apolares."),
-   ("REAL","oil2",3,"PROOF","oil","EMULSÃO REAL • VÍDEO REAL","Com um emulsificante, como numa maionese, pequenas gotas de óleo conseguem permanecer dispersas por muito mais tempo."),
-   ("ANIMATION","anim",2,"MECHANISM","oil","ANIMAÇÃO • AGITAÇÃO CRIA GOTÍCULAS","Agitar quebra o óleo em gotas menores, mas isso aumenta a área de contato entre os dois líquidos."),
-   ("REAL","oil3",2,"CONSEQUENCE","oil","ÓLEO SEPARADO DA ÁGUA • VÍDEO REAL","Sem estabilização, o sistema reduz essa interface e o óleo volta a se juntar em regiões separadas da água."),
-   ("ANIMATION","anim",4,"MECHANISM","oil","ANIMAÇÃO • EMULSIFICANTE FAZ A PONTE","Um emulsificante tem uma parte que interage com água e outra com óleo, ajudando a manter as gotículas separadas."),
-   ("REAL","oil4",4,"PROOF","oil","REMOÇÃO DE ÓLEO • VÍDEO REAL","A separação entre óleo e água é tão útil que materiais especiais conseguem capturar o óleo sem absorver a maior parte da água.")
+   ("REAL","oil1",1,"CONTEXT","oil","ÓLEO + ÁGUA SENDO AGITADOS • VÍDEO REAL","Agite óleo e água com força: por alguns segundos eles parecem misturados."),
+   ("ANIMATION","anim",0,"MECHANISM","oil","ANIMAÇÃO • POLAR × APOLAR","A água é polar e interage melhor com água; o óleo é majoritariamente apolar."),
+   ("REAL","oil2",3,"PROOF","oil","EMULSÃO REAL • VÍDEO REAL","Com emulsificante, como na maionese, gotas de óleo permanecem dispersas por mais tempo."),
+   ("ANIMATION","anim",2,"MECHANISM","oil","ANIMAÇÃO • AGITAÇÃO CRIA GOTÍCULAS","Agitar quebra o óleo em gotas menores e aumenta a área de contato entre os líquidos."),
+   ("REAL","oil3",2,"CONSEQUENCE","oil","ÓLEO SEPARADO DA ÁGUA • VÍDEO REAL","Sem estabilização, o óleo volta a se juntar e se separar da água."),
+   ("ANIMATION","anim",4,"MECHANISM","oil","ANIMAÇÃO • EMULSIFICANTE FAZ A PONTE","O emulsificante tem uma parte compatível com água e outra com óleo, estabilizando as gotículas."),
+   ("REAL","oil4",4,"PROOF","oil","REMOÇÃO DE ÓLEO • VÍDEO REAL","Materiais especiais aproveitam essa diferença para capturar óleo sem absorver a maior parte da água.")
   ]},
  "mick_jagger_palco":{
   "title":"Como Mick Jagger consegue ocupar um palco gigante? #shorts",
