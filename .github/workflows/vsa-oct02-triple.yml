@@ -12,7 +12,7 @@ on:
       - ops/vsa-oct02-three-production
     paths:
       - '.github/workflows/vsa-oct02-triple.yml'
-      - 'production/vsa/pilots/oct02_triple/render_oct02_triple_v2.py'
+      - 'production/vsa/pilots/oct02_triple/render_oct02_triple_v3.py'
       - 'scripts/vsa/validate_release_receipt.py'
       - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
       - '.github/actions/vsa-release-gate/action.yml'
@@ -42,16 +42,16 @@ jobs:
       - name: Compile production renderer
         run: |
           set -euo pipefail
-          python -m py_compile production/vsa/pilots/oct02_triple/render_oct02_triple_v2.py
+          python -m py_compile production/vsa/pilots/oct02_triple/render_oct02_triple_v3.py
 
       - name: Editorial hard gates before render
         run: |
           set -euo pipefail
-          R=production/vsa/pilots/oct02_triple/render_oct02_triple_v2.py
+          R=production/vsa/pilots/oct02_triple/render_oct02_triple_v3.py
           test "$(grep -o 'Agora você já sabe\.' "$R" | wc -l)" -eq 1
           grep -q 'ANIMAÇÃO • GÁS QUENTE SOBE' "$R"
           grep -q 'ANIMAÇÃO • POLAR × APOLAR' "$R"
-          grep -q 'ANIMAÇÃO • ROTAS PELO PALCO' "$R"
+          grep -q 'ANIMAÇÃO • CONEXÕES NO CÉREBRO' "$R"
           grep -q 'MASK_SHA="ac8162ee849f154edf2519ef649f64cd470737df7b5ecbabb7085f72059cfd56"' "$R"
           grep -q 'REAL_ASSET_DUPLICATE_FAIL' "$R"
           grep -q 'CELEBRITY_CONTEXT_FAIL' "$R"
@@ -59,18 +59,18 @@ jobs:
       - name: Render three fresh final masters
         run: |
           set -euo pipefail
-          python production/vsa/pilots/oct02_triple/render_oct02_triple_v2.py | tee /tmp/vsa_oct02_render.log
+          python production/vsa/pilots/oct02_triple/render_oct02_triple_v3.py | tee /tmp/vsa_oct02_render.log
           OUT=production/vsa/pilots/oct02_triple/output
           test -s "$OUT/chama_vela/VSA_chama_vela_OCT02.mp4"
           test -s "$OUT/oleo_agua/VSA_oleo_agua_OCT02.mp4"
-          test -s "$OUT/mick_jagger_palco/VSA_mick_jagger_palco_OCT02.mp4"
+          test -s "$OUT/shakira_primeira_infancia/VSA_shakira_primeira_infancia_OCT02.mp4"
           cp /tmp/vsa_oct02_render.log "$OUT/RENDER_LOG.txt"
 
       - name: Prove animation segments are visually distinct
         run: |
           set -euo pipefail
           AS=production/vsa/pilots/oct02_triple/assets
-          for slug in chama_vela oleo_agua mick_jagger_palco; do
+          for slug in chama_vela oleo_agua shakira_primeira_infancia; do
             rm -f /tmp/${slug}_*.png
             ffmpeg -loglevel error -ss 0.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_0.png"
             ffmpeg -loglevel error -ss 2.5 -i "$AS/${slug}_3d.mp4" -frames:v 1 "/tmp/${slug}_1.png"
@@ -82,7 +82,7 @@ jobs:
         run: |
           set -euo pipefail
           OUT=production/vsa/pilots/oct02_triple/output
-          for slug in chama_vela oleo_agua mick_jagger_palco; do
+          for slug in chama_vela oleo_agua shakira_primeira_infancia; do
             ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
             python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_OCT02.mp4"
             jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
