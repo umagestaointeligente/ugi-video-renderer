@@ -1,0 +1,496 @@
+{
+  "generated_at": "2026-10-02T02:15:00-03:00",
+  "blocked_frame_fingerprints": [
+    "78e4ce5bf4e31836e4a908672d88c72c5c824e73104473b448487b6801c1d29e",
+    "c122e7e004e18ef84860db3098b215bf4dc104481cafeb205c6b58ee994b24c6",
+    "e500e9f3cf8ddbc2fc35b198c5dacb091c6b95d07f5b0d83a8c1cb5f41a88b2e",
+    "cf91f1ea4c67265c241ab5a6dde3d911aad81cdc6dffb2fedf4a81717ab9a7ea",
+    "e9eb6b90ba924a52539a65ae80ef74dc8866194c8c1c25363990edceb2ec377b",
+    "e70215f1fe57197d33c2cdf336b771abd6d2240d95c5f17cc6de9497c7577a0b",
+    "545a1d68c9afc659430f47aceb9ea964b90d310b437c15219d281f50dc23a751",
+    "9e2c5575024257e52f1c8306aa9cc611bf1dc49de00a9a8dcd4f322820c3f7b4",
+    "35991da53ca7edf96da3b4da0ea1d267e02c94a9d3904d59f4aa7a0357bf4253",
+    "25fccdfb656e7df6760d32015924297b5c9ee7312fa9617535f7abca437c9835",
+    "a6880e78c5a0335c4ea4608578ae8f504f47e671fe3329da06664531b7553222",
+    "69d69d319da7b95aed7a88ee16af04bee667cd65a02bbd3cb7073b3113862f85"
+  ],
+  "prior_sources": [
+    {
+      "source_id": "4707587",
+      "timestamps_used": [
+        0,
+        59.2
+      ],
+      "normalized_title": "mister brau — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "6600863",
+      "timestamps_used": [
+        43,
+        103.6
+      ],
+      "normalized_title": "deus salve o rei — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "5613016",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "rock story — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "5493233",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "sol nascente — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-koji-2024",
+      "timestamps_used": [
+        34.813,
+        52.421
+      ],
+      "normalized_title": "koji",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "5680110",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "a lei do amor — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "7214188",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "o tempo não para — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-midnight-snack-2014",
+      "timestamps_used": [
+        24.145,
+        41.473
+      ],
+      "normalized_title": "midnight snack",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-new-day-2023",
+      "timestamps_used": [
+        27.695,
+        44.255
+      ],
+      "normalized_title": "it's a new day!",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-bateria-baja-2023",
+      "timestamps_used": [
+        20.528,
+        37.976
+      ],
+      "normalized_title": "bateria baja",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-cazacerebros-2016",
+      "timestamps_used": [
+        17.793,
+        34.449
+      ],
+      "normalized_title": "cazacerebros",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-requiem-2023",
+      "timestamps_used": [
+        17.198,
+        33.326
+      ],
+      "normalized_title": "requiem",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-magdurus-2023",
+      "timestamps_used": [
+        14.398,
+        30.286
+      ],
+      "normalized_title": "a deal in magdurus",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-bun-hunting-2024",
+      "timestamps_used": [
+        77.954,
+        93.698
+      ],
+      "normalized_title": "bun hunting: overture",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-nyctophobia-2019",
+      "timestamps_used": [
+        13.688,
+        29.912
+      ],
+      "normalized_title": "nyctophobia",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-casino-royale-2023",
+      "timestamps_used": [
+        8.159,
+        22.367
+      ],
+      "normalized_title": "casino royale",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "commons-fursuit-etiquette-2024",
+      "timestamps_used": [
+        14.167,
+        30.871
+      ],
+      "normalized_title": "fursuit etiquette",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "10170601",
+      "timestamps_used": [
+        0,
+        41.866
+      ],
+      "normalized_title": "um lugar ao sol — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "10170598",
+      "timestamps_used": [
+        0,
+        47.183
+      ],
+      "normalized_title": "salve-se quem puder — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14998159",
+      "timestamps_used": [
+        0,
+        23.824
+      ],
+      "normalized_title": "pedro vê adriana produzida e a elogia",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14997870",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "fernando não gosta de ver mau mau com felipe",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14997876",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "mau mau e felipe descobrem a verdade sobre fernando",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14997894",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "carolina e fábia comentam sobre felipe e mau mau",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14997922",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "mau mau admite que está confuso sobre fernando",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14998251",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "normalized_title": "pedro se preocupa com a nova fase de adriana",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14956992",
+      "timestamps_used": [
+        0,
+        42.237
+      ],
+      "normalized_title": "pedro questiona adriana sobre o flagra no cassino",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14996045",
+      "timestamps_used": [
+        0,
+        52.699
+      ],
+      "normalized_title": "fábia procura ademir para cuidar do divórcio",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14996060",
+      "timestamps_used": [
+        0,
+        55.368
+      ],
+      "normalized_title": "pilar pensa em contratar tom para outro serviço",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14988846",
+      "timestamps_used": [
+        0,
+        44.624
+      ],
+      "normalized_title": "fábia decide enfrentar a revelação de pilar",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "2282199",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "américa — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "1445504",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "o clone — falha nossa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14971362",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "normalized_title": "carminha pula no pescoço de nina",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "14555837",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "normalized_title": "nina vê carminha roubando mercadorias e assume a culpa",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "3802076",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "normalized_title": "isabel descobre sua verdadeira mãe",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "4184050",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "normalized_title": "bruno gissoni viveu um rapaz romântico em avenida brasil",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "4183571",
+      "timestamps_used": [
+        0,
+        14.976
+      ],
+      "normalized_title": "maria bo se declara para lance",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "4183565",
+      "timestamps_used": [
+        0,
+        26.752
+      ],
+      "normalized_title": "ravi se declara para camila",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "4183558",
+      "timestamps_used": [
+        0,
+        22.421
+      ],
+      "normalized_title": "agostinho se declara para bebel",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "3802141",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "normalized_title": "carlota manda boneco de vodu para sandra",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "3802157",
+      "timestamps_used": [
+        0,
+        58.825
+      ],
+      "normalized_title": "vitória tranca sandra no quarto no dia do noivado",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "3802033",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "normalized_title": "severo e magnólia tentam se dar bem",
+      "frame_fingerprint_sha256": null
+    },
+    {
+      "source_id": "4115698",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "sai de baixo — improvisos nas gravações",
+      "frame_fingerprint_sha256": "78e4ce5bf4e31836e4a908672d88c72c5c824e73104473b448487b6801c1d29e"
+    },
+    {
+      "source_id": "6130248",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "pega pega — erros de gravação",
+      "frame_fingerprint_sha256": "c122e7e004e18ef84860db3098b215bf4dc104481cafeb205c6b58ee994b24c6"
+    },
+    {
+      "source_id": "7423457",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "normalized_title": "choque de cultura — aguardando a próxima categoria",
+      "frame_fingerprint_sha256": "e500e9f3cf8ddbc2fc35b198c5dacb091c6b95d07f5b0d83a8c1cb5f41a88b2e"
+    },
+    {
+      "source_id": "12530768",
+      "timestamps_used": [
+        0,
+        42
+      ],
+      "normalized_title": "os outros — cibele compra uma arma",
+      "frame_fingerprint_sha256": "cf91f1ea4c67265c241ab5a6dde3d911aad81cdc6dffb2fedf4a81717ab9a7ea"
+    },
+    {
+      "source_id": "12647645",
+      "timestamps_used": [
+        0,
+        44
+      ],
+      "normalized_title": "sob pressão — menino ferido por linha de pipa",
+      "frame_fingerprint_sha256": "e9eb6b90ba924a52539a65ae80ef74dc8866194c8c1c25363990edceb2ec377b"
+    },
+    {
+      "source_id": "9241800",
+      "timestamps_used": [
+        0,
+        42
+      ],
+      "normalized_title": "arcanjo renegado — mikhael encontra ronaldo",
+      "frame_fingerprint_sha256": "e70215f1fe57197d33c2cdf336b771abd6d2240d95c5f17cc6de9497c7577a0b"
+    },
+    {
+      "source_id": "commons-charge-2022",
+      "timestamps_used": [
+        18,
+        48
+      ],
+      "normalized_title": "charge",
+      "frame_fingerprint_sha256": "545a1d68c9afc659430f47aceb9ea964b90d310b437c15219d281f50dc23a751"
+    },
+    {
+      "source_id": "commons-glass-half-2015",
+      "timestamps_used": [
+        24,
+        54
+      ],
+      "normalized_title": "glass half",
+      "frame_fingerprint_sha256": "9e2c5575024257e52f1c8306aa9cc611bf1dc49de00a9a8dcd4f322820c3f7b4"
+    },
+    {
+      "source_id": "commons-caminandes3-2016",
+      "timestamps_used": [
+        10,
+        40
+      ],
+      "normalized_title": "caminandes 3: llamigos",
+      "frame_fingerprint_sha256": "35991da53ca7edf96da3b4da0ea1d267e02c94a9d3904d59f4aa7a0357bf4253"
+    },
+    {
+      "source_id": "12530762",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "os outros — wando surta e ameaça cibele",
+      "frame_fingerprint_sha256": "25fccdfb656e7df6760d32015924297b5c9ee7312fa9617535f7abca437c9835"
+    },
+    {
+      "source_id": "12543328",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "sob pressão — vítimas da explosão chegam ao hospital",
+      "frame_fingerprint_sha256": "a6880e78c5a0335c4ea4608578ae8f504f47e671fe3329da06664531b7553222"
+    },
+    {
+      "source_id": "9241803",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "arcanjo renegado — resgate no cativeiro",
+      "frame_fingerprint_sha256": "69d69d319da7b95aed7a88ee16af04bee667cd65a02bbd3cb7073b3113862f85"
+    }
+  ]
+}
