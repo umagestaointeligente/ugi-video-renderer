@@ -7,6 +7,7 @@ on:
       - .github/workflows/cena-certa-oct02-pack.yml
       - scripts/cena_certa_oct02_pack.py
       - ops/cena-certa-oct02/manifest.json
+      - ops/cena-certa-oct02/anti-repeat-snapshot.json
       - assets/cena-certa-logo.png.b64
   workflow_dispatch:
 permissions:
