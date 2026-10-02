@@ -182,7 +182,11 @@ def main():
     logo=WORK/"logo.png"; logo.write_bytes(base64.b64decode("".join(LOGO_B64.read_text().split())))
     core=WORK/"core.mp3"; download(CORE_URL,core)
     summary={"schema":"CENA_CERTA_OCT02_DELIVERY_V1","items":[]}
-    for item in manifest["items"]:
+    network=os.environ.get("CENA_NETWORK","").strip().lower()
+    items=[i for i in manifest["items"] if not network or str(i.get("network","")).lower()==network]
+    if network and len(items)!=3:
+        raise RuntimeError(f"NETWORK_ITEM_COUNT_FAIL:{network}:{len(items)}")
+    for item in items:
         # Fail closed on exact source reuse with overlapping time window.
         cand_s=float(item.get("source_start",0)); cand_e=float(item.get("source_end",0))
         for old in prior_sources:
