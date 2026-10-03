@@ -1,0 +1,39 @@
+name: Cena Certa Oct03 Source Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct03-source-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Install yt-dlp
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Probe candidate sources
+        run: |
+          set -u
+          urls=(
+            "https://globoplay.globo.com/v/11855119/"
+            "https://globoplay.globo.com/v/12124446/"
+            "https://globoplay.globo.com/v/11344988/"
+            "https://globoplay.globo.com/v/10553491/"
+            "https://globoplay.globo.com/v/10721801/"
+            "https://globoplay.globo.com/v/10777202/"
+            "https://globoplay.globo.com/v/12076731/"
+            "https://globoplay.globo.com/v/11622939/"
+          )
+          fail=0
+          for u in "${urls[@]}"; do
+            id="${u%/}"; id="${id##*/}"
+            if yt-dlp --no-warnings --simulate -f "bv*+ba/b" "$u" >/tmp/probe-$id.log 2>&1; then
+              echo "SOURCE_PROBE_PASS $id"
+            else
+              echo "SOURCE_PROBE_FAIL $id"
+              tail -20 /tmp/probe-$id.log
+              fail=1
+            fi
+          done
+          exit $fail
