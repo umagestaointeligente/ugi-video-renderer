@@ -1,0 +1,71 @@
+name: Cena Certa Oct03 Format Reset
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cena-certa-oct03-format-reset.yml
+      - scripts/cena_certa_oct03_pack.py
+      - ops/cena-certa-oct03/manifest.json
+      - ops/cena-certa-oct03/anti-repeat-snapshot.json
+      - ops/cena-certa-oct03/history_media.json
+      - assets/cena-certa-logo.png.b64
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: cena-certa-oct03-format-reset
+  cancel-in-progress: true
+
+jobs:
+  render-and-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          python -m pip install -q --upgrade yt-dlp
+
+      - name: Render 12 network-native masters and run fail-closed QA
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct03_pack.py
+
+      - name: Publish QA-approved masters to GitHub releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for network in tiktok instagram youtube facebook; do
+            tag="cena-certa-oct03-${network}"
+            gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||               gh release create "${tag}" --repo "$GITHUB_REPOSITORY"                 --title "Cena Certa Oct03 ${network}"                 --notes "Cena Certa 2.8 Oct03 format-reset masters. Released only after 60d source-window and perceptual scene-fingerprint gates."
+            gh release upload "${tag}" out/cena-certa-oct03/${network}/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+          done
+
+      - name: Create fail-closed evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          {
+            echo "CENA_CERTA_OCT03_PACK=PASS"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "COMMIT=$GITHUB_SHA"
+            echo
+            cat out/cena-certa-oct03/summary.json
+          } > out/cena-certa-oct03/issue.txt
+          gh issue create --repo "$GITHUB_REPOSITORY"             --title "[CENA-CERTA-OCT03-FORMAT-RESET] $GITHUB_RUN_ID"             --body-file out/cena-certa-oct03/issue.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-oct03-format-reset-${{ github.run_id }}
+          path: out/cena-certa-oct03/
+          retention-days: 7
