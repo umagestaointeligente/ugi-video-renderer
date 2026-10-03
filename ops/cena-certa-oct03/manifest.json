@@ -115,18 +115,18 @@
       "cta": "QUEM ESTÁ CERTO?"
     },
     {
-      "id": "CC-OCT03-YT-ZOE",
+      "id": "CC-OCT03-YT-THEO",
       "network": "youtube",
-      "format": "reversal",
+      "format": "reversal_dialogue",
       "slot": "2026-10-03T17:20:00-03:00",
-      "title": "Todas as Flores — Zoé vira o jogo",
-      "year": 2022,
-      "source": "https://globoplay.globo.com/v/12092188/",
-      "source_id": "12092188",
+      "title": "Vai na Fé — Theo liga para Benjamin dizendo que quer se entregar",
+      "year": 2023,
+      "source": "https://globoplay.globo.com/v/11855119/",
+      "source_id": "11855119",
       "source_start": 0,
       "source_end": 36,
-      "hook": "ZOÉ VIRA O JOGO — E MAÍRA RECEBE VOZ DE PRISÃO",
-      "cta": "VOCÊ ESPERAVA ESSA VIRADA?"
+      "hook": "THEO DIZ QUE VAI SE ENTREGAR — MAS TEM UM PLANO",
+      "cta": "VOCÊ ACREDITARIA NELE?"
     },
     {
       "id": "CC-OCT03-YT-ALINE",
@@ -157,18 +157,18 @@
       "cta": "QUEM TEM RAZÃO?"
     },
     {
-      "id": "CC-OCT03-FB-GALO",
+      "id": "CC-OCT03-FB-DISCURSO",
       "network": "facebook",
-      "format": "microstory_reveal",
+      "format": "microstory_confrontation",
       "slot": "2026-10-03T18:30:00-03:00",
-      "title": "Todas as Flores — Galo descobre o segredo de Maíra",
-      "year": 2022,
-      "source": "https://globoplay.globo.com/v/12076904/",
-      "source_id": "12076904",
+      "title": "Terra e Paixão — Aline interrompe o discurso de Antônio",
+      "year": 2023,
+      "source": "https://globoplay.globo.com/v/12076731/",
+      "source_id": "12076731",
       "source_start": 0,
       "source_end": 55,
-      "hook": "GALO DESCOBRE QUE MAÍRA É FILHA DE ZOÉ",
-      "cta": "VOCÊ JÁ SABIA DESSE SEGREDO?"
+      "hook": "ALINE INTERROMPE O DISCURSO E ACUSA ANTÔNIO DE ASSASSINATO",
+      "cta": "VOCÊ TERIA ESSA CORAGEM?"
     },
     {
       "id": "CC-OCT03-FB-JUMARIO",
