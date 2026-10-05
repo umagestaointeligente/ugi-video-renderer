@@ -50,7 +50,7 @@ def download_source(item,cache):
         except:pass
     base=[
       "yt-dlp","--no-warnings","--force-ipv4","--retries","5","--fragment-retries","5","--retry-sleep","3",
-      "-f","bv*+ba/b","--merge-output-format","mp4","-o",str(wd/"source.%(ext)s")
+      "-f","bv*+ba/b","--merge-output-format","mp4","--download-sections","*0-90","--force-keyframes-at-cuts","-o",str(wd/"source.%(ext)s")
     ]
     variants=[[],["--extractor-args","youtube:player_client=tv,web_safari"]]
     last=None
