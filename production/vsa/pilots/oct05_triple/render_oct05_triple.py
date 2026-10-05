@@ -69,13 +69,13 @@ TOPICS={
    "dua4":{"file":"dua4.webm","source_url":"https://commons.wikimedia.org/wiki/File:All_you_need_to_know_about_Dua_Lipa%27s_new_album_%27Radical_Optimism%27.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"DUA_LIPA_VISUAL_IDENTITY_MUSIC_ERA","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","dua1",2,"CONTEXT","dua","DUA LIPA • ARQUIVO REAL","Uma era pop não é só música. Ela também precisa ser reconhecida visualmente."),
+   ("REAL","dua1",8,"CONTEXT","dua","DUA LIPA • ARQUIVO REAL","Uma era pop não é só música. Ela também precisa ser reconhecida visualmente."),
    ("ANIMATION","anim",0,"MECHANISM","dua","ANIMAÇÃO • CÓDIGOS VISUAIS SE REPETEM","Cores, formas e enquadramentos repetidos criam pistas que o público associa àquela fase."),
-   ("REAL","dua2",2,"PROOF","dua","DUA LIPA • OUTRO ARQUIVO REAL","Figurino, cabelo e direção de imagem reforçam essa linguagem."),
+   ("REAL","dua2",10,"PROOF","dua","DUA LIPA • OUTRO ARQUIVO REAL","Figurino, cabelo e direção de imagem reforçam essa linguagem."),
    ("ANIMATION","anim",2,"MECHANISM","dua","ANIMAÇÃO • CONSISTÊNCIA CRIA MEMÓRIA","Quando capa, vídeo e palco compartilham códigos, o público reconhece a era antes de ler o nome."),
-   ("REAL","dua3",2,"CONSEQUENCE","dua","DUA LIPA • MATERIAL MUSICAL REAL","Repetir tudo igual cansaria, então cada peça muda elementos e preserva sinais centrais."),
+   ("REAL","dua3",5,"CONSEQUENCE","dua","DUA LIPA • MATERIAL MUSICAL REAL","Repetir tudo igual cansaria, então cada peça muda elementos e preserva sinais centrais."),
    ("ANIMATION","anim",4,"MECHANISM","dua","ANIMAÇÃO • VARIAÇÃO CONTROLADA","A identidade funciona como uma família: peças diferentes continuam no mesmo universo."),
-   ("REAL","dua4",2,"PROOF","dua","DUA LIPA • RADICAL OPTIMISM REAL","Assim, um álbum ganha assinatura própria e continua reconhecível em formatos diferentes.")
+   ("REAL","dua4",15,"PROOF","dua","DUA LIPA • RADICAL OPTIMISM REAL","Assim, um álbum ganha assinatura própria e continua reconhecível em formatos diferentes.")
   ]}
 }
 
