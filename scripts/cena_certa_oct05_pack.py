@@ -324,7 +324,7 @@ def main():
             cache[sid]=src
             print("SOURCE_INGEST_PASS",sid)
 
-    for item in items:
+    def render_one(item):
         src=cache[str(item["source_id"])]
         out,s,e,total,segs=render_item(item,src,logo,core)
         sha=hashlib.sha256(out.read_bytes()).hexdigest()
@@ -341,8 +341,20 @@ def main():
             "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"CTA_FINAL_PASS":True
           }
         }
-        summary["items"].append(rec); rendered.append((item,out))
-        print("MASTER_RENDER_PASS",item["id"],sha)
+        return item,out,rec
+
+    rendered_by_id={}
+    rec_by_id={}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
+        futs=[ex.submit(render_one,item) for item in items]
+        for fut in concurrent.futures.as_completed(futs):
+            item,out,rec=fut.result()
+            rendered_by_id[item["id"]]=(item,out)
+            rec_by_id[item["id"]]=rec
+            print("MASTER_RENDER_PASS",item["id"],rec["sha256"])
+
+    rendered=[rendered_by_id[item["id"]] for item in items]
+    summary["items"]=[rec_by_id[item["id"]] for item in items]
 
     hidx,coverage,eligible=history_index()
     vis=visual_gate(rendered,hidx)
