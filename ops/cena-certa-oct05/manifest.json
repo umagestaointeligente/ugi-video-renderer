@@ -1,0 +1,276 @@
+{
+  "schema": "CENA_CERTA_OCT05_NETWORK_NATIVE_V1",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-10-05",
+  "benchmark_basis": {
+    "tiktok": "Own winners: Brazilian humor/bloopers with original dialogue; regain reach with 3 pacing variants.",
+    "instagram": "Shareable recognizable scenes: nostalgia, villain tension, romantic-comedy conflict.",
+    "youtube": "Performance-first Shorts: immediate conflict/iconic payoff, 29-40s, no narration.",
+    "facebook": "Substantial editorial transformation: three-beat micro-arcs using real scenes + original PT-BR dialogue."
+  },
+  "editorial_rules": {
+    "release_year_floor": 1990,
+    "real_motion_only": true,
+    "audio_ptbr_required": true,
+    "no_narration": true,
+    "no_visual_audio_mismatch": true,
+    "anti_repeat_days": 60,
+    "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
+    "no_black": true,
+    "no_silent_tail": true,
+    "no_legacy_mask": true,
+    "no_extra_zoom": true,
+    "no_aggressive_crop": true,
+    "cta_after_story_closure": true
+  },
+  "items": [
+    {
+      "id": "CC-OCT05-TT-AGF-RAW",
+      "network": "tiktok",
+      "format": "humor_raw_payoff",
+      "slot": "2026-10-05T10:00:00-03:00",
+      "title": "A Grande Família — Falha Nossa",
+      "year": 2001,
+      "source": "https://globoplay.globo.com/v/1412674/",
+      "source_id": "1412674",
+      "source_start": 0,
+      "source_end": 55,
+      "hook": "A GRANDE FAMÍLIA: TENTA NÃO RIR 😂",
+      "cta": "QUAL ERRO TE QUEBROU? 😂",
+      "caption": "A Grande Família sem conseguir segurar a cena 😂 Erros reais de gravação, reação real e áudio original em português. #AGrandeFamilia #FalhaNossa #CenaErrada #CenaCerta"
+    },
+    {
+      "id": "CC-OCT05-TT-TAPAS-FAST",
+      "network": "tiktok",
+      "format": "humor_fast_payoff",
+      "slot": "2026-10-05T12:00:00-03:00",
+      "title": "Tapas & Beijos — Falha Nossa",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/2874951/",
+      "source_id": "2874951",
+      "source_start": 0,
+      "source_end": 40,
+      "hook": "TAPAS & BEIJOS: A CENA DESANDA 😂",
+      "cta": "VOCÊ SEGURARIA O RISO? 😂",
+      "caption": "Quando o elenco de Tapas & Beijos perde a linha, fica melhor que o roteiro 😂 Áudio original em português, sem narração por cima. #TapasEBeijos #FalhaNossa #HumorBrasileiro #CenaCerta"
+    },
+    {
+      "id": "CC-OCT05-TT-AQUELE-3X",
+      "network": "tiktok",
+      "format": "humor_three_hits",
+      "slot": "2026-10-05T18:00:00-03:00",
+      "title": "Aquele Beijo — 3 quebras de personagem",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/1707565/",
+      "source_id": "1707565",
+      "segments": [
+        [
+          0,
+          12
+        ],
+        [
+          24,
+          37
+        ],
+        [
+          50,
+          63
+        ]
+      ],
+      "beat_labels": [
+        "1/3",
+        "2/3",
+        "3/3"
+      ],
+      "hook": "3 VEZES EM QUE A CENA NÃO SOBREVIVEU 😂",
+      "cta": "QUAL FOI A MELHOR? 😂",
+      "caption": "Três quebras de personagem em Aquele Beijo — sem explicação por cima, só a cena e a reação do elenco 😂 #AqueleBeijo #FalhaNossa #CenaErrada #CenaCerta"
+    },
+    {
+      "id": "CC-OCT05-IG-AVENIDA",
+      "network": "instagram",
+      "format": "nostalgia_conflict",
+      "slot": "2026-10-05T10:00:00-03:00",
+      "title": "Avenida Brasil — Carminha tenta disfarçar a tensão",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/14917711/",
+      "source_id": "14917711",
+      "source_start": 0,
+      "source_end": 42,
+      "hook": "CARMINHA TENTA DISFARÇAR — MAS NINA ESTÁ NO CONTROLE",
+      "cta": "VOCÊ LEMBRAVA DESSA CENA?",
+      "caption": "Carminha tenta manter as aparências enquanto Nina controla a situação. Cena real, diálogo original em português e zero narração por cima. #AvenidaBrasil #Carminha #Nina #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT05-IG-NAZARE",
+      "network": "instagram",
+      "format": "iconic_villain",
+      "slot": "2026-10-05T11:00:00-03:00",
+      "title": "Senhora do Destino — Nazaré no casamento de Isabel",
+      "year": 2004,
+      "source": "https://globoplay.globo.com/v/5694170/",
+      "source_id": "5694170",
+      "source_start": 0,
+      "source_end": 42,
+      "hook": "NAZARÉ ACHOU QUE O DISFARCE IA FUNCIONAR 😳",
+      "cta": "ESSA VILÃ ERA OUTRO NÍVEL?",
+      "caption": "Nazaré tenta entrar disfarçada no casamento de Isabel — e o plano não dura muito. Cena real, áudio original em português. #SenhoraDoDestino #Nazare #Novela #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT05-IG-CRAVO",
+      "network": "instagram",
+      "format": "romcom_duel",
+      "slot": "2026-10-05T12:00:00-03:00",
+      "title": "O Cravo e a Rosa — Catarina aposta na fazenda",
+      "year": 2000,
+      "source": "https://globoplay.globo.com/v/10648385/",
+      "source_id": "10648385",
+      "source_start": 0,
+      "source_end": 42,
+      "hook": "CATARINA DECIDE APOSTAR TUDO NA FAZENDA",
+      "cta": "PETRUCHIO ESTAVA PRONTO PRA ISSO?",
+      "caption": "Catarina decide investir na fazenda de Petruchio e muda o jogo entre os dois. Cena real e diálogo original em português. #OCravoEARosa #Catarina #Petruchio #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT05-YT-ESCADA",
+      "network": "youtube",
+      "format": "iconic_shock",
+      "slot": "2026-10-05T14:00:00-03:00",
+      "title": "Senhora do Destino — Nazaré joga Luís Carlos da escada",
+      "year": 2004,
+      "source": "https://globoplay.globo.com/v/2873003/",
+      "source_id": "2873003",
+      "source_start": 0,
+      "source_end": 35,
+      "hook": "NAZARÉ VAI LONGE DEMAIS EM 35 SEGUNDOS",
+      "cta": "VOCÊ LEMBRAVA DESSA CENA?",
+      "caption": "Nazaré joga Luís Carlos da escada. Cena original em português. #SenhoraDoDestino #Nazare #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT05-YT-ODETE",
+      "network": "youtube",
+      "format": "instant_twist",
+      "slot": "2026-10-05T15:00:00-03:00",
+      "title": "Vale Tudo — Odete Roitman é assassinada",
+      "year": 2025,
+      "source": "https://globoplay.globo.com/v/14018885/",
+      "source_id": "14018885",
+      "source_start": 0,
+      "source_end": 29,
+      "hook": "29 SEGUNDOS QUE MUDAM VALE TUDO",
+      "cta": "QUEM VOCÊ SUSPEITARIA?",
+      "caption": "O momento em que Odete Roitman é assassinada. Cena real, áudio original em português. #ValeTudo #OdeteRoitman #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT05-YT-BRIGA",
+      "network": "youtube",
+      "format": "dialogue_duel",
+      "slot": "2026-10-05T16:00:00-03:00",
+      "title": "O Cravo e a Rosa — Petruchio e Catarina brigam",
+      "year": 2000,
+      "source": "https://globoplay.globo.com/v/2505129/",
+      "source_id": "2505129",
+      "source_start": 0,
+      "source_end": 40,
+      "hook": "PETRUCHIO + CATARINA: 40 SEGUNDOS DE CAOS",
+      "cta": "QUEM GANHOU ESSA BRIGA?",
+      "caption": "Petruchio e Catarina em mais uma briga impossível de ignorar. Cena real e áudio original em português. #OCravoEARosa #Petruchio #Catarina #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT05-FB-NINA-3BEAT",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-05T10:00:00-03:00",
+      "title": "Avenida Brasil — Nina força Carminha a encarar as consequências",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/15004552/",
+      "source_id": "15004552",
+      "segments": [
+        [
+          0,
+          14
+        ],
+        [
+          34,
+          49
+        ],
+        [
+          70,
+          86
+        ]
+      ],
+      "beat_labels": [
+        "1. PRESSÃO",
+        "2. VIRADA",
+        "3. CONSEQUÊNCIA"
+      ],
+      "hook": "NINA APERTA O CERCO SOBRE CARMINHA",
+      "cta": "ATÉ ONDE NINA DEVERIA IR?",
+      "caption": "Três momentos da mesma virada: Nina aperta o cerco e Carminha começa a perder o controle. Micro-arco editorial com cenas reais e diálogo original em português. #AvenidaBrasil #Nina #Carminha #CenaCerta"
+    },
+    {
+      "id": "CC-OCT05-FB-NAZARE-3BEAT",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-05T12:00:00-03:00",
+      "title": "Senhora do Destino — Nazaré encurralada",
+      "year": 2004,
+      "source": "https://globoplay.globo.com/v/5694282/",
+      "source_id": "5694282",
+      "segments": [
+        [
+          0,
+          14
+        ],
+        [
+          28,
+          43
+        ],
+        [
+          58,
+          74
+        ]
+      ],
+      "beat_labels": [
+        "1. AMEAÇA",
+        "2. ATAQUE",
+        "3. INTERRUPÇÃO"
+      ],
+      "hook": "NAZARÉ É ENCURRALADA — E PARTE PARA O ATAQUE",
+      "cta": "QUAL ERA O LIMITE DESSA VILÃ?",
+      "caption": "A ameaça cresce em três etapas até Nazaré partir para o ataque. Edição editorial em micro-arco, sempre com cenas reais e áudio original em português. #SenhoraDoDestino #Nazare #CenaCerta"
+    },
+    {
+      "id": "CC-OCT05-FB-ODETE-3BEAT",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-05T17:00:00-03:00",
+      "title": "Vale Tudo — Odete orienta Fátima a sustentar a mentira",
+      "year": 2025,
+      "source": "https://globoplay.globo.com/v/13631051/",
+      "source_id": "13631051",
+      "segments": [
+        [
+          0,
+          14
+        ],
+        [
+          30,
+          45
+        ],
+        [
+          66,
+          82
+        ]
+      ],
+      "beat_labels": [
+        "1. PROBLEMA",
+        "2. ESTRATÉGIA",
+        "3. MANIPULAÇÃO"
+      ],
+      "hook": "ODETE ENSINA FÁTIMA A MUDAR A NARRATIVA",
+      "cta": "QUEM MANIPULA QUEM AQUI?",
+      "caption": "Odete e Maria de Fátima em três movimentos: problema, estratégia e manipulação. Micro-arco editorial com diálogo original em português. #ValeTudo #OdeteRoitman #MariaDeFatima #CenaCerta"
+    }
+  ]
+}
