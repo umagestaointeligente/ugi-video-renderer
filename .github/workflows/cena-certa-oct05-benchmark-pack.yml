@@ -25,6 +25,13 @@ jobs:
     timeout-minutes: 95
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/cena_certa_oct05_pack.py
+            ops/cena-certa-oct05
+            assets/cena-certa-logo.png.b64
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
 
       - name: Install runtime
         run: |
