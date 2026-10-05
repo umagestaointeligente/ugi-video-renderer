@@ -6,6 +6,8 @@ on:
     paths:
       - .github/workflows/cena-certa-oct03-format-reset.yml
       - scripts/cena_certa_oct03_pack.py
+      - scripts/cena_certa_render_evidence_guard.py
+      - ops/cena-certa-oct03/prepublish-receipts.json
       - ops/cena-certa-oct03/manifest.json
       - ops/cena-certa-oct03/anti-repeat-snapshot.json
       - ops/cena-certa-oct03/history_media.json
@@ -38,6 +40,25 @@ jobs:
           set -euo pipefail
           python scripts/cena_certa_oct03_pack.py
 
+      - name: Verify execution-bound approval before external writes
+        run: |
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root=Path("out/cena-certa-oct03")
+          d=json.loads((root/"diagnostic.json").read_text())
+          p=json.loads((root/"preflight.json").read_text())
+          if d.get("status")!="PASS" or p.get("status")!="PASS": raise SystemExit("APPROVAL_MISSING")
+          for key,env in (("run_id","GITHUB_RUN_ID"),("run_attempt","GITHUB_RUN_ATTEMPT"),("commit","GITHUB_SHA")):
+              if d.get(key)!=os.environ.get(env): raise SystemExit("APPROVAL_EXECUTION_MISMATCH")
+          if d.get("summary_sha256")!=hashlib.sha256((root/"summary.json").read_bytes()).hexdigest():
+              raise SystemExit("SUMMARY_CHANGED_AFTER_GATE")
+          summary=json.loads((root/"summary.json").read_text())
+          for item in summary["items"]:
+              path=root/item["network"]/(item["id"]+".mp4")
+              if hashlib.sha256(path.read_bytes()).hexdigest()!=item["sha256"]: raise SystemExit("MASTER_CHANGED_AFTER_GATE")
+          PY
+
       - name: Publish QA-approved masters to GitHub releases
         env:
           GH_TOKEN: ${{ github.token }}
@@ -58,6 +79,8 @@ jobs:
             echo "CENA_CERTA_OCT03_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
             echo "COMMIT=$GITHUB_SHA"
+            echo "PUBLICATION_STATUS=NOT_VERIFIED"
+            cat out/cena-certa-oct03/preflight.json
             echo
             cat out/cena-certa-oct03/summary.json
           } > out/cena-certa-oct03/issue.txt
@@ -66,6 +89,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cena-certa-oct03-format-reset-${{ github.run_id }}
+          name: cena-certa-oct03-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
           path: out/cena-certa-oct03/
           retention-days: 7

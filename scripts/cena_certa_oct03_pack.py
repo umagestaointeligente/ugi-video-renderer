@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+import sys
+from cena_certa_render_evidence_guard import validate_pack
+from datetime import datetime, timezone
+from urllib.parse import urlparse
 import base64, concurrent.futures, hashlib, json, math, os, pathlib, subprocess, time, urllib.request
 
 ROOT=pathlib.Path.cwd()
@@ -13,6 +17,27 @@ FONT="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 CORE_URL="https://storage.soundinstants.com/core-sound-effect.mp3"
 
 NETWORK_PREFIX={"tiktok":"TT","instagram":"IG","youtube":"YT","facebook":"FB"}
+
+# Diagnosis is separate from approval; every receipt is bound to this execution.
+PHASE="CONFIGURATION"
+CONTEXT={}
+
+def execution_receipt_matches(receipt):
+    return isinstance(receipt,dict) and all(os.environ.get(env) and receipt.get(key)==os.environ[env]
+        for key,env in (("run_id","GITHUB_RUN_ID"),("run_attempt","GITHUB_RUN_ATTEMPT"),("commit","GITHUB_SHA")))
+
+
+def diagnostic(status, **details):
+    OUT.mkdir(parents=True,exist_ok=True)
+    receipt={"schema":"CENA_CERTA_OCT03_DIAGNOSTIC_V1", "status":status,
+             "run_id":os.environ.get("GITHUB_RUN_ID"),
+             "run_attempt":os.environ.get("GITHUB_RUN_ATTEMPT"),
+             "commit":os.environ.get("GITHUB_SHA"), "phase":PHASE,
+             "at":datetime.now(timezone.utc).isoformat(), **details}
+    tmp=OUT/"diagnostic.json.tmp"
+    tmp.write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding="utf-8")
+    tmp.replace(OUT/"diagnostic.json")
+
 
 def run(cmd,check=True,timeout=None,binary=False):
     p=subprocess.run(cmd,capture_output=True,timeout=timeout)
@@ -50,14 +75,19 @@ def download_source(item,cache):
         try: p.unlink()
         except: pass
     base=["yt-dlp","--no-warnings","--force-ipv4","--retries","5","--fragment-retries","5","--retry-sleep","3",
-          "-f","bv*+ba/b","--merge-output-format","mp4","-o",str(wd/"source.%(ext)s")]
-    variants=[[],["--extractor-args","youtube:player_client=tv,web_safari"]]
+          "--write-info-json","-f","bv*+ba/b","--merge-output-format","mp4","-o",str(wd/"source.%(ext)s")]
+    variants=[[]]
+    if (urlparse(item["source"]).hostname or "").lower() in ("youtube.com","www.youtube.com","youtu.be","m.youtube.com"):
+        variants.append(["--extractor-args","youtube:player_client=tv,web_safari"])
     last=None
     for attempt in range(1,5):
         for extra in variants:
             try:
                 run(base+extra+[item["source"]],timeout=240)
-                files=list(wd.glob("source.*"))
+                metadata=json.loads((wd/"source.info.json").read_text(encoding="utf-8"))
+                if str(metadata.get("id"))!=sid:
+                    raise RuntimeError(f"SOURCE_IDENTITY_MISMATCH:{item['id']}:{sid}")
+                files=[p for p in wd.glob("source.*") if p.suffix in (".mp4",".webm",".mkv",".mov")]
                 if not files: raise RuntimeError("SOURCE_OUTPUT_MISSING")
                 src=files[0]
                 if src.stat().st_size<400000: raise RuntimeError("SOURCE_TOO_SMALL")
@@ -68,6 +98,10 @@ def download_source(item,cache):
                 return src
             except Exception as exc:
                 last=exc
+                if "SOURCE_IDENTITY_MISMATCH" in str(exc): raise
+                # An access denial is not transient; do not amplify it with retries.
+                if "HTTP Error 403" in str(exc) or "HTTP Error 401" in str(exc):
+                    raise RuntimeError(f"SOURCE_ACCESS_DENIED:{item['id']}:{sid}") from exc
                 for p in wd.glob("source.*"):
                     try:p.unlink()
                     except:pass
@@ -84,7 +118,7 @@ def validate_master(out):
     n,d=map(int,v["avg_frame_rate"].split("/"))
     if abs(n/d-30)>0.05: raise RuntimeError("FPS_FAIL")
     if a["codec_name"]!="aac" or int(a["sample_rate"])!=48000: raise RuntimeError("AAC_48K_FAIL")
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.8:pix_th=0.02","-an","-f","null","-"],check=False)
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.8:pix_th=0.02","-an","-f","null","-"])
     if b"black_start" in black.stderr: raise RuntimeError("NO_BLACK_FAIL")
     motion=run(["ffmpeg","-v","error","-i",str(out),"-vf","fps=1","-f","framemd5","-"])
     hashes=[]
@@ -93,16 +127,19 @@ def validate_master(out):
             parts=[x.strip() for x in ln.split(",")]
             if len(parts)>=6: hashes.append(parts[-1])
     if len(set(hashes)) < min(6,max(4,len(hashes)//4)): raise RuntimeError("REAL_MOTION_FAIL")
-    sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.2","-vn","-f","null","-"],check=False)
+    sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.2","-vn","-f","null","-"])
     txt=sil.stderr.decode("utf-8","ignore")
-    dur=duration(out); open_start=None
+    dur=duration(out); open_start=None; silent_tail=False
     for ln in txt.splitlines():
         if "silence_start:" in ln:
             try: open_start=float(ln.split("silence_start:")[1].split()[0])
             except: pass
         elif "silence_end:" in ln:
+            end=float(ln.split("silence_end:")[1].split()[0])
+            if open_start is not None and end>=dur-0.1 and end-open_start>1.0:
+                silent_tail=True
             open_start=None
-    if open_start is not None and dur-open_start>1.0: raise RuntimeError("SILENT_TAIL_FAIL")
+    if silent_tail or (open_start is not None and dur-open_start>1.0): raise RuntimeError("SILENT_TAIL_FAIL")
     return p
 
 def render(item,src,logo,core):
@@ -199,7 +236,12 @@ def history_index():
             except Exception: pass
     coverage=ok/max(1,len(eligible))
     print("HISTORY_FINGERPRINT_COVERAGE",ok,len(eligible),coverage)
-    if eligible and coverage<0.80: raise RuntimeError(f"HISTORY_FINGERPRINT_COVERAGE_FAIL:{coverage:.3f}")
+    missing=[{"id":x.get("id"),"network":x.get("network")} for x in eligible
+             if not any(row is x for row,_ in idx)]
+    if not eligible or missing:
+        diagnostic("BLOCKED",reason="HISTORY_FINGERPRINT_COVERAGE_FAIL",coverage=coverage,
+                   eligible=len(eligible),missing=missing)
+        raise RuntimeError(f"HISTORY_FINGERPRINT_COVERAGE_FAIL:{ok}/{len(eligible)}")
     return idx,coverage,len(eligible)
 
 def source_window_gate(items,prior_sources):
@@ -220,11 +262,14 @@ def source_window_gate(items,prior_sources):
         evidence[item["id"]]={"source_id":sid,"prior_matches":hits}
     return evidence
 
-def visual_gate(rendered,hidx):
+def visual_gate(rendered,hidx,fingerprints=None):
+    fingerprints={} if fingerprints is None else fingerprints
     evidence={}
     cand=[]
     for item,out in rendered:
-        hs=dhashes(out,70,1.0,60)
+        key=str(out)
+        if key not in fingerprints: fingerprints[key]=dhashes(out,70,1.0,60)
+        hs=fingerprints[key]
         if len(hs)<5: raise RuntimeError(f"CANDIDATE_FINGERPRINT_TOO_SHORT:{item['id']}")
         cand.append((item,out,hs))
         threshold=max(5,math.ceil(len(hs)*0.25))
@@ -234,6 +279,9 @@ def visual_gate(rendered,hidx):
             if score>best["score"]: best={"score":score,"history":{"id":hx.get("id"),"network":hx.get("network"),"title":hx.get("title")}}
         evidence[item["id"]]={"candidate_frames":len(hs),"threshold":threshold,"best_score":best["score"],"best_history":best["history"]}
         if best["score"]>=threshold:
+            diagnostic("BLOCKED",reason="SCENE_FINGERPRINT_REPEAT_FAIL",item_id=item["id"],
+                       master_sha256=hashlib.sha256(out.read_bytes()).hexdigest(),
+                       scene_evidence=evidence[item["id"]])
             raise RuntimeError(f"SCENE_FINGERPRINT_REPEAT_FAIL:{item['id']}:{best}")
     # Candidate-to-candidate duplication protection
     for i in range(len(cand)):
@@ -245,7 +293,11 @@ def visual_gate(rendered,hidx):
     return evidence
 
 def main():
+    global PHASE,CONTEXT
     WORK.mkdir(parents=True,exist_ok=True); OUT.mkdir(parents=True,exist_ok=True)
+    # Never reuse an approval left by an earlier attempt in a persistent workspace.
+    (OUT/"summary.json").unlink(missing_ok=True)
+    (OUT/"diagnostic.json").unlink(missing_ok=True)
     manifest=json.loads(MANIFEST.read_text(encoding="utf-8"))
     anti=json.loads(ANTI.read_text(encoding="utf-8"))
     items=manifest["items"]
@@ -256,38 +308,100 @@ def main():
     if any(int(x.get("year",0))<1990 for x in items): raise RuntimeError("YEAR_FLOOR_FAIL")
     source_ev=source_window_gate(items,anti.get("prior_sources",[]))
 
+    PHASE="HISTORY_PREFLIGHT"
+    hidx,coverage,eligible=history_index()
+    # Download and validate every input before spending CPU on any master.
+    PHASE="SOURCE_PREFLIGHT"
+    cache={}
+    sources={}
+    source_metadata={}
+    for item in items:
+        CONTEXT={"item_id":item["id"],"source_id":str(item["source_id"])}
+        src=download_source(item,cache)
+        srcdur=duration(src)
+        start=float(item["source_start"]);end=float(item["source_end"])
+        if not math.isfinite(start) or not math.isfinite(end) or start<0 or end<=start or end>srcdur or end-start<12:
+            raise RuntimeError(f"SOURCE_WINDOW_PREFLIGHT_FAIL:{item['id']}")
+        sources[item["id"]]=src
+        info=src.parent/"source.info.json"
+        source_metadata[item["id"]]={"extracted_id":str(json.loads(info.read_text())["id"]),
+                                    "metadata_sha256":hashlib.sha256(info.read_bytes()).hexdigest(),
+                                    "duration_sec":srcdur}
+    PHASE="RENDER_AND_GATE"
     logo=WORK/"logo.png"; logo.write_bytes(base64.b64decode("".join(LOGO_B64.read_text().split())))
     core=WORK/"core.mp3"; download(CORE_URL,core)
-    cache={}; rendered=[]; summary={"schema":"CENA_CERTA_OCT03_DELIVERY_V1","strategy":manifest["strategy"],"items":[]}
+    rendered=[]; fingerprints={}; summary={"schema":"CENA_CERTA_OCT03_DELIVERY_V1","strategy":manifest["strategy"],"items":[]}
     for item in items:
-        src=download_source(item,cache)
+        CONTEXT={"item_id":item["id"]}
+        src=sources[item["id"]]
         out,s,e,total=render(item,src,logo,core)
         sha=hashlib.sha256(out.read_bytes()).hexdigest()
         summary["items"].append({
           "id":item["id"],"network":item["network"],"format":item["format"],"slot":item["slot"],"title":item["title"],
           "source":item["source"],"source_id":item["source_id"],"source_start_sec":round(s,3),"source_end_sec":round(e,3),
-          "duration_sec":round(total,3),"sha256":sha,
+          "duration_sec":round(total,3),"sha256":sha,"technical_status":"PASS",
+          "kind":"humor" if str(item.get("format","")).startswith("humor") else "scene",
+          "source_duration_sec":source_metadata[item["id"]]["duration_sec"],
+          "source_metadata":source_metadata[item["id"]],
           "gates":{
-            "SOURCE_PASS":True,"SOURCE_WINDOW_60D_PASS":True,"REAL_FOOTAGE_PASS":True,"REAL_MOTION_PASS":True,
-            "AUDIO_PTBR_MODE":"ORIGINAL_BRAZILIAN_SOURCE_AUDIO","NO_NARRATION_PASS":True,"AUDIO_VISUAL_SYNC_PASS":"ORIGINAL_SCENE_AUDIO",
+            "SOURCE_PASS":True,"SOURCE_WINDOW_60D_PASS":True,"REAL_FOOTAGE_STATUS":"NOT_VERIFIED","REAL_MOTION_PASS":True,
+            "AUDIO_PTBR_STATUS":"NOT_VERIFIED","NO_NARRATION_STATUS":"NOT_VERIFIED","AUDIO_VISUAL_SYNC_STATUS":"NOT_VERIFIED",
             "NO_BLACK_PASS":True,"NO_SILENT_TAIL_PASS":True,"NO_EXTRA_ZOOM_PASS":True,"NO_AGGRESSIVE_CROP_PASS":True,
             "NO_LEGACY_MASK_PASS":True,"H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True
           }
         })
         rendered.append((item,out))
+        # Reject the first repeating master immediately, including intra-pack repeats.
+        visual_gate(rendered,hidx,fingerprints)
         print("MASTER_RENDER_PASS",item["id"],sha)
 
-    hidx,coverage,eligible=history_index()
-    vis=visual_gate(rendered,hidx)
+    PHASE="SCENE_GATE"
+    CONTEXT={}
+    vis=visual_gate(rendered,hidx,fingerprints)
     summary["history_fingerprint_coverage"]=coverage
     summary["history_eligible_media"]=eligible
     summary["source_window_evidence"]=source_ev
     summary["scene_fingerprint_evidence"]=vis
     for rec in summary["items"]:
         rec["gates"]["SCENE_FINGERPRINT_60D_PASS"]=True
-        rec["gates"]["EDITORIAL_PASS"]=True
+        rec["gates"]["EDITORIAL_STATUS"]="NOT_VERIFIED"
     (OUT/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
+    PHASE="EVIDENCE_PREFLIGHT"
+    CONTEXT={}
+    receipt_path=ROOT/"ops/cena-certa-oct03/prepublish-receipts.json"
+    receipts=json.loads(receipt_path.read_text()) if receipt_path.exists() else {}
+    preflight={"status":"PASS","items":[],"publication_status":"NOT_VERIFIED"}
+    for net in NETWORK_PREFIX:
+        batch={"items":[x for x in summary["items"] if x["network"]==net]}
+        result=validate_pack(batch,receipts,OUT/net)
+        preflight["items"].extend(result["items"])
+        if result["status"]!="PASS":preflight["status"]="BLOCK"
+    # A receipt for another run or commit cannot authorize this attempt.
+    for row in preflight["items"]:
+        receipt=receipts.get(row["content_id"],{})
+        if not execution_receipt_matches(receipt):
+            row["status"]="BLOCK";row["errors"].append("RECEIPT_EXECUTION_MISMATCH")
+            preflight["status"]="BLOCK"
+    preflight.update(run_id=os.environ.get("GITHUB_RUN_ID"),commit=os.environ.get("GITHUB_SHA"))
+    (OUT/"preflight.json").write_text(json.dumps(preflight,indent=2),encoding="utf-8")
+    if preflight["status"]!="PASS":
+        diagnostic("BLOCKED",reason="EDITORIAL_EVIDENCE_NOT_PROVEN",preflight=preflight)
+        raise RuntimeError("EDITORIAL_EVIDENCE_NOT_PROVEN")
+    diagnostic("PASS",item_count=len(summary["items"]),
+               summary_sha256=hashlib.sha256((OUT/"summary.json").read_bytes()).hexdigest())
     print("CENA_CERTA_OCT03_PACK=PASS",len(summary["items"]))
 
+def execute():
+    try:
+        main()
+    except Exception as exc:
+        (OUT/"summary.json").unlink(missing_ok=True)
+        # Preserve the structured match/coverage evidence written by the gate.
+        if not (OUT/"diagnostic.json").exists():
+            diagnostic("BLOCKED",reason=type(exc).__name__,error=str(exc)[:2000],**CONTEXT)
+        print(f"CENA_CERTA_OCT03_PACK=BLOCKED phase={PHASE} reason={exc}",file=sys.stderr)
+        return 1
+    return 0
+
 if __name__=="__main__":
-    main()
+    sys.exit(execute())

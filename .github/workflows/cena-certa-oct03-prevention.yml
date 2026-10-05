@@ -1,0 +1,35 @@
+name: Cena Certa Configuration and Gate Regression
+on:
+  pull_request:
+    paths:
+      - .github/workflows/cena-certa-oct01-rights-discovery.yml
+      - .github/workflows/cena-certa-oct03*.yml
+      - scripts/cena_certa_oct03_pack.py
+      - scripts/cena_certa_render_evidence_guard.py
+      - tests/test_cena_certa_oct03_prevention.py
+      - tests/test_cena_certa_render_evidence.py
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct01-rights-discovery.yml
+      - .github/workflows/cena-certa-oct03*.yml
+      - scripts/cena_certa_oct03_pack.py
+      - scripts/cena_certa_render_evidence_guard.py
+      - tests/test_cena_certa_oct03_prevention.py
+      - tests/test_cena_certa_render_evidence.py
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install YAML parser
+        run: python -m pip install PyYAML==6.0.2
+      - name: Configuration and fail-closed regressions (no network media or publication)
+        run: |
+          python -m unittest discover -s tests -p 'test_cena_certa_oct03_prevention.py' -v
+          python -m unittest discover -s tests -p 'test_cena_certa_render_evidence.py' -v
