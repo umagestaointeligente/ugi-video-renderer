@@ -8,26 +8,18 @@ on:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - name: Install yt-dlp
         run: python -m pip install -q --upgrade yt-dlp
-      - name: Probe Oct05 candidates
+      - name: Probe Oct05 fallback candidates
         run: |
           set -u
           urls=(
-            "https://globoplay.globo.com/v/1412674/"
-            "https://globoplay.globo.com/v/2874951/"
-            "https://globoplay.globo.com/v/919887/"
-            "https://globoplay.globo.com/v/14917711/"
-            "https://globoplay.globo.com/v/5694170/"
-            "https://globoplay.globo.com/v/10648385/"
-            "https://globoplay.globo.com/v/2873003/"
-            "https://globoplay.globo.com/v/14018885/"
-            "https://globoplay.globo.com/v/2505129/"
-            "https://globoplay.globo.com/v/15004552/"
-            "https://globoplay.globo.com/v/5694282/"
-            "https://globoplay.globo.com/v/13606454/"
+            "https://globoplay.globo.com/v/1707565/"
+            "https://globoplay.globo.com/v/1785271/"
+            "https://globoplay.globo.com/v/13631051/"
+            "https://globoplay.globo.com/v/13994402/"
           )
           fail=0
           for u in "${urls[@]}"; do
