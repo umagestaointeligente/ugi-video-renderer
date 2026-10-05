@@ -273,9 +273,12 @@ def source_window_gate(items,prior_sources):
 def visual_gate(rendered,hidx):
     evidence={}
     cands=[]
+    violations=[]
     for item,out in rendered:
         hs=dhashes_center(out,90,2.0,70)
-        if len(hs)<12: raise RuntimeError(f"CANDIDATE_FINGERPRINT_TOO_SHORT:{item['id']}")
+        if len(hs)<12:
+            violations.append({"type":"CANDIDATE_FINGERPRINT_TOO_SHORT","id":item["id"],"frames":len(hs)})
+            continue
         cands.append((item,hs))
         threshold=max(8,min(12,math.ceil(len(hs)*0.15)))
         best={"streak":0,"history":None,"alignment":None}
@@ -285,14 +288,16 @@ def visual_gate(rendered,hidx):
                 best={"streak":streak,"history":{"id":hx.get("id"),"network":hx.get("network"),"title":hx.get("title")},"alignment":meta}
         evidence[item["id"]]={"candidate_frames":len(hs),"fps":2.0,"threshold_frames":threshold,"threshold_seconds":round(threshold/2,2),"best":best}
         if best["streak"]>=threshold:
-            raise RuntimeError(f"SCENE_SEQUENCE_REPEAT_FAIL:{item['id']}:{best}:threshold={threshold}")
+            violations.append({"type":"SCENE_SEQUENCE_REPEAT","id":item["id"],"best":best,"threshold":threshold})
     for i in range(len(cands)):
         for j in range(i+1,len(cands)):
             a,b=cands[i],cands[j]
             streak,meta=longest_temporal_streak(a[1],b[1],7)
             threshold=max(8,min(12,math.ceil(min(len(a[1]),len(b[1]))*0.15)))
             if streak>=threshold:
-                raise RuntimeError(f"INTRA_PACK_SCENE_DUPLICATE_FAIL:{a[0]['id']}:{b[0]['id']}:{streak}:{threshold}:{meta}")
+                violations.append({"type":"INTRA_PACK_SCENE_DUPLICATE","a":a[0]["id"],"b":b[0]["id"],"streak":streak,"threshold":threshold,"alignment":meta})
+    if violations:
+        raise RuntimeError("SCENE_SEQUENCE_GATE_FAIL:"+json.dumps(violations,ensure_ascii=False))
     return evidence
 
 def main():
