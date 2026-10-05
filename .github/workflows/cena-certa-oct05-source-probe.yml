@@ -8,28 +8,13 @@ on:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
       - name: Install yt-dlp
         run: python -m pip install -q --upgrade yt-dlp
-      - name: Probe Oct05 fallback candidates
+      - name: Identify fallback candidates
         run: |
-          set -u
-          urls=(
-            "https://globoplay.globo.com/v/1707565/"
-            "https://globoplay.globo.com/v/1785271/"
-            "https://globoplay.globo.com/v/13631051/"
-            "https://globoplay.globo.com/v/13994402/"
-          )
-          fail=0
-          for u in "${urls[@]}"; do
-            id="${u%/}"; id="${id##*/}"
-            if yt-dlp --no-warnings --simulate -f "bv*+ba/b" "$u" >/tmp/probe-$id.log 2>&1; then
-              echo "SOURCE_PROBE_PASS $id"
-            else
-              echo "SOURCE_PROBE_FAIL $id"
-              tail -20 /tmp/probe-$id.log
-              fail=1
-            fi
+          set -euo pipefail
+          for u in             "https://globoplay.globo.com/v/1785271/"             "https://globoplay.globo.com/v/13994402/"; do
+            yt-dlp --no-warnings --simulate --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"
           done
-          exit $fail
