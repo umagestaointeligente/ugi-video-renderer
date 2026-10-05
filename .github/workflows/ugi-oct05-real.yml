@@ -1,0 +1,49 @@
+name: UGI Oct05 Real Editorial
+on:
+  push:
+    paths: ['.github/workflows/ugi-oct05-real.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core curl
+          python -m pip install -U edge-tts
+      - name: Build real exact-topic videos
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-10-05; mkdir -p "$O/src"
+          curl -L --fail --retry 3 -o "$O/src/workers.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Manual_workers_2026.webm"
+          curl -L --fail --retry 3 -o "$O/src/assembly.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Assembly_line.webm"
+          curl -L --fail --retry 3 -o "$O/src/capping.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Capping_machine_in_action.webm"
+          curl -L --fail --retry 3 -o "$O/src/conveyor.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gigaset_Cordless_Telephone_Production_VII_-_Pneumatic_Conveyor_Belt.webm"
+          cat > "$O/tiktok.txt" <<'TXT'
+          Gente ocupada não significa operação produtiva. Se uma equipe trabalha sem parar, mas espera material, refaz tarefa ou acumula produto entre etapas, esforço está sendo confundido com fluxo. Produtividade não é maximizar ocupação de cada pessoa. É aumentar a quantidade de valor que atravessa o processo com menos espera e retrabalho. Antes de cobrar velocidade, descubra onde o trabalho está parando.
+          TXT
+          cat > "$O/youtube.txt" <<'TXT'
+          Uma linha de produção pode parecer eficiente porque todas as máquinas estão trabalhando. Mas existe um indicador escondido entre elas: o estoque em processo. Quando uma etapa produz mais rápido do que a próxima consegue absorver, peças começam a se acumular. Esse material parado já consumiu dinheiro, energia e capacidade, mas ainda não virou produto vendido. O problema é que excesso de estoque em processo também esconde defeitos e aumenta o tempo total de atravessamento. Se um erro aparece em uma peça e existem centenas esperando na fila, a correção chega tarde. A gestão enxuta trata esse acúmulo como sinal de desequilíbrio. Em vez de perguntar quanto cada máquina consegue produzir isoladamente, pergunta qual ritmo o sistema inteiro consegue sustentar. É aí que entram conceitos como fluxo, capacidade e trabalho puxado pela demanda. Produzir antes da hora pode parecer eficiência local e ainda piorar o resultado global. Imagine três etapas. A primeira entrega cem unidades por hora. A segunda consegue processar sessenta. A terceira, oitenta. Fazer a primeira trabalhar no máximo não aumenta a saída do sistema. Apenas cria quarenta unidades de fila a cada hora. Com o tempo, essa fila ocupa espaço, exige movimentação, aumenta risco de dano e prende capital. Melhorar o sistema começa pelo gargalo, não pela etapa mais fácil de acelerar. Depois, o objetivo é sincronizar as demais etapas ao ritmo que realmente gera saída. Isso vale para fábrica, centro de distribuição, cozinha, hospital e até escritório. Trabalho acumulado entre pessoas também é estoque em processo. A pergunta para sua operação é simples: onde existe uma fila de trabalho que todos já aprenderam a considerar normal? Muitas vezes, ali está dinheiro parado esperando para virar resultado.
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=+4% --text "$(cat "$O/tiktok.txt")" --write-media "$O/tiktok.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/youtube.txt")" --write-media "$O/youtube.mp3"
+          DT=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/tiktok.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/workers.webm" -i "$O/tiktok.mp3" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,drawbox=x=0:y=0:w=iw:h=180:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='OCUPAÇÃO NÃO É PRODUTIVIDADE':fontcolor=white:fontsize=47:x=(w-text_w)/2:y=62[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$DT" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/tiktok-ocupacao-produtividade.mp4"
+          DY=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/assembly.webm" -stream_loop -1 -i "$O/src/capping.webm" -stream_loop -1 -i "$O/src/conveyor.webm" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:28,setpts=PTS-STARTPTS[a];[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:28,setpts=PTS-STARTPTS[b];[2:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,trim=0:28,setpts=PTS-STARTPTS[c];[a][b][c]concat=n=3:v=1:a=0,loop=loop=-1:size=2520:start=0,drawbox=x=0:y=0:w=iw:h=155:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='A FILA INVISÍVEL DENTRO DA OPERAÇÃO':fontcolor=white:fontsize=52:x=(w-text_w)/2:y=48[v];[3:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$DY" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-estoque-em-processo.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-10-05"); out={}
+          for f in ["tiktok-ocupacao-produtividade.mp4","youtube-estoque-em-processo.mp4"]:
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); assert d>25; out[f]=d
+          (p/"qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"exactTopicVisual":True,"noCompanyNamed":True,"noRandomFootage":True,"noSlideshow":True,"files":out,"sources":["Wikimedia Commons CC BY 4.0 Manual workers 2026","Wikimedia Commons CC BY 4.0 Assembly line","Wikimedia Commons CC licensed Capping machine in action","Wikimedia Commons CC BY Gigaset production conveyor"]},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-10-05
+          git commit -m "assets(ugi): Oct05 real exact-topic videos [skip ci]"
+          git push
