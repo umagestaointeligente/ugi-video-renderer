@@ -48,13 +48,13 @@ TOPICS={
    "gyro4":{"file":"gyro4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Fidget_spinner_spinning_in_space!.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SPINNER_MICROGRAVITY_ROTATION","asset_role":"TARGET_SUBJECT","identifiable_human":False}
   },
   "scenes":[
-   ("REAL","gyro1",1,"CONTEXT","gyro","PIÃO GIRANDO • VÍDEO REAL","Um pião parado cai rápido. Girando, ele consegue manter o eixo levantado por muito mais tempo."),
-   ("ANIMATION","anim",0,"MECHANISM","gyro","ANIMAÇÃO • MOMENTO ANGULAR","A rotação cria momento angular, uma grandeza que aponta ao longo do eixo e tende a conservar sua direção."),
-   ("REAL","gyro2",3,"PROOF","gyro","ESTABILIZAÇÃO GIROSCÓPICA • NASA","É esse comportamento que torna giroscópios úteis para estabilização e orientação."),
-   ("ANIMATION","anim",2,"MECHANISM","gyro","ANIMAÇÃO • TORQUE GERA PRECESSÃO","Quando a gravidade aplica torque, o eixo não cai simplesmente: ele começa a mudar de direção, num movimento chamado precessão."),
-   ("REAL","gyro3",2,"CONSEQUENCE","gyro","PIÃO ESPECIAL • VÍDEO REAL","Alguns piões ainda transformam parte da rotação em movimentos surpreendentes antes de perder estabilidade."),
-   ("ANIMATION","anim",4,"MECHANISM","gyro","ANIMAÇÃO • ATRITO ROUBA ENERGIA","O atrito reduz a velocidade de rotação; com menos momento angular, a estabilidade diminui."),
-   ("REAL","gyro4",2,"PROOF","gyro","ROTAÇÃO EM MICROGRAVIDADE • VÍDEO REAL","Sem o mesmo torque da gravidade terrestre, a rotação pode conservar sua orientação por mais tempo.")
+   ("REAL","gyro1",1,"CONTEXT","gyro","PIÃO GIRANDO • VÍDEO REAL","Um pião parado cai rápido. Girando, mantém o eixo levantado por muito mais tempo."),
+   ("ANIMATION","anim",0,"MECHANISM","gyro","ANIMAÇÃO • MOMENTO ANGULAR","A rotação cria momento angular, que aponta ao longo do eixo e tende a conservar sua direção."),
+   ("REAL","gyro2",3,"PROOF","gyro","ESTABILIZAÇÃO GIROSCÓPICA • NASA","Esse comportamento torna giroscópios úteis para estabilização e orientação."),
+   ("ANIMATION","anim",2,"MECHANISM","gyro","ANIMAÇÃO • TORQUE GERA PRECESSÃO","Quando a gravidade aplica torque, o eixo muda de direção num movimento chamado precessão."),
+   ("REAL","gyro3",2,"CONSEQUENCE","gyro","PIÃO ESPECIAL • VÍDEO REAL","Alguns piões transformam parte da rotação em movimentos surpreendentes antes de perder estabilidade."),
+   ("ANIMATION","anim",4,"MECHANISM","gyro","ANIMAÇÃO • ATRITO ROUBA ENERGIA","O atrito reduz a rotação; com menos momento angular, a estabilidade diminui."),
+   ("REAL","gyro4",2,"PROOF","gyro","ROTAÇÃO EM MICROGRAVIDADE • VÍDEO REAL","Com menos torque, a rotação pode conservar sua orientação por mais tempo.")
   ]},
  "dua_lipa_identidade":{
   "title":"Como Dua Lipa transforma um álbum em uma identidade visual? #shorts",
