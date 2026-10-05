@@ -311,8 +311,21 @@ def main():
     core=WORK/"core.mp3"; download(CORE_URL,core)
     cache={}; rendered=[]
     summary={"schema":"CENA_CERTA_OCT05_DELIVERY_V1","date":"2026-10-05","strategy":manifest["benchmark_basis"],"items":[]}
+
+    # Ingest unique already-probed sources in parallel; rendering/QA stays deterministic and sequential.
+    def ingest(item):
+        local={}
+        src=download_source(item,local)
+        return str(item["source_id"]),src
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex:
+        futs=[ex.submit(ingest,item) for item in items]
+        for fut in concurrent.futures.as_completed(futs):
+            sid,src=fut.result()
+            cache[sid]=src
+            print("SOURCE_INGEST_PASS",sid)
+
     for item in items:
-        src=download_source(item,cache)
+        src=cache[str(item["source_id"])]
         out,s,e,total,segs=render_item(item,src,logo,core)
         sha=hashlib.sha256(out.read_bytes()).hexdigest()
         rec={
