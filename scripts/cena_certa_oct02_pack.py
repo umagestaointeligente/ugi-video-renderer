@@ -70,9 +70,9 @@ def validate(out):
     n,d=map(int,v["avg_frame_rate"].split("/"))
     assert abs(n/d-30)<0.05
     assert a["codec_name"]=="aac" and int(a["sample_rate"])==48000
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=False).stderr or ""
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=True).stderr or ""
     if "black_start" in black: raise RuntimeError("NO_BLACK_FAIL")
-    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=False).stderr or ""
+    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=True).stderr or ""
     dur=duration(out)
     events=[]
     for ln in aud.splitlines():
@@ -158,7 +158,7 @@ def render_narrated(item,src,logo,out,wd):
       "[1:v]scale=132:-1[logo];[base][logo]overlay=W-w-24:24[branded];"
       f"[branded]drawtext=fontfile={FONT}:text='{hook}':fontcolor=white:fontsize=46:borderw=3:bordercolor=black@0.82:box=1:boxcolor=black@0.42:boxborderw=14:x=(w-text_w)/2:y=150:enable='lt(t,2.4)'[hooked];"
     )
-    if cta and item["network"]!="youtube":
+    if cta:
         fc += f"[hooked]drawtext=fontfile={FONT}:text='{cta}':fontcolor=white:fontsize=38:borderw=3:bordercolor=black@0.85:box=1:boxcolor=black@0.48:boxborderw=12:x=(w-text_w)/2:y=h-230:enable='gte(t,{max(0,total-2.2):.3f})'[v];"
     else:
         fc += "[hooked]copy[v];"
@@ -187,6 +187,8 @@ def main():
     if network and len(items)!=3:
         raise RuntimeError(f"NETWORK_ITEM_COUNT_FAIL:{network}:{len(items)}")
     for item in items:
+        if not str(item.get("cta", "")).strip():
+            raise RuntimeError("CTA_TEXT_MISSING")
         # Fail closed on exact source reuse with overlapping time window.
         cand_s=float(item.get("source_start",0)); cand_e=float(item.get("source_end",0))
         for old in prior_sources:
@@ -215,24 +217,22 @@ def main():
           "year":item.get("year"),"source":item["source"],"source_id":item["source_id"],
           "source_start_sec":round(s,3),"source_end_sec":round(e,3),"duration_sec":round(total,3),
           "sha256":sha,"frame_fingerprint_sha256":fp,
+          "technical_status":"PASS", "source_duration_sec":duration(src),
+          "execution": {"run_id":os.environ.get("GITHUB_RUN_ID"), "run_attempt":os.environ.get("GITHUB_RUN_ATTEMPT"), "head_sha":os.environ.get("GITHUB_SHA"), "job_id":os.environ.get("GITHUB_JOB")},
           "gates":{
-            "SOURCE_PASS":True,"RIGHTS_USAGE_CHECK":item.get("rights","UNSPECIFIED"),
-            "ANTI_REPEAT_60D_PASS":"LIVE_METRICOOL_PLUS_CANONICAL_SOURCE_ID_REGISTRIES_PASS",
-            "SCENE_FINGERPRINT_PASS":"NEW_FRAME_FINGERPRINT_RECORDED",
-            "REAL_FOOTAGE_PASS":True,"FULL_SCENE_PRESERVATION_PASS":True,
-            "NO_EXTRA_ZOOM_PASS":True,"NO_AGGRESSIVE_CROP_PASS":True,"NO_LEGACY_MASK_PASS":True,
-            "LOGO_TOP_RIGHT_PASS":True,"AUDIO_PTBR_PASS":audio,
-            "SCENE_NARRATION_SYNC_PASS":"SOURCE_SPECIFIC_SCRIPT" if item["kind"] not in ("humor","scene") else "ORIGINAL_SOURCE_AUDIO",
-            "CORE_PASS":"CANONICAL_AFTER_BLOCK" if item["kind"]=="humor" else "N/A",
             "NO_BLACK_PASS":True,"REAL_MOTION_PASS":True,"NO_SILENT_TAIL_PASS":True,
-            "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_PASS":True
+            "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,
+            "SOURCE_PASS":"NOT_VERIFIED", "RIGHTS_USAGE_CHECK":"NOT_VERIFIED",
+            "ANTI_REPEAT_60D_PASS":"NOT_VERIFIED", "SCENE_NARRATION_SYNC_PASS":"NOT_VERIFIED",
+            "EDITORIAL_PASS":"NOT_VERIFIED", "CTA_PASS":"NOT_VERIFIED"
           }
         }
         (OUT/f"{item['id']}.json").write_text(json.dumps(rec,ensure_ascii=False,indent=2),encoding="utf-8")
         summary["items"].append(rec)
-        print("MASTER_PASS",item["id"],sha,fp)
+        print("MASTER_TECHNICAL_PASS",item["id"],sha,fp)
     (OUT/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
-    print("PACK_PASS",len(summary["items"]))
+    print("PACK_TECHNICAL_PASS",len(summary["items"]))
 
 if __name__=="__main__":
     main()
+

@@ -1,28 +1,19 @@
 name: Cena Certa Oct02 Pack
+# Historical production is manual only. Code review never replays Oct02.
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/cena-certa-oct02-pack.yml
-      - scripts/cena_certa_oct02_pack.py
-      - ops/cena-certa-oct02/manifest.json
-      - ops/cena-certa-oct02/anti-repeat-snapshot.json
-      - assets/cena-certa-logo.png.b64
   workflow_dispatch:
 permissions:
-  contents: write
-  issues: write
+  contents: read
+concurrency:
+  group: cena-certa-oct02-pack
+  cancel-in-progress: false
 jobs:
-  render:
-    strategy:
-      fail-fast: false
-      matrix:
-        network: [tiktok, instagram, youtube, facebook]
+  render-and-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    env:
-      CENA_NETWORK: ${{ matrix.network }}
+    timeout-minutes: 240
+    permissions:
+      contents: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
       - name: Install runtime
@@ -30,34 +21,41 @@ jobs:
           set -euo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
-          python -m pip install -q --upgrade yt-dlp edge-tts
-      - name: Render and QA
+          python -m pip install -q yt-dlp edge-tts
+      - name: Render full four-network batch with technical status only
+        run: python scripts/cena_certa_oct02_pack.py
+      - name: Reconcile exact files, execution, receipts and scene reservations
         run: |
-          set -euo pipefail
-          python scripts/cena_certa_oct02_pack.py
-      - name: Publish approved masters
+          python scripts/cena_certa_oct02_evidence.py \
+            out/cena-certa-oct02 \
+            ops/cena-certa-oct02/prepublish-receipts.json \
+            ops/cena-certa-oct02/issued-scene-reservations.json
+      - name: Upload approved assets to immutable run-specific release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG="cena-certa-oct02-${CENA_NETWORK}"
-          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Oct02 ${CENA_NETWORK}" --notes "QA-approved Cena Certa Oct02 ${CENA_NETWORK} masters."
-          gh release upload "$TAG" out/cena-certa-oct02/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
-      - name: Create evidence issue
+          TAG="cena-certa-oct02-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$TAG" --notes "Evidence-gated render assets. Social publication NOT_VERIFIED."
+          gh release upload "$TAG" out/cena-certa-oct02/*.mp4 out/cena-certa-oct02/summary.json out/cena-certa-oct02/preflight.json --repo "$GITHUB_REPOSITORY"
+      - name: Record one full-batch evidence issue
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           {
-            echo "CENA_CERTA_OCT02_PACK=PASS"
-            echo "NETWORK=$CENA_NETWORK"
+            echo 'CENA_CERTA_OCT02_PACK=PASS'
             echo "RUN_ID=$GITHUB_RUN_ID"
-            echo
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "HEAD_SHA=$GITHUB_SHA"
+            echo 'PUBLICATION_STATUS=NOT_VERIFIED'
+            cat out/cena-certa-oct02/preflight.json
             cat out/cena-certa-oct02/summary.json
           } > out/cena-certa-oct02/issue.txt
-          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-OCT02-${CENA_NETWORK}] $GITHUB_RUN_ID" --body-file out/cena-certa-oct02/issue.txt
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[CENA-CERTA-OCT02-BATCH] ${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}" --body-file out/cena-certa-oct02/issue.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cena-certa-oct02-${{ matrix.network }}-${{ github.run_id }}
+          name: cena-certa-oct02-${{ github.run_id }}-${{ github.run_attempt }}
           path: out/cena-certa-oct02/
           retention-days: 7
