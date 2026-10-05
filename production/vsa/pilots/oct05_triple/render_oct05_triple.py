@@ -69,13 +69,13 @@ TOPICS={
    "dua4":{"file":"dua4.webm","source_url":"https://commons.wikimedia.org/wiki/File:All_you_need_to_know_about_Dua_Lipa%27s_new_album_%27Radical_Optimism%27.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"DUA_LIPA_VISUAL_IDENTITY_MUSIC_ERA","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","dua1",2,"CONTEXT","dua","DUA LIPA • ARQUIVO REAL","Uma era pop não é só um conjunto de músicas. Ela também precisa ser reconhecida visualmente."),
-   ("ANIMATION","anim",0,"MECHANISM","dua","ANIMAÇÃO • CÓDIGOS VISUAIS SE REPETEM","Cores, formas, tipografia e enquadramentos repetidos criam pistas que o cérebro aprende a associar àquela fase."),
-   ("REAL","dua2",2,"PROOF","dua","DUA LIPA • OUTRO ARQUIVO REAL","Em aparições públicas, figurino, cabelo e direção de imagem ajudam a reforçar essa linguagem."),
-   ("ANIMATION","anim",2,"MECHANISM","dua","ANIMAÇÃO • CONSISTÊNCIA CRIA MEMÓRIA","Quando capa, vídeo, palco e divulgação compartilham códigos, o público reconhece a era antes mesmo de ler o nome."),
-   ("REAL","dua3",2,"CONSEQUENCE","dua","DUA LIPA • MATERIAL MUSICAL REAL","Mas repetir tudo igual cansaria rápido, então cada peça muda elementos enquanto preserva alguns sinais centrais."),
-   ("ANIMATION","anim",4,"MECHANISM","dua","ANIMAÇÃO • VARIAÇÃO CONTROLADA","A identidade funciona como uma família: peças diferentes continuam parecendo parte do mesmo universo."),
-   ("REAL","dua4",2,"PROOF","dua","DUA LIPA • RADICAL OPTIMISM REAL","É assim que um álbum pode ganhar uma assinatura visual própria e continuar reconhecível em formatos diferentes.")
+   ("REAL","dua1",2,"CONTEXT","dua","DUA LIPA • ARQUIVO REAL","Uma era pop não é só música. Ela também precisa ser reconhecida visualmente."),
+   ("ANIMATION","anim",0,"MECHANISM","dua","ANIMAÇÃO • CÓDIGOS VISUAIS SE REPETEM","Cores, formas e enquadramentos repetidos criam pistas que o público associa àquela fase."),
+   ("REAL","dua2",2,"PROOF","dua","DUA LIPA • OUTRO ARQUIVO REAL","Figurino, cabelo e direção de imagem reforçam essa linguagem."),
+   ("ANIMATION","anim",2,"MECHANISM","dua","ANIMAÇÃO • CONSISTÊNCIA CRIA MEMÓRIA","Quando capa, vídeo e palco compartilham códigos, o público reconhece a era antes de ler o nome."),
+   ("REAL","dua3",2,"CONSEQUENCE","dua","DUA LIPA • MATERIAL MUSICAL REAL","Repetir tudo igual cansaria, então cada peça muda elementos e preserva sinais centrais."),
+   ("ANIMATION","anim",4,"MECHANISM","dua","ANIMAÇÃO • VARIAÇÃO CONTROLADA","A identidade funciona como uma família: peças diferentes continuam no mesmo universo."),
+   ("REAL","dua4",2,"PROOF","dua","DUA LIPA • RADICAL OPTIMISM REAL","Assim, um álbum ganha assinatura própria e continua reconhecível em formatos diferentes.")
   ]}
 }
 
