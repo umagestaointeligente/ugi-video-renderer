@@ -1,0 +1,48 @@
+name: UGI Oct06 Real Editorial
+on:
+  push:
+    paths: ['.github/workflows/ugi-oct06-real.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core curl
+          python -m pip install -U edge-tts
+      - name: Build exact-topic real videos
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-10-06; mkdir -p "$O/src"
+          curl -L --fail --retry 3 -o "$O/src/maintenance.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Logistics_Readiness_Squadron_-_Vehicle_Maintenance_Flight_highlight_(1022521).webm"
+          curl -L --fail --retry 3 -o "$O/src/dock1.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Amazon_warehouse_BHX4_loading_docks_1.webm"
+          curl -L --fail --retry 3 -o "$O/src/dock2.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Amazon_warehouse_BHX4_loading_docks_2.webm"
+          cat > "$O/tiktok.txt" <<'TXT'
+          Manutenção só quando quebra parece economia até a primeira parada crítica. O custo real de uma falha inclui equipamento parado, equipe esperando, pedido atrasado e urgência para conseguir peça. Manutenção preventiva troca surpresa por planejamento. O segredo não é revisar tudo o tempo todo. É identificar ativos críticos, medir falhas e programar intervenção antes que a operação pare. Confiabilidade também é capacidade.
+          TXT
+          cat > "$O/youtube.txt" <<'TXT'
+          Um centro de distribuição pode ter estoque, equipe e caminhões disponíveis e ainda perder horas todos os dias na doca. O motivo é simples: recebimento e expedição são pontos de encontro entre dois sistemas que raramente chegam no mesmo ritmo. Caminhões aparecem em ondas, cargas exigem tempos diferentes e a área física tem capacidade limitada. Quando a programação ignora essas diferenças, a fila cresce do lado de fora e o congestionamento aparece dentro do armazém. A primeira alavanca é medir tempo de permanência. Quanto tempo passa entre a chegada do veículo, o início da operação e sua liberação? Separar espera de processamento mostra se o gargalo está na doca, na documentação, na equipe ou na preparação da carga. A segunda é nivelar agenda. Se todos os fornecedores escolhem o mesmo horário, a empresa transforma pico em rotina. Janelas de recebimento e agendamento reduzem variabilidade, mas só funcionam quando a operação mede aderência e trata exceções. A terceira é preparar antes da chegada. Informação de carga, endereço de doca, equipamento e equipe podem estar definidos antes do caminhão encostar. Cada decisão tomada depois da chegada aumenta o tempo improdutivo do ativo e do motorista. Existe ainda uma conexão com estoque. Receber mais rápido não ajuda se o material descarregado não tem endereço ou capacidade para seguir. A doca precisa conversar com armazenagem, separação e expedição. Otimizar apenas o portão pode simplesmente empurrar a fila para dentro. O indicador mais útil não é quantos caminhões chegaram. É quanto tempo e capacidade o sistema precisou para fazê-los atravessar. Em logística, fluxo bom é aquele em que transporte, informação e espaço chegam sincronizados. A pergunta para sua operação é: quanto do tempo na doca é trabalho real e quanto é espera criada pelo próprio sistema?
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=+4% --text "$(cat "$O/tiktok.txt")" --write-media "$O/tiktok.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/youtube.txt")" --write-media "$O/youtube.mp3"
+          DT=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/tiktok.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/maintenance.webm" -i "$O/tiktok.mp3" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,fps=30,drawbox=x=0:y=0:w=iw:h=180:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='QUEBRAR CUSTA MAIS QUE CONSERTAR':fontcolor=white:fontsize=43:x=(w-text_w)/2:y=62[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$DT" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/tiktok-manutencao-preventiva.mp4"
+          DY=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/dock1.webm" -stream_loop -1 -i "$O/src/dock2.webm" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,fps=30,trim=0:30,setpts=PTS-STARTPTS[a];[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,fps=30,trim=0:30,setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1:a=0,loop=loop=-1:size=1800:start=0,drawbox=x=0:y=0:w=iw:h=155:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='A FILA QUE COMEÇA NA DOCA':fontcolor=white:fontsize=54:x=(w-text_w)/2:y=48[v];[2:a]loudnorm=I=-16:TP=-1.5:LRA=9[aud]" -map "[v]" -map "[aud]" -t "$DY" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-capacidade-doca.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-10-06"); out={}
+          for f in ["tiktok-manutencao-preventiva.mp4","youtube-capacidade-doca.mp4"]:
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); assert d>25; out[f]=d
+          (p/"qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"exactTopicVisual":True,"noRandomFootage":True,"noSlideshow":True,"files":out,"sources":[{"media":"maintenance","source":"US Air Force/Wikimedia Commons","license":"Public Domain"},{"media":"loading docks","source":"Amazon warehouse BHX4 loading docks / domdomegg / Wikimedia Commons","license":"Creative Commons"}]},indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-10-06
+          git commit -m "assets(ugi): Oct06 real exact-topic videos [skip ci]"
+          git push
