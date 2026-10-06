@@ -75,7 +75,7 @@ TOPICS={
    ("ANIMATION","anim",2,"MECHANISM","charlie","ANIMAÇÃO • HARMONIA DÁ CONTEXTO","Os acordes mudam a sensação da mesma melodia e ajudam a definir tensão e resolução."),
    ("REAL","piano",2,"CONSEQUENCE","charlie","PIANO • CONTEXTO REAL","Um instrumento permite testar rapidamente notas, acordes e diferentes caminhos para a música."),
    ("ANIMATION","anim",4,"MECHANISM","charlie","ANIMAÇÃO • ARRANJO ORGANIZA CAMADAS","Depois entram baixo, bateria e texturas; o arranjo decide quando cada camada aparece."),
-   ("REAL","charlie2",0,"PROOF","charlie","CHARLIE PUTH • SEGUNDO ARQUIVO REAL","O resultado é uma música completa construída em cima de uma ideia simples que continua reconhecível.")
+   ("REAL","charlie2",45,"PROOF","charlie","CHARLIE PUTH • SEGUNDO ARQUIVO REAL","O resultado é uma música completa construída em cima de uma ideia simples que continua reconhecível.")
   ]}
 }
 
