@@ -28,8 +28,8 @@ jobs:
           curl -L --fail --retry 3 -o qa/charlie1.webm 'https://cdn.creativeclaw.co/u/2f9dfa63/videos/346d48d7-f1da-4cab-8cfb-1ea10723a590.webm'
           curl -L --fail --retry 3 -o qa/charlie2.webm 'https://cdn.creativeclaw.co/u/2f9dfa63/videos/67da3309-5a9a-4456-9636-e0309bc72f24.webm'
           for n in 1 2; do
-            ffmpeg -y -loglevel error -i qa/charlie\${n}.webm -vf "fps=1/5,scale=320:-2,tile=5x4:padding=4:margin=4" -frames:v 1 qa/charlie\${n}_contact.jpg
-            ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 qa/charlie\${n}.webm > qa/charlie\${n}_duration.txt
+            ffmpeg -y -loglevel error -i qa/charlie${n}.webm -vf "fps=1/5,scale=320:-2,tile=5x4:padding=4:margin=4" -frames:v 1 qa/charlie${n}_contact.jpg
+            ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 qa/charlie${n}.webm > qa/charlie${n}_duration.txt
           done
       - uses: actions/upload-artifact@v4
         with:
