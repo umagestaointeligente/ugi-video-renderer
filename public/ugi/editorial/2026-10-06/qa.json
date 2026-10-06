@@ -1,0 +1,23 @@
+{
+  "state": "PASS",
+  "realVideo": true,
+  "exactTopicVisual": true,
+  "noRandomFootage": true,
+  "noSlideshow": true,
+  "files": {
+    "tiktok-manutencao-preventiva.mp4": 28.466667,
+    "youtube-capacidade-doca.mp4": 124.3
+  },
+  "sources": [
+    {
+      "media": "maintenance",
+      "source": "US Air Force/Wikimedia Commons",
+      "license": "Public Domain"
+    },
+    {
+      "media": "loading docks",
+      "source": "Amazon warehouse BHX4 loading docks / domdomegg / Wikimedia Commons",
+      "license": "Creative Commons"
+    }
+  ]
+}
