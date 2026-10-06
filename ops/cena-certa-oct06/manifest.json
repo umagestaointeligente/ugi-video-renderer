@@ -1,0 +1,267 @@
+{
+  "schema": "CENA_CERTA_OCT06_BREAKOUT_TEST_V1",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-10-06",
+  "objective": {
+    "primary": "Maximize breakout probability with mainstream, instantly recognizable film/series IPs.",
+    "stretch_views_per_post": 100000,
+    "stretch_likes_per_post": 70000,
+    "note": "Stretch targets, not guarantees; decisions remain evidence-led."
+  },
+  "benchmark_basis": {
+    "tiktok": "Fast recognition + immediate payoff; diversify beyond TV bloopers into acclaimed comedy and global tension.",
+    "instagram": "Highly shareable recognizable scenes with nostalgia, villain/character recognition and clean emotional payoff.",
+    "youtube": "Immediate conflict/action/payoff in 28-40s Shorts; title names the IP and the moment.",
+    "facebook": "Coherent 3-beat micro-arcs from acclaimed films/series, with real scene dialogue and stronger story closure."
+  },
+  "editorial_rules": {
+    "release_year_floor": 1990,
+    "real_motion_only": true,
+    "audio_ptbr_required": true,
+    "no_narration": true,
+    "no_visual_audio_mismatch": true,
+    "anti_repeat_days": 60,
+    "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
+    "official_source_only": true,
+    "no_trailer": true,
+    "no_black": true,
+    "no_silent_tail": true,
+    "no_legacy_mask": true,
+    "no_extra_zoom": true,
+    "no_aggressive_crop": true,
+    "cta_after_story_closure": true
+  },
+  "items": [
+    {
+      "id": "CC-OCT06-TT-MINHAMAe2",
+      "network": "tiktok",
+      "format": "mainstream_comedy_payoff",
+      "slot": "2026-10-06T10:00:00-03:00",
+      "title": "Minha Mãe é Uma Peça 2 — Dona Hermínia sem filtro",
+      "year": 2016,
+      "source": "https://globoplay.globo.com/v/5523857/",
+      "source_id": "5523857",
+      "source_start": 0,
+      "source_end": 38,
+      "hook": "DONA HERMÍNIA NÃO PRECISA DE 5 SEGUNDOS 😂",
+      "cta": "QUAL FRASE DELA É INESQUECÍVEL?",
+      "caption": "Dona Hermínia em Minha Mãe é Uma Peça 2: reconhecimento imediato e Paulo Gustavo no modo sem filtro 😂 Cena real, áudio original em português. #MinhaMaeEUmaPeca2 #PauloGustavo #CinemaBrasileiro #CenaCerta"
+    },
+    {
+      "id": "CC-OCT06-TT-CHRIS",
+      "network": "tiktok",
+      "format": "nostalgia_meme_payoff",
+      "slot": "2026-10-06T12:00:00-03:00",
+      "title": "Todo Mundo Odeia o Chris — só fui dar uma olhada",
+      "year": 2005,
+      "source": "https://www.youtube.com/watch?v=qQrp4OSRtck",
+      "source_id": "qQrp4OSRtck",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "QUEM ENTRA SÓ PRA 'DAR UMA OLHADA' 😂",
+      "cta": "ESSA CENA AINDA É A SUA CARA?",
+      "caption": "Todo Mundo Odeia o Chris transforma uma ida à loja em uma situação que todo mundo reconhece 😂 Cena de fonte oficial brasileira, sem narração por cima. #TodoMundoOdeiaOChris #Chris #Nostalgia #CenaCerta"
+    },
+    {
+      "id": "CC-OCT06-TT-ROUND6",
+      "network": "tiktok",
+      "format": "tension_instant_hook",
+      "slot": "2026-10-06T18:00:00-03:00",
+      "title": "Round 6 — Batatinha Frita 1, 2, 3",
+      "year": 2024,
+      "source": "https://www.youtube.com/watch?v=OeWS8Bt7fWo",
+      "source_id": "OeWS8Bt7fWo",
+      "source_start": 0,
+      "source_end": 36,
+      "hook": "UM PASSO ERRADO E ACABOU 😳",
+      "cta": "VOCÊ CONSEGUIRIA FICAR PARADO?",
+      "caption": "Round 6 e o jogo que virou símbolo da série: Batatinha Frita 1, 2, 3. Tensão imediata, cena real e áudio da fonte oficial Netflix Brasil. #Round6 #SquidGame #Netflix #CenaCerta"
+    },
+    {
+      "id": "CC-OCT06-IG-AUTO",
+      "network": "instagram",
+      "format": "iconic_brazilian_comedy",
+      "slot": "2026-10-06T10:00:00-03:00",
+      "title": "O Auto da Compadecida — João Grilo engana o cabo Setenta",
+      "year": 2000,
+      "source": "https://globoplay.globo.com/v/2628217/",
+      "source_id": "2628217",
+      "source_start": 0,
+      "source_end": 40,
+      "hook": "JOÃO GRILO PRECISOU DE 40s PRA VIRAR O JOGO",
+      "cta": "CHICÓ APROVARIA ESSE PLANO?",
+      "caption": "João Grilo fazendo o que sabe melhor: improvisar até o plano funcionar. Cena real de O Auto da Compadecida, em português. #OAutoDaCompadecida #JoaoGrilo #CinemaBrasileiro #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT06-IG-THEBOYS",
+      "network": "instagram",
+      "format": "character_reveal",
+      "slot": "2026-10-06T12:00:00-03:00",
+      "title": "The Boys — a primeira aparição do Capitão Pátria",
+      "year": 2019,
+      "source": "https://www.youtube.com/watch?v=goUnn1-jPNo",
+      "source_id": "goUnn1-jPNo",
+      "source_start": 0,
+      "source_end": 36,
+      "hook": "ANTES DA MÁSCARA CAIR, ELE PARECIA O HERÓI PERFEITO",
+      "cta": "VOCÊ TERIA CONFIADO NELE?",
+      "caption": "A primeira impressão do Capitão Pátria em The Boys ganha outro peso quando você sabe o que vem depois. Cena de fonte oficial Prime Video Brasil. #TheBoys #CapitaoPatria #PrimeVideo #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT06-IG-REACHER",
+      "network": "instagram",
+      "format": "character_intro",
+      "slot": "2026-10-06T18:00:00-03:00",
+      "title": "Reacher — a primeira aparição",
+      "year": 2022,
+      "source": "https://www.youtube.com/watch?v=jFURWlaWOos",
+      "source_id": "jFURWlaWOos",
+      "source_start": 0,
+      "source_end": 36,
+      "hook": "REACHER CHEGA SEM DIZER QUASE NADA — E TODO MUNDO ENTENDE",
+      "cta": "MELHOR INTRODUÇÃO DE PERSONAGEM?",
+      "caption": "A primeira cena de Reacher: presença, silêncio e tensão antes da ação. Fonte oficial Prime Video Brasil. #Reacher #AlanRitchson #PrimeVideo #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT06-YT-ST5",
+      "network": "youtube",
+      "format": "final_battle_payoff",
+      "slot": "2026-10-06T15:00:00-03:00",
+      "title": "Stranger Things 5 — Onze encara Vecna",
+      "year": 2025,
+      "source": "https://www.youtube.com/watch?v=3m8itrC4CkE",
+      "source_id": "3m8itrC4CkE",
+      "source_start": 0,
+      "source_end": 35,
+      "hook": "ONZE X VECNA: O CONFRONTO QUE LEVOU ANOS PRA CHEGAR",
+      "cta": "QUEM CARREGOU ESSA BATALHA?",
+      "caption": "Onze encara Vecna no confronto final de Stranger Things. Cena real da fonte oficial Netflix Brasil. #StrangerThings #Eleven #Vecna #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT06-YT-AVENGERS-LOKI",
+      "network": "youtube",
+      "format": "iconic_dialogue_duel",
+      "slot": "2026-10-06T16:00:00-03:00",
+      "title": "Os Vingadores — Tony Stark encara Loki",
+      "year": 2012,
+      "source": "https://www.youtube.com/watch?v=eV_x6-0JhCE",
+      "source_id": "eV_x6-0JhCE",
+      "source_start": 0,
+      "source_end": 38,
+      "hook": "TONY STARK X LOKI: UMA CONVERSA QUE JÁ COMEÇA COMO BATALHA",
+      "cta": "QUEM DOMINOU ESSA CENA?",
+      "caption": "Tony Stark e Loki frente a frente em Os Vingadores. Cena oficial Marvel Brasil. #Vingadores #TonyStark #Loki #Marvel #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT06-YT-FALLOUT",
+      "network": "youtube",
+      "format": "dark_comedy_conflict",
+      "slot": "2026-10-06T17:00:00-03:00",
+      "title": "Fallout — quando educação e caos se encontram",
+      "year": 2024,
+      "source": "https://www.youtube.com/watch?v=9VIGkfmRcoA",
+      "source_id": "9VIGkfmRcoA",
+      "source_start": 0,
+      "source_end": 36,
+      "hook": "NO WASTELAND, ATÉ A EDUCAÇÃO VIRA AMEAÇA",
+      "cta": "VOCÊ CONFIARIA NESSA CONVERSA?",
+      "caption": "Fallout apresenta o Wasteland do jeito mais estranho possível: educação, tensão e perigo na mesma cena. Fonte oficial Prime Video Brasil. #Fallout #PrimeVideo #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT06-FB-AUTO-SEVERINO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-06T10:00:00-03:00",
+      "title": "O Auto da Compadecida — João Grilo engana Severino",
+      "year": 2000,
+      "source": "https://globoplay.globo.com/v/2628227/",
+      "source_id": "2628227",
+      "segments": [
+        [
+          0,
+          14
+        ],
+        [
+          28,
+          43
+        ],
+        [
+          58,
+          74
+        ]
+      ],
+      "beat_labels": [
+        "1. O PLANO",
+        "2. A CONVICÇÃO",
+        "3. A VIRADA"
+      ],
+      "hook": "JOÃO GRILO CONTRA SEVERINO: O PLANO MAIS ARRISCADO",
+      "cta": "VOCÊ TERIA ACREDITADO?",
+      "caption": "João Grilo transforma conversa em sobrevivência diante de Severino. Micro-arco em três movimentos, com cena real e diálogo original em português. #OAutoDaCompadecida #JoaoGrilo #Severino #CenaCerta"
+    },
+    {
+      "id": "CC-OCT06-FB-AVENGERS-FIGHT",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-06T11:00:00-03:00",
+      "title": "Os Vingadores — Capitão América e Thor entram na luta",
+      "year": 2012,
+      "source": "https://www.youtube.com/watch?v=C5QplNJGt5Q",
+      "source_id": "C5QplNJGt5Q",
+      "segments": [
+        [
+          0,
+          12
+        ],
+        [
+          18,
+          31
+        ],
+        [
+          36,
+          50
+        ]
+      ],
+      "beat_labels": [
+        "1. ENCONTRO",
+        "2. CHOQUE",
+        "3. RESPOSTA"
+      ],
+      "hook": "CAPITÃO AMÉRICA + THOR: QUANDO NINGUÉM QUER RECUAR",
+      "cta": "QUAL DOS DOIS LEVA ESSA?",
+      "caption": "Capitão América e Thor em um confronto que escala rápido. Três beats da mesma cena, fonte oficial Marvel Brasil. #Vingadores #CapitaoAmerica #Thor #Marvel #CenaCerta"
+    },
+    {
+      "id": "CC-OCT06-FB-WIDOW",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-06T12:00:00-03:00",
+      "title": "Os Vingadores — Viúva Negra vira o interrogatório",
+      "year": 2012,
+      "source": "https://www.youtube.com/watch?v=cFk7Os9J0UI",
+      "source_id": "cFk7Os9J0UI",
+      "segments": [
+        [
+          0,
+          12
+        ],
+        [
+          18,
+          30
+        ],
+        [
+          35,
+          48
+        ]
+      ],
+      "beat_labels": [
+        "1. ARMADILHA",
+        "2. LEITURA",
+        "3. CONTROLE"
+      ],
+      "hook": "ELE ACHOU QUE ESTAVA INTERROGANDO A VIÚVA NEGRA",
+      "cta": "EM QUE MOMENTO O JOGO VIROU?",
+      "caption": "A Viúva Negra deixa o outro lado acreditar que está no controle — até revelar quem realmente conduz a conversa. Fonte oficial Marvel Brasil. #ViuvaNegra #Vingadores #Marvel #CenaCerta"
+    }
+  ]
+}
