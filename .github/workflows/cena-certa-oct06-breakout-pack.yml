@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     paths:
-      - .github/workflows/cena-certa-oct06-benchmark-pack.yml
+      - .github/workflows/cena-certa-oct06-breakout-pack.yml
       - scripts/cena_certa_oct06_pack.py
       - ops/cena-certa-oct06/manifest.json
       - ops/cena-certa-oct06/anti-repeat-snapshot.json
