@@ -309,7 +309,8 @@ def main():
     counts={}
     for x in items: counts[x["network"]]=counts.get(x["network"],0)+1
     if counts!={"tiktok":3,"instagram":3,"youtube":3,"facebook":3}: raise RuntimeError(f"NETWORK_COUNTS_FAIL:{counts}")
-    if any(int(x.get("year",0))<1990 for x in items): raise RuntimeError("YEAR_FLOOR_FAIL")\n    if any(not str(x.get("source","")).startswith(("https://globoplay.globo.com/","https://www.youtube.com/")) for x in items): raise RuntimeError("OFFICIAL_SOURCE_DOMAIN_FAIL")
+    if any(int(x.get("year",0))<1990 for x in items): raise RuntimeError("YEAR_FLOOR_FAIL")
+    if any(not str(x.get("source","")).startswith(("https://globoplay.globo.com/","https://www.youtube.com/")) for x in items): raise RuntimeError("OFFICIAL_SOURCE_DOMAIN_FAIL")
     src_ev=source_window_gate(items,anti.get("prior_sources",[]))
 
     logo=WORK/"logo.png"; logo.write_bytes(base64.b64decode("".join(LOGO_B64.read_text().split())))
