@@ -54,7 +54,7 @@ TOPICS={
    ("ANIMATION","anim",2,"MECHANISM","dry","ANIMAÇÃO • VAPOR DE ÁGUA CONDENSA","Ao esfriar, o vapor de água do ar se condensa em minúsculas gotículas visíveis."),
    ("REAL","dry3",2,"CONSEQUENCE","dry","SUBLIMAÇÃO REAL • VÍDEO REAL","Por isso a parte branca que enxergamos é principalmente água condensada, não CO₂ visível."),
    ("ANIMATION","anim",4,"MECHANISM","dry","ANIMAÇÃO • NÉVOA FRIA DESCE","A mistura fria fica mais densa que o ar quente ao redor e tende a se espalhar para baixo."),
-   ("REAL","dry4",2,"CONTEXT","dry","GELO SECO COMO RESFRIAMENTO • CONTEXTO REAL","O poder de resfriamento do gelo seco também é usado em experimentos que precisam de temperaturas muito baixas.")
+   ("REAL","dry4",2,"PROOF","dry","GELO SECO COMO RESFRIAMENTO • CONTEXTO REAL","O poder de resfriamento do gelo seco também é usado em experimentos que precisam de temperaturas muito baixas.")
   ]},
  "charlie_puth_musica":{
   "title":"Como Charlie Puth transforma uma ideia simples em música? #shorts",
@@ -71,9 +71,9 @@ TOPICS={
   "scenes":[
    ("REAL","charlie1",8,"CONTEXT","charlie","CHARLIE PUTH • ARQUIVO REAL","Uma música pode começar com algo minúsculo: poucas notas, um acorde ou um ritmo."),
    ("ANIMATION","anim",0,"MECHANISM","charlie","ANIMAÇÃO • MOTIVO VIRA MELODIA","O primeiro passo é repetir e variar a ideia até ela formar uma melodia reconhecível."),
-   ("REAL","studio",3,"CONTEXT","charlie","HOME STUDIO • CONTEXTO REAL","No estúdio, novas camadas podem ser testadas sem perder a ideia principal."),
+   ("REAL","studio",3,"PROOF","charlie","HOME STUDIO • CONTEXTO REAL","No estúdio, novas camadas podem ser testadas sem perder a ideia principal."),
    ("ANIMATION","anim",2,"MECHANISM","charlie","ANIMAÇÃO • HARMONIA DÁ CONTEXTO","Os acordes mudam a sensação da mesma melodia e ajudam a definir tensão e resolução."),
-   ("REAL","piano",2,"CONTEXT","charlie","PIANO • CONTEXTO REAL","Um instrumento permite testar rapidamente notas, acordes e diferentes caminhos para a música."),
+   ("REAL","piano",2,"CONSEQUENCE","charlie","PIANO • CONTEXTO REAL","Um instrumento permite testar rapidamente notas, acordes e diferentes caminhos para a música."),
    ("ANIMATION","anim",4,"MECHANISM","charlie","ANIMAÇÃO • ARRANJO ORGANIZA CAMADAS","Depois entram baixo, bateria e texturas; o arranjo decide quando cada camada aparece."),
    ("REAL","charlie2",12,"PROOF","charlie","CHARLIE PUTH • SEGUNDO ARQUIVO REAL","O resultado é uma música completa construída em cima de uma ideia simples que continua reconhecível.")
   ]}
