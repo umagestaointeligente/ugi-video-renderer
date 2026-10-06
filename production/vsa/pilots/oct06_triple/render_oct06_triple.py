@@ -30,7 +30,7 @@ TOPICS={
   "scenes":[
    ("REAL","pressure1",1,"CONTEXT","pressure","LATA SENDO ESMAGADA • VÍDEO REAL","Uma lata aquecida pode se amassar em segundos sem ninguém apertar o metal."),
    ("ANIMATION","anim",0,"MECHANISM","pressure","ANIMAÇÃO • VAPOR OCUPA O INTERIOR","A água vira vapor e expulsa boa parte do ar que estava dentro da lata."),
-   ("REAL","pressure2",2,"PROOF","pressure","PRESSÃO E VOLUME • VÍDEO REAL","Pressão e volume estão ligados: mudar o gás dentro de um recipiente muda as forças nas paredes."),
+   ("REAL","pressure2",12,"PROOF","pressure","PRESSÃO E VOLUME • VÍDEO REAL","Pressão e volume estão ligados: mudar o gás dentro de um recipiente muda as forças nas paredes."),
    ("ANIMATION","anim",2,"MECHANISM","pressure","ANIMAÇÃO • VAPOR CONDENSA","Ao resfriar de repente, o vapor condensa e ocupa um volume muito menor."),
    ("REAL","pressure3",3,"CONSEQUENCE","pressure","BAIXA PRESSÃO • VÍDEO REAL","Com menos gás no interior, a pressão interna despenca em relação ao ar externo."),
    ("ANIMATION","anim",4,"MECHANISM","pressure","ANIMAÇÃO • AR EXTERNO ESMAGA","A pressão atmosférica de fora fica maior e empurra todas as paredes da lata para dentro."),
@@ -64,14 +64,14 @@ TOPICS={
   "celebrity_name":"Charlie Puth",
   "assets":{
    "charlie1":{"file":"charlie1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Interview_with_Charlie_Puth_from_2022.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"CHARLIE_PUTH_SONGWRITING_IDEA_TO_ARRANGEMENT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
-   "studio":{"file":"studio.webm","source_url":"https://commons.wikimedia.org/wiki/File:Home_studio.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_HOME_STUDIO_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
+   "studio":{"file":"studio.webm","source_url":"https://commons.wikimedia.org/wiki/File:Sound_Effect_Recording.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_SOUND_RECORDING_SESSION_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
    "piano":{"file":"piano.webm","source_url":"https://commons.wikimedia.org/wiki/File:Piano_close-up.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_PIANO_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
    "charlie2":{"file":"charlie2.webm","source_url":"https://commons.wikimedia.org/wiki/File:The_Evolution_of_Charlie_Puth.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"CHARLIE_PUTH_SONGWRITING_IDEA_TO_ARRANGEMENT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
    ("REAL","charlie1",25,"CONTEXT","charlie","CHARLIE PUTH • ARQUIVO REAL","Uma música pode começar com algo minúsculo: poucas notas, um acorde ou um ritmo."),
    ("ANIMATION","anim",0,"MECHANISM","charlie","ANIMAÇÃO • MOTIVO VIRA MELODIA","O primeiro passo é repetir e variar a ideia até ela formar uma melodia reconhecível."),
-   ("REAL","studio",3,"PROOF","charlie","HOME STUDIO • CONTEXTO REAL","No estúdio, novas camadas podem ser testadas sem perder a ideia principal."),
+   ("REAL","studio",5,"PROOF","charlie","GRAVAÇÃO EM ESTÚDIO • CONTEXTO REAL","No estúdio, novas camadas podem ser testadas sem perder a ideia principal."),
    ("ANIMATION","anim",2,"MECHANISM","charlie","ANIMAÇÃO • HARMONIA DÁ CONTEXTO","Os acordes mudam a sensação da mesma melodia e ajudam a definir tensão e resolução."),
    ("REAL","piano",2,"CONSEQUENCE","charlie","PIANO • CONTEXTO REAL","Um instrumento permite testar rapidamente notas, acordes e diferentes caminhos para a música."),
    ("ANIMATION","anim",4,"MECHANISM","charlie","ANIMAÇÃO • ARRANJO ORGANIZA CAMADAS","Depois entram baixo, bateria e texturas; o arranjo decide quando cada camada aparece."),
@@ -371,7 +371,7 @@ def main():
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/a2a78480-1d29-4e7e-9530-87ee3ed65eb0.webm",AS/"dry3.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/52e360d4-99c2-4915-bd3d-196067731f9f.webm",AS/"dry4.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/346d48d7-f1da-4cab-8cfb-1ea10723a590.webm",AS/"charlie1.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/afc15273-02f1-4e90-b104-d0dd636a7bd0.webm",AS/"studio.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/ae41a780-93f7-4c32-9f5a-b58eea57c99e.webm",AS/"studio.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/f325be21-9f5b-4960-b0d1-67c0cf34e9b4.webm",AS/"piano.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/67da3309-5a9a-4456-9636-e0309bc72f24.webm",AS/"charlie2.webm")
  for slug,t in TOPICS.items():
