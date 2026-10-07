@@ -41,7 +41,7 @@ jobs:
           gh run download 37558976047 --repo "$GITHUB_REPOSITORY" \
             --name cena-certa-oct07-benchmark-37558976047 \
             --dir out/cena-certa-oct07
-          rm -f out/cena-certa-oct07/tiktok/CC-OCT07-TT-TAPAS-FAST.mp4
+          rm -f out/cena-certa-oct07/youtube/CC-OCT07-YT-TROPA.mp4
           test "$(find out/cena-certa-oct07 -name '*.mp4' | wc -l)" -eq 11
 
       - name: Render replacement and run full fail-closed gate
@@ -69,7 +69,7 @@ jobs:
           cc.source_window_gate(manifest["items"],anti.get("prior_sources",[]))
 
           rendered=[]
-          summary={"schema":"CENA_CERTA_OCT07_DELIVERY_V2_REPAIR","date":"2026-10-05","items":[]}
+          summary={"schema":"CENA_CERTA_OCT07_DELIVERY_V2_REPAIR","date":"2026-10-07","items":[]}
           for x in manifest["items"]:
               p=cc.OUT/x["network"]/(x["id"]+".mp4")
               if not p.exists():
