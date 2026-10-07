@@ -66,7 +66,7 @@ TOPICS={
    "bruno1":{"file":"bruno1.webm","source_url":"https://commons.wikimedia.org/wiki/File:Bruno_Mars_dancing_in_Singapore.webm","license":"CC_BY_SA_4.0","asset_subject":"BRUNO_MARS_RHYTHM_TO_STAGE_MOVEMENT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
    "band":{"file":"band.webm","source_url":"https://commons.wikimedia.org/wiki/File:Live_band_performs_on_stage..webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_LIVE_BAND_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
    "dance":{"file":"dance.webm","source_url":"https://commons.wikimedia.org/wiki/File:Persona_dance_rehearsal.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_DANCE_REHEARSAL_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
-   "bruno2":{"file":"bruno2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Rock_in_Rio-_Edição_de_2018_pode_ser_em_junho,_com_concertos_mais_cedo_e_Bruno_Mars.webm","license":"CC_BY_3.0","asset_subject":"BRUNO_MARS_RHYTHM_TO_STAGE_MOVEMENT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
+   "bruno2":{"file":"bruno2.webm","source_url":"https://commons.wikimedia.org/wiki/File:We_would_%E2%80%98Risk_It_All%E2%80%99_for_%40brunomars_-newmusic_-brunomars_-riskitall.webm","license":"CC_BY_4.0","asset_subject":"BRUNO_MARS_RHYTHM_TO_STAGE_MOVEMENT","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
    ("REAL","bruno1",3,"CONTEXT","bruno","BRUNO MARS • PERFORMANCE REAL","Bruno Mars não dança por cima da música: o movimento costuma reforçar exatamente o que o ritmo já está marcando."),
@@ -75,7 +75,7 @@ TOPICS={
    ("ANIMATION","anim",2,"MECHANISM","bruno","ANIMAÇÃO • ACENTO VIRA GESTO","Batidas fortes podem virar gestos maiores, enquanto notas curtas combinam com movimentos menores e rápidos."),
    ("REAL","dance",3,"CONSEQUENCE","bruno","ENSAIO DE DANÇA • CONTEXTO REAL","No ensaio, repetir essas relações transforma ritmo em memória muscular e sincroniza o grupo."),
    ("ANIMATION","anim",4,"MECHANISM","bruno","ANIMAÇÃO • MÚSICA E MOVIMENTO ALINHAM","Quando áudio e movimento chegam juntos, o cérebro percebe uma performance mais precisa e energética."),
-   ("REAL","bruno2",8,"PROOF","bruno","BRUNO MARS • SEGUNDO ARQUIVO REAL","É essa conexão entre pulso, gesto e deslocamento que faz a performance parecer tão encaixada na música.")
+   ("REAL","bruno2",10,"PROOF","bruno","BRUNO MARS • SEGUNDO ARQUIVO REAL","É essa conexão entre pulso, gesto e deslocamento que faz a performance parecer tão encaixada na música.")
   ]}
 }
 
@@ -371,7 +371,7 @@ def main():
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/17597f88-0c14-4cea-9b47-6a86e7854b74.webm",AS/"bruno1.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/0f5daacf-ba3a-4840-a0c2-fc4234b2f851.webm",AS/"band.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/7a88a217-92ad-4d0d-a594-1bc64220187c.webm",AS/"dance.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/b8cb5b9d-bc93-4847-9d2a-71a2330c89ef.webm",AS/"bruno2.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/f03371a7-de4e-4503-9105-82b3c3e64331.webm",AS/"bruno2.webm")
  for slug,t in TOPICS.items():
   real_keys=[s[1] for s in t["scenes"] if s[0]=="REAL"]
   real_files=[t["assets"][k]["file"] for k in real_keys]
