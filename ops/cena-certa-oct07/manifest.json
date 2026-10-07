@@ -1,0 +1,267 @@
+{
+  "schema": "CENA_CERTA_OCT07_BREAKOUT_TEST_V1",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-10-07",
+  "objective": {
+    "primary": "Breakout distribution",
+    "views_floor": 100000,
+    "like_rate_target_pct": "6-8",
+    "stretch_likes": 70000
+  },
+  "benchmark_basis": {
+    "tiktok": "Instant recognition + conflict/payoff in under 2s; three distinct IPs.",
+    "instagram": "Shareable nostalgia/character tension; recognizable faces and scene premise.",
+    "youtube": "Conflict-first Shorts, 30-38s, recognizable IP in title.",
+    "facebook": "Three-beat micro-arcs with complete mini-story and comment prompt."
+  },
+  "editorial_rules": {
+    "release_year_floor": 1990,
+    "real_motion_only": true,
+    "audio_ptbr_required": true,
+    "no_narration": true,
+    "no_visual_audio_mismatch": true,
+    "anti_repeat_days": 60,
+    "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
+    "rights_usage_mode": "OFFICIAL_GLOBOPLAY_TRANSFORMATIVE_EDITORIAL_EXCERPT",
+    "no_trailer": true,
+    "no_black": true,
+    "no_silent_tail": true,
+    "no_legacy_mask": true,
+    "no_extra_zoom": true,
+    "no_aggressive_crop": true,
+    "cta_after_story_closure": true
+  },
+  "items": [
+    {
+      "id": "CC-OCT07-TT-AUTO-JULG",
+      "network": "tiktok",
+      "format": "iconic_comedy_conflict",
+      "slot": "2026-10-07T10:00:00-03:00",
+      "title": "O Auto da Compadecida — Julgamento de João Grilo",
+      "year": 1999,
+      "source": "https://globoplay.globo.com/v/2630272/",
+      "source_id": "2630272",
+      "source_start": 0,
+      "source_end": 36,
+      "hook": "JOÃO GRILO DIANTE DO JULGAMENTO MAIS IMPOSSÍVEL 😂",
+      "cta": "QUEM ROUBA ESSA CENA?",
+      "caption": "João Grilo no julgamento mais lembrado de O Auto da Compadecida. Cena real, diálogo original em português. #OAutoDaCompadecida #JoaoGrilo #CenaCerta"
+    },
+    {
+      "id": "CC-OCT07-TT-TAPAS",
+      "network": "tiktok",
+      "format": "relatable_comedy",
+      "slot": "2026-10-07T12:00:00-03:00",
+      "title": "Tapas & Beijos — Fátima sente ciúme de Armane",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/2760631/",
+      "source_id": "2760631",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "CIÚME EM 3 SEGUNDOS: FÁTIMA NÃO DISFARÇA 😂",
+      "cta": "VOCÊ FARIA IGUAL?",
+      "caption": "Fátima não consegue esconder o ciúme de Armane em Tapas & Beijos. Cena real e áudio original em português. #TapasEBeijos #FernandaTorres #CenaCerta"
+    },
+    {
+      "id": "CC-OCT07-TT-OUTROS-BRIGA",
+      "network": "tiktok",
+      "format": "tension_fast_hook",
+      "slot": "2026-10-07T18:00:00-03:00",
+      "title": "Os Outros — Marcinho e Rogério brigam",
+      "year": 2023,
+      "source": "https://globoplay.globo.com/v/12530757/",
+      "source_id": "12530757",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "UMA BRIGA DE ADOLESCENTES ACENDE O CONDOMÍNIO INTEIRO",
+      "cta": "QUEM PASSOU DO LIMITE?",
+      "caption": "Em Os Outros, uma briga entre Marcinho e Rogério vira o estopim para algo muito maior. #OsOutros #Drama #CenaCerta"
+    },
+    {
+      "id": "CC-OCT07-IG-CIDADE-BAILE",
+      "network": "instagram",
+      "format": "nostalgia_character",
+      "slot": "2026-10-07T10:00:00-03:00",
+      "title": "Cidade dos Homens — Laranjinha e Acerola no baile",
+      "year": 2003,
+      "source": "https://globoplay.globo.com/v/2858099/",
+      "source_id": "2858099",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ACEROLA + LARANJINHA NO BAILE: NOSTALGIA PURA",
+      "cta": "VOCÊ LEMBRAVA DESSA?",
+      "caption": "Laranjinha e Acerola no baile em Cidade dos Homens. Cena clássica, real e em português. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT07-IG-MULHER",
+      "network": "instagram",
+      "format": "character_duel",
+      "slot": "2026-10-07T11:00:00-03:00",
+      "title": "A Mulher Invisível — Clarisse x Amanda",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/2984954/",
+      "source_id": "2984954",
+      "source_start": 0,
+      "source_end": 36,
+      "hook": "CLARISSE X AMANDA: UMA CONVERSA QUE SÓ PIORA 😂",
+      "cta": "DE QUE LADO VOCÊ FICA?",
+      "caption": "Clarisse e Amanda frente a frente em A Mulher Invisível. Cena real e diálogo original. #AMulherInvisivel #DeboraFalabella #LuanaPiovani #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT07-IG-AVENIDA-CASAMENTO",
+      "network": "instagram",
+      "format": "iconic_villain_event",
+      "slot": "2026-10-07T18:00:00-03:00",
+      "title": "Avenida Brasil — Carminha invade o casamento",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/15024334/",
+      "source_id": "15024334",
+      "source_start": 0,
+      "source_end": 38,
+      "hook": "CARMINHA INVADE O CASAMENTO — E O CAOS COMEÇA",
+      "cta": "ESSA VILÃ ERA OUTRO NÍVEL?",
+      "caption": "Carminha invade o casamento de Jorginho e Nina e transforma tudo em caos. #AvenidaBrasil #Carminha #Nina #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT07-YT-TROPA",
+      "network": "youtube",
+      "format": "action_conflict_short",
+      "slot": "2026-10-07T14:00:00-03:00",
+      "title": "Tropa de Elite 2 — o confronto muda de nível",
+      "year": 2010,
+      "source": "https://globoplay.globo.com/v/1291741/",
+      "source_id": "1291741",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "34 SEGUNDOS E A TENSÃO JÁ ESTÁ NO MÁXIMO",
+      "cta": "QUAL CENA DO FILME TE MARCOU?",
+      "caption": "Tropa de Elite 2 em uma cena de tensão imediata. Áudio original em português. #TropaDeElite2 #WagnerMoura #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT07-YT-CIDADE",
+      "network": "youtube",
+      "format": "dramatic_stakes_short",
+      "slot": "2026-10-07T15:00:00-03:00",
+      "title": "Cidade dos Homens — Laranjinha chega ao limite",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5589880/",
+      "source_id": "5589880",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "QUANDO A SAÍDA PARECE PIOR QUE O PROBLEMA",
+      "cta": "O QUE VOCÊ FARIA?",
+      "caption": "Laranjinha pensa em uma atitude desesperada para conseguir ajudar o filho. #CidadeDosHomens #Drama #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT07-YT-AVENIDA-SURTO",
+      "network": "youtube",
+      "format": "iconic_meltdown_short",
+      "slot": "2026-10-07T16:00:00-03:00",
+      "title": "Avenida Brasil — Carminha surta no casamento",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/2063829/",
+      "source_id": "2063829",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "CARMINHA PERDE O CONTROLE EM 34 SEGUNDOS",
+      "cta": "ESSA É A MELHOR VILÃ DA TV?",
+      "caption": "Carminha surta no casamento e ninguém sabe como reagir. #AvenidaBrasil #Carminha #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT07-FB-AUTO-VIC",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-07T10:00:00-03:00",
+      "title": "O Auto da Compadecida — João Grilo engambela Vicentão",
+      "year": 1999,
+      "source": "https://globoplay.globo.com/v/2630388/",
+      "source_id": "2630388",
+      "segments": [
+        [
+          0,
+          9
+        ],
+        [
+          10,
+          19
+        ],
+        [
+          20,
+          29
+        ]
+      ],
+      "beat_labels": [
+        "1. IDEIA",
+        "2. CONVENCIMENTO",
+        "3. PAYOFF"
+      ],
+      "hook": "JOÃO GRILO INVENTA — VICENTÃO ACREDITA",
+      "cta": "VOCÊ CAIRIA NESSA?",
+      "caption": "João Grilo vira o jogo contra Vicentão em três movimentos. Cena real e diálogo original. #OAutoDaCompadecida #JoaoGrilo #CenaCerta"
+    },
+    {
+      "id": "CC-OCT07-FB-MULHER-HOMEM",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-07T11:00:00-03:00",
+      "title": "A Mulher Invisível — surge o homem invisível",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/2984971/",
+      "source_id": "2984971",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          12,
+          22
+        ],
+        [
+          24,
+          34
+        ]
+      ],
+      "beat_labels": [
+        "1. IDEIA",
+        "2. PROJEÇÃO",
+        "3. VIRADA"
+      ],
+      "hook": "ELA CRIA O HOMEM IDEAL — E A SITUAÇÃO FICA AINDA MAIS ESTRANHA",
+      "cta": "QUAL SERIA SEU PERSONAGEM IDEAL?",
+      "caption": "Clarisse cria sua própria versão de homem ideal em A Mulher Invisível. Micro-arco em três beats. #AMulherInvisivel #CenaCerta"
+    },
+    {
+      "id": "CC-OCT07-FB-OUTROS",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-07T12:00:00-03:00",
+      "title": "Os Outros — pedido de desculpas vira confronto",
+      "year": 2023,
+      "source": "https://globoplay.globo.com/v/12530759/",
+      "source_id": "12530759",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          12,
+          22
+        ],
+        [
+          24,
+          34
+        ]
+      ],
+      "beat_labels": [
+        "1. DESCULPA",
+        "2. TENSÃO",
+        "3. CONFRONTO"
+      ],
+      "hook": "ERA PRA SER UM PEDIDO DE DESCULPAS",
+      "cta": "QUEM ESCALOU ESSA BRIGA?",
+      "caption": "Wando leva Rogério para pedir desculpas e a situação desanda com Cibele. Três beats da mesma cena. #OsOutros #Drama #CenaCerta"
+    }
+  ]
+}
