@@ -1,0 +1,1375 @@
+{
+  "schema": "CENA_CERTA_OCT07_ANTI_REPEAT_SNAPSHOT_V1",
+  "generated_at": "2026-10-06T22:50:00-03:00",
+  "source_commit": "4add750499c427cfdaad81627071aad257b30742",
+  "prior_sources": [
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Benjamin_Corrie_-_Outpaws_%282024%29.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "7d24b93e47f640ba4a081f7fceed2e09f47d2902aa80f6ce7b344603cda01ef2",
+      "normalized_title": "outpaws",
+      "status": "DRAFT_BLOCKED_NOT_PUBLISHED"
+    },
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Max_Jayzeh_-_Game_Day_%282022%29.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "4a60abece61a6aaddf407058e21df1e7bbd1ba11d9566fe2b11c035a5e93a9a3",
+      "normalized_title": "game day",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Destiny_Zukevich_et_al._-_Jeremy_%282024%29.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "fcae5323281d32c7846337778cff78118d5a9e63299dde907b8d9bb8c6ca6f43",
+      "normalized_title": "jeremy",
+      "status": "DRAFT_BLOCKED_NOT_PUBLISHED"
+    },
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Max_Richey_-_Terrarium_%282023%29.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "5928ee6e9138734ae99d6a821d835abffe0b68c2571faff16fc81152ecea82d8",
+      "normalized_title": "terrarium",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Ivonne_Castillo_and_Javier_Hern%C3%A1ndez_-_Obsolete_%282023%29.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "70012605780f0119e91277dbed2c1f1534c98b250997db1e6af002ce7ea526d2",
+      "normalized_title": "obsolete",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Joseph_Jones_et_al._-_Tag_Team_%282024%29.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "46ac928df378f6e19f425649de28e560f81e7c35a72c7ef2271bcc6aa4ae544d",
+      "normalized_title": "tag team",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Emma_Rose_Marshall_-_Notre_Jeu_-_Cave_Flower%2C_The_%282024%29.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "a3df1e80954e28265c56377810ffc74bf5a4317a11073cc3605609d5c858c1f9",
+      "normalized_title": "notre jeu: the cave flower",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Earth_Hour_Horror_2009.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "13c0565653effe8e198fb50b4c1c694ac36db3b04467a1899213e6a50dcb0bc3",
+      "normalized_title": "earth hour horror",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": null,
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Rensaven_-_Seaside_%282024%29.webm",
+      "timestamps_used": null,
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "fa56a4e80fbb128c0f5b76b1a9ea02d2e3a07f1b1b5e7fbbd9d4daee4dafa254",
+      "normalized_title": "seaside",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "4707587",
+      "source_url": "https://globoplay.globo.com/v/4707587/",
+      "timestamps_used": [
+        0,
+        59.2
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "d3e5b7242314ebfae0df4b52fdb182eeaeca95b2cd5aee990ba6d768d765b5b5",
+      "normalized_title": "mister brau — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "6600863",
+      "source_url": "https://globoplay.globo.com/v/6600863/",
+      "timestamps_used": [
+        43,
+        103.6
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "a9440bfd6d2a980c1f9d82efd6a5a7f224c0e3862bc6573b23bac9ca094caff4",
+      "normalized_title": "deus salve o rei — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "5613016",
+      "source_url": "https://globoplay.globo.com/v/5613016/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "955cd6fb3129f38cee953b14af5ccc0acd0b9ff7dd426543695e64c1531c3adc",
+      "normalized_title": "rock story — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "5493233",
+      "source_url": "https://globoplay.globo.com/v/5493233/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "3ce2a004a355cb6a1deb358746eced6151776b1e60f13284f5bf9223ad781c76",
+      "normalized_title": "sol nascente — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-koji-2024",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Award_Winning_Animated_Short_Film_-_Koji.webm",
+      "timestamps_used": [
+        34.813,
+        52.421
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "1393c11bfb9f2fb5b1de84fd131fb341fc2ce8a0f14b74881ef667336e13012e",
+      "normalized_title": "koji",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "5680110",
+      "source_url": "https://globoplay.globo.com/v/5680110/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "ec16309097c721dedf1ba8f4da53f9905e1ed5232a95202873bca079f8cd740a",
+      "normalized_title": "a lei do amor — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "7214188",
+      "source_url": "https://globoplay.globo.com/v/7214188/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "e38a90eb8d7f7e73f3bd8b115044e2f2355bd734c95251934cb373de42678d48",
+      "normalized_title": "o tempo não para — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-midnight-snack-2014",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/David_Romero_-_Midnight_Snack_%282014%29.webm",
+      "timestamps_used": [
+        24.145,
+        41.473
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "46db8bd72288335282cd8264de333e39362cd94dea2c4f7bb5a1434ccbdca75e",
+      "normalized_title": "midnight snack",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-new-day-2023",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/N%C3%A1dia_Correia_-_It%27s_a_New_Day%21_%282023%29.webm",
+      "timestamps_used": [
+        27.695,
+        44.255
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "32994bb219971d427e0418834ab3ca1daed5af089878468fe22737382e9b9fa9",
+      "normalized_title": "it's a new day!",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-bateria-baja-2023",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Montserrat_Diaz_and_Millaray_Robles_-_Bateria_baja_%282023%29_%28without_audio_variant%29.webm",
+      "timestamps_used": [
+        20.528,
+        37.976
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "76c83fa394f564a7cebf21fdf7a91b1a665e4edfd6cfcd819cd874351ee705fe",
+      "normalized_title": "bateria baja",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-cazacerebros-2016",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/La_Academia_de_Animaci%C3%B3n_-_Cazacerebros.webm",
+      "timestamps_used": [
+        17.793,
+        34.449
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "704f87ce426b6dfd44377100d641068052daebb5f36f1995924c4e1735ce0b39",
+      "normalized_title": "cazacerebros",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-requiem-2023",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Joshua_Why_-_Requiem_%282023%29.webm",
+      "timestamps_used": [
+        17.198,
+        33.326
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "b9712dabc0a494d7db85a5cf19120da32517d69f7e9641570fa555c16304bc5d",
+      "normalized_title": "requiem",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-magdurus-2023",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/NotSoProish_-_Deal_in_Magdurus%2C_A_%282023%29.webm",
+      "timestamps_used": [
+        14.398,
+        30.286
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "3cd557376bfd71d24463ec3a4baa836d9e5003298b3d08081d038abc3312a212",
+      "normalized_title": "a deal in magdurus",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-bun-hunting-2024",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Piti_Yindee_-_Hank_Howell_-_Bun_Hunting_-_Overture_%282024%29.webm",
+      "timestamps_used": [
+        77.954,
+        93.698
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "0ca172055d8647e2e5caa8729f3700203445db3a4eec4a285315c0a4a8762914",
+      "normalized_title": "bun hunting: overture",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-nyctophobia-2019",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Alaya_Knowlton_-_Nyctophobia_%282019%29.webm",
+      "timestamps_used": [
+        13.688,
+        29.912
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "9262cdd2c641b474c6abf8b2b72020edc19b50f4fc5c0720d715128dd0fed68c",
+      "normalized_title": "nyctophobia",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-casino-royale-2023",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/NotSoProish_-_Casino_Royale_%282023%29_%28without_audio_variant%29.webm",
+      "timestamps_used": [
+        8.159,
+        22.367
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "6926e65832b84f0a9c7ca128c9bc4baa15ead47011245c1e485710588e0f0230",
+      "normalized_title": "casino royale",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-fursuit-etiquette-2024",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/TITANIA_-_Fursuit_Etiquette_%282024%29.webm",
+      "timestamps_used": [
+        14.167,
+        30.871
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "e914cbdb15c0f5c958f95b3b8252a7c73060aeeb6585a4ac7f576bb4ccd227ae",
+      "normalized_title": "fursuit etiquette",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "10170601",
+      "source_url": "https://globoplay.globo.com/v/10170601/",
+      "timestamps_used": [
+        0,
+        41.866
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "011e25e7174ddfd69ed633f30e6d986f1540fe4885aba2b5d5cf661066ea936d",
+      "normalized_title": "um lugar ao sol — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "10170598",
+      "source_url": "https://globoplay.globo.com/v/10170598/",
+      "timestamps_used": [
+        0,
+        47.183
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "f05882b9f84622ccf0a4ee2e3bf67a156ddf4fa11126a0218654c426cb9a6a0e",
+      "normalized_title": "salve-se quem puder — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14998159",
+      "source_url": "https://globoplay.globo.com/v/14998159/",
+      "timestamps_used": [
+        0,
+        23.824
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "3c92003f48606d8af95250ff90f80de8e76980d3366605d12025e5c587f960fa",
+      "normalized_title": "pedro vê adriana produzida e a elogia",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14997870",
+      "source_url": "https://globoplay.globo.com/v/14997870/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "5ba4aea09ea98847d505d2c737690a01bcfb498001f286b4258575bf30947cb9",
+      "normalized_title": "fernando não gosta de ver mau mau com felipe",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14997876",
+      "source_url": "https://globoplay.globo.com/v/14997876/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "cc52aaece7a147abbbd71eedd172c1db9ba8470564c22ab5e23b6534ce39765f",
+      "normalized_title": "mau mau e felipe descobrem a verdade sobre fernando",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14997894",
+      "source_url": "https://globoplay.globo.com/v/14997894/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "9a732e7c108dbe90792c798d15c9e09a74697f826c17a2fb6bd5978a07d75a12",
+      "normalized_title": "carolina e fábia comentam sobre felipe e mau mau",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14997922",
+      "source_url": "https://globoplay.globo.com/v/14997922/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "c151e4546f7638bde58cd7ba573cd0341c6e1185258c725753d1c3c6a0f3bb3d",
+      "normalized_title": "mau mau admite que está confuso sobre fernando",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14998251",
+      "source_url": "https://globoplay.globo.com/v/14998251/",
+      "timestamps_used": [
+        0,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "45f8aff545a5b052fab111f65ef317b4ea55f833306b578e3b24da8bbb92b089",
+      "normalized_title": "pedro se preocupa com a nova fase de adriana",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14956992",
+      "source_url": "https://globoplay.globo.com/v/14956992/",
+      "timestamps_used": [
+        0,
+        42.237
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "80e237ecf34586f055e80bf23a86f047086e715dc7fd179442b3bb6713650064",
+      "normalized_title": "pedro questiona adriana sobre o flagra no cassino",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14996045",
+      "source_url": "https://globoplay.globo.com/v/14996045/",
+      "timestamps_used": [
+        0,
+        52.699
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "05e86e6440bdedca152b2d869ce97c72637ab750a515660ec12ff11e517c9c9c",
+      "normalized_title": "fábia procura ademir para cuidar do divórcio",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14996060",
+      "source_url": "https://globoplay.globo.com/v/14996060/",
+      "timestamps_used": [
+        0,
+        55.368
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "54ff2fdce9fdb9a42ec7a19eb43ff83b4f0eb812846232c0c6fa2fdbeb4a8acc",
+      "normalized_title": "pilar pensa em contratar tom para outro serviço",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14988846",
+      "source_url": "https://globoplay.globo.com/v/14988846/",
+      "timestamps_used": [
+        0,
+        44.624
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "8173e1dd0fab0ed55eca06e0b94ca6cfbeb1473c0636bee04271a2d9158ae8af",
+      "normalized_title": "fábia decide enfrentar a revelação de pilar",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "2282199",
+      "source_url": "https://globoplay.globo.com/v/2282199/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "528652800824624908b7bb3913df3546c4f21cb1b6e1c7c26fd3d5a4d3e1e482",
+      "normalized_title": "américa — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "1445504",
+      "source_url": "https://globoplay.globo.com/v/1445504/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "5a82e084a055ab950bc3629c2b813210c75674f987766fda631e089f8692bf26",
+      "normalized_title": "o clone — falha nossa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14971362",
+      "source_url": "https://globoplay.globo.com/v/14971362/",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "030ba8493f786c988b8951c4f626291a32ae85283265ad2d7e65fd483a1ecbb9",
+      "normalized_title": "carminha pula no pescoço de nina",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "14555837",
+      "source_url": "https://globoplay.globo.com/v/14555837/",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "6c476d223008ebba1dd129ce95b24369dd01f13b35e58e53663a4b0e0e4a207d",
+      "normalized_title": "nina vê carminha roubando mercadorias e assume a culpa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "3802076",
+      "source_url": "https://globoplay.globo.com/v/3802076/",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "04e14f023f0cf7ebd7ae06c130aa5ecf4714a6b46e25ad7d260539a13f1424ca",
+      "normalized_title": "isabel descobre sua verdadeira mãe",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "4184050",
+      "source_url": "https://globoplay.globo.com/v/4184050/",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "025762edf0a26a793acbe9b431964a928272548365c99ab29ae7e02afd445e13",
+      "normalized_title": "bruno gissoni viveu um rapaz romântico em avenida brasil",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "4183571",
+      "source_url": "https://globoplay.globo.com/v/4183571/",
+      "timestamps_used": [
+        0,
+        14.976
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "4a716064ce4c0d0e545c21d5b323333e51a35c60dbefe31515db6f8632ebb5d5",
+      "normalized_title": "maria bo se declara para lance",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "4183565",
+      "source_url": "https://globoplay.globo.com/v/4183565/",
+      "timestamps_used": [
+        0,
+        26.752
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "d3ca094f49fb55b2d3b9c238c3402358c80888220c186183fe7b83010cbb5e70",
+      "normalized_title": "ravi se declara para camila",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "4183558",
+      "source_url": "https://globoplay.globo.com/v/4183558/",
+      "timestamps_used": [
+        0,
+        22.421
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "51ccd5e906cdfe93a5dcd239a626aab61533968869ad7d30190c33a140bade98",
+      "normalized_title": "agostinho se declara para bebel",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "3802141",
+      "source_url": "https://globoplay.globo.com/v/3802141/",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "3a6cb9d50808bb5514cd0709af95c7e7ba4df1709ff633fc9cf1a1b505f2529c",
+      "normalized_title": "carlota manda boneco de vodu para sandra",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "3802157",
+      "source_url": "https://globoplay.globo.com/v/3802157/",
+      "timestamps_used": [
+        0,
+        58.825
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "962fe1ba6af5648839145d0c89d2e38b03bf9fd6177278004fa7f6f7902f51ba",
+      "normalized_title": "vitória tranca sandra no quarto no dia do noivado",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "3802033",
+      "source_url": "https://globoplay.globo.com/v/3802033/",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": "5d701dce205c34343fb46cc6debbf77faee8038309763f596938ed65039bceda",
+      "normalized_title": "severo e magnólia tentam se dar bem",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "4115698",
+      "source_url": "https://globoplay.globo.com/v/4115698/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "frame_fingerprint_sha256": "78e4ce5bf4e31836e4a908672d88c72c5c824e73104473b448487b6801c1d29e",
+      "master_sha256": "00e0ea89acd61e03ae3bdb7bbc845112d1a8b08d9f4f2c190006d6112db05dac",
+      "normalized_title": "sai de baixo — improvisos nas gravações",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "6130248",
+      "source_url": "https://globoplay.globo.com/v/6130248/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "frame_fingerprint_sha256": "c122e7e004e18ef84860db3098b215bf4dc104481cafeb205c6b58ee994b24c6",
+      "master_sha256": "323cd4435a29ff1c89a9681befb442f4711127594bb50f96194ce0b0d6a99aff",
+      "normalized_title": "pega pega — erros de gravação",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "7423457",
+      "source_url": "https://globoplay.globo.com/v/7423457/",
+      "timestamps_used": [
+        0,
+        60
+      ],
+      "frame_fingerprint_sha256": "e500e9f3cf8ddbc2fc35b198c5dacb091c6b95d07f5b0d83a8c1cb5f41a88b2e",
+      "master_sha256": "3c202ff05f959425e29574831e5353802820f4d30f8d1a6e19f28933582185bf",
+      "normalized_title": "choque de cultura — aguardando a próxima categoria",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "12530768",
+      "source_url": "https://globoplay.globo.com/v/12530768/",
+      "timestamps_used": [
+        0,
+        42
+      ],
+      "frame_fingerprint_sha256": "cf91f1ea4c67265c241ab5a6dde3d911aad81cdc6dffb2fedf4a81717ab9a7ea",
+      "master_sha256": "a5b053d7d1a2c972053ae6ff0365b519bd139d6fd971e2078eb7a7a61dda66d3",
+      "normalized_title": "os outros — cibele compra uma arma",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "12647645",
+      "source_url": "https://globoplay.globo.com/v/12647645/",
+      "timestamps_used": [
+        0,
+        44
+      ],
+      "frame_fingerprint_sha256": "e9eb6b90ba924a52539a65ae80ef74dc8866194c8c1c25363990edceb2ec377b",
+      "master_sha256": "c5e63aa79250668346c806a214d94a59ad76924ed9b013a832a91218a074e42a",
+      "normalized_title": "sob pressão — menino ferido por linha de pipa",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "9241800",
+      "source_url": "https://globoplay.globo.com/v/9241800/",
+      "timestamps_used": [
+        0,
+        42
+      ],
+      "frame_fingerprint_sha256": "e70215f1fe57197d33c2cdf336b771abd6d2240d95c5f17cc6de9497c7577a0b",
+      "master_sha256": "1da2b766534e5f17ab161fe82eb78fe69540539b22da9de6e6c7305cd4accc90",
+      "normalized_title": "arcanjo renegado — mikhael encontra ronaldo",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-charge-2022",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Charge_-_Blender_Open_Movie-full_movie.webm",
+      "timestamps_used": [
+        18,
+        48
+      ],
+      "frame_fingerprint_sha256": "545a1d68c9afc659430f47aceb9ea964b90d310b437c15219d281f50dc23a751",
+      "master_sha256": "dcc753ad6d30793b0c6a52447b5815674edbfa48474edb6dec89876ca3c2c6fd",
+      "normalized_title": "charge",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-glass-half-2015",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Glass_Half_-_Blender_Open_Movie-full_movie.webm",
+      "timestamps_used": [
+        24,
+        54
+      ],
+      "frame_fingerprint_sha256": "9e2c5575024257e52f1c8306aa9cc611bf1dc49de00a9a8dcd4f322820c3f7b4",
+      "master_sha256": "c35833ba2d4ad5d390d0d8ad78cb0028f6465df2f103e19ffa7962da4dde5ceb",
+      "normalized_title": "glass half",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "commons-caminandes3-2016",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Caminandes_3_-_Llamigos_-_Blender_Animated_Short.webm",
+      "timestamps_used": [
+        10,
+        40
+      ],
+      "frame_fingerprint_sha256": "35991da53ca7edf96da3b4da0ea1d267e02c94a9d3904d59f4aa7a0357bf4253",
+      "master_sha256": "512531952ea590ec0d603a2bbd3d6dd97ae2f2fd69e97f860877bbbea80c9c64",
+      "normalized_title": "caminandes 3: llamigos",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "12530762",
+      "source_url": "https://globoplay.globo.com/v/12530762/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "frame_fingerprint_sha256": "25fccdfb656e7df6760d32015924297b5c9ee7312fa9617535f7abca437c9835",
+      "master_sha256": "212d012f135fc6ecbb2152a3eabe85502975b90285bb17e875347787bf5016b1",
+      "normalized_title": "os outros — wando surta e ameaça cibele",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "12543328",
+      "source_url": "https://globoplay.globo.com/v/12543328/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "frame_fingerprint_sha256": "a6880e78c5a0335c4ea4608578ae8f504f47e671fe3329da06664531b7553222",
+      "master_sha256": "ab8519a6d4ffe05cf9e1fa8de21b9accdbed85566e85ca1c645ccb43c4322a91",
+      "normalized_title": "sob pressão — vítimas da explosão chegam ao hospital",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "9241803",
+      "source_url": "https://globoplay.globo.com/v/9241803/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "frame_fingerprint_sha256": "69d69d319da7b95aed7a88ee16af04bee667cd65a02bbd3cb7073b3113862f85",
+      "master_sha256": "3faf89629f8beac01337c285e347c86045c22aa09af83977761f8f4525e67542",
+      "normalized_title": "arcanjo renegado — resgate no cativeiro",
+      "status": "SCHEDULED"
+    },
+    {
+      "source_id": "7699083",
+      "source_url": "https://globoplay.globo.com/v/7699083/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "shippados — erros de gravação",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "4958540",
+      "source_url": "https://globoplay.globo.com/v/4958540/",
+      "timestamps_used": [
+        0,
+        58
+      ],
+      "normalized_title": "mais caminhos — erros de gravação e bastidores",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "14722514",
+      "source_url": "https://globoplay.globo.com/v/14722514/",
+      "timestamps_used": [
+        60,
+        105
+      ],
+      "normalized_title": "jogada de risco — o jogo por trás do futebol",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "13901707",
+      "source_url": "https://globoplay.globo.com/v/13901707/",
+      "timestamps_used": [
+        60,
+        105
+      ],
+      "normalized_title": "reencarne — desencarne",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "10734248",
+      "source_url": "https://globoplay.globo.com/v/10734248/",
+      "timestamps_used": [
+        60,
+        105
+      ],
+      "normalized_title": "rensga hits! — no dia em que eu saí de casa",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "13171424",
+      "source_url": "https://globoplay.globo.com/v/13171424/",
+      "timestamps_used": [
+        60,
+        105
+      ],
+      "normalized_title": "vermelho sangue — episódio 1",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "commons-cosmos-laundromat-2015",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm",
+      "timestamps_used": [
+        62,
+        92
+      ],
+      "normalized_title": "cosmos laundromat",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "commons-daily-dweebs-2017",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Daily_Dweebs_-_Blender_Open_Movie-full_movie.webm",
+      "timestamps_used": [
+        0,
+        30
+      ],
+      "normalized_title": "the daily dweebs",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "commons-elephants-dream-2006",
+      "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Elephants_Dream_%282006%29.webm",
+      "timestamps_used": [
+        105,
+        135
+      ],
+      "normalized_title": "elephants dream",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "12410485",
+      "source_url": "https://globoplay.globo.com/v/12410485/",
+      "timestamps_used": [
+        60,
+        115
+      ],
+      "normalized_title": "o jogo que mudou a história — episódio 1",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "7765187",
+      "source_url": "https://globoplay.globo.com/v/7765187/",
+      "timestamps_used": [
+        60,
+        115
+      ],
+      "normalized_title": "a divisão — episódio 1",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "14847509",
+      "source_url": "https://globoplay.globo.com/v/14847509/",
+      "timestamps_used": [
+        60,
+        115
+      ],
+      "normalized_title": "emergência 53 — o monstro",
+      "status": "OCT02_GENERATED_OR_APPROVED_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "12672149",
+      "source_url": null,
+      "timestamps_used": [
+        0,
+        50
+      ],
+      "normalized_title": null,
+      "status": "OCT02_PASS_EVIDENCE_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "8508005",
+      "source_url": null,
+      "timestamps_used": [
+        0,
+        30
+      ],
+      "normalized_title": null,
+      "status": "OCT02_PASS_EVIDENCE_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "11225899",
+      "source_url": null,
+      "timestamps_used": [
+        0,
+        50
+      ],
+      "normalized_title": null,
+      "status": "OCT02_PASS_EVIDENCE_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "commons-wingit-2023",
+      "source_url": null,
+      "timestamps_used": [
+        22,
+        52
+      ],
+      "normalized_title": null,
+      "status": "OCT02_PASS_EVIDENCE_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "commons-spring-2019",
+      "source_url": null,
+      "timestamps_used": [
+        55,
+        85
+      ],
+      "normalized_title": null,
+      "status": "OCT02_PASS_EVIDENCE_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "commons-coffee-run-2020",
+      "source_url": null,
+      "timestamps_used": [
+        20,
+        50
+      ],
+      "normalized_title": null,
+      "status": "OCT02_PASS_EVIDENCE_BLOCK_FROM_REUSE"
+    },
+    {
+      "source_id": "1412674",
+      "source_url": "https://globoplay.globo.com/v/1412674/",
+      "timestamps_used": [
+        0,
+        55
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "a grande família — falha nossa",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "1785271",
+      "source_url": "https://globoplay.globo.com/v/1785271/",
+      "timestamps_used": [
+        0,
+        40
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "morde & assopra — falha nossa",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "1707565",
+      "source_url": "https://globoplay.globo.com/v/1707565/",
+      "timestamps_used": [
+        0,
+        12
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "aquele beijo — 3 quebras de personagem",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "1707565",
+      "source_url": "https://globoplay.globo.com/v/1707565/",
+      "timestamps_used": [
+        24,
+        37
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "aquele beijo — 3 quebras de personagem",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "1707565",
+      "source_url": "https://globoplay.globo.com/v/1707565/",
+      "timestamps_used": [
+        50,
+        63
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "aquele beijo — 3 quebras de personagem",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "14917711",
+      "source_url": "https://globoplay.globo.com/v/14917711/",
+      "timestamps_used": [
+        0,
+        42
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "avenida brasil — carminha tenta disfarçar a tensão",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "5694170",
+      "source_url": "https://globoplay.globo.com/v/5694170/",
+      "timestamps_used": [
+        0,
+        42
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "senhora do destino — nazaré no casamento de isabel",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "10648385",
+      "source_url": "https://globoplay.globo.com/v/10648385/",
+      "timestamps_used": [
+        0,
+        42
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "o cravo e a rosa — catarina aposta na fazenda",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "2873003",
+      "source_url": "https://globoplay.globo.com/v/2873003/",
+      "timestamps_used": [
+        0,
+        35
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "senhora do destino — nazaré joga luís carlos da escada",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "14018885",
+      "source_url": "https://globoplay.globo.com/v/14018885/",
+      "timestamps_used": [
+        0,
+        29
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "vale tudo — odete roitman é assassinada",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "2505129",
+      "source_url": "https://globoplay.globo.com/v/2505129/",
+      "timestamps_used": [
+        0,
+        40
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "o cravo e a rosa — petruchio e catarina brigam",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "15004552",
+      "source_url": "https://globoplay.globo.com/v/15004552/",
+      "timestamps_used": [
+        0,
+        14
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "avenida brasil — nina força carminha a encarar as consequências",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "15004552",
+      "source_url": "https://globoplay.globo.com/v/15004552/",
+      "timestamps_used": [
+        34,
+        49
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "avenida brasil — nina força carminha a encarar as consequências",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "15004552",
+      "source_url": "https://globoplay.globo.com/v/15004552/",
+      "timestamps_used": [
+        70,
+        86
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "avenida brasil — nina força carminha a encarar as consequências",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "5694282",
+      "source_url": "https://globoplay.globo.com/v/5694282/",
+      "timestamps_used": [
+        0,
+        14
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "senhora do destino — nazaré encurralada",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "5694282",
+      "source_url": "https://globoplay.globo.com/v/5694282/",
+      "timestamps_used": [
+        28,
+        43
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "senhora do destino — nazaré encurralada",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "5694282",
+      "source_url": "https://globoplay.globo.com/v/5694282/",
+      "timestamps_used": [
+        58,
+        74
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "senhora do destino — nazaré encurralada",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "13631051",
+      "source_url": "https://globoplay.globo.com/v/13631051/",
+      "timestamps_used": [
+        0,
+        14
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "vale tudo — odete orienta fátima a sustentar a mentira",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "13631051",
+      "source_url": "https://globoplay.globo.com/v/13631051/",
+      "timestamps_used": [
+        30,
+        45
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "vale tudo — odete orienta fátima a sustentar a mentira",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "13631051",
+      "source_url": "https://globoplay.globo.com/v/13631051/",
+      "timestamps_used": [
+        66,
+        82
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "vale tudo — odete orienta fátima a sustentar a mentira",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "5523857",
+      "source_url": "https://globoplay.globo.com/v/5523857/",
+      "timestamps_used": [
+        0,
+        38
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "minha mãe é uma peça 2 — dona hermínia sem filtro",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "7890603",
+      "source_url": "https://globoplay.globo.com/v/7890603/",
+      "timestamps_used": [
+        0,
+        36
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "vai que cola 2 — o começo",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "1338108",
+      "source_url": "https://globoplay.globo.com/v/1338108/",
+      "timestamps_used": [
+        0,
+        34
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "tropa de elite 2 — mathias enfrenta o traficante",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "3518569",
+      "source_url": "https://globoplay.globo.com/v/3518569/",
+      "timestamps_used": [
+        0,
+        38
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "o auto da compadecida — joão grilo vira o jogo",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "8175362",
+      "source_url": "https://globoplay.globo.com/v/8175362/",
+      "timestamps_used": [
+        0,
+        38
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "minha mãe é uma peça 3 — dona hermínia",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "1608984",
+      "source_url": "https://globoplay.globo.com/v/1608984/",
+      "timestamps_used": [
+        0,
+        38
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "o homem do futuro — zero e helena",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "2921024",
+      "source_url": "https://globoplay.globo.com/v/2921024/",
+      "timestamps_used": [
+        0,
+        34
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "meu passado me condena — fábio e miá em crise",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "1338114",
+      "source_url": "https://globoplay.globo.com/v/1338114/",
+      "timestamps_used": [
+        0,
+        36
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "tropa de elite 2 — nascimento discute sobre o filho",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "7471794",
+      "source_url": "https://globoplay.globo.com/v/7471794/",
+      "timestamps_used": [
+        0,
+        34
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "de pernas pro ar 3 — quando a realidade virtual complica tudo",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "3408563",
+      "source_url": "https://globoplay.globo.com/v/3408563/",
+      "timestamps_used": [
+        0,
+        9
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "os homens são de marte — paulo gustavo no aeroporto",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "3408563",
+      "source_url": "https://globoplay.globo.com/v/3408563/",
+      "timestamps_used": [
+        10,
+        19
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "os homens são de marte — paulo gustavo no aeroporto",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "3408563",
+      "source_url": "https://globoplay.globo.com/v/3408563/",
+      "timestamps_used": [
+        20,
+        29
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "os homens são de marte — paulo gustavo no aeroporto",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "6369249",
+      "source_url": "https://globoplay.globo.com/v/6369249/",
+      "timestamps_used": [
+        0,
+        9
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "fala sério, mãe! — família, constrangimento e reação",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "6369249",
+      "source_url": "https://globoplay.globo.com/v/6369249/",
+      "timestamps_used": [
+        10,
+        19
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "fala sério, mãe! — família, constrangimento e reação",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "6369249",
+      "source_url": "https://globoplay.globo.com/v/6369249/",
+      "timestamps_used": [
+        20,
+        29
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "fala sério, mãe! — família, constrangimento e reação",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "2316840",
+      "source_url": "https://globoplay.globo.com/v/2316840/",
+      "timestamps_used": [
+        0,
+        9
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "de pernas pro ar 2 — ciúme vira discussão",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "2316840",
+      "source_url": "https://globoplay.globo.com/v/2316840/",
+      "timestamps_used": [
+        10,
+        19
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "de pernas pro ar 2 — ciúme vira discussão",
+      "status": "PUBLISHED"
+    },
+    {
+      "source_id": "2316840",
+      "source_url": "https://globoplay.globo.com/v/2316840/",
+      "timestamps_used": [
+        20,
+        29
+      ],
+      "frame_fingerprint_sha256": null,
+      "master_sha256": null,
+      "normalized_title": "de pernas pro ar 2 — ciúme vira discussão",
+      "status": "PUBLISHED"
+    }
+  ],
+  "blocked_frame_fingerprints": [
+    "78e4ce5bf4e31836e4a908672d88c72c5c824e73104473b448487b6801c1d29e",
+    "c122e7e004e18ef84860db3098b215bf4dc104481cafeb205c6b58ee994b24c6",
+    "e500e9f3cf8ddbc2fc35b198c5dacb091c6b95d07f5b0d83a8c1cb5f41a88b2e",
+    "cf91f1ea4c67265c241ab5a6dde3d911aad81cdc6dffb2fedf4a81717ab9a7ea",
+    "e9eb6b90ba924a52539a65ae80ef74dc8866194c8c1c25363990edceb2ec377b",
+    "e70215f1fe57197d33c2cdf336b771abd6d2240d95c5f17cc6de9497c7577a0b",
+    "545a1d68c9afc659430f47aceb9ea964b90d310b437c15219d281f50dc23a751",
+    "9e2c5575024257e52f1c8306aa9cc611bf1dc49de00a9a8dcd4f322820c3f7b4",
+    "35991da53ca7edf96da3b4da0ea1d267e02c94a9d3904d59f4aa7a0357bf4253",
+    "25fccdfb656e7df6760d32015924297b5c9ee7312fa9617535f7abca437c9835",
+    "a6880e78c5a0335c4ea4608578ae8f504f47e671fe3329da06664531b7553222",
+    "69d69d319da7b95aed7a88ee16af04bee667cd65a02bbd3cb7073b3113862f85"
+  ],
+  "note": "Fail-closed 60d registry inherited from prior canonical history. Oct05 adds source-window plus center-crop temporal sequence comparison. Failed/unpublished Oct03 drafts are not treated as published."
+}
