@@ -1,0 +1,78 @@
+name: Cena Certa Oct07 Benchmark Pack
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct07-breakout-pack.yml
+      - scripts/cena_certa_oct07_pack.py
+      - ops/cena-certa-oct07/manifest.json
+      - ops/cena-certa-oct07/anti-repeat-snapshot.json
+      - ops/cena-certa-oct07/history_media.json
+      - assets/cena-certa-logo.png.b64
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: cena-certa-oct07-benchmark-pack
+  cancel-in-progress: true
+
+jobs:
+  render-gate-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 95
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/cena_certa_oct07_pack.py
+            ops/cena-certa-oct07
+            assets/cena-certa-logo.png.b64
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          python -m pip install -q --upgrade yt-dlp
+
+      - name: Render and run all fail-closed gates
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct07_pack.py
+
+      - name: Publish QA-approved network masters
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for network in tiktok instagram youtube facebook; do
+            tag="cena-certa-oct07-${network}"
+            gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||               gh release create "${tag}" --repo "$GITHUB_REPOSITORY"                 --title "Cena Certa Oct07 ${network}"                 --notes "Cena Certa 2.8 Oct07 benchmark test. Real scenes, original PT-BR dialogue, no narration. Released only after 60d source-window and temporal scene-sequence gates."
+            gh release upload "${tag}" out/cena-certa-oct07/${network}/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+          done
+
+      - name: Create evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          {
+            echo "CENA_CERTA_OCT07_PACK=PASS"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "COMMIT=$GITHUB_SHA"
+            echo
+            cat out/cena-certa-oct07/summary.json
+          } > out/cena-certa-oct07/evidence.txt
+          gh issue create --repo "$GITHUB_REPOSITORY"             --title "[CENA-CERTA-OCT07-BENCHMARK] $GITHUB_RUN_ID"             --body-file out/cena-certa-oct07/evidence.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-oct07-benchmark-${{ github.run_id }}
+          path: out/cena-certa-oct07/
+          retention-days: 7
