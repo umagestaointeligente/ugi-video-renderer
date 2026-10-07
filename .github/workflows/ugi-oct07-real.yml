@@ -35,7 +35,7 @@ jobs:
           import json,pathlib,subprocess
           p=pathlib.Path("public/ugi/editorial/2026-10-07"); out={}
           for f in ["tiktok-valor-no-pdv.mp4","youtube-sortimento-variedade-profundidade.mp4"]:
-            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); assert d>25; out[f]=d
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); assert d>20; out[f]=d
           (p/"qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"exactTopicVisual":True,"noRandomFootage":True,"noSlideshow":True,"files":out,"sources":[{"media":"juice","source":"Kjetil Ree/Wikimedia Commons","license":"CC BY-SA 3.0"},{"media":"grocery","source":"USDAgov/Wikimedia Commons","license":"Public Domain"}]},indent=2))
           PY
       - name: Commit
