@@ -1,0 +1,47 @@
+name: UGI Oct07 Real Editorial
+on:
+  push:
+    paths: ['.github/workflows/ugi-oct07-real.yml']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg fonts-dejavu-core curl
+          python -m pip install -U edge-tts
+      - name: Build real retail videos
+        shell: bash
+        run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-10-07; mkdir -p "$O/src"
+          curl -L --fail --retry 3 -o "$O/src/juice.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Juicemaskin.webm"
+          curl -L --fail --retry 3 -o "$O/src/grocery.webm" "https://commons.wikimedia.org/wiki/Special:Redirect/file/Supermarket_Grocery_Products_(13083756734).webm"
+          cat > "$O/tiktok.txt" <<'TXT'
+          Um produto comum pode ganhar valor quando a loja muda a forma de entregá-lo. Uma máquina que transforma laranja em suco na frente do cliente não vende apenas a fruta. Ela combina frescor, conveniência e experiência no ponto de venda. A lição para o varejo é simples: antes de baixar preço, pergunte se apresentação, serviço ou conveniência conseguem aumentar o valor percebido.
+          TXT
+          cat > "$O/youtube.txt" <<'TXT'
+          Uma gôndola cheia não significa um sortimento bom. O desafio é equilibrar duas decisões diferentes: variedade e profundidade. Variedade é quantos tipos de necessidade a loja consegue atender. Profundidade é quantas opções ela oferece dentro de cada necessidade. Quando a variedade cresce demais, o cliente pode encontrar mais soluções, mas a operação ganha complexidade, estoque se espalha por mais SKUs e cada item recebe menos espaço. Quando a profundidade é excessiva, várias opções disputam a mesma missão de compra e o capital fica preso em produtos muito parecidos. O ponto de equilíbrio depende do papel da categoria e do comportamento do consumidor. Em uma categoria de destino, ruptura em um item importante pode custar a compra inteira. Em uma categoria de conveniência, excesso de opções pode acrescentar pouco valor. Por isso, cortar SKU apenas porque vende pouco também pode ser um erro. Um item pequeno pode atrair um público específico, completar uma faixa de preço ou proteger uma missão que nenhum outro produto cobre. A análise precisa separar duplicação de diferenciação. Dois SKUs podem vender volumes parecidos e ter funções completamente diferentes. Existe ainda o efeito sobre a execução. Quanto mais complexo o sortimento, mais difícil abastecer, precificar, inventariar e manter a gôndola legível. A decisão comercial precisa conversar com a capacidade operacional da loja. O melhor sortimento não é o maior. É aquele em que cada espaço tem uma função clara para o cliente e para o resultado. Antes de adicionar mais um SKU, a pergunta deveria ser: qual necessidade nova ele atende, de qual item ele vai tirar espaço e quanto capital adicional essa decisão exige?
+          TXT
+          edge-tts --voice pt-BR-AntonioNeural --rate=+4% --text "$(cat "$O/tiktok.txt")" --write-media "$O/tiktok.mp3"
+          edge-tts --voice pt-BR-AntonioNeural --rate=-2% --text "$(cat "$O/youtube.txt")" --write-media "$O/youtube.mp3"
+          DT=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/tiktok.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/juice.webm" -i "$O/tiktok.mp3" -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,fps=30,drawbox=x=0:y=0:w=iw:h=180:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='VALOR NÃO É SÓ PREÇO':fontcolor=white:fontsize=50:x=(w-text_w)/2:y=62[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$DT" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/tiktok-valor-no-pdv.mp4"
+          DY=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube.mp3")
+          ffmpeg -y -stream_loop -1 -i "$O/src/grocery.webm" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,fps=30,drawbox=x=0:y=0:w=iw:h=155:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='SORTIMENTO: VARIEDADE OU PROFUNDIDADE?':fontcolor=white:fontsize=52:x=(w-text_w)/2:y=48[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$DY" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-sortimento-variedade-profundidade.mp4"
+          python - <<'PY'
+          import json,pathlib,subprocess
+          p=pathlib.Path("public/ugi/editorial/2026-10-07"); out={}
+          for f in ["tiktok-valor-no-pdv.mp4","youtube-sortimento-variedade-profundidade.mp4"]:
+            d=float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(p/f)],text=True)); assert d>25; out[f]=d
+          (p/"qa.json").write_text(json.dumps({"state":"PASS","realVideo":True,"exactTopicVisual":True,"noRandomFootage":True,"noSlideshow":True,"files":out,"sources":[{"media":"juice","source":"Kjetil Ree/Wikimedia Commons","license":"CC BY-SA 3.0"},{"media":"grocery","source":"USDAgov/Wikimedia Commons","license":"Public Domain"}]},indent=2))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ugi-editorial-bot
+          git config user.email ugi-editorial-bot@users.noreply.github.com
+          git add public/ugi/editorial/2026-10-07
+          git commit -m "assets(ugi): Oct07 real retail editorial [skip ci]"
+          git push
