@@ -1,0 +1,23 @@
+{
+  "state": "PASS",
+  "realVideo": true,
+  "exactTopicVisual": true,
+  "noRandomFootage": true,
+  "noSlideshow": true,
+  "files": {
+    "tiktok-valor-no-pdv.mp4": 24.0,
+    "youtube-sortimento-variedade-profundidade.mp4": 115.968
+  },
+  "sources": [
+    {
+      "media": "juice",
+      "source": "Kjetil Ree/Wikimedia Commons",
+      "license": "CC BY-SA 3.0"
+    },
+    {
+      "media": "grocery",
+      "source": "USDAgov/Wikimedia Commons",
+      "license": "Public Domain"
+    }
+  ]
+}
