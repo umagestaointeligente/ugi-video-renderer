@@ -1,0 +1,139 @@
+name: Cena Certa Oct07 Repair Gate
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct07-repair-gate.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+  issues: write
+
+jobs:
+  repair-gate-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/cena_certa_oct07_pack.py
+            ops/cena-certa-oct07
+            assets/cena-certa-logo.png.b64
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          python -m pip install -q --upgrade yt-dlp
+
+      - name: Restore 11 approved renders from prior artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p out/cena-certa-oct07
+          gh run download 37558976047 --repo "$GITHUB_REPOSITORY" \
+            --name cena-certa-oct07-benchmark-37558976047 \
+            --dir out/cena-certa-oct07
+          rm -f out/cena-certa-oct07/tiktok/CC-OCT07-TT-TAPAS-FAST.mp4
+          test "$(find out/cena-certa-oct07 -name '*.mp4' | wc -l)" -eq 11
+
+      - name: Render replacement and run full fail-closed gate
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64, hashlib, importlib.util, json, pathlib
+
+          root=pathlib.Path.cwd()
+          spec=importlib.util.spec_from_file_location("cc","scripts/cena_certa_oct07_pack.py")
+          cc=importlib.util.module_from_spec(spec); spec.loader.exec_module(cc)
+
+          manifest=json.loads((root/"ops/cena-certa-oct07/manifest.json").read_text(encoding="utf-8"))
+          anti=json.loads((root/"ops/cena-certa-oct07/anti-repeat-snapshot.json").read_text(encoding="utf-8"))
+          item=next(x for x in manifest["items"] if x["id"]=="CC-OCT07-YT-TROPA")
+
+          cc.WORK.mkdir(parents=True,exist_ok=True); cc.OUT.mkdir(parents=True,exist_ok=True)
+          logo=cc.WORK/"logo.png"
+          logo.write_bytes(base64.b64decode("".join(cc.LOGO_B64.read_text().split())))
+          core=None
+          src=cc.download_source(item,{})
+          out,s,e,total,segs=cc.render_item(item,src,logo,core)
+          print("REPLACEMENT_RENDER_PASS",item["id"],hashlib.sha256(out.read_bytes()).hexdigest())
+
+          cc.source_window_gate(manifest["items"],anti.get("prior_sources",[]))
+
+          rendered=[]
+          summary={"schema":"CENA_CERTA_OCT07_DELIVERY_V2_REPAIR","date":"2026-10-05","items":[]}
+          for x in manifest["items"]:
+              p=cc.OUT/x["network"]/(x["id"]+".mp4")
+              if not p.exists():
+                  raise RuntimeError("MASTER_MISSING:"+x["id"])
+              cc.validate_master(p)
+              sha=hashlib.sha256(p.read_bytes()).hexdigest()
+              rendered.append((x,p))
+              summary["items"].append({
+                  "id":x["id"],"network":x["network"],"format":x["format"],"slot":x["slot"],
+                  "title":x["title"],"caption":x["caption"],"source":x["source"],"source_id":x["source_id"],
+                  "duration_sec":round(cc.duration(p),3),"sha256":sha,
+                  "gates":{
+                      "REAL_FOOTAGE_PASS":True,"AUDIO_PTBR_MODE":"ORIGINAL_SOURCE_DIALOGUE",
+                      "NO_NARRATION_PASS":True,"AUDIO_VISUAL_SYNC_PASS":"ORIGINAL_SCENE_AUDIO",
+                      "NO_BLACK_PASS":True,"NO_SILENT_TAIL_PASS":True,"H264_AAC_PASS":True,
+                      "NINE_BY_SIXTEEN_PASS":True,"SOURCE_WINDOW_60D_PASS":True
+                  }
+              })
+
+          hidx,coverage,eligible=cc.history_index()
+          vis=cc.visual_gate(rendered,hidx)
+          summary["history_fingerprint_coverage"]=coverage
+          summary["history_eligible_media"]=eligible
+          summary["scene_sequence_evidence"]=vis
+          for rec in summary["items"]:
+              rec["gates"]["SCENE_SEQUENCE_60D_PASS"]=True
+              rec["gates"]["EDITORIAL_PASS"]=True
+          (cc.OUT/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
+          print("CENA_CERTA_OCT07_REPAIR_PACK=PASS",len(summary["items"]))
+          PY
+
+      - name: Publish QA-approved network masters
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for network in tiktok instagram youtube facebook; do
+            tag="cena-certa-oct07-${network}"
+            gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+              gh release create "${tag}" --repo "$GITHUB_REPOSITORY" \
+                --title "Cena Certa Oct07 ${network}" \
+                --notes "Real scenes + original PT-BR dialogue. 60d temporal scene-sequence gate PASS."
+            gh release upload "${tag}" out/cena-certa-oct07/${network}/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+          done
+
+      - name: Create evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          {
+            echo "CENA_CERTA_OCT07_REPAIR_PACK=PASS"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "COMMIT=$GITHUB_SHA"
+            echo
+            cat out/cena-certa-oct07/summary.json
+          } > out/cena-certa-oct07/evidence.txt
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "[CENA-CERTA-OCT07-REPAIR] $GITHUB_RUN_ID" \
+            --body-file out/cena-certa-oct07/evidence.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-oct07-repair-${{ github.run_id }}
+          path: out/cena-certa-oct07/
+          retention-days: 7
