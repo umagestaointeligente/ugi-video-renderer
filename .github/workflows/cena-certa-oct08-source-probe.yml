@@ -29,7 +29,15 @@ jobs:
             "https://globoplay.globo.com/v/14925153/"
             "https://globoplay.globo.com/v/2628238/"
           )
+          failed=0
           for u in "${urls[@]}"; do
             echo "PROBE $u"
-            yt-dlp --no-warnings --simulate --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"
+            if yt-dlp --no-warnings --simulate --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"; then
+              echo "SOURCE_PROBE_PASS $u"
+            else
+              echo "SOURCE_PROBE_FAIL $u"
+              failed=$((failed+1))
+            fi
           done
+          echo "SOURCE_PROBE_FAILED_COUNT=$failed"
+          test "$failed" -eq 0
