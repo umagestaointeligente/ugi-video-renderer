@@ -1,0 +1,269 @@
+{
+  "schema": "CENA_CERTA_OCT08_BREAKOUT_TEST_V1",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-10-08",
+  "objective": {
+    "primary": "Increase breakout probability by maximizing first-3-second hold, average watch time and shareability.",
+    "breakout_views_floor": 100000,
+    "operating_like_rate_target_pct": "6-14",
+    "stretch_likes": 70000,
+    "note": "70k likes is a stretch outcome, not a guaranteed rate target."
+  },
+  "benchmark_basis": {
+    "tiktok": "Recent best internal cell: Dona Herminia led Oct06 with 13.6% likes/views; historic breakout cells combine instant-recognition comedy, 18s+ watch and shares.",
+    "instagram": "Historic winner reached 78.2% 3s view rate and 21.2s average watch; Oct06 best fell to 44% and 12.7s, so hooks must pay off faster.",
+    "youtube": "Historic winners are recognizable Brazilian comedy/blooper Shorts with 4.4k-6.7k views; prioritize famous IP + immediate conflict.",
+    "facebook": "Oct06 De Pernas pro Ar 2 reached 1,168 views but only ~4s avg watch; keep strong premise but tighten the micro-arc and payoff."
+  },
+  "editorial_rules": {
+    "release_year_floor": 1990,
+    "real_motion_only": true,
+    "audio_ptbr_required": true,
+    "no_narration": true,
+    "no_visual_audio_mismatch": true,
+    "anti_repeat_days": 60,
+    "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
+    "rights_usage_mode": "OFFICIAL_GLOBOPLAY_TRANSFORMATIVE_EDITORIAL_EXCERPT",
+    "no_trailer": true,
+    "no_black": true,
+    "no_silent_tail": true,
+    "no_legacy_mask": true,
+    "no_extra_zoom": true,
+    "no_aggressive_crop": true,
+    "hook_seconds_max": 1.2,
+    "cta_after_story_closure": true
+  },
+  "items": [
+    {
+      "id": "CC-OCT08-TT-MINHAMAe1",
+      "network": "tiktok",
+      "format": "iconic_character_comedy",
+      "slot": "2026-10-08T10:00:00-03:00",
+      "title": "Minha Mãe é Uma Peça — Dona Hermínia",
+      "year": 2013,
+      "source": "https://globoplay.globo.com/v/8082772/",
+      "source_id": "8082772",
+      "source_start": 20,
+      "source_end": 55,
+      "hook": "DONA HERMÍNIA: 3 SEGUNDOS E VOCÊ JÁ SABE O QUE VEM 😂",
+      "cta": "QUEM NA SUA CASA É ASSIM?",
+      "caption": "Dona Hermínia em Minha Mãe é Uma Peça: reconhecimento imediato e Paulo Gustavo sem filtro. Cena real, áudio original em português. #MinhaMaeEUmaPeca #PauloGustavo #CinemaBrasileiro #CenaCerta"
+    },
+    {
+      "id": "CC-OCT08-TT-SORTE",
+      "network": "tiktok",
+      "format": "mainstream_comedy_payoff",
+      "slot": "2026-10-08T12:00:00-03:00",
+      "title": "Até Que a Sorte Nos Separe — Tino apronta",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/4192864/",
+      "source_id": "4192864",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "QUANDO O DINHEIRO CHEGA — E O BOM SENSO VAI EMBORA 😂",
+      "cta": "VOCÊ FARIA DIFERENTE?",
+      "caption": "Leandro Hassum em Até Que a Sorte Nos Separe: uma decisão e a confusão já começa. Cena real e áudio original em português. #AteQueASorteNosSepare #LeandroHassum #Comedia #CenaCerta"
+    },
+    {
+      "id": "CC-OCT08-TT-AUTO-DORA",
+      "network": "tiktok",
+      "format": "iconic_romcom_comedy",
+      "slot": "2026-10-08T18:00:00-03:00",
+      "title": "O Auto da Compadecida — Os amantes de Dora",
+      "year": 2000,
+      "source": "https://globoplay.globo.com/v/2628250/",
+      "source_id": "2628250",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "DORA TENTA DISFARÇAR — E PIORA TUDO 😂",
+      "cta": "CHICÓ SABIA ONDE ESTAVA SE METENDO?",
+      "caption": "Dora, Chicó, Vicentão e Eurico no mesmo problema em O Auto da Compadecida. Cena real e diálogo original em português. #OAutoDaCompadecida #Chico #CinemaBrasileiro #CenaCerta"
+    },
+    {
+      "id": "CC-OCT08-IG-AVENIDA-CHANT",
+      "network": "instagram",
+      "format": "iconic_power_flip",
+      "slot": "2026-10-08T10:00:00-03:00",
+      "title": "Avenida Brasil — Nina chantageia Carminha",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/2055555/",
+      "source_id": "2055555",
+      "source_start": 0,
+      "source_end": 30,
+      "hook": "NINA AVISA: AGORA QUEM MANDA É ELA",
+      "cta": "ESSA FOI A MELHOR VIRADA DA NOVELA?",
+      "caption": "Nina chantageia Carminha e inverte o jogo em Avenida Brasil. Cena real, diálogo original e payoff rápido. #AvenidaBrasil #Nina #Carminha #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT08-IG-MULHER-CONVERSA",
+      "network": "instagram",
+      "format": "character_triangle",
+      "slot": "2026-10-08T11:00:00-03:00",
+      "title": "A Mulher Invisível — Amanda conversa com Clarisse",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/2984937/",
+      "source_id": "2984937",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "A AMANTE INVISÍVEL RESOLVE CONVERSAR COM A ESPOSA 😳",
+      "cta": "VOCÊ CONSEGUIRIA EXPLICAR ESSA SITUAÇÃO?",
+      "caption": "Amanda procura Clarisse e tenta resolver o impossível em A Mulher Invisível. Cena real e diálogo original. #AMulherInvisivel #SeltonMello #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT08-IG-TAPAS-LIMO",
+      "network": "instagram",
+      "format": "relationship_comedy_chase",
+      "slot": "2026-10-08T12:00:00-03:00",
+      "title": "Tapas & Beijos — Jorge e Armane roubam a limusine",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/4469946/",
+      "source_id": "4469946",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ELES ROUBAM A LIMUSINE PRA IMPEDIR O CASAMENTO 😂",
+      "cta": "ROMÂNTICO OU COMPLETAMENTE MALUCO?",
+      "caption": "Jorge e Armane decidem que roubar a limusine é a melhor forma de impedir o casamento. Tapas & Beijos em modo caos. #TapasEBeijos #FernandaTorres #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT08-YT-TROPA-MATHIAS2",
+      "network": "youtube",
+      "format": "conflict_statement_short",
+      "slot": "2026-10-08T10:00:00-03:00",
+      "title": "Tropa de Elite 2 — Mathias se defende",
+      "year": 2010,
+      "source": "https://globoplay.globo.com/v/1338063/",
+      "source_id": "1338063",
+      "source_start": 0,
+      "source_end": 36,
+      "hook": "MATHIAS SE RECUSA A VIRAR O CULPADO",
+      "cta": "ELE ESTAVA CERTO?",
+      "caption": "Mathias se defende das acusações após a operação no presídio. Cena real de Tropa de Elite 2, áudio original em português. #TropaDeElite2 #Mathias #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT08-YT-CIDADE-AVO",
+      "network": "youtube",
+      "format": "emotional_stakes_short",
+      "slot": "2026-10-08T15:00:00-03:00",
+      "title": "Cidade dos Homens — Laranjinha descobre a morte da avó",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5587241/",
+      "source_id": "5587241",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "A NOTÍCIA QUE FAZ LARANJINHA PARAR NA HORA",
+      "cta": "ESSA CENA TE PEGOU?",
+      "caption": "Laranjinha descobre que perdeu a avó e relembra a própria história. Cena real de Cidade dos Homens. #CidadeDosHomens #Laranjinha #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT08-YT-MULHER-REPRENDE",
+      "network": "youtube",
+      "format": "comedy_conflict_short",
+      "slot": "2026-10-08T16:00:00-03:00",
+      "title": "A Mulher Invisível — Clarisse repreende Pedro",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/2984942/",
+      "source_id": "2984942",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "CLARISSE OLHA O TRABALHO DE PEDRO — E NÃO POUPA NADA 😂",
+      "cta": "ELA PEGOU PESADO?",
+      "caption": "Clarisse reprova o trabalho de Pedro em A Mulher Invisível e a conversa desanda rápido. #AMulherInvisivel #Comedia #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT08-FB-TAPAS-PIJAMA",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-08T10:00:00-03:00",
+      "title": "Tapas & Beijos — o pijama vira uma crise",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/2167555/",
+      "source_id": "2167555",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          25,
+          35
+        ],
+        [
+          50,
+          60
+        ]
+      ],
+      "beat_labels": [
+        "1. INCÔMODO",
+        "2. DISCUSSÃO",
+        "3. PAYOFF"
+      ],
+      "hook": "ERA SÓ UM PIJAMA. VIROU UMA CRISE 😂",
+      "cta": "QUEM TÁ CERTO NESSA?",
+      "caption": "Fátima e Armane começam falando de um pijama velho e terminam em crise. Micro-arco em três beats. #TapasEBeijos #FernandaTorres #CenaCerta"
+    },
+    {
+      "id": "CC-OCT08-FB-AVENIDA-LUCIO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-08T11:00:00-03:00",
+      "title": "Avenida Brasil — Carminha manda Lúcio soltar Nina",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/14925153/",
+      "source_id": "14925153",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          35,
+          45
+        ],
+        [
+          70,
+          80
+        ]
+      ],
+      "beat_labels": [
+        "1. AMEAÇA",
+        "2. VIRADA",
+        "3. CONSEQUÊNCIA"
+      ],
+      "hook": "CARMINHA MANDA SOLTAR NINA — MAS O PROBLEMA SÓ COMEÇA",
+      "cta": "QUEM ESTAVA COM O CONTROLE AQUI?",
+      "caption": "Carminha manda Lúcio soltar Nina e a tensão muda de lado. Três beats da mesma virada. #AvenidaBrasil #Carminha #Nina #CenaCerta"
+    },
+    {
+      "id": "CC-OCT08-FB-AUTO-CASAMENTO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-08T12:00:00-03:00",
+      "title": "O Auto da Compadecida — Chicó e Rosinha se casam",
+      "year": 2000,
+      "source": "https://globoplay.globo.com/v/2628238/",
+      "source_id": "2628238",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          25,
+          35
+        ],
+        [
+          55,
+          65
+        ]
+      ],
+      "beat_labels": [
+        "1. DECISÃO",
+        "2. CONFRONTO",
+        "3. DESFECHO"
+      ],
+      "hook": "CHICÓ + ROSINHA: O CASAMENTO QUE NINGUÉM CONSEGUIU IMPEDIR",
+      "cta": "VOCÊ TORCIA POR ESSE CASAL?",
+      "caption": "Chicó e Rosinha conseguem se casar apesar da oposição do major. Micro-arco em três beats, cena real e áudio original. #OAutoDaCompadecida #Chico #Rosinha #CenaCerta"
+    }
+  ]
+}
