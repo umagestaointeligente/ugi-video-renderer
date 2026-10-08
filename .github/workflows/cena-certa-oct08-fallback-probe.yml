@@ -1,0 +1,26 @@
+name: Cena Certa Oct08 Fallback Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct08-fallback-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Install yt-dlp
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Probe fallbacks
+        run: |
+          set -u
+          for u in \
+            "https://globoplay.globo.com/v/2678004/" \
+            "https://globoplay.globo.com/v/8162911/" \
+            "https://globoplay.globo.com/v/2894979/" \
+            "https://globoplay.globo.com/v/7557487/" \
+            "https://globoplay.globo.com/v/2907626/"; do
+            echo "PROBE $u"
+            if yt-dlp --no-warnings --simulate --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"; then echo "PASS $u"; else echo "FAIL $u"; fi
+          done
