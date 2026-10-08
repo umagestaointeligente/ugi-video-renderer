@@ -1,0 +1,35 @@
+name: Cena Certa Oct08 Source Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct08-source-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Install yt-dlp
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Probe all Oct08 sources
+        run: |
+          set -euo pipefail
+          urls=(
+            "https://globoplay.globo.com/v/8082772/"
+            "https://globoplay.globo.com/v/4192864/"
+            "https://globoplay.globo.com/v/2628250/"
+            "https://globoplay.globo.com/v/2055555/"
+            "https://globoplay.globo.com/v/2984937/"
+            "https://globoplay.globo.com/v/3514683/"
+            "https://globoplay.globo.com/v/1338063/"
+            "https://globoplay.globo.com/v/5587241/"
+            "https://globoplay.globo.com/v/2984942/"
+            "https://globoplay.globo.com/v/2167555/"
+            "https://globoplay.globo.com/v/14925153/"
+            "https://globoplay.globo.com/v/2628238/"
+          )
+          for u in "${urls[@]}"; do
+            echo "PROBE $u"
+            yt-dlp --no-warnings --simulate --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"
+          done
