@@ -69,13 +69,13 @@ TOPICS={
    "stevie2":{"file":"stevie2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Presidential_Medal_of_Freedom_Recipient_-_Stevie_Wonder.webm","license":"PUBLIC_DOMAIN_US_GOV","asset_subject":"STEVIE_WONDER_MUSICAL_IDENTITY_RHYTHM_HARMONY_TIMBRE","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
-   ("REAL","stevie1",18,"CONTEXT","stevie","STEVIE WONDER • ARQUIVO REAL","Stevie Wonder atravessa soul, R&B, funk, pop e outros estilos sem deixar de soar imediatamente reconhecível."),
-   ("ANIMATION","anim",0,"MECHANISM","stevie","ANIMAÇÃO • IDENTIDADE TEM CAMADAS","Uma assinatura musical nasce quando ritmo, harmonia e timbre se repetem como escolhas, não como cópias."),
-   ("REAL","keyboard",4,"PROOF","stevie","TECLADO • CONTEXTO REAL","Teclados permitem mudar timbres e registrar ideias harmônicas mantendo a mesma linguagem de execução."),
-   ("ANIMATION","anim",2,"MECHANISM","stevie","ANIMAÇÃO • SÍNCOPE MUDA O GROOVE","Deslocar acentos para pontos inesperados do compasso cria síncope e dá ao groove uma sensação mais elástica."),
-   ("REAL","piano",4,"CONSEQUENCE","stevie","PIANO • CONTEXTO REAL","Na harmonia, inversões e escolhas de acordes mudam a cor emocional sem precisar trocar a melodia inteira."),
-   ("ANIMATION","anim",4,"MECHANISM","stevie","ANIMAÇÃO • TIMBRE COMPLETA A ASSINATURA","A mesma nota pode soar diferente em piano, teclado ou voz; combinar esses timbres cria uma textura reconhecível."),
-   ("REAL","stevie2",10,"PROOF","stevie","STEVIE WONDER • SEGUNDO ARQUIVO REAL","É essa combinação de instrumentos, estilos e decisões rítmicas que ajuda a explicar por que sua identidade atravessa décadas.")
+   ("REAL","stevie1",18,"CONTEXT","stevie","STEVIE WONDER • ARQUIVO REAL","Stevie Wonder passa por soul, R&B, funk e pop sem deixar de soar reconhecível."),
+   ("ANIMATION","anim",0,"MECHANISM","stevie","ANIMAÇÃO • IDENTIDADE TEM CAMADAS","Uma assinatura musical nasce quando ritmo, harmonia e timbre viram escolhas recorrentes."),
+   ("REAL","keyboard",4,"PROOF","stevie","TECLADO • CONTEXTO REAL","Teclados permitem mudar timbres e testar harmonias mantendo a mesma linguagem."),
+   ("ANIMATION","anim",2,"MECHANISM","stevie","ANIMAÇÃO • SÍNCOPE MUDA O GROOVE","A síncope desloca acentos do compasso e deixa o groove mais elástico."),
+   ("REAL","piano",4,"CONSEQUENCE","stevie","PIANO • CONTEXTO REAL","Inversões e acordes mudam a cor emocional sem trocar toda a melodia."),
+   ("ANIMATION","anim",4,"MECHANISM","stevie","ANIMAÇÃO • TIMBRE COMPLETA A ASSINATURA","A mesma nota muda de caráter em piano, teclado ou voz; esses timbres criam textura."),
+   ("REAL","stevie2",10,"PROOF","stevie","STEVIE WONDER • SEGUNDO ARQUIVO REAL","Essa combinação de instrumentos, estilos e ritmo ajuda a explicar uma identidade que atravessa décadas.")
   ]}
 }
 
