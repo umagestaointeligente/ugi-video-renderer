@@ -28,13 +28,13 @@ TOPICS={
    "plasma4":{"file":"plasma4.webm","source_url":"https://commons.wikimedia.org/wiki/File:Tesla_Coil_Lightning.webm","license":"CC_BY_4.0","asset_subject":"REAL_HIGH_VOLTAGE_IONIZED_DISCHARGE_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False}
   },
   "scenes":[
-   ("REAL","plasma1",2,"CONTEXT","plasma","BOLA DE PLASMA • VÍDEO REAL","Dentro da esfera, aqueles filamentos brilhantes são caminhos de gás ionizado, não pequenos raios comuns."),
-   ("ANIMATION","anim",0,"MECHANISM","plasma","ANIMAÇÃO • CAMPO ELÉTRICO IONIZA O GÁS","Um eletrodo central recebe alta tensão alternada e cria um campo elétrico que acelera cargas no gás de baixa pressão."),
-   ("REAL","plasma2",2,"PROOF","plasma","FILAMENTOS DE PLASMA • VÍDEO REAL","As colisões arrancam elétrons de alguns átomos e formam canais luminosos de plasma."),
-   ("ANIMATION","anim",2,"MECHANISM","plasma","ANIMAÇÃO • DEDO ALTERA O CAMPO","Quando seu dedo toca o vidro, seu corpo se acopla eletricamente à esfera e muda a distribuição do campo naquela região."),
-   ("REAL","plasma3",1,"CONSEQUENCE","plasma","PLASMA RESPONDE AO TOQUE • VÍDEO REAL","Por isso mais descarga se concentra perto do ponto tocado e o filamento parece seguir seu dedo."),
-   ("ANIMATION","anim",4,"MECHANISM","plasma","ANIMAÇÃO • DESCARGA SE CONCENTRA","O caminho luminoso não sai do vidro: o que muda é onde o gás dentro da esfera recebe mais energia."),
-   ("REAL","plasma4",1,"PROOF","plasma","DESCARGA DE ALTA TENSÃO • CONTEXTO REAL","Em outros sistemas de alta tensão também vemos o ar ionizado formar canais luminosos quando o campo fica intenso.")
+   ("REAL","plasma1",2,"CONTEXT","plasma","BOLA DE PLASMA • VÍDEO REAL","Dentro da esfera, os filamentos brilhantes são caminhos de gás ionizado."),
+   ("ANIMATION","anim",0,"MECHANISM","plasma","ANIMAÇÃO • CAMPO ELÉTRICO IONIZA O GÁS","Um eletrodo central cria um campo elétrico intenso que acelera cargas no gás de baixa pressão."),
+   ("REAL","plasma2",2,"PROOF","plasma","FILAMENTOS DE PLASMA • VÍDEO REAL","As colisões ionizam átomos e formam canais luminosos de plasma."),
+   ("ANIMATION","anim",2,"MECHANISM","plasma","ANIMAÇÃO • DEDO ALTERA O CAMPO","Ao tocar o vidro, seu corpo altera a distribuição do campo elétrico naquela região."),
+   ("REAL","plasma3",1,"CONSEQUENCE","plasma","PLASMA RESPONDE AO TOQUE • VÍDEO REAL","A descarga então se concentra perto do toque e parece seguir seu dedo."),
+   ("ANIMATION","anim",4,"MECHANISM","plasma","ANIMAÇÃO • DESCARGA SE CONCENTRA","O filamento não sai do vidro: muda apenas onde o gás recebe mais energia."),
+   ("REAL","plasma4",1,"PROOF","plasma","DESCARGA DE ALTA TENSÃO • CONTEXTO REAL","Outros sistemas de alta tensão também formam canais luminosos quando o campo fica intenso.")
   ]},
  "radiometro_crookes":{
   "title":"Por que o radiômetro de Crookes gira quando recebe luz? #shorts",
