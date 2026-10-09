@@ -1,0 +1,269 @@
+{
+  "schema": "CENA_CERTA_OCT09_BREAKOUT_TEST_V1",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-10-09",
+  "objective": {
+    "primary": "Increase breakout probability through first-second clarity, early payoff, average watch time, comments and shares.",
+    "breakout_views_floor": 100000,
+    "operating_like_rate_target_pct": "6-14",
+    "stretch_likes": 70000,
+    "note": "70k likes remains a stretch outcome; distribution depends primarily on retention and shares."
+  },
+  "benchmark_basis": {
+    "tiktok": "Oct07 synced: 97.4%-98.4% For You exposure but only 3-9s average watch and zero shares/comments. Fix retention and shareability before changing timing.",
+    "instagram": "Oct07 best synced average watch was 7.1s with 43.6% 3s+ view rate; historic winner reached 21.2s and 78.2%.",
+    "facebook": "Oct07 average watch topped at 7s; Oct06 De Pernas pro Ar 2 reached 1,168 views but only ~4s average watch.",
+    "youtube": "Metricool sync remains delayed; internal historic winners favor immediately recognizable Brazilian comedy/conflict."
+  },
+  "editorial_rules": {
+    "real_motion_only": true,
+    "audio_ptbr_required": true,
+    "no_narration": true,
+    "no_visual_audio_mismatch": true,
+    "anti_repeat_days": 60,
+    "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
+    "rights_usage_mode": "OFFICIAL_GLOBOPLAY_TRANSFORMATIVE_EDITORIAL_EXCERPT",
+    "no_trailer": true,
+    "no_black": true,
+    "no_silent_tail": true,
+    "no_legacy_mask": true,
+    "no_extra_zoom": true,
+    "no_aggressive_crop": true,
+    "hook_seconds_max": 1.2,
+    "payoff_seconds_target": 15,
+    "cta_after_story_closure": true
+  },
+  "items": [
+    {
+      "id": "CC-OCT09-TT-AVENIDA-TRIPUDIA",
+      "network": "tiktok",
+      "format": "iconic_revenge_conflict",
+      "slot": "2026-10-09T10:00:00-03:00",
+      "title": "Avenida Brasil — Nina tripudia de Carminha",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/14917665/",
+      "source_id": "14917665",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "AGORA QUEM MANDA É A NINA 😳",
+      "cta": "ESSA FOI A MELHOR VIRADA DE AVENIDA BRASIL?",
+      "caption": "Nina finalmente vira o jogo e Carminha percebe que perdeu o controle. Cena real, diálogo original em português. #AvenidaBrasil #Nina #Carminha #CenaCerta"
+    },
+    {
+      "id": "CC-OCT09-TT-AUTO-SEVERINO",
+      "network": "tiktok",
+      "format": "iconic_comedy_tension",
+      "slot": "2026-10-09T12:00:00-03:00",
+      "title": "O Auto da Compadecida — Severino é engambelado",
+      "year": 2000,
+      "source": "https://globoplay.globo.com/v/2628227/",
+      "source_id": "2628227",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "JOÃO GRILO TEM UMA IDEIA — E SEVERINO ACREDITA 😂",
+      "cta": "VOCÊ TERIA CAÍDO NESSA?",
+      "caption": "João Grilo tenta a maior de suas histórias diante de Severino. Cena real e diálogo original. #OAutoDaCompadecida #JoaoGrilo #CinemaBrasileiro #CenaCerta"
+    },
+    {
+      "id": "CC-OCT09-TT-TROPA-FRAGA",
+      "network": "tiktok",
+      "format": "high_stakes_argument",
+      "slot": "2026-10-09T18:00:00-03:00",
+      "title": "Tropa de Elite 2 — Fraga confronta o BOPE",
+      "year": 2010,
+      "source": "https://globoplay.globo.com/v/1338060/",
+      "source_id": "1338060",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "FRAGA DIZ O QUE NINGUÉM QUERIA OUVIR",
+      "cta": "ESSA CENA AINDA É FORTE HOJE?",
+      "caption": "Fraga faz um discurso duro contra a atuação do BOPE em Tropa de Elite 2. Cena real e áudio original em português. #TropaDeElite2 #Fraga #CinemaBrasileiro #CenaCerta"
+    },
+    {
+      "id": "CC-OCT09-IG-HOMEM-FUTURO",
+      "network": "instagram",
+      "format": "romance_scifi_recognition",
+      "slot": "2026-10-09T10:00:00-03:00",
+      "title": "O Homem do Futuro — Zero e Helena",
+      "year": 2011,
+      "source": "https://gshow.globo.com/cultura-pop/filmes/globo-filmes/video/o-homem-do-futuro-1602954.ghtml",
+      "source_id": "1602954",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ELE VOLTOU NO TEMPO — E ELA ESTAVA LÁ",
+      "cta": "VOCÊ MUDARIA O PASSADO POR ALGUÉM?",
+      "caption": "Zero reencontra Helena em O Homem do Futuro. Wagner Moura e Alinne Moraes em uma das histórias mais lembradas do cinema nacional. #OHomemDoFuturo #WagnerMoura #CinemaBrasileiro #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT09-IG-CIDADE-FESTA",
+      "network": "instagram",
+      "format": "emotional_nostalgia",
+      "slot": "2026-10-09T11:00:00-03:00",
+      "title": "Cidade dos Homens — festa surpresa",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5584478/",
+      "source_id": "5584478",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ELE ABRE A PORTA — E O PASSADO VOLTA JUNTO",
+      "cta": "QUAL PERSONAGEM DESSA SÉRIE MAIS TE MARCOU?",
+      "caption": "Clayton chega em casa e encontra uma festa surpresa enquanto Laranjinha e Acerola relembram o passado. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT09-IG-TAPAS-COPA",
+      "network": "instagram",
+      "format": "relationship_comedy_mission",
+      "slot": "2026-10-09T12:00:00-03:00",
+      "title": "Tapas & Beijos — Fátima e Sueli vão a Copacabana",
+      "year": 2015,
+      "source": "https://globoplay.globo.com/v/4469932/",
+      "source_id": "4469932",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "UMA LIGAÇÃO E AS DUAS MUDAM TODO O PLANO 😂",
+      "cta": "VOCÊ FARIA O MESMO PELA AMIGA?",
+      "caption": "Fátima e Sueli recebem uma ligação e decidem ir juntas até Copacabana. Amizade, confusão e timing perfeito. #TapasEBeijos #FernandaTorres #AndreaBeltrao #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT09-YT-AUTO-CABO",
+      "network": "youtube",
+      "format": "fast_comedy_short",
+      "slot": "2026-10-09T10:00:00-03:00",
+      "title": "O Auto da Compadecida — João Grilo engana cabo Setenta",
+      "year": 2000,
+      "source": "https://globoplay.globo.com/v/2628217/",
+      "source_id": "2628217",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "JOÃO GRILO CONSEGUE UM PRESENTE SEM GASTAR NADA 😂",
+      "cta": "GENIAL OU CARA DE PAU?",
+      "caption": "João Grilo convence cabo Setenta a entregar um presente para Rosinha. Cena real e diálogo original. #OAutoDaCompadecida #JoaoGrilo #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT09-YT-AVENIDA-FLAGRA",
+      "network": "youtube",
+      "format": "instant_triangle_conflict",
+      "slot": "2026-10-09T14:00:00-03:00",
+      "title": "Avenida Brasil — Carminha surpreende Nina e Jorginho",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/1908233/",
+      "source_id": "1908233",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "CARMINHA CHEGA EXATAMENTE NA PIOR HORA",
+      "cta": "QUEM ESTAVA MENTINDO MELHOR?",
+      "caption": "Carminha surpreende Nina e Jorginho no meio de uma conversa que ninguém queria explicar. #AvenidaBrasil #Carminha #Nina #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT09-YT-MULHER-TRES",
+      "network": "youtube",
+      "format": "romcom_resolution_short",
+      "slot": "2026-10-09T16:00:00-03:00",
+      "title": "A Mulher Invisível — os três se entendem",
+      "year": 2011,
+      "source": "https://globoplay.globo.com/v/2984949/",
+      "source_id": "2984949",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "O TRIÂNGULO MAIS IMPROVÁVEL CHEGA A UM ACORDO 😂",
+      "cta": "VOCÊ ACEITARIA ESSE FINAL?",
+      "caption": "Amanda, Pedro e Clarisse chegam a um entendimento completamente improvável. #AMulherInvisivel #SeltonMello #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT09-FB-AVENIDA-DESMASCARA",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-09T10:00:00-03:00",
+      "title": "Avenida Brasil — Carminha desmascara Nina",
+      "year": 2012,
+      "source": "https://globoplay.globo.com/v/14904288/",
+      "source_id": "14904288",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          30,
+          40
+        ],
+        [
+          65,
+          75
+        ]
+      ],
+      "beat_labels": [
+        "1. SUSPEITA",
+        "2. CERCO",
+        "3. DESMASCARADA"
+      ],
+      "hook": "CARMINHA DESCOBRE QUEM NINA É DE VERDADE",
+      "cta": "QUAL DAS DUAS JOGOU MELHOR?",
+      "caption": "Carminha junta as peças e confronta Nina. A virada em três beats da mesma cena. #AvenidaBrasil #Carminha #Nina #CenaCerta"
+    },
+    {
+      "id": "CC-OCT09-FB-TAPAS-BRECHO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-09T11:00:00-03:00",
+      "title": "Tapas & Beijos — Fátima e Sueli abrem o brechó",
+      "year": 2015,
+      "source": "https://globoplay.globo.com/v/4933201/",
+      "source_id": "4933201",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          25,
+          35
+        ],
+        [
+          50,
+          60
+        ]
+      ],
+      "beat_labels": [
+        "1. SONHO",
+        "2. PROBLEMA",
+        "3. REAÇÃO"
+      ],
+      "hook": "FÁTIMA + SUELI ABREM UM NEGÓCIO. O CAOS VEM JUNTO 😂",
+      "cta": "VOCÊ SERIA SÓCIO DELAS?",
+      "caption": "Fátima e Sueli finalmente abrem o próprio brechó — e obviamente nada fica simples. #TapasEBeijos #FernandaTorres #AndreaBeltrao #CenaCerta"
+    },
+    {
+      "id": "CC-OCT09-FB-CIDADE-EXCURSAO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-09T12:00:00-03:00",
+      "title": "Cidade dos Homens — dinheiro para a excursão",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5587247/",
+      "source_id": "5587247",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          30,
+          40
+        ],
+        [
+          60,
+          70
+        ]
+      ],
+      "beat_labels": [
+        "1. PROBLEMA",
+        "2. CORRERIA",
+        "3. SOLUÇÃO"
+      ],
+      "hook": "R$ 6,50 PARECIA POUCO — ATÉ ELES PRECISAREM CONSEGUIR",
+      "cta": "VOCÊ LEMBRA DESSA FASE DE ACEROLA E LARANJINHA?",
+      "caption": "Acerola e Laranjinha precisam conseguir o dinheiro da excursão e aprendem cedo que nada vem fácil. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta"
+    }
+  ]
+}
