@@ -65,7 +65,7 @@ TOPICS={
   "assets":{
    "stevie1":{"file":"stevie1.webm","source_url":"https://commons.wikimedia.org/wiki/File:052112_Stevie_Wonder.webm","license":"PUBLIC_DOMAIN_US_GOV","asset_subject":"STEVIE_WONDER_MUSICAL_IDENTITY_RHYTHM_HARMONY_TIMBRE","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True},
    "keyboard":{"file":"keyboard.webm","source_url":"https://commons.wikimedia.org/wiki/File:Musical_keyboard_playing_recorded_melody_from_memory.webm","license":"WIKIMEDIA_COMMONS_LICENSED","asset_subject":"REAL_MUSICAL_KEYBOARD_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
-   "piano":{"file":"piano.webm","source_url":"https://commons.wikimedia.org/wiki/File:Piano_close-up.webm","license":"CC_BY_SA_4.0","asset_subject":"REAL_PIANO_CLOSEUP_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":False,"celebrity_visible":False},
+   "piano":{"file":"piano.webm","source_url":"https://commons.wikimedia.org/wiki/File:Odna-semya-a-family-1943-film-song-music-lesson.webm","license":"PUBLIC_DOMAIN","asset_subject":"REAL_PIANO_PERFORMANCE_CONTEXT","asset_role":"EXPLICIT_CONTEXT","identifiable_human":True,"celebrity_visible":False},
    "stevie2":{"file":"stevie2.webm","source_url":"https://commons.wikimedia.org/wiki/File:Presidential_Medal_of_Freedom_Recipient_-_Stevie_Wonder.webm","license":"PUBLIC_DOMAIN_US_GOV","asset_subject":"STEVIE_WONDER_MUSICAL_IDENTITY_RHYTHM_HARMONY_TIMBRE","asset_role":"TARGET_SUBJECT","identifiable_human":True,"celebrity_visible":True}
   },
   "scenes":[
@@ -73,7 +73,7 @@ TOPICS={
    ("ANIMATION","anim",0,"MECHANISM","stevie","ANIMAÇÃO • IDENTIDADE TEM CAMADAS","Uma assinatura musical nasce quando ritmo, harmonia e timbre viram escolhas recorrentes."),
    ("REAL","keyboard",4,"PROOF","stevie","TECLADO • CONTEXTO REAL","Teclados permitem mudar timbres e testar harmonias mantendo a mesma linguagem."),
    ("ANIMATION","anim",2,"MECHANISM","stevie","ANIMAÇÃO • SÍNCOPE MUDA O GROOVE","A síncope desloca acentos do compasso e deixa o groove mais elástico."),
-   ("REAL","piano",2,"CONSEQUENCE","stevie","PIANO • CONTEXTO REAL","Inversões e acordes mudam a cor emocional sem trocar toda a melodia."),
+   ("REAL","piano",90,"CONSEQUENCE","stevie","PIANO • CONTEXTO REAL","Inversões e acordes mudam a cor emocional sem trocar toda a melodia."),
    ("ANIMATION","anim",4,"MECHANISM","stevie","ANIMAÇÃO • TIMBRE COMPLETA A ASSINATURA","A mesma nota muda de caráter em piano, teclado ou voz; esses timbres criam textura."),
    ("REAL","stevie2",10,"PROOF","stevie","STEVIE WONDER • SEGUNDO ARQUIVO REAL","Essa combinação de instrumentos, estilos e ritmo ajuda a explicar uma identidade que atravessa décadas.")
   ]}
@@ -377,7 +377,7 @@ def main():
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/e712e2d2-c078-483b-93d2-1919c698d911.webm",AS/"crookes4.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/affc86cd-43ee-4513-82b3-b386e3c661b9.webm",AS/"stevie1.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/20f5bb7d-a561-4151-a0c1-1eb3d5e1ca7c.webm",AS/"keyboard.webm")
- dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/f325be21-9f5b-4960-b0d1-67c0cf34e9b4.webm",AS/"piano.webm")
+ dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/1e04a9d0-2ad7-4741-981c-cb7f14e88e91.webm",AS/"piano.webm")
  dl("https://cdn.creativeclaw.co/u/2f9dfa63/videos/0718d3b1-d86b-4c55-b48d-49d3776f453e.webm",AS/"stevie2.webm")
  for slug,t in TOPICS.items():
   real_keys=[s[1] for s in t["scenes"] if s[0]=="REAL"]
