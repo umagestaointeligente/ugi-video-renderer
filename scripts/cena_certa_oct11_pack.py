@@ -30,7 +30,7 @@ def probe(path):
     return json.loads(p.stdout.decode())
 
 def esc(s):
-    return str(s).replace("\\","\\\\").replace(":","\\:").replace("'","\\'").replace("%","\\%").replace("“",'"').replace("”",'"')
+    return str(s).replace("\\","\\\\").replace(":","\\:").replace("'","’").replace("%","\\%").replace("“",'"').replace("”",'"')
 
 def download(url,path):
     req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 CenaCerta/2.8"})
