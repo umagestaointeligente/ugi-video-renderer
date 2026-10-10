@@ -41,9 +41,32 @@ jobs:
           python -m pip install -q --upgrade yt-dlp
 
       - name: Render and run all fail-closed gates
+        id: render_gate
         run: |
           set -euo pipefail
-          python scripts/cena_certa_oct11_pack.py
+          mkdir -p diagnostics/cena-certa-oct11
+          python scripts/cena_certa_oct11_pack.py 2>&1 | tee diagnostics/cena-certa-oct11/render.log
+
+      - name: Persist approved masters and QA evidence
+        id: approved_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-oct11-approved-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/cena-certa-oct11/
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Verify artifact persistence receipt
+        env:
+          ARTIFACT_ID: ${{ steps.approved_artifact.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.approved_artifact.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.approved_artifact.outputs.artifact-url }}
+        run: |
+          set -euo pipefail
+          test -s out/cena-certa-oct11/summary.json
+          test -n "$ARTIFACT_ID"
+          test -n "$ARTIFACT_URL"
+          [[ "$ARTIFACT_DIGEST" =~ ^[a-fA-F0-9]{64}$ ]]
 
       - name: Publish QA-approved network masters
         env:
@@ -59,20 +82,43 @@ jobs:
       - name: Create evidence issue
         env:
           GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ steps.approved_artifact.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.approved_artifact.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.approved_artifact.outputs.artifact-url }}
         run: |
           set -euo pipefail
           {
             echo "CENA_CERTA_OCT11_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
             echo "COMMIT=$GITHUB_SHA"
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "ARTIFACT_ID=$ARTIFACT_ID"
+            echo "ARTIFACT_DIGEST=$ARTIFACT_DIGEST"
+            echo "ARTIFACT_URL=$ARTIFACT_URL"
             echo
             cat out/cena-certa-oct11/summary.json
           } > out/cena-certa-oct11/evidence.txt
           gh issue create --repo "$GITHUB_REPOSITORY"             --title "[CENA-CERTA-OCT11-BENCHMARK] $GITHUB_RUN_ID"             --body-file out/cena-certa-oct11/evidence.txt
 
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - name: Record failed attempt identity
+        if: ${{ failure() && steps.render_gate.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          mkdir -p diagnostics/cena-certa-oct11
+          {
+            echo "STATUS=FAIL"
+            echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "COMMIT=$GITHUB_SHA"
+          } > diagnostics/cena-certa-oct11/identity.txt
+
+      - name: Persist lightweight failure diagnostics
+        if: ${{ failure() && steps.render_gate.outcome == 'failure' }}
+        uses: actions/upload-artifact@v4
         with:
-          name: cena-certa-oct11-benchmark-${{ github.run_id }}
-          path: out/cena-certa-oct11/
-          retention-days: 7
+          name: cena-certa-oct11-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            diagnostics/cena-certa-oct11/render.log
+            diagnostics/cena-certa-oct11/identity.txt
+          retention-days: 1
+          if-no-files-found: error
