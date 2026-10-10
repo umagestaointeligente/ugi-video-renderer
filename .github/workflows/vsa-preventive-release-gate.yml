@@ -18,6 +18,12 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/vsa
+            config/vsa
+            .github/actions/vsa-release-gate
       - name: Parse policy JSON
         run: python -m json.tool config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json >/dev/null
       - name: Compile VSA preventive gate code

@@ -45,7 +45,7 @@ def validate(out):
     assert a["codec_name"]=="aac"
     assert int(a["sample_rate"])==48000
 
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=False).stderr or ""
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=True).stderr or ""
     if "black_start" in black:
         raise RuntimeError("NO_BLACK_FAIL")
 
@@ -58,7 +58,7 @@ def validate(out):
     if len(set(hashes)) < min(5,max(3,len(hashes)//4)):
         raise RuntimeError("REAL_MOTION_FAIL")
 
-    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=False).stderr or ""
+    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=True).stderr or ""
     dur=duration(out)
     events=[]
     for ln in aud.splitlines():
@@ -163,7 +163,7 @@ def main():
             "NO_SILENT_TAIL_PASS":True,
             "H264_AAC_PASS":True,
             "NINE_BY_SIXTEEN_PASS":True,
-            "EDITORIAL_PASS":True
+            "EDITORIAL_STATUS":"NOT_VERIFIED"
           }
         }
         (OUT/f"{item['id']}.json").write_text(json.dumps(rec,ensure_ascii=False,indent=2),encoding="utf-8")

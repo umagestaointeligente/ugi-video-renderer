@@ -27,6 +27,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
+            scripts/cena_certa_render_evidence_guard.py
+            scripts/cena_certa_media_safety.py
             scripts/cena_certa_oct11_pack.py
             ops/cena-certa-oct11
             assets/cena-certa-logo.png.b64
@@ -45,6 +47,11 @@ jobs:
           set -euo pipefail
           python scripts/cena_certa_oct11_pack.py
 
+      - name: Require current execution-bound editorial evidence
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-oct11/summary.json ops/cena-certa-oct11/prepublish-receipts.json out/cena-certa-oct11/release-preflight.json
+
       - name: Publish QA-approved network masters
         env:
           GH_TOKEN: ${{ github.token }}
@@ -53,7 +60,7 @@ jobs:
           for network in tiktok instagram youtube facebook; do
             tag="cena-certa-oct11-${network}"
             gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||               gh release create "${tag}" --repo "$GITHUB_REPOSITORY"                 --title "Cena Certa Oct11 ${network}"                 --notes "Cena Certa 2.8 Oct11 benchmark test. Real scenes, original PT-BR dialogue, no narration. Released only after 60d source-window and temporal scene-sequence gates."
-            gh release upload "${tag}" out/cena-certa-oct11/${network}/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+            gh release upload "${tag}" out/cena-certa-oct11/${network}/*.mp4 --repo "$GITHUB_REPOSITORY"
           done
 
       - name: Create evidence issue
@@ -61,9 +68,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-oct11/summary.json ops/cena-certa-oct11/prepublish-receipts.json out/cena-certa-oct11/release-preflight.json
           {
             echo "CENA_CERTA_OCT11_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "PUBLICATION_STATUS=NOT_VERIFIED"
             echo "COMMIT=$GITHUB_SHA"
             echo
             cat out/cena-certa-oct11/summary.json

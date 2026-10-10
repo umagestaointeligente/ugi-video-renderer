@@ -19,6 +19,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
+            scripts/cena_certa_render_evidence_guard.py
+            scripts/cena_certa_media_safety.py
             scripts/cena_certa_oct05_pack.py
             ops/cena-certa-oct05
             assets/cena-certa-logo.png.b64
@@ -48,9 +50,10 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import base64, hashlib, importlib.util, json, pathlib
+          import base64, hashlib, importlib.util, json, pathlib, sys
 
           root=pathlib.Path.cwd()
+          sys.path.insert(0,str(root/"scripts"))
           spec=importlib.util.spec_from_file_location("cc","scripts/cena_certa_oct05_pack.py")
           cc=importlib.util.module_from_spec(spec); spec.loader.exec_module(cc)
 
@@ -81,7 +84,7 @@ jobs:
               summary["items"].append({
                   "id":x["id"],"network":x["network"],"format":x["format"],"slot":x["slot"],
                   "title":x["title"],"caption":x["caption"],"source":x["source"],"source_id":x["source_id"],
-                  "duration_sec":round(cc.duration(p),3),"sha256":sha,
+                  "duration_sec":round(cc.duration(p),3),"sha256":sha,"technical_status":"PASS",
                   "gates":{
                       "REAL_FOOTAGE_PASS":True,"AUDIO_PTBR_MODE":"ORIGINAL_SOURCE_DIALOGUE",
                       "NO_NARRATION_PASS":True,"AUDIO_VISUAL_SYNC_PASS":"ORIGINAL_SCENE_AUDIO",
@@ -92,15 +95,22 @@ jobs:
 
           hidx,coverage,eligible=cc.history_index()
           vis=cc.visual_gate(rendered,hidx)
+          summary["history_fingerprint_receipt_sha256"]=hashlib.sha256((cc.OUT/"history-fingerprints.json").read_bytes()).hexdigest()
+          summary["candidate_fingerprint_receipt_sha256"]=hashlib.sha256((cc.OUT/"candidate-fingerprints.json").read_bytes()).hexdigest()
           summary["history_fingerprint_coverage"]=coverage
           summary["history_eligible_media"]=eligible
           summary["scene_sequence_evidence"]=vis
           for rec in summary["items"]:
               rec["gates"]["SCENE_SEQUENCE_60D_PASS"]=True
-              rec["gates"]["EDITORIAL_PASS"]=True
+              rec["gates"]["EDITORIAL_STATUS"]="NOT_VERIFIED"
           (cc.OUT/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
-          print("CENA_CERTA_OCT05_REPAIR_PACK=PASS",len(summary["items"]))
+          print("CENA_CERTA_OCT05_REPAIR_RENDER_TECHNICAL=PASS",len(summary["items"]))
           PY
+
+      - name: Require current execution-bound editorial evidence
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-oct05/summary.json ops/cena-certa-oct05/prepublish-receipts.json out/cena-certa-oct05/release-preflight.json
 
       - name: Publish QA-approved network masters
         env:
@@ -113,7 +123,7 @@ jobs:
               gh release create "${tag}" --repo "$GITHUB_REPOSITORY" \
                 --title "Cena Certa Oct05 ${network}" \
                 --notes "Real scenes + original PT-BR dialogue. 60d temporal scene-sequence gate PASS."
-            gh release upload "${tag}" out/cena-certa-oct05/${network}/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+            gh release upload "${tag}" out/cena-certa-oct05/${network}/*.mp4 --repo "$GITHUB_REPOSITORY"
           done
 
       - name: Create evidence issue
@@ -121,9 +131,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-oct05/summary.json ops/cena-certa-oct05/prepublish-receipts.json out/cena-certa-oct05/release-preflight.json
           {
             echo "CENA_CERTA_OCT05_REPAIR_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "PUBLICATION_STATUS=NOT_VERIFIED"
             echo "COMMIT=$GITHUB_SHA"
             echo
             cat out/cena-certa-oct05/summary.json
