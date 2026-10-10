@@ -1,0 +1,43 @@
+name: Cena Certa Oct11 Source Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct11-source-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install yt-dlp
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Probe all Oct11 sources
+        run: |
+          set -u
+          failed=0
+          urls=(
+            "https://www.youtube.com/watch?v=OeWS8Bt7fWo"
+            "https://globoplay.globo.com/v/2630314/"
+            "https://globoplay.globo.com/v/5582562/"
+            "https://www.youtube.com/watch?v=Ym_POo7DgAM"
+            "https://globoplay.globo.com/v/1338056/"
+            "https://globoplay.globo.com/v/5908140/"
+            "https://globoplay.globo.com/v/5592390/"
+            "https://globoplay.globo.com/v/5369644/"
+            "https://globoplay.globo.com/v/10257660/"
+            "https://globoplay.globo.com/v/6092657/"
+            "https://globoplay.globo.com/v/5482089/"
+            "https://www.youtube.com/watch?v=6FiFolecFC0"
+          )
+          for u in "${urls[@]}"; do
+            echo "PROBE $u"
+            if yt-dlp --no-warnings --simulate --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"; then
+              echo "SOURCE_PROBE_PASS $u"
+            else
+              echo "SOURCE_PROBE_FAIL $u"
+              failed=$((failed+1))
+            fi
+          done
+          echo "SOURCE_PROBE_FAILED_COUNT=$failed"
+          test "$failed" -eq 0
