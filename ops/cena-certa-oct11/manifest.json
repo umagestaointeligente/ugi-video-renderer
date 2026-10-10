@@ -1,0 +1,273 @@
+{
+  "schema": "CENA_CERTA_OCT11_BREAKOUT_TEST_V1",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-10-11",
+  "objective": {
+    "primary": "Raise breakout probability by combining stronger IP recognition with first-second conflict, faster payoff, and platform-specific story shape.",
+    "breakout_views_floor": 100000,
+    "operating_like_rate_target_pct": "6-14",
+    "stretch_likes": 70000,
+    "note": "70k likes on 100k views is a 70% like rate and remains an extraordinary stretch; retention, shares and comments are primary leading indicators."
+  },
+  "benchmark_basis": {
+    "yesterday_sync_status": "Metricool post analytics for 2026-10-09 is not synced yet; all 12 planner records are confirmed PUBLISHED.",
+    "latest_synced_tiktok": "2026-10-08: 195-246 views, 19-23 likes, 0 comments, 0 shares, average watch 8-12s, For You 99.5%-100%. Distribution entry is not the main bottleneck.",
+    "latest_synced_instagram": "2026-10-08 winner Tapas & Beijos: 278 views, 9 likes, 14.045s average watch, 73.2% 3s view rate; clear improvement versus prior 3-7s average watch.",
+    "latest_synced_facebook": "2026-10-08 Avenida Brasil: 974 views and 18 likes, 6s average watch; micro-arc conflict outperformed the other two cells.",
+    "historic_tiktok": "Tô de Graça: 22,663 views, 2,780 likes, 25 comments, 57 shares, 68s average watch. Vai Que Cola cells repeatedly exceeded 5k-11k views.",
+    "historic_instagram": "Vai Que Cola: 1,271 views, 58 likes, 21.246s average watch, 78.2% 3s view rate.",
+    "historic_youtube": "Vai Que Cola: 6,694 views, 308 likes, ~24s average watch. Metricool sync remains delayed for current Shorts.",
+    "strategy_change": "Reduce dependence on TV-program/novela clips; prioritize acclaimed films and series with immediate recognition, conflict or spectacle."
+  },
+  "editorial_rules": {
+    "real_motion_only": true,
+    "audio_ptbr_required": true,
+    "no_narration": true,
+    "no_visual_audio_mismatch": true,
+    "anti_repeat_days": 60,
+    "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
+    "rights_usage_mode": "OFFICIAL_SOURCE_TRANSFORMATIVE_EDITORIAL_EXCERPT",
+    "no_trailer": true,
+    "no_black": true,
+    "no_silent_tail": true,
+    "no_legacy_mask": true,
+    "no_extra_zoom": true,
+    "no_aggressive_crop": true,
+    "hook_seconds_max": 1.2,
+    "payoff_seconds_target": 15,
+    "cta_after_story_closure": true
+  },
+  "items": [
+    {
+      "id": "CC-OCT11-TT-ROUND6-BATATINHA",
+      "network": "tiktok",
+      "format": "global_tension_iconic_scene",
+      "slot": "2026-10-11T10:00:00-03:00",
+      "title": "Round 6 — Jogador 456 tenta salvar todos no Batatinha Frita",
+      "year": 2024,
+      "source": "https://www.youtube.com/watch?v=OeWS8Bt7fWo",
+      "source_id": "OeWS8Bt7fWo",
+      "source_start": 2,
+      "source_end": 34,
+      "hook": "A BONECA VIROU — E O 456 TENTA SALVAR TODO MUNDO 😳",
+      "cta": "VOCÊ CORRERIA OU FICARIA PARADO?",
+      "caption": "O Jogador 456 tenta salvar o máximo de pessoas no Batatinha Frita 1, 2, 3 de Round 6. Cena oficial da Netflix Brasil. #Round6 #SquidGame #NetflixBrasil #CenaCerta"
+    },
+    {
+      "id": "CC-OCT11-TT-AUTO-BORDAO",
+      "network": "tiktok",
+      "format": "iconic_comedy_quote",
+      "slot": "2026-10-11T12:00:00-03:00",
+      "title": "O Auto da Compadecida — Chicó e o bordão mais famoso",
+      "year": 1999,
+      "source": "https://globoplay.globo.com/v/2630314/",
+      "source_id": "2630314",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "CHICÓ EXPLICA TUDO COM 5 PALAVRAS 😂",
+      "cta": "QUEM JÁ USOU: NÃO SEI, SÓ SEI QUE FOI ASSIM?",
+      "caption": "João Grilo, Chicó e um dos bordões mais lembrados de O Auto da Compadecida. Cena real e diálogo original em português. #OAutoDaCompadecida #Chico #JoaoGrilo #CenaCerta"
+    },
+    {
+      "id": "CC-OCT11-TT-PENETRAS2",
+      "network": "tiktok",
+      "format": "fast_comedy_scene",
+      "slot": "2026-10-11T18:00:00-03:00",
+      "title": "Os Penetras 2 — Quem dá mais?",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5582562/",
+      "source_id": "5582562",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "UM NEGÓCIO SIMPLES — ATÉ ESSES DOIS ENTRAREM NA HISTÓRIA 😂",
+      "cta": "VOCÊ CONFIARIA NELES?",
+      "caption": "Marcelo Adnet e Eduardo Sterblitch no universo de Os Penetras 2. Cena oficial do filme, ritmo rápido e áudio original. #OsPenetras2 #MarceloAdnet #EduardoSterblitch #CenaCerta"
+    },
+    {
+      "id": "CC-OCT11-IG-COBRAKAI-MMA",
+      "network": "instagram",
+      "format": "global_action_scene",
+      "slot": "2026-10-11T10:00:00-03:00",
+      "title": "Cobra Kai — Johnny Lawrence luta MMA no México",
+      "year": 2022,
+      "source": "https://www.youtube.com/watch?v=Ym_POo7DgAM",
+      "source_id": "Ym_POo7DgAM",
+      "source_start": 2,
+      "source_end": 34,
+      "hook": "JOHNNY LAWRENCE ENTRA NUMA LUTA DE MMA NO MÉXICO 🥋",
+      "cta": "JOHNNY AINDA É O MAIS CASCA-GROSSA DE COBRA KAI?",
+      "caption": "Johnny Lawrence resolve a situação do jeito mais Johnny possível em Cobra Kai. Cena oficial Netflix Brasil. #CobraKai #JohnnyLawrence #NetflixBrasil #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT11-IG-TROPA-BEIRADA",
+      "network": "instagram",
+      "format": "high_stakes_action_scene",
+      "slot": "2026-10-11T12:00:00-03:00",
+      "title": "Tropa de Elite 2 — Beirada se prepara para dominar o presídio",
+      "year": 2010,
+      "source": "https://globoplay.globo.com/v/1338056/",
+      "source_id": "1338056",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "O PRESÍDIO VIRA UM BARRIL DE PÓLVORA",
+      "cta": "ESSA TENSÃO AINDA FUNCIONA HOJE?",
+      "caption": "Beirada recebe armas dentro da cadeia e o clima muda em segundos em Tropa de Elite 2. Cena real e áudio original. #TropaDeElite2 #SeuJorge #CinemaBrasileiro #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT11-IG-TIO-PERFEITO",
+      "network": "instagram",
+      "format": "family_comedy_scene",
+      "slot": "2026-10-11T18:00:00-03:00",
+      "title": "Um Tio Quase Perfeito — Marcus Majella",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5908140/",
+      "source_id": "5908140",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "QUANDO O TIO 'PERFEITO' PRECISA PROVAR QUE DÁ CONTA 😂",
+      "cta": "VOCÊ DEIXARIA AS CRIANÇAS COM ELE?",
+      "caption": "Marcus Majella em Um Tio Quase Perfeito: família, improviso e confusão em poucos segundos. Cena oficial do filme. #UmTioQuasePerfeito #MarcusMajella #CinemaBrasileiro #CenaCerta #Reels"
+    },
+    {
+      "id": "CC-OCT11-YT-CIDADE-PITBULL",
+      "network": "youtube",
+      "format": "action_chase_short",
+      "slot": "2026-10-11T10:00:00-03:00",
+      "title": "Cidade dos Homens — Laranjinha e Acerola perseguem Pitbull",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5592390/",
+      "source_id": "5592390",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "LARANJINHA + ACEROLA SAEM ATRÁS DO DINHEIRO",
+      "cta": "VOCÊ LEMBRAVA DESSA CORRERIA?",
+      "caption": "Laranjinha e Acerola perseguem Pitbull pelo morro para tentar recuperar o dinheiro. #CidadeDosHomens #Acerola #Laranjinha #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT11-YT-SHAOLIN",
+      "network": "youtube",
+      "format": "martial_arts_comedy_short",
+      "slot": "2026-10-11T16:00:00-03:00",
+      "title": "O Shaolin do Sertão — kung fu no sertão",
+      "year": 2016,
+      "source": "https://globoplay.globo.com/v/5369644/",
+      "source_id": "5369644",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "O SERTÃO VIROU FILME DE KUNG FU 😂",
+      "cta": "ESSA MISTURA FUNCIONA PRA VOCÊ?",
+      "caption": "O Shaolin do Sertão homenageia os clássicos de artes marciais com humor brasileiro. Cena oficial do filme. #OShaolinDoSertao #CinemaBrasileiro #Comedia #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT11-YT-TORYCA2",
+      "network": "youtube",
+      "format": "recognizable_comedy_short",
+      "slot": "2026-10-11T18:00:00-03:00",
+      "title": "Tô Ryca! 2 — Samantha Schmütz",
+      "year": 2022,
+      "source": "https://globoplay.globo.com/v/10257660/",
+      "source_id": "10257660",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "QUANDO A RIQUEZA VOLTA — E A CONFUSÃO VEM JUNTO 😂",
+      "cta": "VOCÊ GASTARIA OU GUARDARIA?",
+      "caption": "Samantha Schmütz volta ao caos de Tô Ryca! 2. Cena oficial da comédia brasileira. #ToRyca2 #SamanthaSchmutz #Comedia #Shorts #CenaCerta"
+    },
+    {
+      "id": "CC-OCT11-FB-COMO-PAIS",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-11T10:00:00-03:00",
+      "title": "Como Nossos Pais — terapia de casal",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/6092657/",
+      "source_id": "6092657",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          18,
+          28
+        ],
+        [
+          38,
+          48
+        ]
+      ],
+      "beat_labels": [
+        "1. INCÔMODO",
+        "2. CONFRONTO",
+        "3. VERDADE"
+      ],
+      "hook": "UMA TERAPIA DE CASAL QUE VIRA CONFRONTO",
+      "cta": "QUEM ESTÁ CERTO NESSA CONVERSA?",
+      "caption": "Maria Ribeiro e Paulo Vilhena em uma conversa que vai apertando até virar confronto em Como Nossos Pais. #ComoNossosPais #CinemaBrasileiro #Drama #CenaCerta"
+    },
+    {
+      "id": "CC-OCT11-FB-FILHO-ETERNO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-11T12:00:00-03:00",
+      "title": "O Filho Eterno — cena de identificação familiar",
+      "year": 2016,
+      "source": "https://globoplay.globo.com/v/5482089/",
+      "source_id": "5482089",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          16,
+          26
+        ],
+        [
+          32,
+          42
+        ]
+      ],
+      "beat_labels": [
+        "1. ROTINA",
+        "2. TENSÃO",
+        "3. EMOÇÃO"
+      ],
+      "hook": "UMA CENA QUE QUALQUER PAI OU MÃE ENTENDE",
+      "cta": "ESSA CENA TE PEGOU?",
+      "caption": "Marcos Veras e Débora Falabella em O Filho Eterno: uma cena curta sobre família, pressão e emoção. #OFilhoEterno #CinemaBrasileiro #Drama #CenaCerta"
+    },
+    {
+      "id": "CC-OCT11-FB-ROUND6-JOGOS",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-11T18:00:00-03:00",
+      "title": "Round 6 — três jogos que definiram a série",
+      "year": 2025,
+      "source": "https://www.youtube.com/watch?v=6FiFolecFC0",
+      "source_id": "6FiFolecFC0",
+      "segments": [
+        [
+          5,
+          15
+        ],
+        [
+          35,
+          45
+        ],
+        [
+          65,
+          75
+        ]
+      ],
+      "beat_labels": [
+        "1. BATATINHA",
+        "2. JOGO",
+        "3. SOBREVIVER"
+      ],
+      "hook": "TRÊS JOGOS. UM ERRO E ACABA TUDO.",
+      "cta": "QUAL JOGO DE ROUND 6 FOI O MAIS TENSO?",
+      "caption": "Round 6 em três beats: jogos simples que viram decisões de vida ou morte. Fonte oficial Netflix Brasil. #Round6 #SquidGame #NetflixBrasil #CenaCerta"
+    }
+  ]
+}
