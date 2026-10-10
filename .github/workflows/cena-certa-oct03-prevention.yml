@@ -5,9 +5,14 @@ on:
       - .github/workflows/**
       - scripts/validate_workflow_config.py
       - tests/test_workflow_config.py
-      - scripts/cena_certa_oct03_pack.py
+      - scripts/cena_certa_*.py
+      - scripts/check_cena_certa_release_barriers.py
+      - scripts/ugi_delivery_verifier.py
+      - scripts/vsa/check_workflow_compliance.py
+      - tests/test_ugi_delivery_prevention.py
+      - tests/test_vsa_workflow_prevention.py
       - scripts/cena_certa_render_evidence_guard.py
-      - tests/test_cena_certa_oct03_prevention.py
+      - tests/test_cena_certa*.py
       - tests/test_cena_certa_render_evidence.py
   push:
     branches: [main]
@@ -15,9 +20,14 @@ on:
       - .github/workflows/**
       - scripts/validate_workflow_config.py
       - tests/test_workflow_config.py
-      - scripts/cena_certa_oct03_pack.py
+      - scripts/cena_certa_*.py
+      - scripts/check_cena_certa_release_barriers.py
+      - scripts/ugi_delivery_verifier.py
+      - scripts/vsa/check_workflow_compliance.py
+      - tests/test_ugi_delivery_prevention.py
+      - tests/test_vsa_workflow_prevention.py
       - scripts/cena_certa_render_evidence_guard.py
-      - tests/test_cena_certa_oct03_prevention.py
+      - tests/test_cena_certa*.py
       - tests/test_cena_certa_render_evidence.py
 permissions:
   contents: read
@@ -30,11 +40,16 @@ jobs:
         with:
           persist-credentials: false
       - name: Install YAML parser
-        run: python -m pip install PyYAML==6.0.2
+        run: |
+          python -m pip install PyYAML==6.0.2 requests==2.32.5
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
       - name: Configuration and fail-closed regressions (no network media or publication)
         run: |
           set -euo pipefail
           python scripts/validate_workflow_config.py
           python -m unittest discover -s tests -p 'test_workflow_config.py' -v
-          python -m unittest discover -s tests -p 'test_cena_certa_oct03_prevention.py' -v
-          python -m unittest discover -s tests -p 'test_cena_certa_render_evidence.py' -v
+          python scripts/check_cena_certa_release_barriers.py
+          python -m unittest discover -s tests -p 'test_cena_certa*.py' -v
+          python -m unittest discover -s tests -p 'test_ugi_delivery_prevention.py' -v
+          python -m unittest discover -s tests -p 'test_vsa_workflow_prevention.py' -v

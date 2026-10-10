@@ -106,9 +106,9 @@ def main():
         a=next(s for s in p["streams"] if s["codec_type"]=="audio")
         assert v["codec_name"]=="h264" and (int(v["width"]),int(v["height"]))==(1080,1920)
         assert v["pix_fmt"]=="yuv420p" and a["codec_name"]=="aac" and int(a["sample_rate"])==48000
-        visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.10","-an","-f","null","-"],check=False).stderr
+        visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.10","-an","-f","null","-"],check=True).stderr
         if "black_start" in visual: raise RuntimeError("NO_BLACK_FAIL")
-        audio=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.8","-vn","-f","null","-"],check=False).stderr
+        audio=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.8","-vn","-f","null","-"],check=True).stderr
         events=[]
         for ln in audio.splitlines():
             if "silence_start:" in ln:
@@ -142,7 +142,7 @@ def main():
             "NO_SILENT_TAIL_PASS":True,
             "H264_AAC_PASS":True,
             "NINE_BY_SIXTEEN_PASS":True,
-            "EDITORIAL_PASS":True
+            "EDITORIAL_STATUS":"NOT_VERIFIED"
           }
         }
         (OUT/f"{item['id']}.json").write_text(json.dumps(rec,ensure_ascii=False,indent=2),encoding="utf-8")

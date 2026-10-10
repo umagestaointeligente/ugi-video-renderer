@@ -54,7 +54,7 @@ def validate(out):
     black=run([
         "ffmpeg","-hide_banner","-i",str(out),
         "-vf","blackdetect=d=1.2:pix_th=0.02","-an","-f","null","-"
-    ],check=False).stderr or ""
+    ],check=True).stderr or ""
     if "black_start" in black:
         raise RuntimeError("NO_BLACK_FAIL")
 
@@ -73,7 +73,7 @@ def validate(out):
     audio=run([
         "ffmpeg","-hide_banner","-i",str(out),
         "-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"
-    ],check=False).stderr or ""
+    ],check=True).stderr or ""
     dur=ff_duration(out)
     events=[]
     for ln in audio.splitlines():
@@ -210,7 +210,7 @@ def main():
             "MUSIC_PASS":"ORIGINAL_SYNTH_LOW_BED" if item["kind"]!="humor" else "ORIGINAL_SOURCE_AUDIO",
             "CORE_PASS":"CANONICAL_AFTER_BLOCK" if item["kind"]=="humor" else "N/A",
             "NO_BLACK_PASS":True,"REAL_MOTION_PASS":True,"NO_SILENT_TAIL_PASS":True,
-            "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_PASS":True
+            "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_STATUS":"NOT_VERIFIED"
           }
         }
         (OUT/f"{item['id']}.json").write_text(json.dumps(rec,ensure_ascii=False,indent=2),encoding="utf-8")

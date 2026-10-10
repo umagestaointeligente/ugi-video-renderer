@@ -28,6 +28,11 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/cena_certa_oct02_recovery.py
+      - name: Require current execution-bound editorial evidence
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-oct02/summary.json ops/cena-certa-oct02/prepublish-receipts.json out/cena-certa-oct02/release-preflight.json
+
       - name: Publish approved masters
         env:
           GH_TOKEN: ${{ github.token }}
@@ -35,7 +40,7 @@ jobs:
           set -euo pipefail
           TAG=cena-certa-oct02-recovery
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Oct02 Recovery" --notes "12 fail-closed masters after 60d title/source/frame reconciliation."
-          gh release upload "$TAG" out/cena-certa-oct02/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+          gh release upload "$TAG" out/cena-certa-oct02/*.mp4 --repo "$GITHUB_REPOSITORY"
       - name: Create evidence issue
         env:
           GH_TOKEN: ${{ github.token }}
@@ -43,6 +48,8 @@ jobs:
           {
             echo "CENA_CERTA_OCT02_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "PUBLICATION_STATUS=NOT_VERIFIED"
             echo
             cat out/cena-certa-oct02/summary.json
           } > out/cena-certa-oct02/issue.txt

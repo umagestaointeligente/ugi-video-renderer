@@ -36,7 +36,8 @@ def parse_time(value: Any) -> dt.datetime | None:
     if not value:
         return None
     try:
-        return dt.datetime.fromisoformat(str(value).replace("Z", "+00:00")).astimezone(dt.timezone.utc)
+        parsed = dt.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        return parsed.astimezone(dt.timezone.utc) if parsed.tzinfo else None
     except Exception:
         return None
 
@@ -44,7 +45,10 @@ def parse_time(value: Any) -> dt.datetime | None:
 def load_active_platforms() -> set[str]:
     data = json.loads(DISTRIBUTION_STATE.read_text(encoding="utf-8"))
     buffer = data.get("buffer", {})
-    if buffer.get("publisher") != "buffer":
+    # This observer reads historical Buffer receipts; it cannot select a new publisher.
+    provider = buffer.get("publisher")
+    legacy = provider == "buffer_legacy" and buffer.get("status") == "LEGACY_REFERENCE_ONLY" and data.get("publisher_routing", {}).get("primary") == "metricool"
+    if provider != "buffer" and not legacy:
         raise SystemExit("DELIVERY_VERIFIER_PROVIDER_LOCK")
     active = {str(x).lower() for x in buffer.get("active_platforms", [])}
     paused = {str(x).lower() for x in buffer.get("paused_platforms", [])}
@@ -58,7 +62,8 @@ def external_proof(url: str | None) -> dict[str, Any]:
         return {"attempted": False, "ok": False, "reason": "external_link_missing"}
     try:
         r = requests.get(url, timeout=30, allow_redirects=True, headers={"User-Agent":"Mozilla/5.0 UGI-Delivery-Proof/1.0"})
-        return {"attempted": True, "ok": r.status_code < 500, "httpStatus": r.status_code, "finalUrl": r.url}
+        return {"attempted": True, "ok": 200 <= r.status_code < 300, "httpStatus": r.status_code, "finalUrl": r.url,
+                "scope": "HTTP_REACHABILITY_ONLY"}
     except Exception as exc:
         return {"attempted": True, "ok": False, "error": str(exc)}
 

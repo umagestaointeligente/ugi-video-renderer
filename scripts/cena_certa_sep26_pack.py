@@ -100,7 +100,7 @@ def render_one(item, logo):
     assert abs(n/dn-30)<0.05
     assert a["codec_name"]=="aac" and int(a["sample_rate"])==48000
 
-    visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.00:pix_th=0.10","-an","-f","null","-"],check=False).stderr or ""
+    visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.00:pix_th=0.10","-an","-f","null","-"],check=True).stderr or ""
     if "black_start" in visual:
         raise RuntimeError("NO_BLACK_FAIL")
     fm=run(["ffmpeg","-v","error","-i",str(out),"-vf","fps=1","-f","framemd5","-"]).stdout
@@ -113,7 +113,7 @@ def render_one(item, logo):
     if len(set(hashes)) < min(5,max(2,len(hashes)//3)):
         raise RuntimeError("REAL_MOTION_FAIL")
 
-    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.8","-vn","-f","null","-"],check=False).stderr or ""
+    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.8","-vn","-f","null","-"],check=True).stderr or ""
     od=duration(out)
     starts=[float(x) for x in re.findall(r"silence_start:\s*([0-9.]+)",aud)]
     if starts and od-starts[-1] > 0.8:
@@ -132,7 +132,7 @@ def render_one(item, logo):
         "LOGO_TOP_RIGHT_PASS":True,"AUDIO_PTBR_PASS":"pt-BR-AntonioNeural",
         "SCENE_NARRATION_SYNC_PASS":"generic_visual_match","MUSIC_PASS":"original_synth_ambient",
         "NO_BLACK_PASS":True,"NO_LONG_SILENCE_PASS":True,"NO_SILENT_TAIL_PASS":True,
-        "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_PASS":True
+        "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_STATUS":"NOT_VERIFIED"
       }
     }
     gates.write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding="utf-8")
@@ -165,7 +165,7 @@ def main():
     summary={"schema":"CENA_CERTA_SEP26_DELIVERY_V1","items":[]}
     for item in manifest["items"]:
         rec,path=render_one(item,logo)
-        r2=upload(item,path)
+        r2={"status":"NOT_UPLOADED_PENDING_EVIDENCE"}
         rec["r2"]=r2
         summary["items"].append(rec)
         print("MASTER_PASS",item["id"],json.dumps(r2,ensure_ascii=False))
