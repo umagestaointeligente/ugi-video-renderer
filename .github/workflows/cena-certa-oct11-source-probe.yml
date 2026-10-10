@@ -17,10 +17,10 @@ jobs:
           set -u
           failed=0
           urls=(
-            "https://www.youtube.com/watch?v=OeWS8Bt7fWo"
+            "https://globoplay.globo.com/v/5584484/"
             "https://globoplay.globo.com/v/2630314/"
             "https://globoplay.globo.com/v/5582562/"
-            "https://www.youtube.com/watch?v=Ym_POo7DgAM"
+            "https://globoplay.globo.com/v/5573632/"
             "https://globoplay.globo.com/v/1338056/"
             "https://globoplay.globo.com/v/5908140/"
             "https://globoplay.globo.com/v/5592390/"
@@ -28,7 +28,7 @@ jobs:
             "https://globoplay.globo.com/v/10257660/"
             "https://globoplay.globo.com/v/6092657/"
             "https://globoplay.globo.com/v/5482089/"
-            "https://www.youtube.com/watch?v=6FiFolecFC0"
+            "https://globoplay.globo.com/v/5592393/"
           )
           for u in "${urls[@]}"; do
             echo "PROBE $u"
