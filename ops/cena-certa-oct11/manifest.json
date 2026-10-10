@@ -39,19 +39,19 @@
   },
   "items": [
     {
-      "id": "CC-OCT11-TT-ROUND6-BATATINHA",
+      "id": "CC-OCT11-TT-CIDADE-DELIRIO",
       "network": "tiktok",
       "format": "global_tension_iconic_scene",
       "slot": "2026-10-11T10:00:00-03:00",
-      "title": "Round 6 — Jogador 456 tenta salvar todos no Batatinha Frita",
-      "year": 2024,
-      "source": "https://www.youtube.com/watch?v=OeWS8Bt7fWo",
-      "source_id": "OeWS8Bt7fWo",
-      "source_start": 2,
+      "title": "Cidade dos Homens — Acerola delira vendo várias mulheres grávidas",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5584484/",
+      "source_id": "5584484",
+      "source_start": 0,
       "source_end": 34,
-      "hook": "A BONECA VIROU — E O 456 TENTA SALVAR TODO MUNDO 😳",
-      "cta": "VOCÊ CORRERIA OU FICARIA PARADO?",
-      "caption": "O Jogador 456 tenta salvar o máximo de pessoas no Batatinha Frita 1, 2, 3 de Round 6. Cena oficial da Netflix Brasil. #Round6 #SquidGame #NetflixBrasil #CenaCerta"
+      "hook": "ACEROLA OLHA EM VOLTA — E SÓ VÊ GRAVIDEZ 😳😂",
+      "cta": "VOCÊ JÁ ENTROU NESSA PARANOIA?",
+      "caption": "Acerola entra em pânico com a ideia de ser pai e começa a enxergar gravidez em todo lugar. Cena real de Cidade dos Homens. #CidadeDosHomens #Acerola #SerieBrasileira #CenaCerta"
     },
     {
       "id": "CC-OCT11-TT-AUTO-BORDAO",
@@ -84,19 +84,19 @@
       "caption": "Marcelo Adnet e Eduardo Sterblitch no universo de Os Penetras 2. Cena oficial do filme, ritmo rápido e áudio original. #OsPenetras2 #MarceloAdnet #EduardoSterblitch #CenaCerta"
     },
     {
-      "id": "CC-OCT11-IG-COBRAKAI-MMA",
+      "id": "CC-OCT11-IG-SALTIMBANCOS",
       "network": "instagram",
       "format": "global_action_scene",
       "slot": "2026-10-11T10:00:00-03:00",
-      "title": "Cobra Kai — Johnny Lawrence luta MMA no México",
-      "year": 2022,
-      "source": "https://www.youtube.com/watch?v=Ym_POo7DgAM",
-      "source_id": "Ym_POo7DgAM",
-      "source_start": 2,
+      "title": "Os Saltimbancos Trapalhões — Piruetas",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5573632/",
+      "source_id": "5573632",
+      "source_start": 0,
       "source_end": 34,
-      "hook": "JOHNNY LAWRENCE ENTRA NUMA LUTA DE MMA NO MÉXICO 🥋",
-      "cta": "JOHNNY AINDA É O MAIS CASCA-GROSSA DE COBRA KAI?",
-      "caption": "Johnny Lawrence resolve a situação do jeito mais Johnny possível em Cobra Kai. Cena oficial Netflix Brasil. #CobraKai #JohnnyLawrence #NetflixBrasil #CenaCerta #Reels"
+      "hook": "UMA MÚSICA QUE MUITA GENTE RECONHECE EM 2 SEGUNDOS 🎪",
+      "cta": "ESSA MÚSICA FEZ PARTE DA SUA INFÂNCIA?",
+      "caption": "A trupe do Grande Circo Sumatra canta e dança 'Piruetas' em Os Saltimbancos Trapalhões. Cena oficial e nostalgia imediata. #OsSaltimbancosTrapalhoes #CinemaBrasileiro #Nostalgia #CenaCerta #Reels"
     },
     {
       "id": "CC-OCT11-IG-TROPA-BEIRADA",
@@ -238,36 +238,36 @@
       "caption": "Marcos Veras e Débora Falabella em O Filho Eterno: uma cena curta sobre família, pressão e emoção. #OFilhoEterno #CinemaBrasileiro #Drama #CenaCerta"
     },
     {
-      "id": "CC-OCT11-FB-ROUND6-JOGOS",
+      "id": "CC-OCT11-FB-CIDADE-DOACAO",
       "network": "facebook",
       "format": "editorial_microarc_3beat",
       "slot": "2026-10-11T18:00:00-03:00",
-      "title": "Round 6 — três jogos que definiram a série",
-      "year": 2025,
-      "source": "https://www.youtube.com/watch?v=6FiFolecFC0",
-      "source_id": "6FiFolecFC0",
+      "title": "Cidade dos Homens — comunidade ajuda na cirurgia de Davi",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5592393/",
+      "source_id": "5592393",
       "segments": [
         [
-          5,
-          15
+          0,
+          10
         ],
         [
-          35,
-          45
+          16,
+          26
         ],
         [
-          65,
-          75
+          32,
+          42
         ]
       ],
       "beat_labels": [
-        "1. BATATINHA",
-        "2. JOGO",
-        "3. SOBREVIVER"
+        "1. PROBLEMA",
+        "2. COMUNIDADE",
+        "3. ESPERANÇA"
       ],
-      "hook": "TRÊS JOGOS. UM ERRO E ACABA TUDO.",
-      "cta": "QUAL JOGO DE ROUND 6 FOI O MAIS TENSO?",
-      "caption": "Round 6 em três beats: jogos simples que viram decisões de vida ou morte. Fonte oficial Netflix Brasil. #Round6 #SquidGame #NetflixBrasil #CenaCerta"
+      "hook": "QUANDO A COMUNIDADE INTEIRA RESOLVE AJUDAR",
+      "cta": "ESSA CENA AINDA TE EMOCIONA?",
+      "caption": "Os moradores se unem para ajudar na cirurgia de Davi em Cidade dos Homens. Um micro-arco de problema, solidariedade e esperança. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta"
     }
   ]
 }
