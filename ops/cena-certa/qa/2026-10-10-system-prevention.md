@@ -22,7 +22,8 @@ Scope: syntax/structure inspection of all 265 main-branch workflows (801 origina
 6. A legacy Sep26 in-render upload is contained; rendering records technical output only. Recent renderers and repair summaries no longer assign editorial approval constants.
 7. New structural regression verifies actual Cena Certa guard steps, failure propagation, write ordering and overwrite protection. CI covers all dated renderers/helpers rather than Oct03 alone.
 8. UGI's read-only observer accepts the documented Buffer legacy state while preserving Metricool primary routing. HTTP 403/404/429 are not positive reachability proof, and naive timestamps are rejected rather than assigned the runner timezone.
-9. VSA workflow compliance parses actual gate actions and checks job/step write order and dependency protection; a comment or attempted shell execution of `action.yml` is not an action gate. GitHub release writes are included in the mutation checks.
+9. CI validation uses sparse checkouts of code/tests/policies, excluding approximately 2 GB of public media from each validation job.
+10. VSA workflow compliance parses actual gate actions and checks job/step write order and dependency protection; a comment or attempted shell execution of `action.yml` is not an action gate. GitHub release writes are included in the mutation checks.
 
 ## Validation
 

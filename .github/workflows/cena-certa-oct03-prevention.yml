@@ -39,6 +39,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          sparse-checkout: |
+            .github/workflows
+            scripts
+            tests
+            config
+            control-plane/policies
       - name: Install YAML parser
         run: |
           python -m pip install PyYAML==6.0.2 requests==2.32.5
