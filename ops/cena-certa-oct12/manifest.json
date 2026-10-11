@@ -72,22 +72,20 @@
       "audio_mode": "ORIGINAL_PTBR_SOURCE"
     },
     {
-      "id": "CC-OCT12-TT-NICK-BLOOPERS",
+      "id": "CC-OCT12-TT-CIDADE-FILHOS",
       "network": "tiktok",
       "format": "nostalgia_bloopers",
       "slot": "2026-10-12T18:00:00-03:00",
-      "title": "Nickelodeon — iCarly, Victorious e Sam & Cat nos bastidores",
-      "year": 2010,
-      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm",
-      "source_id": "NICKREWIND_BLOOPERS_QH7EZCEA7DS",
-      "source_start": 185,
-      "source_end": 219,
-      "hook": "QUANDO O ELENCO DA NICKELODEON PERDE A LINHA 😂",
-      "cta": "QUAL DESSAS SÉRIES MARCOU MAIS SUA INFÂNCIA?",
-      "caption": "Bastidores de iCarly, Victorious e Sam & Cat, com reações reais do elenco. Fonte NickRewind/Nickelodeon, CC BY 3.0. Edição Cena Certa. #iCarly #Victorious #SamAndCat #Nickelodeon #CenaCerta",
-      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
-      "license": "CC BY 3.0",
-      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons"
+      "title": "Cidade dos Homens — Acerola e Laranjinha apresentam os filhos",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5584476/",
+      "source_id": "5584476",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ACEROLA + LARANJINHA CRESCERAM — E AGORA OS FILHOS ENTRAM NA HISTÓRIA",
+      "cta": "VOCÊ ACOMPANHAVA OS DOIS DESDE O COMEÇO?",
+      "caption": "Acerola e Laranjinha apresentam Clayton e Davi e mostram como a amizade atravessou gerações. Cena real de Cidade dos Homens. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
     },
     {
       "id": "CC-OCT12-IG-CIDADE-FILHO",
@@ -122,22 +120,20 @@
       "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
     },
     {
-      "id": "CC-OCT12-IG-JIMMY",
+      "id": "CC-OCT12-IG-CIDADE-TEMPO",
       "network": "instagram",
       "format": "global_nostalgia_animation",
       "slot": "2026-10-12T18:00:00-03:00",
-      "title": "Jimmy Neutron — primeiros e últimos momentos",
-      "year": 2002,
-      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Jimmy_Neutron_Firsts_%26_Lasts%21_-_NickRewind.webm",
-      "source_id": "NICKTOONS_JIMMY_OHSXUPDBX90",
+      "title": "Cidade dos Homens — Acerola pensa em dar um tempo",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5584498/",
+      "source_id": "5584498",
       "source_start": 0,
       "source_end": 34,
-      "hook": "JIMMY NEUTRON EM 34 SEGUNDOS DE NOSTALGIA 🚀",
-      "cta": "VOCÊ ASSISTIA TODO DIA?",
-      "caption": "Jimmy Neutron e a turma em uma dose rápida de nostalgia. Fonte oficial Nicktoons/NickRewind, CC BY 3.0. Edição Cena Certa. #JimmyNeutron #Nickelodeon #Nostalgia #CenaCerta #Reels",
-      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
-      "license": "CC BY 3.0",
-      "attribution": "Nicktoons via Wikimedia Commons"
+      "hook": "ACEROLA PENSA EM SUMIR — E LARANJINHA NÃO DEIXA PASSAR",
+      "cta": "AMIGO TEM QUE FALAR A VERDADE?",
+      "caption": "Acerola pensa em dar um tempo na relação e Laranjinha lembra o peso de crescer sem pai. Cena real de Cidade dos Homens. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
     },
     {
       "id": "CC-OCT12-YT-VICTORIOUS-TORI",
@@ -260,39 +256,37 @@
       "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
     },
     {
-      "id": "CC-OCT12-FB-ROCKO",
+      "id": "CC-OCT12-FB-CIDADE-CIRURGIA-OK",
       "network": "facebook",
       "format": "editorial_microarc_3beat",
       "slot": "2026-10-12T12:00:00-03:00",
-      "title": "Rocko's Modern Life — cenas clássicas",
-      "year": 1993,
-      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Classic_Scenes_from_Rocko%27s_Modern_Life-_Season_1_-_NickRewind.webm",
-      "source_id": "NICKTOONS_ROCKO_UVUATYPSCJW",
+      "title": "Cidade dos Homens — cirurgia de Davi é um sucesso",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5592396/",
+      "source_id": "5592396",
       "segments": [
         [
           0,
           10
         ],
         [
-          20,
-          30
+          18,
+          28
         ],
         [
-          40,
-          50
+          36,
+          46
         ]
       ],
       "beat_labels": [
-        "1. NORMAL",
-        "2. ESTRANHO",
-        "3. ROCKO"
+        "1. ESPERA",
+        "2. NOTÍCIA",
+        "3. ALÍVIO"
       ],
-      "hook": "SE VOCÊ CRESCEU NOS ANOS 90, ISSO DESBLOQUEIA UMA MEMÓRIA 😂",
-      "cta": "QUAL DESENHO DA NICK VOCÊ MAIS VIA?",
-      "caption": "Rocko's Modern Life em três momentos clássicos. Fonte Nicktoons/NickRewind, CC BY 3.0 via Wikimedia Commons. Edição Cena Certa. #RockosModernLife #Nickelodeon #Nostalgia #CenaCerta",
-      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
-      "license": "CC BY 3.0",
-      "attribution": "Nicktoons via Wikimedia Commons"
+      "hook": "DEPOIS DE TUDO, A NOTÍCIA QUE ELES PRECISAVAM OUVIR",
+      "cta": "ESSA CENA TE DEU ALÍVIO?",
+      "caption": "Depois de tanta correria, chega a notícia de que a cirurgia de Davi deu certo. Micro-arco em três beats. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
     }
   ]
 }
