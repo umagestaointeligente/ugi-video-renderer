@@ -1,0 +1,32 @@
+name: Cena Certa Oct12 NickRewind YouTube Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct12-nick-youtube-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Install yt-dlp
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Probe original NickRewind sources
+        run: |
+          set -u
+          failed=0
+          for u in \
+            "https://www.youtube.com/watch?v=Qh7EzCea7Ds" \
+            "https://www.youtube.com/watch?v=96ZMKsCN_eo" \
+            "https://www.youtube.com/watch?v=TZGDmSwzdMY" \
+            "https://www.youtube.com/watch?v=Pk-VgN0psu4"; do
+            echo "PROBE $u"
+            if yt-dlp --no-warnings --simulate --extractor-args "youtube:player_client=tv,web_safari" --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"; then
+              echo "SOURCE_PROBE_PASS $u"
+            else
+              echo "SOURCE_PROBE_FAIL $u"; failed=$((failed+1))
+            fi
+          done
+          echo "SOURCE_PROBE_FAILED_COUNT=$failed"
+          test "$failed" -eq 0
