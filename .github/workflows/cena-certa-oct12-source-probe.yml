@@ -1,0 +1,55 @@
+name: Cena Certa Oct12 Source Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct12-source-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Install runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg >/dev/null
+          python -m pip install -q --upgrade yt-dlp
+      - name: Probe Oct12 sources
+        run: |
+          set -u
+          failed=0
+          globo=(
+            "https://globoplay.globo.com/v/5584488/"
+            "https://globoplay.globo.com/v/2228138/"
+            "https://globoplay.globo.com/v/5584490/"
+            "https://globoplay.globo.com/v/5587236/"
+            "https://globoplay.globo.com/v/5584497/"
+            "https://globoplay.globo.com/v/5589883/"
+          )
+          commons=(
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Jimmy_Neutron_Firsts_%26_Lasts%21_-_NickRewind.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Tori_messes_up_Beck%27s_big_break_%F0%9F%98%94_Victorious.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Can_iCarly_Break_A_WORLD_RECORD-_-_Full_Episode_in_5_Minutes_-_NickRewind.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Carly_Dates_A_Bad_Boy_-_Full_Episode_in_10_Minutes_-_iCarly.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Classic_Scenes_from_Rocko%27s_Modern_Life-_Season_1_-_NickRewind.webm"
+          )
+          for u in "${globo[@]}"; do
+            echo "PROBE $u"
+            if yt-dlp --no-warnings --simulate --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"; then
+              echo "SOURCE_PROBE_PASS $u"
+            else
+              echo "SOURCE_PROBE_FAIL $u"; failed=$((failed+1))
+            fi
+          done
+          for u in "${commons[@]}"; do
+            echo "PROBE $u"
+            if curl -L --fail --silent --show-error --range 0-1048575 -o /tmp/probe.bin "$u" && test -s /tmp/probe.bin; then
+              echo "SOURCE_PROBE_PASS $u"
+            else
+              echo "SOURCE_PROBE_FAIL $u"; failed=$((failed+1))
+            fi
+          done
+          echo "SOURCE_PROBE_FAILED_COUNT=$failed"
+          test "$failed" -eq 0
