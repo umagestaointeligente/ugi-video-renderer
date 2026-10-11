@@ -17,7 +17,6 @@ jobs:
           set -u
           failed=0
           for u in \
-            "https://globoplay.globo.com/v/5584476/" \
             "https://globoplay.globo.com/v/5592388/" \
             "https://globoplay.globo.com/v/5592396/"; do
             echo "PROBE $u"
