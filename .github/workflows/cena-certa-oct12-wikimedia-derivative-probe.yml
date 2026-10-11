@@ -1,0 +1,48 @@
+name: Cena Certa Oct12 Wikimedia Derivative Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct12-wikimedia-derivative-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Resolve and probe derivatives
+        run: |
+          python - <<'PY'
+          import json, urllib.parse, urllib.request, sys
+          files=[
+            "Best of Bloopers from Sam & Cat, iCarly & Victorious! 🤣 NickRewind.webm",
+            "Tori messes up Beck's big break 😔 Victorious.webm",
+            "Can iCarly Break A WORLD RECORD- - Full Episode in 5 Minutes - NickRewind.webm",
+            "Carly Dates A Bad Boy - Full Episode in 10 Minutes - iCarly.webm",
+          ]
+          failed=0
+          for fn in files:
+              q=urllib.parse.urlencode({
+                  "action":"query","format":"json","prop":"videoinfo",
+                  "viprop":"url|derivatives","titles":"File:"+fn
+              })
+              req=urllib.request.Request("https://commons.wikimedia.org/w/api.php?"+q,
+                  headers={"User-Agent":"CenaCerta/2.8 derivative probe"})
+              try:
+                  with urllib.request.urlopen(req,timeout=60) as r:
+                      data=json.load(r)
+                  page=next(iter(data["query"]["pages"].values()))
+                  vi=page["videoinfo"][0]
+                  ds=vi.get("derivatives",[])
+                  # Prefer 360p/480p video with audio; smallest reliable network payload.
+                  picks=[d for d in ds if any(k in str(d.get("transcodekey","")) for k in ("360p","480p"))]
+                  print("FILE",fn)
+                  for d in picks[:12]:
+                      print("DERIV",d.get("transcodekey"),d.get("src"))
+                  if not picks:
+                      print("DERIVATIVE_FAIL",fn); failed+=1
+              except Exception as e:
+                  print("API_FAIL",fn,repr(e)); failed+=1
+          print("DERIVATIVE_FAILED_COUNT",failed)
+          sys.exit(1 if failed else 0)
+          PY
