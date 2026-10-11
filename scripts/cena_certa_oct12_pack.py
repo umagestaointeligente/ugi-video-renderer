@@ -33,12 +33,29 @@ def esc(s):
     return str(s).replace("\\","\\\\").replace(":","\\:").replace("'","’").replace("%","\\%").replace("“",'"').replace("”",'"')
 
 def download(url,path):
-    req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 CenaCerta/2.8"})
-    with urllib.request.urlopen(req,timeout=180) as r, open(path,"wb") as f:
-        while True:
-            b=r.read(1024*1024)
-            if not b: break
-            f.write(b)
+    last=None
+    for attempt in range(1,7):
+        try:
+            req=urllib.request.Request(url,headers={
+                "User-Agent":"CenaCerta/2.8 (editorial QA; contact via repository)",
+                "Accept":"video/webm,video/*;q=0.9,*/*;q=0.8"
+            })
+            with urllib.request.urlopen(req,timeout=240) as r, open(path,"wb") as f:
+                while True:
+                    b=r.read(1024*1024)
+                    if not b: break
+                    f.write(b)
+            return
+        except Exception as exc:
+            last=exc
+            try:
+                if path.exists(): path.unlink()
+            except: pass
+            code=getattr(exc,"code",None)
+            if code not in (429,500,502,503,504) and attempt>=2:
+                raise
+            time.sleep(min(45,5*attempt))
+    raise last
 
 def download_source(item,cache):
     sid=str(item["source_id"])
@@ -331,13 +348,22 @@ def main():
     cache={}; rendered=[]
     summary={"schema":"CENA_CERTA_OCT12_DELIVERY_V1","date":"2026-10-12","strategy":manifest["benchmark_basis"],"items":[]}
 
-    # Ingest unique already-probed sources in parallel; rendering/QA stays deterministic and sequential.
+    # Wikimedia throttles burst downloads. Ingest Commons sequentially with retry/backoff,
+    # then ingest official provider sources in bounded parallelism.
     def ingest(item):
         local={}
         src=download_source(item,local)
         return str(item["source_id"]),src
-    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex:
-        futs=[ex.submit(ingest,item) for item in items]
+
+    commons_items=[item for item in items if str(item["source"]).startswith("https://commons.wikimedia.org/")]
+    other_items=[item for item in items if item not in commons_items]
+    for item in commons_items:
+        sid,src=ingest(item)
+        cache[sid]=src
+        print("SOURCE_INGEST_PASS",sid)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
+        futs=[ex.submit(ingest,item) for item in other_items]
         for fut in concurrent.futures.as_completed(futs):
             sid,src=fut.result()
             cache[sid]=src
