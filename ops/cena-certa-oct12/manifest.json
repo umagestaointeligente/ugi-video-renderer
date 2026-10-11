@@ -1,0 +1,298 @@
+{
+  "schema": "CENA_CERTA_OCT12_BREAKOUT_TEST_V1",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-10-12",
+  "objective": {
+    "primary": "Increase breakout probability by combining the strongest posting windows with higher-recognition film/series IPs, stronger first-second hooks, and a non-Globo YouTube lane.",
+    "breakout_views_floor": 100000,
+    "operating_like_rate_target_pct": "6-14",
+    "stretch_likes": 70000,
+    "note": "70k likes on 100k views equals a 70% like rate and remains an extraordinary stretch; retention, shares and comments remain leading indicators."
+  },
+  "benchmark_basis": {
+    "today_sync_status": "Metricool analytics for 2026-10-11 is not synced yet; all 12 planner records are confirmed PUBLISHED.",
+    "latest_synced_tiktok": "2026-10-09: 10h Avenida Brasil 532 views/49 likes/1 comment/7s average watch; 12h O Auto da Compadecida 276 views/37 likes/1 comment/22s average watch; 18h Tropa de Elite 2 247 views/23 likes/6s average watch.",
+    "latest_synced_instagram": "2026-10-09: 10h Senhora do Destino 216 views/10 likes/14.946s average watch/55% 3s rate; 11h Cidade dos Homens 142/2/10.892s; 12h Tapas & Beijos 131/4/5.671s.",
+    "latest_synced_facebook": "2026-10-09: 10h Avenida Brasil 634 views/7 likes; 11h Tapas & Beijos 250/4; 12h Cidade dos Homens 193/1.",
+    "historic_tiktok": "Tô de Graça: 22,663 views, 2,780 likes, 25 comments, 57 shares, 68s average watch. Vai Que Cola repeatedly exceeded 5k-11k views.",
+    "historic_instagram": "Vai Que Cola: 1,271 views, 58 likes, 21.246s average watch, 78.2% 3s view rate.",
+    "historic_youtube": "Vai Que Cola: 6,694 views, 308 likes, ~24s average watch. Current Globo-derived Shorts have shown blocking/sync issues, so Oct12 moves YouTube to non-Globo Creative Commons sources.",
+    "strategy_change": "No novelas and no Video Show/Sai de Baixo/Grande Família in Oct12 pack. YouTube sources are non-Globo, Creative Commons licensed Nickelodeon/NickRewind/Nicktoons material via Wikimedia Commons."
+  },
+  "editorial_rules": {
+    "real_motion_only": true,
+    "no_narration": true,
+    "portuguese_hook_and_cta": true,
+    "anti_repeat_days": 60,
+    "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
+    "youtube_non_globo_required": true,
+    "youtube_rights_mode": "CC_BY_3_0_VERIFIED_OR_DECLARED_SOURCE",
+    "globo_other_networks_mode": "OFFICIAL_GLOBOPLAY_TRANSFORMATIVE_EDITORIAL_EXCERPT",
+    "no_trailer": true,
+    "no_black": true,
+    "no_silent_tail": true,
+    "no_legacy_mask": true,
+    "no_extra_zoom": true,
+    "no_aggressive_crop": true,
+    "hook_seconds_max": 1.2,
+    "payoff_seconds_target": 15,
+    "cta_after_story_closure": true
+  },
+  "items": [
+    {
+      "id": "CC-OCT12-TT-CIDADE-PAI",
+      "network": "tiktok",
+      "format": "recognition_conflict",
+      "slot": "2026-10-12T10:00:00-03:00",
+      "title": "Cidade dos Homens — Laranjinha encara quem pode ser seu pai",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5584488/",
+      "source_id": "5584488",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ELE PODE SER O PAI DE LARANJINHA — E A REAÇÃO MUDA TUDO",
+      "cta": "VOCÊ IRIA ATRÁS DESSA RESPOSTA?",
+      "caption": "Laranjinha encara a possibilidade de finalmente descobrir quem é seu pai. Cena real de Cidade dos Homens, com conflito entendido logo no começo. #CidadeDosHomens #Laranjinha #SerieBrasileira #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+    },
+    {
+      "id": "CC-OCT12-TT-AUTO-ABERTURA",
+      "network": "tiktok",
+      "format": "iconic_nostalgia",
+      "slot": "2026-10-12T12:00:00-03:00",
+      "title": "O Auto da Compadecida — abertura clássica",
+      "year": 1999,
+      "source": "https://globoplay.globo.com/v/2228138/",
+      "source_id": "2228138",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "VOCÊ RECONHECE ESSA ABERTURA EM 1 SEGUNDO? 😂",
+      "cta": "QUAL PERSONAGEM VEM PRIMEIRO NA SUA CABEÇA?",
+      "caption": "A abertura de O Auto da Compadecida é uma daquelas que o brasileiro reconhece antes mesmo de aparecer João Grilo ou Chicó. #OAutoDaCompadecida #CinemaBrasileiro #Nostalgia #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
+    },
+    {
+      "id": "CC-OCT12-TT-NICK-BLOOPERS",
+      "network": "tiktok",
+      "format": "nostalgia_bloopers",
+      "slot": "2026-10-12T18:00:00-03:00",
+      "title": "Nickelodeon — iCarly, Victorious e Sam & Cat nos bastidores",
+      "year": 2010,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm",
+      "source_id": "NICKREWIND_BLOOPERS_QH7EZCEA7DS",
+      "source_start": 185,
+      "source_end": 219,
+      "hook": "QUANDO O ELENCO DA NICKELODEON PERDE A LINHA 😂",
+      "cta": "QUAL DESSAS SÉRIES MARCOU MAIS SUA INFÂNCIA?",
+      "caption": "Bastidores de iCarly, Victorious e Sam & Cat, com reações reais do elenco. Fonte NickRewind/Nickelodeon, CC BY 3.0. Edição Cena Certa. #iCarly #Victorious #SamAndCat #Nickelodeon #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons"
+    },
+    {
+      "id": "CC-OCT12-IG-CIDADE-FILHO",
+      "network": "instagram",
+      "format": "emotional_family_scene",
+      "slot": "2026-10-12T10:00:00-03:00",
+      "title": "Cidade dos Homens — Acerola segura o filho pela primeira vez",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5584490/",
+      "source_id": "5584490",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ACEROLA CHEGA CORRENDO — E SEGURA O FILHO PELA PRIMEIRA VEZ",
+      "cta": "ESSA CENA TE PEGA?",
+      "caption": "Acerola chega ao hospital e o medo vira emoção quando ele segura o filho. Cena real de Cidade dos Homens. #CidadeDosHomens #Acerola #Drama #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+    },
+    {
+      "id": "CC-OCT12-IG-CIDADE-CIRURGIA",
+      "network": "instagram",
+      "format": "high_stakes_family",
+      "slot": "2026-10-12T12:00:00-03:00",
+      "title": "Cidade dos Homens — Laranjinha precisa salvar Davi",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5587236/",
+      "source_id": "5587236",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "O FILHO NÃO PODE ESPERAR — E O DINHEIRO NÃO EXISTE",
+      "cta": "O QUE VOCÊ FARIA NO LUGAR DELE?",
+      "caption": "Laranjinha descobre que Davi não pode esperar pela fila e precisa encontrar uma saída. Conflito claro e emocional em Cidade dos Homens. #CidadeDosHomens #Laranjinha #Drama #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+    },
+    {
+      "id": "CC-OCT12-IG-JIMMY",
+      "network": "instagram",
+      "format": "global_nostalgia_animation",
+      "slot": "2026-10-12T18:00:00-03:00",
+      "title": "Jimmy Neutron — primeiros e últimos momentos",
+      "year": 2002,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Jimmy_Neutron_Firsts_%26_Lasts%21_-_NickRewind.webm",
+      "source_id": "NICKTOONS_JIMMY_OHSXUPDBX90",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "JIMMY NEUTRON EM 34 SEGUNDOS DE NOSTALGIA 🚀",
+      "cta": "VOCÊ ASSISTIA TODO DIA?",
+      "caption": "Jimmy Neutron e a turma em uma dose rápida de nostalgia. Fonte oficial Nicktoons/NickRewind, CC BY 3.0. Edição Cena Certa. #JimmyNeutron #Nickelodeon #Nostalgia #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "Nicktoons via Wikimedia Commons"
+    },
+    {
+      "id": "CC-OCT12-YT-VICTORIOUS-TORI",
+      "network": "youtube",
+      "format": "licensed_series_conflict_short",
+      "slot": "2026-10-12T14:00:00-03:00",
+      "title": "Victorious — Tori atrapalha a grande chance de Beck",
+      "year": 2010,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Tori_messes_up_Beck%27s_big_break_%F0%9F%98%94_Victorious.webm",
+      "source_id": "NICKREWIND_TORI_96ZMKS-CN-EO",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "TORI TENTA AJUDAR BECK — E TUDO DÁ ERRADO 😬",
+      "cta": "ELA FEZ O CERTO?",
+      "caption": "Tori tenta defender Beck e acaba piorando a situação. Fonte NickRewind/Nickelodeon, licenciada em CC BY 3.0 via Wikimedia Commons. #Victorious #ToriVega #BeckOliver #Shorts #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons"
+    },
+    {
+      "id": "CC-OCT12-YT-ICARLY-RECORD",
+      "network": "youtube",
+      "format": "licensed_challenge_short",
+      "slot": "2026-10-12T15:00:00-03:00",
+      "title": "iCarly — o desafio de quebrar um recorde mundial",
+      "year": 2007,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Can_iCarly_Break_A_WORLD_RECORD-_-_Full_Episode_in_5_Minutes_-_NickRewind.webm",
+      "source_id": "NICKREWIND_ICARLY_WORLD_RECORD",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ICARLY QUER QUEBRAR UM RECORDE — 24 HORAS AO VIVO 😳",
+      "cta": "VOCÊ AGUENTARIA?",
+      "caption": "Carly, Sam e Freddie tentam quebrar um recorde com uma transmissão de mais de 24 horas. Fonte NickRewind/Nickelodeon, CC BY 3.0 via Wikimedia Commons. #iCarly #Nickelodeon #Shorts #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons"
+    },
+    {
+      "id": "CC-OCT12-YT-ICARLY-BADBOY",
+      "network": "youtube",
+      "format": "licensed_romcom_short",
+      "slot": "2026-10-12T16:00:00-03:00",
+      "title": "iCarly — Carly começa a namorar um bad boy",
+      "year": 2009,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Carly_Dates_A_Bad_Boy_-_Full_Episode_in_10_Minutes_-_iCarly.webm",
+      "source_id": "NICKREWIND_ICARLY_BAD_BOY",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "CARLY COMEÇA A NAMORAR O GAROTO QUE TODO MUNDO AVISOU 😈",
+      "cta": "VOCÊ TERIA OUVIDO O SPENCER?",
+      "caption": "Carly se envolve com um garoto que ninguém ao redor dela aprova. Fonte NickRewind/Nickelodeon, CC BY 3.0 via Wikimedia Commons. #iCarly #CarlyShay #Nickelodeon #Shorts #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons"
+    },
+    {
+      "id": "CC-OCT12-FB-CIDADE-GRAVIDEZ",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-12T10:00:00-03:00",
+      "title": "Cidade dos Homens — Cris conta que Acerola será pai",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5584497/",
+      "source_id": "5584497",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          25,
+          35
+        ],
+        [
+          50,
+          60
+        ]
+      ],
+      "beat_labels": [
+        "1. NOTÍCIA",
+        "2. CHOQUE",
+        "3. REAÇÃO"
+      ],
+      "hook": "A NOTÍCIA QUE ACEROLA NÃO ESTAVA PRONTO PRA OUVIR",
+      "cta": "QUAL SERIA SUA PRIMEIRA REAÇÃO?",
+      "caption": "Cris conta que Acerola vai ser pai. Três beats da mesma cena: notícia, choque e reação. #CidadeDosHomens #Acerola #SerieBrasileira #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+    },
+    {
+      "id": "CC-OCT12-FB-CIDADE-DINHEIRO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-12T11:00:00-03:00",
+      "title": "Cidade dos Homens — Clayton e Davi encontram muito dinheiro",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5589883/",
+      "source_id": "5589883",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          30,
+          40
+        ],
+        [
+          60,
+          70
+        ]
+      ],
+      "beat_labels": [
+        "1. DESCOBERTA",
+        "2. TENTAÇÃO",
+        "3. PROBLEMA"
+      ],
+      "hook": "DOIS GAROTOS. MUITO DINHEIRO. E UMA DECISÃO ERRADA.",
+      "cta": "VOCÊ DEVOLVERIA?",
+      "caption": "Clayton e Davi encontram uma quantia alta e a escolha vira problema. Micro-arco em três beats. #CidadeDosHomens #Drama #SerieBrasileira #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+    },
+    {
+      "id": "CC-OCT12-FB-ROCKO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-12T12:00:00-03:00",
+      "title": "Rocko's Modern Life — cenas clássicas",
+      "year": 1993,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Classic_Scenes_from_Rocko%27s_Modern_Life-_Season_1_-_NickRewind.webm",
+      "source_id": "NICKTOONS_ROCKO_UVUATYPSCJW",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          20,
+          30
+        ],
+        [
+          40,
+          50
+        ]
+      ],
+      "beat_labels": [
+        "1. NORMAL",
+        "2. ESTRANHO",
+        "3. ROCKO"
+      ],
+      "hook": "SE VOCÊ CRESCEU NOS ANOS 90, ISSO DESBLOQUEIA UMA MEMÓRIA 😂",
+      "cta": "QUAL DESENHO DA NICK VOCÊ MAIS VIA?",
+      "caption": "Rocko's Modern Life em três momentos clássicos. Fonte Nicktoons/NickRewind, CC BY 3.0 via Wikimedia Commons. Edição Cena Certa. #RockosModernLife #Nickelodeon #Nostalgia #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "Nicktoons via Wikimedia Commons"
+    }
+  ]
+}
