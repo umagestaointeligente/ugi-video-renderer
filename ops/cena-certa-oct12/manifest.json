@@ -72,20 +72,22 @@
       "audio_mode": "ORIGINAL_PTBR_SOURCE"
     },
     {
-      "id": "CC-OCT12-TT-CIDADE-FILHOS",
+      "id": "CC-OCT12-TT-NICK-BLOOPERS",
       "network": "tiktok",
       "format": "nostalgia_bloopers",
       "slot": "2026-10-12T18:00:00-03:00",
-      "title": "Cidade dos Homens — Acerola e Laranjinha apresentam os filhos",
-      "year": 2017,
-      "source": "https://globoplay.globo.com/v/5584476/",
-      "source_id": "5584476",
-      "source_start": 0,
-      "source_end": 34,
-      "hook": "ACEROLA + LARANJINHA CRESCERAM — E AGORA OS FILHOS ENTRAM NA HISTÓRIA",
-      "cta": "VOCÊ ACOMPANHAVA OS DOIS DESDE O COMEÇO?",
-      "caption": "Acerola e Laranjinha apresentam Clayton e Davi e mostram como a amizade atravessou gerações. Cena real de Cidade dos Homens. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta",
-      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+      "title": "Nickelodeon — iCarly, Victorious e Sam & Cat nos bastidores",
+      "year": 2010,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm",
+      "source_id": "NICKREWIND_BLOOPERS_QH7EZCEA7DS",
+      "source_start": 185,
+      "source_end": 219,
+      "hook": "QUANDO O ELENCO DA NICKELODEON PERDE A LINHA 😂",
+      "cta": "QUAL DESSAS SÉRIES MARCOU MAIS SUA INFÂNCIA?",
+      "caption": "Bastidores de iCarly, Victorious e Sam & Cat, com reações reais do elenco. Fonte NickRewind/Nickelodeon, CC BY 3.0. Edição Cena Certa. #iCarly #Victorious #SamAndCat #Nickelodeon #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons"
     },
     {
       "id": "CC-OCT12-IG-CIDADE-FILHO",
