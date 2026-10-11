@@ -1,0 +1,36 @@
+name: Cena Certa Oct12 Transcode Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct12-transcode-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg >/dev/null
+      - name: Probe bounded Wikimedia transcodes
+        run: |
+          set -euo pipefail
+          urls=(
+            "https://upload.wikimedia.org/wikipedia/commons/transcoded/8/82/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm.360p.mpeg4.mov"
+            "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/4a/Tori_messes_up_Beck%27s_big_break_%F0%9F%98%94_Victorious.webm/Tori_messes_up_Beck%27s_big_break_%F0%9F%98%94_Victorious.webm.360p.mpeg4.mov"
+            "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b9/Can_iCarly_Break_A_WORLD_RECORD-_-_Full_Episode_in_5_Minutes_-_NickRewind.webm/Can_iCarly_Break_A_WORLD_RECORD-_-_Full_Episode_in_5_Minutes_-_NickRewind.webm.360p.mpeg4.mov"
+            "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f9/Carly_Dates_A_Bad_Boy_-_Full_Episode_in_10_Minutes_-_iCarly.webm/Carly_Dates_A_Bad_Boy_-_Full_Episode_in_10_Minutes_-_iCarly.webm.360p.mpeg4.mov"
+          )
+          lens=(222 37 37 37)
+          for i in 0 1 2 3; do
+            echo "PROBE_INDEX=$i"
+            for attempt in 1 2 3; do
+              if ffmpeg -y -hide_banner -loglevel error -user_agent "CenaCerta/2.8 editorial QA" -i "${urls[$i]}" -t "${lens[$i]}" -c copy "/tmp/p$i.mov"; then break; fi
+              sleep $((attempt*5))
+            done
+            test -s "/tmp/p$i.mov"
+            ffprobe -v error -show_entries stream=codec_type -of csv=p=0 "/tmp/p$i.mov" | sort -u
+            echo "TRANSCODE_PROBE_PASS $i"
+          done
