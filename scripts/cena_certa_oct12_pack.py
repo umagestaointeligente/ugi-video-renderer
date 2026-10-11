@@ -66,15 +66,32 @@ def download_source(item,cache):
         try:p.unlink()
         except:pass
     url=str(item["source"])
-    if url.startswith("https://commons.wikimedia.org/"):
-        target=wd/"source.webm"
-        download(url,target)
-        if not target.exists() or target.stat().st_size<350000: raise RuntimeError("SOURCE_TOO_SMALL")
-        pr=probe(target)
-        if not any(s.get("codec_type")=="video" for s in pr["streams"]): raise RuntimeError("SOURCE_VIDEO_MISSING")
-        if not any(s.get("codec_type")=="audio" for s in pr["streams"]): raise RuntimeError("SOURCE_AUDIO_MISSING")
-        cache[sid]=target
-        return target
+    if url.startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/")):
+        windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
+        max_end=max(float(x[1]) for x in windows)
+        section_end=max(20,min(300,int(max_end+3)))
+        target=wd/"source.mov"
+        last=None
+        for attempt in range(1,7):
+            try:
+                run([
+                    "ffmpeg","-y","-hide_banner","-loglevel","error",
+                    "-user_agent","CenaCerta/2.8 editorial QA",
+                    "-i",url,"-t",str(section_end),"-c","copy",str(target)
+                ],timeout=300)
+                if not target.exists() or target.stat().st_size<250000: raise RuntimeError("SOURCE_TOO_SMALL")
+                pr=probe(target)
+                if not any(s.get("codec_type")=="video" for s in pr["streams"]): raise RuntimeError("SOURCE_VIDEO_MISSING")
+                if not any(s.get("codec_type")=="audio" for s in pr["streams"]): raise RuntimeError("SOURCE_AUDIO_MISSING")
+                cache[sid]=target
+                return target
+            except Exception as exc:
+                last=exc
+                try:
+                    if target.exists(): target.unlink()
+                except: pass
+                time.sleep(min(45,5*attempt))
+        raise last
     windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
     max_end=max(float(x[1]) for x in windows)
     section_end=max(90,min(600,int(max_end+8)))
@@ -340,7 +357,7 @@ def main():
     for x in items: counts[x["network"]]=counts.get(x["network"],0)+1
     if counts!={"tiktok":3,"instagram":3,"youtube":3,"facebook":3}: raise RuntimeError(f"NETWORK_COUNTS_FAIL:{counts}")
     if any(int(x.get("year",0))<1990 for x in items): raise RuntimeError("YEAR_FLOOR_FAIL")
-    if any(not str(x.get("source","")).startswith(("https://globoplay.globo.com/","https://www.youtube.com/","https://commons.wikimedia.org/")) for x in items): raise RuntimeError("OFFICIAL_SOURCE_DOMAIN_FAIL")
+    if any(not str(x.get("source","")).startswith(("https://globoplay.globo.com/","https://www.youtube.com/","https://commons.wikimedia.org/","https://upload.wikimedia.org/")) for x in items): raise RuntimeError("OFFICIAL_SOURCE_DOMAIN_FAIL")
     src_ev=source_window_gate(items,anti.get("prior_sources",[]))
 
     logo=WORK/"logo.png"; logo.write_bytes(base64.b64decode("".join(LOGO_B64.read_text().split())))
@@ -355,7 +372,7 @@ def main():
         src=download_source(item,local)
         return str(item["source_id"]),src
 
-    commons_items=[item for item in items if str(item["source"]).startswith("https://commons.wikimedia.org/")]
+    commons_items=[item for item in items if str(item["source"]).startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/"))]
     other_items=[item for item in items if item not in commons_items]
     for item in commons_items:
         sid,src=ingest(item)
