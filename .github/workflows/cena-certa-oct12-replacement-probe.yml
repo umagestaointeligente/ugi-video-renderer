@@ -18,7 +18,7 @@ jobs:
           failed=0
           for u in \
             "https://globoplay.globo.com/v/5584476/" \
-            "https://globoplay.globo.com/v/5584498/" \
+            "https://globoplay.globo.com/v/5592388/" \
             "https://globoplay.globo.com/v/5592396/"; do
             echo "PROBE $u"
             if yt-dlp --no-warnings --simulate --print "SOURCE_META %(id)s | %(title)s | %(duration_string)s" "$u"; then
