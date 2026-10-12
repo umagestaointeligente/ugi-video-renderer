@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0",
+  "status": "CANONICAL_APPROVED_FOR_PILOT",
+  "effective_at": "2026-09-23T00:00:00Z",
+  "owner": "Orbit/UGI",
+  "tool": {
+    "name": "HyperFrames",
+    "origin": "HeyGen",
+    "upstream_repository": "heygen-com/hyperframes",
+    "license": "Apache-2.0",
+    "role": "Deterministic HTML/CSS/media composition and MP4 rendering",
+    "not_a_capability": [
+      "autonomous footage generation",
+      "celebrity or actor generation",
+      "avatar generation",
+      "voice cloning",
+      "rights clearance"
+    ]
+  },
+  "source_lock": {
+    "policy": "PINNED_SOURCE_ONLY",
+    "reviewed_commit": "cc19b8c8121d938aa589c50363f3c099e8dec8e7",
+    "security_requirement": "Use this commit or a later signed release proven to contain the static-file path-containment fix from PR #4217.",
+    "blocked_release_until_proven": "0.8.59",
+    "latest_tag_allowed_in_production": false
+  },
+  "requirements": {
+    "node": ">=22",
+    "ffmpeg": "required",
+    "render_default": "local_or_self_hosted",
+    "incremental_cost": "zero"
+  },
+  "skills": {
+    "project_skill": "orbit-hyperframes-video",
+    "official_router": "hyperframes",
+    "approved_on_demand": [
+      "hyperframes-cli",
+      "hyperframes-core",
+      "hyperframes-animation",
+      "hyperframes-audio",
+      "embedded-captions",
+      "faceless-explainer",
+      "media-use"
+    ],
+    "ecc_policy": "Do not bulk-install ECC. Add only audited, non-duplicated capabilities after dry-run."
+  },
+  "routing": {
+    "VSA": [
+      "faceless-explainer",
+      "maps",
+      "mechanisms",
+      "charts",
+      "captions",
+      "audio",
+      "CTA"
+    ],
+    "UGI": [
+      "corporate motion",
+      "data visualization",
+      "captions",
+      "brand-safe CTA"
+    ],
+    "CENA_CERTA": [
+      "mask",
+      "title",
+      "captions",
+      "CORE transition",
+      "music mix",
+      "logo",
+      "CTA"
+    ],
+    "FATOR_ESPORTE": [
+      "scoreboards",
+      "statistics",
+      "comparisons",
+      "heatmaps"
+    ],
+    "ATMOS_FLOW": [
+      "finite loops",
+      "audio-reactive visuals"
+    ],
+    "FALA_EM_ALTA": [
+      "authorized footage recut",
+      "captions",
+      "overlays"
+    ]
+  },
+  "hard_gates": [
+    "Read the target channel canonical contract before work.",
+    "Keep VSA, Cena Certa and UGI accounts, paths, assets and schedules isolated.",
+    "Run lint, validate and inspect before accepting a render.",
+    "Verify first frame, transitions and final frame.",
+    "Require licensed assets, safe zones, audible audio and CTA through the last frame.",
+    "No publish, schedule, merge or deploy from tool adoption alone.",
+    "No paid cloud fallback or automatic top-up."
+  ],
+  "adoption": {
+    "production_default": false,
+    "pilot_branch_required": true,
+    "comparative_pilot_required": true,
+    "promotion_requires": [
+      "render artifact",
+      "QA evidence",
+      "cost evidence",
+      "rollback",
+      "Paulo approval"
+    ]
+  },
+  "conversation_directive": "Any conversation handling Orbit/UGI video work must read AGENTS.md and this file before selecting a renderer or claiming HyperFrames is active in production."
+}

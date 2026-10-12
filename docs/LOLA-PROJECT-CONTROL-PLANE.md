@@ -155,3 +155,8 @@ Until that production-path proof exists:
 `NEXT_ACTION=Recover exact deployed Worker source/version from Cloudflare, insert isolated UGI policy pre-generation gate without changing other projects/components, deploy with credential revalidation, run one no-publication/no-payment smoke, persist receipt, and perform independent readback.`
 
 This file intentionally captures durable policy and evidence status, not ephemeral chat memory.
+
+## 15. Canonical video toolchain — 2026-09-23
+The source of truth for cross-project video tooling is `canonical/tooling/VIDEO_TOOLCHAIN_CURRENT.json`.
+HyperFrames by HeyGen is approved for isolated deterministic-render pilots and is routed through the `orbit-hyperframes-video` skill. It is not the production default until a comparative pilot has render, QA, cost and rollback evidence plus Paulo's approval.
+Any new conversation handling video must read `AGENTS.md`, the toolchain record and the target channel's canonical contract. Never infer that HyperFrames is live from documentation alone.

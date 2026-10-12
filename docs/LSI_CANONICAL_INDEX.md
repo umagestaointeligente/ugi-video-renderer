@@ -1,8 +1,8 @@
 # LSI — ÍNDICE CANÔNICO DE CONTINUIDADE
 
 Status: CANÔNICO
-Versão: 1.0
-Data-base: 2026-09-02 BRT
+Versão: 1.1
+Data-base: 2026-09-23 BRT
 Objetivo: permitir continuidade exata entre chats sem reler uma biblioteca inteira e sem reconstruir estado por memória.
 
 ## 1. Âncora única de recuperação
@@ -135,11 +135,21 @@ A conversa é interface de trabalho.
 Git/documentação canônica é memória operacional durável.
 Runtime/evidência é prova do estado real.
 
+## 9.1 Ferramentas transversais de vídeo
+
+Para qualquer conversa sobre produção, edição, animação ou renderização de vídeo, ler também:
+
+- `canonical/tooling/VIDEO_TOOLCHAIN_CURRENT.json` — registro canônico de ferramentas, versões, skills, limites e gates.
+- `AGENTS.md` — ponto de entrada obrigatório para novos agentes/conversas no repositório.
+
+HyperFrames/HeyGen está aprovado como compositor/renderizador determinístico para pilotos, não como padrão produtivo automático. Não confundir o motor de composição com geração de footage, atores, avatares ou vozes. A promoção para produção exige evidência de render, QA, custo, rollback e aprovação de Paulo.
+
 ## 10. Projetos atualmente registrados neste índice
 
 - LSI Career 360 — manifesto: `docs/projects/LSI_CAREER360.md`
 - LSI Incubadora — política transversal incorporada no snapshot CURRENT até ganhar manifesto próprio quando houver múltiplos projetos em incubação simultânea.
 - NEXO — registrado no snapshot CURRENT; aprofundamento permanece em sua documentação canônica própria e deve ser recuperado quando se tornar CURRENT_FOCUS.
+- Toolchain de vídeo Orbit/UGI — registro transversal: `canonical/tooling/VIDEO_TOOLCHAIN_CURRENT.json`.
 - UGI e outros projetos estáveis permanecem isolados; não devem ser reconstruídos ou alterados pelo fluxo Career sem readback específico.
 
 ## REGRA FINAL
