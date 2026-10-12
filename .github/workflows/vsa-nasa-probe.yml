@@ -1,0 +1,46 @@
+name: VSA NASA Recovery Probe
+on:
+  push:
+    branches: [ops/vsa-sep16-production]
+    paths:
+      - '.github/workflows/vsa-nasa-probe.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe exact NASA video candidates
+        shell: bash
+        run: |
+          python - <<'PY'
+          import requests, json
+          queries=[
+            'Jessica Meir', 'Christina Koch', 'Victor Glover',
+            'astronaut exercise International Space Station ARED',
+            'astronaut treadmill International Space Station',
+            'space station water recycling system',
+            'spacewalk International Space Station',
+            'astronaut return Earth splashdown recovery'
+          ]
+          for q in queries:
+            print('\n===',q,'===')
+            r=requests.get('https://images-api.nasa.gov/search',params={'q':q,'media_type':'video','page_size':100},timeout=60)
+            r.raise_for_status()
+            n=0
+            for item in r.json().get('collection',{}).get('items',[]):
+              d=(item.get('data') or [{}])[0]
+              title=str(d.get('title') or '')
+              desc=str(d.get('description') or '')
+              blob=(title+' '+desc).lower()
+              href=item.get('href')
+              if not href: continue
+              try: coll=requests.get(href,timeout=30).json()
+              except Exception: continue
+              mp4=[u for u in coll if isinstance(u,str) and '.mp4' in u.lower()]
+              if not mp4: continue
+              print(json.dumps({'nasa_id':d.get('nasa_id'),'title':title,'date':d.get('date_created'),'desc':desc[:180],'mp4':mp4[0]},ensure_ascii=False))
+              n+=1
+              if n>=8: break
+            print('COUNT_SHOWN',n)
+          PY
