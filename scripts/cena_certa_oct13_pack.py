@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import base64, concurrent.futures, hashlib, json, math, os, pathlib, subprocess, time, urllib.request
+import base64, concurrent.futures, hashlib, json, math, os, pathlib, subprocess, sys, time, urllib.request
 
 ROOT=pathlib.Path.cwd()
 MANIFEST=ROOT/"ops/cena-certa-oct13/manifest.json"
@@ -373,7 +373,7 @@ def editorial_alignment_gate(items):
             {"expected_or_changed":missing,"legacy_or_changed":unexpected},ensure_ascii=False))
     return True
 
-def main():
+def main(preflight_only=False):
     WORK.mkdir(parents=True,exist_ok=True); OUT.mkdir(parents=True,exist_ok=True)
     manifest=json.loads(MANIFEST.read_text(encoding="utf-8"))
     anti=json.loads(ANTI.read_text(encoding="utf-8"))
@@ -401,6 +401,9 @@ def main():
         if item.get("media_type")!="LIVE_ACTION":
             raise RuntimeError(f"REAL_FOOTAGE_EVIDENCE_MISSING:{sid}")
     src_ev=source_window_gate(items,anti.get("prior_sources",[]))
+    if preflight_only:
+        print("CENA_CERTA_OCT13_PREFLIGHT=PASS")
+        return
 
     logo=WORK/"logo.png"; logo.write_bytes(base64.b64decode("".join(LOGO_B64.read_text().split())))
     core=None
@@ -473,4 +476,4 @@ def main():
     print("CENA_CERTA_OCT13_PACK=PASS",len(summary["items"]))
 
 if __name__=="__main__":
-    main()
+    main(preflight_only=("--preflight" in sys.argv[1:]))
