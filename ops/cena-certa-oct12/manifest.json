@@ -17,7 +17,7 @@
     "historic_tiktok": "Tô de Graça: 22,663 views, 2,780 likes, 25 comments, 57 shares, 68s average watch. Vai Que Cola repeatedly exceeded 5k-11k views.",
     "historic_instagram": "Vai Que Cola: 1,271 views, 58 likes, 21.246s average watch, 78.2% 3s view rate.",
     "historic_youtube": "Vai Que Cola: 6,694 views, 308 likes, ~24s average watch. Current Globo-derived Shorts have shown blocking/sync issues, so Oct12 moves YouTube to non-Globo Creative Commons sources.",
-    "strategy_change": "No novelas and no Video Show/Sai de Baixo/Grande Família in Oct12 pack. YouTube sources are non-Globo, Creative Commons licensed Nickelodeon/NickRewind/Nicktoons material via Wikimedia Commons."
+    "strategy_change": "No novelas and no concentration in one TV franchise. TikTok/Instagram/Facebook mix acclaimed Brazilian films and series; YouTube uses only non-Globo CC sources via Wikimedia Commons (Victorious, Spring, Tears of Steel)."
   },
   "editorial_rules": {
     "real_motion_only": true,
@@ -26,7 +26,7 @@
     "anti_repeat_days": 60,
     "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
     "youtube_non_globo_required": true,
-    "youtube_rights_mode": "CC_BY_3_0_VERIFIED_OR_DECLARED_SOURCE",
+    "youtube_rights_mode": "CC_LICENSED_WIKIMEDIA_SOURCES_ONLY",
     "globo_other_networks_mode": "OFFICIAL_GLOBOPLAY_TRANSFORMATIVE_EDITORIAL_EXCERPT",
     "no_trailer": true,
     "no_black": true,
@@ -72,23 +72,20 @@
       "audio_mode": "ORIGINAL_PTBR_SOURCE"
     },
     {
-      "id": "CC-OCT12-TT-NICK-BLOOPERS",
+      "id": "CC-OCT12-TT-TIO2",
       "network": "tiktok",
-      "format": "nostalgia_bloopers",
+      "format": "film_comedy_fast",
       "slot": "2026-10-12T18:00:00-03:00",
-      "title": "Nickelodeon — iCarly, Victorious e Sam & Cat nos bastidores",
-      "year": 2010,
-      "source": "https://upload.wikimedia.org/wikipedia/commons/transcoded/8/82/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm.360p.mpeg4.mov",
-      "source_id": "NICKREWIND_BLOOPERS_QH7EZCEA7DS",
-      "source_start": 185,
-      "source_end": 219,
-      "hook": "QUANDO O ELENCO DA NICKELODEON PERDE A LINHA 😂",
-      "cta": "QUAL DESSAS SÉRIES MARCOU MAIS SUA INFÂNCIA?",
-      "caption": "Bastidores de iCarly, Victorious e Sam & Cat, com reações reais do elenco. Fonte NickRewind/Nickelodeon, CC BY 3.0. Edição Cena Certa. #iCarly #Victorious #SamAndCat #Nickelodeon #CenaCerta",
-      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
-      "license": "CC BY 3.0",
-      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons",
-      "source_origin": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Best_of_Bloopers_from_Sam_%26_Cat%2C_iCarly_%26_Victorious%21_%F0%9F%A4%A3_NickRewind.webm"
+      "title": "Um Tio Quase Perfeito 2 — Marcus Majella volta ao caos",
+      "year": 2021,
+      "source": "https://globoplay.globo.com/v/9178997/",
+      "source_id": "9178997",
+      "source_start": 5,
+      "source_end": 39,
+      "hook": "ELE VOLTOU — E CONTINUA LONGE DE SER O TIO PERFEITO 😂",
+      "cta": "VOCÊ DEIXARIA AS CRIANÇAS COM ELE?",
+      "caption": "Marcus Majella volta ao caos familiar em Um Tio Quase Perfeito 2. Trecho oficial com cena do filme. #UmTioQuasePerfeito2 #MarcusMajella #CinemaBrasileiro #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
     },
     {
       "id": "CC-OCT12-IG-CIDADE-FILHO",
@@ -99,44 +96,44 @@
       "year": 2017,
       "source": "https://globoplay.globo.com/v/5584490/",
       "source_id": "5584490",
-      "source_start": 0,
-      "source_end": 34,
+      "source_start": 5,
+      "source_end": 39,
       "hook": "ACEROLA CHEGA CORRENDO — E SEGURA O FILHO PELA PRIMEIRA VEZ",
       "cta": "ESSA CENA TE PEGA?",
       "caption": "Acerola chega ao hospital e o medo vira emoção quando ele segura o filho. Cena real de Cidade dos Homens. #CidadeDosHomens #Acerola #Drama #CenaCerta #Reels",
       "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
     },
     {
-      "id": "CC-OCT12-IG-CIDADE-CIRURGIA",
+      "id": "CC-OCT12-IG-MEUPASSADO",
       "network": "instagram",
-      "format": "high_stakes_family",
+      "format": "film_rehearsal_comedy",
       "slot": "2026-10-12T12:00:00-03:00",
-      "title": "Cidade dos Homens — Laranjinha precisa salvar Davi",
-      "year": 2017,
-      "source": "https://globoplay.globo.com/v/5587236/",
-      "source_id": "5587236",
-      "source_start": 0,
-      "source_end": 34,
-      "hook": "O FILHO NÃO PODE ESPERAR — E O DINHEIRO NÃO EXISTE",
-      "cta": "O QUE VOCÊ FARIA NO LUGAR DELE?",
-      "caption": "Laranjinha descobre que Davi não pode esperar pela fila e precisa encontrar uma saída. Conflito claro e emocional em Cidade dos Homens. #CidadeDosHomens #Laranjinha #Drama #CenaCerta #Reels",
-      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+      "title": "Meu Passado Me Condena — Fábio Porchat e Miá Mello ensaiam",
+      "year": 2013,
+      "source": "https://globoplay.globo.com/v/2894988/",
+      "source_id": "2894988",
+      "source_start": 4,
+      "source_end": 38,
+      "hook": "ANTES DO FILME, PORCHAT + MIÁ JÁ ESTAVAM NESSE RITMO 😂",
+      "cta": "VOCÊ REVÊ MEU PASSADO ME CONDENA?",
+      "caption": "Fábio Porchat e Miá Mello ensaiam para Meu Passado Me Condena — química de comédia antes mesmo da câmera valer. #MeuPassadoMeCondena #FabioPorchat #MiaMello #CinemaBrasileiro #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
     },
     {
-      "id": "CC-OCT12-IG-CIDADE-CUSTO",
+      "id": "CC-OCT12-IG-LOUCAS",
       "network": "instagram",
-      "format": "global_nostalgia_animation",
+      "format": "film_comedy_bts",
       "slot": "2026-10-12T18:00:00-03:00",
-      "title": "Cidade dos Homens — o custo da operação de Davi",
-      "year": 2017,
-      "source": "https://globoplay.globo.com/v/5592388/",
-      "source_id": "5592388",
-      "source_start": 0,
-      "source_end": 34,
-      "hook": "A OPERAÇÃO PODE SALVAR DAVI — MAS O PREÇO ASSUSTA",
-      "cta": "ATÉ ONDE VOCÊ IRIA POR UM FILHO?",
-      "caption": "Laranjinha e Acerola encaram o custo da operação de Davi e percebem o tamanho do problema. Cena real de Cidade dos Homens. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta #Reels",
-      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+      "title": "Loucas pra Casar — Ingrid Guimarães e Tatá Werneck",
+      "year": 2015,
+      "source": "https://globoplay.globo.com/v/3871876/",
+      "source_id": "3871876",
+      "source_start": 10,
+      "source_end": 44,
+      "hook": "INGRID + TATÁ NUMA CENA QUE JÁ COMEÇA NO CAOS 😂",
+      "cta": "QUAL DAS DUAS ROUBA MAIS A CENA?",
+      "caption": "Bastidores de cenas de Loucas pra Casar com Ingrid Guimarães e Tatá Werneck. Humor, ritmo e reconhecimento imediato. #LoucasPraCasar #TataWerneck #IngridGuimaraes #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
     },
     {
       "id": "CC-OCT12-YT-VICTORIOUS-TORI",
@@ -147,53 +144,53 @@
       "year": 2010,
       "source": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/4a/Tori_messes_up_Beck%27s_big_break_%F0%9F%98%94_Victorious.webm/Tori_messes_up_Beck%27s_big_break_%F0%9F%98%94_Victorious.webm.360p.mpeg4.mov",
       "source_id": "NICKREWIND_TORI_96ZMKS-CN-EO",
-      "source_start": 0,
-      "source_end": 34,
+      "source_start": 5,
+      "source_end": 39,
       "hook": "TORI TENTA AJUDAR BECK — E TUDO DÁ ERRADO 😬",
       "cta": "ELA FEZ O CERTO?",
-      "caption": "Tori tenta defender Beck e acaba piorando a situação. Fonte NickRewind/Nickelodeon, licenciada em CC BY 3.0 via Wikimedia Commons. #Victorious #ToriVega #BeckOliver #Shorts #CenaCerta",
+      "caption": "Tori tenta defender Beck e acaba piorando a situação. Fonte NickRewind/Nickelodeon, CC BY 3.0 via Wikimedia Commons. #Victorious #ToriVega #BeckOliver #Shorts #CenaCerta",
       "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
       "license": "CC BY 3.0",
       "attribution": "NickRewind / Nickelodeon via Wikimedia Commons",
       "source_origin": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Tori_messes_up_Beck%27s_big_break_%F0%9F%98%94_Victorious.webm"
     },
     {
-      "id": "CC-OCT12-YT-ICARLY-RECORD",
+      "id": "CC-OCT12-YT-SPRING",
       "network": "youtube",
-      "format": "licensed_challenge_short",
+      "format": "licensed_animation_short",
       "slot": "2026-10-12T15:00:00-03:00",
-      "title": "iCarly — o desafio de quebrar um recorde mundial",
-      "year": 2007,
-      "source": "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b9/Can_iCarly_Break_A_WORLD_RECORD-_-_Full_Episode_in_5_Minutes_-_NickRewind.webm/Can_iCarly_Break_A_WORLD_RECORD-_-_Full_Episode_in_5_Minutes_-_NickRewind.webm.360p.mpeg4.mov",
-      "source_id": "NICKREWIND_ICARLY_WORLD_RECORD",
-      "source_start": 0,
-      "source_end": 34,
-      "hook": "ICARLY QUER QUEBRAR UM RECORDE — 24 HORAS AO VIVO 😳",
-      "cta": "VOCÊ AGUENTARIA?",
-      "caption": "Carly, Sam e Freddie tentam quebrar um recorde com uma transmissão de mais de 24 horas. Fonte NickRewind/Nickelodeon, CC BY 3.0 via Wikimedia Commons. #iCarly #Nickelodeon #Shorts #CenaCerta",
-      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
-      "license": "CC BY 3.0",
-      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons",
-      "source_origin": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Can_iCarly_Break_A_WORLD_RECORD-_-_Full_Episode_in_5_Minutes_-_NickRewind.webm"
+      "title": "Spring — a pastora e os espíritos da montanha",
+      "year": 2019,
+      "source": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a5/Spring_-_Blender_Open_Movie.webm/Spring_-_Blender_Open_Movie.webm.360p.mpeg4.mov",
+      "source_id": "BLENDER_SPRING_CC_BY_4",
+      "source_start": 220,
+      "source_end": 254,
+      "hook": "ELA PRECISA ENCARAR OS ESPÍRITOS PARA A PRIMAVERA VOLTAR",
+      "cta": "VOCÊ JÁ CONHECIA SPRING?",
+      "caption": "Spring acompanha uma jovem pastora e seu cão diante dos espíritos da montanha. Blender Foundation, CC BY 4.0 via Wikimedia Commons. #Spring #Blender #Animation #Shorts #CenaCerta",
+      "audio_mode": "ORIGINAL_CC_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 4.0",
+      "attribution": "Blender Foundation / Spring via Wikimedia Commons",
+      "source_origin": "https://commons.wikimedia.org/wiki/File:Spring_-_Blender_Open_Movie.webm"
     },
     {
-      "id": "CC-OCT12-YT-ICARLY-BADBOY",
+      "id": "CC-OCT12-YT-TEARS",
       "network": "youtube",
-      "format": "licensed_romcom_short",
+      "format": "licensed_scifi_short",
       "slot": "2026-10-12T16:00:00-03:00",
-      "title": "iCarly — Carly começa a namorar um bad boy",
-      "year": 2009,
-      "source": "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f9/Carly_Dates_A_Bad_Boy_-_Full_Episode_in_10_Minutes_-_iCarly.webm/Carly_Dates_A_Bad_Boy_-_Full_Episode_in_10_Minutes_-_iCarly.webm.360p.mpeg4.mov",
-      "source_id": "NICKREWIND_ICARLY_BAD_BOY",
-      "source_start": 0,
-      "source_end": 34,
-      "hook": "CARLY COMEÇA A NAMORAR O GAROTO QUE TODO MUNDO AVISOU 😈",
-      "cta": "VOCÊ TERIA OUVIDO O SPENCER?",
-      "caption": "Carly se envolve com um garoto que ninguém ao redor dela aprova. Fonte NickRewind/Nickelodeon, CC BY 3.0 via Wikimedia Commons. #iCarly #CarlyShay #Nickelodeon #Shorts #CenaCerta",
-      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "title": "Tears of Steel — humanos contra robôs",
+      "year": 2012,
+      "source": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cb/Tears_of_Steel_1080p.webm/Tears_of_Steel_1080p.webm.360p.mpeg4.mov",
+      "source_id": "BLENDER_TEARS_OF_STEEL_CC_BY_3",
+      "source_start": 240,
+      "source_end": 274,
+      "hook": "QUANDO O FUTURO DE AMSTERDÃ DEPENDE DE PARAR OS ROBÔS",
+      "cta": "ESSE CURTA AINDA IMPRESSIONA?",
+      "caption": "Tears of Steel mistura ficção científica, efeitos visuais e uma batalha contra máquinas. Blender Foundation, CC BY 3.0 via Wikimedia Commons. #TearsOfSteel #Blender #SciFi #Shorts #CenaCerta",
+      "audio_mode": "ORIGINAL_CC_SOURCE_WITH_PTBR_CONTEXT",
       "license": "CC BY 3.0",
-      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons",
-      "source_origin": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Carly_Dates_A_Bad_Boy_-_Full_Episode_in_10_Minutes_-_iCarly.webm"
+      "attribution": "Blender Foundation / Tears of Steel via Wikimedia Commons",
+      "source_origin": "https://commons.wikimedia.org/wiki/File:Tears_of_Steel_1080p.webm"
     },
     {
       "id": "CC-OCT12-FB-CIDADE-GRAVIDEZ",
@@ -206,16 +203,16 @@
       "source_id": "5584497",
       "segments": [
         [
-          0,
-          10
+          5,
+          15
         ],
         [
-          25,
-          35
+          30,
+          40
         ],
         [
-          50,
-          60
+          55,
+          65
         ]
       ],
       "beat_labels": [
@@ -229,70 +226,70 @@
       "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
     },
     {
-      "id": "CC-OCT12-FB-CIDADE-DINHEIRO",
-      "network": "facebook",
-      "format": "editorial_microarc_3beat",
-      "slot": "2026-10-12T11:00:00-03:00",
-      "title": "Cidade dos Homens — Clayton e Davi encontram muito dinheiro",
-      "year": 2017,
-      "source": "https://globoplay.globo.com/v/5589883/",
-      "source_id": "5589883",
-      "segments": [
-        [
-          0,
-          10
-        ],
-        [
-          30,
-          40
-        ],
-        [
-          60,
-          70
-        ]
-      ],
-      "beat_labels": [
-        "1. DESCOBERTA",
-        "2. TENTAÇÃO",
-        "3. PROBLEMA"
-      ],
-      "hook": "DOIS GAROTOS. MUITO DINHEIRO. E UMA DECISÃO ERRADA.",
-      "cta": "VOCÊ DEVOLVERIA?",
-      "caption": "Clayton e Davi encontram uma quantia alta e a escolha vira problema. Micro-arco em três beats. #CidadeDosHomens #Drama #SerieBrasileira #CenaCerta",
-      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
-    },
-    {
-      "id": "CC-OCT12-FB-CIDADE-CIRURGIA-OK",
+      "id": "CC-OCT12-FB-PENETRAS2",
       "network": "facebook",
       "format": "editorial_microarc_3beat",
       "slot": "2026-10-12T12:00:00-03:00",
-      "title": "Cidade dos Homens — cirurgia de Davi é um sucesso",
+      "title": "Os Penetras 2 — o golpe volta a dar errado",
       "year": 2017,
-      "source": "https://globoplay.globo.com/v/5592396/",
-      "source_id": "5592396",
+      "source": "https://globoplay.globo.com/v/5594397/",
+      "source_id": "5594397",
       "segments": [
         [
-          0,
-          10
+          10,
+          20
         ],
         [
-          18,
-          28
+          45,
+          55
         ],
         [
-          36,
-          46
+          80,
+          90
         ]
       ],
       "beat_labels": [
-        "1. ESPERA",
-        "2. NOTÍCIA",
-        "3. ALÍVIO"
+        "1. PLANO",
+        "2. CONFUSÃO",
+        "3. REAÇÃO"
       ],
-      "hook": "DEPOIS DE TUDO, A NOTÍCIA QUE ELES PRECISAVAM OUVIR",
-      "cta": "ESSA CENA TE DEU ALÍVIO?",
-      "caption": "Depois de tanta correria, chega a notícia de que a cirurgia de Davi deu certo. Micro-arco em três beats. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta",
-      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+      "hook": "O PLANO PARECIA BOM — ATÉ ESSE GRUPO ENTRAR EM AÇÃO 😂",
+      "cta": "VOCÊ CONFIARIA NESSE GOLPE?",
+      "caption": "Marcelo Adnet, Eduardo Sterblitch e Mariana Ximenes no universo de Os Penetras 2. Micro-arco de plano, confusão e reação. #OsPenetras2 #CinemaBrasileiro #Comedia #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
+    },
+    {
+      "id": "CC-OCT12-FB-SORTE2",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-12T18:00:00-03:00",
+      "title": "Até Que a Sorte Nos Separe 2 — Leandro Hassum e Jerry Lewis",
+      "year": 2013,
+      "source": "https://globoplay.globo.com/v/3038961/",
+      "source_id": "3038961",
+      "segments": [
+        [
+          10,
+          20
+        ],
+        [
+          45,
+          55
+        ],
+        [
+          80,
+          90
+        ]
+      ],
+      "beat_labels": [
+        "1. ENCONTRO",
+        "2. CAOS",
+        "3. PAYOFF"
+      ],
+      "hook": "LEANDRO HASSUM + JERRY LEWIS NA MESMA CONFUSÃO 😂",
+      "cta": "VOCÊ LEMBRAVA DESSA PARTICIPAÇÃO?",
+      "caption": "Leandro Hassum contracena com Jerry Lewis em Até Que a Sorte Nos Separe 2. Três beats da mesma sequência. #AteQueASorteNosSepare2 #LeandroHassum #JerryLewis #CenaCerta",
+      "audio_mode": "ORIGINAL_SOURCE"
     }
   ]
 }
