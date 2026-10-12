@@ -1,0 +1,294 @@
+{
+  "schema": "CENA_CERTA_OCT13_BREAKOUT_TEST_V1",
+  "timezone": "America/Sao_Paulo",
+  "date": "2026-10-13",
+  "objective": {
+    "primary": "Increase breakout probability through higher-recognition films/series, faster conflict, and a fully non-Globo YouTube lane.",
+    "breakout_views_floor": 100000,
+    "operating_like_rate_target_pct": "6-14",
+    "stretch_likes": 70000,
+    "note": "70k likes on 100k views is a 70% like rate and remains an extraordinary stretch; retention, shares and comments remain leading indicators."
+  },
+  "benchmark_basis": {
+    "latest_synced_tiktok": "2026-10-11: O Auto da Compadecida led with 228 views, 20 likes and 10s average watch; Cidade dos Homens 197/9/3s; Os Penetras 2 182/9/6s.",
+    "latest_synced_instagram": "2026-10-11: Tropa de Elite 2 led with 195 views, 7 likes, 1 save and 10.448s average watch; Saltimbancos 174 views/4 likes/6.75s; Um Tio Quase Perfeito 172/3/5.886s.",
+    "latest_synced_facebook": "2026-10-11: Como Nossos Pais reached 1,135 views and 7 likes; O Filho Eterno 280; Cidade dos Homens 239.",
+    "historic_tiktok": "Tô de Graça: 22,663 views, 2,780 likes, 25 comments, 57 shares, 68s average watch; Vai Que Cola repeatedly exceeded 5k-11k.",
+    "historic_instagram": "Vai Que Cola: 1,271 views, 58 likes, 21.246s average watch, 78.2% 3s view rate.",
+    "historic_youtube": "Vai Que Cola: 6,694 views, 308 likes, ~24s average watch. To avoid Globo blocking, Oct13 YouTube uses only non-Globo CC BY NickRewind/Nickelodeon sources via Wikimedia Commons.",
+    "strategy_change": "No novelas in the Oct13 grid. TikTok/Instagram/Facebook focus on film and series scenes; YouTube is 100% non-Globo."
+  },
+  "editorial_rules": {
+    "real_motion_only": true,
+    "no_narration": true,
+    "portuguese_hook_and_cta": true,
+    "anti_repeat_days": 60,
+    "anti_repeat_mode": "SOURCE_WINDOW_PLUS_CENTER_CROP_TEMPORAL_SCENE_SEQUENCE",
+    "youtube_non_globo_required": true,
+    "youtube_rights_mode": "CC_BY_3_NICKREWIND_WIKIMEDIA",
+    "globo_other_networks_mode": "OFFICIAL_GLOBOPLAY_TRANSFORMATIVE_EDITORIAL_EXCERPT",
+    "no_trailer": true,
+    "no_black": true,
+    "no_silent_tail": true,
+    "no_legacy_mask": true,
+    "no_extra_zoom": true,
+    "no_aggressive_crop": true,
+    "hook_seconds_max": 1.2,
+    "payoff_seconds_target": 15,
+    "cta_after_story_closure": true
+  },
+  "items": [
+    {
+      "id": "CC-OCT13-TT-CANDIDATO",
+      "network": "tiktok",
+      "format": "film_comedy_conflict",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "O Candidato Honesto 2 — a cena favorita de Leandro Hassum",
+      "year": 2018,
+      "source": "https://globoplay.globo.com/v/6980346/",
+      "source_id": "6980346",
+      "source_start": 8,
+      "source_end": 42,
+      "hook": "QUANDO O POLÍTICO TENTA SER HONESTO — E TUDO COMPLICA 😂",
+      "cta": "VOCÊ CONSEGUIRIA FICAR SÉRIO NESSA CENA?",
+      "caption": "Leandro Hassum em uma das cenas destacadas de O Candidato Honesto 2. Humor rápido, conflito entendido logo no início e áudio original. #OCandidatoHonesto2 #LeandroHassum #CinemaBrasileiro #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
+    },
+    {
+      "id": "CC-OCT13-TT-CIDADE-PITBULL",
+      "network": "tiktok",
+      "format": "series_action_shock",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "Cidade dos Homens — Pitbull leva um tiro",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5592391/",
+      "source_id": "5592391",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "UM TIRO MUDA TUDO EM SEGUNDOS",
+      "cta": "ESSA CENA AINDA TE PRENDE?",
+      "caption": "A tensão explode quando Pitbull leva um tiro e cai do telhado em Cidade dos Homens. Cena real, áudio original e conflito imediato. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+    },
+    {
+      "id": "CC-OCT13-TT-FALASERIO",
+      "network": "tiktok",
+      "format": "film_family_recognition",
+      "slot": "2026-10-13T18:00:00-03:00",
+      "title": "Fala Sério, Mãe! — cena do beijo",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/6395851/",
+      "source_id": "6395851",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "A MÃE DESCOBRE — E A REAÇÃO VEM NA HORA 😂",
+      "cta": "SUA MÃE REAGIRIA ASSIM?",
+      "caption": "Ingrid Guimarães e Larissa Manoela em Fala Sério, Mãe! — uma situação familiar que muita gente reconhece na hora. #FalaSerioMae #IngridGuimaraes #LarissaManoela #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
+    },
+    {
+      "id": "CC-OCT13-IG-LOUCAS-PONTE",
+      "network": "instagram",
+      "format": "film_visual_comedy",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "Loucas pra Casar — Ingrid e Tatá na ponte",
+      "year": 2015,
+      "source": "https://globoplay.globo.com/v/3862655/",
+      "source_id": "3862655",
+      "source_start": 12,
+      "source_end": 46,
+      "hook": "INGRID + TATÁ + UMA PONTE: O CAOS JÁ ESTÁ ARMADO 😂",
+      "cta": "QUAL DAS DUAS ROUBA A CENA?",
+      "caption": "Ingrid Guimarães e Tatá Werneck em um dos momentos físicos de Loucas pra Casar. Humor visual e reconhecimento imediato. #LoucasPraCasar #TataWerneck #IngridGuimaraes #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
+    },
+    {
+      "id": "CC-OCT13-IG-CIDADE-FILHOS",
+      "network": "instagram",
+      "format": "series_emotional_generation",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "Cidade dos Homens — Acerola e Laranjinha apresentam os filhos",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5584476/",
+      "source_id": "5584476",
+      "source_start": 0,
+      "source_end": 34,
+      "hook": "ACEROLA + LARANJINHA AGORA SÃO PAIS",
+      "cta": "VOCÊ ACOMPANHOU ESSA HISTÓRIA DESDE O COMEÇO?",
+      "caption": "Acerola e Laranjinha apresentam Clayton e Davi e mostram como a história mudou de geração. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+    },
+    {
+      "id": "CC-OCT13-IG-IRMA-E-EU",
+      "network": "instagram",
+      "format": "film_comedy_sisters",
+      "slot": "2026-10-13T18:00:00-03:00",
+      "title": "Minha Irmã e Eu — Tatá Werneck e Ingrid Guimarães",
+      "year": 2023,
+      "source": "https://globoplay.globo.com/v/12229932/",
+      "source_id": "12229932",
+      "source_start": 12,
+      "source_end": 46,
+      "hook": "TATÁ + INGRID COMO IRMÃS: A CONFUSÃO VEM PRONTA 😂",
+      "cta": "QUAL DAS DUAS PARECE MAIS COM SUA IRMÃ?",
+      "caption": "Tatá Werneck e Ingrid Guimarães juntas em Minha Irmã e Eu. Duas personalidades opostas, identificação familiar e humor. #MinhaIrmaEEu #TataWerneck #IngridGuimaraes #CenaCerta #Reels",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
+    },
+    {
+      "id": "CC-OCT13-YT-ICARLY",
+      "network": "youtube",
+      "format": "licensed_series_chaos_short",
+      "slot": "2026-10-13T14:00:00-03:00",
+      "title": "iCarly — quando todo mundo perde o controle",
+      "year": 2007,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/ICarly_Characters_Freaking_Out_For_9_Minutes_Straight_-_NickRewind.webm",
+      "source_id": "NICK_ICARLY_FREAKOUT_2024",
+      "source_start": 20,
+      "source_end": 54,
+      "hook": "ICARLY EM MODO CAOS POR 34 SEGUNDOS 😂",
+      "cta": "QUAL PERSONAGEM SURTA MELHOR?",
+      "caption": "Carly, Sam, Freddie e companhia em um dos blocos caóticos de iCarly. Fonte NickRewind/Nickelodeon, CC BY 3.0 via Wikimedia Commons. #iCarly #Nickelodeon #Shorts #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons",
+      "source_origin": "https://commons.wikimedia.org/wiki/File:ICarly_Characters_Freaking_Out_For_9_Minutes_Straight_-_NickRewind.webm"
+    },
+    {
+      "id": "CC-OCT13-YT-VICTORIOUS",
+      "network": "youtube",
+      "format": "licensed_series_performance_short",
+      "slot": "2026-10-13T15:00:00-03:00",
+      "title": "Victorious — Hollywood Arts sai do controle",
+      "year": 2010,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Victorious_Characters_%22Acting_Out%22_For_28_Minutes_Straight_-_NickRewind.webm",
+      "source_id": "NICK_VICTORIOUS_ACTINGOUT_2024",
+      "source_start": 30,
+      "source_end": 64,
+      "hook": "HOLLYWOOD ARTS NUNCA FOI UMA ESCOLA NORMAL 😂",
+      "cta": "TORI, JADE OU CAT: QUEM ROUBA A CENA?",
+      "caption": "Tori, Jade, Cat e o caos de Hollywood Arts em Victorious. Fonte NickRewind/Nickelodeon, CC BY 3.0 via Wikimedia Commons. #Victorious #Nickelodeon #Shorts #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons",
+      "source_origin": "https://commons.wikimedia.org/wiki/File:Victorious_Characters_%22Acting_Out%22_For_28_Minutes_Straight_-_NickRewind.webm"
+    },
+    {
+      "id": "CC-OCT13-YT-ZOEY101",
+      "network": "youtube",
+      "format": "licensed_series_school_chaos_short",
+      "slot": "2026-10-13T16:00:00-03:00",
+      "title": "Zoey 101 — quando a escola vira caos",
+      "year": 2005,
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Zoey_101_school_was_a_MESS_and_a_half_-_-shorts.webm",
+      "source_id": "NICK_ZOEY101_MESS_2025",
+      "source_start": 5,
+      "source_end": 39,
+      "hook": "PCA PARECIA A ESCOLA DOS SONHOS — ATÉ ISSO ACONTECER 😭😂",
+      "cta": "VOCÊ ESTUDARIA NA PCA?",
+      "caption": "Zoey 101 transforma a escola dos sonhos em caos: brigas, confusão e desastre. Fonte NickRewind/Nickelodeon, CC BY 3.0 via Wikimedia Commons. #Zoey101 #Nickelodeon #Shorts #CenaCerta",
+      "audio_mode": "ORIGINAL_ENGLISH_SOURCE_WITH_PTBR_CONTEXT",
+      "license": "CC BY 3.0",
+      "attribution": "NickRewind / Nickelodeon via Wikimedia Commons",
+      "source_origin": "https://commons.wikimedia.org/wiki/File:The_Zoey_101_school_was_a_MESS_and_a_half_-_-shorts.webm"
+    },
+    {
+      "id": "CC-OCT13-FB-MARTE",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "Minha Vida em Marte — Mônica Martelli e Paulo Gustavo",
+      "year": 2018,
+      "source": "https://globoplay.globo.com/v/7260459/",
+      "source_id": "7260459",
+      "segments": [
+        [
+          20,
+          30
+        ],
+        [
+          55,
+          65
+        ],
+        [
+          90,
+          100
+        ]
+      ],
+      "beat_labels": [
+        "1. CRISE",
+        "2. AMIZADE",
+        "3. REAÇÃO"
+      ],
+      "hook": "QUANDO O CASAMENTO ENTRA EM CRISE — E O MELHOR AMIGO ENTRA JUNTO",
+      "cta": "QUEM É O AMIGO QUE VOCÊ LIGARIA?",
+      "caption": "Minha Vida em Marte coloca amizade e crise de relacionamento no mesmo arco, com Mônica Martelli e Paulo Gustavo. #MinhaVidaEmMarte #PauloGustavo #MonicaMartelli #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
+    },
+    {
+      "id": "CC-OCT13-FB-FAROFEIROS",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-13T11:00:00-03:00",
+      "title": "Os Farofeiros — viagem que dá errado",
+      "year": 2018,
+      "source": "https://globoplay.globo.com/v/6606563/",
+      "source_id": "6606563",
+      "segments": [
+        [
+          20,
+          30
+        ],
+        [
+          55,
+          65
+        ],
+        [
+          90,
+          100
+        ]
+      ],
+      "beat_labels": [
+        "1. VIAGEM",
+        "2. PROBLEMA",
+        "3. CAOS"
+      ],
+      "hook": "QUATRO CASAIS SAEM DE FÉRIAS — E NADA SAI COMO O PLANEJADO 😂",
+      "cta": "VOCÊ VIAJARIA COM ESSE GRUPO?",
+      "caption": "Os Farofeiros transforma uma viagem de amigos em uma coleção de problemas. Micro-arco de viagem, problema e caos. #OsFarofeiros #CinemaBrasileiro #Comedia #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE"
+    },
+    {
+      "id": "CC-OCT13-FB-CIDADE-SUCESSO",
+      "network": "facebook",
+      "format": "editorial_microarc_3beat",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "Cidade dos Homens — Clayton e Davi comemoram o sucesso",
+      "year": 2017,
+      "source": "https://globoplay.globo.com/v/5592395/",
+      "source_id": "5592395",
+      "segments": [
+        [
+          0,
+          10
+        ],
+        [
+          15,
+          25
+        ],
+        [
+          30,
+          40
+        ]
+      ],
+      "beat_labels": [
+        "1. TENSÃO",
+        "2. NOTÍCIA",
+        "3. ALÍVIO"
+      ],
+      "hook": "DEPOIS DE TANTA TENSÃO, FINALMENTE VEM O ALÍVIO",
+      "cta": "VOCÊ LEMBRA DESSA FASE?",
+      "caption": "Clayton e Davi comemoram o sucesso da operação em Cidade dos Homens. Três beats de tensão, notícia e alívio. #CidadeDosHomens #Acerola #Laranjinha #CenaCerta",
+      "audio_mode": "ORIGINAL_PTBR_SOURCE_DIALOGUE"
+    }
+  ]
+}
