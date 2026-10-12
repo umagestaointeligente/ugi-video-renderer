@@ -44,7 +44,8 @@ jobs:
           test "$failed" -eq 0
       - name: Probe non-Globo YouTube candidates
         run: |
-          set -euo pipefail
+          set -u
+          failed=0
           urls=(
             "https://commons.wikimedia.org/wiki/Special:Redirect/file/ICarly_Characters_Freaking_Out_For_9_Minutes_Straight_-_NickRewind.webm"
             "https://commons.wikimedia.org/wiki/Special:Redirect/file/Victorious_Characters_%22Acting_Out%22_For_28_Minutes_Straight_-_NickRewind.webm"
@@ -52,6 +53,21 @@ jobs:
           )
           for u in "${urls[@]}"; do
             echo "COMMONS_PROBE $u"
-            ffprobe -v error -user_agent "CenaCerta/2.8 editorial QA" -show_entries format=duration -of default=nw=1:nk=1 "$u"
-            echo "COMMONS_PROBE_PASS $u"
+            ok=0
+            for attempt in 1 2 3 4; do
+              if ffprobe -v error -user_agent "CenaCerta/2.8 editorial QA" -show_entries format=duration -of default=nw=1:nk=1 "$u"; then
+                echo "COMMONS_PROBE_PASS $u attempt=$attempt"
+                ok=1
+                break
+              fi
+              echo "COMMONS_PROBE_RETRY $u attempt=$attempt"
+              sleep $((attempt*7))
+            done
+            if [ "$ok" -ne 1 ]; then
+              echo "COMMONS_PROBE_FAIL $u"
+              failed=$((failed+1))
+            fi
+            sleep 4
           done
+          echo "COMMONS_PROBE_FAILED_COUNT=$failed"
+          test "$failed" -eq 0
