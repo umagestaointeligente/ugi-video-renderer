@@ -76,66 +76,165 @@ def split_mech(mech):
         a,b=mech.split('→',1); return a.strip(),b.strip()
     return mech.strip(),''
 
-def mech_style(text):
-    u=text.upper()
-    if any(k in u for k in ['POEIRA','PARTÍC','GÁS','VAPOR','PLUMA','FLUXO']): return 'particles'
-    if any(k in u for k in ['SINAL','VIBRA','ONDA','TREMOR','RADAR','SOM']): return 'wave'
-    if any(k in u for k in ['LUZ','ESPECTRO','COR','INFRAVERMELHO']): return 'spectrum'
-    if any(k in u for k in ['PRESSÃO','CALOR','ENERGIA','TEMPERATURA']): return 'energy'
-    return 'chain'
+ANIMATION_TYPES={'force_vectors','orbit_phase','particle_scatter','wave','energy_flow','layer_cross_section','branching','light_path','orientation_axes','cell_split'}
 
-def make_anim(base,mech,length,out_path,seed=1):
+def validate_anim_spec(spec,mech,index):
+    if not isinstance(spec,dict): raise SystemExit(f'ANIMATION_SPEC_REQUIRED:{index}')
+    typ=str(spec.get('visual_type') or '').strip()
+    if typ not in ANIMATION_TYPES: raise SystemExit(f'ANIMATION_VISUAL_TYPE_FAIL:{index}:{typ}')
+    if not str(spec.get('visual_subject') or '').strip(): raise SystemExit(f'ANIMATION_VISUAL_SUBJECT_MISSING:{index}')
+    if not str(spec.get('action') or '').strip(): raise SystemExit(f'ANIMATION_ACTION_MISSING:{index}')
+    claim=str(spec.get('claim') or '').strip()
+    if not claim or claim != str(mech).strip(): raise SystemExit(f'ANIMATION_CLAIM_MISMATCH:{index}')
+    return typ
+
+def make_anim(base,mech,spec,length,out_path,seed=1):
     tmp=pathlib.Path(out_path).with_suffix(''); tmp.mkdir(parents=True,exist_ok=True)
     baseim=Image.open(base).convert('RGB')
-    x,y,w,h=VIDEO; style=mech_style(mech); left,right=split_mech(mech)
+    x,y,w,h=VIDEO; typ=validate_anim_spec(spec,mech,0); left,right=split_mech(mech)
     font_big=ImageFont.truetype(FONT_BOLD,42); font_mid=ImageFont.truetype(FONT_BOLD,34); font_small=ImageFont.truetype(FONT_REG,28)
     frames=max(20,int(length*10)); rng=random.Random(seed)
-    pts=[(rng.uniform(0,1),rng.uniform(0,1),rng.uniform(.5,1.4)) for _ in range(36)]
+    pts=[(rng.uniform(0,1),rng.uniform(0,1),rng.uniform(.5,1.4)) for _ in range(42)]
     for i in range(frames):
         t=i/max(1,frames-1); im=baseim.copy(); d=ImageDraw.Draw(im)
         d.rounded_rectangle((x+25,y+25,x+w-25,y+h-25),radius=34,fill=(3,20,48),outline=(20,178,255),width=3)
         d.text((x+60,y+58),'O QUE ESTÁ ACONTECENDO',font=font_small,fill=(255,203,35))
-        if style=='particles':
-            for px,py,s in pts:
-                if right:
-                    xx=x+80+((px+t*0.65)%1.0)*(w-160); yy=y+220+py*(h-330)
-                else:
-                    xx=x+80+px*(w-160); yy=y+220+((py-t*0.55)%1.0)*(h-330)
-                r=int(4+5*s); d.ellipse((xx-r,yy-r,xx+r,yy+r),fill=(244,189,88))
-        elif style=='wave':
-            cy=y+480
-            points=[]
+
+        if typ=='force_vectors':
+            gy=y+615; d.line((x+120,gy,x+w-120,gy),fill=(120,170,200),width=5)
+            cx=x+w//2; cy=gy-135-int(70*math.sin(math.pi*t))
+            d.ellipse((cx-62,cy-62,cx+62,cy+62),fill=(22,125,188),outline=(48,215,255),width=5)
+            up=110+int(90*t); d.line((cx,cy+45,cx,cy+45-up),fill=(255,190,45),width=11)
+            d.polygon([(cx,cy+45-up-20),(cx-18,cy+45-up+14),(cx+18,cy+45-up+14)],fill=(255,190,45))
+            d.line((cx+120,gy-25,cx+120,gy-25+90),fill=(255,95,85),width=9)
+
+        elif typ=='orbit_phase':
+            sx=x+230; sy=y+430; d.ellipse((sx-62,sy-62,sx+62,sy+62),fill=(255,190,45))
+            d.ellipse((x+155,y+250,x+w-120,y+620),outline=(70,140,205),width=4)
+            ang=math.pi*(.15+1.7*t); px=x+500+310*math.cos(ang); py=y+435+150*math.sin(ang)
+            d.ellipse((px-48,py-48,px+48,py+48),fill=(55,145,205),outline=(120,225,255),width=4)
+            d.pieslice((px-48,py-48,px+48,py+48),90,270,fill=(8,30,65))
+
+        elif typ=='particle_scatter':
+            for k in range(5):
+                yy=y+270+k*65; d.line((x+85,yy,x+410,yy),fill=(255,205,55),width=5)
+            for px,py,ps in pts:
+                xx=x+430+px*(w-560); yy=y+220+py*390; rr=int(3+4*ps)
+                d.ellipse((xx-rr,yy-rr,xx+rr,yy+rr),fill=(230,190,100))
+                if int(px*10)%5==0:
+                    d.line((xx,yy,xx+70+50*t,yy-45+90*t),fill=(70,190,255),width=3)
+
+        elif typ=='wave':
+            cy=y+455; points=[]
             for xx in range(x+70,x+w-70,8):
-                phase=(xx-(x+70))/(w-140)*math.pi*6 - t*math.pi*6
-                yy=cy+math.sin(phase)*70
-                points.append((xx,yy))
+                phase=(xx-(x+70))/(w-140)*math.pi*6-t*math.pi*6
+                points.append((xx,cy+math.sin(phase)*72))
             d.line(points,fill=(47,205,255),width=8)
-        elif style=='spectrum':
-            cols=[(255,70,70),(255,170,45),(255,230,60),(80,220,130),(60,175,255),(120,95,255)]
-            for j,c in enumerate(cols):
-                xx=x+110+j*125; amp=50+int(100*(0.5+0.5*math.sin(t*math.pi*2+j)))
-                d.rounded_rectangle((xx,y+390-amp,xx+70,y+390+amp),radius=20,fill=c)
-        elif style=='energy':
-            d.rounded_rectangle((x+130,y+310,x+w-130,y+420),radius=32,outline=(100,170,220),width=4)
-            d.rounded_rectangle((x+135,y+315,x+135+int((w-270)*t),y+415),radius=28,fill=(255,163,40))
-            for j in range(5):
-                rr=20+int(8*math.sin(t*math.pi*4+j)); cx=x+210+j*145; cy=y+570
-                d.ellipse((cx-rr,cy-rr,cx+rr,cy+rr),fill=(44,190,255))
-        else:
-            for j in range(3):
-                cx=x+160+j*310; cy=y+470+int(24*math.sin(t*math.pi*2+j))
-                d.ellipse((cx-55,cy-55,cx+55,cy+55),fill=(15,98,155),outline=(35,205,255),width=4)
-                if j<2: d.line((cx+60,cy,cx+245,cy),fill=(255,181,45),width=8)
-        # Mechanism text is the visual itself; never generic CAUSA/EFEITO labels.
+            d.ellipse((x+110,cy-35,x+180,cy+35),outline=(255,190,45),width=5)
+
+        elif typ=='energy_flow':
+            for k in range(6):
+                xx=x+145+k*125; yy=y+230+int(85*math.sin(t*math.pi*2+k))
+                d.line((xx,yy,xx,yy+260),fill=(255,155+10*k,45),width=8)
+                d.polygon([(xx,yy+285),(xx-17,yy+250),(xx+17,yy+250)],fill=(255,170,45))
+            d.rounded_rectangle((x+150,y+570,x+w-150,y+620),radius=22,fill=(230,95,55))
+
+        elif typ=='layer_cross_section':
+            subject=(str(spec.get('visual_subject') or '')+' '+str(spec.get('action') or '')).lower()
+            if 'vapor' in subject or 'gota' in subject or 'superfície' in subject:
+                # Leidenfrost cross-section: hot surface, visible vapor cushion,
+                # and a droplet that rises/falls as the vapor layer changes.
+                surf=y+600
+                d.rounded_rectangle((x+90,surf,x+w-90,surf+70),radius=18,fill=(210,85,45))
+                lift=45+int(115*(0.5+0.5*math.sin(t*math.pi*2)))
+                drop_cy=surf-120-lift
+                drop_w=260+int(45*math.sin(t*math.pi*2))
+                drop_h=125-int(25*math.sin(t*math.pi*2))
+                d.ellipse((x+w//2-drop_w//2,drop_cy-drop_h//2,x+w//2+drop_w//2,drop_cy+drop_h//2),
+                          fill=(35,145,210),outline=(80,225,255),width=7)
+                # Animated vapor jets make the causal layer unmistakable.
+                for k in range(7):
+                    xx=x+230+k*95
+                    phase=t*math.pi*2+k*.7
+                    top=surf-35-lift-int(35*math.sin(phase))
+                    d.line((xx,surf-8,xx+int(25*math.sin(phase)),top),fill=(225,245,255),width=9)
+                    d.ellipse((xx-10,top-10,xx+10,top+10),fill=(245,250,255))
+                d.line((x+145,surf-20,x+w-145,surf-20),fill=(255,190,55),width=6)
+            else:
+                # General layered anatomy/structure view with visibly changing
+                # layer radii and a scanning arc.
+                cx=x+w//2+int(55*math.sin(t*math.pi*2)); cy=y+440
+                pulse=int(55*math.sin(t*math.pi*2))
+                for rr,col in [(260,(20,90,150)),(195,(40,130,185)),(125,(65,175,210)),(58,(255,185,60))]:
+                    r=max(35,rr+pulse)
+                    d.ellipse((cx-r,cy-r,cx+r,cy+r),outline=col,width=14)
+                rr=65+int(190*t)
+                d.arc((cx-rr,cy-rr,cx+rr,cy+rr),170,355,fill=(255,220,75),width=10)
+
+        elif typ=='branching':
+            rootx=x+w//2; top=y+220; mid=y+420
+            d.line((rootx,top,rootx,mid),fill=(70,195,255),width=10)
+            spread=90+int(150*t)
+            for sign,col in [(-1,(255,190,45)),(1,(80,220,150))]:
+                ex=rootx+sign*(180+spread); ey=y+585
+                d.line((rootx,mid,ex,ey),fill=col,width=10)
+                d.ellipse((ex-42,ey-42,ex+42,ey+42),fill=col)
+
+        elif typ=='light_path':
+            # Refraction/light-path animation: the incoming ray visibly bends
+            # through a moving atmospheric layer instead of a nearly static line.
+            cy=y+430
+            layer_top=y+285+int(35*math.sin(t*math.pi*2))
+            layer_bottom=y+575+int(25*math.sin(t*math.pi*2))
+            d.rounded_rectangle((x+390,layer_top,x+650,layer_bottom),radius=34,fill=(8,55,95),outline=(65,205,255),width=7)
+            for k in range(4):
+                yy=layer_top+45+k*55+int(18*math.sin(t*math.pi*2+k))
+                d.line((x+405,yy,x+635,yy),fill=(35,120+20*k,180+12*k),width=4)
+            entry_y=cy+int(95*math.sin(t*math.pi*2))
+            d.line((x+80,entry_y,x+410,cy),fill=(255,225,80),width=10)
+            bend=285*math.sin(t*math.pi*2)
+            p1=(x+410,cy); p2=(x+525,cy-int(bend*.30)); p3=(x+665,cy-int(bend*.72)); p4=(x+w-85,cy-int(bend))
+            d.line((p1,p2,p3,p4),fill=(80,205,255),width=14)
+            # Broad translucent-looking guide band makes the refraction change
+            # legible in perceptual-hash QA and, more importantly, on phones.
+            guide=55+int(45*(0.5+0.5*math.sin(t*math.pi*2)))
+            d.line((x+655,cy-int(bend*.72)-guide,x+w-90,cy-int(bend)-guide),fill=(25,110,175),width=8)
+            px=x+425+int(255*t); py=cy-int(bend*(0.25+0.65*t))
+            rr=30+int(14*(0.5+0.5*math.sin(t*math.pi*4)))
+            d.ellipse((px-rr,py-rr,px+rr,py+rr),fill=(255,190,45),outline=(255,245,180),width=5)
+
+        elif typ=='orientation_axes':
+            # Dynamic spatial-reference animation: large axis rotation + moving body
+            # so the viewer can perceive orientation change on a phone screen.
+            cx=x+w//2+int(95*math.sin(t*math.pi*2)); cy=y+430+int(38*math.cos(t*math.pi*2))
+            ang=(t-.5)*2.8
+            d.ellipse((cx-70,cy-45,cx+70,cy+45),outline=(80,210,255),width=6)
+            d.line((x+120,y+430,x+w-120,y+430),fill=(120,150,180),width=5)
+            ax=math.cos(ang)*290; ay=math.sin(ang)*290
+            d.line((cx-ax,cy-ay,cx+ax,cy+ay),fill=(255,190,45),width=10)
+            bx=math.cos(ang+math.pi/2)*205; by=math.sin(ang+math.pi/2)*205
+            d.line((cx-bx,cy-by,cx+bx,cy+by),fill=(85,220,145),width=7)
+            px=cx+math.cos(t*math.pi*2)*155; py=cy+math.sin(t*math.pi*2)*155
+            d.ellipse((px-22,py-22,px+22,py+22),fill=(255,95,85))
+
+        elif typ=='cell_split':
+            cx=x+w//2; cy=y+300; d.ellipse((cx-58,cy-58,cx+58,cy+58),fill=(80,180,220))
+            spread=70+int(190*t)
+            for sign,col in [(-1,(255,180,70)),(1,(95,220,150))]:
+                ex=cx+sign*spread; ey=y+540
+                d.line((cx,cy+60,ex,ey-55),fill=col,width=7)
+                d.ellipse((ex-55,ey-55,ex+55,ey+55),fill=col)
+
+        # Labels explain exactly the causal claim shown; no generic chain fallback exists.
         if right:
-            lns=wrap_px(d,left,font_mid,380,3); rns=wrap_px(d,right,font_mid,380,3)
-            ly=y+660; ry=y+660
-            for z in lns: d.text((x+65,ly),z,font=font_mid,fill='white'); ly+=44
+            lns=wrap_px(d,left,font_mid,390,3); rns=wrap_px(d,right,font_mid,390,3)
+            ly=y+675; ry=y+675
+            for z in lns: d.text((x+55,ly),z,font=font_mid,fill='white'); ly+=44
             for z in rns: d.text((x+525,ry),z,font=font_mid,fill='white'); ry+=44
-            d.text((x+455,y+690),'→',font=font_big,fill=(255,190,35))
+            d.text((x+465,y+700),'→',font=font_big,fill=(255,190,35))
         else:
-            lns=wrap_px(d,left,font_big,w-140,3); yy=y+650
-            for z in lns:
+            yy=y+675
+            for z in wrap_px(d,left,font_big,w-140,3):
                 bb=d.textbbox((0,0),z,font=font_big); d.text((x+(w-(bb[2]-bb[0]))/2,yy),z,font=font_big,fill='white'); yy+=54
         im.save(tmp/f'f_{i:04d}.jpg',quality=90)
     run(['ffmpeg','-y','-loglevel','error','-framerate','10','-i',str(tmp/'f_%04d.jpg'),'-vf',f'fps={FPS},format=yuv420p','-t',f'{length:.3f}','-c:v','libx264','-preset','veryfast','-crf','20',out_path])
@@ -183,18 +282,29 @@ def main():
     if exp_mask and sha256(a.mask)!=exp_mask: raise SystemExit('MASK_HASH_FAIL')
     if exp_cta and sha256(a.cta)!=exp_cta: raise SystemExit('CTA_HASH_FAIL')
     base=work/'base.jpg'; make_base(a.mask,t['title'],t['bucket'],base)
-    body_text=re.sub(r'\s*Agora você já sabe\.?\s*$','',t['script'].strip(),flags=re.I)
+    # CTA belongs exclusively to the canonical end card.
+    # Remove any legacy spoken CTA from the body before TTS.
+    body_text=t['script'].strip()
+    cta_tail=re.compile(r'(?:\\s*Agora\\s+voc[eê]\\s+j[aá]\\s+sabe[.!?]?\\s*)?(?:Curta\\s*,?\\s*compartilhe(?:\\s+e)?\\s+siga(?:\\s+o)?\\s+(?:Voc[eê]\\s+Sabia\\s+Agora|Cena\\s+Certa)[.!?]?\\s*)$',re.I)
+    body_text=cta_tail.sub('',body_text).strip()
+    if re.search(r'(curta\\s*,?\\s*compartilhe|agora\\s+voc[eê]\\s+j[aá]\\s+sabe)',body_text[-220:],re.I):
+        raise SystemExit('CTA_DUPLICATION_FAIL')
     voice=t.get('voice','pt-BR-AntonioNeural')
     body_audio=work/'body.mp3'; body_vtt=work/'body.vtt'; cta_audio=work/'cta.mp3'
-    run(['edge-tts','--voice',voice,'--rate','+4%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])
-    run(['edge-tts','--voice',voice,'--rate','+22%','--text','Agora você já sabe. Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])
+    run(['edge-tts','--voice',voice,'--rate=-6%','--text',body_text,'--write-media',body_audio,'--write-subtitles',body_vtt])
+    run(['edge-tts','--voice',voice,'--rate','+24%','--text','Curta, compartilhe e siga o Você Sabia Agora.','--write-media',cta_audio])
     bd=dur(body_audio); cd=min(4.5,max(3.0,dur(cta_audio)+0.15))
     if dur(cta_audio)>4.5: raise SystemExit('CTA_VOICE_TOO_LONG')
     mechs=t['mechs']; sources=t['source_files']; starts=t.get('real_starts',[0,0,0]);
     if len(mechs)<2 or len(sources)<1: raise SystemExit('SEMANTIC_INPUT_FAIL')
     people=t['bucket']=='PEOPLE_CURIOSITY'
-    pattern=['real','anim','real','anim','real'] if people else ['real','anim','real','anim','real','anim']
-    weights=[.22,.16,.22,.16,.24] if people else [.18,.14,.18,.14,.18,.18]
+    pattern=['real','anim','real','anim','real']
+    weights=[.22,.16,.22,.16,.24] if people else [.23,.18,.22,.18,.19]
+    required_anim=sum(1 for x in pattern if x=='anim')
+    anim_specs=t.get('animation_specs') or []
+    if len(anim_specs)<required_anim: raise SystemExit(f'ANIMATION_SPEC_CARDINALITY_FAIL:{len(anim_specs)}<{required_anim}')
+    anim_types=[validate_anim_spec(anim_specs[i],mechs[min(i,len(mechs)-1)],i) for i in range(required_anim)]
+    if len(set(anim_types)) != len(anim_types): raise SystemExit('ANIMATION_VISUAL_DIVERSITY_FAIL:'+repr(anim_types))
     blocks=[]; real_i=0; anim_i=0; real_files=[]; anim_files=[]
     for idx,(kind,wgt) in enumerate(zip(pattern,weights)):
         length=bd*wgt; p=work/f'block_{idx:02d}.mp4'
@@ -202,7 +312,7 @@ def main():
             src=sources[real_i%len(sources)]; st=starts[real_i] if real_i<len(starts) else 0
             fit_real(src,st,length,base,p); real_files.append(p); real_i+=1
         else:
-            mech=mechs[min(anim_i,len(mechs)-1)]; make_anim(base,mech,length,p,seed=idx+7); anim_files.append(p); anim_i+=1
+            mech=mechs[min(anim_i,len(mechs)-1)]; spec=anim_specs[anim_i]; make_anim(base,mech,spec,length,p,seed=idx+7); anim_files.append(p); anim_i+=1
         blocks.append(p)
     concat=work/'concat.txt'; concat.write_text('\n'.join("file '"+str(p).replace("'","'\\''")+"'" for p in blocks)+'\n')
     body_raw=work/'body_raw.mp4'; run(['ffmpeg','-y','-loglevel','error','-f','concat','-safe','0','-i',concat,'-an','-c:v','libx264','-preset','veryfast','-crf','20','-r',str(FPS),body_raw])
@@ -240,7 +350,7 @@ def main():
     delta=float(np.mean(np.abs(np.asarray(cap,dtype=np.int16)-np.asarray(bas,dtype=np.int16))))
     if delta<1.2: raise SystemExit(f'CAPTION_BURNIN_FAIL:{delta}')
     probe=json.loads(out(['ffprobe','-v','error','-show_entries','stream=codec_name,codec_type,width,height,r_frame_rate','-of','json',outp]))
-    receipt={'renderer':'VSA_CANONICAL_V2_FAIL_CLOSED','title':t['title'],'mask_sha256':sha256(a.mask),'cta_sha256':sha256(a.cta),'CLEAN_HEADER_PASS':True,'CLEAN_CC_ZONE_PASS':True,'CAPTION_BURNIN_PASS':True,'caption_pixel_delta':round(delta,2),'SCENE_DIVERSITY_PASS':True,'real_scene_hash_distances':distances,'ANIMATION_SEMANTIC_PASS':True,'animation_motion_hash_distances':anim_dynamic,'MUSIC_THEME_MATCH_PASS':True,'music':t.get('track_meta',{}),'THUMBNAIL_READY_PASS':True,'output':outp.name,'thumbnail':thumb.name,'duration':round(dur(outp),3),'probe':probe}
+    receipt={'renderer':'VSA_CANONICAL_V2_FAIL_CLOSED','title':t['title'],'mask_sha256':sha256(a.mask),'cta_sha256':sha256(a.cta),'CLEAN_HEADER_PASS':True,'CLEAN_CC_ZONE_PASS':True,'CAPTION_BURNIN_PASS':True,'caption_pixel_delta':round(delta,2),'SCENE_DIVERSITY_PASS':True,'real_scene_hash_distances':distances,'ANIMATION_SEMANTIC_PASS':True,'ANIMATION_SPECIFICITY_PASS':True,'animation_visual_types':anim_types,'animation_motion_hash_distances':anim_dynamic,'CTA_DEDUP_PASS':True,'MUSIC_THEME_MATCH_PASS':True,'music':t.get('track_meta',{}),'THUMBNAIL_READY_PASS':True,'output':outp.name,'thumbnail':thumb.name,'duration':round(dur(outp),3),'probe':probe}
     qaout=outp.with_name(outp.stem+'_QA.json'); qaout.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(receipt,ensure_ascii=False,indent=2))
 

@@ -66,20 +66,31 @@ def source_preflight(topic: dict, policy: dict) -> None:
             raise SystemExit(f"PRIOR_FINAL_MASTER_REUSE_FORBIDDEN:{idx}")
         if any(token in name for token in ("_FINAL.MP4", "_MASTER.MP4", "FINAL_MASTER")):
             raise SystemExit(f"PRIOR_FINAL_MASTER_FILENAME_BLOCK:{idx}:{src.name}")
-        for field in ("expected_subject", "asset_subject", "asset_role", "source_url", "license"):
+        for field in ("expected_subject", "asset_subject", "asset_role", "source_url", "license", "rights_basis", "content_id_risk"):
             if not str(meta.get(field) or "").strip():
                 raise SystemExit(f"SOURCE_MANIFEST_FIELD_MISSING:{idx}:{field}")
         if meta.get("expected_subject") != expected:
             raise SystemExit(f"EXPECTED_SUBJECT_MISMATCH:{idx}")
         if meta.get("rights_verified") is not True:
             raise SystemExit(f"RIGHTS_NOT_VERIFIED:{idx}")
+        # A legal reuse license alone is not enough for YouTube: broadcaster,
+        # sports-club, agency and entertainment masters can still trip Content ID.
+        # New VSA releases require low pre-release Content-ID risk.
+        if str(meta.get("content_id_risk") or "").upper() != "LOW":
+            raise SystemExit(f"CONTENT_ID_RISK_FAIL:{idx}:{meta.get('content_id_risk')}")
         if meta.get("asset_subject") == expected:
             target_segments += 1
         elif meta.get("asset_role") != "EXPLICIT_CONTEXT" or meta.get("explicit_script_reference") is not True:
             raise SystemExit(f"UNRELATED_PERSON_FOOTAGE_FAIL:{idx}:{meta.get('asset_subject')}")
 
-    if topic.get("content_class") == "PERSON_PROFILE" and target_segments < 2:
-        raise SystemExit(f"PERSON_REAL_VIDEO_SEGMENTS_TOO_FEW:{target_segments}")
+    if topic.get("content_class") == "PERSON_PROFILE":
+        if target_segments < 2:
+            raise SystemExit(f"PERSON_REAL_VIDEO_SEGMENTS_TOO_FEW:{target_segments}")
+        human_total=sum(float(m.get("duration_seconds") or 0) for m in manifests if m.get("identifiable_human") is True)
+        human_target=sum(float(m.get("duration_seconds") or 0) for m in manifests if m.get("identifiable_human") is True and m.get("asset_subject")==expected)
+        share=(human_target/human_total) if human_total>0 else 0.0
+        if share < 0.70:
+            raise SystemExit(f"PERSON_TARGET_SCREEN_SHARE_FAIL:{share:.3f}")
 
 
 def build_receipt(topic: dict, policy: dict, master: pathlib.Path, mask: pathlib.Path, cta: pathlib.Path, qa: dict) -> dict:
