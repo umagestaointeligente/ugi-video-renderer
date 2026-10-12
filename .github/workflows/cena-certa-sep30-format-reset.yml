@@ -28,13 +28,20 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/cena_certa_sep30_format_reset.py
-      - name: Publish approved masters
+      - name: Fail-closed evidence preflight before release or PASS issue
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py \
+            out/cena-certa-sep30/summary.json \
+            ops/cena-certa-sep30/prepublish-receipts.json \
+            out/cena-certa-sep30/preflight.json
+      - name: Upload preflight-approved masters to GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           TAG=cena-certa-sep30-format-reset
-          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Sep30 Format Reset" --notes "12 platform-specific masters approved for Metricool."
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Sep30 Format Reset" --notes "Preflight-approved render assets; social publication is NOT_VERIFIED."
           gh release upload "$TAG" out/cena-certa-sep30/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
       - name: Create evidence issue
         env:
@@ -43,6 +50,9 @@ jobs:
           {
             echo "CENA_CERTA_SEP30_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "HEAD_SHA=$GITHUB_SHA"
+            echo "PUBLICATION_STATUS=NOT_VERIFIED"
+            cat out/cena-certa-sep30/preflight.json
             echo
             cat out/cena-certa-sep30/summary.json
           } > out/cena-certa-sep30/issue.txt
@@ -53,3 +63,4 @@ jobs:
           name: cena-certa-sep30-${{ github.run_id }}
           path: out/cena-certa-sep30/
           retention-days: 7
+

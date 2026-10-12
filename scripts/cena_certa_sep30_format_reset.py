@@ -44,7 +44,7 @@ def validate(out):
     assert abs(n/d-30)<0.05
     assert a["codec_name"]=="aac" and int(a["sample_rate"])==48000
 
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=False).stderr or ""
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"]).stderr or ""
     if "black_start" in black: raise RuntimeError("NO_BLACK_FAIL")
 
     fm=run(["ffmpeg","-v","error","-i",str(out),"-vf","fps=1","-f","framemd5","-"]).stdout
@@ -56,7 +56,7 @@ def validate(out):
     if len(set(hashes)) < min(5,max(3,len(hashes)//4)):
         raise RuntimeError("REAL_MOTION_FAIL")
 
-    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=False).stderr or ""
+    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"]).stderr or ""
     dur=duration(out)
     events=[]
     for ln in aud.splitlines():
@@ -66,7 +66,16 @@ def validate(out):
         if "silence_end:" in ln:
             try: events.append(("end",float(ln.split("silence_end:")[1].split()[0])))
             except Exception: pass
-    if events and events[-1][0]=="start" and dur-events[-1][1]>0.8:
+    tail_start = None
+    silent_tail = False
+    for event, timestamp in events:
+        if event == "start":
+            tail_start = timestamp
+        elif tail_start is not None:
+            if timestamp >= dur-0.1 and timestamp-tail_start > 0.8:
+                silent_tail = True
+            tail_start = None
+    if silent_tail or (tail_start is not None and dur-tail_start > 0.8):
         raise RuntimeError("SILENT_TAIL_FAIL")
     return p
 
@@ -75,14 +84,14 @@ def download_source(item,wd):
     for attempt in range(1,5):
         try:
             run([
-              "yt-dlp","--no-warnings","--retries","5","--fragment-retries","5","--retry-sleep","3",
+              "yt-dlp","--write-info-json","--no-warnings","--retries","5","--fragment-retries","5","--retry-sleep","3",
               "-f","bv*+ba/b","--merge-output-format","mp4","-o",str(wd/"source.%(ext)s"),item["source"]
             ])
             last=None; break
         except Exception as exc:
             last=exc; time.sleep(4*attempt)
     if last is not None: raise last
-    return next(wd.glob("source.*"))
+    return next(p for p in wd.glob("source.*") if p.suffix != ".json")
 
 def render(item,src,logo,core):
     src_d=duration(src)
@@ -135,7 +144,7 @@ def render(item,src,logo,core):
         "[orig][core]amix=inputs=2:duration=longest:dropout_transition=0,loudnorm=I=-15.5:TP=-1.5:LRA=7[a]"
       )
     else:
-      if item["network"]=="youtube" or not cta:
+      if not cta:
         fc += (
           "[hooked]copy[v];"
           f"[0:a]atrim=duration={clip_d:.3f},asetpts=PTS-STARTPTS,loudnorm=I=-16:TP=-2:LRA=7[a]"
@@ -166,40 +175,39 @@ def main():
 
     for item in manifest["items"]:
         wd=WORK/item["id"]; wd.mkdir(parents=True,exist_ok=True)
+        item = dict(item)
+        item.setdefault("cta", "QUAL CENA VOCÊ QUER VER AQUI?")
         src=download_source(item,wd)
+        source_duration = duration(src)
+        metadata = json.loads((wd/"source.info.json").read_text())
+        (OUT/f"{item['id']}-source.json").write_text(json.dumps(metadata,ensure_ascii=False,indent=2))
+        if str(metadata.get("id")) != str(item["source_id"]):
+            raise RuntimeError("SOURCE_ID_MISMATCH")
         out,clip_d,total=render(item,src,logo,core)
         sha=hashlib.sha256(out.read_bytes()).hexdigest()
         rec={
           "id":item["id"],"network":item["network"],"slot":item["slot"],"title":item["title"],"kind":item["kind"],
           "source":item["source"],"source_id":item["source_id"],"source_start_sec":0.0,"source_end_sec":round(clip_d,3),
-          "duration_sec":round(total,3),"sha256":sha,
+          "duration_sec":round(total,3),"source_duration_sec":source_duration,"sha256":sha,
+          "technical_status":"PASS", "editorial_status":"NOT_VERIFIED",
+          "publication_status":"NOT_VERIFIED",
           "gates":{
-            "SOURCE_PASS":True,
-            "RIGHTS_USAGE_CHECK":"OFFICIAL_GLOBOPLAY_EDITORIAL_EXCERPT_CREDITED",
-            "ANTI_REPEAT_60D_PASS":"LIVE_METRICOOL_PLUS_CANONICAL_REGISTRIES_PASS",
-            "SCENE_FINGERPRINT_PASS":"UNIQUE_SOURCE_ID_WINDOW_AND_MASTER_SHA",
-            "REAL_FOOTAGE_PASS":True,
-            "FULL_SCENE_PRESERVATION_PASS":True,
-            "NO_EXTRA_ZOOM_PASS":True,
-            "NO_AGGRESSIVE_CROP_PASS":True,
-            "NO_LEGACY_MASK_PASS":True,
-            "LOGO_TOP_RIGHT_PASS":True,
-            "AUDIO_PTBR_PASS":"ORIGINAL_PTBR_SOURCE_AUDIO",
-            "NO_NARRATION_OVER_SOURCE_PASS":True,
-            "CORE_PASS":"CANONICAL_AFTER_BLOCK" if item["kind"]=="humor" else "N/A",
-            "NO_BLACK_PASS":True,
-            "REAL_MOTION_PASS":True,
-            "NO_SILENT_TAIL_PASS":True,
-            "H264_AAC_PASS":True,
-            "NINE_BY_SIXTEEN_PASS":True,
-            "EDITORIAL_PASS":True
+            "SOURCE_ID_MATCH": True,
+            "RIGHTS_USAGE_CHECK":"NOT_VERIFIED",
+            "ANTI_REPEAT_60D_PASS":"NOT_VERIFIED",
+            "SCENE_FINGERPRINT_PASS":"NOT_VERIFIED",
+            "EDITORIAL_PASS":"NOT_VERIFIED",
+            "CTA_RENDERED":bool(item.get("cta")),
+            "CTA_INSPECTED":"NOT_VERIFIED",
+            "TECHNICAL_QA_PASS":True
           }
         }
         (OUT/f"{item['id']}.json").write_text(json.dumps(rec,ensure_ascii=False,indent=2),encoding="utf-8")
         summary["items"].append(rec)
-        print("MASTER_PASS",item["id"],sha)
+        print("MASTER_TECHNICAL_PASS",item["id"],sha)
     (OUT/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
-    print("PACK_PASS",len(summary["items"]))
+    print("PACK_TECHNICAL_PASS",len(summary["items"]))
 
 if __name__=="__main__":
     main()
+
