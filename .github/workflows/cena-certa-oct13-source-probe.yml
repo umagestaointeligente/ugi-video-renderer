@@ -48,7 +48,7 @@ jobs:
           urls=(
             "https://commons.wikimedia.org/wiki/Special:Redirect/file/ICarly_Characters_Freaking_Out_For_9_Minutes_Straight_-_NickRewind.webm"
             "https://commons.wikimedia.org/wiki/Special:Redirect/file/Victorious_Characters_%22Acting_Out%22_For_28_Minutes_Straight_-_NickRewind.webm"
-            "https://upload.wikimedia.org/wikipedia/commons/0/0c/The_Zoey_101_school_was_a_MESS_and_a_half_-_-shorts.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/60_MINUTES_of_Big_Time_Bromance!_-_Big_Time_Rush_-_NickRewind.webm"
           )
           for u in "${urls[@]}"; do
             echo "COMMONS_PROBE $u"
