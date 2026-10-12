@@ -4,6 +4,11 @@ from __future__ import annotations
 
 import argparse
 import pathlib
+import re
+import sys
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+import yaml
+from validate_workflow_config import WorkflowLoader
 
 GUARD_WORKFLOWS = {
     ".github/workflows/vsa-visual-story-standard-guard.yml",
@@ -35,7 +40,21 @@ def check(path: pathlib.Path) -> list[str]:
         errors.append(f"{rel}:MISSING_CANONICAL_MARKER:{ENGINE_MARKER}")
     if not any(marker in text for marker in RECEIPT_MARKERS):
         errors.append(f"{rel}:MISSING_CANONICAL_RECEIPT_MARKER:V2_OR_V1")
-    if GATE_MARKER not in text:
+    try:
+        doc = yaml.load(text, Loader=WorkflowLoader)
+        jobs = doc.get("jobs", {}) if isinstance(doc, dict) else {}
+    except (ValueError, TypeError, yaml.YAMLError):
+        return [f"{rel}:INVALID_WORKFLOW_YAML"]
+    valid_gate_jobs = set()
+    for job_id, job in jobs.items():
+        for step in job.get("steps", []):
+            if step.get("uses") != GATE_MARKER:
+                continue
+            if step.get("continue-on-error") in (True, "true") or step.get("if") not in (None, "success()", "${{ success() }}") or job.get("continue-on-error") in (True, "true"):
+                errors.append(f"{rel}:CANONICAL_GATE_CAN_BE_BYPASSED")
+            else:
+                valid_gate_jobs.add(job_id)
+    if not valid_gate_jobs:
         errors.append(f"{rel}:MISSING_CANONICAL_MARKER:{GATE_MARKER}")
     for token in FORBIDDEN_TOKENS:
         if token in low:
@@ -44,12 +63,20 @@ def check(path: pathlib.Path) -> list[str]:
         errors.append(f"{rel}:METRICOOL_WITHOUT_VSA_BRAND_LOCK:{ALLOWED_VSA_METRICOOL_BRAND}")
     if "drawtext" in low and "causa" in low and "efeito" in low:
         errors.append(f"{rel}:LEGACY_GENERIC_CAUSE_EFFECT_RENDERER_FORBIDDEN")
-    gate_pos = text.find(GATE_MARKER)
-    mutation_markers = ["createScheduledPost", "scheduled_at", "publish_to", "youtube upload", "youtube_upload", "autopublish"]
-    positions = [low.find(x.lower()) for x in mutation_markers if low.find(x.lower()) >= 0]
-    first_mutation = min(positions, default=-1)
-    if first_mutation >= 0 and (gate_pos < 0 or gate_pos > first_mutation):
-        errors.append(f"{rel}:RELEASE_GATE_MUST_PRECEDE_PUBLISH_OR_SCHEDULE_MUTATION")
+    mutation_markers = ["createScheduledPost", "scheduled_at", "publish_to", "youtube upload", "youtube_upload", "autopublish", "gh release upload", "gh release create"]
+    for job_id, job in jobs.items():
+        needs = job.get("needs", [])
+        needs = [needs] if isinstance(needs, str) else needs
+        gated = bool(valid_gate_jobs.intersection(needs))
+        for step in job.get("steps", []):
+            if step.get("uses") == GATE_MARKER and job_id in valid_gate_jobs:
+                gated = True
+            commands = "\n".join(line for line in step.get("run", "").splitlines() if not line.lstrip().startswith("#")).lower()
+            if any(marker.lower() in commands for marker in mutation_markers):
+                if not gated:
+                    errors.append(f"{rel}:RELEASE_GATE_MUST_PRECEDE_PUBLISH_OR_SCHEDULE_MUTATION")
+                if step.get("if") not in (None, "success()", "${{ success() }}") or job.get("if") in ("always()", "${{ always() }}"):
+                    errors.append(f"{rel}:MUTATION_CAN_IGNORE_CANONICAL_GATE_FAILURE")
     return errors
 
 

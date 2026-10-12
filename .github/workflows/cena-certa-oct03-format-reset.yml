@@ -59,6 +59,11 @@ jobs:
               if hashlib.sha256(path.read_bytes()).hexdigest()!=item["sha256"]: raise SystemExit("MASTER_CHANGED_AFTER_GATE")
           PY
 
+      - name: Require current execution-bound editorial evidence
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-oct03/summary.json ops/cena-certa-oct03/prepublish-receipts.json out/cena-certa-oct03/release-preflight.json
+
       - name: Publish QA-approved masters to GitHub releases
         env:
           GH_TOKEN: ${{ github.token }}
@@ -67,7 +72,7 @@ jobs:
           for network in tiktok instagram youtube facebook; do
             tag="cena-certa-oct03-${network}"
             gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||               gh release create "${tag}" --repo "$GITHUB_REPOSITORY"                 --title "Cena Certa Oct03 ${network}"                 --notes "Cena Certa 2.8 Oct03 format-reset masters. Released only after 60d source-window and perceptual scene-fingerprint gates."
-            gh release upload "${tag}" out/cena-certa-oct03/${network}/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+            gh release upload "${tag}" out/cena-certa-oct03/${network}/*.mp4 --repo "$GITHUB_REPOSITORY"
           done
 
       - name: Create fail-closed evidence issue
@@ -75,9 +80,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-oct03/summary.json ops/cena-certa-oct03/prepublish-receipts.json out/cena-certa-oct03/release-preflight.json
           {
             echo "CENA_CERTA_OCT03_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "PUBLICATION_STATUS=NOT_VERIFIED"
             echo "COMMIT=$GITHUB_SHA"
             echo "PUBLICATION_STATUS=NOT_VERIFIED"
             cat out/cena-certa-oct03/preflight.json

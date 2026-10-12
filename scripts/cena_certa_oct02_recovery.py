@@ -60,7 +60,7 @@ def validate(out):
     n,d=map(int,v["avg_frame_rate"].split("/"))
     assert abs(n/d-30)<0.05
     assert a["codec_name"]=="aac" and int(a["sample_rate"])==48000
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=False).stderr or ""
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=True).stderr or ""
     if "black_start" in black: raise RuntimeError("NO_BLACK_FAIL")
     fm=run(["ffmpeg","-v","error","-i",str(out),"-vf","fps=1","-f","framemd5","-"]).stdout
     hashes=[]
@@ -70,7 +70,7 @@ def validate(out):
             if len(parts)>=6: hashes.append(parts[-1])
     if len(set(hashes)) < min(5,max(3,len(hashes)//4)):
         raise RuntimeError("REAL_MOTION_FAIL")
-    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=False).stderr or ""
+    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=True).stderr or ""
     dur=duration(out)
     starts=[]
     for ln in aud.splitlines():
@@ -369,7 +369,7 @@ def main():
             "NO_NARRATION_OVER_HUMOR_PASS":item["kind"]!="humor" or audio=="ORIGINAL_PTBR_SOURCE_AUDIO",
             "CORE_PASS":"CANONICAL_AFTER_BLOCK" if item["kind"]=="humor" else "N/A",
             "NO_BLACK_PASS":True,"REAL_MOTION_PASS":True,"NO_SILENT_TAIL_PASS":True,
-            "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_PASS":True,
+            "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_STATUS":"NOT_VERIFIED",
             "RIGHTS_NOTE":"Official/public promotional source used for editorial transformation; no independent reuse license claim"
           }
         }

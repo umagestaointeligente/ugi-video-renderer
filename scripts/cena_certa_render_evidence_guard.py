@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import re
 import sys
+import os
 
 CONTRACT = "CENA_CERTA_RENDER_EVIDENCE_V1"
 POSITIONS = {"0s", "1.5s", "first_third", "midpoint", "last_third", "last_frame"}
@@ -80,19 +81,31 @@ def validate_receipt(item, receipt, now=None):
                 errors.append("NEAR_FULL_SOURCE_EXCEPTION_MISSING")
     return errors
 
-def validate_pack(summary, receipts, media_dir, now=None):
+def validate_pack(summary, receipts, media_dir, now=None, execution=None):
     rows = []
+    if not isinstance(summary, dict) or not isinstance(receipts, dict):
+        return {"status": "BLOCK", "errors": ["PACK_OR_RECEIPTS_INVALID"], "items": []}
     items = summary.get("items", [])
-    if not items:
+    if not isinstance(items, list) or not items:
         return {"status": "BLOCK", "errors": ["PACK_EMPTY"], "items": []}
     seen = set()
     for item in items:
+        if not isinstance(item, dict):
+            rows.append({"content_id": None, "status": "BLOCK", "errors": ["ITEM_INVALID"]})
+            continue
         ident = item.get("id", "")
         errors = validate_receipt(item, receipts.get(ident), now)
-        if not re.fullmatch(r"[A-Za-z0-9_-]+", ident) or ident in seen:
+        if execution:
+            receipt = receipts.get(ident)
+            if not isinstance(receipt, dict) or any(not value or receipt.get(key) != value for key, value in execution.items()):
+                errors.append("RECEIPT_EXECUTION_MISMATCH")
+        if not isinstance(ident, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", ident) or ident in seen:
             errors.append("ITEM_ID_INVALID_OR_DUPLICATE")
         else:
             path = Path(media_dir) / (ident + ".mp4")
+            network = item.get("network")
+            if network in {"tiktok", "instagram", "youtube", "facebook"} and not path.is_file():
+                path = Path(media_dir) / network / (ident + ".mp4")
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != item.get("sha256"):
                 errors.append("FINAL_FILE_HASH_MISMATCH")
         seen.add(ident)
@@ -107,12 +120,51 @@ def validate_pack(summary, receipts, media_dir, now=None):
                 row["errors"].append("BATCH_SIBLING_REVALIDATION_REQUIRED")
     return {"contract": CONTRACT, "status": "BLOCK" if blocked else "PASS", "publication_status": "NOT_VERIFIED", "items": rows}
 
+
+def validate_fingerprint_files(summary, root):
+    errors = []
+    documents = {}
+    for name, field in (("history-fingerprints.json", "history_fingerprint_receipt_sha256"),
+                        ("candidate-fingerprints.json", "candidate_fingerprint_receipt_sha256")):
+        path = root / name
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != summary.get(field):
+            errors.append("FINGERPRINT_FILE_MISSING_OR_CHANGED:" + name)
+            continue
+        documents[name] = json.loads(path.read_text())
+    candidates = documents.get("candidate-fingerprints.json", {})
+    rows = candidates.get("items", [])
+    expected = {item["id"]: item["sha256"] for item in summary.get("items", [])}
+    if len(rows) != len(expected) or {row.get("id"): row.get("master_sha256") for row in rows} != expected:
+        errors.append("CANDIDATE_FINGERPRINT_MASTER_BINDING_MISMATCH")
+    if candidates.get("violations") or any(not row.get("frames") for row in rows):
+        errors.append("CANDIDATE_FINGERPRINT_REPEAT_OR_MISSING")
+    history = documents.get("history-fingerprints.json", {})
+    eligible = history.get("eligible_count")
+    if history.get("coverage") != 1.0 or not isinstance(eligible, int) or eligible < 1 or len(history.get("items", [])) != eligible:
+        errors.append("HISTORY_FINGERPRINT_COVERAGE_INCOMPLETE")
+    return errors
+
 def main():
     summary_path, receipt_path, output_path = map(Path, sys.argv[1:4])
-    summary = json.loads(summary_path.read_text())
-    receipts = json.loads(receipt_path.read_text()) if receipt_path.is_file() else {}
-    result = validate_pack(summary, receipts, summary_path.parent)
-    output_path.write_text(json.dumps(result, indent=2))
+    execution = {key: os.environ.get(env) for key, env in (
+        ("run_id", "GITHUB_RUN_ID"), ("run_attempt", "GITHUB_RUN_ATTEMPT"), ("commit", "GITHUB_SHA"))}
+    try:
+        summary = json.loads(summary_path.read_text())
+        receipts = json.loads(receipt_path.read_text()) if receipt_path.is_file() else {}
+        result = validate_pack(summary, receipts, summary_path.parent, execution=execution)
+        if re.match(r"CENA_CERTA_OCT(?:05|06|07|08|09|11)_DELIVERY", str(summary.get("schema", ""))):
+            fingerprint_errors = validate_fingerprint_files(summary, summary_path.parent)
+            if fingerprint_errors:
+                result["status"] = "BLOCK"
+                result["errors"] = fingerprint_errors
+        result["summary_sha256"] = hashlib.sha256(summary_path.read_bytes()).hexdigest()
+    except (OSError, ValueError, TypeError, AttributeError, KeyError) as exc:
+        result = {"status": "BLOCK", "errors": ["EVIDENCE_INPUT_INVALID"], "detail": str(exc)[:500]}
+    result.update(execution, publication_status="NOT_VERIFIED")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = output_path.with_suffix(output_path.suffix + ".tmp")
+    temporary.write_text(json.dumps(result, indent=2))
+    temporary.replace(output_path)
     print("CENA_CERTA_PREFLIGHT=" + result["status"])
     return 0 if result["status"] == "PASS" else 1
 

@@ -31,6 +31,11 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/cena_certa_sep26_pack.py
+      - name: Require current execution-bound editorial evidence
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-sep26/delivery-summary.json ops/cena-certa-sep26/prepublish-receipts.json out/cena-certa-sep26/release-preflight.json
+
       - name: Publish approved masters as release assets
         env:
           GH_TOKEN: ${{ github.token }}
@@ -38,7 +43,7 @@ jobs:
           set -euo pipefail
           TAG=cena-certa-sep26-recovery
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "Cena Certa Sep26 Recovery" --notes "Approved QA masters for Metricool ingestion."
-          gh release upload "$TAG" out/cena-certa-sep26/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+          gh release upload "$TAG" out/cena-certa-sep26/*.mp4 --repo "$GITHUB_REPOSITORY"
           python - <<'PY'
           import json, pathlib
           base="https://github.com/umagestaointeligente/ugi-video-renderer/releases/download/cena-certa-sep26-recovery/"
@@ -53,9 +58,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          python scripts/cena_certa_render_evidence_guard.py out/cena-certa-sep26/delivery-summary.json ops/cena-certa-sep26/prepublish-receipts.json out/cena-certa-sep26/release-preflight.json
           {
             echo "CENA_CERTA_SEP26_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "PUBLICATION_STATUS=NOT_VERIFIED"
             echo
             echo "PUBLIC_MEDIA:"
             cat out/cena-certa-sep26/public-media.json

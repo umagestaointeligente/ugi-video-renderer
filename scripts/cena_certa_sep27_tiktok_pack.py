@@ -75,7 +75,7 @@ def validate(out):
     assert (int(v["width"]),int(v["height"]))==(1080,1920)
     assert v["pix_fmt"]=="yuv420p"
     assert a["codec_name"]=="aac" and int(a["sample_rate"])==48000
-    visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.10","-an","-f","null","-"],check=False).stderr or ""
+    visual=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.10","-an","-f","null","-"],check=True).stderr or ""
     if "black_start" in visual: raise RuntimeError("NO_BLACK_FAIL")
     return p
 
@@ -157,7 +157,7 @@ def main():
             "LOGO_TOP_RIGHT_PASS":True,"AUDIO_PTBR_PASS":audio,
             "NO_NARRATION_OVER_HUMOR_PASS":item["kind"]=="humor",
             "CORE_PASS":"CANONICAL_AFTER_BLOCK" if item["kind"]=="humor" else "N/A",
-            "NO_BLACK_PASS":True,"H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_PASS":True
+            "NO_BLACK_PASS":True,"H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_STATUS":"NOT_VERIFIED"
           }
         }
         (OUT/f"{item['id']}.json").write_text(json.dumps(rec,ensure_ascii=False,indent=2),encoding="utf-8")

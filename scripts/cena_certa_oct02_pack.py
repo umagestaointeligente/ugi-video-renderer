@@ -70,9 +70,9 @@ def validate(out):
     n,d=map(int,v["avg_frame_rate"].split("/"))
     assert abs(n/d-30)<0.05
     assert a["codec_name"]=="aac" and int(a["sample_rate"])==48000
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=False).stderr or ""
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=1.0:pix_th=0.02","-an","-f","null","-"],check=True).stderr or ""
     if "black_start" in black: raise RuntimeError("NO_BLACK_FAIL")
-    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=False).stderr or ""
+    aud=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-48dB:d=0.9","-vn","-f","null","-"],check=True).stderr or ""
     dur=duration(out)
     events=[]
     for ln in aud.splitlines():
@@ -225,7 +225,7 @@ def main():
             "SCENE_NARRATION_SYNC_PASS":"SOURCE_SPECIFIC_SCRIPT" if item["kind"] not in ("humor","scene") else "ORIGINAL_SOURCE_AUDIO",
             "CORE_PASS":"CANONICAL_AFTER_BLOCK" if item["kind"]=="humor" else "N/A",
             "NO_BLACK_PASS":True,"REAL_MOTION_PASS":True,"NO_SILENT_TAIL_PASS":True,
-            "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_PASS":True
+            "H264_AAC_PASS":True,"NINE_BY_SIXTEEN_PASS":True,"EDITORIAL_STATUS":"NOT_VERIFIED"
           }
         }
         (OUT/f"{item['id']}.json").write_text(json.dumps(rec,ensure_ascii=False,indent=2),encoding="utf-8")

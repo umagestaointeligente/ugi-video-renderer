@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from cena_certa_media_safety import overlay_textfile
 import base64, concurrent.futures, hashlib, json, math, os, pathlib, subprocess, time, urllib.request
 
 ROOT=pathlib.Path.cwd()
@@ -50,15 +51,21 @@ def download_source(item,cache):
         except:pass
     base=[
       "yt-dlp","--no-warnings","--force-ipv4","--retries","5","--fragment-retries","5","--retry-sleep","3",
-      "-f","bv*+ba/b","--merge-output-format","mp4","--download-sections","*0-90","--force-keyframes-at-cuts","-o",str(wd/"source.%(ext)s")
+      "-f","bv*+ba/b","--merge-output-format","mp4","--write-info-json","--download-sections","*0-90","--force-keyframes-at-cuts","-o",str(wd/"source.%(ext)s")
     ]
-    variants=[[],["--extractor-args","youtube:player_client=tv,web_safari"]]
+    variants=[[]]
+    if "youtube.com/" in item["source"]:
+        variants.append(["--extractor-args","youtube:player_client=tv,web_safari"])
     last=None
     for attempt in range(1,5):
         for extra in variants:
             try:
                 run(base+extra+[item["source"]],timeout=300)
-                fs=list(wd.glob("source.*"))
+                metadata=json.loads((wd/"source.info.json").read_text(encoding="utf-8"))
+                if str(metadata.get("id"))!=sid: raise RuntimeError("SOURCE_IDENTITY_MISMATCH")
+                OUT.mkdir(parents=True,exist_ok=True)
+                (OUT/("source-metadata-"+sid+".json")).write_text(json.dumps({"extracted_id":metadata["id"],"url":item["source"],"duration_sec":metadata.get("duration"),"extractor":metadata.get("extractor_key")}),encoding="utf-8")
+                fs=[p for p in wd.glob("source.*") if p.suffix in (".mp4",".webm",".mkv",".mov")]
                 if not fs: raise RuntimeError("SOURCE_OUTPUT_MISSING")
                 src=fs[0]
                 if src.stat().st_size<350000: raise RuntimeError("SOURCE_TOO_SMALL")
@@ -69,6 +76,7 @@ def download_source(item,cache):
                 return src
             except Exception as exc:
                 last=exc
+                if "SOURCE_IDENTITY_MISMATCH" in str(exc) or "not a bot" in str(exc): raise
                 for p in wd.glob("source.*"):
                     try:p.unlink()
                     except:pass
@@ -76,17 +84,22 @@ def download_source(item,cache):
     raise last
 
 def normalized_segments(item,srcdur):
+    if not math.isfinite(srcdur) or srcdur<=0: raise RuntimeError("SOURCE_DURATION_INVALID")
     if item.get("segments"):
         segs=[]
         for s,e in item["segments"]:
             s=float(s); e=float(e)
+            if not math.isfinite(s) or not math.isfinite(e) or s<0: raise RuntimeError("SEGMENT_RANGE_INVALID")
             if s>=srcdur-0.5: raise RuntimeError(f"SEGMENT_START_FAIL:{item['id']}:{s}:{srcdur}")
+            if e>srcdur+0.1: raise RuntimeError(f"SEGMENT_END_FAIL:{item['id']}:{e}:{srcdur}")
             e=min(e,srcdur)
             if e-s<4: raise RuntimeError(f"SEGMENT_TOO_SHORT:{item['id']}:{s}-{e}")
             segs.append((s,e))
         return segs
     s=float(item.get("source_start",0)); e=float(item.get("source_end",srcdur))
+    if not math.isfinite(s) or not math.isfinite(e) or s<0: raise RuntimeError("SOURCE_WINDOW_RANGE_INVALID")
     if s>=srcdur-0.5: raise RuntimeError(f"SOURCE_WINDOW_START_FAIL:{item['id']}:{s}:{srcdur}")
+    if e>srcdur+0.1: raise RuntimeError(f"SOURCE_WINDOW_END_FAIL:{item['id']}:{e}:{srcdur}")
     e=min(e,srcdur)
     if e-s<12: raise RuntimeError(f"SOURCE_WINDOW_TOO_SHORT:{item['id']}:{e-s}")
     return [(s,e)]
@@ -102,7 +115,7 @@ def make_base_video_chain(input_label,hook,cta,total,network,logo_idx=1,beat_spe
       f"[fg]scale={fg}:force_original_aspect_ratio=decrease[fgv];"
       "[bgv][fgv]overlay=(W-w)/2:(H-h)/2[base];"
       f"[{logo_idx}:v]scale=124:-1[logo];[base][logo]overlay=W-w-22:22[branded];"
-      f"[branded]drawtext=fontfile={FONT}:text='{esc(hook)}':fontcolor=white:fontsize={hs}:"
+      f"[branded]drawtext=fontfile={FONT}:textfile='{overlay_textfile(hook, WORK / 'overlay-text')}':expansion=none:fontcolor=white:fontsize={hs}:"
       "borderw=3:bordercolor=black@0.88:box=1:boxcolor=black@0.38:boxborderw=12:"
       f"x=(w-text_w)/2:y=145:enable='lt(t,{hook_end})'[h0];"
     )
@@ -111,13 +124,13 @@ def make_base_video_chain(input_label,hook,cta,total,network,logo_idx=1,beat_spe
         for idx,(st,en,label) in enumerate(beat_specs):
             nxt=f"[b{idx}]"
             chain += (
-              f"{last}drawtext=fontfile={FONT}:text='{esc(label)}':fontcolor=white:fontsize=34:"
+              f"{last}drawtext=fontfile={FONT}:textfile='{overlay_textfile(label, WORK / 'overlay-text')}':expansion=none:fontcolor=white:fontsize=34:"
               "borderw=3:bordercolor=black@0.86:box=1:boxcolor=black@0.40:boxborderw=10:"
               f"x=42:y=h-310:enable='between(t,{st:.3f},{en:.3f})'{nxt};"
             )
             last=nxt
     chain += (
-      f"{last}drawtext=fontfile={FONT}:text='{esc(cta)}':fontcolor=white:fontsize=36:"
+      f"{last}drawtext=fontfile={FONT}:textfile='{overlay_textfile(cta, WORK / 'overlay-text')}':expansion=none:fontcolor=white:fontsize=36:"
       "borderw=3:bordercolor=black@0.88:box=1:boxcolor=black@0.46:boxborderw=11:"
       f"x=(w-text_w)/2:y=h-220:enable='gte(t,{max(0,total-1.35):.3f})'[v]"
     )
@@ -141,7 +154,7 @@ def render_item(item,src,logo,core):
         labels=item.get("beat_labels") or [f"{i+1}/{len(segs)}" for i in range(len(segs))]
         for i,(s,e) in enumerate(segs):
             d=e-s
-            fc_parts.append(f"[0:v]trim=start={s:.3f}:end={e:.3f},setpts=PTS-STARTPTS[v{i}]")
+            fc_parts.append(f"[0:v]trim=start={s:.3f}:end={e:.3f},setpts=PTS-STARTPTS,setsar=1[v{i}]")
             fc_parts.append(f"[0:a]atrim=start={s:.3f}:end={e:.3f},asetpts=PTS-STARTPTS[a{i}]")
             vl.append(f"[v{i}]"); al.append(f"[a{i}]")
             beat_specs.append((cursor,min(cursor+1.15,cursor+d),labels[i]))
@@ -174,7 +187,7 @@ def validate_master(out):
     n,d=map(int,v["avg_frame_rate"].split("/"))
     if abs(n/d-30)>0.05: raise RuntimeError("FPS_FAIL")
     if a["codec_name"]!="aac" or int(a["sample_rate"])!=48000: raise RuntimeError("AAC_48K_FAIL")
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.75:pix_th=0.02","-an","-f","null","-"],check=False)
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.75:pix_th=0.02","-an","-f","null","-"],check=True)
     if b"black_start" in black.stderr: raise RuntimeError("NO_BLACK_FAIL")
     mot=run(["ffmpeg","-v","error","-i",str(out),"-vf","fps=1","-f","framemd5","-"])
     hashes=[]
@@ -183,7 +196,7 @@ def validate_master(out):
             parts=[x.strip() for x in ln.split(",")]
             if len(parts)>=6: hashes.append(parts[-1])
     if len(set(hashes))<min(6,max(4,len(hashes)//4)): raise RuntimeError("REAL_MOTION_FAIL")
-    sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.0","-vn","-f","null","-"],check=False)
+    sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.0","-vn","-f","null","-"],check=True)
     txt=sil.stderr.decode("utf-8","ignore"); dur=duration(out); open_start=None
     for ln in txt.splitlines():
         if "silence_start:" in ln:
@@ -247,7 +260,12 @@ def history_index():
             except Exception: pass
     coverage=ok/max(1,len(eligible))
     print("HISTORY_FINGERPRINT_COVERAGE",ok,len(eligible),coverage)
-    if eligible and coverage<0.80: raise RuntimeError(f"HISTORY_FINGERPRINT_COVERAGE_FAIL:{coverage:.3f}")
+    if not eligible or coverage<1.0: raise RuntimeError(f"HISTORY_FINGERPRINT_COVERAGE_FAIL:{coverage:.3f}")
+    (OUT/"history-fingerprints.json").write_text(json.dumps({
+        "history_sha256":hashlib.sha256(HISTORY.read_bytes()).hexdigest(),
+        "eligible_count":len(eligible), "coverage":coverage,
+        "items":[{"id":x.get("id"),"network":x.get("network"),"frames":hs} for x,hs in sorted(idx,key=lambda pair:str(pair[0].get("id")))]
+    },sort_keys=True),encoding="utf-8")
     return idx,coverage,len(eligible)
 
 def source_window_gate(items,prior_sources):
@@ -296,12 +314,17 @@ def visual_gate(rendered,hidx):
             threshold=max(8,min(12,math.ceil(min(len(a[1]),len(b[1]))*0.15)))
             if streak>=threshold:
                 violations.append({"type":"INTRA_PACK_SCENE_DUPLICATE","a":a[0]["id"],"b":b[0]["id"],"streak":streak,"threshold":threshold,"alignment":meta})
+    (OUT/"candidate-fingerprints.json").write_text(json.dumps({
+        "items":[{"id":item["id"],"master_sha256":hashlib.sha256(dict((x["id"],path) for x,path in rendered)[item["id"]].read_bytes()).hexdigest(),"frames":hs} for item,hs in cands],
+        "evidence":evidence,"violations":violations
+    },sort_keys=True),encoding="utf-8")
     if violations:
         raise RuntimeError("SCENE_SEQUENCE_GATE_FAIL:"+json.dumps(violations,ensure_ascii=False))
     return evidence
 
 def main():
     WORK.mkdir(parents=True,exist_ok=True); OUT.mkdir(parents=True,exist_ok=True)
+    (OUT/"summary.json").unlink(missing_ok=True)
     manifest=json.loads(MANIFEST.read_text(encoding="utf-8"))
     anti=json.loads(ANTI.read_text(encoding="utf-8"))
     items=manifest["items"]
@@ -338,7 +361,7 @@ def main():
           "id":item["id"],"network":item["network"],"format":item["format"],"slot":item["slot"],"title":item["title"],
           "caption":item["caption"],"source":item["source"],"source_id":item["source_id"],
           "source_start_sec":round(s,3),"source_end_sec":round(e,3),"segments":[[round(a,3),round(b,3)] for a,b in segs],
-          "duration_sec":round(total,3),"sha256":sha,
+          "duration_sec":round(total,3),"sha256":sha,"technical_status":"PASS",
           "gates":{
             "SOURCE_PASS":True,"SOURCE_WINDOW_60D_PASS":True,"REAL_FOOTAGE_PASS":True,"REAL_MOTION_PASS":True,
             "AUDIO_PTBR_MODE":"ORIGINAL_SOURCE_DIALOGUE","NO_NARRATION_PASS":True,
@@ -364,15 +387,17 @@ def main():
 
     hidx,coverage,eligible=history_index()
     vis=visual_gate(rendered,hidx)
+    summary["history_fingerprint_receipt_sha256"]=hashlib.sha256((OUT/"history-fingerprints.json").read_bytes()).hexdigest()
+    summary["candidate_fingerprint_receipt_sha256"]=hashlib.sha256((OUT/"candidate-fingerprints.json").read_bytes()).hexdigest()
     summary["history_fingerprint_coverage"]=coverage
     summary["history_eligible_media"]=eligible
     summary["source_window_evidence"]=src_ev
     summary["scene_sequence_evidence"]=vis
     for rec in summary["items"]:
         rec["gates"]["SCENE_SEQUENCE_60D_PASS"]=True
-        rec["gates"]["EDITORIAL_PASS"]=True
+        rec["gates"]["EDITORIAL_STATUS"]="NOT_VERIFIED"
     (OUT/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
-    print("CENA_CERTA_OCT11_PACK=PASS",len(summary["items"]))
+    print("CENA_CERTA_OCT11_RENDER_TECHNICAL=PASS",len(summary["items"]))
 
 if __name__=="__main__":
     main()
