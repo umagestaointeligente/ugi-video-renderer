@@ -1,0 +1,33 @@
+name: Cena Certa Oct13 Third YouTube Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct13-third-youtube-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg >/dev/null
+      - name: Probe third non-Globo candidates
+        run: |
+          set -u
+          urls=(
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Kenan_Thompson_playing_EVERY_character_on_All_That_-_-shorts.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Jimmy_Neutron_Firsts_%26_Lasts%21_-_NickRewind.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Best_GIR_Moments_from_Invader_ZIM%21_NickRewind.webm"
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Dragon_%26_the_Professor_Where_Were_The_Parents-_Wild_Thornberrys_-_NickRewind.webm"
+          )
+          for u in "${urls[@]}"; do
+            echo "THIRD_PROBE $u"
+            if ffprobe -v error -user_agent "CenaCerta/2.8 editorial QA" -show_entries format=duration -of default=nw=1:nk=1 "$u"; then
+              echo "THIRD_PROBE_PASS $u"
+            else
+              echo "THIRD_PROBE_FAIL $u"
+            fi
+          done
