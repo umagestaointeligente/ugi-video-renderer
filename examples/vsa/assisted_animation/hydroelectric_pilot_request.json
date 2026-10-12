@@ -1,0 +1,43 @@
+{
+  "video_id": "hidreletrica_piloto",
+  "topic_title": "Como uma hidrelétrica transforma água em eletricidade?",
+  "narration_status": "approved",
+  "public_figure": false,
+  "real_footage_available": false,
+  "approved_script": "Uma hidrelétrica não cria energia do nada. A água armazenada mais alta possui energia potencial gravitacional. Quando a comporta abre, a água desce pelo conduto forçado e acelera por causa da diferença de altura. Esse fluxo atinge as pás da turbina e faz o conjunto girar. O mesmo eixo gira o rotor dentro do gerador. O campo magnético em movimento atravessa as bobinas e induz corrente elétrica. Depois, transformadores elevam a tensão para que a energia viaje pelas linhas de transmissão com menos perdas. A água não desaparece: depois de atravessar a turbina, ela retorna ao rio. Por isso, a potência disponível depende de quanta água passa pela usina e da diferença de altura entre o reservatório e a saída. No fundo, uma hidrelétrica é uma cadeia de conversões: altura da água vira movimento, o movimento vira rotação, e a rotação vira eletricidade.",
+  "scene_hints": [
+    {
+      "match": "conduto forçado",
+      "tool_candidate": "zsky",
+      "visual_tag": "physical_mechanism",
+      "duration_seconds": 5,
+      "visual_purpose": "Mostrar como a diferença de altura acelera a água dentro do conduto.",
+      "scene_description": "Corte lateral educativo de uma barragem e reservatório; água entra em um conduto inclinado, desce e acelera em direção à casa de força.",
+      "first_frame": "Reservatório alto, tomada d'água fechada e conduto visível em corte.",
+      "last_frame": "Fluxo rápido chegando à parte inferior do conduto, imediatamente antes da turbina.",
+      "camera_motion": "câmera lateral estável com acompanhamento suave do fluxo"
+    },
+    {
+      "match": "pás da turbina",
+      "tool_candidate": "zsky",
+      "visual_tag": "machine",
+      "duration_seconds": 5,
+      "visual_purpose": "Mostrar o fluxo de água transferindo energia para a turbina.",
+      "scene_description": "Corte técnico de uma turbina hidráulica; água entra pelas pás curvas e faz o rotor acelerar.",
+      "first_frame": "Turbina quase parada e fluxo começando a entrar.",
+      "last_frame": "Turbina girando de forma estável e água saindo a jusante.",
+      "camera_motion": "close técnico estável, leve aproximação"
+    },
+    {
+      "match": "rotor dentro do gerador",
+      "tool_candidate": "zsky",
+      "visual_tag": "internal_structure",
+      "duration_seconds": 5,
+      "visual_purpose": "Mostrar a rotação mecânica sendo convertida em eletricidade por indução.",
+      "scene_description": "Corte educativo de um gerador: rotor magnético gira dentro de bobinas fixas; pulsos luminosos discretos representam corrente saindo para os cabos.",
+      "first_frame": "Rotor alinhado ao eixo da turbina, bobinas fixas ao redor, sem fluxo elétrico representado.",
+      "last_frame": "Rotor girando e corrente representada saindo das bobinas para três cabos.",
+      "camera_motion": "câmera frontal técnica, estável"
+    }
+  ]
+}
