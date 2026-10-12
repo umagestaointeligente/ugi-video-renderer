@@ -6,6 +6,7 @@ ROOT=pathlib.Path.cwd()
 MANIFEST=ROOT/"ops/cena-certa-oct13/manifest.json"
 ANTI=ROOT/"ops/cena-certa-oct13/anti-repeat-snapshot.json"
 HISTORY=ROOT/"ops/cena-certa-oct13/history_media.json"
+EDITORIAL=ROOT/"ops/cena-certa-oct13/editorial-v2-9-proposed.json"
 WORK=ROOT/"tmp/cena-certa-oct13"
 OUT=ROOT/"out/cena-certa-oct13"
 LOGO_B64=ROOT/"assets/cena-certa-logo.png.b64"
@@ -347,11 +348,37 @@ def visual_gate(rendered,hidx):
         raise RuntimeError("SCENE_SEQUENCE_GATE_FAIL:"+json.dumps(violations,ensure_ascii=False))
     return evidence
 
+def editorial_alignment_gate(items):
+    """Prevent publishing a legacy lineup under the user's Oct13 approved editorial."""
+    if not EDITORIAL.is_file():
+        raise RuntimeError("EDITORIAL_V29_MANIFEST_MISSING")
+    approved=json.loads(EDITORIAL.read_text(encoding="utf-8"))
+    if approved.get("publication_date")!="2026-10-13" or approved.get("metricool_brand_id")!=6809869:
+        raise RuntimeError("EDITORIAL_V29_SCOPE_MISMATCH")
+    expected=approved.get("items",[])
+    if len(expected)!=12:
+        raise RuntimeError("EDITORIAL_V29_ITEM_COUNT_FAIL")
+    def index(records):
+        out={}
+        for record in records:
+            key=(record.get("network"), record.get("slot"))
+            if key in out: raise RuntimeError(f"EDITORIAL_DUPLICATE_SLOT:{key}")
+            out[key]=record.get("title")
+        return out
+    actual=index(items); canonical=index(expected)
+    if actual!=canonical:
+        missing={str(k):v for k,v in canonical.items() if actual.get(k)!=v}
+        unexpected={str(k):v for k,v in actual.items() if canonical.get(k)!=v}
+        raise RuntimeError("EDITORIAL_V29_DRIFT_FAIL:"+json.dumps(
+            {"expected_or_changed":missing,"legacy_or_changed":unexpected},ensure_ascii=False))
+    return True
+
 def main():
     WORK.mkdir(parents=True,exist_ok=True); OUT.mkdir(parents=True,exist_ok=True)
     manifest=json.loads(MANIFEST.read_text(encoding="utf-8"))
     anti=json.loads(ANTI.read_text(encoding="utf-8"))
     items=manifest["items"]
+    editorial_alignment_gate(items)
     if len(items)!=12: raise RuntimeError(f"ITEM_COUNT_FAIL:{len(items)}")
     counts={}
     for x in items: counts[x["network"]]=counts.get(x["network"],0)+1
