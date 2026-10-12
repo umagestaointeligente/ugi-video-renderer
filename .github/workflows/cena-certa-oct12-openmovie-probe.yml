@@ -1,0 +1,25 @@
+name: Cena Certa Oct12 Open Movie Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct12-openmovie-probe.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Probe direct Wikimedia transcodes
+        run: |
+          set -euo pipefail
+          urls=(
+            "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a5/Spring_-_Blender_Open_Movie.webm/Spring_-_Blender_Open_Movie.webm.360p.mpeg4.mov"
+            "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cb/Tears_of_Steel_1080p.webm/Tears_of_Steel_1080p.webm.360p.mpeg4.mov"
+            "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f1/Sintel_movie_4K.webm/Sintel_movie_4K.webm.360p.mpeg4.mov"
+          )
+          for u in "${urls[@]}"; do
+            echo "PROBE $u"
+            ffprobe -v error -user_agent "CenaCerta/2.8 editorial QA" -show_entries format=duration:stream=codec_type,codec_name,width,height -of json "$u"
+            echo "SOURCE_PROBE_PASS $u"
+          done
