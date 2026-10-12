@@ -6,6 +6,7 @@ on:
       - .github/workflows/cena-certa-oct13-breakout-pack.yml
       - scripts/cena_certa_oct13_pack.py
       - ops/cena-certa-oct13/manifest.json
+      - ops/cena-certa-oct13/editorial-v2-9-proposed.json
       - ops/cena-certa-oct13/anti-repeat-snapshot.json
       - ops/cena-certa-oct13/history_media.json
       - assets/cena-certa-logo.png.b64
@@ -32,6 +33,11 @@ jobs:
             assets/cena-certa-logo.png.b64
           sparse-checkout-cone-mode: false
           fetch-depth: 1
+
+      - name: Editorial, source-window and rights preflight
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct13_pack.py --preflight
 
       - name: Install runtime
         run: |
