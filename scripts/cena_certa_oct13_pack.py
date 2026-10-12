@@ -70,7 +70,7 @@ def download_source(item,cache):
         windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
         max_end=max(float(x[1]) for x in windows)
         section_end=max(20,min(300,int(max_end+3)))
-        target=wd/"source.mov"
+        target=wd/"source.mkv"
         last=None
         for attempt in range(1,7):
             try:
@@ -358,6 +358,21 @@ def main():
     if counts!={"tiktok":3,"instagram":3,"youtube":3,"facebook":3}: raise RuntimeError(f"NETWORK_COUNTS_FAIL:{counts}")
     if any(int(x.get("year",0))<1990 for x in items): raise RuntimeError("YEAR_FLOOR_FAIL")
     if any(not str(x.get("source","")).startswith(("https://globoplay.globo.com/","https://www.youtube.com/","https://commons.wikimedia.org/","https://upload.wikimedia.org/")) for x in items): raise RuntimeError("OFFICIAL_SOURCE_DOMAIN_FAIL")
+    # Fail closed before network/downloads/releases: a platform source URL is not a use license.
+    for item in items:
+        sid=str(item["id"])
+        if not item.get("segments") and not (
+            isinstance(item.get("source_start"), (int, float))
+            and isinstance(item.get("source_end"), (int, float))
+        ):
+            raise RuntimeError(f"SOURCE_WINDOW_UNDEFINED:{sid}")
+        rights=item.get("rights_evidence")
+        if not isinstance(rights,dict) or rights.get("status")!="VERIFIED" or not rights.get("proof_url"):
+            raise RuntimeError(f"RIGHTS_EVIDENCE_MISSING:{sid}")
+        if item["network"]=="youtube" and "globoplay.globo.com" in str(item["source"]):
+            raise RuntimeError(f"YOUTUBE_GLOBO_SOURCE_BLOCK:{sid}")
+        if item.get("media_type")!="LIVE_ACTION":
+            raise RuntimeError(f"REAL_FOOTAGE_EVIDENCE_MISSING:{sid}")
     src_ev=source_window_gate(items,anti.get("prior_sources",[]))
 
     logo=WORK/"logo.png"; logo.write_bytes(base64.b64decode("".join(LOGO_B64.read_text().split())))
