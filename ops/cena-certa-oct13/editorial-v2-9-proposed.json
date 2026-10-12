@@ -1,0 +1,342 @@
+{
+  "schema": "CENA_CERTA_2_9_OCT13_PROPOSED_EDITORIAL_V1",
+  "created_on": "2026-10-12",
+  "publication_date": "2026-10-13",
+  "timezone": "America/Sao_Paulo",
+  "metricool_brand_id": 6809869,
+  "status": "EDITORIAL_ONLY_NOT_READY_TO_PUBLISH",
+  "authoritative_source": "Cena Certa 2.9 editorial agreed in user conversation",
+  "notes": [
+    "This is the explicitly requested lineup, different from the legacy ops/cena-certa-oct13/manifest.json.",
+    "No media has been sourced, rights verified, rendered, approved or scheduled for these records.",
+    "Do not use as active pipeline manifest or publish automatically.",
+    "Youtube: no Globo; film and TV IP from other distributors still requires explicit use rights.",
+    "Never treat absence of source history / timing / fingerprint / metadata as PASS."
+  ],
+  "items": [
+    {
+      "id": "CC-OCT13-V29-TIKTOK-01",
+      "network": "tiktok",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "As Branquelas (2004)",
+      "scene_direction": "Encontro envolvendo Latrell; reação cômica",
+      "hook": "Esse encontro tinha tudo para dar errado 😂",
+      "cta": "Qual foi a melhor cena?",
+      "target_duration_sec": {
+        "min": 25,
+        "max": 32
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-TIKTOK-02",
+      "network": "tiktok",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "Minha Vida em Marte (2018)",
+      "scene_direction": "Conversa Fernanda/Aníbal sobre relacionamentos",
+      "hook": "Todo mundo precisa de um amigo sincero assim 😂",
+      "cta": "Marca aquele amigo sem filtro.",
+      "target_duration_sec": {
+        "min": 22,
+        "max": 30
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-TIKTOK-03",
+      "network": "tiktok",
+      "slot": "2026-10-13T18:00:00-03:00",
+      "title": "Se Beber, Não Case! (2009)",
+      "scene_direction": "Descoberta do tigre na suíte",
+      "hook": "Imagina acordar e encontrar ISSO no banheiro 😳",
+      "cta": "Qual seria sua reação?",
+      "target_duration_sec": {
+        "min": 22,
+        "max": 30
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-INSTAGRAM-04",
+      "network": "instagram",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "O Diabo Veste Prada (2006)",
+      "scene_direction": "Entrevista de Andy e Miranda",
+      "hook": "Quando a entrevista de emprego vira um pesadelo",
+      "cta": "Você aceitaria esse emprego?",
+      "target_duration_sec": {
+        "min": 20,
+        "max": 30
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-INSTAGRAM-05",
+      "network": "instagram",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "De Repente 30 (2004)",
+      "scene_direction": "Jenna percebe que acordou adulta",
+      "hook": "E se você acordasse amanhã com 30 anos?",
+      "cta": "Que conselho você daria?",
+      "target_duration_sec": {
+        "min": 24,
+        "max": 32
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-INSTAGRAM-06",
+      "network": "instagram",
+      "slot": "2026-10-13T18:00:00-03:00",
+      "title": "À Procura da Felicidade (2006)",
+      "scene_direction": "Momento de conquista de Chris Gardner",
+      "hook": "Depois de tudo que ele enfrentou, chegou esse momento",
+      "cta": "Qual filme marcou sua vida?",
+      "target_duration_sec": {
+        "min": 25,
+        "max": 35
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-FACEBOOK-07",
+      "network": "facebook",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "Que Horas Ela Volta? (2015)",
+      "scene_direction": "Jéssica questiona regras sociais da casa",
+      "hook": "Uma regra que todo mundo aceitava... até alguém questionar",
+      "cta": "O que você faria nessa situação?",
+      "target_duration_sec": {
+        "min": 35,
+        "max": 45
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-FACEBOOK-08",
+      "network": "facebook",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "Intocáveis (2011)",
+      "scene_direction": "Interação bem-humorada entre Driss e Philippe",
+      "hook": "Ninguém imaginava que esses dois se entenderiam tão bem",
+      "cta": "Qual amizade do cinema marcou você?",
+      "target_duration_sec": {
+        "min": 35,
+        "max": 45
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-FACEBOOK-09",
+      "network": "facebook",
+      "slot": "2026-10-13T17:00:00-03:00",
+      "title": "Sempre ao Seu Lado (2009)",
+      "scene_direction": "Hachi retorna à estação",
+      "hook": "Ele continuou voltando ao mesmo lugar...",
+      "cta": "Você conseguiu assistir sem chorar?",
+      "target_duration_sec": {
+        "min": 35,
+        "max": 50
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-YOUTUBE-10",
+      "network": "youtube",
+      "slot": "2026-10-13T14:00:00-03:00",
+      "title": "Piratas do Caribe: A Maldição do Pérola Negra (2003)",
+      "scene_direction": "Jack Sparrow chega em barco afundando",
+      "hook": "Só Jack Sparrow conseguiria transformar isso numa entrada triunfal 😂",
+      "cta": "Qual pirata é o melhor?",
+      "target_duration_sec": {
+        "min": 20,
+        "max": 28
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-YOUTUBE-11",
+      "network": "youtube",
+      "slot": "2026-10-13T15:00:00-03:00",
+      "title": "The Office (2005–2013)",
+      "scene_direction": "Simulação de incêndio de Dwight",
+      "hook": "Dwight decidiu testar o escritório... e criou o caos 😂",
+      "cta": "Quem seria você nesse escritório?",
+      "target_duration_sec": {
+        "min": 24,
+        "max": 32
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-YOUTUBE-12",
+      "network": "youtube",
+      "slot": "2026-10-13T16:00:00-03:00",
+      "title": "Interestelar (2014)",
+      "scene_direction": "Manobra de acoplamento à Endurance",
+      "hook": "Era praticamente impossível. Mas ele precisava tentar.",
+      "cta": "Você tentaria essa manobra?",
+      "target_duration_sec": {
+        "min": 25,
+        "max": 35
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    }
+  ]
+}
