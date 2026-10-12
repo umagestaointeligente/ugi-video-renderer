@@ -36,7 +36,13 @@ jobs:
             for line in textwrap.wrap(title,32): d.text((50,yy),line,font=ImageFont.truetype(bold,44),fill="white"); yy+=54
             im.save(p/fn,quality=92)
           PY
-          yt-dlp --impersonate chrome -f "best[ext=mp4]/best" -o "$O/factory-source.mp4" "https://www.pexels.com/video/person-working-on-a-factory-5532764/"
+          # Pexels free license: https://www.pexels.com/license/
+          # Source: https://www.pexels.com/video/person-working-on-a-factory-5532764/
+          SOURCE_URL=https://videos.pexels.com/video-files/5532764/5532764-uhd_4096_2160_25fps.mp4
+          SOURCE_SHA256=b6765848bc225f2dd3126833d3aa4d3ca8a4c2c5a35e001dc14f8864815f4b7e
+          curl --fail --location --retry 2 --connect-timeout 15 --max-time 120 "$SOURCE_URL" -o "$O/factory-source.mp4"
+          echo "$SOURCE_SHA256  $O/factory-source.mp4" | sha256sum -c -
+          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1 "$O/factory-source.mp4" | grep -q '^codec_name='
           cat > "$O/youtube.txt" <<'TXT'
           Quando a margem cai, esperar o mercado melhorar é uma estratégia perigosa. A Tupy, multinacional brasileira de engenharia e fundição, entrou em 2026 reorganizando fábricas, preços, custos, capital de giro e investimentos. O objetivo declarado é recuperar margens, reduzir a dependência do ciclo de caminhões pesados e baixar a alavancagem líquida para menos de três vezes até o fim do ano. O caso ajuda a enxergar cinco alavancas que qualquer operação industrial precisa acompanhar. Primeiro, preço: onde existe poder de repasse e onde o cliente realmente compara alternativas. Segundo, custo: cortar desperdício sem destruir capacidade. Terceiro, capital de giro: estoque e prazo consomem caixa antes de aparecerem no resultado. Quarto, utilização dos ativos: máquina parada ou rodando no mix errado corrói retorno. Quinto, portfólio: complexidade só vale quando remunera o capital. A Tupy também anunciou cerca de um bilhão e trezentos milhões de reais em novos contratos. O ponto não é prever se o ciclo vai melhorar. É entender quanto da recuperação depende de decisões internas. Margem é consequência do mercado, mas também de centenas de escolhas operacionais. Se a demanda não melhorar nos próximos doze meses, quais decisões ainda estão sob controle da sua gestão?
           TXT
@@ -44,14 +50,40 @@ jobs:
           D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$O/youtube.mp3")
           ffmpeg -y -stream_loop -1 -i "$O/factory-source.mp4" -i "$O/youtube.mp3" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,drawbox=x=0:y=0:w=iw:h=150:color=black@0.35:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='5 ALAVANCAS PARA RECUPERAR MARGEM':fontcolor=white:fontsize=52:x=(w-text_w)/2:y=48[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=9[a]" -map "[v]" -map "[a]" -t "$D" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 160k "$O/youtube-cinco-alavancas-margem.mp4"
           python - <<'PY'
-          import json,pathlib
+          import json,pathlib,subprocess,hashlib
           p=pathlib.Path("public/ugi/editorial/2026-09-23")
-          (p/"qa.json").write_text(json.dumps({"state":"PASS","exactCompanyVisual":True,"realMotionVideo":True,"noSlideshow":True,"youtubeSource":"Pexels real factory production footage; no company named in video","voice":"pt-BR-AntonioNeural","cards":["Grupo Vilarejo real resort photo","Mari Saad real photo holding Mascavo product","Meliá Brasil 21 real facade with brand name visible"]},ensure_ascii=False,indent=2))
+          movie=p/"youtube-cinco-alavancas-margem.mp4"
+          assert movie.is_file() and movie.stat().st_size>100000, "FINAL_VIDEO_MISSING"
+          probe=json.loads(subprocess.check_output(["ffprobe","-v","error","-show_streams","-show_format","-of","json",str(movie)]))
+          streams=probe.get("streams",[])
+          assert any(s.get("codec_type")=="video" and s.get("width")==1920 and s.get("height")==1080 for s in streams), "FINAL_VIDEO_FORMAT_FAIL"
+          assert any(s.get("codec_type")=="audio" for s in streams), "FINAL_AUDIO_MISSING"
+          assert float(probe["format"]["duration"])>30, "FINAL_DURATION_FAIL"
+          license_record={"source_url":"https://www.pexels.com/video/person-working-on-a-factory-5532764/","license":"Pexels License","commercial_use_evidence":"https://www.pexels.com/license/"}
+          (p/"qa.json").write_text(json.dumps({"state":"REVIEW_REQUIRED","technical_video_pass":True,"video_sha256":hashlib.sha256(movie.read_bytes()).hexdigest(),"source_url":license_record["source_url"],"license":license_record["license"],"commercial_use_evidence":license_record["commercial_use_evidence"],"visual_review":"PENDING","publication_approved":False},ensure_ascii=False,indent=2))
           PY
-      - name: Commit
+          ffmpeg -y -v error -i "$O/youtube-cinco-alavancas-margem.mp4" -vf scale=540:-2 -c:v libx264 -preset veryfast -crf 32 -c:a aac -b:a 64k "$O/technical-preview.mp4"
+          test -s "$O/technical-preview.mp4"
+      - name: Upload technical smoke evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-sep23-review-required
+          path: |
+            public/ugi/editorial/2026-09-23/qa.json
+            public/ugi/editorial/2026-09-23/technical-preview.mp4
+          if-no-files-found: error
+          retention-days: 1
+      - name: Commit only editorially approved pack
+        shell: bash
         run: |
+          set -euo pipefail
+          O=public/ugi/editorial/2026-09-23
+          if ! jq -e '.state == "PASS" and .publication_approved == true and .visual_review == "PASS"' "$O/qa.json"; then
+            echo "REVIEW_REQUIRED: evidence retained; repository and publication unchanged"
+            exit 0
+          fi
           git config user.name ugi-editorial-bot
           git config user.email ugi-editorial-bot@users.noreply.github.com
-          git add public/ugi/editorial/2026-09-23
+          git add "$O"
           git commit -m "assets(ugi): Sep23 exact-company editorial [skip ci]"
           git push
