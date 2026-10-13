@@ -5,6 +5,8 @@ on:
     paths:
       - 'config/vsa/**'
       - 'scripts/vsa/**'
+      - 'tests/vsa/**'
+      - 'production/vsa/pilots/oct13_triple/**'
       - '.github/actions/vsa-release-gate/**'
       - '.github/workflows/vsa-preventive-release-gate.yml'
   workflow_dispatch:
@@ -29,3 +31,10 @@ jobs:
           python scripts/vsa/validate_release_receipt.py \
             --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json \
             --self-test
+
+      - name: Test Oct13 provider and release failure paths without rendering
+        run: |
+          set -euo pipefail
+          python -m pip install requests==2.31.0
+          python -m unittest discover -s tests/vsa -v
+

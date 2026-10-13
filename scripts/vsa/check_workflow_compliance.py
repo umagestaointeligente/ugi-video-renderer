@@ -38,7 +38,7 @@ def check(path: pathlib.Path) -> list[str]:
         errors.append(f"{rel}:MISSING_CANONICAL_RECEIPT_MARKER:V2_OR_V1")
     # A comment or an attempted shell execution of action.yml is not a gate.
     executable = "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
-    action_gate = re.search(r"^\s*uses:\s*[\"']?\./\.github/actions/vsa-release-gate[\"']?\s*$", executable, re.M)
+    action_gate = re.search(r"^\s*(?:-\s*)?uses:\s*[\"']?\./\.github/actions/vsa-release-gate[\"']?\s*$", executable, re.M)
     direct_gate = re.search(r"python(?:3)?\s+scripts/vsa/validate_release_receipt\.py[^\n]*--receipt[^\n]*--master", executable)
     self_test = re.search(r"python(?:3)?\s+scripts/vsa/validate_release_receipt\.py[^\n]*--self-test", executable)
     if not action_gate and not (direct_gate and self_test):
