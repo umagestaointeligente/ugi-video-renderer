@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 ROOT = Path(__file__).resolve().parents[1]
 EDITORIAL = ROOT / "ops/cena-certa-oct13/editorial-v2-9-proposed.json"
 OUTPUT = ROOT / "out/cena-certa-oct13"
+CURATED = ROOT / "ops/cena-certa-oct13/source-candidate-leads.json"
 SKIP_WORDS = ("trailer", "teaser", "fan made", "fanmade", "reaction", "review", "analysis", "breakdown", "explained", "recap", "compilation")
 
 
@@ -80,19 +81,34 @@ def main():
     entries = document.get("items") or []
     if len(entries) != 12:
         raise SystemExit("EDITORIAL_ITEM_COUNT_FAIL")
+    leads = json.loads(CURATED.read_text(encoding="utf-8")).get("items", []) if CURATED.exists() else []
+    valid_ids = {entry.get("id") for entry in entries}
+    if any(lead.get("editorial_id") not in valid_ids or
+           not str(lead.get("source_url", "")).startswith("https://") or
+           lead.get("verified_redistribution_rights") is not False
+           for lead in leads):
+        raise SystemExit("CURATED_CANDIDATE_INVALID_OR_UNAUTHORIZED")
     OUTPUT.mkdir(parents=True, exist_ok=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
         results = list(ex.map(yt_search, entries))
     items = [{"id": item.get("id"), "network": item.get("network"),
               "title": item.get("title"), "slot": item.get("slot"),
               **result} for item, result in zip(entries, results)]
+    for item in items:
+        item["curated_publisher_scene_leads"] = [
+            {"source_url": lead["source_url"], "publisher": lead.get("publisher"),
+             "source_page": lead.get("source_page"),
+             "verified_redistribution_rights": False,
+             "source_window": None, "status": "PUBLISHER_PAGE_NOT_REUSE_APPROVAL"}
+            for lead in leads if lead.get("editorial_id") == item["id"]
+        ]
     output = {
         "schema": "CENA_CERTA_LEGACY_YTDLP_DISCOVERY_V1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "reference": "Oct12 run 38196309142: source probes -> manifest -> FFmpeg -> media gates -> releases",
         "automatic_download": False, "automatic_approval": False,
         "publishing": False, "scheduled": False, "items": items,
-        "candidate_count": sum(len(i["candidates"]) for i in items),
+        "candidate_count": sum(len(i["candidates"]) + len(i["curated_publisher_scene_leads"]) for i in items),
         "rights_verified_count": 0, "masters_count": 0,
         "status": "CANDIDATE_DISCOVERY_NOT_SOURCE_APPROVAL",
     }
