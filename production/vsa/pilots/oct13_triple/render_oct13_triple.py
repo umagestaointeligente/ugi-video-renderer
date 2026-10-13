@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import pathlib, subprocess, json, hashlib, shutil, requests, math
+import pathlib, subprocess, json, hashlib, shutil, requests, math, os, re
 
 ROOT=pathlib.Path(__file__).resolve().parents[4]
 HERE=pathlib.Path(__file__).resolve().parent
@@ -88,13 +88,20 @@ def sha(p):
   for b in iter(lambda:f.read(1048576),b""): h.update(b)
  return h.hexdigest()
 def dl(url,p):
- if p.exists() and p.stat().st_size>1000:return p
- with requests.get(url,headers={"User-Agent":"VSA-Oct13/1.0"},stream=True,timeout=180) as r:
-  r.raise_for_status()
-  with open(p,"wb") as f:
-   for c in r.iter_content(1048576):
-    if c:f.write(c)
- return p
+ # Fresh atomic acquisition; size alone is not cache validation.
+ partial=p.with_name(p.name+".partial")
+ p.unlink(missing_ok=True);partial.unlink(missing_ok=True)
+ try:
+  with requests.get(url,headers={"User-Agent":"VSA-Oct13/1.0"},stream=True,timeout=(15,60)) as r:
+   r.raise_for_status()
+   with open(partial,"wb") as f:
+    for c in r.iter_content(1048576):
+     if c:f.write(c)
+  if not partial.is_file() or partial.stat().st_size==0:raise RuntimeError("ASSET_EMPTY_FAIL")
+  partial.replace(p)
+  return p
+ finally:partial.unlink(missing_ok=True)
+
 def commons_video(name,p):
  api="https://commons.wikimedia.org/w/api.php"
  q={"action":"query","format":"json","prop":"videoinfo","viprop":"url|derivatives","titles":"File:"+name}
@@ -268,11 +275,11 @@ def scene_video(base,src,start,length,label,kind,out):
  if kind=="REAL":
   fc=(f"[1:v]setpts=PTS-STARTPTS,split=2[b][f];[b]scale={WW}:{HH}:force_original_aspect_ratio=increase,crop={WW}:{HH},boxblur=14:2[b2];"
       f"[f]scale={WW}:{HH}:force_original_aspect_ratio=decrease,{lf}[f2];[b2][f2]overlay=(W-w)/2:(H-h)/2[in];"
-      f"[0:v][in]overlay={X}:{Y}:shortest=1,format=yuv420p[v]")
+      f"[0:v][in]overlay={X}:{Y}:shortest=1,setsar=1,format=yuv420p[v]")
   run(["ffmpeg","-y","-loglevel","error","-loop","1","-i",base,"-ss",start,"-i",src,"-t",length,"-filter_complex",fc,"-map","[v]","-an","-r",FPS,"-c:v","libx264","-preset","veryfast","-crf","20",out])
  else:
   stretch=max(.1,float(length)/2.0)
-  fc=(f"[1:v]setpts={stretch:.6f}*PTS,fps={FPS},scale={WW}:{HH}:flags=lanczos,{lf}[in];[0:v][in]overlay={X}:{Y}:shortest=1,format=yuv420p[v]")
+  fc=(f"[1:v]setpts={stretch:.6f}*PTS,fps={FPS},scale={WW}:{HH}:flags=lanczos,{lf}[in];[0:v][in]overlay={X}:{Y}:shortest=1,setsar=1,format=yuv420p[v]")
   run(["ffmpeg","-y","-loglevel","error","-loop","1","-i",base,"-ss",start,"-t","2.0","-i",src,"-t",length,"-filter_complex",fc,"-map","[v]","-an","-r",FPS,"-c:v","libx264","-preset","veryfast","-crf","20",out])
 
 def receipt(topic,meta,master,scene_rows,caption_samples):
@@ -284,18 +291,18 @@ def receipt(topic,meta,master,scene_rows,caption_samples):
   "channel":{"name":"Você Sabia Agora?","youtube_channel_id":"UCm0UMO6lNWlr66YSIS1p4iQ"},
   "scheduler":{"publisher":"METRICOOL","metricool_brand_id":6935441,"youtube_channel_id":"UCm0UMO6lNWlr66YSIS1p4iQ"},
   "build":{"fresh_build":True,"prior_final_master_used":False,"workdir_reused":False},
-  "master":{"sha256":h},"release_token":{"status":"PASS","master_sha256":h},
-  "voice":{"language":"pt-BR","profile_id":VOICE,"neutral_ptbr_gate":"PASS","foreign_accent_detected":False},
+  "master":{"sha256":h},"release_token":{"status":"PENDING_QA","master_sha256":h},
+  "voice":{"language":"pt-BR","profile_id":VOICE,"neutral_ptbr_gate":"UNVERIFIED","foreign_accent_detected":None},
   "mask":{"version":"V2","sha256":MASK_SHA,"applied_to_final_master":True,"safe_zone_gate":"PASS"},
   "content_class":topic["content_class"],"expected_subject":topic["expected_subject"],"shot_map":scene_rows,
-  "tail_integrity":{"pre_cta_contamination_gate":"PASS","unrelated_or_legacy_frame_detected":False,"cta_first_frame_matches_canonical":True},
-  "gates":{g:True for g in gates},
+  "tail_integrity":{"pre_cta_contamination_gate":"UNVERIFIED","unrelated_or_legacy_frame_detected":None,"cta_first_frame_matches_canonical":False},
+  "gates":{g:False for g in gates},
   "captions":{"burned_in_final_master":True,"maximum_lines_observed":2,"visible_samples":caption_samples},
   "title":{"layer_count":1,"ghost_duplicate_detected":False,"inside_safe_zone":True},
   "cta":{"lines":CTA_LINES},
   "format":{"width":1080,"height":1920,"fps":30,"video_codec":"h264","pixel_format":"yuv420p"},
   "visual_proof":{"contact_sheet_generated":True,"all_story_blocks_sampled":True,"tail_window_sampled":True},
-  "release_eligible":True,"schedule_mutated_before_gate":False
+  "release_eligible":False,"schedule_mutated_before_gate":False
  }
 
 
@@ -303,15 +310,66 @@ def require_duration(slug,seconds):
  if not math.isfinite(seconds) or not 45 <= seconds <= 55:
   raise RuntimeError("DURATION_GATE_FAIL "+json.dumps({"slug":slug,"duration_seconds":seconds},ensure_ascii=False))
 
+
+def validate_narration_audio(path):
+ seconds=duration(path)
+ if not math.isfinite(seconds) or seconds<=0:
+  raise RuntimeError("TTS_AUDIO_INVALID")
+ result=subprocess.run(["ffmpeg","-hide_banner","-v","info","-xerror","-i",str(path),
+                        "-map","0:a:0","-af","volumedetect","-f","null","-"],
+                       check=True,capture_output=True,text=True,timeout=60)
+ match=re.search(r"max_volume:\s*(-?inf|[-+]?\d+(?:\.\d+)?)\s*dB",result.stderr)
+ if not match or float(match.group(1))<=-60:
+  raise RuntimeError("TTS_AUDIO_SILENT_OR_UNMEASURED")
+ return seconds
+
+def synthesize_narration(text,rate,target):
+ # Never accept a stale/partial file or substitute silence on provider failure.
+ partial=target.with_name(target.stem+".partial.mp3")
+ target.unlink(missing_ok=True);partial.unlink(missing_ok=True)
+ try:
+  bundle=os.environ.get("VSA_NARRATION_BUNDLE")
+  if bundle:
+   manifest_path=pathlib.Path(bundle).resolve()
+   manifest=json.loads(manifest_path.read_text(encoding="utf-8"))
+   key=hashlib.sha256(json.dumps([VOICE,rate,text],ensure_ascii=False,separators=(",",":")).encode()).hexdigest()
+   entry=manifest.get("clips",{}).get(key,{})
+   if entry.get("voice")!=VOICE or entry.get("rate")!=rate or entry.get("text")!=text:
+    raise RuntimeError("TTS_BUNDLE_IDENTITY_FAIL")
+   source=(manifest_path.parent/entry.get("file","")).resolve()
+   if not source.is_relative_to(manifest_path.parent) or not source.is_file() or sha(source)!=entry.get("sha256"):
+    raise RuntimeError("TTS_BUNDLE_HASH_FAIL")
+   shutil.copyfile(source,partial)
+   result=None
+  else:
+   result=subprocess.run(["edge-tts","--voice",VOICE,"--rate="+rate,
+                          "--text",text,"--write-media",str(partial)],
+                         capture_output=True,text=True,timeout=60)
+  if result is not None and result.returncode:
+   if "WSServerHandshakeError: 403" in result.stderr:reason="TTS_PROVIDER_HTTP_403"
+   elif "SSLCertVerificationError" in result.stderr or "ClientConnectorCertificateError" in result.stderr:reason="TTS_TLS_CERTIFICATE_FAIL"
+   else:reason="TTS_PROVIDER_FAILED"
+   raise RuntimeError(reason)
+  if not partial.is_file() or partial.stat().st_size==0:
+   raise RuntimeError("TTS_AUDIO_MISSING")
+  validate_narration_audio(partial)
+  partial.replace(target)
+ except subprocess.TimeoutExpired:
+  raise RuntimeError("TTS_TIMEOUT") from None
+ except subprocess.CalledProcessError:
+  raise RuntimeError("TTS_AUDIO_DECODE_FAIL") from None
+ finally:
+  partial.unlink(missing_ok=True)
+
 def prepare_narration(slug,topic,wd):
  # Measure the exact audio that will be reused by the render, including CTA.
  measured=[]
  for i,scene in enumerate(topic["scenes"],1):
   voice=wd/f"v{i}.mp3"
-  run(["edge-tts","--voice",VOICE,"--rate=-2%","--text",scene[-1],"--write-media",voice])
+  synthesize_narration(scene[-1],"-2%",voice)
   measured.append(duration(voice))
  ca=wd/"cta.mp3"
- run(["edge-tts","--voice",VOICE,"--rate=+18%","--text"," ".join(CTA_LINES),"--write-media",ca])
+ synthesize_narration(" ".join(CTA_LINES),"+18%",ca)
  cta_seconds=duration(ca)
  if any(not math.isfinite(x) or x<=0 for x in measured+[cta_seconds]):
   raise RuntimeError("NARRATION_DURATION_INVALID "+slug)
@@ -322,9 +380,9 @@ def prepare_narration(slug,topic,wd):
  print("DURATION_PREFLIGHT_PASS",slug,projected)
  return measured,ca,max(3.6,cta_seconds+.2)
 
-def render(slug,topic,mask,cta,music):
- wd=WORK/slug;od=OUT/slug;shutil.rmtree(wd,ignore_errors=True);shutil.rmtree(od,ignore_errors=True);wd.mkdir(parents=True);od.mkdir(parents=True)
- measured,ca,cd=prepare_narration(slug,topic,wd)
+def render(slug,topic,mask,cta,music,narration):
+ wd=WORK/slug;od=OUT/slug;shutil.rmtree(od,ignore_errors=True);od.mkdir(parents=True)
+ measured,ca,cd=narration
  base=wd/"base.jpg";make_base(mask,topic["header"],base)
  anim=AS/(slug+"_3d.mp4")
  vids=[];asegs=[];times=[];rows=[];cursor=0.0
@@ -339,14 +397,14 @@ def render(slug,topic,mask,cta,music):
   vids.append(sv);seg=wd/f"a{i}.wav"
   run(["ffmpeg","-y","-loglevel","error","-i",voice,"-f","lavfi","-t","0.10","-i","anullsrc=r=48000:cl=mono","-filter_complex","[0:a][1:a]concat=n=2:v=0:a=1[a]","-map","[a]","-ar","48000",seg]);asegs.append(seg)
   times.append((cursor,cursor+vd,text));cursor+=length
-  row={"id":f"s{i}","narration":text,"media_type":kind,"visual_role":role,"visual_description":label,"visible_action":label,"semantic_claim":text,"semantic_match":"EXACT","causal_link_id":link,"topic_only_match":False,"generic_filler":False,"reused_take_as_variety":False}
+  row={"id":f"s{i}","narration":text,"media_type":kind,"visual_role":role,"visual_description":label,"visible_action":label,"semantic_claim":text,"semantic_match":"UNVERIFIED","causal_link_id":link,"topic_only_match":False,"generic_filler":False,"reused_take_as_variety":False}
   if kind=="REAL":
-   row["asset"]={"event":slug,"asset_key":source_key,"file":asset["file"],"semantic_role":role,"visible_action":label,"source_url":asset["source_url"],"license":asset["license"],"source_timestamp_seconds":float(start),"rights_verified":True,"expected_subject":topic["expected_subject"],"asset_subject":asset["asset_subject"],"asset_role":asset["asset_role"],"identifiable_human":asset.get("identifiable_human",False),"celebrity_visible":asset.get("celebrity_visible",False),"duration_seconds":length,"explicit_script_reference":True}
+   row["asset"]={"event":slug,"asset_key":source_key,"file":asset["file"],"semantic_role":role,"visible_action":label,"source_url":asset["source_url"],"license":asset["license"],"source_timestamp_seconds":float(start),"rights_verified":False,"expected_subject":topic["expected_subject"],"asset_subject":asset["asset_subject"],"asset_role":asset["asset_role"],"identifiable_human":asset.get("identifiable_human",False),"celebrity_visible":asset.get("celebrity_visible",False),"duration_seconds":length,"explicit_script_reference":True}
   rows.append(row)
  vl=wd/"v.txt";vl.write_text("\n".join(f"file '{p}'" for p in vids)+"\n");body=wd/"body.mp4";run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",vl,"-an","-c:v","libx264","-preset","veryfast","-crf","20","-pix_fmt","yuv420p",body])
  al=wd/"a.txt";al.write_text("\n".join(f"file '{p}'" for p in asegs)+"\n");bodya=wd/"body.wav";run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",al,"-c:a","pcm_s16le","-ar","48000",bodya])
  ass=wd/"c.ass";make_ass(times,ass);esc=str(ass).replace("'","\\'").replace(":","\\:");bodyc=wd/"bodyc.mp4";run(["ffmpeg","-y","-loglevel","error","-i",body,"-vf",f"subtitles='{esc}'","-an","-c:v","libx264","-preset","veryfast","-crf","20","-pix_fmt","yuv420p",bodyc])
- cv=wd/"cta.mp4";run(["ffmpeg","-y","-loglevel","error","-loop","1","-i",cta,"-t",f"{cd:.3f}","-vf",f"scale={W}:{H},fps={FPS},format=yuv420p","-an","-c:v","libx264","-preset","veryfast","-crf","20",cv])
+ cv=wd/"cta.mp4";run(["ffmpeg","-y","-loglevel","error","-loop","1","-i",cta,"-t",f"{cd:.3f}","-vf",f"scale={W}:{H},setsar=1,fps={FPS},format=yuv420p","-an","-c:v","libx264","-preset","veryfast","-crf","20",cv])
  fl=wd/"f.txt";fl.write_text(f"file '{bodyc}'\nfile '{cv}'\n");visual=wd/"visual.mp4";run(["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",fl,"-an","-c:v","libx264","-preset","veryfast","-crf","20","-pix_fmt","yuv420p",visual])
  alla=wd/"all.wav";run(["ffmpeg","-y","-loglevel","error","-i",bodya,"-i",ca,"-filter_complex","[0:a][1:a]concat=n=2:v=0:a=1[a]","-map","[a]","-ar","48000",alla])
  mix=wd/"mix.m4a";af="[0:a]aresample=48000,asplit=2[n1][n2];[1:a]aresample=48000,volume=.10,aloop=loop=-1:size=2147483647[m];[m][n1]sidechaincompress=threshold=.035:ratio=8:attack=20:release=250[d];[n2][d]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=10[a]";run(["ffmpeg","-y","-loglevel","error","-i",alla,"-i",music,"-filter_complex",af,"-map","[a]","-ar","48000",mix])
@@ -357,13 +415,17 @@ def render(slug,topic,mask,cta,music):
  if int(v["width"])!=1080 or int(v["height"])!=1920 or v["codec_name"]!="h264" or v["pix_fmt"]!="yuv420p":raise RuntimeError("FORMAT_FAIL")
  contact=od/"CONTACT.jpg";run(["ffmpeg","-y","-loglevel","error","-i",final,"-vf","fps=1/5,scale=270:480,tile=4x3:padding=4:margin=4","-frames:v","1",contact])
  thumb=od/"THUMBNAIL.jpg";run(["ffmpeg","-y","-loglevel","error","-ss","1","-i",final,"-frames:v","1",thumb])
- samples=[{"t":round(fd*x,1),"visible":True,"inside_safe_zone":True} for x in (.18,.48,.75)]
+ samples=[{"t":round(fd*x,1),"visible":False,"inside_safe_zone":False} for x in (.18,.48,.75)]
  meta={"slug":slug,"title":topic["title"],"description":topic["description"],"duration_seconds":fd,"sha256":sha(final),"master":str(final),"receipt":str(od/"RELEASE_RECEIPT.json")}
  rec=receipt(topic,meta,final,rows,samples);(od/"RELEASE_RECEIPT.json").write_text(json.dumps(rec,ensure_ascii=False,indent=2)+"\n");(od/"META.json").write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
  return meta
 
 def main():
  shutil.rmtree(WORK,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);WORK.mkdir();OUT.mkdir()
+ narrations={}
+ for slug,topic in TOPICS.items():
+  wd=WORK/slug;wd.mkdir()
+  narrations[slug]=prepare_narration(slug,topic,wd)
  mask=dl(MASK_URL,AS/"mask.png");cta=dl(CTA_URL,AS/"cta.png")
  if sha(mask)!=MASK_SHA:raise RuntimeError("MASK_SHA_FAIL")
  music=dl("https://d2ol7oe51mr4n9.cloudfront.net/user_3INXyBRQIUkFRTaKNDmjseizowV/f1f3904c-153f-4d51-9ffe-a8974cf30ea0.mp3",AS/"music.mp3")
@@ -382,14 +444,22 @@ def main():
  for slug,t in TOPICS.items():
   real_keys=[s[1] for s in t["scenes"] if s[0]=="REAL"]
   real_files=[t["assets"][k]["file"] for k in real_keys]
+  hashes=[sha(AS/name) for name in real_files]
+  if len(set(hashes))!=len(hashes):raise RuntimeError("REAL_ASSET_DUPLICATE_BYTES_FAIL "+slug)
+  for scene in t["scenes"]:
+   if scene[0]=="REAL":
+    source=AS/t["assets"][scene[1]]["file"]
+    if duration(source)<scene[2]+narrations[slug][0][t["scenes"].index(scene)]+.10:
+     raise RuntimeError("SOURCE_WINDOW_TOO_SHORT "+slug)
   if len(real_files)!=4 or len(real_files)!=len(set(real_files)): raise RuntimeError("REAL_ASSET_DUPLICATE_FAIL "+slug)
   if t["content_class"]=="NEWS_EXPLAINER":
    celeb=[t["assets"][k].get("celebrity_visible",False) for k in real_keys]
    if sum(1 for x in celeb if x)<2 or not celeb[0] or not celeb[-1]: raise RuntimeError("CELEBRITY_CONTEXT_FAIL "+slug)
   make_anim(slug,AS/(slug+"_3d.mp4"))
- metas=[render(slug,t,mask,cta,music) for slug,t in TOPICS.items()]
+ metas=[render(slug,t,mask,cta,music,narrations[slug]) for slug,t in TOPICS.items()]
  bad=[{"slug":m["slug"],"duration_seconds":m["duration_seconds"]} for m in metas if not(45<=float(m["duration_seconds"])<=55)]
  if bad: raise RuntimeError("DURATION_GATE_FAIL "+json.dumps(bad,ensure_ascii=False))
  (OUT/"MANIFEST.json").write_text(json.dumps(metas,ensure_ascii=False,indent=2)+"\n")
  print(json.dumps(metas,ensure_ascii=False,indent=2))
 if __name__=="__main__":main()
+

@@ -5,6 +5,8 @@ on:
     paths:
       - 'config/vsa/**'
       - 'scripts/vsa/**'
+      - 'tests/vsa/**'
+      - 'production/vsa/pilots/oct13_triple/**'
       - '.github/actions/vsa-release-gate/**'
       - '.github/workflows/vsa-preventive-release-gate.yml'
   workflow_dispatch:
@@ -29,3 +31,44 @@ jobs:
           python scripts/vsa/validate_release_receipt.py \
             --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json \
             --self-test
+
+      - name: Test Oct13 provider and release failure paths without rendering
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
+          python -m pip install requests==2.31.0
+          python -m unittest discover -s tests/vsa -v
+
+  tts-provider-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install probe decoder
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
+      - name: Compare historical and current dependency pairs once
+        run: |
+          set -euo pipefail
+          failures=0
+          for pair in '3.14.3 6.9.1' '3.14.5 7.1.0'; do
+            read -r aio_version multi_version <<< "$pair"
+            envdir="/tmp/vsa-probe-${aio_version}"
+            python -m venv "$envdir"
+            "$envdir/bin/python" -m pip install requests==2.31.0 edge-tts==7.2.8 "aiohttp==$aio_version" "multidict==$multi_version"
+            if ! "$envdir/bin/python" scripts/vsa/probe_narration_provider.py --output "/tmp/vsa-probe-reports/${aio_version}.json"; then
+              failures=$((failures+1))
+            fi
+          done
+          test "$failures" -eq 0
+      - name: Preserve sanitized diagnostic results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-tts-provider-diagnostic-${{ github.run_id }}
+          path: /tmp/vsa-probe-reports/*.json
+          if-no-files-found: error
+          retention-days: 3
+
