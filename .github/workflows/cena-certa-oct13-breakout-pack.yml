@@ -6,6 +6,7 @@ on:
       - .github/workflows/cena-certa-oct13-breakout-pack.yml
       - scripts/cena_certa_oct13_pack.py
       - scripts/cena_certa_oct13_compile.py
+      - scripts/cena_certa_oct13_readiness.py
       - ops/cena-certa-oct13/manifest.json
       - ops/cena-certa-oct13/editorial-v2-9-proposed.json
       - ops/cena-certa-oct13/anti-repeat-snapshot.json
@@ -31,10 +32,16 @@ jobs:
           sparse-checkout: |
             scripts/cena_certa_oct13_pack.py
             scripts/cena_certa_oct13_compile.py
+            scripts/cena_certa_oct13_readiness.py
             ops/cena-certa-oct13
             assets/cena-certa-logo.png.b64
           sparse-checkout-cone-mode: false
           fetch-depth: 1
+
+      - name: Persistent source-readiness receipt before fail-closed compiler
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct13_readiness.py
 
       - name: Compile ONLY approved 2025 editorial with licensed scene inputs
         run: |
