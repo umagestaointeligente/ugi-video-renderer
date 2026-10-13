@@ -1,0 +1,391 @@
+{
+  "schema": "CENA_CERTA_2_9_OCT13_RECENT_ACCLAIMED_EDITORIAL_V2",
+  "updated_on": "2026-10-12",
+  "publication_date": "2026-10-13",
+  "timezone": "America/Sao_Paulo",
+  "metricool_brand_id": 6809869,
+  "status": "NEW_EDITORIAL_APPROVED_DIRECTION_NOT_READY_TO_PUBLISH",
+  "source": "User pivot: discard Metamorposa and Stop Bullying; use newer acclaimed movies and series",
+  "notes": [
+    "Three new recent acclaimed/live-action titles per platform; no Globo material on YouTube.",
+    "Source is not yet validated or licensed; do not download unauthorized full movies/episodes or reuse studio uploads as if licensed.",
+    "The 60d title scan was performed against repo history_media.json with 366 entries 2026-09-02 through 2026-10-12, not a complete 60-day coverage.",
+    "Scene descriptions are selection briefs; exact frames/timestamps not yet confirmed.",
+    "Do not render or schedule without distinct official rights evidence, specific source windows, and visual anti-repeat gate.",
+    "Two previously rendered CC indie shorts explicitly excluded."
+  ],
+  "items": [
+    {
+      "id": "CC-OCT13-V29-TIKTOK-01",
+      "network": "tiktok",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "Corra que a Polícia Vem Aí! (2025)",
+      "canonical_english": "The Naked Gun",
+      "kind": "filme",
+      "theme": "humor",
+      "scene_direction": "Selecionar gag física com Frank Drebin Jr.; reação e payoff no mesmo trecho",
+      "hook": "QUANDO O POLICIAL MAIS SÉRIO DO MUNDO FAZ ISSO 😂",
+      "cta": "QUAL SERIA SUA REAÇÃO?",
+      "target_duration_sec": {
+        "min": 22,
+        "max": 32
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-TIKTOK-02",
+      "network": "tiktok",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "O Estúdio (The Studio, 2025)",
+      "canonical_english": "The Studio",
+      "kind": "série",
+      "theme": "humor",
+      "scene_direction": "Selecionar confusão real de produção envolvendo Matt Remick; evitar metalinguagem sem payoff",
+      "hook": "QUANDO A REUNIÃO VIRA UM DESASTRE 😂",
+      "cta": "QUEM JÁ PASSOU POR ISSO?",
+      "target_duration_sec": {
+        "min": 22,
+        "max": 32
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-TIKTOK-03",
+      "network": "tiktok",
+      "slot": "2026-10-13T18:00:00-03:00",
+      "title": "Acompanhante Perfeita (2025)",
+      "canonical_english": "Companion",
+      "kind": "filme",
+      "theme": "suspense",
+      "scene_direction": "Selecionar virada de tensão sem revelar reviravolta central",
+      "hook": "PARECIA UM ENCONTRO NORMAL... ATÉ ACONTECER ISSO 😳",
+      "cta": "VOCÊ PERCEBERIA O PERIGO?",
+      "target_duration_sec": {
+        "min": 25,
+        "max": 35
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-INSTAGRAM-04",
+      "network": "instagram",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "F1: O Filme (2025)",
+      "canonical_english": "F1 The Movie",
+      "kind": "filme",
+      "theme": "ação",
+      "scene_direction": "Selecionar ultrapassagem/decisão de corrida e reação humana com clímax visual",
+      "hook": "NESSA HORA NÃO DAVA MAIS PARA ERRAR 🏎️",
+      "cta": "VOCÊ TERIA ESSA CORAGEM?",
+      "target_duration_sec": {
+        "min": 24,
+        "max": 34
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-INSTAGRAM-05",
+      "network": "instagram",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "Pecadores (2025)",
+      "canonical_english": "Sinners",
+      "kind": "filme",
+      "theme": "emoção",
+      "scene_direction": "Selecionar cena musical ou encontro de forte tensão; excluir violência gráfica",
+      "hook": "ESSA CENA PROVA QUE UMA ATUAÇÃO MUDA TUDO",
+      "cta": "O QUE MAIS TE MARCOU NESSE FILME?",
+      "target_duration_sec": {
+        "min": 24,
+        "max": 34
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-INSTAGRAM-06",
+      "network": "instagram",
+      "slot": "2026-10-13T18:00:00-03:00",
+      "title": "Frankenstein (2025)",
+      "canonical_english": "Frankenstein",
+      "kind": "filme",
+      "theme": "emoção",
+      "scene_direction": "Selecionar encontro da criatura com rejeição ou humanidade; construir gancho de empatia",
+      "hook": "ELE SÓ QUERIA SER ACEITO...",
+      "cta": "VOCÊ FICOU DO LADO DE QUEM?",
+      "target_duration_sec": {
+        "min": 25,
+        "max": 35
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-FACEBOOK-07",
+      "network": "facebook",
+      "slot": "2026-10-13T10:00:00-03:00",
+      "title": "Adolescência (2025)",
+      "canonical_english": "Adolescence",
+      "kind": "série",
+      "theme": "conflito",
+      "scene_direction": "Selecionar diálogo dramático inteligível entre personagens; não apresentar acusação sem contexto",
+      "hook": "UMA PERGUNTA MUDA A CONVERSA INTEIRA",
+      "cta": "O QUE VOCÊ DIRIA NESSA HORA?",
+      "target_duration_sec": {
+        "min": 35,
+        "max": 48
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-FACEBOOK-08",
+      "network": "facebook",
+      "slot": "2026-10-13T12:00:00-03:00",
+      "title": "The Pitt (2025)",
+      "canonical_english": "The Pitt",
+      "kind": "série",
+      "theme": "tensão",
+      "scene_direction": "Selecionar momento de decisão de equipe de hospital sem aconselhamento médico",
+      "hook": "QUANDO NÃO EXISTE TEMPO PARA ERRAR",
+      "cta": "VOCÊ CONSEGUIRIA MANTER A CALMA?",
+      "target_duration_sec": {
+        "min": 34,
+        "max": 47
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-FACEBOOK-09",
+      "network": "facebook",
+      "slot": "2026-10-13T17:00:00-03:00",
+      "title": "DNA do Crime — 2ª temporada (2025)",
+      "canonical_english": "DNA do Crime",
+      "kind": "série",
+      "theme": "ação",
+      "scene_direction": "Selecionar tensão de investigação policial; evitar violência explícita",
+      "hook": "UM DETALHE PODE MUDAR TODA A OPERAÇÃO",
+      "cta": "VOCÊ TERIA PERCEBIDO?",
+      "target_duration_sec": {
+        "min": 32,
+        "max": 45
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-YOUTUBE-10",
+      "network": "youtube",
+      "slot": "2026-10-13T14:00:00-03:00",
+      "title": "Stranger Things — 5ª temporada (2025)",
+      "canonical_english": "Stranger Things",
+      "kind": "série",
+      "theme": "mistério",
+      "scene_direction": "Selecionar reação real a ameaça misteriosa e um payoff no primeiro segundo",
+      "hook": "NINGUÉM ESTAVA PREPARADO PARA ISSO 😳 #Shorts",
+      "cta": "VOCÊ TERIA ENTRADO?",
+      "target_duration_sec": {
+        "min": 22,
+        "max": 32
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-YOUTUBE-11",
+      "network": "youtube",
+      "slot": "2026-10-13T15:00:00-03:00",
+      "title": "Andor — 2ª temporada (2025)",
+      "canonical_english": "Andor",
+      "kind": "série",
+      "theme": "ação",
+      "scene_direction": "Selecionar decisão de alto risco da rebelião; ação com contexto e sem trailer",
+      "hook": "A MISSÃO NÃO PODIA FALHAR 🚀 #Shorts",
+      "cta": "VOCÊ CONFIARIA NESSE PLANO?",
+      "target_duration_sec": {
+        "min": 23,
+        "max": 33
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    },
+    {
+      "id": "CC-OCT13-V29-YOUTUBE-12",
+      "network": "youtube",
+      "slot": "2026-10-13T16:00:00-03:00",
+      "title": "Uma Batalha Após a Outra (2025)",
+      "canonical_english": "One Battle After Another",
+      "kind": "filme",
+      "theme": "ação",
+      "scene_direction": "Selecionar perseguição ou confronto dramático de pai e filha, com começo-meio-fim",
+      "hook": "ELE SÓ PRECISAVA ENCONTRÁ-LA... #Shorts",
+      "cta": "QUAL É A CENA MAIS TENSA?",
+      "target_duration_sec": {
+        "min": 24,
+        "max": 34
+      },
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "proof_url": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "source_history_60d": "NOT_VERIFIED",
+      "history_sample_sep02_oct12": "NO_MATCH_BY_TITLE",
+      "scene_fingerprint_60d": "NOT_VERIFIED",
+      "quality_gate": "PENDING",
+      "schedule_status": "NOT_SCHEDULED",
+      "metricool_post_id": null
+    }
+  ]
+}

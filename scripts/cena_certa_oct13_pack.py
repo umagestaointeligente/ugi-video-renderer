@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import base64, concurrent.futures, hashlib, json, math, os, pathlib, subprocess, time, urllib.request
+import base64, concurrent.futures, hashlib, json, math, os, pathlib, subprocess, sys, time, urllib.request
 
 ROOT=pathlib.Path.cwd()
 MANIFEST=ROOT/"ops/cena-certa-oct13/manifest.json"
 ANTI=ROOT/"ops/cena-certa-oct13/anti-repeat-snapshot.json"
 HISTORY=ROOT/"ops/cena-certa-oct13/history_media.json"
+EDITORIAL=ROOT/"ops/cena-certa-oct13/editorial-v2-9-proposed.json"
 WORK=ROOT/"tmp/cena-certa-oct13"
 OUT=ROOT/"out/cena-certa-oct13"
 LOGO_B64=ROOT/"assets/cena-certa-logo.png.b64"
@@ -66,11 +67,14 @@ def download_source(item,cache):
         try:p.unlink()
         except:pass
     url=str(item["source"])
-    if url.startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/")):
+    # FFmpeg handles verified direct media/CDN URLs, including signed query strings,
+    # without relying on yt-dlp's website extractor.
+    direct_media = url.split("?", 1)[0].lower().endswith((".mp4", ".mov", ".webm", ".mkv"))
+    if url.startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/")) or direct_media:
         windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
         max_end=max(float(x[1]) for x in windows)
         section_end=max(20,min(300,int(max_end+3)))
-        target=wd/"source.mov"
+        target=wd/"source.mkv"
         last=None
         for attempt in range(1,7):
             try:
@@ -347,18 +351,64 @@ def visual_gate(rendered,hidx):
         raise RuntimeError("SCENE_SEQUENCE_GATE_FAIL:"+json.dumps(violations,ensure_ascii=False))
     return evidence
 
-def main():
+def editorial_alignment_gate(items):
+    """Prevent publishing a legacy lineup under the user's Oct13 approved editorial."""
+    if not EDITORIAL.is_file():
+        raise RuntimeError("EDITORIAL_V29_MANIFEST_MISSING")
+    approved=json.loads(EDITORIAL.read_text(encoding="utf-8"))
+    if approved.get("publication_date")!="2026-10-13" or approved.get("metricool_brand_id")!=6809869:
+        raise RuntimeError("EDITORIAL_V29_SCOPE_MISMATCH")
+    expected=approved.get("items",[])
+    if len(expected)!=12:
+        raise RuntimeError("EDITORIAL_V29_ITEM_COUNT_FAIL")
+    def index(records):
+        out={}
+        for record in records:
+            key=(record.get("network"), record.get("slot"))
+            if key in out: raise RuntimeError(f"EDITORIAL_DUPLICATE_SLOT:{key}")
+            out[key]=record.get("title")
+        return out
+    actual=index(items); canonical=index(expected)
+    if actual!=canonical:
+        missing={str(k):v for k,v in canonical.items() if actual.get(k)!=v}
+        unexpected={str(k):v for k,v in actual.items() if canonical.get(k)!=v}
+        raise RuntimeError("EDITORIAL_V29_DRIFT_FAIL:"+json.dumps(
+            {"expected_or_changed":missing,"legacy_or_changed":unexpected},ensure_ascii=False))
+    return True
+
+def main(preflight_only=False):
     WORK.mkdir(parents=True,exist_ok=True); OUT.mkdir(parents=True,exist_ok=True)
     manifest=json.loads(MANIFEST.read_text(encoding="utf-8"))
     anti=json.loads(ANTI.read_text(encoding="utf-8"))
     items=manifest["items"]
+    editorial_alignment_gate(items)
     if len(items)!=12: raise RuntimeError(f"ITEM_COUNT_FAIL:{len(items)}")
     counts={}
     for x in items: counts[x["network"]]=counts.get(x["network"],0)+1
     if counts!={"tiktok":3,"instagram":3,"youtube":3,"facebook":3}: raise RuntimeError(f"NETWORK_COUNTS_FAIL:{counts}")
     if any(int(x.get("year",0))<1990 for x in items): raise RuntimeError("YEAR_FLOOR_FAIL")
-    if any(not str(x.get("source","")).startswith(("https://globoplay.globo.com/","https://www.youtube.com/","https://commons.wikimedia.org/","https://upload.wikimedia.org/")) for x in items): raise RuntimeError("OFFICIAL_SOURCE_DOMAIN_FAIL")
+    # Source domains are validated against licensed HTTPS evidence by the canonical compiler.
+    # Do not restrict the renderer to Globo/YouTube/Commons: user-licensed CDN sources are valid.
+    if any(not str(x.get("source","")).startswith("https://") for x in items): raise RuntimeError("SOURCE_HTTPS_FAIL")
+    # Fail closed before network/downloads/releases: a platform source URL is not a use license.
+    for item in items:
+        sid=str(item["id"])
+        if not item.get("segments") and not (
+            isinstance(item.get("source_start"), (int, float))
+            and isinstance(item.get("source_end"), (int, float))
+        ):
+            raise RuntimeError(f"SOURCE_WINDOW_UNDEFINED:{sid}")
+        rights=item.get("rights_evidence")
+        if not isinstance(rights,dict) or rights.get("status")!="VERIFIED" or not rights.get("proof_url"):
+            raise RuntimeError(f"RIGHTS_EVIDENCE_MISSING:{sid}")
+        if item["network"]=="youtube" and "globoplay.globo.com" in str(item["source"]):
+            raise RuntimeError(f"YOUTUBE_GLOBO_SOURCE_BLOCK:{sid}")
+        if item.get("media_type")!="LIVE_ACTION":
+            raise RuntimeError(f"REAL_FOOTAGE_EVIDENCE_MISSING:{sid}")
     src_ev=source_window_gate(items,anti.get("prior_sources",[]))
+    if preflight_only:
+        print("CENA_CERTA_OCT13_PREFLIGHT=PASS")
+        return
 
     logo=WORK/"logo.png"; logo.write_bytes(base64.b64decode("".join(LOGO_B64.read_text().split())))
     core=None
@@ -431,4 +481,4 @@ def main():
     print("CENA_CERTA_OCT13_PACK=PASS",len(summary["items"]))
 
 if __name__=="__main__":
-    main()
+    main(preflight_only=("--preflight" in sys.argv[1:]))
