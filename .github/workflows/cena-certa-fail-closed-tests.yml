@@ -27,6 +27,11 @@ jobs:
             tests/test_cena_certa_oct13_offline.py
             ops/cena-certa-oct13/editorial-v2-9-proposed.json
           sparse-checkout-cone-mode: false
+      - name: Install test media runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg >/dev/null
       - name: Run offline tests with synthetic fixtures
         run: |
           set -euo pipefail
