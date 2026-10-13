@@ -7,6 +7,7 @@ on:
       - scripts/cena_certa_oct13_pack.py
       - scripts/cena_certa_oct13_compile.py
       - scripts/cena_certa_delivery_guard.py
+      - scripts/cena_certa_oct13_readiness.py
       - ops/cena-certa-oct13/content-qa.json
       - ops/cena-certa-oct13/manifest.json
       - ops/cena-certa-oct13/editorial-v2-9-proposed.json
@@ -34,10 +35,16 @@ jobs:
             scripts/cena_certa_oct13_pack.py
             scripts/cena_certa_oct13_compile.py
             scripts/cena_certa_delivery_guard.py
+            scripts/cena_certa_oct13_readiness.py
             ops/cena-certa-oct13
             assets/cena-certa-logo.png.b64
           sparse-checkout-cone-mode: false
           fetch-depth: 1
+
+      - name: Persistent source-readiness receipt before fail-closed compiler
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct13_readiness.py
 
       - name: Compile ONLY approved 2025 editorial with licensed scene inputs
         run: |
@@ -109,6 +116,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cena-certa-oct13-blocked-${{ github.run_id }}-${{ github.run_attempt }}
-          path: out/cena-certa-oct13/preflight.log
+          path: |
+            out/cena-certa-oct13/preflight.log
+            out/cena-certa-oct13/source-readiness.json
+            out/cena-certa-oct13/source-readiness.md
           retention-days: 3
           if-no-files-found: warn

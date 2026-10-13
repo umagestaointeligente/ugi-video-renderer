@@ -5,6 +5,7 @@ on:
       - scripts/cena_certa_oct13_pack.py
       - scripts/cena_certa_oct13_compile.py
       - scripts/cena_certa_delivery_guard.py
+      - scripts/cena_certa_oct13_readiness.py
       - tests/test_cena_certa*.py
       - .github/workflows/cena-certa-fail-closed-tests.yml
   push:
@@ -22,6 +23,7 @@ jobs:
             scripts/cena_certa_oct13_pack.py
             scripts/cena_certa_oct13_compile.py
             scripts/cena_certa_delivery_guard.py
+            scripts/cena_certa_oct13_readiness.py
             tests/test_cena_certa_delivery_guard.py
             tests/test_cena_certa_oct13_compile.py
             tests/test_cena_certa_oct13_offline.py
