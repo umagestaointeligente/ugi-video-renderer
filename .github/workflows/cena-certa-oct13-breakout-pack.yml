@@ -5,6 +5,7 @@ on:
     paths:
       - .github/workflows/cena-certa-oct13-breakout-pack.yml
       - scripts/cena_certa_oct13_pack.py
+      - scripts/cena_certa_oct13_compile.py
       - ops/cena-certa-oct13/manifest.json
       - ops/cena-certa-oct13/editorial-v2-9-proposed.json
       - ops/cena-certa-oct13/anti-repeat-snapshot.json
@@ -29,10 +30,16 @@ jobs:
         with:
           sparse-checkout: |
             scripts/cena_certa_oct13_pack.py
+            scripts/cena_certa_oct13_compile.py
             ops/cena-certa-oct13
             assets/cena-certa-logo.png.b64
           sparse-checkout-cone-mode: false
           fetch-depth: 1
+
+      - name: Compile ONLY approved 2025 editorial with licensed scene inputs
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct13_compile.py --write-manifest
 
       - name: Editorial, source-window and rights preflight
         run: |
@@ -58,7 +65,7 @@ jobs:
           set -euo pipefail
           for network in tiktok instagram youtube facebook; do
             tag="cena-certa-oct13-${network}"
-            gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||               gh release create "${tag}" --repo "$GITHUB_REPOSITORY"                 --title "Cena Certa Oct13 ${network}"                 --notes "Cena Certa 2.8 Oct13 benchmark test. Real scenes, original PT-BR dialogue, no narration. Released only after 60d source-window and temporal scene-sequence gates."
+            gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||               gh release create "${tag}" --repo "$GITHUB_REPOSITORY"                 --title "Cena Certa Oct13 ${network}"                 --notes "Cena Certa 2.9 Oct13 user-approved 2025 film and series editorial. Source rights are verified in the source manifest before ingestion, followed by full 60d scene QA. No automatic Metricool scheduling."
             gh release upload "${tag}" out/cena-certa-oct13/${network}/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
           done
 
