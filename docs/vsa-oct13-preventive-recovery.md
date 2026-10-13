@@ -27,3 +27,11 @@ All attempts fail on the first Edge TTS narration with HTTP 403. This change doe
 ## Acceptance and rollback
 
 Recovery requires actual valid narration, usable source assets, full rendering and independent machine QA evidence for each required gate, bound to the exact master. This patch intentionally does not invent those results or tokens. Shared workflows outside Oct13 need separate compatibility checks before adopting the tightened guard. The changes are reviewable on an isolated branch, without altering production branch, schedules or Metricool. Rollback consists of discarding the proposed branch/PR before merge; production was not promoted.
+
+## Follow-up: provider recovery investigation
+
+Historical success run 36512160336 used edge-tts 7.2.8, aiohttp 3.14.3 and multidict 6.9.1. Failing Oct13 runs used edge-tts 7.2.8, aiohttp 3.14.5 and multidict 7.1.0. Two bounded local probes, after loading the system trust store into the verified SSL context, both received HTTP 403 and produced zero audio bytes. Before loading system certificates the local environment failed certificate verification; that local TLS issue must not be conflated with the GitHub 403. No SSL verification was disabled. These results do not support claiming that a dependency rollback restores TTS.
+
+The PR CI now compares the two dependency pairs on GitHub runners with one bounded probe per pair, preserves only sanitized JSON reports for three days, and fails if either provider test fails. It never renders, issues a release token, publishes, schedules, or uploads narration. Probe success establishes only that the tested narration request produced decodable audible audio at that moment. Full recovery still requires the complete production gates.
+
+Audio validation now uses a real FFmpeg decode and measured peak level. Silent audio or missing loudness measurement blocks; errors distinguish certificate failures from provider 403. Eight local unittest methods passed, including real tone acceptance and real silence rejection. No silent clip is a narration fallback.

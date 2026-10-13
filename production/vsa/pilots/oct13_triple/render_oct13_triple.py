@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import pathlib, subprocess, json, hashlib, shutil, requests, math, os
+import pathlib, subprocess, json, hashlib, shutil, requests, math, os, re
 
 ROOT=pathlib.Path(__file__).resolve().parents[4]
 HERE=pathlib.Path(__file__).resolve().parent
@@ -311,6 +311,18 @@ def require_duration(slug,seconds):
   raise RuntimeError("DURATION_GATE_FAIL "+json.dumps({"slug":slug,"duration_seconds":seconds},ensure_ascii=False))
 
 
+def validate_narration_audio(path):
+ seconds=duration(path)
+ if not math.isfinite(seconds) or seconds<=0:
+  raise RuntimeError("TTS_AUDIO_INVALID")
+ result=subprocess.run(["ffmpeg","-hide_banner","-v","info","-xerror","-i",str(path),
+                        "-map","0:a:0","-af","volumedetect","-f","null","-"],
+                       check=True,capture_output=True,text=True,timeout=60)
+ match=re.search(r"max_volume:\s*(-?inf|[-+]?\d+(?:\.\d+)?)\s*dB",result.stderr)
+ if not match or float(match.group(1))<=-60:
+  raise RuntimeError("TTS_AUDIO_SILENT_OR_UNMEASURED")
+ return seconds
+
 def synthesize_narration(text,rate,target):
  # Never accept a stale/partial file or substitute silence on provider failure.
  partial=target.with_name(target.stem+".partial.mp3")
@@ -334,17 +346,13 @@ def synthesize_narration(text,rate,target):
                           "--text",text,"--write-media",str(partial)],
                          capture_output=True,text=True,timeout=60)
   if result is not None and result.returncode:
-   reason="TTS_PROVIDER_HTTP_403" if "WSServerHandshakeError: 403" in result.stderr else "TTS_PROVIDER_FAILED"
+   if "WSServerHandshakeError: 403" in result.stderr:reason="TTS_PROVIDER_HTTP_403"
+   elif "SSLCertVerificationError" in result.stderr or "ClientConnectorCertificateError" in result.stderr:reason="TTS_TLS_CERTIFICATE_FAIL"
+   else:reason="TTS_PROVIDER_FAILED"
    raise RuntimeError(reason)
   if not partial.is_file() or partial.stat().st_size==0:
    raise RuntimeError("TTS_AUDIO_MISSING")
-  seconds=duration(partial)
-  if not math.isfinite(seconds) or seconds<=0:
-   raise RuntimeError("TTS_AUDIO_INVALID")
-  # Probe plus full decode: an MP3 header alone is insufficient evidence.
-  subprocess.run(["ffmpeg","-v","error","-xerror","-i",str(partial),
-                  "-map","0:a:0","-f","null","-"],
-                 check=True,capture_output=True,timeout=60)
+  validate_narration_audio(partial)
   partial.replace(target)
  except subprocess.TimeoutExpired:
   raise RuntimeError("TTS_TIMEOUT") from None

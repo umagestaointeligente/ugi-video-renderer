@@ -34,9 +34,9 @@ class NarrationTests(unittest.TestCase):
                 if args[0]=='edge-tts':
                     if case=='timeout':raise subprocess.TimeoutExpired(args,60)
                     pathlib.Path(args[-1]).write_bytes(b'' if case=='empty' else b'audio')
-                    return SimpleNamespace(returncode=1 if case in ('403','failed') else 0,stderr='WSServerHandshakeError: 403' if case=='403' else 'unavailable')
+                    return SimpleNamespace(returncode=1 if case in ('403','failed','tls') else 0,stderr='WSServerHandshakeError: 403' if case=='403' else 'SSLCertVerificationError' if case=='tls' else 'unavailable')
                 if case=='decode':raise subprocess.CalledProcessError(1,args)
-                return SimpleNamespace(returncode=0)
+                return SimpleNamespace(returncode=0,stderr='max_volume: -inf dB' if case=='silent' else 'max_volume: -10.0 dB')
             with patch.dict(r.os.environ,{'VSA_NARRATION_BUNDLE':str(manifest)} if bundle else {},clear=True),patch.object(r.subprocess,'run',side_effect=run),patch.object(r,'duration',return_value=float('nan') if case=='invalid' else 4.):
                 if case=='success':r.synthesize_narration('fala','-2%',target)
                 else:
@@ -46,13 +46,23 @@ class NarrationTests(unittest.TestCase):
             self.assertLessEqual(sum(c[0]=='edge-tts' for c in calls),1)
             if bundle:self.assertFalse(any(c[0]=='edge-tts' for c in calls))
     def test_provider_failures(self):
-        for case in ('403','failed','timeout','empty','invalid','decode','success'):
+        for case in ('403','tls','failed','timeout','empty','invalid','decode','silent','success'):
             with self.subTest(case=case):self.exercise(case)
     def test_bundle_fail_closed(self):
         for case in ('hash','identity','traversal','decode','success'):
             with self.subTest(case=case):self.exercise(case,True)
 
 class AcquisitionTests(unittest.TestCase):
+    def test_real_audio_decode_and_silence_gate(self):
+        import shutil
+        if not shutil.which('ffmpeg') or not shutil.which('ffprobe'):self.skipTest('FFmpeg not installed')
+        with tempfile.TemporaryDirectory() as td:
+            for name,source,valid in [('tone','sine=frequency=440:duration=0.5',True),('silence','anullsrc=r=48000:cl=mono',False)]:
+                audio=pathlib.Path(td)/(name+'.wav')
+                subprocess.run(['ffmpeg','-y','-v','error','-f','lavfi','-i',source,'-t','0.5',str(audio)],check=True)
+                if valid:self.assertGreater(r.validate_narration_audio(audio),0)
+                else:
+                    with self.assertRaisesRegex(RuntimeError,'SILENT'):r.validate_narration_audio(audio)
     def test_interrupted_download_discards_stale_and_partial(self):
         with tempfile.TemporaryDirectory() as td:
             target=pathlib.Path(td)/'video.mp4';target.write_bytes(b'stale')
