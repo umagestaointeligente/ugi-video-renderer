@@ -98,6 +98,35 @@ class TestUserEditorialSourceOfTruth(unittest.TestCase):
                 self.assertGreaterEqual(result["blocking_error_count"], 12)
                 self.assertTrue((out / "source-readiness.json").exists())
 
+    def test_historical_discovery_before_compile_without_bypassing_gate(self):
+        workflow = (ROOT / ".github/workflows/cena-certa-oct13-breakout-pack.yml").read_text(encoding="utf-8")
+        self.assertLess(workflow.index("python scripts/cena_certa_oct13_discover.py"),
+                        workflow.index("python scripts/cena_certa_oct13_compile.py --write-manifest"))
+        self.assertLess(workflow.index("python scripts/cena_certa_oct13_compile.py --write-manifest"),
+                        workflow.index("python scripts/cena_certa_oct13_pack.py"))
+        self.assertIn("if: always()", workflow)
+        # A discovery report is not an authorization to render.
+        compiled, errors = compiler.compile_editorial(self.document)
+        self.assertIsNone(compiled)
+        self.assertTrue(any("SOCIAL_REPUBLISH_RIGHTS_MISSING" in e for e in errors))
+
+    def test_historical_ytdlp_discovery_filters_trailers_and_does_not_auto_approve(self):
+        import importlib.util
+        discovery_file = ROOT / "scripts/cena_certa_oct13_discover.py"
+        spec = importlib.util.spec_from_file_location("legacy_discovery", discovery_file)
+        discovery = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(discovery)
+        self.assertTrue(discovery.acceptable_candidate(
+            {"id": "12345678901", "title": "The Naked Gun | Official Scene Clip"},
+            "The Naked Gun"))
+        self.assertFalse(discovery.acceptable_candidate(
+            {"id": "12345678901", "title": "The Naked Gun - Official Trailer"},
+            "The Naked Gun"))
+        self.assertFalse(discovery.acceptable_candidate(
+            {"id": "12345678901", "title": "Unrelated Viral Video"},
+            "The Naked Gun"))
+        self.assertEqual(discovery.yt_search.__name__, "yt_search")
+
     def test_no_globoplay_on_youtube(self):
         doc = self.fake_complete()
         yt = next(x for x in doc["items"] if x["network"] == "youtube")
