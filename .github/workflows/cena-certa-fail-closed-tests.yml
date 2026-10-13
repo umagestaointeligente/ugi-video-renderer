@@ -1,0 +1,35 @@
+name: Cena Certa fail-closed regression
+on:
+  pull_request:
+    paths:
+      - scripts/cena_certa_oct13_pack.py
+      - scripts/cena_certa_oct13_compile.py
+      - scripts/cena_certa_delivery_guard.py
+      - tests/test_cena_certa*.py
+      - .github/workflows/cena-certa-fail-closed-tests.yml
+  push:
+    branches: [fix/cena-certa-oct13-preventive-guards]
+permissions:
+  contents: read
+jobs:
+  offline-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/cena_certa_oct13_pack.py
+            scripts/cena_certa_oct13_compile.py
+            scripts/cena_certa_delivery_guard.py
+            tests/test_cena_certa_delivery_guard.py
+            tests/test_cena_certa_oct13_compile.py
+            tests/test_cena_certa_oct13_offline.py
+            ops/cena-certa-oct13/editorial-v2-9-proposed.json
+          sparse-checkout-cone-mode: false
+      - name: Run offline tests with synthetic fixtures
+        run: |
+          set -euo pipefail
+          command -v ffmpeg
+          command -v ffprobe
+          python -m unittest discover -s tests -p 'test_cena_certa*.py' -v

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from cena_certa_delivery_guard import CONTENT_GATES, validate_review, validate_delivery, digest
 import base64, concurrent.futures, hashlib, json, math, os, pathlib, subprocess, sys, time, urllib.request
 
 ROOT=pathlib.Path.cwd()
@@ -73,7 +74,7 @@ def download_source(item,cache):
     if url.startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/")) or direct_media:
         windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
         max_end=max(float(x[1]) for x in windows)
-        section_end=max(20,min(300,int(max_end+3)))
+        section_end=math.ceil(max_end+3)
         target=wd/"source.mkv"
         last=None
         for attempt in range(1,7):
@@ -98,7 +99,7 @@ def download_source(item,cache):
         raise last
     windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
     max_end=max(float(x[1]) for x in windows)
-    section_end=max(90,min(600,int(max_end+8)))
+    section_end=max(90,math.ceil(max_end+8))
     base=[
       "yt-dlp","--no-warnings","--force-ipv4","--retries","5","--fragment-retries","5","--retry-sleep","3",
       "-f","bv*+ba/b","--merge-output-format","mp4","--download-sections",f"*0-{section_end}","--force-keyframes-at-cuts","-o",str(wd/"source.%(ext)s")
@@ -131,14 +132,16 @@ def normalized_segments(item,srcdur):
         segs=[]
         for s,e in item["segments"]:
             s=float(s); e=float(e)
+            if not math.isfinite(s) or not math.isfinite(e) or s<0 or e<=s: raise RuntimeError("SOURCE_WINDOW_INVALID")
             if s>=srcdur-0.5: raise RuntimeError(f"SEGMENT_START_FAIL:{item['id']}:{s}:{srcdur}")
-            e=min(e,srcdur)
+            if e > srcdur: raise RuntimeError("SOURCE_WINDOW_TRUNCATED")
             if e-s<4: raise RuntimeError(f"SEGMENT_TOO_SHORT:{item['id']}:{s}-{e}")
             segs.append((s,e))
         return segs
     s=float(item.get("source_start",0)); e=float(item.get("source_end",srcdur))
+    if not math.isfinite(s) or not math.isfinite(e) or s<0 or e<=s: raise RuntimeError("SOURCE_WINDOW_INVALID")
     if s>=srcdur-0.5: raise RuntimeError(f"SOURCE_WINDOW_START_FAIL:{item['id']}:{s}:{srcdur}")
-    e=min(e,srcdur)
+    if e > srcdur: raise RuntimeError("SOURCE_WINDOW_TRUNCATED")
     if e-s<12: raise RuntimeError(f"SOURCE_WINDOW_TOO_SHORT:{item['id']}:{e-s}")
     return [(s,e)]
 
@@ -225,7 +228,7 @@ def validate_master(out):
     n,d=map(int,v["avg_frame_rate"].split("/"))
     if abs(n/d-30)>0.05: raise RuntimeError("FPS_FAIL")
     if a["codec_name"]!="aac" or int(a["sample_rate"])!=48000: raise RuntimeError("AAC_48K_FAIL")
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.75:pix_th=0.02","-an","-f","null","-"],check=False)
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.75:pix_th=0.02","-an","-f","null","-"],check=True)
     if b"black_start" in black.stderr: raise RuntimeError("NO_BLACK_FAIL")
     mot=run(["ffmpeg","-v","error","-i",str(out),"-vf","fps=1","-f","framemd5","-"])
     hashes=[]
@@ -234,7 +237,7 @@ def validate_master(out):
             parts=[x.strip() for x in ln.split(",")]
             if len(parts)>=6: hashes.append(parts[-1])
     if len(set(hashes))<min(6,max(4,len(hashes)//4)): raise RuntimeError("REAL_MOTION_FAIL")
-    sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.0","-vn","-f","null","-"],check=False)
+    sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.0","-vn","-f","null","-"],check=True)
     txt=sil.stderr.decode("utf-8","ignore"); dur=duration(out); open_start=None
     for ln in txt.splitlines():
         if "silence_start:" in ln:
@@ -285,9 +288,21 @@ def longest_temporal_streak(a,b,maxham=7):
     return best,bestmeta
 
 def history_index():
-    raw=json.loads(HISTORY.read_text(encoding="utf-8")).get("items",[])
+    doc=json.loads(HISTORY.read_text(encoding="utf-8"))
+    from datetime import datetime, timezone
+    generated=datetime.fromisoformat(doc["generated_at"])
+    if generated.tzinfo is None: raise RuntimeError("HISTORY_TIMEZONE_MISSING")
+    age=(datetime.now(timezone.utc)-generated).total_seconds()
+    if age<0 or age>24*3600: raise RuntimeError("HISTORY_STALE_FAIL")
+    raw=doc.get("items",[])
     eligible=[x for x in raw if str(x.get("status","")).upper() in ("PUBLISHED","SCHEDULED") and str(x.get("media","")).lower().split("?")[0].endswith(".mp4")]
-    def one(x): return x,dhashes_center(x["media"],90,2.0,55)
+    def one(x):
+        length=duration(x["media"])
+        if not math.isfinite(length) or length<=0: raise RuntimeError("HISTORY_DURATION_FAIL")
+        hs=dhashes_center(x["media"],math.ceil(length)+1,2.0,55)
+        if len(hs)<max(12,math.floor(length*2)-2):
+            raise RuntimeError("HISTORY_FINGERPRINT_INCOMPLETE")
+        return x,hs
     idx=[]; ok=0
     with concurrent.futures.ThreadPoolExecutor(max_workers=12) as ex:
         futs=[ex.submit(one,x) for x in eligible]
@@ -296,9 +311,12 @@ def history_index():
                 x,hs=f.result()
                 if hs: ok+=1; idx.append((x,hs))
             except Exception: pass
+    if len(eligible) != sum(str(x.get("status", "")).upper() in ("PUBLISHED", "SCHEDULED") for x in raw):
+        raise RuntimeError("HISTORY_MEDIA_UNSUPPORTED_OR_MISSING")
+    if not eligible: raise RuntimeError("HISTORY_EMPTY_FAIL")
     coverage=ok/max(1,len(eligible))
     print("HISTORY_FINGERPRINT_COVERAGE",ok,len(eligible),coverage)
-    if eligible and coverage<0.80: raise RuntimeError(f"HISTORY_FINGERPRINT_COVERAGE_FAIL:{coverage:.3f}")
+    if coverage != 1.0: raise RuntimeError(f"HISTORY_FINGERPRINT_COVERAGE_FAIL:{coverage:.3f}")
     return idx,coverage,len(eligible)
 
 def source_window_gate(items,prior_sources):
@@ -358,6 +376,11 @@ def editorial_alignment_gate(items):
     approved=json.loads(EDITORIAL.read_text(encoding="utf-8"))
     if approved.get("publication_date")!="2026-10-13" or approved.get("metricool_brand_id")!=6809869:
         raise RuntimeError("EDITORIAL_V29_SCOPE_MISMATCH")
+    from cena_certa_oct13_compile import compile_editorial
+    compiled, errors = compile_editorial(approved)
+    if errors: raise RuntimeError("EDITORIAL_SOURCE_GATE_FAIL:" + json.dumps(errors))
+    if items != compiled["items"]:
+        raise RuntimeError("EDITORIAL_COMPILED_INPUT_DRIFT")
     expected=approved.get("items",[])
     if len(expected)!=12:
         raise RuntimeError("EDITORIAL_V29_ITEM_COUNT_FAIL")
@@ -422,8 +445,15 @@ def main(preflight_only=False):
         src=download_source(item,local)
         return str(item["source_id"]),src
 
-    commons_items=[item for item in items if str(item["source"]).startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/"))]
-    other_items=[item for item in items if item not in commons_items]
+    unique_sources={}
+    for item in items:
+        key=str(item["source_id"])
+        if key not in unique_sources:
+            unique_sources[key]={**item,"segments":[]}
+        unique_sources[key]["segments"].extend(item["segments"])
+    unique_items=list(unique_sources.values())
+    commons_items=[item for item in unique_items if str(item["source"]).startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/"))]
+    other_items=[item for item in unique_items if item not in commons_items]
     for item in commons_items:
         sid,src=ingest(item)
         cache[sid]=src
@@ -477,8 +507,18 @@ def main(preflight_only=False):
     for rec in summary["items"]:
         rec["gates"]["SCENE_SEQUENCE_60D_PASS"]=True
         rec["gates"]["EDITORIAL_PASS"]=True
-    (OUT/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
+    review_path = MANIFEST.parent / "content-qa.json"
+    if not review_path.is_file(): raise RuntimeError("CONTENT_QA_MISSING")
+    validate_review(summary,json.loads(review_path.read_text(encoding="utf-8")),digest(MANIFEST))
+    summary["run_id"] = os.environ["GITHUB_RUN_ID"]
+    summary["run_attempt"] = os.environ["GITHUB_RUN_ATTEMPT"]
+    summary["commit"] = os.environ["GITHUB_SHA"]
+    validate_delivery(OUT,summary,manifest,os.environ)
+    tmp=OUT/"summary.json.tmp"
+    tmp.write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
+    tmp.replace(OUT/"summary.json")
     print("CENA_CERTA_OCT13_PACK=PASS",len(summary["items"]))
 
 if __name__=="__main__":
     main(preflight_only=("--preflight" in sys.argv[1:]))
+

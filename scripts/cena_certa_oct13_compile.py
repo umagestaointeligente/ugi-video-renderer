@@ -9,6 +9,8 @@ from __future__ import annotations
 import argparse
 import ipaddress
 import json
+import math
+from datetime import datetime
 import pathlib
 import re
 from urllib.parse import urlparse
@@ -44,7 +46,7 @@ def validate_segments(value, target, key, errors):
     spans = []
     for part in value:
         if (not isinstance(part, list) or len(part) != 2 or
-            not all(type(t) in (int, float) and 0 <= t <= 21600 for t in part) or
+            not all(type(t) in (int, float) and math.isfinite(t) and 0 <= t <= 21600 for t in part) or
             float(part[1]) <= float(part[0])):
             errors.append(key + ":SOURCE_WINDOW_INVALID")
             return None
@@ -58,7 +60,7 @@ def validate_segments(value, target, key, errors):
     length = sum(e-s for s, e in spans)
     if length < 12 or length > 60:
         errors.append(key + ":OUTPUT_DURATION_OUTSIDE_12_60S")
-    if not isinstance(target, dict) or not all(type(target.get(k)) in (int, float) for k in ("min", "max")):
+    if not isinstance(target, dict) or not all(type(target.get(k)) in (int, float) and math.isfinite(target[k]) for k in ("min", "max")):
         errors.append(key + ":TARGET_DURATION_MISSING")
     elif length < target["min"] - 1 or length > target["max"] + 1:
         errors.append(key + ":SCENE_DURATION_DOES_NOT_MATCH_EDITORIAL")
@@ -75,10 +77,18 @@ def compile_editorial(approved):
         errors.append("ITEM_COUNT_NOT_12")
         return None, errors
     counts, slots, compiled = {}, set(), []
+    ids=set(); source_urls={}
     used_source_windows = []
     for entry in items:
         network, slot = entry.get("network"), entry.get("slot")
         key = str(entry.get("id") or (str(network)+"_"+str(slot)))
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,120}", key) or key in ids:
+            errors.append(key + ":ITEM_ID_INVALID_OR_DUPLICATE")
+        ids.add(key)
+        try:
+            datetime.fromisoformat(str(slot))
+        except ValueError:
+            errors.append(key + ":SLOT_INVALID")
         counts[network] = counts.get(network, 0) + 1
         if (network, slot) in slots:
             errors.append(key + ":DUPLICATE_NETWORK_SLOT")
@@ -97,6 +107,12 @@ def compile_editorial(approved):
             errors.append(key + ":HTTPS_SOURCE_MISSING")
         if not isinstance(source_id, str) or not source_id.strip() or "/" in source_id or ".." in source_id:
             errors.append(key + ":SOURCE_ID_MISSING")
+        if isinstance(source_id,str):
+            if not re.fullmatch(r"[A-Za-z0-9_-]{1,120}", source_id):
+                errors.append(key + ":SOURCE_ID_INVALID")
+            if source_id in source_urls and source_urls[source_id] != source_url:
+                errors.append(key + ":SOURCE_ID_URL_COLLISION")
+            source_urls[source_id]=source_url
         rights = entry.get("rights_evidence") or {}
         if (rights.get("status") != "VERIFIED" or
             rights.get("scope") not in LICENSE_SCOPES or
@@ -152,3 +168,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

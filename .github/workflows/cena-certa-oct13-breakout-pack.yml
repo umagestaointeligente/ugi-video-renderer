@@ -6,6 +6,8 @@ on:
       - .github/workflows/cena-certa-oct13-breakout-pack.yml
       - scripts/cena_certa_oct13_pack.py
       - scripts/cena_certa_oct13_compile.py
+      - scripts/cena_certa_delivery_guard.py
+      - ops/cena-certa-oct13/content-qa.json
       - ops/cena-certa-oct13/manifest.json
       - ops/cena-certa-oct13/editorial-v2-9-proposed.json
       - ops/cena-certa-oct13/anti-repeat-snapshot.json
@@ -31,6 +33,7 @@ jobs:
           sparse-checkout: |
             scripts/cena_certa_oct13_pack.py
             scripts/cena_certa_oct13_compile.py
+            scripts/cena_certa_delivery_guard.py
             ops/cena-certa-oct13
             assets/cena-certa-logo.png.b64
           sparse-checkout-cone-mode: false
@@ -39,7 +42,8 @@ jobs:
       - name: Compile ONLY approved 2025 editorial with licensed scene inputs
         run: |
           set -euo pipefail
-          python scripts/cena_certa_oct13_compile.py --write-manifest
+          mkdir -p out/cena-certa-oct13
+          python scripts/cena_certa_oct13_compile.py --write-manifest 2>&1 | tee out/cena-certa-oct13/preflight.log
 
       - name: Editorial, source-window and rights preflight
         run: |
@@ -58,15 +62,29 @@ jobs:
           set -euo pipefail
           python scripts/cena_certa_oct13_pack.py
 
+      - name: Revalidate exact delivery bytes and provenance
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_delivery_guard.py --out out/cena-certa-oct13 --manifest ops/cena-certa-oct13/manifest.json
+
+      - uses: actions/upload-artifact@v4
+        id: delivery-artifact
+        with:
+          name: cena-certa-oct13-benchmark-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/cena-certa-oct13/
+          retention-days: 7
+          if-no-files-found: error
+
+
       - name: Publish QA-approved network masters
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           for network in tiktok instagram youtube facebook; do
-            tag="cena-certa-oct13-${network}"
+            tag="cena-certa-oct13-${network}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
             gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||               gh release create "${tag}" --repo "$GITHUB_REPOSITORY"                 --title "Cena Certa Oct13 ${network}"                 --notes "Cena Certa 2.9 Oct13 user-approved 2025 film and series editorial. Source rights are verified in the source manifest before ingestion, followed by full 60d scene QA. No automatic Metricool scheduling."
-            gh release upload "${tag}" out/cena-certa-oct13/${network}/*.mp4 --clobber --repo "$GITHUB_REPOSITORY"
+            gh release upload "${tag}" out/cena-certa-oct13/${network}/*.mp4 --repo "$GITHUB_REPOSITORY"
           done
 
       - name: Create evidence issue
@@ -78,14 +96,19 @@ jobs:
             echo "CENA_CERTA_OCT13_PACK=PASS"
             echo "RUN_ID=$GITHUB_RUN_ID"
             echo "COMMIT=$GITHUB_SHA"
+            echo "RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+            echo "ARTIFACT_ID=${{ steps.delivery-artifact.outputs.artifact-id }}"
+            echo "ARTIFACT_DIGEST=${{ steps.delivery-artifact.outputs.artifact-digest }}"
             echo
             cat out/cena-certa-oct13/summary.json
           } > out/cena-certa-oct13/evidence.txt
           gh issue create --repo "$GITHUB_REPOSITORY"             --title "[CENA-CERTA-OCT13-BENCHMARK] $GITHUB_RUN_ID"             --body-file out/cena-certa-oct13/evidence.txt
 
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - name: Preserve failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          name: cena-certa-oct13-benchmark-${{ github.run_id }}
-          path: out/cena-certa-oct13/
-          retention-days: 7
+          name: cena-certa-oct13-blocked-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/cena-certa-oct13/preflight.log
+          retention-days: 3
+          if-no-files-found: warn
