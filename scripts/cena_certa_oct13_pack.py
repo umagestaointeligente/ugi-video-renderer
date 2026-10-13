@@ -67,7 +67,10 @@ def download_source(item,cache):
         try:p.unlink()
         except:pass
     url=str(item["source"])
-    if url.startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/")):
+    # FFmpeg handles verified direct media/CDN URLs, including signed query strings,
+    # without relying on yt-dlp's website extractor.
+    direct_media = url.split("?", 1)[0].lower().endswith((".mp4", ".mov", ".webm", ".mkv"))
+    if url.startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/")) or direct_media:
         windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
         max_end=max(float(x[1]) for x in windows)
         section_end=max(20,min(300,int(max_end+3)))
