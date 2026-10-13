@@ -384,7 +384,9 @@ def main(preflight_only=False):
     for x in items: counts[x["network"]]=counts.get(x["network"],0)+1
     if counts!={"tiktok":3,"instagram":3,"youtube":3,"facebook":3}: raise RuntimeError(f"NETWORK_COUNTS_FAIL:{counts}")
     if any(int(x.get("year",0))<1990 for x in items): raise RuntimeError("YEAR_FLOOR_FAIL")
-    if any(not str(x.get("source","")).startswith(("https://globoplay.globo.com/","https://www.youtube.com/","https://commons.wikimedia.org/","https://upload.wikimedia.org/")) for x in items): raise RuntimeError("OFFICIAL_SOURCE_DOMAIN_FAIL")
+    # Source domains are validated against licensed HTTPS evidence by the canonical compiler.
+    # Do not restrict the renderer to Globo/YouTube/Commons: user-licensed CDN sources are valid.
+    if any(not str(x.get("source","")).startswith("https://") for x in items): raise RuntimeError("SOURCE_HTTPS_FAIL")
     # Fail closed before network/downloads/releases: a platform source URL is not a use license.
     for item in items:
         sid=str(item["id"])
