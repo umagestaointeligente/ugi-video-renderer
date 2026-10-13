@@ -9,6 +9,11 @@ on:
       - scripts/cena_certa_render_evidence_guard.py
       - tests/test_cena_certa_oct03_prevention.py
       - tests/test_cena_certa_render_evidence.py
+      - scripts/cena_certa_oct13_compile.py
+      - scripts/cena_certa_oct13_pack.py
+      - tests/test_cena_certa_oct13_compile.py
+      - tests/test_cena_certa_oct13_offline.py
+      - ops/cena-certa-oct13/editorial-v2-9-proposed.json
   push:
     branches: [main]
     paths:
@@ -19,6 +24,11 @@ on:
       - scripts/cena_certa_render_evidence_guard.py
       - tests/test_cena_certa_oct03_prevention.py
       - tests/test_cena_certa_render_evidence.py
+      - scripts/cena_certa_oct13_compile.py
+      - scripts/cena_certa_oct13_pack.py
+      - tests/test_cena_certa_oct13_compile.py
+      - tests/test_cena_certa_oct13_offline.py
+      - ops/cena-certa-oct13/editorial-v2-9-proposed.json
 permissions:
   contents: read
 jobs:
@@ -38,3 +48,5 @@ jobs:
           python -m unittest discover -s tests -p 'test_workflow_config.py' -v
           python -m unittest discover -s tests -p 'test_cena_certa_oct03_prevention.py' -v
           python -m unittest discover -s tests -p 'test_cena_certa_render_evidence.py' -v
+          python -m unittest discover -s tests -p 'test_cena_certa_oct13_compile.py' -v
+          python -m unittest discover -s tests -p 'test_cena_certa_oct13_offline.py' -v
