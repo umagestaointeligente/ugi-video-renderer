@@ -10,6 +10,7 @@ on:
       - scripts/cena_certa_oct13_discover.py
       - ops/cena-certa-oct13/manifest.json
       - ops/cena-certa-oct13/editorial-v2-9-proposed.json
+      - ops/cena-certa-oct13/source-candidate-leads.json
       - ops/cena-certa-oct13/anti-repeat-snapshot.json
       - ops/cena-certa-oct13/history_media.json
       - assets/cena-certa-logo.png.b64
