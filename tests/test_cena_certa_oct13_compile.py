@@ -76,6 +76,28 @@ class TestUserEditorialSourceOfTruth(unittest.TestCase):
         self.assertTrue(any("INTRA_PACK_SOURCE_OVERLAP" in e
                             for e in compiler.compile_editorial(doc)[1]))
 
+    def test_readiness_receipt_never_labels_unverified_sources_ready(self):
+        # Exercise the user-facing intake receipt in a temporary directory;
+        # test must never write to the production out/ tree.
+        import sys
+        import tempfile
+        from unittest.mock import patch
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import cena_certa_oct13_readiness as readiness
+        with tempfile.TemporaryDirectory() as d:
+            out = pathlib.Path(d)
+            with patch.object(readiness, "OUT", out), \
+                 patch.object(readiness, "OUTPUT", out / "source-readiness.json"), \
+                 patch.object(readiness, "SUMMARY", out / "source-readiness.md"):
+                result = readiness.generate()
+                self.assertEqual(result["editorial_items"], 12)
+                self.assertEqual(result["source_ready_count"], 0)
+                self.assertEqual(result["existing_masters_count"], 0)
+                self.assertFalse(result["release_allowed"])
+                self.assertFalse(result["metricool_scheduling_allowed"])
+                self.assertGreaterEqual(result["blocking_error_count"], 12)
+                self.assertTrue((out / "source-readiness.json").exists())
+
     def test_no_globoplay_on_youtube(self):
         doc = self.fake_complete()
         yt = next(x for x in doc["items"] if x["network"] == "youtube")
