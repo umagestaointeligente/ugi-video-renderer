@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import pathlib
+import re
 
 GUARD_WORKFLOWS = {
     ".github/workflows/vsa-visual-story-standard-guard.yml",
@@ -35,8 +36,17 @@ def check(path: pathlib.Path) -> list[str]:
         errors.append(f"{rel}:MISSING_CANONICAL_MARKER:{ENGINE_MARKER}")
     if not any(marker in text for marker in RECEIPT_MARKERS):
         errors.append(f"{rel}:MISSING_CANONICAL_RECEIPT_MARKER:V2_OR_V1")
-    if GATE_MARKER not in text:
+    # A comment or an attempted shell execution of action.yml is not a gate.
+    executable = "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
+    action_gate = re.search(r"^\s*uses:\s*[\"']?\./\.github/actions/vsa-release-gate[\"']?\s*$", executable, re.M)
+    direct_gate = re.search(r"python(?:3)?\s+scripts/vsa/validate_release_receipt\.py[^\n]*--receipt[^\n]*--master", executable)
+    self_test = re.search(r"python(?:3)?\s+scripts/vsa/validate_release_receipt\.py[^\n]*--self-test", executable)
+    if not action_gate and not (direct_gate and self_test):
         errors.append(f"{rel}:MISSING_CANONICAL_MARKER:{GATE_MARKER}")
+    if re.search(r"vsa-release-gate/action\.yml.*\|\|\s*true", executable):
+        errors.append(f"{rel}:GATE_EXECUTION_ERROR_SWALLOWED")
+    if re.search(r"validate_release_receipt\.py[^\n]*(?:\|\|\s*true|;\s*true)", executable):
+        errors.append(f"{rel}:GATE_VALIDATION_ERROR_SWALLOWED")
     for token in FORBIDDEN_TOKENS:
         if token in low:
             errors.append(f"{rel}:FORBIDDEN_CROSS_ROUTE_TOKEN:{token}")
@@ -44,7 +54,7 @@ def check(path: pathlib.Path) -> list[str]:
         errors.append(f"{rel}:METRICOOL_WITHOUT_VSA_BRAND_LOCK:{ALLOWED_VSA_METRICOOL_BRAND}")
     if "drawtext" in low and "causa" in low and "efeito" in low:
         errors.append(f"{rel}:LEGACY_GENERIC_CAUSE_EFFECT_RENDERER_FORBIDDEN")
-    gate_pos = text.find(GATE_MARKER)
+    gate_pos = text.find(action_gate.group(0)) if action_gate else text.find(direct_gate.group(0)) if direct_gate else -1
     mutation_markers = ["createScheduledPost", "scheduled_at", "publish_to", "youtube upload", "youtube_upload", "autopublish"]
     positions = [low.find(x.lower()) for x in mutation_markers if low.find(x.lower()) >= 0]
     first_mutation = min(positions, default=-1)
@@ -76,3 +86,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

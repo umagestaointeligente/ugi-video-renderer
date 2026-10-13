@@ -14,6 +14,7 @@ on:
       - '.github/workflows/vsa-oct13-triple.yml'
       - 'production/vsa/pilots/oct13_triple/render_oct13_triple.py'
       - 'scripts/vsa/validate_release_receipt.py'
+      - 'tests/vsa/**'
       - 'config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json'
       - '.github/actions/vsa-release-gate/action.yml'
 
@@ -36,13 +37,20 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -y
-          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          sudo apt-get install -y ffmpeg fonts-dejavu-core jq
           python -m pip install --disable-pip-version-check Pillow requests edge-tts
 
       - name: Compile production renderer
         run: |
           set -euo pipefail
           python -m py_compile production/vsa/pilots/oct13_triple/render_oct13_triple.py
+
+      - name: Self-test release gate and preventive regressions
+        run: |
+          set -euo pipefail
+          python scripts/vsa/validate_release_receipt.py --self-test
+          python scripts/vsa/check_workflow_compliance.py .github/workflows/vsa-oct13-triple.yml
+          python -m unittest discover -s tests/vsa -v
 
       - name: Editorial hard gates before render
         run: |
@@ -59,7 +67,7 @@ jobs:
       - name: Render three fresh final masters
         run: |
           set -euo pipefail
-          python production/vsa/pilots/oct13_triple/render_oct13_triple.py | tee /tmp/vsa_oct13_render.log
+          python production/vsa/pilots/oct13_triple/render_oct13_triple.py 2>&1 | tee /tmp/vsa_oct13_render.log
           OUT=production/vsa/pilots/oct13_triple/output
           test -s "$OUT/pendulo_newton/VSA_pendulo_newton_OCT13.mp4"
           test -s "$OUT/semaforo_quimico/VSA_semaforo_quimico_OCT13.mp4"
@@ -83,7 +91,6 @@ jobs:
           set -euo pipefail
           OUT=production/vsa/pilots/oct13_triple/output
           for slug in pendulo_newton semaforo_quimico olivia_rodrigo_mensagem; do
-            ./.github/actions/vsa-release-gate/action.yml >/dev/null 2>&1 || true
             python scripts/vsa/validate_release_receipt.py               --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json               --receipt "$OUT/$slug/RELEASE_RECEIPT.json"               --master "$OUT/$slug/VSA_${slug}_OCT13.mp4"
             jq -e '.release_token.status=="PASS" and .release_eligible==true and .schedule_mutated_before_gate==false' "$OUT/$slug/RELEASE_RECEIPT.json"
           done
@@ -95,3 +102,4 @@ jobs:
           path: production/vsa/pilots/oct13_triple/output/
           if-no-files-found: error
           retention-days: 7
+
