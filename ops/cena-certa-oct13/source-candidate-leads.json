@@ -1,0 +1,50 @@
+{
+  "schema": "CENA_CERTA_OCT13_PUBLISHER_SCENE_LEADS_V1",
+  "description": "Curated official-title scene URLs discovered through public publisher pages. Discovery only; permission to redistribute is not established.",
+  "items": [
+    {
+      "editorial_id": "CC-OCT13-V29-FACEBOOK-09",
+      "title": "DNA do Crime — 2ª temporada",
+      "source_url": "https://www.youtube.com/watch?v=jeM5QW0HtzI",
+      "publisher": "Netflix Brasil",
+      "source_page": "https://www.youtube.com/watch?v=jeM5QW0HtzI",
+      "verified_as_official_publisher_page": true,
+      "verified_redistribution_rights": false,
+      "source_window": null,
+      "format": "SCENE"
+    },
+    {
+      "editorial_id": "CC-OCT13-V29-YOUTUBE-10",
+      "title": "Stranger Things — 5ª temporada, Sorcerer (official clip)",
+      "source_url": "https://www.youtube.com/watch?v=hAhDBHNwJYQ",
+      "publisher": "Stranger Things / Netflix",
+      "source_page": "https://www.youtube.com/watch?v=hAhDBHNwJYQ",
+      "verified_as_official_publisher_page": true,
+      "verified_redistribution_rights": false,
+      "source_window": null,
+      "format": "SCENE"
+    },
+    {
+      "editorial_id": "CC-OCT13-V29-YOUTUBE-11",
+      "title": "Andor — 2ª temporada, How nice for you",
+      "source_url": "https://www.youtube.com/watch?v=uHOS0rYw2EE",
+      "publisher": "Lucasfilm / Disney+",
+      "source_page": "https://press.disney.co.uk/news/lucasfilms-critically-acclaimed-andor-season-2-now-streaming-on-disney-new-materials-available",
+      "verified_as_official_publisher_page": true,
+      "verified_redistribution_rights": false,
+      "source_window": null,
+      "format": "SCENE"
+    },
+    {
+      "editorial_id": "CC-OCT13-V29-YOUTUBE-11",
+      "title": "Andor — 2ª temporada, You're coming home to yourself",
+      "source_url": "https://www.youtube.com/watch?v=OGvPbqCatUk",
+      "publisher": "Lucasfilm / Disney+",
+      "source_page": "https://press.disney.co.uk/news/lucasfilms-critically-acclaimed-andor-season-2-now-streaming-on-disney-new-materials-available",
+      "verified_as_official_publisher_page": true,
+      "verified_redistribution_rights": false,
+      "source_window": null,
+      "format": "SCENE"
+    }
+  ]
+}
