@@ -83,7 +83,7 @@ jobs:
           set -euo pipefail
           for network in tiktok instagram youtube facebook; do
             tag="cena-certa-oct13-${network}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-            gh release view "${tag}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||               gh release create "${tag}" --repo "$GITHUB_REPOSITORY"                 --title "Cena Certa Oct13 ${network}"                 --notes "Cena Certa 2.9 Oct13 user-approved 2025 film and series editorial. Source rights are verified in the source manifest before ingestion, followed by full 60d scene QA. No automatic Metricool scheduling."
+            gh release create "${tag}" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA"                 --title "Cena Certa Oct13 ${network}"                 --notes "Cena Certa 2.9 Oct13 user-approved 2025 film and series editorial. Source rights are verified in the source manifest before ingestion, followed by full 60d scene QA. No automatic Metricool scheduling."
             gh release upload "${tag}" out/cena-certa-oct13/${network}/*.mp4 --repo "$GITHUB_REPOSITORY"
           done
 
