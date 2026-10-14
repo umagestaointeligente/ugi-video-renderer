@@ -31,7 +31,7 @@ O relatório de posts/reels/vídeos publicado pelo Metricool apresentou a últim
 
 | Rede | Horário | Filme ou série (2025) | Gancho / abertura | Tempo-alvo |
 |---|---|---|---|---|
-| TikTok | 10h | Corra que a Polícia Vem Aí! | A DISFARCE DESSE POLICIAL É ABSURDO 😂 | 24–32s |
+| TikTok | 10h | Corra que a Polícia Vem Aí! | O DISFARCE DESSE POLICIAL É ABSURDO 😂 | 24–32s |
 | TikTok | 12h | O Estúdio | ERA SÓ UMA REUNIÃO NORMAL… ATÉ ISSO 😂 | 22–30s |
 | TikTok | 18h | Acompanhante Perfeita | A CONVERSA MUDA DE TOM EM UM SEGUNDO 😳 | 22–30s |
 | Instagram | 10h | F1: O Filme | UM SEGUNDO DECIDE A CORRIDA INTEIRA 🏎️ | 25–34s |
