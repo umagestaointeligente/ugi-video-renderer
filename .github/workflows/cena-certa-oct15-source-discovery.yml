@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/cena-certa-oct15-source-discovery.yml
       - scripts/cena_certa_oct15_discover.py
+      - scripts/cena_certa_oct13_discover.py
       - ops/cena-certa-oct15/editorial-metricool-v1.json
       - ops/cena-certa-oct15/source-candidate-leads.json
 permissions:
