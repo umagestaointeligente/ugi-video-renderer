@@ -1,0 +1,67 @@
+{
+  "schema": "CENA_CERTA_180D_METRICOOL_TITLE_CHECK_V1",
+  "brand_id": "6809869",
+  "window": {
+    "start": "2026-04-18T00:00:00-03:00",
+    "end": "2026-10-14T23:59:59-03:00"
+  },
+  "queried_at_local_date": "2026-10-14",
+  "method": "Metricool per-network published video/Reels connectors queried month by month to avoid ~100-item broad-range truncation. Exact film/series title tokens checked against public description/title, excluding substring collisions (e.g. Andor in Pandora).",
+  "monthly_returned_rows": {
+    "april": {
+      "tiktok": 0,
+      "instagram": 0,
+      "facebook": 0,
+      "youtube": 0
+    },
+    "may": {
+      "tiktok": 0,
+      "instagram": 0,
+      "facebook": 0,
+      "youtube": 0
+    },
+    "june": {
+      "tiktok": 0,
+      "instagram": 0,
+      "facebook": 0,
+      "youtube": 0
+    },
+    "july": {
+      "tiktok": 0,
+      "instagram": 0,
+      "facebook": 0,
+      "youtube": 0
+    },
+    "august": {
+      "tiktok": 0,
+      "instagram": 1,
+      "facebook": 0,
+      "youtube": 20
+    },
+    "september": {
+      "tiktok": 82,
+      "instagram": 78,
+      "facebook": 79,
+      "youtube": 76
+    },
+    "october_to_14": {
+      "tiktok": 24,
+      "instagram": 24,
+      "facebook": 24,
+      "youtube": 9
+    }
+  },
+  "total_returned_rows": 417,
+  "title_matches_to_oct15_editorial": [],
+  "interpretation": "No explicit title matches among 417 returned published video/Reels records; NOT evidence of complete 180-day visual scene fingerprint uniqueness or exact 180-day platform sync.",
+  "anti_repeat_180d_pass": false,
+  "reason_not_pass": "Only title/description metadata available; direct clip windows, source hashes and complete published/unsynced content are not reconciled. No guarantee of full 180-day scene identity coverage.",
+  "release_allowed_from_this_audit": false,
+  "publishing_allowed_from_this_audit": false,
+  "next_evidence_needed": [
+    "scene source_id and cut window",
+    "historical audio/video fingerprints from 180-day archive",
+    "reconcile publisher posts missing from Metricool sync",
+    "per-master SHA-256 linked to source and unique run"
+  ]
+}

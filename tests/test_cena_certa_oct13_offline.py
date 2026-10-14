@@ -43,6 +43,70 @@ class EditorialPreflightTests(unittest.TestCase):
             pipeline.editorial_alignment_gate(records)
 
 
+class SourceAccessRegressionTests(unittest.TestCase):
+    def test_youtube_bot_confirmation_is_non_retryable(self):
+        from unittest.mock import patch
+        sample = "ERROR: [youtube] AQmiLNr4BVY: Sign in to confirm you’re not a bot."
+        item = {
+            "id": "SYNTHETIC_FIXTURE_ONLY",
+            "source": "https://www.youtube.com/watch?v=AQmiLNr4BVY",
+            "source_id": "TEST_FIXTURE_YOUTUBE",
+            "segments": [[0, 25]],
+        }
+        with tempfile.TemporaryDirectory() as d:
+            with patch.object(pipeline, "WORK", pathlib.Path(d)), \
+                 patch.object(pipeline, "run", side_effect=RuntimeError(sample)) as runner, \
+                 patch.object(pipeline.time, "sleep", side_effect=AssertionError("No retry permitted")):
+                with self.assertRaisesRegex(RuntimeError, "SOURCE_AUTH_REQUIRED:YTDLP_NON_RETRYABLE"):
+                    pipeline.download_source(item, {})
+                self.assertEqual(runner.call_count, 1)
+
+    def test_direct_cdn_auth_denied_is_non_retryable(self):
+        from unittest.mock import patch
+        item = {
+            "id": "SYNTHETIC_FIXTURE_ONLY",
+            "source": "https://media.example.test/licensed-scene.mp4",
+            "source_id": "TEST_FIXTURE_DIRECT",
+            "segments": [[0, 25]],
+        }
+        with tempfile.TemporaryDirectory() as d:
+            with patch.object(pipeline, "WORK", pathlib.Path(d)), \
+                 patch.object(pipeline, "run", side_effect=RuntimeError("HTTP Error 403")) as runner, \
+                 patch.object(pipeline.time, "sleep", side_effect=AssertionError("No retry permitted")):
+                with self.assertRaisesRegex(RuntimeError, "SOURCE_AUTH_REQUIRED:DIRECT_MEDIA_NON_RETRYABLE"):
+                    pipeline.download_source(item, {})
+                self.assertEqual(runner.call_count, 1)
+
+    def test_authorized_direct_media_keeps_ffmpeg_path_without_ytdlp(self):
+        from unittest.mock import patch
+        item = {
+            "id": "SYNTHETIC_FIXTURE_ONLY",
+            "source": "https://licensed.example.test/media/cut.mp4?signature=fixture",
+            "source_id": "TEST_FIXTURE_DIRECT_PASS",
+            "segments": [[0, 25]],
+        }
+        def fake_run(command, **kwargs):
+            self.assertEqual(command[0], "ffmpeg")
+            pathlib.Path(command[-1]).write_bytes(b"x" * 250001)
+        fake_probe = {"streams": [{"codec_type": "video"}, {"codec_type": "audio"}]}
+        with tempfile.TemporaryDirectory() as d:
+            with patch.object(pipeline, "WORK", pathlib.Path(d)), \
+                 patch.object(pipeline, "run", side_effect=fake_run) as calls, \
+                 patch.object(pipeline, "probe", return_value=fake_probe):
+                cache = {}
+                output = pipeline.download_source(item, cache)
+                self.assertTrue(output.exists())
+                self.assertEqual(output.suffix, ".mkv")
+                self.assertEqual(calls.call_count, 1)
+                self.assertEqual(cache[item["source_id"]], output)
+
+    def test_network_timeouts_remain_retryable_but_not_licensed(self):
+        self.assertIsNone(pipeline.permanent_source_failure(RuntimeError("timed out")))
+        self.assertEqual(pipeline.permanent_source_failure(RuntimeError("HTTP Error 404")),
+                         "SOURCE_NOT_AVAILABLE")
+        self.assertEqual(pipeline.permanent_source_failure(RuntimeError("private video")),
+                         "SOURCE_AUTH_REQUIRED")
+
 @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "FFmpeg unavailable")
 class VP9OpusRemuxTests(unittest.TestCase):
     def test_vp9_opus_webm_remux_into_matroska(self):
