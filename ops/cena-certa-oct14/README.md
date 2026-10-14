@@ -1,6 +1,6 @@
 # Cena Certa 3.0 — Editorial + agenda de 14/10/2026
 
-**Marca Metricool:** 6809869 · **Fuso:** America/Sao_Paulo · **Escopo:** 3 vídeos para cada uma das 4 redes · **Estado:** PAUTAS PREPARADAS / MP4s PENDENTES / AGENDAMENTOS NÃO EFETUADOS
+**Marca Metricool:** 6809869 · **Fuso:** America/Sao_Paulo · **Escopo:** 3 vídeos para cada uma das 4 redes · **Estado:** PAUTAS PREPARADAS / MP4s PENDENTES / AGENDAMENTOS NÃO EFETUADOS (confirmado em 13/10)
 
 ## Evidências de desempenho (Metricool, consulta em 13/10/2026)
 
@@ -67,4 +67,10 @@ A agenda foi escolhida usando **Best Times By Network** para quarta-feira no Met
 
 Todos os URLs de página de estúdio são **leads**, não licenças. Materiais promocionais disponíveis publicamente podem estar protegidos e restritos a exibição, não reutilização comercial. A seleção de 12 títulos não aparece no histórico de títulos coberto entre 02/09–12/10; não é prova de 180 dias completos.
 
-**Planilha-mestre JSON:** [editorial-v3-0.json](./editorial-v3-0.json). 
+## Prova de tentativa de geração de MP4
+
+- [GitHub Actions run 38498197125](https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/38498197125): `Install free CI editing runtime=PASS`, `Authentic studio-published movie scene pilot=FAIL` no download pelo `yt-dlp`.
+- Falha observada: `[youtube] AQmiLNr4BVY: Sign in to confirm you’re not a bot`. O GitHub runner não tem sessão autenticada do YouTube. **Nenhum MP4 foi produzido nem lançado**; exigir fonte direta acessível ou sessão autorizada na interface conectada. Não tentar contornar bloqueios de autenticação.
+- O ambiente de edição não foi a causa desse run. Repetir o workflow com as mesmas credenciais e a mesma URL não é correção.
+
+**Editorial JSON de produção:** [editorial-v3-0.json](./editorial-v3-0.json). 
