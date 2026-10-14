@@ -127,6 +127,12 @@ class TestUserEditorialSourceOfTruth(unittest.TestCase):
             "The Naked Gun"))
         self.assertEqual(discovery.yt_search.__name__, "yt_search")
 
+    def test_dated_oct13_pack_does_not_rerun_on_new_editorial_commits(self):
+        workflow = (ROOT / ".github/workflows/cena-certa-oct13-breakout-pack.yml").read_text(encoding="utf-8")
+        trigger_block = workflow.split("on:", 1)[1].split("permissions:", 1)[0]
+        self.assertIn("workflow_dispatch:", trigger_block)
+        self.assertNotIn("push:", trigger_block)
+
     def test_oct15_restored_discovery_cannot_publish_or_schedule(self):
         editorial = json.loads((ROOT / "ops/cena-certa-oct15/editorial-metricool-v1.json").read_text(encoding="utf-8"))
         self.assertEqual(len(editorial["items"]), 12)
