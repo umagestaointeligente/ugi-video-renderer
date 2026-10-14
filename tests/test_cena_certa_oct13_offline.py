@@ -77,6 +77,29 @@ class SourceAccessRegressionTests(unittest.TestCase):
                     pipeline.download_source(item, {})
                 self.assertEqual(runner.call_count, 1)
 
+    def test_authorized_direct_media_keeps_ffmpeg_path_without_ytdlp(self):
+        from unittest.mock import patch
+        item = {
+            "id": "SYNTHETIC_FIXTURE_ONLY",
+            "source": "https://licensed.example.test/media/cut.mp4?signature=fixture",
+            "source_id": "TEST_FIXTURE_DIRECT_PASS",
+            "segments": [[0, 25]],
+        }
+        def fake_run(command, **kwargs):
+            self.assertEqual(command[0], "ffmpeg")
+            pathlib.Path(command[-1]).write_bytes(b"x" * 250001)
+        fake_probe = {"streams": [{"codec_type": "video"}, {"codec_type": "audio"}]}
+        with tempfile.TemporaryDirectory() as d:
+            with patch.object(pipeline, "WORK", pathlib.Path(d)), \
+                 patch.object(pipeline, "run", side_effect=fake_run) as calls, \
+                 patch.object(pipeline, "probe", return_value=fake_probe):
+                cache = {}
+                output = pipeline.download_source(item, cache)
+                self.assertTrue(output.exists())
+                self.assertEqual(output.suffix, ".mkv")
+                self.assertEqual(calls.call_count, 1)
+                self.assertEqual(cache[item["source_id"]], output)
+
     def test_network_timeouts_remain_retryable_but_not_licensed(self):
         self.assertIsNone(pipeline.permanent_source_failure(RuntimeError("timed out")))
         self.assertEqual(pipeline.permanent_source_failure(RuntimeError("HTTP Error 404")),
