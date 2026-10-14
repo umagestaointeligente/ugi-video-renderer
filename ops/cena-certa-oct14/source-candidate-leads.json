@@ -1,0 +1,117 @@
+{
+  "schema": "CENA_CERTA_OCT14_CANDIDATES_V1",
+  "note": "Publisher clips and official press pages are editorial sourcing leads, not licences to upload these movie/TV excerpts elsewhere.",
+  "count": 10,
+  "items": [
+    {
+      "id": "CC-OCT14-V30-01",
+      "public_url": "https://www.youtube.com/watch?v=AQmiLNr4BVY",
+      "publisher": "Paramount Movies",
+      "material_type": "OFFICIAL_SCENE",
+      "source_page": "https://www.youtube.com/watch?v=AQmiLNr4BVY",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-02",
+      "public_url": "https://www.apple.com/tv-pr/originals/the-studio/",
+      "publisher": "Apple TV Press",
+      "material_type": "PRESS_PAGE_TRAILERS_ONLY",
+      "source_page": "https://www.apple.com/tv-pr/originals/the-studio/",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-04",
+      "public_url": "https://www.apple.com/br/tv-pr/originals/f1/",
+      "publisher": "Apple TV Press BR",
+      "material_type": "PRESS_PAGE_TRAILERS_ONLY",
+      "source_page": "https://www.apple.com/br/tv-pr/originals/f1/",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-05",
+      "public_url": "https://www.sinnersmovie.com/trailer/",
+      "publisher": "Warner Bros",
+      "material_type": "OFFICIAL_TRAILER_PAGE_NOT_SCENE",
+      "source_page": "https://www.sinnersmovie.com/trailer/",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-06",
+      "public_url": "https://www.netflix.com/tudum/pt-br/frankenstein",
+      "publisher": "Netflix Tudum",
+      "material_type": "SHOW_PAGE_TRAILERS",
+      "source_page": "https://www.netflix.com/tudum/pt-br/frankenstein",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-07",
+      "public_url": "https://www.netflix.com/tudum/videos/adolescence-inside-episode-1",
+      "publisher": "Netflix Tudum",
+      "material_type": "PRESS_BTS_INCLUDES_SCENE",
+      "source_page": "https://www.netflix.com/tudum/videos/adolescence-inside-episode-1",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-09",
+      "public_url": "https://www.youtube.com/watch?v=jeM5QW0HtzI",
+      "publisher": "Netflix Brasil",
+      "material_type": "PUBLISHER_CLIP_UNVERIFIED_SCENE",
+      "source_page": "https://www.youtube.com/watch?v=jeM5QW0HtzI",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-10",
+      "public_url": "https://www.youtube.com/watch?v=hAhDBHNwJYQ",
+      "publisher": "Netflix official",
+      "material_type": "OFFICIAL_CLIP",
+      "source_page": "https://www.youtube.com/watch?v=hAhDBHNwJYQ",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-11",
+      "public_url": "https://www.youtube.com/watch?v=uHOS0rYw2EE",
+      "publisher": "Lucasfilm / Disney+",
+      "material_type": "OFFICIAL_SCENE",
+      "source_page": "https://press.disney.co.uk/news/lucasfilms-critically-acclaimed-andor-season-2-now-streaming-on-disney-new-materials-available",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    },
+    {
+      "id": "CC-OCT14-V30-12",
+      "public_url": "https://www.youtube.com/watch?v=AJNXpbrFaKA",
+      "publisher": "Warner Bros",
+      "material_type": "OFFICIAL_SCENE",
+      "source_page": "https://www.youtube.com/watch?v=AJNXpbrFaKA",
+      "video_file_downloaded": false,
+      "clip_window_verified": false,
+      "redistribution_license_verified": false,
+      "publishing_allowed": false
+    }
+  ]
+}
