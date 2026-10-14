@@ -20,10 +20,46 @@ CURATED = ROOT / "ops/cena-certa-oct13/source-candidate-leads.json"
 SKIP_WORDS = ("trailer", "teaser", "fan made", "fanmade", "reaction", "review", "analysis", "breakdown", "explained", "recap", "compilation")
 
 
+def normalize_name(value):
+    """Keep exact word/phrase boundaries across English and PT-BR titles."""
+    import unicodedata
+    ascii_name = unicodedata.normalize("NFKD", str(value or "")).encode(
+        "ascii", "ignore").decode("ascii")
+    return re.sub(r"[^a-z0-9]+", " ", ascii_name.casefold()).strip()
+
+
+def movie_identity(title):
+    """2025 approved film/series aliases; never infer identity from 'studio' alone."""
+    words = normalize_name(title)
+    names = (
+        ("corra que a policia vem ai", "the naked gun", "The Naked Gun 2025 Liam Neeson"),
+        ("the naked gun", "the naked gun", "The Naked Gun 2025 Liam Neeson"),
+        ("um filme minecraft", "a minecraft movie", "A Minecraft Movie 2025"),
+        ("a minecraft movie", "a minecraft movie", "A Minecraft Movie 2025"),
+        ("the studio", "the studio", "The Studio Seth Rogen 2025 Apple TV"),
+        ("o estudio", "the studio", "The Studio Seth Rogen 2025 Apple TV"),
+        ("f1 o filme", "f1", "F1 The Movie 2025 Brad Pitt"),
+        ("pecadores", "sinners", "Sinners 2025 Warner Bros"),
+        ("sinners", "sinners", "Sinners 2025 Warner Bros"),
+        ("frankenstein", "frankenstein", "Frankenstein Guillermo del Toro 2025 Netflix"),
+        ("adolescencia", "adolescence", "Adolescence 2025 Netflix"),
+        ("adolescence", "adolescence", "Adolescence 2025 Netflix"),
+        ("the pitt", "the pitt", "The Pitt 2025 HBO Max"),
+        ("dna do crime", "dna do crime", "DNA do Crime season 2 Netflix 2025"),
+        ("stranger things", "stranger things", "Stranger Things season 5 Netflix"),
+        ("andor", "andor", "Andor season 2 Star Wars Disney"),
+        ("uma batalha apos a outra", "one battle after another", "One Battle After Another 2025"),
+        ("one battle after another", "one battle after another", "One Battle After Another 2025"),
+    )
+    for match, canonical, query in names:
+        if re.search(r"\b" + re.escape(match) + r"\b", words):
+            return canonical, query
+    return words, str(title)
+
+
 def search_term(item):
-    title = item.get("canonical_english") or item.get("title") or ""
-    title = re.sub(r"\s*\(20\d\d\)", "", title).strip()
-    return f"{title} 2025 official scene clip"
+    _canonical, text = movie_identity(item.get("canonical_english") or item.get("title") or "")
+    return f"{text} official movie scene clip"
 
 
 def acceptable_candidate(result, title):
@@ -31,9 +67,19 @@ def acceptable_candidate(result, title):
     low = name.casefold()
     if any(x in low for x in SKIP_WORDS) or not result.get("id") or not name or len(name) > 240:
         return False
-    tokens = [x for x in re.findall(r"[\w]+", title.casefold())
-              if len(x) >= 4 and x not in ("2025", "film", "movie", "the")]
-    return bool(tokens) and any(x in low for x in tokens)
+    candidate = normalize_name(name)
+    canonical, _query = movie_identity(title)
+    if not canonical:
+        return False
+    # Exact phrase, not substring: 'the studio' cannot match a music studio,
+    # and 'andor' cannot match 'Pandora'.
+    if not re.search(r"\b" + re.escape(canonical) + r"\b", candidate):
+        return False
+    # F1 is an ambiguous sporting acronym; a race recap is not the film.
+    if canonical == "f1" and not any(re.search(r"\b" + t + r"\b", candidate)
+                                     for t in ("movie", "film", "brad pitt", "film clip", "2025")):
+        return False
+    return True
 
 
 def yt_search(item, timeout=42):
