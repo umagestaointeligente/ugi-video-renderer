@@ -1,0 +1,66 @@
+{
+  "schema": "CENA_CERTA_OCT15_CURATED_SOURCE_LEADS_V1",
+  "note": "Transferred from October 14 studio candidate list. Links are discovery leads ONLY. Authentication failed for YouTube source download on GitHub runner; neither publisher ownership nor permission for republication verified here. Not for automatic render or scheduling.",
+  "items": [
+    {
+      "editorial_id": "CC-20261015-TIKTOK-01",
+      "source_url": "https://www.youtube.com/watch?v=AQmiLNr4BVY",
+      "publisher": "Paramount Movies",
+      "source_page": "https://www.youtube.com/watch?v=AQmiLNr4BVY",
+      "lead_kind": "OFFICIAL_SCENE_FROM_OCT14_LEADS",
+      "verified_redistribution_rights": false,
+      "rights_evidence": null,
+      "source_window": null,
+      "render_ready": false,
+      "metricool_schedulable": false
+    },
+    {
+      "editorial_id": "CC-20261015-FACEBOOK-09",
+      "source_url": "https://www.youtube.com/watch?v=jeM5QW0HtzI",
+      "publisher": "Netflix Brasil",
+      "source_page": "https://www.youtube.com/watch?v=jeM5QW0HtzI",
+      "lead_kind": "PUBLISHER_CLIP_UNVERIFIED_SCENE",
+      "verified_redistribution_rights": false,
+      "rights_evidence": null,
+      "source_window": null,
+      "render_ready": false,
+      "metricool_schedulable": false
+    },
+    {
+      "editorial_id": "CC-20261015-YOUTUBE-10",
+      "source_url": "https://www.youtube.com/watch?v=hAhDBHNwJYQ",
+      "publisher": "Netflix official",
+      "source_page": "https://www.youtube.com/watch?v=hAhDBHNwJYQ",
+      "lead_kind": "OFFICIAL_CLIP_FROM_OCT14_LEADS",
+      "verified_redistribution_rights": false,
+      "rights_evidence": null,
+      "source_window": null,
+      "render_ready": false,
+      "metricool_schedulable": false
+    },
+    {
+      "editorial_id": "CC-20261015-YOUTUBE-11",
+      "source_url": "https://www.youtube.com/watch?v=uHOS0rYw2EE",
+      "publisher": "Lucasfilm / Disney+",
+      "source_page": "https://press.disney.co.uk/news/lucasfilms-critically-acclaimed-andor-season-2-now-streaming-on-disney-new-materials-available",
+      "lead_kind": "OFFICIAL_SCENE_FROM_OCT14_LEADS",
+      "verified_redistribution_rights": false,
+      "rights_evidence": null,
+      "source_window": null,
+      "render_ready": false,
+      "metricool_schedulable": false
+    },
+    {
+      "editorial_id": "CC-20261015-YOUTUBE-12",
+      "source_url": "https://www.youtube.com/watch?v=AJNXpbrFaKA",
+      "publisher": "Warner Bros",
+      "source_page": "https://www.youtube.com/watch?v=AJNXpbrFaKA",
+      "lead_kind": "OFFICIAL_SCENE_FROM_OCT14_LEADS",
+      "verified_redistribution_rights": false,
+      "rights_evidence": null,
+      "source_window": null,
+      "render_ready": false,
+      "metricool_schedulable": false
+    }
+  ]
+}
