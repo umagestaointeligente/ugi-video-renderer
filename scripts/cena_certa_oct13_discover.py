@@ -73,7 +73,10 @@ def acceptable_candidate(result, title):
         return False
     # Exact phrase, not substring: 'the studio' cannot match a music studio,
     # and 'andor' cannot match 'Pandora'.
-    if not re.search(r"\b" + re.escape(canonical) + r"\b", candidate):
+    names = (canonical, "criminal code") if canonical == "dna do crime" else (canonical,)
+    if not any(re.search(r"\b" + re.escape(value) + r"\b", candidate) for value in names):
+        return False
+    if canonical == "the naked gun" and any(word in candidate for word in ("1988", "1991", "1994", "trilogia", "trilogy")) and "2025" not in candidate:
         return False
     # F1 is an ambiguous sporting acronym; a race recap is not the film.
     if canonical == "f1" and not any(re.search(r"\b" + t + r"\b", candidate)
