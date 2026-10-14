@@ -1,0 +1,50 @@
+name: Cena Certa Oct14 Authentic Scene Internal Pilot
+on:
+  push:
+    branches: [ops/cena-certa-oct14-performance-editorial-v30]
+    paths:
+      - .github/workflows/cena-certa-oct14-internal-pilot.yml
+      - scripts/cena_certa_oct14_internal_pilot.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cena-certa-oct14-authentic-internal-pilot
+  cancel-in-progress: true
+
+jobs:
+  studio-scene-internal-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/cena_certa_oct13_pack.py
+            scripts/cena_certa_oct14_internal_pilot.py
+            ops/cena-certa-oct14/editorial-v3-0.json
+            assets/cena-certa-logo.png.b64
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Install free CI editing runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core >/dev/null
+          python -m pip install -q --upgrade yt-dlp
+
+      - name: Authentic studio-published movie scene pilot (not cleared for release)
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct14_internal_pilot.py
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-oct14-internal-preview-${{ github.run_id }}
+          path: out/cena-certa-oct14/pilot/
+          retention-days: 1
+          if-no-files-found: warn
