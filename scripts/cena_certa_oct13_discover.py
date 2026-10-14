@@ -48,7 +48,9 @@ def yt_search(item, timeout=42):
     except (subprocess.TimeoutExpired, FileNotFoundError) as exc:
         return {"query": query, "status": "PROBE_UNAVAILABLE", "error": str(exc)[:250], "candidates": []}
     if p.returncode != 0:
-        return {"query": query, "status": "PROBE_FAILED", "error": p.stderr[-450:], "candidates": []}
+        bot_gate = "sign in to confirm you" in p.stderr.casefold() and "not a bot" in p.stderr.casefold()
+        return {"query": query, "status": "PROBE_AUTH_REQUIRED" if bot_gate else "PROBE_FAILED",
+                "error": p.stderr[-450:], "candidates": []}
     try:
         data = json.loads(p.stdout)
     except (ValueError, TypeError):
@@ -92,7 +94,7 @@ def main():
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
         results = list(ex.map(yt_search, entries))
     items = [{"id": item.get("id"), "network": item.get("network"),
-              "title": item.get("title"), "slot": item.get("slot"),
+              "title": item.get("title"), "slot": item.get("slot") or item.get("local_datetime"),
               **result} for item, result in zip(entries, results)]
     for item in items:
         item["curated_publisher_scene_leads"] = [
@@ -118,7 +120,7 @@ def main():
              "Fontes encontradas são **candidatas**: não possuem aprovação de direitos nem trechos definidos.",
              "", "| Rede | Filme/série | Resultado | Candidatos |", "|---|---|---|---:|"]
     for x in items:
-        lines.append(f'| {x["network"]} | {x["title"].replace("|", "/")} | {x["status"]} | {len(x["candidates"])} |')
+        lines.append(f'| {x["network"]} | {x["title"].replace("|", "/")} | {x["status"]} | {len(x["candidates"]) + len(x["curated_publisher_scene_leads"])} |')
     lines += ["", "Próximo passo: validar fonte, licença, segmento, áudio, anti-repeat 60d e render.", ""]
     summary = "\n".join(lines)
     (OUTPUT / "source-discovery.md").write_text(summary, encoding="utf-8")
