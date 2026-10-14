@@ -1,0 +1,38 @@
+{
+  "schema": "CENA_CERTA_OCT14_DELIVERY_STATUS_V1",
+  "day": "2026-10-14",
+  "metricool_brand_id": 6809869,
+  "editorial_items": 12,
+  "network_counts": {
+    "tiktok": 3,
+    "instagram": 3,
+    "facebook": 3,
+    "youtube": 3
+  },
+  "engagement_target": {
+    "views_per_video": 100000,
+    "likes_per_video": 70000,
+    "guaranteed": false
+  },
+  "last_synced_post_date": {
+    "tiktok": "2026-10-12",
+    "instagram": "2026-10-12",
+    "facebook": "2026-10-12",
+    "youtube": "2026-10-08"
+  },
+  "metrics_for_oct13": "NOT_RETURNED_BY_METRICOOL_AT_CHECK",
+  "source_candidates_official_pages": 10,
+  "source_clips_with_verified_replication_rights": 0,
+  "source_files_validated_for_render": 0,
+  "pilot_run": "https://github.com/umagestaointeligente/ugi-video-renderer/actions/runs/38498197125",
+  "pilot_result": "SOURCE_INGEST_FAILURE",
+  "pilot_root_cause": "YOUTUBE_SIGN_IN_TO_CONFIRM_NOT_A_BOT",
+  "ready_mp4s": 0,
+  "metricool_confirmed_scheduled_posts": 0,
+  "metricool_planner_ids": [],
+  "anti_repeat_180d_coverage": "INCOMPLETE_ONLY_SEP02_OCT12_SOURCE_AVAILABLE",
+  "render_gate": "BLOCKED",
+  "schedule_gate": "BLOCKED",
+  "avoid_fabricated_evidence": true,
+  "notes": "No approved audiovisual material was fabricated or substituted. A publisher video being publicly viewable does not by itself grant permission to redistribute."
+}
