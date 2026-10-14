@@ -33,6 +33,25 @@ def probe(path):
 def esc(s):
     return str(s).replace("\\","\\\\").replace(":","\\:").replace("'","’").replace("%","\\%").replace("“",'"').replace("”",'"')
 
+def permanent_source_failure(exc):
+    """Classify non-retryable provider refusals without bypassing authentication."""
+    status = getattr(exc, "code", None)
+    msg = str(exc).casefold().replace("\u2019", "'")
+    if status in (401, 403) or any(term in msg for term in (
+        "sign in to confirm you're not a bot",
+        "http error 401", "http error 403", "401 unauthorized", "403 forbidden",
+        "login required", "authentication required", "this video is private",
+        "private video", "members-only", "drm protected", "drm-protected",
+    )):
+        return "SOURCE_AUTH_REQUIRED"
+    if status == 404 or any(term in msg for term in (
+        "http error 404", "404 not found", "this video has been removed",
+        "video unavailable", "this video is unavailable",
+    )):
+        return "SOURCE_NOT_AVAILABLE"
+    return None
+
+
 def download(url,path):
     last=None
     for attempt in range(1,7):
@@ -52,6 +71,9 @@ def download(url,path):
             try:
                 if path.exists(): path.unlink()
             except: pass
+            reason=permanent_source_failure(exc)
+            if reason:
+                raise RuntimeError(f"{reason}:FETCH_NON_RETRYABLE") from exc
             code=getattr(exc,"code",None)
             if code not in (429,500,502,503,504) and attempt>=2:
                 raise
@@ -94,6 +116,9 @@ def download_source(item,cache):
                 try:
                     if target.exists(): target.unlink()
                 except: pass
+                reason=permanent_source_failure(exc)
+                if reason:
+                    raise RuntimeError(f"{reason}:DIRECT_MEDIA_NON_RETRYABLE:{sid}") from exc
                 time.sleep(min(45,5*attempt))
         raise last
     windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
@@ -123,6 +148,11 @@ def download_source(item,cache):
                 for p in wd.glob("source.*"):
                     try:p.unlink()
                     except:pass
+                reason=permanent_source_failure(exc)
+                if reason:
+                    # Auth/rights refusal is terminal: do not retry a different
+                    # player client, use cookies, or mislabel this as render error.
+                    raise RuntimeError(f"{reason}:YTDLP_NON_RETRYABLE:{sid}") from exc
         time.sleep(3*attempt)
     raise last
 
