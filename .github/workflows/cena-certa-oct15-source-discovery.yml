@@ -1,0 +1,42 @@
+name: Cena Certa Oct15 Source Discovery (read-only)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct15-source-discovery.yml
+      - scripts/cena_certa_oct15_discover.py
+      - ops/cena-certa-oct15/editorial-metricool-v1.json
+      - ops/cena-certa-oct15/source-candidate-leads.json
+permissions:
+  contents: read
+concurrency:
+  group: cena-certa-oct15-source-discovery
+  cancel-in-progress: true
+jobs:
+  source-discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/cena_certa_oct13_discover.py
+            scripts/cena_certa_oct15_discover.py
+            ops/cena-certa-oct15
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - name: Install historical source discovery tool
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Research 12 approved titles; no video download or rights inference
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct15_discover.py
+      - name: Preserve candidates and blockers; not publication evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena-certa-oct15-source-leads-${{ github.run_id }}
+          path: out/cena-certa-oct15/source-discovery.*
+          if-no-files-found: warn
+          retention-days: 3
