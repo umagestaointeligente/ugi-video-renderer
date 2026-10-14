@@ -148,6 +148,27 @@ class TestUserEditorialSourceOfTruth(unittest.TestCase):
         self.assertNotIn("createscheduledpost", workflow.casefold())
         self.assertNotIn("gh release", workflow.casefold())
 
+    def test_2025_scene_discovery_excludes_wrong_studio_and_old_trilogy(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("discovery_identity", ROOT / "scripts/cena_certa_oct13_discover.py")
+        discover = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(discover)
+        self.assertEqual(discover.movie_identity("O Estúdio (The Studio, 2025)")[0], "the studio")
+        self.assertEqual(discover.movie_identity("F1: O Filme (2025)")[0], "f1")
+        self.assertIn("Liam Neeson", discover.search_term({"title": "Corra que a Polícia Vem Aí! (2025)"}))
+        self.assertFalse(discover.acceptable_candidate({"id": "f0000000000",
+            "title": "Recording Vocals in a Music Studio"}, "O Estúdio (The Studio, 2025)"))
+        self.assertFalse(discover.acceptable_candidate({"id": "f0000000000",
+            "title": "The Naked Gun trilogy | best scenes 1988"}, "Corra que a Polícia Vem Aí! (2025)"))
+        self.assertFalse(discover.acceptable_candidate({"id": "f0000000000",
+            "title": "Pandora 2025 adventures"}, "Andor — 2ª temporada (2025)"))
+        self.assertTrue(discover.acceptable_candidate({"id": "f0000000000",
+            "title": "F1 The Movie | Brad Pitt Clip"}, "F1: O Filme (2025)"))
+        self.assertTrue(discover.acceptable_candidate({"id": "f0000000000",
+            "title": "Sinners | I Lied To You | Warner Bros. Scene"}, "Pecadores (Sinners, 2025)"))
+        self.assertTrue(discover.acceptable_candidate({"id": "f0000000000",
+            "title": "Criminal Code Season 2 | Netflix"}, "DNA do Crime — 2ª temporada (2025)"))
+
     def test_no_globoplay_on_youtube(self):
         doc = self.fake_complete()
         yt = next(x for x in doc["items"] if x["network"] == "youtube")
