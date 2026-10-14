@@ -1,19 +1,5 @@
 name: Cena Certa Oct13 Benchmark Pack
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/cena-certa-oct13-breakout-pack.yml
-      - scripts/cena_certa_oct13_pack.py
-      - scripts/cena_certa_oct13_compile.py
-      - scripts/cena_certa_oct13_readiness.py
-      - scripts/cena_certa_oct13_discover.py
-      - ops/cena-certa-oct13/manifest.json
-      - ops/cena-certa-oct13/editorial-v2-9-proposed.json
-      - ops/cena-certa-oct13/source-candidate-leads.json
-      - ops/cena-certa-oct13/anti-repeat-snapshot.json
-      - ops/cena-certa-oct13/history_media.json
-      - assets/cena-certa-logo.png.b64
   workflow_dispatch:
 
 permissions:
