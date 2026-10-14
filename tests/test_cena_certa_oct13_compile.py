@@ -139,7 +139,8 @@ class TestUserEditorialSourceOfTruth(unittest.TestCase):
         self.assertIn("python scripts/cena_certa_oct15_discover.py", workflow)
         self.assertIn("--skip-download", source)
         self.assertNotIn("gh release ", workflow)
-        self.assertNotIn("metricool", workflow.casefold())
+        self.assertNotIn("createscheduledpost", workflow.casefold())
+        self.assertNotIn("gh release", workflow.casefold())
 
     def test_no_globoplay_on_youtube(self):
         doc = self.fake_complete()
