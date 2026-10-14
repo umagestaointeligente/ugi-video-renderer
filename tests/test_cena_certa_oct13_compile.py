@@ -127,6 +127,20 @@ class TestUserEditorialSourceOfTruth(unittest.TestCase):
             "The Naked Gun"))
         self.assertEqual(discovery.yt_search.__name__, "yt_search")
 
+    def test_oct15_restored_discovery_cannot_publish_or_schedule(self):
+        editorial = json.loads((ROOT / "ops/cena-certa-oct15/editorial-metricool-v1.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(editorial["items"]), 12)
+        self.assertEqual({n: sum(item["network"] == n for item in editorial["items"])
+                          for n in compiler.NETWORKS}, compiler.NETWORKS)
+        self.assertTrue(all(item["source_url"] is None and item["master_mp4_url"] is None
+                            for item in editorial["items"]))
+        workflow = (ROOT / ".github/workflows/cena-certa-oct15-source-discovery.yml").read_text(encoding="utf-8")
+        source = (ROOT / "scripts/cena_certa_oct13_discover.py").read_text(encoding="utf-8")
+        self.assertIn("python scripts/cena_certa_oct15_discover.py", workflow)
+        self.assertIn("--skip-download", source)
+        self.assertNotIn("gh release ", workflow)
+        self.assertNotIn("metricool", workflow.casefold())
+
     def test_no_globoplay_on_youtube(self):
         doc = self.fake_complete()
         yt = next(x for x in doc["items"] if x["network"] == "youtube")
