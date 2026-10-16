@@ -64,7 +64,20 @@ def validate_segments(value, target, key, errors):
         errors.append(key + ":SCENE_DURATION_DOES_NOT_MATCH_EDITORIAL")
     return spans
 
-def compile_editorial(approved, expected_date="2026-10-13"):
+def accepts_unverified_rights(approved, expected_date, decision):
+    """Owner instruction is an exception to intake policy, never a media licence."""
+    if not isinstance(decision, dict):return False
+    ids=[x.get("id") for x in approved.get("items",[])]
+    return (decision.get("schema")=="CENA_CERTA_USER_RIGHTS_DECISION_V1" and
+            decision.get("decision")=="PROCEED_WITH_UNVERIFIED_RIGHTS" and
+            decision.get("owner")=="Paulo" and
+            decision.get("instruction")=="Utilize mesmo sem autorização" and
+            decision.get("publication_date")==expected_date and
+            decision.get("metricool_brand_id")==6809869 and
+            len(ids)==12 and len(set(ids))==12 and None not in ids and
+            set(decision.get("item_ids",[]))==set(ids))
+
+def compile_editorial(approved, expected_date="2026-10-13", rights_decision=None):
     errors = []
     if approved.get("publication_date") != expected_date or approved.get("metricool_brand_id") != 6809869:
         errors.append("SCOPE_DATE_OR_BRAND_FAIL")
@@ -76,6 +89,7 @@ def compile_editorial(approved, expected_date="2026-10-13"):
         return None, errors
     counts, slots, compiled = {}, set(), []
     used_source_windows = []
+    rights_exception=accepts_unverified_rights(approved,expected_date,rights_decision)
     for entry in items:
         network, slot = entry.get("network"), entry.get("slot")
         key = str(entry.get("id") or (str(network)+"_"+str(slot)))
@@ -100,7 +114,7 @@ def compile_editorial(approved, expected_date="2026-10-13"):
         if not isinstance(source_id, str) or not source_id.strip() or "/" in source_id or ".." in source_id:
             errors.append(key + ":SOURCE_ID_MISSING")
         rights = entry.get("rights_evidence") or {}
-        if (rights.get("status") != "VERIFIED" or
+        if not rights_exception and (rights.get("status") != "VERIFIED" or
             rights.get("scope") not in LICENSE_SCOPES or
             not safe_https(rights.get("proof_url"))):
             errors.append(key + ":SOCIAL_REPUBLISH_RIGHTS_MISSING")
@@ -134,6 +148,8 @@ def compile_editorial(approved, expected_date="2026-10-13"):
         "objective": "Newer acclaimed live-action film and series 12-video pack",
         "benchmark_basis": "Cena Certa 2.9 approved editorial; no old Globo or outdated lineup",
         "editorial_rules": ["1990+ films/series; prefer 2000+", "60d source snapshot; release requires current 180d audit", "no Globo on YouTube", "no auto publish before gates"],
+        "rights_policy_decision": rights_decision if rights_exception else None,
+        "rights_verified_by_policy_decision": False,
         "items": compiled
     } if not errors else None), errors
 
