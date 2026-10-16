@@ -121,3 +121,14 @@ O renderer de candidatos sempre mantém release_allowed=false e não chama o Met
 
 ## Manutenção
 Atualizar este manual e o recibo quando houver mudança comprovada. Registrar commit, fontes, janelas, hash, dependências, QA e pendências. Preservar versões anteriores e não substituir evidência histórica por alegações de execução recente.
+
+
+## Continuidade comprovada — V2 de revisão, 16/10/2026
+
+Esta atualização é **aditiva**: não substitui o lote original nem altera os recibos históricos. Em nova sessão, os dois ZIPs canônicos deste manual foram restaurados da Biblioteca, os SHA-256 dos 12 arquivos-fonte e dos 12 masters originais conferidos (24/24), e 12 revisões V2 foram renderizadas a partir dos masters preservados. As V2 identificam permanentemente cada obra e têm CTA específico, com máscara corrigida para não sobrepor o CTA antigo.
+
+**QA V2 realizado:** 12/12 vídeos H.264 1080×1920/30 fps, áudio AAC/48 kHz, duração e SHA-256 conferidos; decodificação integral FFmpeg sem erros. Inspeção visual **amostrada** das aberturas e encerramentos; 164 quadros amostrados das origens e 66 pares comparados **somente dentro do lote**. Não é aprovação de 180 dias nem revisão integral dos diálogos.
+
+**Pendências mantidas:** direitos de republicação NOT_VERIFIED; legendas de diálogo NOT_ADDED; idioma e alinhamento de áudio editorial PENDING; histórico visual completo de 180 dias NOT_VERIFIED; nenhum item elegível para liberação e nenhum agendamento novo no Metricool. A decisão de direitos do usuário foi preservada sem transformá-la em licença.
+
+**Evidência/recuperação V2:** relatório `ops/cena-certa-oct16/CONTINUIDADE_QA_V2.md`; cópia privada na Biblioteca `Cena_Certa_12_Candidatos_V2_Revisao_2026-10-16.zip` (12 MP4s V2, recibos SHA, QA, pranchas e código de revisão) e `CENA_CERTA_16OUT_CONTINUIDADE_QA_V2.md`. O ZIP original de 12 masters e o ZIP de fontes seguem a base de reprodução. Se houver divergência em valores auxiliares do resumo da primeira cópia, consultar os recibos JSON; contagem correta da amostragem é 164.
