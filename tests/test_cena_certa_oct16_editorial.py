@@ -71,6 +71,13 @@ class Oct16EditorialAndSourceResearch(unittest.TestCase):
         self.assertEqual(len(yt),3)
         self.assertTrue(all(x not in title.lower() for x in ("globoplay","tv globo","globo filmes") for title in yt))
 
+    def test_dated_oct03_workflow_cannot_auto_release_on_new_guard_code(self):
+        path = ROOT / ".github/workflows/cena-certa-oct03-format-reset.yml"
+        workflow = path.read_text(encoding="utf-8")
+        triggers = workflow.split("on:", 1)[1].split("permissions:", 1)[0]
+        self.assertIn("workflow_dispatch:", triggers)
+        self.assertNotIn("push:", triggers)
+
     def test_research_workflow_cannot_publish(self):
         text = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("contents: read", text)

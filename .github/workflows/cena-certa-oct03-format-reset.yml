@@ -1,18 +1,7 @@
 name: Cena Certa Oct03 Format Reset
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/cena-certa-oct03-format-reset.yml
-      - scripts/cena_certa_oct03_pack.py
-      - scripts/cena_certa_render_evidence_guard.py
-      - ops/cena-certa-oct03/prepublish-receipts.json
-      - ops/cena-certa-oct03/manifest.json
-      - ops/cena-certa-oct03/anti-repeat-snapshot.json
-      - ops/cena-certa-oct03/history_media.json
-      - assets/cena-certa-logo.png.b64
   workflow_dispatch:
+
 permissions:
   contents: write
   issues: write
