@@ -54,6 +54,29 @@ def search_term(item):
     return f"{title} {year} official scene clip"
 
 
+_legacy_accept = discovery.acceptable_candidate
+
+
+def acceptable_candidate(result, title):
+    if not _legacy_accept(result, title):
+        return False
+    candidate = discovery.normalize_name(result.get("title", ""))
+    ident = discovery.normalize_name(title)
+    # Discourage wrong franchise installments even at the discovery-only stage.
+    if ident == "wonder":
+        if "wonder woman" in candidate:
+            return False
+        if not any(phrase in candidate for phrase in (
+            "2017", "auggie", "jacob tremblay", "r j palacio", "wonder movie"
+        )):
+            return False
+    if ident == "mean girls" and any(y in candidate for y in ("2024", "2025")) and "2004" not in candidate:
+        return False
+    if ident == "the dark knight" and "rises" in candidate:
+        return False
+    return True
+
+
 def main():
     doc = json.loads(EDITORIAL.read_text(encoding="utf-8"))
     validate_editorial(doc)
@@ -61,6 +84,7 @@ def main():
     discovery.OUTPUT = OUT
     discovery.CURATED = ROOT / "ops/cena-certa-oct16/source-candidate-leads.json"
     discovery.search_term = search_term
+    discovery.acceptable_candidate = acceptable_candidate
     discovery.main()
 
 
