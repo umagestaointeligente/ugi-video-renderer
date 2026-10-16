@@ -27,11 +27,19 @@ class EvidenceTests(unittest.TestCase):
             visual=dict(status="PASS", evidence="fixture-review", exact_subject_match=True,
                         source_cta_removed=True, frames={p:"fixture-frame" for p in POSITIONS}),
             anti_repeat=dict(status="PASS", history_complete=True, history_receipt="fixture-history",
-                history_start=(self.now-timedelta(days=60)).isoformat(), history_end=self.now.isoformat(),
+                history_start=(self.now-timedelta(days=180)).isoformat(), history_end=self.now.isoformat(),
                 comparison_layers=list(LAYERS), fingerprint_receipt="fixture-fingerprints", scene_overlap_detected=False))
 
     def test_complete_bound_receipt(self):
         self.assertEqual(validate_receipt(self.item, self.receipt, self.now), [])
+
+    def test_60_and_179_day_anti_repeat_history_cannot_release(self):
+        for days in (60, 179):
+            with self.subTest(days=days):
+                receipt=copy.deepcopy(self.receipt)
+                receipt["anti_repeat"]["history_start"]=(self.now-timedelta(days=days)).isoformat()
+                self.assertIn("ANTI_REPEAT_HISTORY_INCOMPLETE_OR_STALE",
+                              validate_receipt(self.item, receipt, self.now))
 
     def test_sep30_claims_cannot_substitute_receipts(self):
         self.assertIn("RENDER_RECEIPT_MISSING", validate_receipt(self.item, None, self.now))

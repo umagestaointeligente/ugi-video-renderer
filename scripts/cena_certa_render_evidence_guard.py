@@ -64,7 +64,7 @@ def validate_receipt(item, receipt, now=None):
     if not isinstance(repeat, dict):
         repeat = {}
     start, end = _date(repeat.get("history_start")), _date(repeat.get("history_end"))
-    if start is None or end is None or end > now or end - start < timedelta(days=60) or now - end > timedelta(hours=24):
+    if start is None or end is None or end > now or end - start < timedelta(days=180) or now - end > timedelta(hours=24):
         errors.append("ANTI_REPEAT_HISTORY_INCOMPLETE_OR_STALE")
     if repeat.get("status") != "PASS" or repeat.get("history_complete") is not True or not repeat.get("history_receipt"):
         errors.append("ANTI_REPEAT_NOT_PROVEN")
