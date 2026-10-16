@@ -2,6 +2,12 @@ name: Three Channel Real Media E2E
 on:
   push:
     branches: [ops/three-channel-e2e-oct16]
+    paths:
+      - scripts/**
+      - production/vsa/**
+      - assets/**
+      - ops/production/e2e-oct16/**
+      - .github/workflows/three-channel-e2e-render.yml
   workflow_dispatch:
 permissions:
   contents: read

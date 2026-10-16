@@ -39,10 +39,10 @@ class RealMediaTests(unittest.TestCase):
    with self.assertRaisesRegex(RuntimeError,'BROKEN_MASTER'):e2e.verify_master(ROOT/'missing.mp4')
 
  def test_changed_master_cannot_enter_artifacts(self):
-  with tempfile.TemporaryDirectory(dir=ROOT/'out') as td:
+  with tempfile.TemporaryDirectory() as td:
    p=pathlib.Path(td);source=p/'master.mp4';source.write_bytes(b'changed')
-   row={'file':str(source.relative_to(ROOT)),'sha256':'0'*64}
-   with self.assertRaisesRegex(RuntimeError,'MASTER_CHANGED_AFTER_QA'):e2e.stage_deliverables([row],p)
+   row={'file':'master.mp4','sha256':'0'*64}
+   with patch.object(e2e,'ROOT',p),self.assertRaisesRegex(RuntimeError,'MASTER_CHANGED_AFTER_QA'):e2e.stage_deliverables([row],p)
    self.assertEqual(list((p/'deliverables').glob('*.mp4')),[])
 
 if __name__=='__main__':unittest.main()
