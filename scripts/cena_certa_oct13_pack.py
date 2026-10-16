@@ -44,6 +44,8 @@ def permanent_source_failure(exc):
         "private video", "members-only", "drm protected", "drm-protected",
     )):
         return "SOURCE_AUTH_REQUIRED"
+    if "certificate_verify_failed" in msg or "certificateverifyerror" in msg:
+        return "SOURCE_TLS_CERTIFICATE_FAIL"
     if status == 404 or any(term in msg for term in (
         "http error 404", "404 not found", "this video has been removed",
         "video unavailable", "this video is unavailable",
@@ -82,6 +84,20 @@ def download(url,path):
 
 def download_source(item,cache):
     sid=str(item["source_id"])
+    if item.get("source_file"):
+        # Explicit local acquisition is a supported input, not an auth bypass.
+        # The file must already exist in this checkout and match the intake hash.
+        source=(ROOT/item["source_file"]).resolve()
+        if not source.is_relative_to(ROOT.resolve()) or not source.is_file():
+            raise RuntimeError("LOCAL_SOURCE_MISSING_OR_OUTSIDE_REPO")
+        if hashlib.sha256(source.read_bytes()).hexdigest()!=item.get("source_sha256"):
+            raise RuntimeError("LOCAL_SOURCE_HASH_FAIL")
+        pr=probe(source)
+        if not all(any(x.get("codec_type")==kind for x in pr["streams"]) for kind in ("audio","video")):
+            raise RuntimeError("LOCAL_SOURCE_STREAMS_FAIL")
+        normalized_segments(item,duration(source))
+        cache[sid]=source
+        return source
     if sid in cache: return cache[sid]
     wd=WORK/"sources"/sid
     wd.mkdir(parents=True,exist_ok=True)
@@ -95,7 +111,7 @@ def download_source(item,cache):
     if url.startswith(("https://commons.wikimedia.org/","https://upload.wikimedia.org/")) or direct_media:
         windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
         max_end=max(float(x[1]) for x in windows)
-        section_end=max(20,min(300,int(max_end+3)))
+        section_end=math.ceil(max_end+3)
         target=wd/"source.mkv"
         last=None
         for attempt in range(1,7):
@@ -123,9 +139,9 @@ def download_source(item,cache):
         raise last
     windows=item.get("segments") or [[item.get("source_start",0),item.get("source_end",90)]]
     max_end=max(float(x[1]) for x in windows)
-    section_end=max(90,min(600,int(max_end+8)))
+    section_end=max(90,math.ceil(max_end+8))
     base=[
-      "yt-dlp","--no-warnings","--force-ipv4","--retries","5","--fragment-retries","5","--retry-sleep","3",
+      sys.executable,"-m","yt_dlp","--compat-options","no-certifi","--socket-timeout","20","--no-warnings","--force-ipv4","--retries","5","--fragment-retries","5","--retry-sleep","3",
       "-f","bv*+ba/b","--merge-output-format","mp4","--download-sections",f"*0-{section_end}","--force-keyframes-at-cuts","-o",str(wd/"source.%(ext)s")
     ]
     variants=[[],["--extractor-args","youtube:player_client=tv,web_safari"]]
@@ -161,14 +177,17 @@ def normalized_segments(item,srcdur):
         segs=[]
         for s,e in item["segments"]:
             s=float(s); e=float(e)
+            if not math.isfinite(s) or not math.isfinite(e) or s<0 or e<=s: raise RuntimeError("SOURCE_WINDOW_INVALID")
             if s>=srcdur-0.5: raise RuntimeError(f"SEGMENT_START_FAIL:{item['id']}:{s}:{srcdur}")
-            e=min(e,srcdur)
+
+            if e>srcdur: raise RuntimeError("SOURCE_WINDOW_TRUNCATED")
             if e-s<4: raise RuntimeError(f"SEGMENT_TOO_SHORT:{item['id']}:{s}-{e}")
             segs.append((s,e))
         return segs
     s=float(item.get("source_start",0)); e=float(item.get("source_end",srcdur))
+    if not math.isfinite(s) or not math.isfinite(e) or s<0 or e<=s: raise RuntimeError("SOURCE_WINDOW_INVALID")
     if s>=srcdur-0.5: raise RuntimeError(f"SOURCE_WINDOW_START_FAIL:{item['id']}:{s}:{srcdur}")
-    e=min(e,srcdur)
+    if e>srcdur: raise RuntimeError("SOURCE_WINDOW_TRUNCATED")
     if e-s<12: raise RuntimeError(f"SOURCE_WINDOW_TOO_SHORT:{item['id']}:{e-s}")
     return [(s,e)]
 
@@ -255,7 +274,7 @@ def validate_master(out):
     n,d=map(int,v["avg_frame_rate"].split("/"))
     if abs(n/d-30)>0.05: raise RuntimeError("FPS_FAIL")
     if a["codec_name"]!="aac" or int(a["sample_rate"])!=48000: raise RuntimeError("AAC_48K_FAIL")
-    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.75:pix_th=0.02","-an","-f","null","-"],check=False)
+    black=run(["ffmpeg","-hide_banner","-i",str(out),"-vf","blackdetect=d=0.75:pix_th=0.02","-an","-f","null","-"],check=True)
     if b"black_start" in black.stderr: raise RuntimeError("NO_BLACK_FAIL")
     mot=run(["ffmpeg","-v","error","-i",str(out),"-vf","fps=1","-f","framemd5","-"])
     hashes=[]
@@ -264,7 +283,7 @@ def validate_master(out):
             parts=[x.strip() for x in ln.split(",")]
             if len(parts)>=6: hashes.append(parts[-1])
     if len(set(hashes))<min(6,max(4,len(hashes)//4)): raise RuntimeError("REAL_MOTION_FAIL")
-    sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.0","-vn","-f","null","-"],check=False)
+    sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.0","-vn","-f","null","-"],check=True)
     txt=sil.stderr.decode("utf-8","ignore"); dur=duration(out); open_start=None
     for ln in txt.splitlines():
         if "silence_start:" in ln:

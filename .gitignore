@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+/out/
+/tmp/
+/production/vsa/pilots/*/work/
+/production/vsa/pilots/*/output/
+/production/vsa/pilots/*/assets/

@@ -1,0 +1,30 @@
+{
+  "channel": "ugi",
+  "purpose": "historical replay only; never schedule",
+  "items": [
+    {
+      "id": "baseline-oct07-tiktok",
+      "source_file": "public/ugi/editorial/2026-10-07/src/juice.webm",
+      "source_sha256": "929a5596d70cb36c879c29d32eccf873cd0b86d7981dfb4aabbb923e9ebfcaa9",
+      "text_file": "public/ugi/editorial/2026-10-07/tiktok.txt",
+      "text_sha256": "758fbd4ac4fa5bd217ebc3197653057a49dff65871e3c258ee860ddd4eb9c954",
+      "narration_file": "public/ugi/editorial/2026-10-07/tiktok.mp3",
+      "narration_sha256": "b359955705ae89789897f3b8dfbb177a1fb665d89fd4f2b4aa3111656fdd14ae",
+      "rate": "+4%",
+      "orientation": "portrait",
+      "title": "VALOR NÃO É SÓ PREÇO"
+    },
+    {
+      "id": "baseline-oct07-youtube",
+      "source_file": "public/ugi/editorial/2026-10-07/src/grocery.webm",
+      "source_sha256": "91ee40e2b71e9d36ca4df6c3e20ab86497390bb29aca3e10600a277d82d6021c",
+      "text_file": "public/ugi/editorial/2026-10-07/youtube.txt",
+      "text_sha256": "7bd5b39a88a7f39db672023ae97508bcee62b58e954d9d21513a71d8c43a9149",
+      "narration_file": "public/ugi/editorial/2026-10-07/youtube.mp3",
+      "narration_sha256": "2e563c734e65e45c72f1ee1ecfdcd496bb58ff20a9453525e950d4f44515e299",
+      "rate": "-2%",
+      "orientation": "landscape",
+      "title": "SORTIMENTO: VARIEDADE OU PROFUNDIDADE?"
+    }
+  ]
+}

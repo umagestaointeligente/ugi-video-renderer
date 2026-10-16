@@ -1,0 +1,35 @@
+name: Cena Certa Render Candidates (no publishing)
+on:
+  workflow_dispatch:
+    inputs:
+      editorial:
+        description: 'Verified editorial JSON path inside repository'
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
+          python -m pip install yt-dlp
+      - name: Render exact inputs into reviewable candidates
+        env:
+          EDITORIAL_PATH: ${{ inputs.editorial }}
+        run: python scripts/cena_certa_render_candidates.py --editorial "$EDITORIAL_PATH" --out out/cena-certa-candidates
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-candidates-${{ github.run_id }}
+          path: |
+            out/cena-certa-candidates/batch-receipt.json
+            out/cena-certa-candidates/*/*.mp4
+          retention-days: 1
+          if-no-files-found: error
