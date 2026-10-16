@@ -53,11 +53,18 @@ def render(item,out):
           f'drawtext=fontfile={FONT}:textfile={title}:fontcolor=white:fontsize=44:x=(w-text_w)/2:y=62,'
           f'drawtext=fontfile={FONT}:text=UMA GESTÃO INTELIGENTE:fontcolor=white:fontsize=28:borderw=2:x=(w-text_w)/2:y=h-110,'
           f"drawtext=fontfile={FONT}:text=Siga para mais ideias de gestão:fontcolor=white:fontsize=30:borderw=2:x=(w-text_w)/2:y=h-170:enable='gte(t,{max(0,length-3)})'")
+    if item.get('subtitle_file'):
+        subtitles=local(item['subtitle_file'])
+        filt+=f",subtitles='{subtitles}'"
     master=work/'master.mp4'
-    run(['ffmpeg','-y','-v','error','-filter_threads','2','-stream_loop','-1','-i',source,'-i',audio,
-         '-vf',filt,'-af','loudnorm=I=-16:TP=-1.5:LRA=9','-map','0:v:0','-map','1:a:0',
-         '-t',str(length),'-c:v','libx264','-threads','2','-preset','veryfast','-crf','20',
-         '-pix_fmt','yuv420p','-c:a','aac','-ar','48000','-b:a','160k','-movflags','+faststart',master])
+    inputs=['ffmpeg','-y','-v','error','-filter_threads','2','-filter_complex_threads','2','-stream_loop','-1','-i',source,'-i',audio]
+    if item.get('music_file'):
+        inputs+=['-stream_loop','-1','-i',local(item['music_file'])]
+        mix='[1:a]aresample=48000,asplit=2[n1][n2];[2:a]aresample=48000,volume=0.10[m];[m][n1]sidechaincompress=threshold=.035:ratio=8:attack=20:release=250[d];[n2][d]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=9[a]'
+        inputs+=['-filter_complex',mix,'-map','0:v:0','-map','[a]']
+    else:inputs+=['-af','loudnorm=I=-16:TP=-1.5:LRA=9','-map','0:v:0','-map','1:a:0']
+    run(inputs+['-vf',filt,'-t',str(length),'-c:v','libx264','-threads','2','-preset','veryfast','-crf','20',
+                '-pix_fmt','yuv420p','-c:a','aac','-ar','48000','-b:a','160k','-movflags','+faststart',master])
     data=probe(master);v=next(s for s in data['streams'] if s['codec_type']=='video')
     a=next(s for s in data['streams'] if s['codec_type']=='audio')
     if (v['codec_name'],v['width'],v['height'],v.get('sample_aspect_ratio'),a['codec_name'])!=('h264',w,h,'1:1','aac'):
