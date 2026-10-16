@@ -1,0 +1,41 @@
+name: Cena Certa Oct16 Authentic Scene Research (read-only)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cena-certa-oct16-source-discovery.yml
+      - scripts/cena_certa_oct16_discover.py
+      - ops/cena-certa-oct16/editorial-v1.json
+permissions:
+  contents: read
+concurrency:
+  group: cena-certa-oct16-source-discovery
+  cancel-in-progress: true
+jobs:
+  locate-authentic-clips:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/cena_certa_oct13_discover.py
+            scripts/cena_certa_oct16_discover.py
+            ops/cena-certa-oct16
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - name: Install no-cost public title search
+        run: python -m pip install -q --upgrade yt-dlp
+      - name: Discover 12 source leads but never download or publish
+        run: |
+          set -euo pipefail
+          python scripts/cena_certa_oct16_discover.py
+      - name: Preserve discovery evidence only
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cena-certa-oct16-unverified-leads-${{ github.run_id }}
+          path: out/cena-certa-oct16/source-discovery/source-discovery.*
+          if-no-files-found: warn
+          retention-days: 2
