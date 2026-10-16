@@ -26,7 +26,7 @@ def acquire(page,target,seconds=60):
  formats=[f for f in data.get('formats',[]) if f.get('url','').startswith('https://') and not f.get('has_drm') and f.get('vcodec')!='none']
  if not formats:raise RuntimeError('PUBLIC_VIDEO_FORMAT_MISSING')
  formats.sort(key=lambda f:abs((f.get('height') or 720)-720))
- media_url=formats[0]['url'];partial=target.with_name(target.stem+'.partial.mp4');partial.unlink(missing_ok=True)
+ media_url=formats[0]['url'];partial=target.with_name(target.stem+'.partial'+target.suffix);partial.unlink(missing_ok=True)
  try:
   p=subprocess.run(['ffmpeg','-y','-v','error','-rw_timeout','30000000','-i',media_url,'-t',str(seconds),'-c','copy',str(partial)],capture_output=True,timeout=180)
   if p.returncode:raise RuntimeError('PUBLIC_MEDIA_FETCH_FAILED')

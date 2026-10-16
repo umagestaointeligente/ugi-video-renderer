@@ -94,6 +94,7 @@ def ugi_new(out):
 
 def vsa(out):
  script=ROOT/'production/vsa/pilots/oct13_triple/render_oct13_triple.py'
+ (out/'ATTRIBUTION.txt').write_text('Physical Newton demonstration: UniServeScienceVIDEO, PH ME DY TUTE 70030A V0608 Newtons Cradle Introductory Analysis, CC BY 3.0 https://creativecommons.org/licenses/by/3.0/ ; excerpted, resized, narrated and captioned. Source: https://commons.wikimedia.org/wiki/File:PH_ME_DY_TUTE_70030A_V0608_Newtons_Cradle_Introductory_Analysis.webm\nOther source licenses remain listed in the per-scene receipts and require review before release.\n')
  run([sys.executable,script],timeout=1800)
  folder=script.parent/'output';manifest=json.loads((folder/'MANIFEST.json').read_text())
  if len(manifest)!=3:raise RuntimeError('VSA_BATCH_INCOMPLETE')
