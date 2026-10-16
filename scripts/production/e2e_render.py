@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Production-path media tests. RENDERED never implies approved/published/scheduled."""
-import argparse,base64,hashlib,importlib.util,json,math,pathlib,subprocess,sys,textwrap,urllib.request
+import argparse,base64,hashlib,importlib.util,json,math,pathlib,subprocess,sys,textwrap,shutil,re,urllib.request
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT/'scripts'),str(ROOT/'scripts/media')]
 import cena_certa_oct13_pack as cc
@@ -55,7 +55,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
 def cena_certa(out):
  work=out/'work';work.mkdir(parents=True,exist_ok=True);cc.WORK=work;cc.OUT=out
- # Current approved film, a fresh public scene source, original PT-BR dialogue.
+ # Film from the current proposed grade, a fresh public scene source, original PT-BR dialogue.
  # This is an acquisition/render test, never a substitute for rights or 180d review.
  item={'id':'CC-OCT16-FB-FELICIDADE-AQUISICAO','network':'facebook','format':'film_scene_editorial',
        'title':'À Procura da Felicidade (2006)','source':'https://globoplay.globo.com/v/4192856/',
@@ -104,15 +104,31 @@ def vsa(out):
   rec.update(slug=item['slug'],editorial_review='PENDING',anti_repeat_180d='NOT_VERIFIED');rows.append(rec)
  return rows
 
+def stage_deliverables(rows,out):
+ deliver=out/'deliverables';shutil.rmtree(deliver,ignore_errors=True);deliver.mkdir()
+ if not rows:raise RuntimeError('NO_RENDERED_MASTERS')
+ for i,row in enumerate(rows):
+  path=(ROOT/row['file']).resolve()
+  if not path.is_relative_to(ROOT) or not path.is_file():raise RuntimeError('MASTER_MISSING_OR_OUTSIDE_REPO')
+  if digest(path)!=row['sha256']:raise RuntimeError('MASTER_CHANGED_AFTER_QA')
+  dest=deliver/f'{i+1:02d}_{path.name}';shutil.copyfile(path,dest)
+  row['artifact_file']=str(dest.relative_to(ROOT))
+
 def main():
  p=argparse.ArgumentParser();p.add_argument('--channel',choices=['cena-certa','vsa','ugi'],required=True);a=p.parse_args()
  out=ROOT/'out/production-e2e-oct16'/a.channel;out.mkdir(parents=True,exist_ok=True)
+ shutil.rmtree(out/'deliverables',ignore_errors=True)
  report={'channel':a.channel,'status':'FAIL','release_allowed':False,'published':False,'scheduled':False}
  try:
   rows={'cena-certa':cena_certa,'vsa':vsa,'ugi':ugi_new}[a.channel](out)
+  stage_deliverables(rows,out)
   report.update(status='RENDERED_TECHNICAL_QA_PASS',videos=rows)
  except Exception as exc:
-  report.update(error_type=type(exc).__name__,error_code=str(exc).split(' ',1)[0][:100])
+  code=str(exc).split(' ',1)[0][:100]
+  if isinstance(exc,subprocess.CalledProcessError):
+   codes=re.findall(r'(?:TTS|SOURCE|ASSET|VSA|MASK|DURATION|CAPTION)_[A-Z_]+',str(exc.stderr or ''))
+   code=codes[-1] if codes else 'RENDER_SUBPROCESS_FAILED'
+  report.update(error_type=type(exc).__name__,error_code=code)
  finally:
   (out/'E2E_RECEIPT.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
  print(json.dumps(report,ensure_ascii=False))
