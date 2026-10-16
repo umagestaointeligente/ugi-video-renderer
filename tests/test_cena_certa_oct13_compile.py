@@ -33,6 +33,34 @@ class TestUserEditorialSourceOfTruth(unittest.TestCase):
             item["media_type"] = "LIVE_ACTION"
         return doc
 
+    def decision(self,doc):
+        return {"schema":"CENA_CERTA_USER_RIGHTS_DECISION_V1","decision":"PROCEED_WITH_UNVERIFIED_RIGHTS",
+                "owner":"Paulo","instruction":"Utilize mesmo sem autorização","publication_date":doc['publication_date'],
+                "metricool_brand_id":6809869,"item_ids":[x['id'] for x in doc['items']]}
+
+    def test_scoped_owner_decision_never_claims_a_license(self):
+        doc=self.fake_complete()
+        for x in doc['items']:x['rights_evidence']={'status':'NOT_VERIFIED'}
+        self.assertTrue(any('RIGHTS_MISSING' in x for x in compiler.compile_editorial(doc)[1]))
+        manifest,errors=compiler.compile_editorial(doc,rights_decision=self.decision(doc))
+        self.assertEqual(errors,[])
+        self.assertFalse(manifest['rights_verified_by_policy_decision'])
+        self.assertTrue(all(x['rights_evidence']['status']=='NOT_VERIFIED' for x in manifest['items']))
+
+    def test_owner_decision_cannot_expand_brand_date_or_item_scope(self):
+        doc=self.fake_complete()
+        for x in doc['items']:x['rights_evidence']={'status':'NOT_VERIFIED'}
+        for field,value in [('metricool_brand_id',1),('publication_date','2026-10-17'),('item_ids',['other']),('owner','other')]:
+            policy=self.decision(doc);policy[field]=value
+            self.assertTrue(any('RIGHTS_MISSING' in x for x in compiler.compile_editorial(doc,rights_decision=policy)[1]))
+
+    def test_rights_exception_does_not_supply_missing_media(self):
+        doc=copy.deepcopy(self.document)
+        _,errors=compiler.compile_editorial(doc,rights_decision=self.decision(doc))
+        self.assertTrue(any('HTTPS_SOURCE_MISSING' in x for x in errors))
+        self.assertTrue(any('SOURCE_SEGMENTS_MISSING' in x for x in errors))
+        self.assertFalse(any('RIGHTS_MISSING' in x for x in errors))
+
     def test_real_canonical_editorial_fails_before_media_render(self):
         compiled, errors = compiler.compile_editorial(self.document)
         self.assertIsNone(compiled)

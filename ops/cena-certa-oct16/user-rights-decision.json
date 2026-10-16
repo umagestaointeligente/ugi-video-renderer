@@ -1,0 +1,34 @@
+{
+  "schema": "CENA_CERTA_USER_RIGHTS_DECISION_V1",
+  "decision": "PROCEED_WITH_UNVERIFIED_RIGHTS",
+  "owner": "Paulo",
+  "instruction": "Utilize mesmo sem autorização",
+  "publication_date": "2026-10-16",
+  "metricool_brand_id": 6809869,
+  "item_ids": [
+    "CC-OCT16-TIKTOK-01",
+    "CC-OCT16-TIKTOK-02",
+    "CC-OCT16-TIKTOK-03",
+    "CC-OCT16-INSTAGRAM-04",
+    "CC-OCT16-INSTAGRAM-05",
+    "CC-OCT16-INSTAGRAM-06",
+    "CC-OCT16-FACEBOOK-07",
+    "CC-OCT16-FACEBOOK-08",
+    "CC-OCT16-FACEBOOK-09",
+    "CC-OCT16-YOUTUBE-10",
+    "CC-OCT16-YOUTUBE-11",
+    "CC-OCT16-YOUTUBE-12"
+  ],
+  "rights_verified": false,
+  "license_granted": false,
+  "unchanged_checks": [
+    "real_media",
+    "source_identity",
+    "no_trailers",
+    "no_globo_youtube",
+    "anti_repeat_180d",
+    "technical_qa",
+    "editorial_qa"
+  ],
+  "note": "User accepts proceeding without rights evidence. This does not certify rights or supply missing files."
+}
