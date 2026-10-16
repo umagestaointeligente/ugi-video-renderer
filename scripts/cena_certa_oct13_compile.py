@@ -64,9 +64,9 @@ def validate_segments(value, target, key, errors):
         errors.append(key + ":SCENE_DURATION_DOES_NOT_MATCH_EDITORIAL")
     return spans
 
-def compile_editorial(approved):
+def compile_editorial(approved, expected_date="2026-10-13"):
     errors = []
-    if approved.get("publication_date") != "2026-10-13" or approved.get("metricool_brand_id") != 6809869:
+    if approved.get("publication_date") != expected_date or approved.get("metricool_brand_id") != 6809869:
         errors.append("SCOPE_DATE_OR_BRAND_FAIL")
     if approved.get("timezone") != "America/Sao_Paulo":
         errors.append("TIMEZONE_FAIL")
@@ -83,12 +83,14 @@ def compile_editorial(approved):
         if (network, slot) in slots:
             errors.append(key + ":DUPLICATE_NETWORK_SLOT")
         slots.add((network, slot))
-        if network not in NETWORKS or not isinstance(slot, str) or not re.fullmatch(r"2026-10-13T\d\d:\d\d:00-03:00", slot):
+        if network not in NETWORKS or not isinstance(slot, str) or not re.fullmatch(re.escape(expected_date)+r"T\d\d:\d\d:00-03:00", slot):
             errors.append(key + ":SLOT_INVALID")
         if not isinstance(entry.get("title"), str) or not entry.get("title").strip():
             errors.append(key + ":TITLE_MISSING")
-        if "2025" not in str(entry.get("title")):
-            errors.append(key + ":ONLY_2025_FILM_OR_SERIES_ALLOWED")
+        years = re.findall(r"\b(?:19|20)\d{2}\b", str(entry.get("title", "")))
+        year = entry.get("year", int(years[-1]) if years else None)
+        if type(year) is not int or not 1990 <= year <= 2026:
+            errors.append(key + ":FILM_YEAR_OUTSIDE_1990_2026")
         if not entry.get("hook") or not entry.get("cta"):
             errors.append(key + ":HOOK_OR_CTA_MISSING")
         source_url = entry.get("source_url")
@@ -115,22 +117,23 @@ def compile_editorial(approved):
                 used_source_windows.append((source_id, start, end, key))
         compiled.append({
             "id": key, "network": network, "slot": slot, "title": entry.get("title"),
-            "year": 2025, "format": "film_comedy_conflict" if entry.get("theme") == "humor" else "film_scene_editorial",
+            "year": year, "format": "film_comedy_conflict" if entry.get("theme") == "humor" else "film_scene_editorial",
             "source": source_url, "source_id": source_id, "segments": spans,
             "hook": entry.get("hook"), "cta": entry.get("cta"),
             "caption": entry.get("caption") or (str(entry.get("title")) + " | Qual sua cena favorita? #CenaCerta #Cinema #Series"),
             "audio_mode": "ORIGINAL_SOURCE_DIALOGUE",
             "rights_evidence": rights, "media_type": entry.get("media_type"),
+            **({"source_file":entry["source_file"],"source_sha256":entry.get("source_sha256")} if entry.get("source_file") else {}),
         })
     if counts != NETWORKS:
         errors.append("NETWORK_COUNTS_FAIL:" + repr(counts))
     return ({
         "schema": "CENA_CERTA_OCT13_COMPILED_V29",
         "timezone": "America/Sao_Paulo",
-        "date": "2026-10-13",
+        "date": expected_date,
         "objective": "Newer acclaimed live-action film and series 12-video pack",
         "benchmark_basis": "Cena Certa 2.9 approved editorial; no old Globo or outdated lineup",
-        "editorial_rules": ["2025 films/series", "60d anti-repeat", "no Globo on YouTube", "no auto publish before gates"],
+        "editorial_rules": ["1990+ films/series; prefer 2000+", "60d source snapshot; release requires current 180d audit", "no Globo on YouTube", "no auto publish before gates"],
         "items": compiled
     } if not errors else None), errors
 

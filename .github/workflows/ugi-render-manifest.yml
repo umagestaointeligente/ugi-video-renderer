@@ -1,0 +1,41 @@
+name: UGI Render from Manifest (no publishing)
+on:
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: 'Repository manifest path; baseline replay is internal QA only'
+        required: true
+        default: ops/production/baselines/ugi-oct07-replay.json
+        type: string
+  push:
+    paths: ['ops/production/ugi/current.json']
+permissions:
+  contents: read
+concurrency:
+  group: ugi-manifest-render-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Install runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
+          python -m pip install edge-tts==7.3.1
+      - name: Render candidates with exact asset identities
+        env:
+          RENDER_MANIFEST: ${{ inputs.manifest || 'ops/production/ugi/current.json' }}
+        run: python scripts/ugi_render_manifest.py --manifest "$RENDER_MANIFEST" --out out/ugi-manifest
+      - name: Preserve candidates and receipts for QA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ugi-render-candidates-${{ github.run_id }}
+          path: out/ugi-manifest/
+          retention-days: 1
+          if-no-files-found: error

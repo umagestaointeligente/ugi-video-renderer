@@ -1,0 +1,54 @@
+name: Three Channel Production Recovery Validation
+on:
+  pull_request:
+    paths:
+      - scripts/media/**
+      - scripts/ugi_render_manifest.py
+      - scripts/cena_certa_oct13_*.py
+      - scripts/cena_certa_render_candidates.py
+      - .github/workflows/cena-certa-render-candidates.yml
+      - scripts/vsa/**
+      - production/vsa/pilots/oct13_triple/render_oct13_triple.py
+      - tests/**
+      - .github/workflows/production-recovery-validation.yml
+      - .github/workflows/ugi-render-manifest.yml
+      - .github/workflows/vsa-oct13-triple.yml
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+          python -m pip install requests Pillow PyYAML
+      - run: |
+          python -m unittest discover -s tests -v
+          python -m unittest discover -s tests/vsa -v
+          python scripts/vsa/validate_release_receipt.py --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json --self-test
+          python scripts/vsa/check_workflow_compliance.py .github/workflows/vsa-oct13-triple.yml
+  public-narration-provider:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+          python -m pip install requests edge-tts==7.3.1
+      - name: Synthesize one previously public narration and decode it
+        run: python scripts/vsa/probe_narration_provider.py --output out/tts-provider.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-tts-probe-${{ github.run_id }}
+          path: out/tts-provider.json
+          retention-days: 1
+          if-no-files-found: error
