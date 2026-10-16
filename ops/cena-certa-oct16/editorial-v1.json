@@ -1,0 +1,570 @@
+{
+  "schema": "CENA_CERTA_OCT16_PERFORMANCE_EDITORIAL_V1",
+  "publication_date": "2026-10-16",
+  "metricool_brand_id": 6809869,
+  "timezone": "America/Sao_Paulo",
+  "generated_from": "Metricool network Reels/Posts/Published videos: published Sep01-Oct15 2026, Best Times Oct16.",
+  "strategy": "12 different popular, recognizable 2001+ live-action movies/series; no Globo or Globo-film content on YouTube; three audience-relevant formats per platform. Never invent source/license/scene window. 180-day fingerprint repeat mandatory.",
+  "metadata_title_repeat_scan": {
+    "from": "2026-04-19",
+    "to": "2026-10-15",
+    "explicit_matches": 0,
+    "verified_visual_scene_uniqueness": false
+  },
+  "benchmarks": {
+    "tiktok_best": {
+      "date": "2026-09-14",
+      "title": "Tô de Graça — erros de gravação",
+      "views": 23058,
+      "likes": 2831,
+      "comments": 25,
+      "avg_watch_sec": 68,
+      "duration_sec": 356
+    },
+    "instagram_best": {
+      "date": "2026-09-19",
+      "title": "Vai Que Cola — elenco perde a linha",
+      "views": 1271,
+      "likes": 58,
+      "comments": 0,
+      "avg_watch_sec": 21.246
+    },
+    "facebook_recent_best": {
+      "date": "2026-10-06",
+      "title": "De Pernas pro Ar 2",
+      "views": 1210,
+      "likes": 20,
+      "comments": null,
+      "avg_watch_sec": 4
+    },
+    "youtube_best": {
+      "date": "2026-09-19",
+      "title": "Vai Que Cola — elenco perde a linha",
+      "views": 6658,
+      "likes": 308,
+      "comments": 0,
+      "avg_watch_sec": 24
+    }
+  },
+  "targets": {
+    "views": 100000,
+    "likes": 70000,
+    "guaranteed": false
+  },
+  "status": "EDITORIAL_PREPARED_NO_MEDIA_NO_SCHEDULE",
+  "publishing_allowed": false,
+  "reason": "Missing scene master files, redistribution-rights evidence, exact source segments and 180-day perceptual anti-repeat verification",
+  "technical_contract": {
+    "resolution": "1080x1920",
+    "fps": 30,
+    "container": "MP4",
+    "video_codec": "H264",
+    "audio_codec": "AAC",
+    "audio": "Original intelligible scene dialogue; music when appropriate below dialogue; no silent tail",
+    "hook_placement_sec": "0-1.5",
+    "cta": "Must stay audible and readable through last frame",
+    "prohibit": [
+      "film trailers",
+      "still-image slideshow",
+      "reused video sources",
+      "visual mismatch",
+      "external Make/Vercel",
+      "YouTube Globo film/TV IP"
+    ],
+    "release_gate": "rights and master_SHA256 and scene_fingerprint_180d and QA PASS"
+  },
+  "items": [
+    {
+      "id": "CC-OCT16-TIKTOK-21",
+      "network": "tiktok",
+      "slot": "2026-10-16T10:00:00-03:00",
+      "title": "As Branquelas (2004)",
+      "canonical_english": "White Chicks",
+      "year": 2004,
+      "theme": "humor",
+      "hook": "O DISFARCE DELES ESTÁ PRESTES A CAIR 😂",
+      "scene_brief": "Uma situação social coloca o disfarce sob pressão; preservar a pergunta, a reação e a quebra cômica.",
+      "cta": "Em qual momento você perceberia o disfarce?",
+      "caption": "Quando todo mundo acredita no disfarce… menos a situação 😂 Qual detalhe entregou primeiro? #AsBranquelas #CenaCerta #Comedia",
+      "target_duration_sec": {
+        "min": 40,
+        "max": 52
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-TIKTOK-22",
+      "network": "tiktok",
+      "slot": "2026-10-16T12:00:00-03:00",
+      "title": "Se Beber, Não Case! (2009)",
+      "canonical_english": "The Hangover",
+      "year": 2009,
+      "theme": "humor",
+      "hook": "A RESSACA VEIO COM UMA SURPRESA ABSURDA 😂",
+      "scene_brief": "Trecho do quarto de hotel: descoberta, espanto e reação; nunca misturar outra cena nem substituir diálogo.",
+      "cta": "Você entraria nesse banheiro?",
+      "caption": "Eles acordaram sem lembrar da noite… e o hotel guardava a resposta 😂 Você entraria nesse banheiro? #SeBeberNaoCase #CenaCerta",
+      "target_duration_sec": {
+        "min": 36,
+        "max": 50
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-TIKTOK-23",
+      "network": "tiktok",
+      "slot": "2026-10-16T18:00:00-03:00",
+      "title": "A Hora do Rush 2 (2001)",
+      "canonical_english": "Rush Hour 2",
+      "year": 2001,
+      "theme": "humor",
+      "hook": "DOIS POLICIAIS, UMA IDEIA TERRÍVEL 😂",
+      "scene_brief": "Diálogo e contraste entre Carter e Lee em uma situação inesperada; piada deve terminar na mesma sequência.",
+      "cta": "Quem piora mais a confusão: Carter ou Lee?",
+      "caption": "A dupla tenta resolver um problema e consegue criar outro 😂 Carter ou Lee: quem é o mais caótico? #HoraDoRush2 #CenaCerta",
+      "target_duration_sec": {
+        "min": 42,
+        "max": 56
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-INSTAGRAM-24",
+      "network": "instagram",
+      "slot": "2026-10-16T10:00:00-03:00",
+      "title": "Meninas Malvadas (2004)",
+      "canonical_english": "Mean Girls",
+      "year": 2004,
+      "theme": "humor",
+      "hook": "UMA FRASE VIROU REGRA NA ESCOLA 💗",
+      "scene_brief": "Momento social icônico entre as personagens; regra, resposta e reação, com contexto visual e áudio originais.",
+      "cta": "Qual regra absurda você lembra do seu colégio?",
+      "caption": "Tem frase de filme que vira regra para uma geração inteira 💗 Qual era a regra mais absurda da sua escola? #MeninasMalvadas #CenaCerta",
+      "target_duration_sec": {
+        "min": 34,
+        "max": 48
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-INSTAGRAM-25",
+      "network": "instagram",
+      "slot": "2026-10-16T12:00:00-03:00",
+      "title": "Extraordinário (2017)",
+      "canonical_english": "Wonder",
+      "year": 2017,
+      "theme": "emocao",
+      "hook": "ELE SÓ QUERIA SER TRATADO COMO TODO MUNDO 🥹",
+      "scene_brief": "Uma interação de Auggie na escola, construída com gesto, resposta e efeito emocional, sem cortes de cenas diferentes.",
+      "cta": "Que atitude pequena já mudou seu dia?",
+      "caption": "Às vezes um gesto muda o dia de alguém. Qual atitude você nunca esqueceu? #Extraordinario #CenaCerta #Cinema",
+      "target_duration_sec": {
+        "min": 40,
+        "max": 55
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-INSTAGRAM-26",
+      "network": "instagram",
+      "slot": "2026-10-16T18:00:00-03:00",
+      "title": "Top Gun: Maverick (2022)",
+      "canonical_english": "Top Gun Maverick",
+      "year": 2022,
+      "theme": "acao",
+      "hook": "ELE FEZ O TRAJETO QUE NINGUÉM CONSEGUIA ✈️",
+      "scene_brief": "Demonstração de voo, limite, risco e reação, com áudio compatível e payoff da mesma sequência.",
+      "cta": "Você assumiria esse risco?",
+      "caption": "Um piloto, um limite impossível e segundos para provar que dá certo ✈️ Você tentaria? #TopGunMaverick #CenaCerta",
+      "target_duration_sec": {
+        "min": 30,
+        "max": 45
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-FACEBOOK-27",
+      "network": "facebook",
+      "slot": "2026-10-16T10:00:00-03:00",
+      "title": "Intocáveis (2011)",
+      "canonical_english": "The Intouchables",
+      "year": 2011,
+      "theme": "humor_emocao",
+      "hook": "A ENTREVISTA QUE NÃO DEVERIA DAR CERTO 🤝",
+      "scene_brief": "O encontro inicial entre Driss e Philippe; mal-entendido, sinceridade e reação, sem narração por cima.",
+      "cta": "Você o contrataria depois dessa conversa?",
+      "caption": "Às vezes a melhor escolha é justamente a que ninguém esperava. Você o contrataria? #Intocaveis #CenaCerta",
+      "target_duration_sec": {
+        "min": 42,
+        "max": 55
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-FACEBOOK-28",
+      "network": "facebook",
+      "slot": "2026-10-16T12:00:00-03:00",
+      "title": "Um Senhor Estagiário (2015)",
+      "canonical_english": "The Intern",
+      "year": 2015,
+      "theme": "identificacao",
+      "hook": "ELE CHEGOU PARA APRENDER... E SURPREENDEU TODO MUNDO",
+      "scene_brief": "Um momento de Ben no escritório em que a experiência muda a dinâmica; respeitar entrada e resposta completas.",
+      "cta": "Experiência conta mais do que idade?",
+      "caption": "Às vezes a experiência vale mais que qualquer currículo. Você concorda? #UmSenhorEstagiario #CenaCerta",
+      "target_duration_sec": {
+        "min": 38,
+        "max": 52
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-FACEBOOK-29",
+      "network": "facebook",
+      "slot": "2026-10-16T18:00:00-03:00",
+      "title": "À Procura da Felicidade (2006)",
+      "canonical_english": "The Pursuit of Happyness",
+      "year": 2006,
+      "theme": "emocao",
+      "hook": "DEPOIS DE TANTO SOFRER, A RESPOSTA CHEGOU 🥹",
+      "scene_brief": "Momento da notícia profissional a Chris Gardner; expectativa, resposta e contenção da emoção, sem spoilers no título.",
+      "cta": "Qual conquista fez você chorar?",
+      "caption": "Tem conquista que só quem lutou entende. Qual foi a sua? #AProcuraDaFelicidade #CenaCerta",
+      "target_duration_sec": {
+        "min": 40,
+        "max": 56
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-YOUTUBE-10",
+      "network": "youtube",
+      "slot": "2026-10-16T10:00:00-03:00",
+      "title": "Batman: O Cavaleiro das Trevas (2008)",
+      "canonical_english": "The Dark Knight",
+      "year": 2008,
+      "theme": "tensao",
+      "hook": "O CORINGA NÃO PRECISAVA ESCAPAR PARA VENCER 😳",
+      "scene_brief": "Interrogatório entre Batman e Coringa, escalada verbal e virada, preservar tensão e identidade da fonte.",
+      "cta": "Quem tinha o controle nessa conversa?",
+      "caption": "Um interrogatório que vira disputa psicológica. Quem realmente controlava a conversa? #CavaleiroDasTrevas #Shorts #CenaCerta",
+      "target_duration_sec": {
+        "min": 35,
+        "max": 50
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-YOUTUBE-11",
+      "network": "youtube",
+      "slot": "2026-10-16T14:00:00-03:00",
+      "title": "Breaking Bad (2008)",
+      "canonical_english": "Breaking Bad",
+      "year": 2008,
+      "theme": "drama",
+      "hook": "UMA FRASE MUDOU O RESPEITO POR ELE",
+      "scene_brief": "Conversa de Walter White em que afirma o próprio poder; manter setup, declaração e reação sem rearranjo de diálogo.",
+      "cta": "Foi coragem ou arrogância?",
+      "caption": "Uma frase muda a relação de poder. Foi coragem ou arrogância? #BreakingBad #Shorts #CenaCerta",
+      "target_duration_sec": {
+        "min": 38,
+        "max": 53
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    },
+    {
+      "id": "CC-OCT16-YOUTUBE-12",
+      "network": "youtube",
+      "slot": "2026-10-16T16:00:00-03:00",
+      "title": "Missão: Impossível — Efeito Fallout (2018)",
+      "canonical_english": "Mission Impossible Fallout",
+      "year": 2018,
+      "theme": "acao",
+      "hook": "A MISSÃO DEU ERRADO EM SEGUNDOS 💥",
+      "scene_brief": "Confronto no banheiro, ação autêntica e reação do último beat, sem material Globo, trailers ou planos incompatíveis.",
+      "cta": "Quem sai melhor dessa luta?",
+      "caption": "Um plano perfeito vira caos em segundos 💥 Quem sai melhor dessa luta? #MissaoImpossivel #Shorts #CenaCerta",
+      "target_duration_sec": {
+        "min": 33,
+        "max": 48
+      },
+      "media_type": null,
+      "required_media_type": "LIVE_ACTION",
+      "source_url": null,
+      "source_id": null,
+      "source_segments": null,
+      "source_sha256": null,
+      "source_file": null,
+      "rights_evidence": {
+        "status": "NOT_VERIFIED",
+        "scope": null,
+        "proof_url": null
+      },
+      "anti_repeat_180d": {
+        "status": "NOT_VERIFIED",
+        "fingerprint_receipt": null
+      },
+      "master_mp4_url": null,
+      "master_sha256": null,
+      "qa_status": "BLOCKED_MISSING_SOURCE_AND_RIGHTS",
+      "metricool_status": "NOT_SCHEDULED",
+      "auto_publish": false,
+      "allow_trailer": false,
+      "allow_slideshow": false,
+      "allow_globo_youtube": false
+    }
+  ]
+}
