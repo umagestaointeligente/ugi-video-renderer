@@ -27,7 +27,7 @@ def validate_editorial(doc):
         slot = item.get("slot")
         if not re.fullmatch(r"CC-OCT16-(TIKTOK|INSTAGRAM|FACEBOOK|YOUTUBE)-[0-9]{2}", str(ident)):
             raise ValueError("ITEM_ID_INVALID")
-        if not re.fullmatch(r"2026-10-16T\\d{2}:\\d{2}:00-03:00", str(slot)):
+        if not re.fullmatch(r"2026-10-16T[0-9]{2}:[0-9]{2}:00-03:00", str(slot)):
             raise ValueError("SLOT_INVALID")
         if ident in seen or (network, slot) in seen:
             raise ValueError("DUPLICATE_ITEM_OR_SLOT")
