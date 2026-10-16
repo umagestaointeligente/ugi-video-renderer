@@ -1,0 +1,53 @@
+name: Three Channel Real Media E2E
+on:
+  push:
+    branches: [ops/three-channel-e2e-oct16]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: three-channel-e2e-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  render:
+    strategy:
+      fail-fast: false
+      matrix:
+        channel: [cena-certa, vsa, ugi]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            assets
+            config
+            production/vsa
+            ops/production/e2e-oct16
+      - name: Install zero-cost render dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
+          python -m pip install requests Pillow PyYAML edge-tts==7.3.1 yt-dlp
+      - name: Verify release guard rejects incomplete receipts
+        run: python scripts/vsa/validate_release_receipt.py --policy config/vsa/VSA_VISUAL_STORY_ENGINE_V1.json --self-test
+      - name: Acquire, synthesize, render and decode real final files
+        run: python scripts/production/e2e_render.py --channel ${{ matrix.channel }}
+      - name: Retain final candidates and truthful receipts only
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-media-${{ matrix.channel }}-${{ github.run_id }}
+          retention-days: 1
+          if-no-files-found: error
+          path: |
+            out/production-e2e-oct16/${{ matrix.channel }}/E2E_RECEIPT.json
+            out/production-e2e-oct16/${{ matrix.channel }}/*.mp4
+            out/production-e2e-oct16/${{ matrix.channel }}/*/master.mp4
+            out/production-e2e-oct16/${{ matrix.channel }}/ATTRIBUTION.txt
+            production/vsa/pilots/oct13_triple/output/*.mp4
+            production/vsa/pilots/oct13_triple/output/*.json
+# No publisher or credentials. A technical PASS never grants editorial,
+# rights, or 180-day history approval. Every receipt retains release_allowed=false.

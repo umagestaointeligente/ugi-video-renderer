@@ -45,11 +45,17 @@ class RecoveryTests(unittest.TestCase):
         self.assertIn('"no-certifi"',text)
         self.assertNotIn('--no-check-certificates',text)
     def test_ugi_cannot_render_changed_source_or_narration(self):
-        doc=json.loads((ROOT/'ops/production/baselines/ugi-oct07-replay.json').read_text())
-        for field in ('source_sha256','narration_sha256','text_sha256'):
-            row=copy.deepcopy(doc['items'][0]);row[field]='0'*64
-            with tempfile.TemporaryDirectory() as td, self.assertRaisesRegex(ValueError,'MISMATCH'):
-                u.render(row,pathlib.Path(td))
+        # Hermetic assets: sparse checkouts must exercise integrity, not absence.
+        with tempfile.TemporaryDirectory() as td:
+            root=pathlib.Path(td)
+            for name in ('source.mp4','voice.mp3','text.txt'):(root/name).write_text('fixture')
+            row={'id':'test','source_file':'source.mp4','source_sha256':u.sha(root/'source.mp4'),
+                 'narration_file':'voice.mp3','narration_sha256':u.sha(root/'voice.mp3'),
+                 'text_file':'text.txt','text_sha256':u.sha(root/'text.txt')}
+            for field in ('source_sha256','narration_sha256','text_sha256'):
+                changed=copy.deepcopy(row);changed[field]='0'*64
+                with patch.object(u,'ROOT',root), self.assertRaisesRegex(ValueError,'MISMATCH'):
+                    u.render(changed,root/'out')
     def test_ugi_output_cannot_escape_checkout(self):
         with self.assertRaises(ValueError):u.local('../missing')
 
