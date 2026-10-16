@@ -264,6 +264,11 @@ def render_item(item,src,logo,core):
     validate_master(out)
     return out,source_start,source_end,total,segs
 
+def require_perceptual_motion(hashes):
+    # Codec noise must not turn a still image into a moving-scene PASS.
+    if len(hashes)<2 or max((x^hashes[0]).bit_count() for x in hashes)<4:
+        raise RuntimeError("REAL_MOTION_FAIL")
+
 def validate_master(out):
     p=probe(out)
     v=next(s for s in p["streams"] if s["codec_type"]=="video")
@@ -283,6 +288,7 @@ def validate_master(out):
             parts=[x.strip() for x in ln.split(",")]
             if len(parts)>=6: hashes.append(parts[-1])
     if len(set(hashes))<min(6,max(4,len(hashes)//4)): raise RuntimeError("REAL_MOTION_FAIL")
+    require_perceptual_motion(dhashes_center(out,maxdur=90,fps=1,content_only=True))
     sil=run(["ffmpeg","-hide_banner","-i",str(out),"-af","silencedetect=n=-50dB:d=1.0","-vn","-f","null","-"],check=True)
     txt=sil.stderr.decode("utf-8","ignore"); dur=duration(out); open_start=None
     for ln in txt.splitlines():
@@ -294,8 +300,9 @@ def validate_master(out):
     if open_start is not None and dur-open_start>0.9: raise RuntimeError("SILENT_TAIL_FAIL")
     return p
 
-def dhashes_center(inp,maxdur=90,fps=2.0,timeout=60):
-    vf=f"fps={fps},crop=iw*0.78:ih*0.56:(iw-iw*0.78)/2:(ih-ih*0.56)/2,scale=9:8,format=gray"
+def dhashes_center(inp,maxdur=90,fps=2.0,timeout=60,content_only=False):
+    crop="iw*0.80:ih*0.40:iw*0.10:ih*0.25" if content_only else "iw*0.78:ih*0.56:(iw-iw*0.78)/2:(ih-ih*0.56)/2"
+    vf=f"fps={fps},crop={crop},scale=9:8,format=gray"
     try:
         p=run(["ffmpeg","-v","error","-t",str(maxdur),"-i",str(inp),"-vf",vf,"-f","rawvideo","-pix_fmt","gray","-"],timeout=timeout)
     except Exception:

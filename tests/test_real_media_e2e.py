@@ -45,4 +45,9 @@ class RealMediaTests(unittest.TestCase):
    with patch.object(e2e,'ROOT',p),self.assertRaisesRegex(RuntimeError,'MASTER_CHANGED_AFTER_QA'):e2e.stage_deliverables([row],p)
    self.assertEqual(list((p/'deliverables').glob('*.mp4')),[])
 
+ def test_codec_jitter_is_not_real_scene_motion(self):
+  for hashes in ([],[0],[0,0,0],[0,1,2,4]):
+   with self.assertRaisesRegex(RuntimeError,'REAL_MOTION_FAIL'):e2e.cc.require_perceptual_motion(hashes)
+  e2e.cc.require_perceptual_motion([0,255,65535])
+
 if __name__=='__main__':unittest.main()
