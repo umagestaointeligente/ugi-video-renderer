@@ -26,7 +26,11 @@ def srt_time(seconds):
 def cues(words):
     group = []
     for word in words:
-        if group and (len(group) >= 6 or len(' '.join(w['word'].strip() for w in group + [word])) > 31):
+        if group and (word['start'] - group[-1]['end'] > 0.65
+                      or word['end'] - group[0]['start'] > 3.5
+                      or group[-1]['word'].strip().endswith(('.', '?', '!'))
+                      or len(group) >= 6
+                      or len(' '.join(w['word'].strip() for w in group + [word])) > 31):
             yield group
             group = []
         group.append(word)
