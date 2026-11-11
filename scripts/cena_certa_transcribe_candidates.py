@@ -44,6 +44,7 @@ def main():
     parser.add_argument('--media-dir', required=True)
     parser.add_argument('--out', required=True)
     parser.add_argument('--model', default='base')
+    parser.add_argument('--language', default=None, help='Known audio language; does not certify transcription accuracy')
     parser.add_argument('--model-cache', required=True)
     parser.add_argument('--audio-start', type=float, default=0)
     parser.add_argument('--audio-duration', type=float)
@@ -71,7 +72,7 @@ def main():
         pcm = subprocess.run(decode + ['-ar', '16000', '-ac', '1', '-f', 'f32le', 'pipe:1'],
             check=True, capture_output=True).stdout
         audio = np.frombuffer(pcm, dtype=np.float32)
-        segments, info = model.transcribe(audio, beam_size=5, word_timestamps=True,
+        segments, info = model.transcribe(audio, language=args.language, beam_size=8, word_timestamps=True,
                                          vad_filter=False, condition_on_previous_text=False)
         rows, words = [], []
         for segment in segments:
@@ -82,7 +83,8 @@ def main():
             rows.append(row)
             words.extend(row['words'])
         result = dict(id=item['id'], master_sha256=item['sha256'], language=info.language,
-                      language_probability=info.language_probability, segments=rows,
+                      language_probability=info.language_probability if args.language is None else None,
+                      language_mode='forced' if args.language else 'detected', segments=rows,
                       review_status='PENDING_AUDIOVISUAL_REVIEW', scheduled=False, published=False)
         (out / (item['id'] + '.json')).write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
         lines = []
