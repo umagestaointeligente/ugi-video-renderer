@@ -45,6 +45,8 @@ def main():
     parser.add_argument('--out', required=True)
     parser.add_argument('--model', default='base')
     parser.add_argument('--model-cache', required=True)
+    parser.add_argument('--audio-start', type=float, default=0)
+    parser.add_argument('--audio-duration', type=float)
     args = parser.parse_args()
     # Only pre-downloaded models; reject Python network operations and the
     # optional ONNX VAD component instead of permitting its telemetry.
@@ -63,17 +65,19 @@ def main():
         if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
             raise ValueError('MASTER_HASH_MISMATCH:' + item['id'])
         # FFmpeg avoids coupling the pipeline to PyAV's metadata_errors API.
-        pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(path), '-vn',
-            '-ar', '16000', '-ac', '1', '-f', 'f32le', 'pipe:1'],
+        decode = ['ffmpeg', '-v', 'error', '-ss', str(args.audio_start), '-i', str(path), '-vn']
+        if args.audio_duration is not None:
+            decode += ['-t', str(args.audio_duration)]
+        pcm = subprocess.run(decode + ['-ar', '16000', '-ac', '1', '-f', 'f32le', 'pipe:1'],
             check=True, capture_output=True).stdout
         audio = np.frombuffer(pcm, dtype=np.float32)
         segments, info = model.transcribe(audio, beam_size=5, word_timestamps=True,
                                          vad_filter=False, condition_on_previous_text=False)
         rows, words = [], []
         for segment in segments:
-            row = dict(start=segment.start, end=segment.end, text=segment.text,
+            row = dict(start=segment.start + args.audio_start, end=segment.end + args.audio_start, text=segment.text,
                        avg_logprob=segment.avg_logprob, no_speech_prob=segment.no_speech_prob,
-                       words=[dict(start=w.start, end=w.end, word=w.word, probability=w.probability)
+                       words=[dict(start=w.start + args.audio_start, end=w.end + args.audio_start, word=w.word, probability=w.probability)
                               for w in (segment.words or [])])
             rows.append(row)
             words.extend(row['words'])
