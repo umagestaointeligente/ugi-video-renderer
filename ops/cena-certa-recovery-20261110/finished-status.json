@@ -1,0 +1,22 @@
+{
+  "rendered": 12,
+  "decoded_without_error": 12,
+  "scheduled": 0,
+  "published": 0,
+  "metadata_180d_rows": 422,
+  "metadata_title_matches": 0,
+  "visual_history_snapshot_total": 366,
+  "visual_history_processed": 190,
+  "visual_history_extracted": 169,
+  "visual_history_failed": 21,
+  "visual_180d_complete": false,
+  "rights": "NOT_VERIFIED",
+  "external_upload": "BLOCKED_BY_AUTOMATIC_REVIEW",
+  "final_editorial_review": "PENDING",
+  "archive_name": "Cena_Certa_12_Videos_Renderizados_2026-11-10.zip",
+  "tests": {
+    "run": 68,
+    "passed": 67,
+    "skipped": 1
+  }
+}

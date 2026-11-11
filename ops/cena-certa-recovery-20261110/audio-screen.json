@@ -1,0 +1,100 @@
+{
+  "schema": "CENA_CERTA_AUDIO_SCREEN_V1",
+  "master_hashes_verified": 12,
+  "source_hashes_verified": 12,
+  "asr_model": "Systran/faster-whisper-base",
+  "asr_device": "cpu/int8",
+  "network_allowed": false,
+  "onnx_vad_used": false,
+  "review_status": "PENDING_AUDIOVISUAL_REVIEW",
+  "items": [
+    {
+      "id": "CC-OCT16-TIKTOK-01",
+      "master_sha256": "6a22bb1d4cfafbd2effb036da1bc71f2e5ac856f363d464962da20fc8376e7de",
+      "language": "en",
+      "language_probability": 0.3002835512161255,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-TIKTOK-02",
+      "master_sha256": "cb57b6b529501cd6b7ed919adcd39ebf31e47aef0877a481ec1921a7fdaa596c",
+      "language": "pt",
+      "language_probability": 0.989772379398346,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-TIKTOK-03",
+      "master_sha256": "a85e0b3d577eb9eb9d73b1fd721f1fd02962af41e6676485afaff06b4301b5e5",
+      "language": "zh",
+      "language_probability": 0.8775637149810791,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-INSTAGRAM-04",
+      "master_sha256": "667970d976047c71bd882b6a62346df600cd916da4467835bade48f88434bbac",
+      "language": "pt",
+      "language_probability": 0.9834222793579102,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-INSTAGRAM-05",
+      "master_sha256": "d7f71193a445b1675390c824babddf246ae8aa63eec7460cecbda14a43b7aaf9",
+      "language": "pt",
+      "language_probability": 0.9938510656356812,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-INSTAGRAM-06",
+      "master_sha256": "c66d04f590f2242a6d28736d6d61dc0c1c99de98b3570e4b75fe08c65ad6e847",
+      "language": "pt",
+      "language_probability": 0.9466212391853333,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-FACEBOOK-07",
+      "master_sha256": "175402981d3d2d2478648822ed3cbe75ac44de2868b77e12b8f1fa1b6dc4e6f4",
+      "language": "pt",
+      "language_probability": 0.9931568503379822,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-FACEBOOK-08",
+      "master_sha256": "ec5c1feb7b9be798fb7a6ba489ada7d99cd5617d093eecfd30080f3286d945bc",
+      "language": "pt",
+      "language_probability": 0.9890698194503784,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-FACEBOOK-09",
+      "master_sha256": "1e702df9807c0748010939b191b8ef81b8537c69eb11f939f42926eb0ae1769c",
+      "language": "pt",
+      "language_probability": 0.9498332142829895,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-YOUTUBE-10",
+      "master_sha256": "e1f6ea90ccedace6516b7c839270424bf8dcfb4244147ed0645d4b4d2f698ec7",
+      "language": "pt",
+      "language_probability": 0.988142192363739,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-YOUTUBE-11",
+      "master_sha256": "84007f79c82c44409bc28cca44597802e2cc6d5a24e2ba25a3c12ded14f29767",
+      "language": "pt",
+      "language_probability": 0.9858667254447937,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    },
+    {
+      "id": "CC-OCT16-YOUTUBE-12",
+      "master_sha256": "5f9cdf18a20b430b35ff2e321192700a876a1d1a942aeffe70b26c41624c2787",
+      "language": "en",
+      "language_probability": 0.3528577387332916,
+      "review_status": "PENDING_AUDIOVISUAL_REVIEW"
+    }
+  ],
+  "language_pt_candidates": 9,
+  "language_review_or_replace": 3,
+  "scheduled": false,
+  "published": false
+}
